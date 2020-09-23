@@ -1,0 +1,15 @@
+language: java
+sudo: required
+matrix:
+  include:
+  - jdk: openjdk11
+addons:
+  sonarcloud:
+    organization: exasol
+    token:
+script:
+- mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent org.jacoco:jacoco-maven-plugin:prepare-agent-integration
+  verify sonar:sonar -Dsonar.login=${SONAR_TOKEN} -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml,target/site/jacoco-it/jacoco.xml,target/site/jacoco-udf/jacoco.xml
+cache:
+  directories:
+  - "$HOME/.m2"
