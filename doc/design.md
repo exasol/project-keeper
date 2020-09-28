@@ -38,7 +38,7 @@ Covers:
 Needs: impl, itest
 
 ## Maven fit Gaol
-`dsn~mvn-fit-pahse~1`
+`dsn~mvn-fit-goal~1`
 
 This plugin defines a maven goal named `fit` that creates or updates the project files so that they match 
 the required project structure. 
