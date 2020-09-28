@@ -21,10 +21,11 @@ this plugin validates it as if it would only exist in `require_exact`.
 Covers:
 
 * `req~repository-structure~1`
+* `req~convenient-repository-structure~1`
 
 Needs: impl
 
-## Maven verify goal
+## Maven Verify Goal
 `dsn~mvn-verify-goal~1`
 
 This plugin defines a maven goal named `verify` that checks if the project matches the defined structure.
@@ -36,7 +37,7 @@ Covers:
 
 Needs: impl, itest
 
-## Maven fit gaol
+## Maven fit Gaol
 `dsn~mvn-fit-pahse~1`
 
 This plugin defines a maven goal named `fit` that creates or updates the project files so that they match 
@@ -45,5 +46,6 @@ the required project structure.
 Covers:
 
 * `req~fit-repo-structure~1`
+* `req~verify-repo-structure~1`
 
 Needs: impl, itest
