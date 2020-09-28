@@ -5,3 +5,4 @@ Code name: Initial release
 ## Features / Enhancements
 
 * #1: Added initial project structure
+* #2: Added requirements and design
