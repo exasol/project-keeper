@@ -52,4 +52,5 @@ mvn project-keeper:fit
 
 ## Additional Resources
 
+* [Dependencies](NOTICE)
 * [Changelog](doc/changes/changelog.md)
