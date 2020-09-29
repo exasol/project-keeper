@@ -17,7 +17,7 @@ class InputStreamComparatorTest {
     void testEqual() throws IOException {
         try (final InputStream stream1 = new ByteArrayInputStream("test".getBytes());
                 final InputStream stream2 = new ByteArrayInputStream("test".getBytes())) {
-            assertThat(COMPARATOR.isEqual(stream1, stream2), equalTo(true));
+            assertThat(COMPARATOR.areStreamsEqual(stream1, stream2), equalTo(true));
         }
     }
 
@@ -25,7 +25,7 @@ class InputStreamComparatorTest {
     void testNotEqual() throws IOException {
         try (final InputStream stream1 = new ByteArrayInputStream("test".getBytes());
                 final InputStream stream2 = new ByteArrayInputStream("other".getBytes())) {
-            assertThat(COMPARATOR.isEqual(stream1, stream2), equalTo(false));
+            assertThat(COMPARATOR.areStreamsEqual(stream1, stream2), equalTo(false));
         }
     }
 
@@ -33,7 +33,7 @@ class InputStreamComparatorTest {
     void testNotEqualButSameLength() throws IOException {
         try (final InputStream stream1 = new ByteArrayInputStream("test1".getBytes());
                 final InputStream stream2 = new ByteArrayInputStream("test2".getBytes())) {
-            assertThat(COMPARATOR.isEqual(stream1, stream2), equalTo(false));
+            assertThat(COMPARATOR.areStreamsEqual(stream1, stream2), equalTo(false));
         }
     }
 }

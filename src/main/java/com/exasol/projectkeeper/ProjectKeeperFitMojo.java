@@ -16,7 +16,7 @@ import org.apache.maven.project.MavenProject;
 public class ProjectKeeperFitMojo extends AbstractProjectKeeperMojo {
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
-    MavenProject project;
+    private MavenProject project;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

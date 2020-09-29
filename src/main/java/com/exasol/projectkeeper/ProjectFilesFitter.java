@@ -13,7 +13,7 @@ import org.apache.maven.plugin.logging.Log;
 /**
  * This class fits the projects file structure.
  */
-public class ProjectFilesFitter extends AbstractProjectFilesValidator {
+public class ProjectFilesFitter extends AbstractProjectFilesWalker {
     private final Log log;
 
     /**
@@ -29,14 +29,14 @@ public class ProjectFilesFitter extends AbstractProjectFilesValidator {
     /**
      * Fit the file structure of the project.
      * 
-     * @param projectDir     project's base directory
-     * @param enabledModules list of enabled modules
+     * @param projectDirectoryectory project's base directory
+     * @param enabledModules         list of enabled modules
      * @throws MojoFailureException in case fitting failed
      */
-    public void fitProjectStructure(final File projectDir, final List<String> enabledModules)
+    public void fitProjectStructure(final File projectDirectory, final List<String> enabledModules)
             throws MojoFailureException {
         final FitterTemplateVisitor fitterVisitor = new FitterTemplateVisitor(this.log);
-        super.run(fitterVisitor, projectDir, enabledModules);
+        super.run(fitterVisitor, projectDirectory, enabledModules);
         if (fitterVisitor.hadErrors()) {
             throw new MojoFailureException("Failed to fit repository file structure. See previous errors.");
         }

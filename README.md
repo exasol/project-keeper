@@ -33,7 +33,6 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
 This plugin provides different template modules for different kinds of projects.
 
 * `default` (always included)
-* `mavenCentral`
 
 ## Usage
 
@@ -41,11 +40,13 @@ The verification is automatically bound to the maven `package` lifecycle phase.
 So it is automatically executed if you run `mvn package` or `mvn verify`.
 
 You can also run the checks manually using:
+
 ```shell script
 mvn project-keeper:verify
 ```
 
 In addition this plugin can also fit the project structure. For that use:
+
 ```shell script
 mvn project-keeper:fit
 ```

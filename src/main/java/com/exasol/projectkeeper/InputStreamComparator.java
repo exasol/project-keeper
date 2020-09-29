@@ -17,21 +17,21 @@ public class InputStreamComparator {
      * @return {@code true} if streams are equal
      * @throws IOException if reading fails
      */
-    public boolean isEqual(final InputStream inputStream1, final InputStream inputStream2) throws IOException {
+    public boolean areStreamsEqual(final InputStream inputStream1, final InputStream inputStream2) throws IOException {
         final byte[] buffer1 = new byte[1024 * 10];
         final byte[] buffer2 = new byte[1024 * 10];
-        int numRead1 = 0;
-        int numRead2 = 0;
+        int numberOfBytesRead1 = 0;
+        int numberOfBytesRead2 = 0;
         while (true) {
-            numRead1 = inputStream1.read(buffer1);
-            numRead2 = inputStream2.read(buffer2);
-            if (numRead1 > -1) {
-                if (numRead2 != numRead1 || !Arrays.equals(buffer1, buffer2)) {
+            numberOfBytesRead1 = inputStream1.read(buffer1);
+            numberOfBytesRead2 = inputStream2.read(buffer2);
+            if (numberOfBytesRead1 > -1) {// stream1 had content
+                if (numberOfBytesRead2 != numberOfBytesRead1 || !Arrays.equals(buffer1, buffer2)) {
                     return false;
                 }
                 // continue since the streams are equal until here
             } else { // stream 1 was empty
-                return numRead2 == -1;
+                return numberOfBytesRead2 == -1;// streams are equal if stream2 is also empty; otherwise not
             }
         }
     }

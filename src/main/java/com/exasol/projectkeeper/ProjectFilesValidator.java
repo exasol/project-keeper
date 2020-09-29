@@ -11,7 +11,7 @@ import org.apache.maven.plugin.logging.Log;
 /**
  * Validator for the projects file structure.
  */
-public class ProjectFilesValidator extends AbstractProjectFilesValidator {
+public class ProjectFilesValidator extends AbstractProjectFilesWalker {
     private final Log log;
 
     /**
@@ -20,20 +20,19 @@ public class ProjectFilesValidator extends AbstractProjectFilesValidator {
      * @param log logger
      */
     public ProjectFilesValidator(final Log log) {
-        super();
         this.log = log;
     }
 
     /**
      * Validate the file structure of the project.
      * 
-     * @param projectDir     project's base directory
-     * @param enabledModules list of enabled modules
+     * @param projectDirectory project's base directory
+     * @param enabledModules   list of enabled modules
      * @return {@code true} if structure is valid
      */
-    public boolean validateProjectStructure(final File projectDir, final List<String> enabledModules) {
+    public boolean validateProjectStructure(final File projectDirectory, final List<String> enabledModules) {
         final ValidationTemplateVisitor validationVisitor = new ValidationTemplateVisitor(this.log);
-        super.run(validationVisitor, projectDir, enabledModules);
+        super.run(validationVisitor, projectDirectory, enabledModules);
         return !validationVisitor.hadErrors();
     }
 
@@ -55,14 +54,18 @@ public class ProjectFilesValidator extends AbstractProjectFilesValidator {
                 return;
             }
             if (templateType.equals(TemplateType.REQUIRE_EXACT)) {
-                try (final FileInputStream actualInputStream = new FileInputStream(projectFile)) {
-                    if (!COMPARATOR.isEqual(actualInputStream, template)) {
-                        this.log.error("Outdated content: " + fileName);
-                    }
-                } catch (final IOException exception) {
-                    this.hadErrors = true;
-                    this.log.error("Failed to open " + fileName + "for read. Cause: " + exception.getMessage());
+                validateContent(fileName, projectFile, template);
+            }
+        }
+
+        private void validateContent(final String fileName, final File projectFile, final InputStream template) {
+            try (final FileInputStream actualInputStream = new FileInputStream(projectFile)) {
+                if (!COMPARATOR.areStreamsEqual(actualInputStream, template)) {
+                    this.log.error("Outdated content: " + fileName);
                 }
+            } catch (final IOException exception) {
+                this.hadErrors = true;
+                this.log.error("Failed to open " + fileName + "for read. Cause: " + exception.getMessage());
             }
         }
 
