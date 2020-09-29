@@ -29,8 +29,8 @@ public class ProjectFilesFitter extends AbstractProjectFilesWalker {
     /**
      * Fit the file structure of the project.
      * 
-     * @param projectDirectoryectory project's base directory
-     * @param enabledModules         list of enabled modules
+     * @param projectDirectory project's base directory
+     * @param enabledModules   list of enabled modules
      * @throws MojoFailureException in case fitting failed
      */
     public void fitProjectStructure(final File projectDirectory, final List<String> enabledModules)
