@@ -1,0 +1,58 @@
+This project has the following dependencies:
+  Apache Commons Compress under Apache License, Version 2.0
+  Apache Commons Lang under Apache License, Version 2.0
+  Backport of JSR 166 under Public Domain
+  Byte Buddy (without dependencies) under Apache License, Version 2.0
+  Byte Buddy agent under Apache License, Version 2.0
+  CDI APIs under Apache License, Version 2.0
+  ClassGraph under The MIT License (MIT)
+  classworlds under BSD Style License
+  Default Plexus Container under Apache License, Version 2.0
+  Duct Tape under MIT
+  Hamcrest under BSD License 3
+  Java Native Access under LGPL, version 2.1 or Apache License v2.0
+  Java Native Access Platform under LGPL, version 2.1 or Apache License v2.0
+  javax.inject under The Apache Software License, Version 2.0
+  JetBrains Java Annotations under The Apache Software License, Version 2.0
+  JSR-250 Common Annotations for the JavaTM Platform under COMMON DEVELOPMENT AND DISTRIBUTION LICENSE (CDDL) Version 1.0
+  JUnit under Eclipse Public License 1.0
+  JUnit Jupiter API under Eclipse Public License v2.0
+  JUnit Jupiter Engine under Eclipse Public License v2.0
+  JUnit Jupiter Params under Eclipse Public License v2.0
+  JUnit Platform Commons under Eclipse Public License v2.0
+  JUnit Platform Engine API under Eclipse Public License v2.0
+  JUnit Platform Launcher under Eclipse Public License v2.0
+  JUnit Platform Runner under Eclipse Public License v2.0
+  JUnit Platform Suite API under Eclipse Public License v2.0
+  junixsocket-common under Apache License, Version 2.0
+  junixsocket-native-common under Apache License, Version 2.0
+  Maven Artifact under The Apache Software License, Version 2.0
+  Maven Artifact Manager under The Apache Software License, Version 2.0
+  Maven Local Settings Model under The Apache Software License, Version 2.0
+  Maven Model under Apache License, Version 2.0
+  Maven Plugin API under Apache License, Version 2.0
+  Maven Plugin Registry Model under The Apache Software License, Version 2.0
+  Maven Plugin Tools Java 5 Annotations under Apache License, Version 2.0
+  Maven Profile Model under The Apache Software License, Version 2.0
+  Maven Project Builder under The Apache Software License, Version 2.0
+  Maven Repository Metadata Model under The Apache Software License, Version 2.0
+  Maven Wagon API under The Apache Software License, Version 2.0
+  mockito-core under The MIT License
+  Native Library Loader under CC0 1.0 Universal License
+  Objenesis under Apache License, Version 2.0
+  org.apiguardian:apiguardian-api under The Apache License, Version 2.0
+  org.eclipse.sisu.inject under Eclipse Public License, Version 1.0
+  org.eclipse.sisu.plexus under Eclipse Public License, Version 1.0
+  org.opentest4j:opentest4j under The Apache License, Version 2.0
+  Plexus :: Component Annotations under The Apache Software License, Version 2.0
+  Plexus Classworlds under Apache License, Version 2.0
+  Plexus Common Utilities under Apache License, Version 2.0
+  Plexus Interpolation API under The Apache Software License, Version 2.0
+  Project keeper maven plugin under MIT
+  SLF4J API Module under MIT License
+  SLF4J JDK14 Binding under MIT License
+  TCP to Unix Socket Proxy under MIT
+  Testcontainers :: JUnit Jupiter Extension under MIT
+  Testcontainers Core under MIT
+  Visible Assertions under MIT
+
