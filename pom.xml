@@ -6,7 +6,6 @@
     <artifactId>project-keeper-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
     <version>0.1.0</version>
-
     <name>Project keeper maven plugin</name>
     <description>This maven plugin checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
@@ -50,6 +49,7 @@
         <junit.version>5.6.2</junit.version>
         <java.version>11</java.version>
         <junit.platform.version>1.6.2</junit.platform.version>
+        <jacoco.version>0.8.5</jacoco.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gpg.skip>true</gpg.skip>
@@ -252,6 +252,50 @@
                         <goals>
                             <goal>sign</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${jacoco.version}</version>
+                <executions>
+                    <execution>
+                        <id>prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>prepare-agent-integration</id>
+                        <goals>
+                            <goal>prepare-agent-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-integration</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>report-udf-integration</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>report-integration</goal>
+                        </goals>
+                        <configuration>
+                            <dataFile>${project.build.directory}/jacoco-udf.exec</dataFile>
+                            <outputDirectory>${project.reporting.outputDirectory}/jacoco-udf</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
