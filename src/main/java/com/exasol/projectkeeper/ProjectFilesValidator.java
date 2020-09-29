@@ -27,7 +27,8 @@ public class ProjectFilesValidator extends AbstractProjectFilesValidator {
     /**
      * Validate the file structure of the project.
      * 
-     * @param projectDir project's base directory
+     * @param projectDir     project's base directory
+     * @param enabledModules list of enabled modules
      * @return {@code true} if structure is valid
      */
     public boolean validateProjectStructure(final File projectDir, final List<String> enabledModules) {
