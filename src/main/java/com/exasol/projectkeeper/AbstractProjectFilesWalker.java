@@ -17,7 +17,7 @@ import io.github.classgraph.ScanResult;
  * This class walks the project templates, and calls a {@link ProjectFileTemplateVisitor} for each template file.
  * </p>
  */
-public class AbstractProjectFilesWalker {
+public abstract class AbstractProjectFilesWalker {
     private static final Pattern TEMPLATE_NAME_PATTERN = Pattern
             .compile(".*\\/templates\\/([^\\/]+)\\/([^\\/]+)\\/(.*)");
 
@@ -45,7 +45,7 @@ public class AbstractProjectFilesWalker {
             throw new IllegalStateException("Template name had invalid format.");
         }
         final String module = matcher.group(1);
-        final TemplateType templateType = templateTypeFromString(matcher.group(2));
+        final TemplateType templateType = TemplateType.fromString(matcher.group(2));
         final String fileName = matcher.group(3);
         if (enabledModules.contains(module)) {
             invokeVisitor(visitor, projectDirectory, resource, templateType, fileName);
@@ -62,19 +62,19 @@ public class AbstractProjectFilesWalker {
         }
     }
 
-    private TemplateType templateTypeFromString(final String templateTypeString) {
-        switch (templateTypeString) {
-        case "require_exact":
-            return TemplateType.REQUIRE_EXACT;
-        case "require_exist":
-            return TemplateType.REQUIRE_EXIST;
-        default:
-            throw new IllegalArgumentException("Unknown template type " + templateTypeString);
-        }
-    }
-
     public enum TemplateType {
-        REQUIRE_EXACT, REQUIRE_EXIST
+        REQUIRE_EXACT, REQUIRE_EXIST;
+
+        private static TemplateType fromString(final String templateTypeString) {
+            switch (templateTypeString) {
+            case "require_exact":
+                return TemplateType.REQUIRE_EXACT;
+            case "require_exist":
+                return TemplateType.REQUIRE_EXIST;
+            default:
+                throw new IllegalArgumentException("Unknown template type " + templateTypeString);
+            }
+        }
     }
 
     /**
