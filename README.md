@@ -27,7 +27,6 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
 </plugin>
 ```
 
-
 ### Modules
 
 This plugin provides different template modules for different kinds of projects.
@@ -36,7 +35,7 @@ This plugin provides different template modules for different kinds of projects.
 
 ## Usage
 
-The verification is automatically bound to the maven `package` lifecycle phase.
+The verification is bound to the maven `package` lifecycle phase.
 So it is automatically executed if you run `mvn package` or `mvn verify`.
 
 You can also run the checks manually using:

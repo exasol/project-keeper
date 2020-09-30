@@ -11,7 +11,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
 /**
- * This class fits the projects file structure.
+ * This class shapes the project's file structure.
  */
 public class ProjectFilesFitter extends AbstractProjectFilesWalker {
     private final Log log;
