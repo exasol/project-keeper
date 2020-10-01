@@ -6,3 +6,4 @@ Code name: Initial release
 
 * #1: Added initial project structure
 * #2: Added requirements and design
+* #5: Project structure checking

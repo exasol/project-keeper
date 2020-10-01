@@ -37,15 +37,15 @@ Covers:
 
 Needs: impl, itest
 
-## Maven fit Gaol
-`dsn~mvn-fit-goal~1`
+## Maven fix Gaol
+`dsn~mvn-fix-goal~1`
 
-This plugin defines a maven goal named `fit` that creates or updates the project files so that they match 
+This plugin defines a maven goal named `fix` that creates or updates the project files so that they match 
 the required project structure. 
 
 Covers:
 
-* `req~fit-repo-structure~1`
+* `req~fix-repo-structure~1`
 * `req~verify-repo-structure~1`
 
 Needs: impl, itest
