@@ -46,10 +46,10 @@ You can also run the checks manually using:
 mvn project-keeper:verify
 ```
 
-In addition this plugin can also fit the project structure. For that use:
+In addition this plugin can also fix the project structure. For that use:
 
 ```shell script
-mvn project-keeper:fit
+mvn project-keeper:fix
 ```
 
 ## Additional Resources

@@ -19,20 +19,20 @@ import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-class ProjectFilesFitterTest {
+class ProjectFilesFixerTest {
     private static final List<String> MODULES = List.of(MODULE_DEFAULT);
 
     @Test
-    void testFitting(@TempDir final File tempDir) throws MojoFailureException {
-        final ProjectFilesFitter fitter = new ProjectFilesFitter(new SystemStreamLog());
-        fitter.fitProjectStructure(tempDir, MODULES);
+    void testFixing(@TempDir final File tempDir) throws MojoFailureException {
+        final ProjectFilesFixer fixer = new ProjectFilesFixer(new SystemStreamLog());
+        fixer.fixProjectStructure(tempDir, MODULES);
         assertThat(tempDir.toPath().resolve("README.md").toFile(), anExistingFile());
     }
 
     @Test
-    void validateAfterFit(@TempDir final File tempDir) throws MojoFailureException {
+    void validateAfterFix(@TempDir final File tempDir) throws MojoFailureException {
         final SystemStreamLog log = new SystemStreamLog();
-        new ProjectFilesFitter(log).fitProjectStructure(tempDir, MODULES);
+        new ProjectFilesFixer(log).fixProjectStructure(tempDir, MODULES);
         assertThat(new ProjectFilesValidator(log).validateProjectStructure(tempDir, MODULES), equalTo(true));
     }
 
@@ -42,8 +42,8 @@ class ProjectFilesFitterTest {
             throw new IllegalStateException("Failed to set temp dir read-only.");
         }
         final SystemStreamLog log = spy(new SystemStreamLog());
-        final ProjectFilesFitter fitter = new ProjectFilesFitter(log);
-        assertThrows(MojoFailureException.class, () -> fitter.fitProjectStructure(tempDir, MODULES));
+        final ProjectFilesFixer fixer = new ProjectFilesFixer(log);
+        assertThrows(MojoFailureException.class, () -> fixer.fixProjectStructure(tempDir, MODULES));
         verify(log).error(and(startsWith("Failed to create or replace"), endsWith("README.md")));
     }
 }

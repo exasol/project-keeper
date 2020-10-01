@@ -7,19 +7,19 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 /**
- * Entry point for the fit goal.
+ * Entry point for the fix goal.
  * <p>
- * Run using {@code mvn project-keeper:fit}
+ * Run using {@code mvn project-keeper:fix}
  * </p>
  */
-@Mojo(name = "fit")
-public class ProjectKeeperFitMojo extends AbstractProjectKeeperMojo {
+@Mojo(name = "fix")
+public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        new ProjectFilesFitter(getLog()).fitProjectStructure(this.project.getBasedir(), getModules());
+        new ProjectFilesFixer(getLog()).fixProjectStructure(this.project.getBasedir(), getModules());
     }
 }

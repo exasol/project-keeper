@@ -11,42 +11,42 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
 /**
- * This class shapes the project's file structure.
+ * This class fixes the project's file structure.
  */
-public class ProjectFilesFitter extends AbstractProjectFilesWalker {
+public class ProjectFilesFixer extends AbstractProjectFilesWalker {
     private final Log log;
 
     /**
-     * Crate a new instance of {@link ProjectFilesFitter}.
+     * Crate a new instance of {@link ProjectFilesFixer}.
      * 
      * @param log logger
      */
-    public ProjectFilesFitter(final Log log) {
+    public ProjectFilesFixer(final Log log) {
         super();
         this.log = log;
     }
 
     /**
-     * Fit the file structure of the project.
+     * Fix the file structure of the project.
      * 
      * @param projectDirectory project's base directory
      * @param enabledModules   list of enabled modules
-     * @throws MojoFailureException in case fitting failed
+     * @throws MojoFailureException in case fixing failed
      */
-    public void fitProjectStructure(final File projectDirectory, final List<String> enabledModules)
+    public void fixProjectStructure(final File projectDirectory, final List<String> enabledModules)
             throws MojoFailureException {
-        final FitterTemplateVisitor fitterVisitor = new FitterTemplateVisitor(this.log);
-        super.run(fitterVisitor, projectDirectory, enabledModules);
-        if (fitterVisitor.hadErrors()) {
-            throw new MojoFailureException("E-PK-5 Failed to fit repository file structure. See previous errors.");
+        final FixerTemplateVisitor fixerVisitor = new FixerTemplateVisitor(this.log);
+        super.run(fixerVisitor, projectDirectory, enabledModules);
+        if (fixerVisitor.hadErrors()) {
+            throw new MojoFailureException("E-PK-5 Failed to fix repository file structure. See previous errors.");
         }
     }
 
-    private static class FitterTemplateVisitor implements ProjectFileTemplateVisitor {
+    private static class FixerTemplateVisitor implements ProjectFileTemplateVisitor {
         private final Log log;
         private boolean hadErrors = false;
 
-        private FitterTemplateVisitor(final Log log) {
+        private FixerTemplateVisitor(final Log log) {
             this.log = log;
         }
 

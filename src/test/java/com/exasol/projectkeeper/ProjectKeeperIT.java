@@ -66,10 +66,10 @@ public class ProjectKeeperIT {
     }
 
     @Test
-    void testFit() throws IOException, InterruptedException {
+    void testFix() throws IOException, InterruptedException {
         runWithCheck("cp", "-r", "/test_project", "/tmp/test_project");// copy to make it writeable
         mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f", "/tmp/test_project/pom.xml",
-                "project-keeper:fit", "--log-file", "/dev/stdout", "--no-transfer-progress");
+                "project-keeper:fix", "--log-file", "/dev/stdout", "--no-transfer-progress");
         final ExecResult result = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
                 "/tmp/test_project/pom.xml", "project-keeper:verify", "--log-file", "/dev/stdout",
                 "--no-transfer-progress");

@@ -28,8 +28,8 @@ This plugin can verify if the repository setup.
 
 Needs: req
 
-### Fit Repository
-`feat~fit-repo-setup~1`
+### Fix Repository
+`feat~fix-repo-setup~1`
 
 This plugin can fix the repository setup.
 
@@ -46,7 +46,7 @@ That means that each change of the template structure is rolled out over a new r
 Covers:
 
 * [feat~verify-repo-setup~1](#verify-repository)
-* [feat~fit-repo-setup~1](#fit-repository)
+* [feat~fix-repo-setup~1](#fix-repository)
 
 Needs: dsn
 
@@ -59,7 +59,7 @@ in that we define the template inside of this plugin, must be convenient and eas
 Covers:
 
 * [feat~verify-repo-setup~1](#verify-repository-structure)
-* [feat~fit-repo-setup~1](#fit-repository-structure)
+* [feat~fix-repo-setup~1](#fix-repository-structure)
 
 Needs: dsn
 
@@ -88,14 +88,14 @@ Covers:
 
 Needs: dsn
 
-### Fitting Repository Structure
-`req~fit-repo-structure~1`
+### Fixing Repository Structure
+`req~fix-repo-structure~1`
 
 This plugin provides a command that automatically creates or updates the files so that they fit 
 the required project structure.
 
 Covers:
 
-* [feat~fit-repo-setup~1](#fit-repository-structure)
+* [feat~fix-repo-setup~1](#fix-repository-structure)
 
 Needs: dsn
