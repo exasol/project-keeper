@@ -42,7 +42,7 @@ public abstract class AbstractProjectFilesWalker {
         final String resourceName = resource.getURI().toString();
         final Matcher matcher = TEMPLATE_NAME_PATTERN.matcher(resourceName);
         if (!matcher.matches()) {
-            throw new IllegalStateException("Template name had invalid format.");
+            throw new IllegalStateException("F-PK-1 Template name had invalid format. Please open an issue.");
         }
         final String module = matcher.group(1);
         final TemplateType templateType = TemplateType.fromString(matcher.group(2));
@@ -58,7 +58,7 @@ public abstract class AbstractProjectFilesWalker {
             final File projectFile = projectDirectory.toPath().resolve(fileName).toFile();
             visitor.visit(fileName, projectFile, templateStream, templateType);
         } catch (final IOException exception) {
-            throw new IllegalStateException("Failed to open template file.", exception);
+            throw new IllegalStateException("F-PK-2 Failed to open template file. Please open an issue.", exception);
         }
     }
 
@@ -72,7 +72,8 @@ public abstract class AbstractProjectFilesWalker {
             case "require_exist":
                 return TemplateType.REQUIRE_EXIST;
             default:
-                throw new IllegalArgumentException("Unknown template type " + templateTypeString);
+                throw new IllegalArgumentException(
+                        "F-PK-3 Unknown template type " + templateTypeString + ". Please open an issue.");
             }
         }
     }

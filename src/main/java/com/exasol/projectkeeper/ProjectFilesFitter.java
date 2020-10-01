@@ -38,7 +38,7 @@ public class ProjectFilesFitter extends AbstractProjectFilesWalker {
         final FitterTemplateVisitor fitterVisitor = new FitterTemplateVisitor(this.log);
         super.run(fitterVisitor, projectDirectory, enabledModules);
         if (fitterVisitor.hadErrors()) {
-            throw new MojoFailureException("Failed to fit repository file structure. See previous errors.");
+            throw new MojoFailureException("E-PK-5 Failed to fit repository file structure. See previous errors.");
         }
     }
 

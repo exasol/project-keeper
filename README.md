@@ -7,24 +7,26 @@ This maven plugin checks and unifies the project's structure according to the Ex
 Install this plugin by adding the following lines to your project's `pom.xml` file:
 
 ```xml
-<plugin>
-    <groupId>com.exasol</groupId>
-    <artifactId>project-keeper-maven-plugin</artifactId>
-    <version>0.1.0</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>verify</goal>
-            </goals>
-        </execution>
-    </executions>
-    <configuration>
-        <modules>
-            <!-- add modules here: --> 
-            <!-- <module>For available modules see below.</module>-->
-        </modules>
-    </configuration>
-</plugin>
+<plugins>
+    <plugin>
+        <groupId>com.exasol</groupId>
+        <artifactId>project-keeper-maven-plugin</artifactId>
+        <version>0.1.0</version>
+        <executions>
+            <execution>
+                <goals>
+                    <goal>verify</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <modules>
+                <!-- add modules here: --> 
+                <!-- <module>For available modules see below.</module>-->
+            </modules>
+        </configuration>
+    </plugin>
+</plugins>
 ```
 
 ### Modules

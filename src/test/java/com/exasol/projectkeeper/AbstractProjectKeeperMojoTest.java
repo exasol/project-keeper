@@ -40,8 +40,8 @@ class AbstractProjectKeeperMojoTest {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(List.of("unknown"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 abstractProjectKeeperMojo::getModules);
-        assertThat(exception.getMessage(),
-                equalTo("Unknown module: 'unknown'. Supported modules: default, mavenCentral"));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-4 Unknown module: 'unknown'. Please update your <modules> configuration in the pom.file to only use supported modules: default, mavenCentral."));
     }
 
     private AbstractProjectKeeperMojo getAbstractProjectKeeperMojo(final List<String> modules)

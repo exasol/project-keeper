@@ -38,8 +38,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     private void validateModules() {
         for (final String module : this.modules) {
             if (!supportedModules.contains(module)) {
-                throw new IllegalArgumentException(
-                        "Unknown module: '" + module + "'. Supported modules: " + String.join(", ", supportedModules));
+                throw new IllegalArgumentException("E-PK-4 Unknown module: '" + module + "'. "
+                        + "Please update your <modules> configuration in the pom.file to only use supported modules: "
+                        + String.join(", ", supportedModules) + ".");
             }
         }
     }
