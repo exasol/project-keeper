@@ -61,6 +61,7 @@ public class ProjectFilesValidator extends AbstractProjectFilesWalker {
         private void validateContent(final String fileName, final File projectFile, final InputStream template) {
             try (final FileInputStream actualInputStream = new FileInputStream(projectFile)) {
                 if (!COMPARATOR.areStreamsEqual(actualInputStream, template)) {
+                    this.hadErrors = true;
                     this.log.error("Outdated content: " + fileName);
                 }
             } catch (final IOException exception) {
