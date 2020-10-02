@@ -85,10 +85,10 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
      * Hint: use {@link #verifyOrFixHasElement(Node, RunMode, String)} or
      * {@link #verifyOrFixPluginPropertyHasExactValue(Node, RunMode, String)} in this method's implementation.
      * </p>
-     * 
-     * @param plugin
-     * @param runMode
-     * @throws PomTemplateValidationException
+     *
+     * @param plugin  the plugin to validate
+     * @param runMode mode (verify or fix)
+     * @throws PomTemplateValidationException if validation fails
      */
     protected void validatePluginConfiguration(final Node plugin, final RunMode runMode)
             throws PomTemplateValidationException {
