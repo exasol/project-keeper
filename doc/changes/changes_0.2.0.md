@@ -4,6 +4,7 @@ Code name:
     
 ## Features / Enhancements
 
+* #8: Pom-file validation
 
 # Bug Fixes:
 
