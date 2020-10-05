@@ -5,7 +5,7 @@ import org.w3c.dom.Document;
 /**
  * Interface for Pom file validation templates.
  * <p>
- * Register add you instances of tis interface to {@link PomFileTemplateRunner#TEMPLATES}.
+ * Register your instances of this interface to {@link PomFileTemplateRunner#TEMPLATES}.
  * </p>
  */
 public interface PomTemplate {

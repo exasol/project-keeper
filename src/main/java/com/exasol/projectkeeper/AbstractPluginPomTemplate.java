@@ -19,9 +19,9 @@ import org.xml.sax.SAXException;
 /**
  * Abstract basis for maven plugin configuration validation.
  * <p>
- * Create a new plugin validation by adding a template file to src/main/resources/maven_templates/. Next create an
- * instance of this class and pass the template's name to the super constructor. If you want to enforce more that only
- * the existence of the plugin definition, ovverride {@link #validatePluginConfiguration(Node, RunMode)}. Finally add
+ * Create a new plugin validation by adding a template file to {@code src/main/resources/maven_templates/}. Next create an
+ * instance of this class and pass the template's name to the super constructor. If you want to enforce more than only
+ * the existence of the plugin definition, override {@link #validatePluginConfiguration(Node, RunMode)}. Finally add
  * your class to {@link PomFileTemplateRunner#TEMPLATES}.
  * </p>
  */
