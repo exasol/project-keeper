@@ -11,7 +11,7 @@ import org.w3c.dom.Document;
 public interface PomTemplate {
 
     /**
-     * Run the template validation or fixing.s
+     * Run the template validation or fixing.
      * 
      * @param pom     pom document
      * @param runMode mode (verify / fix)

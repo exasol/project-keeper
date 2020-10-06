@@ -142,7 +142,7 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
     }
 
     /**
-     * Helper function for validating that an element exists and has same same content as in the template. In FIX mode,
+     * Helper function for validating that an element exists and has same content as in the template. In FIX mode,
      * this method creates the missing element and replaces wrong content with the content from the template.
      *
      * @param plugin        the plugin to validate
