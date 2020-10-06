@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper;
 
+import java.util.List;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.Mojo;
@@ -20,6 +22,8 @@ public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        new ProjectFilesFixer(getLog()).fixProjectStructure(this.project.getBasedir(), getModules());
+        final List<String> modules = getModules();
+        new ProjectFilesFixer(getLog()).fixProjectStructure(this.project.getBasedir(), modules);
+        new PomFileTemplateRunner(this.project.getModel().getPomFile()).fix(getLog(), modules);
     }
 }

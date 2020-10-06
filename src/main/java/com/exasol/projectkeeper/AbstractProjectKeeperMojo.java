@@ -12,7 +12,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     public static final String MODULE_DEFAULT = "default";
     public static final String MODULE_MAVEN_CENTRAL = "mavenCentral";
-    private static final List<String> supportedModules = List.of(MODULE_DEFAULT, MODULE_MAVEN_CENTRAL);
+    public static final List<String> SUPPORTED_MODULES = List.of(MODULE_DEFAULT, MODULE_MAVEN_CENTRAL);
 
     @Parameter(property = "modules")
     private List<String> modules;
@@ -37,10 +37,10 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
 
     private void validateModules() {
         for (final String module : this.modules) {
-            if (!supportedModules.contains(module)) {
+            if (!SUPPORTED_MODULES.contains(module)) {
                 throw new IllegalArgumentException("E-PK-4 Unknown module: '" + module + "'. "
                         + "Please update your <modules> configuration in the pom.file to only use supported modules: "
-                        + String.join(", ", supportedModules) + ".");
+                        + String.join(", ", SUPPORTED_MODULES) + ".");
             }
         }
     }

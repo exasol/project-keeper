@@ -62,7 +62,30 @@ public class ProjectKeeperIT {
                 () -> assertThat(result.getStdout(),
                         containsString("This projects structure does not conform with the template.")),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing required: .settings/org.eclipse.jdt.core.prefs")));
+                        containsString("Missing required: .settings/org.eclipse.jdt.core.prefs")),
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))//
+        );
+    }
+
+    @Test
+    void testOnlyPomInvalid() throws IOException, InterruptedException {
+        runWithCheck("cp", "-r", "/test_project", "/tmp/test_project");// copy to make it writeable
+        mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f", "/tmp/test_project/pom.xml",
+                "project-keeper:fix", "--log-file", "/dev/stdout", "--no-transfer-progress");
+        runWithCheck("cp", "-rf", "/test_project/pom.xml", "/tmp/test_project/pom.xml");
+        final ExecResult result = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
+                "/tmp/test_project/pom.xml", "project-keeper:verify", "--log-file", "/dev/stdout",
+                "--no-transfer-progress");
+        assertAll(//
+                () -> assertThat(result.getExitCode(), not(is(0))),
+                () -> assertThat(result.getStdout(),
+                        containsString("This projects structure does not conform with the template.")),
+                () -> assertThat(result.getStdout(),
+                        not(containsString("Missing required: .settings/org.eclipse.jdt.core.prefs"))),
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))//
+        );
     }
 
     @Test
