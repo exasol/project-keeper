@@ -26,7 +26,8 @@ import org.xml.sax.SAXException;
  */
 public class PomFileTemplateRunner {
 
-    public static final Collection<PomTemplate> TEMPLATES = List.of(new VersionMavenPluginPomTemplate());
+    public static final Collection<PomTemplate> TEMPLATES = List.of(new VersionMavenPluginPomTemplate(),
+            new OssindexMavenPluginPomTemplate(), new EnforcerMavenPluginPomTemplate());
     private final Document pom;
     private final File pomFile;
 

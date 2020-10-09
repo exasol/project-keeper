@@ -19,7 +19,7 @@ public class PomTesting {
     public static Node invalidatePom(final String removeXpath, final String pomResourceName)
             throws IOException, SAXException, ParserConfigurationException {
         final Document pom = getParsedPom(pomResourceName);
-        final Node plugin = runXpath(pom, "/project/build/plugins/plugin[artifactId/text() = 'versions-maven-plugin']");
+        final Node plugin = runXpath(pom, "/project/build/plugins/plugin");
         final Node nodeToRemove = runXpath(plugin, removeXpath);
         nodeToRemove.getParentNode().removeChild(nodeToRemove);
         return plugin;

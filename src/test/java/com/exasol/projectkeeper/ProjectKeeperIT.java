@@ -64,7 +64,11 @@ public class ProjectKeeperIT {
                 () -> assertThat(result.getStdout(),
                         containsString("Missing required: .settings/org.eclipse.jdt.core.prefs")),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))//
+                        containsString("Missing maven plugin org.codehaus.mojo:versions-maven-plugin.")),
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.sonatype.ossindex.maven:ossindex-maven-plugin.")),
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.apache.maven.plugins:maven-enforcer-plugin."))//
         );
     }
 

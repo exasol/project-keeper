@@ -1,8 +1,6 @@
 package com.exasol.projectkeeper;
 
-import static com.exasol.projectkeeper.PomTemplate.RunMode.FIX;
 import static com.exasol.projectkeeper.PomTemplate.RunMode.VERIFY;
-import static com.exasol.projectkeeper.PomTesting.getParsedPom;
 import static com.exasol.projectkeeper.PomTesting.invalidatePom;
 import static com.exasol.projectkeeper.XPathErrorHanlingWrapper.runXpath;
 import static org.hamcrest.CoreMatchers.equalTo;
@@ -15,36 +13,16 @@ import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class VersionMavenPluginPomTemplateTest {
+class VersionMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
     private static final String POM_WITH_VERSION_PLUGIN = "pomWithVersionPlugin.xml";
 
-    @Test
-    void testMissingPlugin() throws IOException, ParserConfigurationException, SAXException {
-        final VersionMavenPluginPomTemplate template = new VersionMavenPluginPomTemplate();
-        final Document pom = invalidatePom(".", POM_WITH_VERSION_PLUGIN).getOwnerDocument();
-        assertThrows(PomTemplateValidationException.class, () -> template.run(pom, VERIFY));
-    }
-
-    @Test
-    void testVerifyValidPlugin() throws IOException, ParserConfigurationException, SAXException {
-        final VersionMavenPluginPomTemplate template = new VersionMavenPluginPomTemplate();
-        final Document pom = getParsedPom(POM_WITH_VERSION_PLUGIN);
-        assertDoesNotThrow(() -> template.run(pom, VERIFY));
-    }
-
-    @Test
-    void testFix() throws IOException, ParserConfigurationException, SAXException, PomTemplateValidationException {
-        final VersionMavenPluginPomTemplate template = new VersionMavenPluginPomTemplate();
-        final Document pom = invalidatePom(".", POM_WITH_VERSION_PLUGIN).getOwnerDocument();
-        template.run(pom, FIX);
-        assertDoesNotThrow(() -> template.run(pom, VERIFY));
+    VersionMavenPluginPomTemplateTest() {
+        super(POM_WITH_VERSION_PLUGIN, new VersionMavenPluginPomTemplate());
     }
 
     @CsvSource({ //

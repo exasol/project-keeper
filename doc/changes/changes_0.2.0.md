@@ -5,6 +5,9 @@ Code name:
 ## Features / Enhancements
 
 * #8: Pom-file validation
+* #13: Added templates for:
+ * ossindex-maven-plugin
+ * maven-enforcer-plugin
 
 # Bug Fixes:
 

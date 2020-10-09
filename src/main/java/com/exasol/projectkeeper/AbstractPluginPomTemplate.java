@@ -4,7 +4,6 @@ import static com.exasol.projectkeeper.XPathErrorHanlingWrapper.runXpath;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.xml.XMLConstants;
@@ -15,6 +14,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+import org.xmlunit.builder.DiffBuilder;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 
 /**
  * Abstract basis for maven plugin configuration validation.
@@ -104,7 +107,7 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
      * 
      * @param plugin  the plugin to validate
      * @param runMode mode (verify or fix)
-     * @param xPath   path of the property to validate / fix. Only use simple XPaths here (only /).
+     * @param xPath   path of the property to validate / fix. Only use simple XPaths here (only / and []).
      * @throws PomTemplateValidationException if validation fails
      */
     protected void verifyOrFixHasElement(final Node plugin, final RunMode runMode, final String xPath)
@@ -121,7 +124,7 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
     }
 
     private void addMissingElement(final Node plugin, final String xPath) {
-        final List<String> pathSegments = Arrays.asList(xPath.split("/"));
+        final List<String> pathSegments = XPathSplitter.split(xPath);
         for (int pathLength = 1; pathLength <= pathSegments.size(); pathLength++) {
             final String currentXpath = String.join("/", pathSegments.subList(0, pathLength));
             if (runXpath(plugin, currentXpath) == null) {
@@ -142,12 +145,12 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
     }
 
     /**
-     * Helper function for validating that an element exists and has same content as in the template. In FIX mode,
-     * this method creates the missing element and replaces wrong content with the content from the template.
+     * Helper function for validating that an element exists and has same content as in the template. In FIX mode, this
+     * method creates the missing element and replaces wrong content with the content from the template.
      *
      * @param plugin        the plugin to validate
      * @param runMode       mode (verify or fix)
-     * @param propertyXpath path of the property to validate / fix. Only use simple XPaths here (only /).
+     * @param propertyXpath path of the property to validate / fix. Only use simple XPaths here (only / and []).
      * @throws PomTemplateValidationException if validation fails
      */
     protected void verifyOrFixPluginPropertyHasExactValue(final Node plugin, final RunMode runMode,
@@ -155,7 +158,10 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
         verifyOrFixHasElement(plugin, runMode, propertyXpath);
         final Node property = runXpath(plugin, propertyXpath);
         final Node templateProperty = runXpath(getPluginTemplate(), propertyXpath);
-        if (!property.isEqualNode(templateProperty)) {
+        final Diff comparison = DiffBuilder.compare(property).withTest(templateProperty).ignoreComments()
+                .ignoreWhitespace().checkForSimilar()
+                .withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText)).build();
+        if (comparison.hasDifferences()) {
             if (runMode == RunMode.VERIFY) {
                 throw new PomTemplateValidationException("pom.xml: The " + this.pluginName
                         + "'s configuration-property " + propertyXpath + " has an illegal value.");
