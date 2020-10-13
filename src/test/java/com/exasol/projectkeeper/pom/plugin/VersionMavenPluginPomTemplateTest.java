@@ -1,0 +1,71 @@
+package com.exasol.projectkeeper.pom.plugin;
+
+import static com.exasol.projectkeeper.pom.PomTemplate.RunMode.VERIFY;
+import static com.exasol.projectkeeper.pom.PomTesting.invalidatePom;
+import static com.exasol.xpath.XPathErrorHanlingWrapper.runXpath;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
+import java.io.IOException;
+import java.util.Collections;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
+
+import com.exasol.projectkeeper.pom.PomTemplate;
+
+class VersionMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
+
+    VersionMavenPluginPomTemplateTest() {
+        super(new VersionMavenPluginPomTemplate());
+    }
+
+    @CsvSource({ //
+            "configuration", //
+            "configuration/rulesUri" //
+    })
+    @ParameterizedTest
+    void testValidateOrFixExits(final String removeXpath)
+            throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
+        final Node plugin = invalidatePom(removeXpath, getFixedPom());
+        final VersionMavenPluginPomTemplate template = new VersionMavenPluginPomTemplate();
+        template.verifyOrFixHasElement(plugin, PomTemplate.RunMode.FIX, "configuration/rulesUri");
+        assertThat(runXpath(plugin, removeXpath), not(equalTo(null)));
+    }
+
+    @CsvSource({ //
+            "configuration, pom.xml: The versions-maven-plugin's configuration does not contain the required property configuration/rulesUri.", //
+            "configuration/rulesUri, pom.xml: The versions-maven-plugin's configuration does not contain the required property configuration/rulesUri.", //
+            "configuration/rulesUri/text(), pom.xml: The versions-maven-plugin's configuration-property configuration/rulesUri has an illegal value."//
+    })
+    @ParameterizedTest
+    void testVerifyConfiguration(final String removeXpath, final String expectedError)
+            throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
+        final Node plugin = invalidatePom(removeXpath, getFixedPom());
+        final PomTemplateValidationException exception = assertThrows(PomTemplateValidationException.class,
+                () -> new VersionMavenPluginPomTemplate().validatePluginConfiguration(plugin, VERIFY,
+                        Collections.emptyList()));
+        assertThat(exception.getMessage(), equalTo(expectedError));
+    }
+
+    @CsvSource({ //
+            "configuration", //
+            "configuration/rulesUri", //
+            "configuration/rulesUri/text()"//
+    })
+    @ParameterizedTest
+    void testFixConfiguration(final String removeXpath)
+            throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
+        final Node plugin = invalidatePom(removeXpath, getFixedPom());
+        final VersionMavenPluginPomTemplate template = new VersionMavenPluginPomTemplate();
+        template.validatePluginConfiguration(plugin, PomTemplate.RunMode.FIX, Collections.emptyList());
+        assertDoesNotThrow(() -> template.validatePluginConfiguration(plugin, VERIFY, Collections.emptyList()));
+    }
+}

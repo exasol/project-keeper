@@ -17,3 +17,7 @@ Code name: POM file validation
 # Bug Fixes:
 
 * #10: Did not abort on unequal files
+
+## Dependency Updates:
+
+* Added `org.xmlunit:xmlunit-core` 2.7.0

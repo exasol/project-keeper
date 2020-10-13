@@ -8,6 +8,9 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
+import com.exasol.projectkeeper.files.ProjectFilesFixer;
+import com.exasol.projectkeeper.pom.PomFileTemplateRunner;
+
 /**
  * Entry point for the fix goal.
  * <p>
@@ -22,7 +25,7 @@ public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final List<String> modules = getModules();
+        final List<Module> modules = getModules();
         new ProjectFilesFixer(getLog()).fixProjectStructure(this.project.getBasedir(), modules);
         new PomFileTemplateRunner(this.project.getModel().getPomFile()).fix(getLog(), modules);
     }

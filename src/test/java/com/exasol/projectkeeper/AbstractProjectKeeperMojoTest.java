@@ -18,21 +18,21 @@ class AbstractProjectKeeperMojoTest {
     void testGetModulesAddsDefault() throws NoSuchFieldException, IllegalAccessException {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(
                 Collections.emptyList());
-        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder("default"));
+        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder(Module.DEFAULT));
     }
 
     @Test
     void testGetModulesWithExplicitModule() throws NoSuchFieldException, IllegalAccessException {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(
                 List.of("mavenCentral"));
-        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder("default", "mavenCentral"));
+        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder(Module.DEFAULT, Module.MAVEN_CENTRAL));
     }
 
     @Test
-    void testGetModulesDoesNotAddDefualtTwice() throws NoSuchFieldException, IllegalAccessException {
+    void testGetModulesDoesNotAddDefaultTwice() throws NoSuchFieldException, IllegalAccessException {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(
                 List.of("default", "mavenCentral"));
-        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder("default", "mavenCentral"));
+        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder(Module.DEFAULT, Module.MAVEN_CENTRAL));
     }
 
     @Test

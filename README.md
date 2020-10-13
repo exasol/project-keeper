@@ -34,13 +34,22 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
 This plugin provides different template modules for different kinds of projects.
 
 * `default` (always included)
+  * [required files (must exist)](src/main/resources/templates/default/require_exist)
+  * [required files (must have same content)](src/main/resources/templates/default/require_exact)
+  * required maven plugins
+    * maven-versions-plugin
+    * ossindex-maven-plugin
+    * maven-enforcer-plugin
+    * maven-surefire-plugin
 * `jarArtifact`
-  * assembly/all-dependencies.xml
-  * maven-assembly-plugin
-  * artifact-reference-checker-maven-plugin
+  * [required files (must have same content)](src/main/resources/templates/jarArtifact/require_exact)
+  * required maven plugins
+      * maven-assembly-plugin
+      * artifact-reference-checker-maven-plugin
 * `integrationTests`
-  * jacoco coverage configuration for integration tests
-  * maven-failsafe-plugin
+  * required maven plugins
+      * jacoco coverage configuration for integration tests
+      * maven-failsafe-plugin
 
 ## Usage
 
@@ -58,6 +67,22 @@ In addition this plugin can also fix the project structure. For that use:
 ```shell script
 mvn project-keeper:fix
 ```
+
+## Adding Templates
+
+### Adding a Required File
+
+Copy the file to `src/main/resources/templates/<module>/<require_exist | require_exact>`
+For `module` use the name of the module you want to add the required files to.
+If you want this plugin to only check that the file exists, put it into `require_exist`.
+If you also want that it check that the file has the same content like the template, add it to `require_exact`.
+Inside of these folders you can also create sub folders.
+These define the path, relative to to projects root, where this plugin searches for the file.
+
+### Adding a Pom File Validation.
+
+Validations for the POM file are defined using code.
+For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
 
 ## Additional Resources
 
