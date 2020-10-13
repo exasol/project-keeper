@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper;
 
+import java.util.Collection;
+
 import org.w3c.dom.Document;
 
 /**
@@ -13,11 +15,13 @@ public interface PomTemplate {
     /**
      * Run the template validation or fixing.
      * 
-     * @param pom     pom document
-     * @param runMode mode (verify / fix)
+     * @param pom            pom document
+     * @param runMode        mode (verify / fix)
+     * @param enabledModules list of enabled modules
      * @throws PomTemplateValidationException if validation fails
      */
-    public void run(final Document pom, final RunMode runMode) throws PomTemplateValidationException;
+    public void run(final Document pom, final RunMode runMode, final Collection<String> enabledModules)
+            throws PomTemplateValidationException;
 
     /**
      * Get the module this template belongs to.

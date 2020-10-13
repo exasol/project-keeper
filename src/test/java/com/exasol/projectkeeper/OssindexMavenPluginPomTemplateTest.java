@@ -5,6 +5,7 @@ import static com.exasol.projectkeeper.PomTesting.invalidatePom;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -14,18 +15,17 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 class OssindexMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
-    private static final String POM_WITH_OSSINDEX_PLUGIN = "pomWithOssindexPlugin.xml";
 
     OssindexMavenPluginPomTemplateTest() {
-        super(POM_WITH_OSSINDEX_PLUGIN, new OssindexMavenPluginPomTemplate());
+        super(new OssindexMavenPluginPomTemplate());
     }
 
     @ValueSource(strings = { "executions", "executions/execution", })
     @ParameterizedTest
     void testMissingExecutions(final String removeXpath)
-            throws ParserConfigurationException, SAXException, IOException {
-        final Node plugin = invalidatePom(removeXpath, POM_WITH_OSSINDEX_PLUGIN);
-        assertThrows(PomTemplateValidationException.class,
-                () -> new OssindexMavenPluginPomTemplate().validatePluginConfiguration(plugin, VERIFY));
+            throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
+        final Node plugin = invalidatePom(removeXpath, getFixedPom());
+        assertThrows(PomTemplateValidationException.class, () -> new OssindexMavenPluginPomTemplate()
+                .validatePluginConfiguration(plugin, VERIFY, Collections.emptyList()));
     }
 }

@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.util.Collections;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -19,10 +20,9 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 class VersionMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
-    private static final String POM_WITH_VERSION_PLUGIN = "pomWithVersionPlugin.xml";
 
     VersionMavenPluginPomTemplateTest() {
-        super(POM_WITH_VERSION_PLUGIN, new VersionMavenPluginPomTemplate());
+        super(new VersionMavenPluginPomTemplate());
     }
 
     @CsvSource({ //
@@ -32,7 +32,7 @@ class VersionMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTe
     @ParameterizedTest
     void testValidateOrFixExits(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
-        final Node plugin = invalidatePom(removeXpath, POM_WITH_VERSION_PLUGIN);
+        final Node plugin = invalidatePom(removeXpath, getFixedPom());
         final VersionMavenPluginPomTemplate template = new VersionMavenPluginPomTemplate();
         template.verifyOrFixHasElement(plugin, PomTemplate.RunMode.FIX, "configuration/rulesUri");
         assertThat(runXpath(plugin, removeXpath), not(equalTo(null)));
@@ -45,10 +45,11 @@ class VersionMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTe
     })
     @ParameterizedTest
     void testVerifyConfiguration(final String removeXpath, final String expectedError)
-            throws ParserConfigurationException, SAXException, IOException {
-        final Node plugin = invalidatePom(removeXpath, POM_WITH_VERSION_PLUGIN);
+            throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
+        final Node plugin = invalidatePom(removeXpath, getFixedPom());
         final PomTemplateValidationException exception = assertThrows(PomTemplateValidationException.class,
-                () -> new VersionMavenPluginPomTemplate().validatePluginConfiguration(plugin, VERIFY));
+                () -> new VersionMavenPluginPomTemplate().validatePluginConfiguration(plugin, VERIFY,
+                        Collections.emptyList()));
         assertThat(exception.getMessage(), equalTo(expectedError));
     }
 
@@ -60,9 +61,9 @@ class VersionMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTe
     @ParameterizedTest
     void testFixConfiguration(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
-        final Node plugin = invalidatePom(removeXpath, POM_WITH_VERSION_PLUGIN);
+        final Node plugin = invalidatePom(removeXpath, getFixedPom());
         final VersionMavenPluginPomTemplate template = new VersionMavenPluginPomTemplate();
-        template.validatePluginConfiguration(plugin, PomTemplate.RunMode.FIX);
-        assertDoesNotThrow(() -> template.validatePluginConfiguration(plugin, VERIFY));
+        template.validatePluginConfiguration(plugin, PomTemplate.RunMode.FIX, Collections.emptyList());
+        assertDoesNotThrow(() -> template.validatePluginConfiguration(plugin, VERIFY, Collections.emptyList()));
     }
 }

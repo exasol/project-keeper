@@ -4,6 +4,7 @@ import static com.exasol.projectkeeper.XPathErrorHanlingWrapper.runXpath;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.List;
 
 import javax.xml.XMLConstants;
@@ -24,8 +25,9 @@ import org.xmlunit.diff.ElementSelectors;
  * <p>
  * Create a new plugin validation by adding a template file to {@code src/main/resources/maven_templates/}. Next create
  * an instance of this class and pass the template's name to the super constructor. If you want to enforce more than
- * only the existence of the plugin definition, override {@link #validatePluginConfiguration(Node, RunMode)}. Finally
- * add your class to {@link PomFileTemplateRunner#TEMPLATES}.
+ * only the existence of the plugin definition, override
+ * {@link #validatePluginConfiguration(Node, RunMode, Collection)}. Finally add your class to
+ * {@link PomFileTemplateRunner#TEMPLATES}.
  * </p>
  */
 public abstract class AbstractPluginPomTemplate implements PomTemplate {
@@ -34,15 +36,15 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
     private final String pluginGroup;
     private final Node template;
 
-    public AbstractPluginPomTemplate(final String pluginName, final String pluginGroup,
-            final String templateResourceName) {
-        this.pluginName = pluginName;
-        this.pluginGroup = pluginGroup;
+    public AbstractPluginPomTemplate(final String templateResourceName) {
         this.template = readPluginTemplate(templateResourceName);
+        this.pluginName = runXpath(this.template, "artifactId/text()").getNodeValue();
+        this.pluginGroup = runXpath(this.template, "groupId/text()").getNodeValue();
     }
 
     @Override
-    public void run(final Document pom, final RunMode runMode) throws PomTemplateValidationException {
+    public void run(final Document pom, final RunMode runMode, final Collection<String> enabledModules)
+            throws PomTemplateValidationException {
         final Node plugins = runXpath(pom, "/project/build/plugins");
         Node plugin = findPluginNode(plugins);
         if (plugin == null) {
@@ -54,12 +56,12 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
                 plugins.appendChild(plugin);
             }
         }
-        validatePluginConfiguration(plugin, runMode);
+        verifyOrFixPluginPropertyHasExactValue(plugin, runMode, "groupId");
+        validatePluginConfiguration(plugin, runMode, enabledModules);
     }
 
     private Node findPluginNode(final Node pluginsNode) {
-        final String xPath = "plugin[artifactId[text()='" + this.pluginName + "'] and groupId[text()='"
-                + this.pluginGroup + "']]";
+        final String xPath = "plugin[artifactId[text()='" + this.pluginName + "'] ]";
         return runXpath(pluginsNode, xPath);
     }
 
@@ -89,12 +91,13 @@ public abstract class AbstractPluginPomTemplate implements PomTemplate {
      * {@link #verifyOrFixPluginPropertyHasExactValue(Node, RunMode, String)} in this method's implementation.
      * </p>
      *
-     * @param plugin  the plugin to validate
-     * @param runMode mode (verify or fix)
+     * @param plugin         the plugin to validate
+     * @param runMode        mode (verify or fix)
+     * @param enabledModules list of enabled modules
      * @throws PomTemplateValidationException if validation fails
      */
-    protected void validatePluginConfiguration(final Node plugin, final RunMode runMode)
-            throws PomTemplateValidationException {
+    protected void validatePluginConfiguration(final Node plugin, final RunMode runMode,
+            final Collection<String> enabledModules) throws PomTemplateValidationException {
     }
 
     /**

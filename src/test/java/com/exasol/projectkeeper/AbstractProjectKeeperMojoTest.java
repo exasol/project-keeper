@@ -1,8 +1,8 @@
 package com.exasol.projectkeeper;
 
+import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.spy;
 
@@ -40,8 +40,8 @@ class AbstractProjectKeeperMojoTest {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(List.of("unknown"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 abstractProjectKeeperMojo::getModules);
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-4 Unknown module: 'unknown'. Please update your <modules> configuration in the pom.file to only use supported modules: default, mavenCentral."));
+        assertThat(exception.getMessage(), startsWith(
+                "E-PK-4 Unknown module: 'unknown'. Please update your <modules> configuration in the pom.file to only use supported modules: "));
     }
 
     private AbstractProjectKeeperMojo getAbstractProjectKeeperMojo(final List<String> modules)

@@ -27,7 +27,9 @@ import org.xml.sax.SAXException;
 public class PomFileTemplateRunner {
 
     public static final Collection<PomTemplate> TEMPLATES = List.of(new VersionMavenPluginPomTemplate(),
-            new OssindexMavenPluginPomTemplate(), new EnforcerMavenPluginPomTemplate());
+            new OssindexMavenPluginPomTemplate(), new EnforcerMavenPluginPomTemplate(), new AssemblyPluginPomTemplate(),
+            new ArtifactReferenceCheckerPluginPomTemplate(), new SurefirePluginPomTemplate(),
+            new JacocoPluginPomTemplate(), new FailsafePluginPomTemplate());
     private final Document pom;
     private final File pomFile;
 
@@ -86,7 +88,7 @@ public class PomFileTemplateRunner {
         for (final PomTemplate template : TEMPLATES) {
             if (enabledModules.contains(template.getModule())) {
                 try {
-                    template.run(this.pom, runMode);
+                    template.run(this.pom, runMode, enabledModules);
                 } catch (final PomTemplateValidationException exception) {
                     success = false;
                     log.error(exception.getMessage());

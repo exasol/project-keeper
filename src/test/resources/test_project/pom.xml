@@ -28,6 +28,8 @@
                 <configuration>
                     <modules>
                         <module>mavenCentral</module>
+                        <module>jarArtifact</module>
+                        <module>integrationTests</module>
                     </modules>
                 </configuration>
             </plugin>

@@ -15,27 +15,27 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class EnforcerMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
+class SurefirePluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
 
-    EnforcerMavenPluginPomTemplateTest() {
-        super(new EnforcerMavenPluginPomTemplate());
+    SurefirePluginPomTemplateTest() {
+        super(new SurefirePluginPomTemplate());
     }
 
-    @ValueSource(strings = { "executions", "executions/execution", "executions/execution/id" })
+    @ValueSource(strings = { "configuration", "configuration/argLine" })
     @ParameterizedTest
-    void testMissingExecutions(final String removeXpath)
+    void testInvalidThrowsException(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
         final Node plugin = invalidatePom(removeXpath, getFixedPom());
-        assertThrows(PomTemplateValidationException.class, () -> new EnforcerMavenPluginPomTemplate()
+        assertThrows(PomTemplateValidationException.class, () -> new SurefirePluginPomTemplate()
                 .validatePluginConfiguration(plugin, VERIFY, Collections.emptyList()));
     }
 
-    @ValueSource(strings = { "executions", "executions/execution", "executions/execution/id" })
+    @ValueSource(strings = { "configuration", "configuration/argLine", "configuration/argLine/text()" })
     @ParameterizedTest
-    void testFixExecutions(final String removeXpath)
+    void testFixConfiguration(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
         final Node plugin = invalidatePom(removeXpath, getFixedPom());
-        final EnforcerMavenPluginPomTemplate template = new EnforcerMavenPluginPomTemplate();
+        final SurefirePluginPomTemplate template = new SurefirePluginPomTemplate();
         template.validatePluginConfiguration(plugin, PomTemplate.RunMode.FIX, Collections.emptyList());
         assertDoesNotThrow(() -> template.validatePluginConfiguration(plugin, VERIFY, Collections.emptyList()));
     }

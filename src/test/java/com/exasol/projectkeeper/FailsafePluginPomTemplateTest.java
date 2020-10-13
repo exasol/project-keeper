@@ -15,27 +15,28 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class EnforcerMavenPluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
+class FailsafePluginPomTemplateTest extends AbstractMavenPluginPomTemplateTest {
 
-    EnforcerMavenPluginPomTemplateTest() {
-        super(new EnforcerMavenPluginPomTemplate());
+    FailsafePluginPomTemplateTest() {
+        super(new FailsafePluginPomTemplate());
     }
 
-    @ValueSource(strings = { "executions", "executions/execution", "executions/execution/id" })
+    @ValueSource(strings = { "configuration", "configuration/argLine", "executions", "executions/execution" })
     @ParameterizedTest
-    void testMissingExecutions(final String removeXpath)
+    void testInvalidThrowsException(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
         final Node plugin = invalidatePom(removeXpath, getFixedPom());
-        assertThrows(PomTemplateValidationException.class, () -> new EnforcerMavenPluginPomTemplate()
+        assertThrows(PomTemplateValidationException.class, () -> new FailsafePluginPomTemplate()
                 .validatePluginConfiguration(plugin, VERIFY, Collections.emptyList()));
     }
 
-    @ValueSource(strings = { "executions", "executions/execution", "executions/execution/id" })
+    @ValueSource(strings = { "configuration", "configuration/argLine", "configuration/argLine/text()", "executions",
+            "executions/execution" })
     @ParameterizedTest
-    void testFixExecutions(final String removeXpath)
+    void testFixConfiguration(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException, PomTemplateValidationException {
         final Node plugin = invalidatePom(removeXpath, getFixedPom());
-        final EnforcerMavenPluginPomTemplate template = new EnforcerMavenPluginPomTemplate();
+        final FailsafePluginPomTemplate template = new FailsafePluginPomTemplate();
         template.validatePluginConfiguration(plugin, PomTemplate.RunMode.FIX, Collections.emptyList());
         assertDoesNotThrow(() -> template.validatePluginConfiguration(plugin, VERIFY, Collections.emptyList()));
     }

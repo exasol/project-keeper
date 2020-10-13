@@ -1,18 +1,21 @@
 package com.exasol.projectkeeper;
 
+import java.util.Collection;
+
 import org.w3c.dom.Node;
 
+/**
+ * Template for versions-maven-plugin.
+ */
 public class VersionMavenPluginPomTemplate extends AbstractPluginPomTemplate {
 
-    public static final String VERSIONS_MAVEN_PLUGIN = "versions-maven-plugin";
-
     public VersionMavenPluginPomTemplate() {
-        super(VERSIONS_MAVEN_PLUGIN, "org.codehaus.mojo", "maven_templates/versions-maven-plugin.xml");
+        super("maven_templates/versions-maven-plugin.xml");
     }
 
     @Override
-    protected void validatePluginConfiguration(final Node plugin, final RunMode runMode)
-            throws PomTemplateValidationException {
+    protected void validatePluginConfiguration(final Node plugin, final RunMode runMode,
+            final Collection<String> enabledModules) throws PomTemplateValidationException {
         verifyOrFixPluginPropertyHasExactValue(plugin, runMode, "configuration/rulesUri");
     }
 

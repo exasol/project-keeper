@@ -12,7 +12,10 @@ import org.apache.maven.plugins.annotations.Parameter;
 public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     public static final String MODULE_DEFAULT = "default";
     public static final String MODULE_MAVEN_CENTRAL = "mavenCentral";
-    public static final List<String> SUPPORTED_MODULES = List.of(MODULE_DEFAULT, MODULE_MAVEN_CENTRAL);
+    public static final String MODULE_JAR_ARTIFACT = "jarArtifact";
+    public static final String MODULE_INTEGRATION_TESTS = "integrationTests";
+    public static final List<String> SUPPORTED_MODULES = List.of(MODULE_DEFAULT, MODULE_MAVEN_CENTRAL,
+            MODULE_JAR_ARTIFACT, MODULE_INTEGRATION_TESTS);
 
     @Parameter(property = "modules")
     private List<String> modules;

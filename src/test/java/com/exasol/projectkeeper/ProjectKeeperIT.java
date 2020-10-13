@@ -68,7 +68,17 @@ public class ProjectKeeperIT {
                 () -> assertThat(result.getStdout(),
                         containsString("Missing maven plugin org.sonatype.ossindex.maven:ossindex-maven-plugin.")),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.apache.maven.plugins:maven-enforcer-plugin."))//
+                        containsString("Missing maven plugin org.apache.maven.plugins:maven-enforcer-plugin.")), //
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin com.exasol:artifact-reference-checker-maven-plugin.")), //
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.apache.maven.plugins:maven-surefire-plugin.")), //
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.apache.maven.plugins:maven-assembly-plugin.")), //
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.jacoco:jacoco-maven-plugin.")), //
+                () -> assertThat(result.getStdout(),
+                        containsString("Missing maven plugin org.apache.maven.plugins:maven-failsafe-plugin."))//
         );
     }
 

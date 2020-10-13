@@ -1,29 +1,29 @@
 package com.exasol.projectkeeper;
 
+import static com.exasol.projectkeeper.AbstractProjectKeeperMojo.MODULE_INTEGRATION_TESTS;
+
 import java.util.Collection;
 
 import org.w3c.dom.Node;
 
 /**
- * Template for ossindex-maven-plugin.
+ * Template for maven-failsafe-plugin.
  */
-public class OssindexMavenPluginPomTemplate extends AbstractPluginPomTemplate {
+public class FailsafePluginPomTemplate extends AbstractPluginPomTemplate {
 
-    /**
-     * Create a new instance of {@link OssindexMavenPluginPomTemplate}.
-     */
-    public OssindexMavenPluginPomTemplate() {
-        super("maven_templates/ossindex-maven-plugin.xml");
+    public FailsafePluginPomTemplate() {
+        super("maven_templates/maven-failsafe-plugin.xml");
     }
 
     @Override
     protected void validatePluginConfiguration(final Node plugin, final RunMode runMode,
             final Collection<String> enabledModules) throws PomTemplateValidationException {
+        verifyOrFixPluginPropertyHasExactValue(plugin, runMode, "configuration/argLine");
         verifyOrFixPluginPropertyHasExactValue(plugin, runMode, "executions");
     }
 
     @Override
     public String getModule() {
-        return AbstractProjectKeeperMojo.MODULE_DEFAULT;
+        return MODULE_INTEGRATION_TESTS;
     }
 }

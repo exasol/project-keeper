@@ -1,4 +1,4 @@
-# bucketfs-document-files-virtual-schema 0.1.0, released 2020-10-01
+# project-keeper-maven-plugin 0.1.0, released 2020-10-01
      
 Code name: Initial release
     

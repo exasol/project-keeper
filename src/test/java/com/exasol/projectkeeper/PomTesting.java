@@ -16,16 +16,15 @@ import org.xml.sax.SAXException;
 
 public class PomTesting {
 
-    public static Node invalidatePom(final String removeXpath, final String pomResourceName)
+    public static Node invalidatePom(final String removeXpath, final Node validPom)
             throws IOException, SAXException, ParserConfigurationException {
-        final Document pom = getParsedPom(pomResourceName);
-        final Node plugin = runXpath(pom, "/project/build/plugins/plugin");
+        final Node plugin = runXpath(validPom, "/project/build/plugins/plugin");
         final Node nodeToRemove = runXpath(plugin, removeXpath);
         nodeToRemove.getParentNode().removeChild(nodeToRemove);
         return plugin;
     }
 
-    public static Document getParsedPom(final String resourceName)
+    public static Document readXmlFromResources(final String resourceName)
             throws IOException, SAXException, ParserConfigurationException {
         try (final InputStream pomFileStream = PomTesting.class.getClassLoader().getResourceAsStream(resourceName)) {
             final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();

@@ -11,7 +11,7 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
     <plugin>
         <groupId>com.exasol</groupId>
         <artifactId>project-keeper-maven-plugin</artifactId>
-        <version>0.1.0</version>
+        <version>0.2.0</version>
         <executions>
             <execution>
                 <goals>
@@ -34,6 +34,13 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
 This plugin provides different template modules for different kinds of projects.
 
 * `default` (always included)
+* `jarArtifact`
+  * assembly/all-dependencies.xml
+  * maven-assembly-plugin
+  * artifact-reference-checker-maven-plugin
+* `integrationTests`
+  * jacoco coverage configuration for integration tests
+  * maven-failsafe-plugin
 
 ## Usage
 
