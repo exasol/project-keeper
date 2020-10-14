@@ -21,7 +21,7 @@ public class PomValidationFinding {
     /**
      * Get the error message.
      * 
-     * @return @error message
+     * @return error message
      */
     public String getMessage() {
         return this.message;

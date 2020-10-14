@@ -129,8 +129,9 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
      * {@link #verifyPluginPropertyHasExactValue(Node, String, Consumer)}.
      * </p>
      * 
-     * @param plugin the plugin to validate
-     * @param xPath  path of the property to validate / fix. Only use simple XPaths here (only / and []).
+     * @param plugin          the plugin to validate
+     * @param xPath           path of the property to validate / fix. Only use simple XPaths here (only / and []).
+     * @param findingConsumer to report the validation findings to
      * @return {@code true} if validation had no findings.
      */
     protected boolean verifyPluginHasProperty(final Node plugin, final String xPath,
