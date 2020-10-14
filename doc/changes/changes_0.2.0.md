@@ -21,3 +21,4 @@ Code name: POM file validation
 ## Dependency Updates:
 
 * Added `org.xmlunit:xmlunit-core` 2.7.0
+* Added `org.xmlunit:xmlunit-matchers` 2.2
