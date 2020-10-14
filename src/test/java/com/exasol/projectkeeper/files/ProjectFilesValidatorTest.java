@@ -16,10 +16,10 @@ import org.hamcrest.MatcherAssert;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.Module;
+import com.exasol.projectkeeper.ProjectKeeperModule;
 
 class ProjectFilesValidatorTest {
-    private static final List<Module> MODULES = List.of(Module.DEFAULT);
+    private static final List<ProjectKeeperModule> PROJECT_KEEPER_MODULES = List.of(ProjectKeeperModule.DEFAULT);
 
     @Test
     void test(@TempDir final File tempDir) throws IOException {
@@ -29,7 +29,7 @@ class ProjectFilesValidatorTest {
             throw new IllegalStateException("Failed to create test files.");
         }
         final ProjectFilesValidator validator = new ProjectFilesValidator(log);
-        assertThat(validator.validateProjectStructure(tempDir, MODULES), equalTo(false));
+        assertThat(validator.validateProjectStructure(tempDir, PROJECT_KEEPER_MODULES), equalTo(false));
         verify(log).error("Missing required: .settings/org.eclipse.jdt.core.prefs");
         verify(log).error("Missing required: README.md");
         verify(log).error("Outdated content: .settings/org.eclipse.jdt.ui.prefs");
@@ -38,10 +38,11 @@ class ProjectFilesValidatorTest {
     @Test
     void testDifferentContent(@TempDir final File tempDir) throws MojoFailureException, IOException {
         final SystemStreamLog log = spy(new SystemStreamLog());
-        new ProjectFilesFixer(log).fixProjectStructure(tempDir, MODULES);
+        new ProjectFilesFixer(log).fixProjectStructure(tempDir, PROJECT_KEEPER_MODULES);
         final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
         changeFile(testFile);
-        MatcherAssert.assertThat(new ProjectFilesValidator(log).validateProjectStructure(tempDir, MODULES),
+        MatcherAssert.assertThat(
+                new ProjectFilesValidator(log).validateProjectStructure(tempDir, PROJECT_KEEPER_MODULES),
                 equalTo(false));
         verify(log).error("Outdated content: .settings/org.eclipse.jdt.core.prefs");
     }

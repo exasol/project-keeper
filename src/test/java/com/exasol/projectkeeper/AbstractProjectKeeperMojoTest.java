@@ -18,28 +18,30 @@ class AbstractProjectKeeperMojoTest {
     void testGetModulesAddsDefault() throws NoSuchFieldException, IllegalAccessException {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(
                 Collections.emptyList());
-        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder(Module.DEFAULT));
+        assertThat(abstractProjectKeeperMojo.getEnabledModules(), containsInAnyOrder(ProjectKeeperModule.DEFAULT));
     }
 
     @Test
     void testGetModulesWithExplicitModule() throws NoSuchFieldException, IllegalAccessException {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(
-                List.of("mavenCentral"));
-        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder(Module.DEFAULT, Module.MAVEN_CENTRAL));
+                List.of("maven_central"));
+        assertThat(abstractProjectKeeperMojo.getEnabledModules(),
+                containsInAnyOrder(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.MAVEN_CENTRAL));
     }
 
     @Test
     void testGetModulesDoesNotAddDefaultTwice() throws NoSuchFieldException, IllegalAccessException {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(
-                List.of("default", "mavenCentral"));
-        assertThat(abstractProjectKeeperMojo.getModules(), containsInAnyOrder(Module.DEFAULT, Module.MAVEN_CENTRAL));
+                List.of("default", "maven_central"));
+        assertThat(abstractProjectKeeperMojo.getEnabledModules(),
+                containsInAnyOrder(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.MAVEN_CENTRAL));
     }
 
     @Test
     void testGetModulesWithUnknownModule() throws NoSuchFieldException, IllegalAccessException {
         final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(List.of("unknown"));
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                abstractProjectKeeperMojo::getModules);
+                abstractProjectKeeperMojo::getEnabledModules);
         assertThat(exception.getMessage(), startsWith(
                 "E-PK-4 Unknown module: 'unknown'. Please update your <modules> configuration in the pom.file to only use supported modules: "));
     }

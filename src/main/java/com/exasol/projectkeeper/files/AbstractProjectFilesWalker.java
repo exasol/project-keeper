@@ -7,7 +7,7 @@ import java.util.Collection;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import com.exasol.projectkeeper.Module;
+import com.exasol.projectkeeper.ProjectKeeperModule;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.Resource;
@@ -31,7 +31,7 @@ public abstract class AbstractProjectFilesWalker {
      * @param enabledModules   list of enabled modules
      */
     protected void run(final ProjectFileTemplateVisitor visitor, final File projectDirectory,
-            final Collection<Module> enabledModules) {
+            final Collection<ProjectKeeperModule> enabledModules) {
         try (final ScanResult scanResult = new ClassGraph().acceptPaths("templates/").scan()) {
             scanResult.getAllResources().forEach(resource -> {
                 walkFile(visitor, projectDirectory, enabledModules, resource);
@@ -40,13 +40,13 @@ public abstract class AbstractProjectFilesWalker {
     }
 
     private void walkFile(final ProjectFileTemplateVisitor visitor, final File projectDirectory,
-            final Collection<Module> enabledModules, final Resource resource) {
+            final Collection<ProjectKeeperModule> enabledModules, final Resource resource) {
         final String resourceName = resource.getURI().toString();
         final Matcher matcher = TEMPLATE_NAME_PATTERN.matcher(resourceName);
         if (!matcher.matches()) {
             throw new IllegalStateException("F-PK-1 Template name had invalid format. Please open an issue.");
         }
-        final Module module = Module.getModuleByName(matcher.group(1));
+        final ProjectKeeperModule module = ProjectKeeperModule.getModuleByName(matcher.group(1));
         final TemplateType templateType = TemplateType.fromString(matcher.group(2));
         final String fileName = matcher.group(3);
         if (enabledModules.contains(module)) {

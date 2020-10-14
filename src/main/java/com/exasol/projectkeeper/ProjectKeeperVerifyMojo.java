@@ -28,11 +28,11 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         final File projectBaseDirectory = this.project.getBasedir();
-        final Collection<Module> modules = getModules();
+        final Collection<ProjectKeeperModule> enabledModules = getEnabledModules();
         final boolean filesValidationResult = new ProjectFilesValidator(getLog())
-                .validateProjectStructure(projectBaseDirectory, modules);
+                .validateProjectStructure(projectBaseDirectory, enabledModules);
         final boolean pomValidationResult = new PomFileTemplateRunner(this.project.getModel().getPomFile())
-                .verify(getLog(), modules);
+                .verify(getLog(), enabledModules);
         if (!(filesValidationResult && pomValidationResult)) {
             throw new MojoFailureException("E-PK-6 This projects structure does not conform with the template.\n"
                     + "You can automatically fix it by running mvn project-keeper:fix");

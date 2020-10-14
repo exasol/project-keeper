@@ -24,11 +24,11 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
      * 
      * @return list of enabled modules.
      */
-    public List<Module> getModules() {
-        final ArrayList<Module> enabledModules = this.modules.stream().map(Module::getModuleByName)
-                .collect(Collectors.toCollection(ArrayList::new));
-        if (!enabledModules.contains(Module.DEFAULT)) {
-            enabledModules.add(Module.DEFAULT);
+    public List<ProjectKeeperModule> getEnabledModules() {
+        final ArrayList<ProjectKeeperModule> enabledModules = this.modules.stream()
+                .map(ProjectKeeperModule::getModuleByName).collect(Collectors.toCollection(ArrayList::new));
+        if (!enabledModules.contains(ProjectKeeperModule.DEFAULT)) {
+            enabledModules.add(ProjectKeeperModule.DEFAULT);
         }
         return enabledModules;
     }

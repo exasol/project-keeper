@@ -6,28 +6,30 @@ import java.util.stream.Collectors;
 /**
  * Enum of supported modules.
  */
-public enum Module {
-    DEFAULT("default"), MAVEN_CENTRAL("mavenCentral"), JAR_ARTIFACT("jarArtifact"),
-    INTEGRATION_TESTS("integrationTests");
+public enum ProjectKeeperModule {
+    DEFAULT("default"), MAVEN_CENTRAL("maven_central"), JAR_ARTIFACT("jar_artifact"),
+    INTEGRATION_TESTS("integration_tests");
 
     private final String moduleName;
 
-    Module(final String moduleName) {
+    ProjectKeeperModule(final String moduleName) {
         this.moduleName = moduleName;
     }
 
     /**
-     * Get {@link Module} by its name.
+     * Get {@link ProjectKeeperModule} by its name.
      * 
      * @param moduleName module name to search for.
-     * @return {@link Module}
+     * @return {@link ProjectKeeperModule}
      * @throws IllegalArgumentException if nothing was found
      */
-    public static Module getModuleByName(final String moduleName) {
-        return Arrays.stream(Module.values()).filter(module -> module.moduleName.equals(moduleName)).findFirst()
+    public static ProjectKeeperModule getModuleByName(final String moduleName) {
+        return Arrays.stream(ProjectKeeperModule.values()).filter(module -> module.moduleName.equals(moduleName))
+                .findFirst()
                 .orElseThrow(() -> new IllegalArgumentException("E-PK-4 Unknown module: '" + moduleName + "'. "
                         + "Please update your <modules> configuration in the pom.file to only use supported modules: "
-                        + Arrays.stream(Module.values()).map(Module::toString).collect(Collectors.joining(", "))
+                        + Arrays.stream(ProjectKeeperModule.values()).map(ProjectKeeperModule::toString)
+                                .collect(Collectors.joining(", "))
                         + "."));
     }
 

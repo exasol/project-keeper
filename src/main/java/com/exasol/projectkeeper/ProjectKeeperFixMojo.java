@@ -25,8 +25,8 @@ public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final List<Module> modules = getModules();
-        new ProjectFilesFixer(getLog()).fixProjectStructure(this.project.getBasedir(), modules);
-        new PomFileTemplateRunner(this.project.getModel().getPomFile()).fix(getLog(), modules);
+        final List<ProjectKeeperModule> enabledModules = getEnabledModules();
+        new ProjectFilesFixer(getLog()).fixProjectStructure(this.project.getBasedir(), enabledModules);
+        new PomFileTemplateRunner(this.project.getModel().getPomFile()).fix(getLog(), enabledModules);
     }
 }

@@ -18,23 +18,24 @@ import org.apache.maven.plugin.logging.SystemStreamLog;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.Module;
+import com.exasol.projectkeeper.ProjectKeeperModule;
 
 class ProjectFilesFixerTest {
-    private static final List<Module> MODULES = List.of(Module.DEFAULT);
+    private static final List<ProjectKeeperModule> PROJECT_KEEPER_MODULES = List.of(ProjectKeeperModule.DEFAULT);
 
     @Test
     void testFixing(@TempDir final File tempDir) throws MojoFailureException {
         final ProjectFilesFixer fixer = new ProjectFilesFixer(new SystemStreamLog());
-        fixer.fixProjectStructure(tempDir, MODULES);
+        fixer.fixProjectStructure(tempDir, PROJECT_KEEPER_MODULES);
         assertThat(tempDir.toPath().resolve("README.md").toFile(), anExistingFile());
     }
 
     @Test
     void validateAfterFix(@TempDir final File tempDir) throws MojoFailureException {
         final SystemStreamLog log = new SystemStreamLog();
-        new ProjectFilesFixer(log).fixProjectStructure(tempDir, MODULES);
-        assertThat(new ProjectFilesValidator(log).validateProjectStructure(tempDir, MODULES), equalTo(true));
+        new ProjectFilesFixer(log).fixProjectStructure(tempDir, PROJECT_KEEPER_MODULES);
+        assertThat(new ProjectFilesValidator(log).validateProjectStructure(tempDir, PROJECT_KEEPER_MODULES),
+                equalTo(true));
     }
 
     @Test
@@ -44,7 +45,7 @@ class ProjectFilesFixerTest {
         }
         final SystemStreamLog log = spy(new SystemStreamLog());
         final ProjectFilesFixer fixer = new ProjectFilesFixer(log);
-        assertThrows(MojoFailureException.class, () -> fixer.fixProjectStructure(tempDir, MODULES));
+        assertThrows(MojoFailureException.class, () -> fixer.fixProjectStructure(tempDir, PROJECT_KEEPER_MODULES));
         verify(log).error(and(startsWith("Failed to create or replace"), endsWith("README.md")));
     }
 }

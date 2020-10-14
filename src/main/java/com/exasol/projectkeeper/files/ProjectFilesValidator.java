@@ -8,7 +8,7 @@ import java.util.Collection;
 
 import org.apache.maven.plugin.logging.Log;
 
-import com.exasol.projectkeeper.Module;
+import com.exasol.projectkeeper.ProjectKeeperModule;
 
 /**
  * Validator for the projects file structure.
@@ -32,7 +32,8 @@ public class ProjectFilesValidator extends AbstractProjectFilesWalker {
      * @param enabledModules   list of enabled modules
      * @return {@code true} if structure is valid
      */
-    public boolean validateProjectStructure(final File projectDirectory, final Collection<Module> enabledModules) {
+    public boolean validateProjectStructure(final File projectDirectory,
+            final Collection<ProjectKeeperModule> enabledModules) {
         final ValidationTemplateVisitor validationVisitor = new ValidationTemplateVisitor(this.log);
         super.run(validationVisitor, projectDirectory, enabledModules);
         return !validationVisitor.hadErrors();

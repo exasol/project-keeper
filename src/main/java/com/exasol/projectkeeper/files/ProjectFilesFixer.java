@@ -10,7 +10,7 @@ import java.util.Collection;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 
-import com.exasol.projectkeeper.Module;
+import com.exasol.projectkeeper.ProjectKeeperModule;
 
 /**
  * This class fixes the project's file structure.
@@ -35,7 +35,7 @@ public class ProjectFilesFixer extends AbstractProjectFilesWalker {
      * @param enabledModules   list of enabled modules
      * @throws MojoFailureException in case fixing failed
      */
-    public void fixProjectStructure(final File projectDirectory, final Collection<Module> enabledModules)
+    public void fixProjectStructure(final File projectDirectory, final Collection<ProjectKeeperModule> enabledModules)
             throws MojoFailureException {
         final FixerTemplateVisitor fixerVisitor = new FixerTemplateVisitor(this.log);
         super.run(fixerVisitor, projectDirectory, enabledModules);

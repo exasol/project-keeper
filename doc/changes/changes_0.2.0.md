@@ -1,4 +1,4 @@
-# project-keeper-maven-plugin 0.2.0, released 2020-10-13
+# project-keeper-maven-plugin 0.2.0, released 2020-10-XX
      
 Code name: POM file validation
     

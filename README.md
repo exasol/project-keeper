@@ -37,19 +37,23 @@ This plugin provides different template modules for different kinds of projects.
   * [required files (must exist)](src/main/resources/templates/default/require_exist)
   * [required files (must have same content)](src/main/resources/templates/default/require_exact)
   * required maven plugins
-    * maven-versions-plugin
-    * ossindex-maven-plugin
-    * maven-enforcer-plugin
-    * maven-surefire-plugin
-* `jarArtifact`
+    * [maven-versions-plugin](https://www.mojohaus.org/versions-maven-plugin/)
+    * [ossindex-maven-plugin](https://sonatype.github.io/ossindex-maven/maven-plugin/)
+    * [maven-enforcer-plugin](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
+    * [maven-surefire-plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
+* `jar_artifact`
   * [required files (must have same content)](src/main/resources/templates/jarArtifact/require_exact)
   * required maven plugins
-      * maven-assembly-plugin
-      * artifact-reference-checker-maven-plugin
-* `integrationTests`
+      * [maven-assembly-plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
+      * [artifact-reference-checker-maven-plugin](https://github.com/exasol/artifact-reference-checker-maven-plugin)
+* `integration_tests`
   * required maven plugins
+      * [maven-failsafe-plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/)
       * jacoco coverage configuration for integration tests
-      * maven-failsafe-plugin
+* `maven_central`
+  * *Not yet implemented.* 
+  This module will check required configuration for releasing on maven central in the future.
+  You can, however, already add this module. By that you can't forget to add it later.
 
 ## Usage
 

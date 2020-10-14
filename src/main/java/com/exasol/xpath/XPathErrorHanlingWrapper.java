@@ -23,7 +23,7 @@ public class XPathErrorHanlingWrapper {
      * @param xPath   xPath String
      * @return evaluated node
      */
-    public static Node runXpath(final Node current, final String xPath) {
+    public static Node runXPath(final Node current, final String xPath) {
         try {
             return (Node) X_PATH_FACTORY.newXPath().compile(xPath).evaluate(current, XPathConstants.NODE);
         } catch (final XPathExpressionException exception) {
