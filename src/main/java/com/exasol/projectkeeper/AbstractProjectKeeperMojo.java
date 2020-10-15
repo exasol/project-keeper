@@ -1,8 +1,9 @@
 package com.exasol.projectkeeper;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -24,12 +25,10 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
      * 
      * @return list of enabled modules.
      */
-    public List<ProjectKeeperModule> getEnabledModules() {
-        final ArrayList<ProjectKeeperModule> enabledModules = this.modules.stream()
-                .map(ProjectKeeperModule::getModuleByName).collect(Collectors.toCollection(ArrayList::new));
-        if (!enabledModules.contains(ProjectKeeperModule.DEFAULT)) {
-            enabledModules.add(ProjectKeeperModule.DEFAULT);
-        }
-        return enabledModules;
+    public Set<ProjectKeeperModule> getEnabledModules() {
+        return Stream.concat(//
+                Stream.of(ProjectKeeperModule.DEFAULT), //
+                this.modules.stream().map(ProjectKeeperModule::getModuleByName)//
+        ).collect(Collectors.toSet());
     }
 }

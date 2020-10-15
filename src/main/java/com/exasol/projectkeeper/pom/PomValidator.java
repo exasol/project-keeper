@@ -10,7 +10,7 @@ import com.exasol.projectkeeper.ProjectKeeperModule;
 /**
  * Interface for Pom file validation templates.
  * <p>
- * Register your instances of this interface to {@link PomFileTemplateRunner#ALL_VALIDATORS}.
+ * Register your instances of this interface to {@link PomFileValidationRunner#ALL_VALIDATORS}.
  * </p>
  */
 public interface PomValidator {

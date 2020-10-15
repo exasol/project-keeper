@@ -22,7 +22,7 @@ import org.xmlunit.diff.Diff;
 import org.xmlunit.diff.ElementSelectors;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.pom.PomFileTemplateRunner;
+import com.exasol.projectkeeper.pom.PomFileValidationRunner;
 import com.exasol.projectkeeper.pom.PomValidationFinding;
 import com.exasol.projectkeeper.pom.PomValidator;
 import com.exasol.xpath.XPathSplitter;
@@ -34,7 +34,7 @@ import com.exasol.xpath.XPathSplitter;
  * an instance of this class and pass the template's name to the super constructor. If you want to enforce more than
  * only the existence of the plugin definition, override
  * {@link #validatePluginConfiguration(Node, Collection, Consumer)}. Finally add your class to
- * {@link PomFileTemplateRunner#ALL_VALIDATORS}.
+ * {@link PomFileValidationRunner#ALL_VALIDATORS}.
  * </p>
  */
 public abstract class AbstractPluginPomValidator extends AbstractPomValidator implements PomValidator {

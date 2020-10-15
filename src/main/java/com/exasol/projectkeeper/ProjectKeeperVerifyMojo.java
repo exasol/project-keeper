@@ -11,7 +11,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import com.exasol.projectkeeper.files.ProjectFilesValidator;
-import com.exasol.projectkeeper.pom.PomFileTemplateRunner;
+import com.exasol.projectkeeper.pom.PomFileValidationRunner;
 
 /**
  * Entry point for the verify goal.
@@ -31,7 +31,7 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
         final Collection<ProjectKeeperModule> enabledModules = getEnabledModules();
         final boolean filesValidationResult = new ProjectFilesValidator(getLog())
                 .validateProjectStructure(projectBaseDirectory, enabledModules);
-        final boolean pomValidationResult = new PomFileTemplateRunner(this.project.getModel().getPomFile())
+        final boolean pomValidationResult = new PomFileValidationRunner(this.project.getModel().getPomFile())
                 .verify(getLog(), enabledModules);
         if (!(filesValidationResult && pomValidationResult)) {
             throw new MojoFailureException("E-PK-6 This projects structure does not conform with the template.\n"

@@ -14,7 +14,7 @@ import com.exasol.projectkeeper.pom.plugin.*;
 /**
  * Runner for {@link PomValidator}.
  */
-public class PomFileTemplateRunner {
+public class PomFileValidationRunner {
 
     public static final Collection<PomValidator> ALL_VALIDATORS = List.of(new VersionMavenPluginPomValidator(),
             new OssindexMavenPluginPomValidator(), new EnforcerMavenPluginPomValidator(),
@@ -23,11 +23,11 @@ public class PomFileTemplateRunner {
     private final PomFileIO pomFile;
 
     /**
-     * Create a new instance of {@link PomFileTemplateRunner}.
+     * Create a new instance of {@link PomFileValidationRunner}.
      * 
      * @param pomFile pom file to create the runner for.
      */
-    public PomFileTemplateRunner(final File pomFile) {
+    public PomFileValidationRunner(final File pomFile) {
         this.pomFile = new PomFileIO(pomFile);
     }
 
