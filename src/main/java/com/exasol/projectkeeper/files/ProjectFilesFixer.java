@@ -40,7 +40,7 @@ public class ProjectFilesFixer extends AbstractProjectFilesWalker {
         final FixerTemplateVisitor fixerVisitor = new FixerTemplateVisitor(this.log);
         super.run(fixerVisitor, projectDirectory, enabledModules);
         if (fixerVisitor.hadErrors()) {
-            throw new MojoFailureException("E-PK-5 Failed to fix repository file structure. See previous errors.");
+            throw new MojoFailureException("E-PK-5: Failed to fix repository file structure. See previous errors.");
         }
     }
 
@@ -65,7 +65,7 @@ public class ProjectFilesFixer extends AbstractProjectFilesWalker {
                 projectFile.mkdirs();
                 Files.copy(template, projectFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
             } catch (final IOException exception) {
-                this.log.error("Failed to create or replace " + projectFile.getAbsolutePath());
+                this.log.error("E-PK-16: Failed to create or replace " + projectFile.getAbsolutePath());
                 this.hadErrors = true;
             }
         }

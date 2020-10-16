@@ -43,7 +43,7 @@ class AbstractProjectKeeperMojoTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 abstractProjectKeeperMojo::getEnabledModules);
         assertThat(exception.getMessage(), startsWith(
-                "E-PK-4 Unknown module: 'unknown'. Please update your <modules> configuration in the pom.file to only use supported modules: "));
+                "E-PK-4: Unknown module: 'unknown'. Please update your <modules> configuration in the pom.file to only use supported modules: "));
     }
 
     private AbstractProjectKeeperMojo getAbstractProjectKeeperMojo(final List<String> modules)

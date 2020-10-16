@@ -61,7 +61,7 @@ class PomFileIO {
             final StreamResult streamResult = new StreamResult(this.pomFile);
             transformer.transform(domSource, streamResult);
         } catch (final TransformerException exception) {
-            throw new IllegalStateException("E-PK-12 Failed to replace pom-file. ", exception);
+            throw new IllegalStateException("E-PK-12: Failed to replace pom-file. ", exception);
         }
     }
 
@@ -73,7 +73,7 @@ class PomFileIO {
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             return documentBuilder.parse(pomFileStream);
         } catch (final ParserConfigurationException | IOException | SAXException exception) {
-            throw new IllegalStateException("E-PK-7 Failed to parse pom.xml.", exception);
+            throw new IllegalStateException("E-PK-7: Failed to parse pom.xml.", exception);
         }
     }
 }

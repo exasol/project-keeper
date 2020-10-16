@@ -53,7 +53,7 @@ public class ProjectFilesValidator extends AbstractProjectFilesWalker {
                 final TemplateType templateType) {
             if (!projectFile.exists()) {
                 this.hadErrors = true;
-                this.log.error("Missing required: " + fileName);
+                this.log.error("E-PK-17: Missing required: " + fileName);
                 return;
             }
             if (templateType.equals(TemplateType.REQUIRE_EXACT)) {
@@ -65,11 +65,11 @@ public class ProjectFilesValidator extends AbstractProjectFilesWalker {
             try (final FileInputStream actualInputStream = new FileInputStream(projectFile)) {
                 if (!COMPARATOR.areStreamsEqual(actualInputStream, template)) {
                     this.hadErrors = true;
-                    this.log.error("Outdated content: " + fileName);
+                    this.log.error("E-PK-18: Outdated content: " + fileName);
                 }
             } catch (final IOException exception) {
                 this.hadErrors = true;
-                this.log.error("Failed to open " + fileName + "for read. Cause: " + exception.getMessage());
+                this.log.error("E-PK-19: Failed to open " + fileName + "for read. Cause: " + exception.getMessage());
             }
         }
 

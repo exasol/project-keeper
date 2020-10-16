@@ -27,7 +27,7 @@ public class XPathErrorHanlingWrapper {
         try {
             return (Node) X_PATH_FACTORY.newXPath().compile(xPath).evaluate(current, XPathConstants.NODE);
         } catch (final XPathExpressionException exception) {
-            throw new IllegalStateException("F-PK-9 Internal error. Please open a ticket.", exception);
+            throw new IllegalStateException("F-PK-9: Internal error. Please open a ticket.", exception);
         }
     }
 }
