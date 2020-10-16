@@ -34,7 +34,7 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
         final boolean pomValidationResult = new PomFileValidationRunner(this.project.getModel().getPomFile())
                 .verify(getLog(), enabledModules);
         if (!(filesValidationResult && pomValidationResult)) {
-            throw new MojoFailureException("E-PK-6 This projects structure does not conform with the template.\n"
+            throw new MojoFailureException("E-PK-6: This projects structure does not conform with the template.\n"
                     + "You can automatically fix it by running mvn project-keeper:fix");
         }
     }

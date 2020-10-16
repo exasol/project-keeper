@@ -46,6 +46,6 @@ class ProjectFilesFixerTest {
         final SystemStreamLog log = spy(new SystemStreamLog());
         final ProjectFilesFixer fixer = new ProjectFilesFixer(log);
         assertThrows(MojoFailureException.class, () -> fixer.fixProjectStructure(tempDir, PROJECT_KEEPER_MODULES));
-        verify(log).error(and(startsWith("E-PK-16 Failed to create or replace"), endsWith("README.md")));
+        verify(log).error(and(startsWith("E-PK-16: Failed to create or replace"), endsWith("README.md")));
     }
 }

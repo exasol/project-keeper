@@ -36,9 +36,9 @@ class VersionMavenPluginPomValidatorTest extends AbstractMavenPluginPomValidator
     }
 
     @CsvSource({ //
-            "configuration, E-PK-13 The versions-maven-plugin's configuration does not contain the required property configuration/rulesUri.", //
-            "configuration/rulesUri, E-PK-13 The versions-maven-plugin's configuration does not contain the required property configuration/rulesUri.", //
-            "configuration/rulesUri/text(), E-PK-14 The versions-maven-plugin's configuration-property configuration/rulesUri has an illegal value."//
+            "configuration, E-PK-13: The versions-maven-plugin's configuration does not contain the required property configuration/rulesUri.", //
+            "configuration/rulesUri, E-PK-13: The versions-maven-plugin's configuration does not contain the required property configuration/rulesUri.", //
+            "configuration/rulesUri/text(), E-PK-14: The versions-maven-plugin's configuration-property configuration/rulesUri has an illegal value."//
     })
     @ParameterizedTest
     void testVerifyConfiguration(final String removeXpath, final String expectedError)

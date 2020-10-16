@@ -66,7 +66,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     private boolean validatePluginExists(final Document pom, final Consumer<PomValidationFinding> findingConsumer) {
         if (runXPath(pom, this.pluginXPath) == null) {
             findingConsumer.accept(new PomValidationFinding(
-                    "E-PK-15 Missing maven plugin " + this.pluginGroupId + ":" + this.pluginArtifactId + ".",
+                    "E-PK-15: Missing maven plugin " + this.pluginGroupId + ":" + this.pluginArtifactId + ".",
                     getFixForMissingPlugin(pom)));
             return false;
         } else {
@@ -95,14 +95,14 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         try (final InputStream templateInputStream = getClass().getClassLoader()
                 .getResourceAsStream(templateResourceName)) {
             if (templateInputStream == null) {
-                throw new IllegalStateException("F-PK-11 Failed to open " + this.pluginArtifactId + "'s template.");
+                throw new IllegalStateException("F-PK-11: Failed to open " + this.pluginArtifactId + "'s template.");
             }
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
             return documentBuilder.parse(templateInputStream).getFirstChild();
         } catch (final IOException | SAXException | ParserConfigurationException e) {
-            throw new IllegalStateException("F-PK-10 Failed to parse " + this.pluginArtifactId + "'s template.");
+            throw new IllegalStateException("F-PK-10: Failed to parse " + this.pluginArtifactId + "'s template.");
         }
     }
 
@@ -141,7 +141,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         } else {
             findingConsumer
                     .accept(new PomValidationFinding(
-                            "E-PK-13 The " + this.pluginArtifactId
+                            "E-PK-13: The " + this.pluginArtifactId
                                     + "'s configuration does not contain the required property " + xPath + ".",
                             getCopyFixForMissingProperty(plugin, xPath)));
             return false;
@@ -201,7 +201,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     private void validatePropertiesAreEqual(final Node plugin, final String propertyXpath,
             final Consumer<PomValidationFinding> findingConsumer, final Node property, final Node templateProperty) {
         if (!isXmlEqual(property, templateProperty)) {
-            findingConsumer.accept(new PomValidationFinding("E-PK-14 The " + this.pluginArtifactId
+            findingConsumer.accept(new PomValidationFinding("E-PK-14: The " + this.pluginArtifactId
                     + "'s configuration-property " + propertyXpath + " has an illegal value.", () -> {
                         final Node importedProperty = plugin.getOwnerDocument().importNode(templateProperty, true);
                         property.getParentNode().replaceChild(importedProperty, property);

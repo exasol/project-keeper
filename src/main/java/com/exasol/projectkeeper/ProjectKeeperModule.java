@@ -20,7 +20,7 @@ public enum ProjectKeeperModule {
         try {
             return valueOf(moduleName.toUpperCase());
         } catch (final IllegalArgumentException exception) {
-            throw new IllegalArgumentException("E-PK-4 Unknown module: '" + moduleName + "'. "
+            throw new IllegalArgumentException("E-PK-4: Unknown module: '" + moduleName + "'. "
                     + "Please update your <modules> configuration in the pom.file to only use supported modules: "
                     + Arrays.stream(ProjectKeeperModule.values()).map(ProjectKeeperModule::name)
                             .map(String::toLowerCase).collect(Collectors.joining(", ")),
