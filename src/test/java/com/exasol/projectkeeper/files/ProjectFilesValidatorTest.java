@@ -30,9 +30,9 @@ class ProjectFilesValidatorTest {
         }
         final ProjectFilesValidator validator = new ProjectFilesValidator(log);
         assertThat(validator.validateProjectStructure(tempDir, PROJECT_KEEPER_MODULES), equalTo(false));
-        verify(log).error("Missing required: .settings/org.eclipse.jdt.core.prefs");
-        verify(log).error("Missing required: README.md");
-        verify(log).error("Outdated content: .settings/org.eclipse.jdt.ui.prefs");
+        verify(log).error("E-PK-17 Missing required: .settings/org.eclipse.jdt.core.prefs");
+        verify(log).error("E-PK-17 Missing required: README.md");
+        verify(log).error("E-PK-18 Outdated content: .settings/org.eclipse.jdt.ui.prefs");
     }
 
     @Test
@@ -44,7 +44,7 @@ class ProjectFilesValidatorTest {
         MatcherAssert.assertThat(
                 new ProjectFilesValidator(log).validateProjectStructure(tempDir, PROJECT_KEEPER_MODULES),
                 equalTo(false));
-        verify(log).error("Outdated content: .settings/org.eclipse.jdt.core.prefs");
+        verify(log).error("E-PK-18 Outdated content: .settings/org.eclipse.jdt.core.prefs");
     }
 
     private void changeFile(final File testFile) throws IOException {

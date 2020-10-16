@@ -27,7 +27,7 @@ class PomFileValidationRunnerTest {
         final PomFileValidationRunner runner = new PomFileValidationRunner(pomFile);
         final Log log = spy(new SystemStreamLog());
         assertThat(runner.verify(log, Arrays.asList(ProjectKeeperModule.values())), equalTo(false));
-        verify(log).error("Missing maven plugin org.codehaus.mojo:versions-maven-plugin.");
+        verify(log).error("E-PK-15 Missing maven plugin org.codehaus.mojo:versions-maven-plugin.");
     }
 
     @Test

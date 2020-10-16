@@ -60,25 +60,27 @@ public class ProjectKeeperIT {
         assertAll(//
                 () -> assertThat(result.getExitCode(), not(is(0))),
                 () -> assertThat(result.getStdout(),
-                        containsString("This projects structure does not conform with the template.")),
+                        containsString("E-PK-6 This projects structure does not conform with the template.")),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing required: .settings/org.eclipse.jdt.core.prefs")),
+                        containsString("E-PK-17 Missing required: .settings/org.eclipse.jdt.core.prefs")),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.codehaus.mojo:versions-maven-plugin.")),
+                        containsString("E-PK-15 Missing maven plugin org.codehaus.mojo:versions-maven-plugin.")),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.sonatype.ossindex.maven:ossindex-maven-plugin.")),
+                        containsString(
+                                "E-PK-15 Missing maven plugin org.sonatype.ossindex.maven:ossindex-maven-plugin.")),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.apache.maven.plugins:maven-enforcer-plugin.")), //
+                        containsString("E-PK-15 Missing maven plugin org.apache.maven.plugins:maven-enforcer-plugin.")), //
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin com.exasol:artifact-reference-checker-maven-plugin.")), //
+                        containsString(
+                                "E-PK-15 Missing maven plugin com.exasol:artifact-reference-checker-maven-plugin.")), //
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.apache.maven.plugins:maven-surefire-plugin.")), //
+                        containsString("E-PK-15 Missing maven plugin org.apache.maven.plugins:maven-surefire-plugin.")), //
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.apache.maven.plugins:maven-assembly-plugin.")), //
+                        containsString("E-PK-15 Missing maven plugin org.apache.maven.plugins:maven-assembly-plugin.")), //
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.jacoco:jacoco-maven-plugin.")), //
+                        containsString("E-PK-15 Missing maven plugin org.jacoco:jacoco-maven-plugin.")), //
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.apache.maven.plugins:maven-failsafe-plugin."))//
+                        containsString("E-PK-15 Missing maven plugin org.apache.maven.plugins:maven-failsafe-plugin."))//
         );
     }
 
@@ -94,11 +96,11 @@ public class ProjectKeeperIT {
         assertAll(//
                 () -> assertThat(result.getExitCode(), not(is(0))),
                 () -> assertThat(result.getStdout(),
-                        containsString("This projects structure does not conform with the template.")),
+                        containsString("E-PK-6 This projects structure does not conform with the template.")),
                 () -> assertThat(result.getStdout(),
-                        not(containsString("Missing required: .settings/org.eclipse.jdt.core.prefs"))),
+                        not(containsString("E-PK-17 Missing required: .settings/org.eclipse.jdt.core.prefs"))),
                 () -> assertThat(result.getStdout(),
-                        containsString("Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))//
+                        containsString("E-PK-15 Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))//
         );
     }
 

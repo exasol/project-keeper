@@ -1,4 +1,4 @@
-# project-keeper-maven-plugin 0.2.0, released 2020-10-XX
+# project-keeper-maven-plugin 0.2.0, released 2020-10-16
      
 Code name: POM file validation
     
@@ -13,6 +13,7 @@ Code name: POM file validation
  * maven-surefire-plugin
  * maven-failsafe-plugin
  * jacoco-maven-plugin
+* #16: Added unified error codes
 
 # Bug Fixes:
 
