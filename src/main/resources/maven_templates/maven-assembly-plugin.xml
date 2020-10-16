@@ -1,0 +1,21 @@
+<plugin>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <groupId>org.apache.maven.plugins</groupId>
+    <version>3.3.0</version>
+    <configuration>
+        <descriptors>
+            <descriptor>assembly/all-dependencies.xml</descriptor>
+        </descriptors>
+        <finalName>NAME_OF_YOUR_JAR</finalName>
+        <appendAssemblyId>false</appendAssemblyId>
+    </configuration>
+    <executions>
+        <execution>
+            <id>make-assembly</id>
+            <phase>package</phase>
+            <goals>
+                <goal>single</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>

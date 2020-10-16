@@ -1,0 +1,13 @@
+<plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.0.0-M3</version>
+    <configuration>
+        <!-- Set the highest log level for coverage testing, so that we
+          have a chance to reach branches in the logging lambdas too. -->
+        <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
+        <excludes>
+            <exclude>**IT.java</exclude>
+        </excludes>
+    </configuration>
+</plugin>

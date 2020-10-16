@@ -27,7 +27,9 @@
                 </executions>
                 <configuration>
                     <modules>
-                        <module>mavenCentral</module>
+                        <module>maven_central</module>
+                        <module>jar_artifact</module>
+                        <module>integration_tests</module>
                     </modules>
                 </configuration>
             </plugin>
