@@ -67,7 +67,7 @@ public class ValidationFinding {
         /**
          * Fix the error described in {@link ValidationFinding}.
          * 
-         * @param log
+         * @param log Logger for log messages
          */
         void fixError(Log log);
     }

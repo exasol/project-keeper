@@ -33,6 +33,9 @@ public class ProjectFilesValidator implements Validator {
 
     /**
      * Crate a new instance of {@link ProjectFilesValidator}.
+     * 
+     * @param enabledModules   list of enabled {@link ProjectKeeperModule}s
+     * @param projectDirectory project's root directory
      */
     public ProjectFilesValidator(final Collection<ProjectKeeperModule> enabledModules, final File projectDirectory) {
         this.enabledModules = enabledModules;
