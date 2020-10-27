@@ -11,7 +11,7 @@ import org.apache.maven.project.MavenProject;
 
 import com.exasol.projectkeeper.validators.ChangelogValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
-import com.exasol.projectkeeper.validators.pom.PomFileValidationRunner;
+import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 
 /**
  * Abstract basis for Mojos in this project.
@@ -43,7 +43,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     protected List<Validator> getValidators() {
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir()),
-                new PomFileValidationRunner(enabledModules, this.project.getModel().getPomFile()),
+                new PomFileValidator(enabledModules, this.project.getModel().getPomFile()),
                 new ChangelogValidator(this.project));
     }
 }

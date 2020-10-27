@@ -54,6 +54,15 @@ class ProjectFilesValidatorTest {
     }
 
     @Test
+    void testFixDifferentContent(@TempDir final File tempDir) throws MojoFailureException, IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
+        validator.validate(finding -> finding.getFix().fixError(mock(Log.class)));// fix everything
+        final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
+        changeFile(testFile);
+        assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
+    }
+
+    @Test
     void testFailedToCreate(@TempDir final File tempDir) {
         if (!tempDir.setWritable(false)) {
             throw new IllegalStateException("Failed to set temp dir read-only.");

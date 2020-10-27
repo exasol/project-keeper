@@ -66,23 +66,28 @@ public class ProjectFilesValidator implements Validator {
     }
 
     private void fixFile(final File projectFile, final Resource templateFile) {
-        try (final InputStream templateStream = templateFile.open()) {
+        try (templateFile; final InputStream templateStream = templateFile.open()) {
             projectFile.mkdirs();
             Files.copy(templateStream, projectFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    "E-PK-16: Failed to create or replace '" + projectFile.getAbsolutePath() + "'.");
+                    "E-PK-16: Failed to create or replace '" + projectFile.getAbsolutePath() + "'.", exception);
         }
     }
 
     private void validateContent(final FileTemplate template, final Consumer<ValidationFinding> findingConsumer,
             final File projectFile) {
-        try (final InputStream templateStream = template.template.open();
+        if (!isFileEqualWithTemplate(template, projectFile)) {
+            findingConsumer.accept(new ValidationFinding("E-PK-18: Outdated content: " + template.fileName,
+                    (Log log) -> fixFile(projectFile, template.template)));
+        }
+    }
+
+    private boolean isFileEqualWithTemplate(final FileTemplate template, final File projectFile) {
+        try (template.template;
+                final InputStream templateStream = template.template.open();
                 final FileInputStream actualInputStream = new FileInputStream(projectFile)) {
-            if (!COMPARATOR.areStreamsEqual(actualInputStream, templateStream)) {
-                findingConsumer.accept(new ValidationFinding("E-PK-18: Outdated content: " + template.fileName,
-                        (Log log) -> fixFile(projectFile, template.template)));
-            }
+            return COMPARATOR.areStreamsEqual(actualInputStream, templateStream);
         } catch (final IOException exception) {
             throw new IllegalStateException("E-PK-19: Failed validate '" + template.fileName + "' 's content.",
                     exception);

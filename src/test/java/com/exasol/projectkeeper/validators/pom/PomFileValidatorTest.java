@@ -17,13 +17,12 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
-class PomFileValidationRunnerTest {
+class PomFileValidatorTest {
 
     @Test
     void testMissingPlugin(@TempDir final File tempDir) throws IOException {
         final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
-        final PomFileValidationRunner runner = new PomFileValidationRunner(Arrays.asList(ProjectKeeperModule.values()),
-                pomFile);
+        final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()), pomFile);
         assertThat(runner, hasValidationFindingWithMessage(
                 "E-PK-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."));
     }
@@ -31,15 +30,14 @@ class PomFileValidationRunnerTest {
     @Test
     void testFixMissingPlugin(@TempDir final File tempDir) throws IOException {
         final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
-        final PomFileValidationRunner runner = new PomFileValidationRunner(Arrays.asList(ProjectKeeperModule.values()),
-                pomFile);
+        final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()), pomFile);
         assertThat(runner, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
     void testNoErrorsOnNoModules(@TempDir final File tempDir) throws IOException {
         final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
-        final PomFileValidationRunner runner = new PomFileValidationRunner(Collections.emptyList(), pomFile);
+        final PomFileValidator runner = new PomFileValidator(Collections.emptyList(), pomFile);
         assertThat(runner, hasNoValidationFindings());
     }
 }
