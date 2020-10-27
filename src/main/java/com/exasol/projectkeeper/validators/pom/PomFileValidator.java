@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import java.io.File;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
@@ -27,21 +26,15 @@ public class PomFileValidator implements Validator {
      * @param enabledModules list of enables modules
      * @param pomFile        pom file to create the runner for.
      */
-    public PomFileValidator(final Collection<ProjectKeeperModule> enabledModules, final File pomFile) {
+    public PomFileValidator(final Collection<ProjectKeeperModule> enabledModules, final PomFileIO pomFile) {
         this.enabledModules = enabledModules;
-        this.pomFile = new PomFileIO(pomFile);
+        this.pomFile = pomFile;
     }
 
     @Override
     public PomFileValidator validate(final Consumer<ValidationFinding> findingConsumer) {
         ALL_VALIDATORS.stream().filter(validator -> this.enabledModules.contains(validator.getModule())).forEach(
                 template -> template.validate(this.pomFile.getContent(), this.enabledModules, findingConsumer));
-        return this;
-    }
-
-    @Override
-    public PomFileValidator flush() {
-        this.pomFile.writeChanges();
         return this;
     }
 }

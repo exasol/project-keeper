@@ -14,13 +14,4 @@ public interface Validator {
      * @return self for fluent programming
      */
     public Validator validate(final Consumer<ValidationFinding> findingConsumer);
-
-    /**
-     * Flush the changes made by fixes.
-     * 
-     * @return self for fluent programming
-     */
-    public default Validator flush() {
-        return this;
-    }
 }

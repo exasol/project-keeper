@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
 /**
  * This class implements access to a pom file.
  */
-class PomFileIO {
+public class PomFileIO {
     private final File pomFile;
     private final Document content;
 
@@ -31,7 +31,7 @@ class PomFileIO {
      * 
      * @param pomFile pom file to wrap.
      */
-    PomFileIO(final File pomFile) {
+    public PomFileIO(final File pomFile) {
         this.pomFile = pomFile;
         this.content = parsePomFile();
     }
@@ -51,7 +51,7 @@ class PomFileIO {
      * The {@link Document} is mutable. So you can change it for example using {@link Document#appendChild(Node)}.
      * </p>
      */
-    void writeChanges() {
+    public void writeChanges() {
         try {
             final TransformerFactory transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");

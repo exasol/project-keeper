@@ -32,7 +32,7 @@ class ChangelogValidatorTest {
     void testFixCreatedTemplate(@TempDir final File tempDir) {
         final MavenProject project = createProject(tempDir);
         final Log log = mock(Log.class);
-        new ChangelogValidator(project).validate(finding -> finding.getFix().fixError(log)).flush();
+        new ChangelogValidator(project).validate(finding -> finding.getFix().fixError(log));
         assertThat(tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md")),
                 hasContent(startsWith("#my-project 1.2.3, release")));
         verify(log).warn("Created 'doc/changes/changes_1.2.3.md'. Don't forget to update it's content!");
@@ -41,7 +41,7 @@ class ChangelogValidatorTest {
     @Test
     void testInvalidAfterFix(@TempDir final File tempDir) {
         final MavenProject project = createProject(tempDir);
-        new ChangelogValidator(project).validate(finding -> finding.getFix().fixError(mock(Log.class))).flush();
+        new ChangelogValidator(project).validate(finding -> finding.getFix().fixError(mock(Log.class)));
         assertThat(new ChangelogValidator(project),
                 validationErrorMessages(
                         hasItems(matchesPattern(Pattern.quote("E-PK-22 Please change the content of '/tmp/") + ".*"

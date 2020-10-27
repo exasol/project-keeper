@@ -21,7 +21,7 @@ class PomFileValidatorTest {
 
     @Test
     void testMissingPlugin(@TempDir final File tempDir) throws IOException {
-        final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
+        final PomFileIO pomFile = new PomFileIO(writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS));
         final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()), pomFile);
         assertThat(runner, hasValidationFindingWithMessage(
                 "E-PK-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."));
@@ -29,14 +29,14 @@ class PomFileValidatorTest {
 
     @Test
     void testFixMissingPlugin(@TempDir final File tempDir) throws IOException {
-        final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
+        final PomFileIO pomFile = new PomFileIO(writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS));
         final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()), pomFile);
         assertThat(runner, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
     void testNoErrorsOnNoModules(@TempDir final File tempDir) throws IOException {
-        final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
+        final PomFileIO pomFile = new PomFileIO(writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS));
         final PomFileValidator runner = new PomFileValidator(Collections.emptyList(), pomFile);
         assertThat(runner, hasNoValidationFindings());
     }
