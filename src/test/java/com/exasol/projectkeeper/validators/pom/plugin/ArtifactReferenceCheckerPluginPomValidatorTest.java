@@ -1,7 +1,4 @@
-package com.exasol.projectkeeper;
-
-import com.exasol.projectkeeper.validators.pom.plugin.AbstractMavenPluginPomValidatorTest;
-import com.exasol.projectkeeper.validators.pom.plugin.ArtifactReferenceCheckerPluginPomValidator;
+package com.exasol.projectkeeper.validators.pom.plugin;
 
 class ArtifactReferenceCheckerPluginPomValidatorTest extends AbstractMavenPluginPomValidatorTest {
 

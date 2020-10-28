@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper;
 
+import java.util.Objects;
+
 import org.apache.maven.plugin.logging.Log;
 
 /**
@@ -45,12 +47,8 @@ public class ValidationFinding {
      * @return function that fixes the error
      */
     public Fix getFix() {
-        if (this.fix == null) {
-            return (log) -> {
-            };
-        } else {
-            return this.fix;
-        }
+        return Objects.requireNonNullElseGet(this.fix, () -> log -> {
+        });
     }
 
     /**

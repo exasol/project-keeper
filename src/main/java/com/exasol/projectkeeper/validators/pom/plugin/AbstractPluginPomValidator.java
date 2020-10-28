@@ -41,13 +41,14 @@ import com.exasol.xpath.XPathSplitter;
 public abstract class AbstractPluginPomValidator extends AbstractPomValidator implements PomValidator {
     public static final String GROUP_ID_XPATH = "groupId";
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
+    @SuppressWarnings("java:S1075") // not an customizable url
     private static final String PLUGINS_XPATH = "/project/build/plugins";
     private final String pluginArtifactId;
     private final String pluginGroupId;
     private final Node template;
     private final String pluginXPath;
 
-    public AbstractPluginPomValidator(final String templateResourceName) {
+    AbstractPluginPomValidator(final String templateResourceName) {
         this.template = readPluginTemplate(templateResourceName);
         this.pluginArtifactId = runXPath(this.template, "artifactId/text()").getNodeValue();
         this.pluginGroupId = runXPath(this.template, GROUP_ID_XPATH + "/text()").getNodeValue();
