@@ -1,17 +1,11 @@
 package com.exasol.projectkeeper;
 
-import java.io.File;
-import java.util.Collection;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
-
-import com.exasol.projectkeeper.files.ProjectFilesValidator;
-import com.exasol.projectkeeper.pom.PomFileValidationRunner;
 
 /**
  * Entry point for the verify goal.
@@ -22,20 +16,28 @@ import com.exasol.projectkeeper.pom.PomFileValidationRunner;
 @Mojo(name = "verify", defaultPhase = LifecyclePhase.PACKAGE)
 public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
 
-    @Parameter(defaultValue = "${project}", required = true, readonly = true)
-    private MavenProject project;
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final File projectBaseDirectory = this.project.getBasedir();
-        final Collection<ProjectKeeperModule> enabledModules = getEnabledModules();
-        final boolean filesValidationResult = new ProjectFilesValidator(getLog())
-                .validateProjectStructure(projectBaseDirectory, enabledModules);
-        final boolean pomValidationResult = new PomFileValidationRunner(this.project.getModel().getPomFile())
-                .verify(getLog(), enabledModules);
-        if (!(filesValidationResult && pomValidationResult)) {
+        final AtomicBoolean hadFindingsWithFix = new AtomicBoolean(false);
+        final AtomicBoolean hadFindingsWithoutFix = new AtomicBoolean(false);
+        getValidators(getPomFile()).forEach(validator -> validator.validate(finding -> {
+            getLog().error(finding.getMessage());
+            if (finding.hasFix()) {
+                hadFindingsWithFix.set(true);
+            } else {
+                hadFindingsWithoutFix.set(true);
+            }
+        }));
+        if (hadFindingsWithoutFix.get() && hadFindingsWithFix.get()) {
+            throw new MojoFailureException("E-PK-24: This projects structure does not conform with the template.\n"
+                    + "You can automatically fix some of the issues by running mvn project-keeper:fix");
+        } else if (hadFindingsWithFix.get()) {
             throw new MojoFailureException("E-PK-6: This projects structure does not conform with the template.\n"
-                    + "You can automatically fix it by running mvn project-keeper:fix");
+                    + "You can automatically fix it by running mvn project-keeper:fix but some also need to be fixed manually.");
+
+        } else if (hadFindingsWithoutFix.get()) {
+            throw new MojoFailureException("E-PK-25: This projects structure does not conform with the template.\n"
+                    + "Please fix it manually.");
         }
     }
 }

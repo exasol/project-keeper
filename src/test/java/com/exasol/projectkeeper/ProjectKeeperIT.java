@@ -20,8 +20,8 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 @Tag("integration")
 @Testcontainers
-public class ProjectKeeperIT {
-    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.2.0.jar").toFile();
+class ProjectKeeperIT {
+    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.3.0.jar").toFile();
     private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
     private static final File TEST_PROJECT = Path.of("src", "test", "resources", "test_project").toFile();
 
@@ -108,11 +108,28 @@ public class ProjectKeeperIT {
     @Test
     void testFix() throws IOException, InterruptedException {
         runWithCheck("cp", "-r", "/test_project", "/tmp/test_project");// copy to make it writeable
-        mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f", "/tmp/test_project/pom.xml",
-                "project-keeper:fix", "--log-file", "/dev/stdout", "--no-transfer-progress");
+        final ExecResult fixResult = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
+                "/tmp/test_project/pom.xml", "project-keeper:fix", "--log-file", "/dev/stdout",
+                "--no-transfer-progress");
         final ExecResult result = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
                 "/tmp/test_project/pom.xml", "project-keeper:verify", "--log-file", "/dev/stdout",
                 "--no-transfer-progress");
+        System.out.println(result.getStdout());
+        System.out.println(result.getStderr());
         assertThat(result.getExitCode(), is(0));
+    }
+
+    @Test
+    void testManualFixRequired() throws IOException, InterruptedException {
+        runWithCheck("cp", "-r", "/test_project", "/tmp/test_project");// copy to make it writeable
+        runWithCheck("rm", "-rf", "/tmp/test_project/doc/changes/changes_1.0.0.md");
+        final ExecResult fixResult = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
+                "/tmp/test_project/pom.xml", "project-keeper:fix", "--log-file", "/dev/stdout",
+                "--no-transfer-progress");
+        final ExecResult result = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
+                "/tmp/test_project/pom.xml", "project-keeper:verify", "--log-file", "/dev/stdout",
+                "--no-transfer-progress");
+        assertThat(result.getStdout(), containsString(
+                "E-PK-25: This projects structure does not conform with the template.\n" + "Please fix it manually."));
     }
 }
