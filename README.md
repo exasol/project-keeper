@@ -1,5 +1,20 @@
 # Project Keeper Maven Plugin
 
+[![Build Status](https://travis-ci.com/exasol/project-keeper-maven-plugin.svg?branch=master)](https://travis-ci.com/exasol/project-keeper-maven-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin) 
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=security_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=sqale_index)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+
+[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=code_smells)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=coverage)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+
 This maven plugin checks and unifies the project's structure according to the Exasol integration team's repository standards.
 
 ## Installation
