@@ -22,6 +22,11 @@ Renamed file:
 * #21: Added validation for doc/changes/changelog_X.X.X.md
 * #24: Updates in the templates 
 
+## Bugfixes:
+
+* #26: Don't require -SNAPSHOT changes files
+    This bug was introduced in #21 and never released
+
 ## Dependency Updates:
 
 * Updated `org.mockito:mockito-core` from 3.5.15 to 3.6.0
