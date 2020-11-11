@@ -18,6 +18,7 @@ import com.exasol.projectkeeper.Validator;
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
  */
 public class ChangelogValidator implements Validator {
+    public static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
     private final MavenProject mavenProject;
 
     /**
@@ -31,7 +32,7 @@ public class ChangelogValidator implements Validator {
 
     @Override
     public ChangelogValidator validate(final Consumer<ValidationFinding> findingConsumer) {
-        final String version = this.mavenProject.getVersion();
+        final String version = getVersionWithoutSnapshotSuffix();
         final File changesFile = this.mavenProject.getBasedir().toPath()
                 .resolve(Path.of("doc", "changes", "changes_" + version + ".md")).toFile();
         if (!changesFile.exists()) {
@@ -44,6 +45,15 @@ public class ChangelogValidator implements Validator {
             checkFileIsDifferentToTemplate(findingConsumer, changesFile);
         }
         return this;
+    }
+
+    private String getVersionWithoutSnapshotSuffix() {
+        final String version = this.mavenProject.getVersion();
+        if (version.endsWith(SNAPSHOT_SUFFIX)) {
+            return version.substring(0, version.length() - SNAPSHOT_SUFFIX.length());
+        } else {
+            return version;
+        }
     }
 
     private void checkFileIsDifferentToTemplate(final Consumer<ValidationFinding> findingConsumer,
