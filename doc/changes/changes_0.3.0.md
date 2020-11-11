@@ -29,3 +29,4 @@ Renamed file:
 * Updated `org.glassfish.jaxb:jaxb-runtime` from 2.3.0 to 2.3.3
 * Updated `org.apache.maven:plugin-tools` from 3.5 to 3.6.0
 * Added `org.apache.maven:maven-core` 3.6.3
+* Added `com.exasol:error-reporting-java` 0.1.1
