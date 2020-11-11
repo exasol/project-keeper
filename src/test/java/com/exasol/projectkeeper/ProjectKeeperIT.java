@@ -82,7 +82,12 @@ class ProjectKeeperIT {
                 () -> assertThat(result.getStdout(),
                         containsString("E-PK-15: Missing maven plugin org.jacoco:jacoco-maven-plugin.")), //
                 () -> assertThat(result.getStdout(),
-                        containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-failsafe-plugin."))//
+                        containsString(
+                                "E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-failsafe-plugin.")), //
+                () -> assertThat(result.getStdout(),
+                        containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-deploy-plugin.")), //
+                () -> assertThat(result.getStdout(),
+                        containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-gpg-plugin."))//
         );
     }
 

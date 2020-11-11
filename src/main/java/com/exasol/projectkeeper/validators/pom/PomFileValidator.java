@@ -16,7 +16,8 @@ public class PomFileValidator implements Validator {
     public static final Collection<PomValidator> ALL_VALIDATORS = List.of(new VersionMavenPluginPomValidator(),
             new OssindexMavenPluginPomValidator(), new EnforcerMavenPluginPomValidator(),
             new AssemblyPluginPomValidator(), new ArtifactReferenceCheckerPluginPomValidator(),
-            new SurefirePluginPomValidator(), new JacocoPluginPomValidator(), new FailsafePluginPomValidator());
+            new SurefirePluginPomValidator(), new JacocoPluginPomValidator(), new FailsafePluginPomValidator(),
+            new GpgPluginValidator(), new DeployPluginValidator());
     final Collection<ProjectKeeperModule> enabledModules;
     private final PomFileIO pomFile;
 

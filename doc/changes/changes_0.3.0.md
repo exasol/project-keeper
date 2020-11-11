@@ -10,6 +10,8 @@ Added new validations:
 * travis.yml
 * LICENSE
 * for maven-central: .github/workflows/maven_central_release.yml
+* maven-gpg-plugin
+* maven-deploy-plugin
 
 Renamed file:
 
