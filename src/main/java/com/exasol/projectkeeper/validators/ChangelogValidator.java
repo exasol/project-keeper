@@ -18,7 +18,7 @@ import com.exasol.projectkeeper.Validator;
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
  */
 public class ChangelogValidator implements Validator {
-    public static final String SNAPSHOT_ENDING = "-SNAPSHOT";
+    public static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
     private final MavenProject mavenProject;
 
     /**
@@ -49,8 +49,8 @@ public class ChangelogValidator implements Validator {
 
     private String getVersionWithoutSnapshotEnding() {
         final String version = this.mavenProject.getVersion();
-        if (version.endsWith(SNAPSHOT_ENDING)) {
-            return version.substring(0, version.length() - SNAPSHOT_ENDING.length());
+        if (version.endsWith(SNAPSHOT_SUFFIX)) {
+            return version.substring(0, version.length() - SNAPSHOT_SUFFIX.length());
         } else {
             return version;
         }
