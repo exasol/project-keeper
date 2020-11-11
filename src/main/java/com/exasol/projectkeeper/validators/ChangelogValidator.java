@@ -32,7 +32,7 @@ public class ChangelogValidator implements Validator {
 
     @Override
     public ChangelogValidator validate(final Consumer<ValidationFinding> findingConsumer) {
-        final String version = getVersionWithoutSnapshotEnding();
+        final String version = getVersionWithoutSnapshotSuffix();
         final File changesFile = this.mavenProject.getBasedir().toPath()
                 .resolve(Path.of("doc", "changes", "changes_" + version + ".md")).toFile();
         if (!changesFile.exists()) {
@@ -47,7 +47,7 @@ public class ChangelogValidator implements Validator {
         return this;
     }
 
-    private String getVersionWithoutSnapshotEnding() {
+    private String getVersionWithoutSnapshotSuffix() {
         final String version = this.mavenProject.getVersion();
         if (version.endsWith(SNAPSHOT_SUFFIX)) {
             return version.substring(0, version.length() - SNAPSHOT_SUFFIX.length());
