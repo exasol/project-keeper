@@ -12,6 +12,7 @@ Added new validations:
 * for maven-central: .github/workflows/maven_central_release.yml
 * maven-gpg-plugin
 * maven-deploy-plugin
+* nexus-staging-maven-plugin
 
 Renamed file:
 
