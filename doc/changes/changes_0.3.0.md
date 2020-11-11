@@ -5,13 +5,20 @@
 ## Summary
 
 Added new validations:
+
 * doc/changes/changelog_X.X.X.md
 * travis.yml
 * LICENSE
+* for maven-central: .github/workflows/maven_central_release.yml
+
+Renamed file:
+
+* .github/workflows/maven.yml --> *.github/workflows/dependencies_check.yml
 
 ## Features / Enhancements
 
 * #21: Added validation for doc/changes/changelog_X.X.X.md
+* #24: Updates in the templates 
 
 ## Dependency Updates:
 
