@@ -70,9 +70,10 @@ This plugin provides different template modules for different kinds of projects.
 This module checks the required configuration for releasing on maven central.
 
 * required maven plugins
-    * maven-gpg-plugin
-    * maven-deploy-plugin
-
+    * [maven-gpg-plugin](https://maven.apache.org/plugins/maven-gpg-plugin/)
+    * [maven-deploy-plugin](https://maven.apache.org/plugins/maven-deploy-plugin/)
+    * [nexus-staging-maven-plugin](https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin)
+    
 ## Usage
 
 The verification is bound to the maven `package` lifecycle phase.
