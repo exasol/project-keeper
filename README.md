@@ -66,11 +66,14 @@ This plugin provides different template modules for different kinds of projects.
     * [maven-failsafe-plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/)
     * jacoco coverage configuration for integration tests
 #### `maven_central`
-*Not yet implemented.*
 
-This module will check required configuration for releasing on maven central in the future.
-You can, however, already add this module. By that you can't forget to add it later.
+This module checks the required configuration for releasing on maven central.
 
+* required maven plugins
+    * [maven-gpg-plugin](https://maven.apache.org/plugins/maven-gpg-plugin/)
+    * [maven-deploy-plugin](https://maven.apache.org/plugins/maven-deploy-plugin/)
+    * [nexus-staging-maven-plugin](https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin)
+    
 ## Usage
 
 The verification is bound to the maven `package` lifecycle phase.

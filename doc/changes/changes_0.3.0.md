@@ -5,13 +5,23 @@
 ## Summary
 
 Added new validations:
+
 * doc/changes/changelog_X.X.X.md
 * travis.yml
 * LICENSE
+* for maven-central: .github/workflows/maven_central_release.yml
+* maven-gpg-plugin
+* maven-deploy-plugin
+* nexus-staging-maven-plugin
+
+Renamed file:
+
+* .github/workflows/maven.yml --> *.github/workflows/dependencies_check.yml
 
 ## Features / Enhancements
 
 * #21: Added validation for doc/changes/changelog_X.X.X.md
+* #24: Updates in the templates 
 
 ## Bugfixes:
 
@@ -25,3 +35,4 @@ Added new validations:
 * Updated `org.glassfish.jaxb:jaxb-runtime` from 2.3.0 to 2.3.3
 * Updated `org.apache.maven:plugin-tools` from 3.5 to 3.6.0
 * Added `org.apache.maven:maven-core` 3.6.3
+* Added `com.exasol:error-reporting-java` 0.1.1
