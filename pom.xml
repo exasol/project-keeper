@@ -404,7 +404,8 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>0.2.0</version>
+                <version>0.3.0</version>
+                <!-- no execution configured on purpose. Run manually -->
                 <configuration>
                     <modules>
                         <module>maven_central</module>
