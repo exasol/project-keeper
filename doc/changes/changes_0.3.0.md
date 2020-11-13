@@ -1,6 +1,6 @@
 #Project keeper maven plugin 0.3.0, released 2020-11-13
 
-## Code name: Added more validations
+Code name: Added more validations
 
 ## Summary
 
