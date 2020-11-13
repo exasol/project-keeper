@@ -36,3 +36,5 @@ Renamed file:
 * Updated `org.apache.maven:plugin-tools` from 3.5 to 3.6.0
 * Added `org.apache.maven:maven-core` 3.6.3
 * Added `com.exasol:error-reporting-java` 0.1.1
+* Added `org.apache.maven.plugins:maven-deploy-plugin`
+* Added `org.sonatype.plugins:nexus-staging-maven-plugin` 1.6.8 
