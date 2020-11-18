@@ -5,7 +5,7 @@
     <groupId>com.exasol</groupId>
     <artifactId>project-keeper-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <name>Project keeper maven plugin</name>
     <description>This maven plugin checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
@@ -103,28 +103,29 @@
             <version>${maven.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- Overrides Junit 4.12 which is used in test containers but contains a security issue: https://ossindex.sonatype.org/vuln/7ea56ad4-8a8b-4e51-8ed9-5aad83d8efb1 -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <scope>test</scope>
+        </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.14.3</version>
+            <version>1.15.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>junit-jupiter</artifactId>
-            <version>1.14.3</version>
+            <version>1.15.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-engine</artifactId>
             <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.junit.platform</groupId>
-            <artifactId>junit-platform-runner</artifactId>
-            <version>${junit.platform.version}</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -248,6 +249,12 @@
                         <phase>package</phase>
                     </execution>
                 </executions>
+                <configuration>
+                    <excludeVulnerabilityIds>
+                        <!-- Ignores CVE-2020-15250, because we use Java 11 and junit 4.13.1 which contains a fix: https://ossindex.sonatype.org/vuln/7ea56ad4-8a8b-4e51-8ed9-5aad83d8efb1 -->
+                        <exclude>7ea56ad4-8a8b-4e51-8ed9-5aad83d8efb1</exclude>
+                    </excludeVulnerabilityIds>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -404,7 +411,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>0.3.0</version>
+                <version>${version}</version>
                 <!-- no execution configured on purpose. Run manually -->
                 <configuration>
                     <modules>

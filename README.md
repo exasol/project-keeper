@@ -74,6 +74,22 @@ This module checks the required configuration for releasing on maven central.
     * [maven-deploy-plugin](https://maven.apache.org/plugins/maven-deploy-plugin/)
     * [nexus-staging-maven-plugin](https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin)
     
+### Excluding Files
+
+Using the `excludedFiles` you can tell project-keeper to ignore some files:
+
+```xml
+<configuration>
+    <excludedFiles>
+        <excludedFile>test/fileToExclude.md</excludedFile>
+        <excludedFile>doc/*</excludedFile>
+        <excludedFile>**/excludeNoMatterWhere.md</excludedFile>
+    </excludedFiles>
+</configuration>
+```
+
+Inside of the `<excludedFile>` tag you can use GLOB wildcards.
+    
 ## Usage
 
 The verification is bound to the maven `package` lifecycle phase.

@@ -17,7 +17,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>0.3.0</version>
+                <version>0.4.0</version>
                 <executions>
                     <execution>
                         <goals>
@@ -31,6 +31,9 @@
                         <module>jar_artifact</module>
                         <module>integration_tests</module>
                     </modules>
+                    <excludedFiles>
+                        <excludedFile>**/logging.properties</excludedFile>
+                    </excludedFiles>
                 </configuration>
             </plugin>
         </plugins>

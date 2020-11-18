@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.Validator;
 
@@ -19,20 +20,27 @@ public class DeletedFilesValidator implements Validator {
             Path.of(".github", "workflows", "maven.yml"), "We renamed maven.yml to dependencies_check.yml"//
     );
     private final Path projectDirectory;
+    private final ExcludedFilesMatcher excludedFiles;
 
     /**
      * Create a new instance of {@link DeletedFilesValidator}.
-     * 
+     *
      * @param projectDirectory project's root directory
+     * @param excludedFiles    matcher for explicitly excluded files
      */
-    public DeletedFilesValidator(final Path projectDirectory) {
+    public DeletedFilesValidator(final Path projectDirectory, final ExcludedFilesMatcher excludedFiles) {
         this.projectDirectory = projectDirectory;
+        this.excludedFiles = excludedFiles;
     }
 
     @Override
     public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
         FILES_THAT_MUST_NOT_EXIST.forEach((fileThatMustNotExist, reason) -> {
-            final File file = this.projectDirectory.resolve(fileThatMustNotExist).toFile();
+            final Path pathThatMustExist = this.projectDirectory.resolve(fileThatMustNotExist);
+            if (this.excludedFiles.isFileExcluded(this.projectDirectory.relativize(pathThatMustExist))) {
+                return;
+            }
+            final File file = pathThatMustExist.toFile();
             if (file.exists()) {
                 findingConsumer.accept(new ValidationFinding(getFileExistsErrorMessage(fileThatMustNotExist, reason),
                         getFix(fileThatMustNotExist.toString(), file)));

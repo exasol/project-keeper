@@ -23,6 +23,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     @Parameter(property = "modules")
     private List<String> modules;
 
+    @Parameter(property = "excludeFiles")
+    private List<String> excludedFiles;
+
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
@@ -48,8 +51,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
 
     protected List<Validator> getValidators(final PomFileIO pomFile) {
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
-        return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir()),
+        final ExcludedFilesMatcher excludedFilesMatcher = new ExcludedFilesMatcher(this.excludedFiles);
+        return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
                 new PomFileValidator(enabledModules, pomFile), new ChangelogValidator(this.project),
-                new DeletedFilesValidator(this.project.getBasedir().toPath()));
+                new DeletedFilesValidator(this.project.getBasedir().toPath(), excludedFilesMatcher));
     }
 }
