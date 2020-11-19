@@ -4,7 +4,8 @@ Code name:
 
 ## Features / Enhancements
 
-* #19: Added a configurable list for excluding files from validation 
+* #19: Added a configurable list for excluding files from validation
+* #35: Updated settings for the code formatter 
 
 ## Dependency Updates:
 
