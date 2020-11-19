@@ -21,7 +21,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Tag("integration")
 @Testcontainers
 class ProjectKeeperIT {
-    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.3.0.jar").toFile();
+    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.4.0.jar").toFile();
     private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
     private static final File TEST_PROJECT = Path.of("src", "test", "resources", "test_project").toFile();
 
@@ -90,8 +90,10 @@ class ProjectKeeperIT {
                         containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-gpg-plugin.")), //
                 () -> assertThat(result.getStdout(),
                         containsString("E-PK-26: '.github/workflows/maven.yml' exists but must not exist.")), //
-                () -> assertThat(result.getStdout(), containsString(
-                        "E-PK-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin."))//
+                () -> assertThat(result.getStdout(),
+                        containsString(
+                                "E-PK-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin.")), //
+                () -> assertThat(result.getStdout(), not(containsString("logging.properties")))//
         );
     }
 

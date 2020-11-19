@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.Collection;
 import java.util.function.Consumer;
@@ -13,6 +14,7 @@ import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.logging.Log;
 
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.Validator;
@@ -30,16 +32,20 @@ public class ProjectFilesValidator implements Validator {
     private static final InputStreamComparator COMPARATOR = new InputStreamComparator();
     private final Collection<ProjectKeeperModule> enabledModules;
     private final File projectDirectory;
+    private final ExcludedFilesMatcher excludedFilesMatcher;
 
     /**
      * Crate a new instance of {@link ProjectFilesValidator}.
      * 
-     * @param enabledModules   list of enabled {@link ProjectKeeperModule}s
-     * @param projectDirectory project's root directory
+     * @param enabledModules       list of enabled {@link ProjectKeeperModule}s
+     * @param projectDirectory     project's root directory
+     * @param excludedFilesMatcher files to exclude from validation
      */
-    public ProjectFilesValidator(final Collection<ProjectKeeperModule> enabledModules, final File projectDirectory) {
+    public ProjectFilesValidator(final Collection<ProjectKeeperModule> enabledModules, final File projectDirectory,
+            final ExcludedFilesMatcher excludedFilesMatcher) {
         this.enabledModules = enabledModules;
         this.projectDirectory = projectDirectory;
+        this.excludedFilesMatcher = excludedFilesMatcher;
     }
 
     @Override
@@ -48,6 +54,7 @@ public class ProjectFilesValidator implements Validator {
             scanResult.getAllResources().stream()//
                     .map(FileTemplate::fromResource)//
                     .filter(template -> this.enabledModules.contains(template.module))
+                    .filter(template -> !this.excludedFilesMatcher.isFileExcluded(Path.of(template.fileName)))
                     .forEach(template -> validate(template, findingConsumer));
         }
         return this;

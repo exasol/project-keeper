@@ -2,8 +2,8 @@ package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.HasNoMoreFindingsAfterApplyingFixesMatcher.hasNoMoreFindingsAfterApplyingFixes;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.validationErrorMessages;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
@@ -13,11 +13,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
 
@@ -30,7 +30,8 @@ class ProjectFilesValidatorTest {
                 || !tempDir.toPath().resolve(".settings/org.eclipse.jdt.ui.prefs").toFile().createNewFile()) {
             throw new IllegalStateException("Failed to create test files.");
         }
-        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
+        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
+                new ExcludedFilesMatcher(List.of()));
         assertThat(validator,
                 validationErrorMessages(hasItems("E-PK-17: Missing required: .settings/org.eclipse.jdt.core.prefs",
                         "E-PK-17: Missing required: README.md",
@@ -38,14 +39,24 @@ class ProjectFilesValidatorTest {
     }
 
     @Test
+    void testValidationWithExclusion(@TempDir final File tempDir) {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
+                new ExcludedFilesMatcher(List.of(".settings/org.eclipse.jdt.core.prefs")));
+        assertThat(validator, validationErrorMessages(
+                not(hasItems("E-PK-17: Missing required: .settings/org.eclipse.jdt.core.prefs"))));
+    }
+
+    @Test
     void testFix(@TempDir final File tempDir) {
-        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
+        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
+                new ExcludedFilesMatcher(List.of()));
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
-    void testDifferentContent(@TempDir final File tempDir) throws MojoFailureException, IOException {
-        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
+    void testDifferentContent(@TempDir final File tempDir) throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
+                new ExcludedFilesMatcher(List.of()));
         validator.validate(finding -> finding.getFix().fixError(mock(Log.class)));// fix everything
         final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
         changeFile(testFile);
@@ -54,8 +65,9 @@ class ProjectFilesValidatorTest {
     }
 
     @Test
-    void testFixDifferentContent(@TempDir final File tempDir) throws MojoFailureException, IOException {
-        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
+    void testFixDifferentContent(@TempDir final File tempDir) throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
+                new ExcludedFilesMatcher(List.of()));
         validator.validate(finding -> finding.getFix().fixError(mock(Log.class)));// fix everything
         final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
         changeFile(testFile);
@@ -67,7 +79,8 @@ class ProjectFilesValidatorTest {
         if (!tempDir.setWritable(false)) {
             throw new IllegalStateException("Failed to set temp dir read-only.");
         }
-        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
+        final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
+                new ExcludedFilesMatcher(List.of()));
         final Consumer<ValidationFinding> findingFixer = finding -> finding.getFix().fixError(mock(Log.class));
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> validator.validate(findingFixer));
