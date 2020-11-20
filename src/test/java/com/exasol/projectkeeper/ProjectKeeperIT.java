@@ -91,6 +91,8 @@ class ProjectKeeperIT {
                 () -> assertThat(result.getStdout(),
                         containsString("E-PK-26: '.github/workflows/maven.yml' exists but must not exist.")), //
                 () -> assertThat(result.getStdout(),
+                        containsString("E-PK-29: Missing dependency 'org.jacoco:org.jacoco.agent'.")), //
+                () -> assertThat(result.getStdout(),
                         containsString(
                                 "E-PK-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin.")), //
                 () -> assertThat(result.getStdout(), not(containsString("logging.properties")))//

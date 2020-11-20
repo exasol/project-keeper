@@ -17,14 +17,11 @@ import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.diff.DefaultNodeMatcher;
-import org.xmlunit.diff.Diff;
-import org.xmlunit.diff.ElementSelectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 import com.exasol.projectkeeper.validators.pom.PomValidator;
 import com.exasol.xpath.XPathSplitter;
@@ -232,11 +229,5 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
                         property.getParentNode().replaceChild(importedProperty, property);
                     }));
         }
-    }
-
-    private boolean isXmlEqual(final Node property1, final Node property2) {
-        final Diff comparison = DiffBuilder.compare(property1).withTest(property2).ignoreComments().ignoreWhitespace()
-                .checkForSimilar().withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText)).build();
-        return !comparison.hasDifferences();
     }
 }
