@@ -29,5 +29,34 @@
                 <goal>report-integration</goal>
             </goals>
         </execution>
+        <execution>
+            <id>merge-it-results</id>
+            <phase>verify</phase>
+            <goals>
+                <goal>merge</goal>
+            </goals>
+            <configuration>
+                <fileSets>
+                    <fileSet>
+                        <directory>${project.build.directory}/</directory>
+                        <includes>
+                            <include>jacoco-it.exec</include>
+                            <include>jacoco-udf.exec</include>
+                        </includes>
+                    </fileSet>
+                </fileSets>
+                <destFile>${project.reporting.outputDirectory}/aggregate-it.exec</destFile>
+            </configuration>
+        </execution>
+        <execution>
+            <id>report-integration-with-udf</id>
+            <phase>verify</phase>
+            <goals>
+                <goal>report-integration</goal>
+            </goals>
+            <configuration>
+                <dataFile>${project.build.directory}/aggregate-it.exec</dataFile>
+            </configuration>
+        </execution>
     </executions>
 </plugin>
