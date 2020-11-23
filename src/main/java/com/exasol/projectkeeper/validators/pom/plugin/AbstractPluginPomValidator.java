@@ -17,13 +17,11 @@ import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
-import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.diff.DefaultNodeMatcher;
-import org.xmlunit.diff.Diff;
-import org.xmlunit.diff.ElementSelectors;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 import com.exasol.projectkeeper.validators.pom.PomValidator;
 import com.exasol.xpath.XPathSplitter;
@@ -58,28 +56,31 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     @Override
     public void validate(final Document pom, final Collection<ProjectKeeperModule> enabledModules,
             final Consumer<ValidationFinding> findingConsumer) {
-        if (validatePluginExists(pom, findingConsumer)) {
+        if (validatePluginExists(pom, enabledModules, findingConsumer)) {
             final Node plugin = runXPath(pom, this.pluginXPath);
             verifyPluginPropertyHasExactValue(plugin, GROUP_ID_XPATH, findingConsumer);
             validatePluginConfiguration(plugin, enabledModules, findingConsumer);
         }
     }
 
-    private boolean validatePluginExists(final Document pom, final Consumer<ValidationFinding> findingConsumer) {
+    private boolean validatePluginExists(final Document pom, final Collection<ProjectKeeperModule> enabledModules,
+            final Consumer<ValidationFinding> findingConsumer) {
         if (runXPath(pom, this.pluginXPath) == null) {
             findingConsumer.accept(new ValidationFinding(
                     "E-PK-15: Missing maven plugin " + this.pluginGroupId + ":" + this.pluginArtifactId + ".",
-                    getFixForMissingPlugin(pom)));
+                    getFixForMissingPlugin(pom, enabledModules)));
             return false;
         } else {
             return true;
         }
     }
 
-    private ValidationFinding.Fix getFixForMissingPlugin(final Document pom) {
+    private ValidationFinding.Fix getFixForMissingPlugin(final Document pom,
+            final Collection<ProjectKeeperModule> enabledModules) {
         return (Log log) -> {
             createObjectPathIfNotExists(runXPath(pom, "/project"), List.of("build", "plugins"));
             final Node plugin = pom.importNode(getPluginTemplate(), true);
+            validatePluginConfiguration(plugin, enabledModules, finding -> finding.getFix().fixError(log));
             runXPath(pom, PLUGINS_XPATH).appendChild(plugin);
         };
     }
@@ -199,6 +200,26 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         }
     }
 
+    /**
+     * Verify that a plugin does not have a specific property.
+     * 
+     * @param plugin          the plugin to validate
+     * @param propertyXpath   path of the property to validate / fix. Only use simple XPaths here (only / and [])
+     * @param findingConsumer consumer to report findings to
+     */
+    protected void verifyPluginDoesNotHaveProperty(final Node plugin, final String propertyXpath,
+            final Consumer<ValidationFinding> findingConsumer) {
+        final Node node = runXPath(plugin, propertyXpath);
+        if (node != null) {
+            findingConsumer.accept(new ValidationFinding(
+                    ExaError.messageBuilder("E-PK-28")
+                            .message("The plugin {{PLUGIN}} has an illegal property {{PROPERTY}}.")
+                            .mitigation("Please remove it.").parameter("PLUGIN", this.pluginArtifactId)
+                            .parameter("PROPERTY", propertyXpath).toString(),
+                    log -> node.getParentNode().removeChild(node)));
+        }
+    }
+
     private void validatePropertiesAreEqual(final Node plugin, final String propertyXpath,
             final Consumer<ValidationFinding> findingConsumer, final Node property, final Node templateProperty) {
         if (!isXmlEqual(property, templateProperty)) {
@@ -208,11 +229,5 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
                         property.getParentNode().replaceChild(importedProperty, property);
                     }));
         }
-    }
-
-    private boolean isXmlEqual(final Node property1, final Node property2) {
-        final Diff comparison = DiffBuilder.compare(property1).withTest(property2).ignoreComments().ignoreWhitespace()
-                .checkForSimilar().withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText)).build();
-        return !comparison.hasDifferences();
     }
 }

@@ -7,7 +7,7 @@ import java.util.stream.Collectors;
  * Enum of supported modules.
  */
 public enum ProjectKeeperModule {
-    DEFAULT, MAVEN_CENTRAL, JAR_ARTIFACT, INTEGRATION_TESTS;
+    DEFAULT, MAVEN_CENTRAL, JAR_ARTIFACT, INTEGRATION_TESTS, UDF_COVERAGE;
 
     /**
      * Get {@link ProjectKeeperModule} by its name.

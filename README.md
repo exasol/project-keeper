@@ -74,6 +74,18 @@ This module checks the required configuration for releasing on maven central.
     * [maven-deploy-plugin](https://maven.apache.org/plugins/maven-deploy-plugin/)
     * [nexus-staging-maven-plugin](https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin)
     
+#### `udf_coverage`
+
+This module configures the pom for extracting the code coverage from UDF executions.
+
+In addition, you need to upload the Jacoco agent to BucketFS and run it using JVM options.
+You can use the [Udf-Debugging-Java](https://github.com/exasol/udf-debugging-java/) to do so.
+
+It makes no sense to use this module without the `integration_tests` module
+
+* required maven plugins
+    * jacoco UDF coverage configuration for integration tests
+    
 ### Excluding Files
 
 Using the `excludedFiles` you can tell project-keeper to ignore some files:

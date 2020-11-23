@@ -74,9 +74,9 @@ abstract class AbstractMavenPluginPomValidatorTest {
         return success.get();
     }
 
-    private void runAllFixesGeneratedByValidation(final Document pom,
+    protected void runAllFixesGeneratedByValidation(final Document pom,
             final Collection<ProjectKeeperModule> enabledModules) {
-        this.template.validate(pom, Collections.emptyList(), finding -> finding.getFix().fixError(mock(Log.class)));
+        this.template.validate(pom, enabledModules, finding -> finding.getFix().fixError(mock(Log.class)));
     }
 
     protected boolean isPluginConfigurationValid(final Node plugin,
