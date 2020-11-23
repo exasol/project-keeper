@@ -201,7 +201,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     }
 
     /**
-     * Verify tha a plugin does not have a specific property.
+     * Verify that a plugin does not have a specific property.
      * 
      * @param plugin          the plugin to validate
      * @param propertyXpath   path of the property to validate / fix. Only use simple XPaths here (only / and [])
