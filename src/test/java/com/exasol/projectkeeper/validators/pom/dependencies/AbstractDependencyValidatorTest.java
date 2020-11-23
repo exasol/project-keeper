@@ -40,7 +40,6 @@ class AbstractDependencyValidatorTest extends AbstractDependencyValidatorAbstrac
     @Test
     void testFix() throws ParserConfigurationException, SAXException, IOException {
         final Document pom = readXmlFromResources(POM_WITH_NO_PLUGINS);
-        final DependencyValidatorStub validator = new DependencyValidatorStub();
         applyFixes(pom);
         assertAll(//
                 () -> assertThat(pom,

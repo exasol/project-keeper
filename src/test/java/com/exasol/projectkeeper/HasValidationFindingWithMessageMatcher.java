@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper;
 
 import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.Matchers.empty;
 
 import java.util.List;
@@ -27,6 +28,10 @@ public class HasValidationFindingWithMessageMatcher<T extends Iterable<? extends
 
     public static Matcher<Validator> hasNoValidationFindings() {
         return new HasValidationFindingWithMessageMatcher(empty());
+    }
+
+    public static Matcher<Validator> hasValidationFindings() {
+        return new HasValidationFindingWithMessageMatcher(not(empty()));
     }
 
     @Override

@@ -8,6 +8,10 @@ Code name: `udf_coverage` module and template improvements
 * #35: Updated settings for the code formatter 
 * #41: Added validation for udf_coverage
 
+## Refactoring 
+
+* #43 Refactored tests for PomValidator
+
 ## Dependency Updates:
 
 * Added `junit:junit` 4.13.1

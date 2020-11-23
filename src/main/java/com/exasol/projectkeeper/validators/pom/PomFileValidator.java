@@ -19,7 +19,7 @@ public class PomFileValidator implements Validator {
             new AssemblyPluginPomValidator(), new ArtifactReferenceCheckerPluginPomValidator(),
             new SurefirePluginPomValidator(), new JacocoPluginPomValidator(), new FailsafePluginPomValidator(),
             new GpgPluginValidator(), new DeployPluginValidator(), new NexusStagingPluginValidator(),
-            new JacocoAgentDependencyValidator());
+            new JacocoAgentDependencyValidator(), new DependencyPluginValidator());
     final Collection<ProjectKeeperModule> enabledModules;
     private final PomFileIO pomFile;
 
