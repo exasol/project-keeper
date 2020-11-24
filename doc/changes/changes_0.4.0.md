@@ -1,4 +1,4 @@
-#Project keeper maven plugin 0.4.0, released 2020-XX-XX
+#Project keeper maven plugin 0.4.0, released 2020-11-24
 
 Code name: `udf_coverage` module and template improvements
 
@@ -7,6 +7,7 @@ Code name: `udf_coverage` module and template improvements
 * #19: Added a configurable list for excluding files from validation
 * #35: Updated settings for the code formatter 
 * #41: Added validation for udf_coverage
+* #36: Moved `assembly/all-dependencies.xml` to `src/assembly/all-dependencies.xml`
 
 ## Refactoring 
 

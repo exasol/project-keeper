@@ -17,7 +17,9 @@ import com.exasol.projectkeeper.Validator;
  */
 public class DeletedFilesValidator implements Validator {
     private static final Map<Path, String> FILES_THAT_MUST_NOT_EXIST = Map.of(//
-            Path.of(".github", "workflows", "maven.yml"), "We renamed maven.yml to dependencies_check.yml"//
+            Path.of(".github", "workflows", "maven.yml"), "We renamed maven.yml to dependencies_check.yml", //
+            Path.of("assembly", "all-dependencies.xml"),
+            "We moved assembly/all-dependencies.xml to src/assembly/all-dependencies.xml"//
     );
     private final Path projectDirectory;
     private final ExcludedFilesMatcher excludedFiles;

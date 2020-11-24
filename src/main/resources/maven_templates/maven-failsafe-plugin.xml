@@ -9,6 +9,9 @@
         <includes>
             <include>**IT.java</include>
         </includes>
+        <systemPropertyVariables>
+            <test.coverage>true</test.coverage>
+        </systemPropertyVariables>
     </configuration>
     <executions>
         <execution>

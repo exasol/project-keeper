@@ -12,6 +12,7 @@ import com.exasol.projectkeeper.ValidationFinding;
  * Validator for the maven-failsafe-plugin's configuration.
  */
 public class FailsafePluginPomValidator extends AbstractPluginPomValidator {
+    private static final String TEST_COVERAGE_CONFIGURATION = "configuration/systemPropertyVariables/test.coverage";
 
     /**
      * Create a new instance of {@link FailsafePluginPomValidator}.
@@ -25,6 +26,11 @@ public class FailsafePluginPomValidator extends AbstractPluginPomValidator {
             final Consumer<ValidationFinding> findingConsumer) {
         verifyPluginPropertyHasExactValue(plugin, "configuration/argLine", findingConsumer);
         verifyPluginPropertyHasExactValue(plugin, "executions", findingConsumer);
+        if (enabledModules.contains(ProjectKeeperModule.UDF_COVERAGE)) {
+            verifyPluginPropertyHasExactValue(plugin, TEST_COVERAGE_CONFIGURATION, findingConsumer);
+        } else {
+            verifyPluginDoesNotHaveProperty(plugin, TEST_COVERAGE_CONFIGURATION, findingConsumer);
+        }
     }
 
     @Override

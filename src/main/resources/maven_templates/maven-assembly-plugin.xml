@@ -4,7 +4,7 @@
     <version>3.3.0</version>
     <configuration>
         <descriptors>
-            <descriptor>assembly/all-dependencies.xml</descriptor>
+            <descriptor>src/assembly/all-dependencies.xml</descriptor>
         </descriptors>
         <finalName>NAME_OF_YOUR_JAR</finalName>
         <appendAssemblyId>false</appendAssemblyId>
