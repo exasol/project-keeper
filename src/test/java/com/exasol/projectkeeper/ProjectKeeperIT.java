@@ -124,15 +124,26 @@ class ProjectKeeperIT {
     @Test
     void testFix() throws IOException, InterruptedException {
         runWithCheck("cp", "-r", "/test_project", "/tmp/test_project");// copy to make it writeable
-        final ExecResult fixResult = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
-                "/tmp/test_project/pom.xml", "project-keeper:fix", "--log-file", "/dev/stdout",
-                "--no-transfer-progress");
+        mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f", "/tmp/test_project/pom.xml",
+                "project-keeper:fix", "--log-file", "/dev/stdout", "--no-transfer-progress");
         final ExecResult result = mvnContainer.execInContainer("mvn", "--batch-mode", "-e", "-f",
                 "/tmp/test_project/pom.xml", "project-keeper:verify", "--log-file", "/dev/stdout",
                 "--no-transfer-progress");
         System.out.println(result.getStdout());
         System.out.println(result.getStderr());
         assertThat(result.getExitCode(), is(0));
+    }
+
+    @Test
+    void testJacocoAgentGetsUploaded() throws IOException, InterruptedException {
+        runWithCheck("cp", "-r", "/test_project", "/tmp/test_project");// copy to make it writeable
+        runWithCheck("mvn", "--batch-mode", "-e", "-f", "/tmp/test_project/pom.xml", "project-keeper:fix", "--log-file",
+                "/dev/stdout", "--no-transfer-progress");
+        runWithCheck("mvn", "--batch-mode", "-e", "-f", "/tmp/test_project/pom.xml", "package");
+        final ExecResult lsResult = mvnContainer.execInContainer("ls", "/tmp/test_project/target/jacoco-agent/");
+        System.out.println(lsResult.getStdout());
+        System.out.println(lsResult.getStderr());
+        assertThat(lsResult.getStdout(), containsString("org.jacoco.agent-runtime.jar"));
     }
 
     @Test
