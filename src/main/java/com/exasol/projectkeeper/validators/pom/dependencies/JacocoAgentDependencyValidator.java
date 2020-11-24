@@ -18,7 +18,7 @@ public class JacocoAgentDependencyValidator extends AbstractDependencyValidator 
      * Create a new instance of {@link JacocoAgentDependencyValidator}.
      */
     public JacocoAgentDependencyValidator() {
-        super("org.jacoco", "org.jacoco.agent", "${jacoco.version}", Scope.RUNTIME);
+        super("org.jacoco", "org.jacoco.agent", "0.8.5", Scope.RUNTIME);
     }
 
     @Override

@@ -1,9 +1,9 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import static com.exasol.projectkeeper.validators.pom.PomTesting.POM_WITH_NO_PLUGINS;
-import static com.exasol.projectkeeper.validators.pom.PomTesting.readXmlFromResources;
+import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasNoValidationFindings;
+import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindings;
+import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
 import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
@@ -36,7 +36,7 @@ abstract class AbstractMavenPluginPomValidatorTest {
     @Test
     void testMissingPlugin() throws IOException, ParserConfigurationException, SAXException {
         final Document emptyPom = readXmlFromResources(POM_WITH_NO_PLUGINS);
-        assertThat(isValid(emptyPom, Collections.emptyList()), equalTo(false));
+        assertThat(validationOf(this.template, emptyPom, Collections.emptyList()), hasValidationFindings());
     }
 
     @Test
@@ -44,7 +44,8 @@ abstract class AbstractMavenPluginPomValidatorTest {
         final Document emptyPom = readXmlFromResources(POM_WITH_NO_PLUGINS);
         runAllFixesGeneratedByValidation(emptyPom, Collections.emptyList());
         assertAll(//
-                () -> assertThat(isValid(emptyPom, Collections.emptyList()), equalTo(true)),
+                () -> assertThat(validationOf(this.template, emptyPom, Collections.emptyList()),
+                        hasNoValidationFindings()),
                 () -> assertThat(emptyPom, hasXPath("/project/build/plugins/plugin"))//
         );
     }
@@ -66,12 +67,6 @@ abstract class AbstractMavenPluginPomValidatorTest {
         final Document pom = readXmlFromResources(POM_WITH_NO_PLUGINS);
         runAllFixesGeneratedByValidation(pom, Collections.emptyList());
         return pom;
-    }
-
-    private boolean isValid(final Document pom, final Collection<ProjectKeeperModule> enabledModules) {
-        final AtomicBoolean success = new AtomicBoolean(true);
-        this.template.validate(pom, Collections.emptyList(), finding -> success.set(false));
-        return success.get();
     }
 
     protected void runAllFixesGeneratedByValidation(final Document pom,

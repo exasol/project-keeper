@@ -1,14 +1,12 @@
 package com.exasol.projectkeeper.validators.pom.dependencies;
 
-import static com.exasol.projectkeeper.validators.pom.PomTesting.POM_WITH_NO_PLUGINS;
-import static com.exasol.projectkeeper.validators.pom.PomTesting.readXmlFromResources;
+import static com.exasol.projectkeeper.HasNoMoreFindingsAfterApplyingFixesMatcher.hasNoMoreFindingsAfterApplyingFixes;
+import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -27,10 +25,7 @@ abstract class AbstractDependencyValidatorAbstractTest {
     @Test
     void testFixFixesValidation() throws ParserConfigurationException, SAXException, IOException {
         final Document pom = readXmlFromResources(POM_WITH_NO_PLUGINS);
-        applyFixes(pom);
-        final AtomicBoolean success = new AtomicBoolean(true);
-        this.validator.validate(pom, List.of(), finding -> success.set(false));
-        assertThat(success.get(), equalTo(true));
+        assertThat(validationOf(this.validator, pom, List.of()), hasNoMoreFindingsAfterApplyingFixes());
     }
 
     protected void applyFixes(final Document pom) {

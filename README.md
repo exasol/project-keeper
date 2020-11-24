@@ -26,7 +26,7 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
     <plugin>
         <groupId>com.exasol</groupId>
         <artifactId>project-keeper-maven-plugin</artifactId>
-        <version>0.2.0</version>
+        <version>CURRENT VERSION</version>
         <executions>
             <execution>
                 <goals>
@@ -85,6 +85,9 @@ It makes no sense to use this module without the `integration_tests` module
 
 * required maven plugins
     * jacoco UDF coverage configuration for integration tests
+    * [mvn-dependency-plugin](https://maven.apache.org/plugins/maven-dependency-plugin/) configured to export jacoco-agent to `target/`
+* required dependencies
+    * `org.jacoco:org.jacoco.agent`
     
 ### Excluding Files
 

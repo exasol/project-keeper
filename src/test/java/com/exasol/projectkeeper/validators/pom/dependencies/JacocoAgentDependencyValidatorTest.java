@@ -1,13 +1,11 @@
 package com.exasol.projectkeeper.validators.pom.dependencies;
 
-import static com.exasol.projectkeeper.validators.pom.PomTesting.POM_WITH_NO_PLUGINS;
-import static com.exasol.projectkeeper.validators.pom.PomTesting.readXmlFromResources;
+import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindingWithMessage;
+import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
 import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -30,9 +28,7 @@ class JacocoAgentDependencyValidatorTest extends AbstractDependencyValidatorAbst
         applyFixes(pom);
         final Node classifier = runXPath(pom, "/project/dependencies/dependency/classifier");
         classifier.getParentNode().removeChild(classifier);
-        final List<String> findings = new ArrayList<>();
-        new JacocoAgentDependencyValidator().validate(pom, List.of(), finding -> findings.add(finding.getMessage()));
-        assertThat(findings, containsInAnyOrder(
+        assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, List.of()), hasValidationFindingWithMessage(
                 "E-PK-30: Missing property 'classifier' in dependency 'org.jacoco:org.jacoco.agent'."));
     }
 
@@ -44,9 +40,7 @@ class JacocoAgentDependencyValidatorTest extends AbstractDependencyValidatorAbst
         final Element wrongClassifier = pom.createElement("classifier");
         classifier.appendChild(pom.createTextNode("other"));
         classifier.getParentNode().replaceChild(wrongClassifier, classifier);
-        final List<String> findings = new ArrayList<>();
-        new JacocoAgentDependencyValidator().validate(pom, List.of(), finding -> findings.add(finding.getMessage()));
-        assertThat(findings, containsInAnyOrder(
+        assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, List.of()), hasValidationFindingWithMessage(
                 "E-PK-31: The property 'classifier' of the dependency 'org.jacoco:org.jacoco.agent' has an illegal value."));
     }
 }

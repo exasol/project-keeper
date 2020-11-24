@@ -7,7 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 import java.util.Objects;
+import java.util.function.Consumer;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
@@ -17,6 +19,10 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.Validator;
 
 public class PomTesting {
     public static final String POM_WITH_NO_PLUGINS = "pomWithNoPlugins.xml";
@@ -46,5 +52,29 @@ public class PomTesting {
             Files.copy(Objects.requireNonNull(pomStream), pomFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
         return pomFile;
+    }
+
+    public static PomValidationRunner validationOf(final PomValidator validator, final Document pom,
+            final List<ProjectKeeperModule> enabledModules) {
+        return new PomValidationRunner(validator, pom, enabledModules);
+    }
+
+    private static class PomValidationRunner implements Validator {
+        private final PomValidator validator;
+        private final Document pom;
+        private final List<ProjectKeeperModule> enabledModules;
+
+        private PomValidationRunner(final PomValidator validator, final Document pom,
+                final List<ProjectKeeperModule> enabledModules) {
+            this.validator = validator;
+            this.pom = pom;
+            this.enabledModules = enabledModules;
+        }
+
+        @Override
+        public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
+            this.validator.validate(this.pom, this.enabledModules, findingConsumer);
+            return this;
+        }
     }
 }
