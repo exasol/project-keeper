@@ -45,7 +45,7 @@
                         </includes>
                     </fileSet>
                 </fileSets>
-                <destFile>${project.reporting.outputDirectory}/aggregate-it.exec</destFile>
+                <destFile>${project.build.directory}/aggregate-it.exec</destFile>
             </configuration>
         </execution>
         <execution>
