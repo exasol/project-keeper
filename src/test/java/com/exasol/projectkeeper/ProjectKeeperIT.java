@@ -8,10 +8,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.Container.ExecResult;
 import org.testcontainers.containers.GenericContainer;
@@ -21,7 +18,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Tag("integration")
 @Testcontainers
 class ProjectKeeperIT {
-    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.4.0.jar").toFile();
+    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.4.1.jar").toFile();
     private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
     private static final File TEST_PROJECT = Path.of("src", "test", "resources", "test_project").toFile();
 
