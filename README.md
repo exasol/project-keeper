@@ -49,6 +49,7 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
 This plugin provides different template modules for different kinds of projects.
 
 #### `default` (always included)
+
 * [required files (must exist)](src/main/resources/templates/default/require_exist)
 * [required files (must have same content)](src/main/resources/templates/default/require_exact)
 * required maven plugins
@@ -56,15 +57,22 @@ This plugin provides different template modules for different kinds of projects.
     * [ossindex-maven-plugin](https://sonatype.github.io/ossindex-maven/maven-plugin/)
     * [maven-enforcer-plugin](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
     * [maven-surefire-plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
+
 #### `jar_artifact`
+
+This module creates a "fat" JAR, containing not only the project binary, but also the runtime dependencies.
+
 * [required files (must have same content)](src/main/resources/templates/jarArtifact/require_exact)
 * required maven plugins
     * [maven-assembly-plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
     * [artifact-reference-checker-maven-plugin](https://github.com/exasol/artifact-reference-checker-maven-plugin)
+
 #### `integration_tests`
+
 * required maven plugins
     * [maven-failsafe-plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/)
     * jacoco coverage configuration for integration tests
+
 #### `maven_central`
 
 This module checks the required configuration for releasing on maven central.
