@@ -5,3 +5,7 @@ Code name: Fixed template
 ## Bugfixes
 
 * # 54: Added missing `.level` suffix in `logging.properties`
+
+## Documentation:
+
+* # 50: Clarified what "jar_artifact" means
