@@ -102,6 +102,13 @@
             <artifactId>maven-core</artifactId>
             <version>${maven.version}</version>
             <scope>test</scope>
+            <exclusions>
+                <!-- excluded since it introduces CVE-2020-8908 -->
+                <exclusion>
+                    <groupId>com.google.guava</groupId>
+                    <artifactId>guava</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <!-- Overrides Junit 4.12 which is used in test containers but contains a security issue: https://ossindex.sonatype.org/vuln/7ea56ad4-8a8b-4e51-8ed9-5aad83d8efb1 -->
         <dependency>
