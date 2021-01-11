@@ -31,10 +31,14 @@ public class ChangelogValidator implements Validator {
     @Override
     public ChangelogValidator validate(final Consumer<ValidationFinding> findingConsumer) {
         final String version = this.mavenProject.getVersion();
-        if (!version.endsWith(SNAPSHOT_SUFFIX)) {
+        if (!isSnapshotVersion(version)) {
             validateThatChangesFileExists(findingConsumer, version);
         }
         return this;
+    }
+
+    private boolean isSnapshotVersion(final String version) {
+        return version.endsWith(SNAPSHOT_SUFFIX);
     }
 
     private void validateThatChangesFileExists(final Consumer<ValidationFinding> findingConsumer,
