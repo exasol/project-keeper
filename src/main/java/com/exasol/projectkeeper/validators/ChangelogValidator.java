@@ -1,8 +1,6 @@
 package com.exasol.projectkeeper.validators;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
@@ -32,7 +30,19 @@ public class ChangelogValidator implements Validator {
 
     @Override
     public ChangelogValidator validate(final Consumer<ValidationFinding> findingConsumer) {
-        final String version = getVersionWithoutSnapshotSuffix();
+        final String version = this.mavenProject.getVersion();
+        if (!isSnapshotVersion(version)) {
+            validateThatChangesFileExists(findingConsumer, version);
+        }
+        return this;
+    }
+
+    private boolean isSnapshotVersion(final String version) {
+        return version.endsWith(SNAPSHOT_SUFFIX);
+    }
+
+    private void validateThatChangesFileExists(final Consumer<ValidationFinding> findingConsumer,
+            final String version) {
         final File changesFile = this.mavenProject.getBasedir().toPath()
                 .resolve(Path.of("doc", "changes", "changes_" + version + ".md")).toFile();
         if (!changesFile.exists()) {
@@ -43,16 +53,6 @@ public class ChangelogValidator implements Validator {
                             getFix(changesFile, changesFileRelativeToProjectRoot)));
         } else {
             checkFileIsDifferentToTemplate(findingConsumer, changesFile);
-        }
-        return this;
-    }
-
-    private String getVersionWithoutSnapshotSuffix() {
-        final String version = this.mavenProject.getVersion();
-        if (version.endsWith(SNAPSHOT_SUFFIX)) {
-            return version.substring(0, version.length() - SNAPSHOT_SUFFIX.length());
-        } else {
-            return version;
         }
     }
 
