@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.validators;
 
 import static com.exasol.projectkeeper.FileContentMatcher.hasContent;
-import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindingWithMessage;
-import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.validationErrorMessages;
+import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.*;
 import static org.hamcrest.CoreMatchers.hasItems;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -32,8 +31,7 @@ class ChangelogValidatorTest {
     @Test
     void testValidationForSnapshotVersion(@TempDir final File tempDir) {
         final MavenProject project = createProject(tempDir, TEST_VERSION + "-SNAPSHOT");
-        assertThat(new ChangelogValidator(project),
-                hasValidationFindingWithMessage("E-PK-20 Could not find 'doc/changes/changes_1.2.3.md'."));
+        assertThat(new ChangelogValidator(project), hasNoValidationFindings());
     }
 
     @Test
