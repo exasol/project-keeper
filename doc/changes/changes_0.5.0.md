@@ -2,9 +2,10 @@
 
 Code name:
 
-## Features / Enhancements
+## Features
 
 * #52: Changed behavior to not force user to create a changes file if version contains a snapshot tag
+* #61: Updated the template for Maven Central release workflow.
 
 ## Bugfixes
 
