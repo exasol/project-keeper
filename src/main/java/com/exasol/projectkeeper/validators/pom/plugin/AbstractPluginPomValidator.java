@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
+import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -9,9 +9,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 
 import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Document;
@@ -21,9 +19,7 @@ import org.xml.sax.SAXException;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
-import com.exasol.projectkeeper.validators.pom.PomFileValidator;
-import com.exasol.projectkeeper.validators.pom.PomValidator;
+import com.exasol.projectkeeper.validators.pom.*;
 import com.exasol.xpath.XPathSplitter;
 
 /**
@@ -67,7 +63,9 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
             final Consumer<ValidationFinding> findingConsumer) {
         if (runXPath(pom, this.pluginXPath) == null) {
             findingConsumer.accept(new ValidationFinding(
-                    "E-PK-15: Missing maven plugin " + this.pluginGroupId + ":" + this.pluginArtifactId + ".",
+                    ExaError.messageBuilder("E-PK-15").message("Missing maven plugin {{plugin group}}:{{plugin name}}.")
+                            .unquotedParameter("plugin group", this.pluginGroupId)
+                            .unquotedParameter("plugin name", this.pluginArtifactId).toString(),
                     getFixForMissingPlugin(pom, enabledModules)));
             return false;
         } else {
@@ -98,14 +96,18 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         try (final InputStream templateInputStream = getClass().getClassLoader()
                 .getResourceAsStream(templateResourceName)) {
             if (templateInputStream == null) {
-                throw new IllegalStateException("F-PK-11: Failed to open " + this.pluginArtifactId + "'s template.");
+                throw new IllegalStateException(
+                        ExaError.messageBuilder("F-PK-11").message("Failed to open {{plugin name}}'s template.")
+                                .unquotedParameter("plugin name", this.pluginArtifactId).toString());
             }
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
             return documentBuilder.parse(templateInputStream).getFirstChild();
         } catch (final IOException | SAXException | ParserConfigurationException e) {
-            throw new IllegalStateException("F-PK-10: Failed to parse " + this.pluginArtifactId + "'s template.");
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("F-PK-10").message("Failed to parse {{plugin name}}'s template.")
+                            .unquotedParameter("plugin name", this.pluginArtifactId).toString());
         }
     }
 
@@ -142,11 +144,10 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         if (runXPath(plugin, xPath) != null) {
             return true;
         } else {
-            findingConsumer
-                    .accept(new ValidationFinding(
-                            "E-PK-13: The " + this.pluginArtifactId
-                                    + "'s configuration does not contain the required property " + xPath + ".",
-                            getCopyFixForMissingProperty(plugin, xPath)));
+            findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-13").message(
+                    "The {{plugin}}'s configuration does not contain the required property {{required property}}.")
+                    .unquotedParameter("plugin", this.pluginArtifactId).parameter("required property", xPath)
+                    .toString(), getCopyFixForMissingProperty(plugin, xPath)));
             return false;
         }
     }
@@ -223,8 +224,10 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     private void validatePropertiesAreEqual(final Node plugin, final String propertyXpath,
             final Consumer<ValidationFinding> findingConsumer, final Node property, final Node templateProperty) {
         if (!isXmlEqual(property, templateProperty)) {
-            findingConsumer.accept(new ValidationFinding("E-PK-14: The " + this.pluginArtifactId
-                    + "'s configuration-property " + propertyXpath + " has an illegal value.", (Log log) -> {
+            findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-14")
+                    .message("The {{plugin}}'s configuration-property {{property path}} has an illegal value.")
+                    .unquotedParameter("plugin", this.pluginArtifactId).parameter("property path", propertyXpath)
+                    .toString(), (Log log) -> {
                         final Node importedProperty = plugin.getOwnerDocument().importNode(templateProperty, true);
                         property.getParentNode().replaceChild(importedProperty, property);
                     }));

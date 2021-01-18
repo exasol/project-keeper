@@ -58,7 +58,7 @@ class ProjectKeeperIT {
                 () -> assertThat(result.getExitCode(), not(is(0))),
                 () -> assertThat(result.getStdout(), containsString("E-PK-6")),
                 () -> assertThat(result.getStdout(),
-                        containsString("E-PK-17: Missing required: .settings/org.eclipse.jdt.core.prefs")),
+                        containsString("E-PK-17: Missing required: '.settings/org.eclipse.jdt.core.prefs'")),
                 () -> assertThat(result.getStdout(),
                         containsString("E-PK-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.")),
                 () -> assertThat(result.getStdout(),
@@ -154,6 +154,6 @@ class ProjectKeeperIT {
                 "/tmp/test_project/pom.xml", "project-keeper:verify", "--log-file", "/dev/stdout",
                 "--no-transfer-progress");
         assertThat(result.getStdout(), containsString(
-                "E-PK-25: This projects structure does not conform with the template.\n" + "Please fix it manually."));
+                "E-PK-25: This projects structure does not conform with the template. Please fix it manually."));
     }
 }

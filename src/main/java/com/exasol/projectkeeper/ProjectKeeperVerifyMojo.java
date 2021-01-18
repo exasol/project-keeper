@@ -7,6 +7,8 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
+import com.exasol.errorreporting.ExaError;
+
 /**
  * Entry point for the verify goal.
  * <p>
@@ -29,15 +31,21 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
             }
         }));
         if (hadFindingsWithoutFix.get() && hadFindingsWithFix.get()) {
-            throw new MojoFailureException("E-PK-24: This projects structure does not conform with the template.\n"
-                    + "You can automatically fix some of the issues by running mvn project-keeper:fix");
+            throw new MojoFailureException(ExaError.messageBuilder("E-PK-24")
+                    .message("This projects structure does not conform with the template.")
+                    .mitigation("You can automatically fix some of the issues by running mvn project-keeper:fix")
+                    .toString());
         } else if (hadFindingsWithFix.get()) {
-            throw new MojoFailureException("E-PK-6: This projects structure does not conform with the template.\n"
-                    + "You can automatically fix it by running mvn project-keeper:fix but some also need to be fixed manually.");
+            throw new MojoFailureException(ExaError.messageBuilder("E-PK-6")
+                    .message("This projects structure does not conform with the template.")
+                    .mitigation(
+                            "You can automatically fix it by running mvn project-keeper:fix but some also need to be fixed manually.")
+                    .toString());
 
         } else if (hadFindingsWithoutFix.get()) {
-            throw new MojoFailureException("E-PK-25: This projects structure does not conform with the template.\n"
-                    + "Please fix it manually.");
+            throw new MojoFailureException(ExaError.messageBuilder("E-PK-25")
+                    .message("This projects structure does not conform with the template.")
+                    .mitigation("Please fix it manually.").toString());
         }
     }
 }

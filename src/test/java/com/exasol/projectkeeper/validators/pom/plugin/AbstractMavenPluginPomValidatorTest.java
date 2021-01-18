@@ -3,7 +3,7 @@ package com.exasol.projectkeeper.validators.pom.plugin;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasNoValidationFindings;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindings;
 import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
-import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
+import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;

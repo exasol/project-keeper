@@ -1,23 +1,18 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.parsers.*;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
+
+import com.exasol.errorreporting.ExaError;
 
 /**
  * This class implements access to a pom file.
@@ -61,7 +56,8 @@ public class PomFileIO {
             final StreamResult streamResult = new StreamResult(this.pomFile);
             transformer.transform(domSource, streamResult);
         } catch (final TransformerException exception) {
-            throw new IllegalStateException("E-PK-12: Failed to replace pom-file. ", exception);
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("E-PK-12").message("Failed to replace pom-file.").toString(), exception);
         }
     }
 
@@ -73,7 +69,8 @@ public class PomFileIO {
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             return documentBuilder.parse(pomFileStream);
         } catch (final ParserConfigurationException | IOException | SAXException exception) {
-            throw new IllegalStateException("E-PK-7: Failed to parse pom.xml.", exception);
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("E-PK-7").message("Failed to parse pom.xml.").toString(), exception);
         }
     }
 }

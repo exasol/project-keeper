@@ -2,7 +2,7 @@ package com.exasol.projectkeeper.validators.pom;
 
 import static com.exasol.projectkeeper.validators.pom.PomTesting.POM_WITH_NO_PLUGINS;
 import static com.exasol.projectkeeper.validators.pom.PomTesting.writeResourceToTempFile;
-import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
+import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
