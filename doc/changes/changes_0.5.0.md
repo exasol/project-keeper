@@ -18,7 +18,7 @@ Code name:
 ## Dependency Updates:
 
 * Added `com.exasol:error-code-crawler-maven-plugin:0.1.1`
-* Updated `com.exasol:error-reporting-java`
+* Updated `com.exasol:error-reporting-java:0.1.1` to `0.2.2`
 * Updated `io.github.classgraph:classgraph:4.8.90` to `4.8.98`
 * Updated `org.glassfish.jaxb:jaxb-runtime:2.3.3` to `3.0.0`
 * Updated `org.xmlunit:xmlunit-core:2.7.0` to `2.8.2`

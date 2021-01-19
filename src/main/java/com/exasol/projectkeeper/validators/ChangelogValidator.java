@@ -83,7 +83,7 @@ public class ChangelogValidator implements Validator {
                 log.warn("Created '" + changesFileRelativeToProjectRoot + "'. Don't forget to update it's content!");
             } catch (final IOException exception) {
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-21")
-                        .message(" Failed to create {{changesFileRelativeToProjectRoot}}. ")
+                        .message("Failed to create {{changesFileRelativeToProjectRoot}}. ")
                         .parameter("changesFileRelativeToProjectRoot", changesFileRelativeToProjectRoot).toString(),
                         exception);
             }
