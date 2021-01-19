@@ -63,8 +63,8 @@ public class ChangelogValidator implements Validator {
         try {
             if (Files.readString(changesFile.toPath()).equals(getTemplate())) {
                 findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-22")
-                        .message("Please change the content of {{changesFile}} by hand!")
-                        .parameter("changesFile", changesFile).toString()));
+                        .message("Please change the content of {{changes file}} by hand!")
+                        .parameter("changes file", changesFile).toString()));
             }
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-23")

@@ -33,14 +33,13 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
         if (hadFindingsWithoutFix.get() && hadFindingsWithFix.get()) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-24")
                     .message("This projects structure does not conform with the template.")
-                    .mitigation("You can automatically fix some of the issues by running mvn project-keeper:fix")
+                    .mitigation(
+                            "You can automatically fix some of the issues by running mvn project-keeper:fix but some also need to be fixed manually.")
                     .toString());
         } else if (hadFindingsWithFix.get()) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-6")
                     .message("This projects structure does not conform with the template.")
-                    .mitigation(
-                            "You can automatically fix it by running mvn project-keeper:fix but some also need to be fixed manually.")
-                    .toString());
+                    .mitigation("You can automatically fix them by running mvn project-keeper:fix").toString());
 
         } else if (hadFindingsWithoutFix.get()) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-25")
