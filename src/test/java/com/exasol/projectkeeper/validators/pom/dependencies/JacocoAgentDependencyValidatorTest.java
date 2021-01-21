@@ -2,7 +2,7 @@ package com.exasol.projectkeeper.validators.pom.dependencies;
 
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindingWithMessage;
 import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
-import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
+import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
@@ -11,9 +11,7 @@ import java.util.List;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 class JacocoAgentDependencyValidatorTest extends AbstractDependencyValidatorAbstractTest {

@@ -9,6 +9,7 @@ import java.util.function.Consumer;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.Validator;
 
@@ -48,9 +49,10 @@ public class ChangelogValidator implements Validator {
         if (!changesFile.exists()) {
             final String changesFileRelativeToProjectRoot = this.mavenProject.getBasedir().toPath()
                     .relativize(changesFile.toPath()).toString();
-            findingConsumer
-                    .accept(new ValidationFinding("E-PK-20 Could not find '" + changesFileRelativeToProjectRoot + "'.",
-                            getFix(changesFile, changesFileRelativeToProjectRoot)));
+            findingConsumer.accept(new ValidationFinding(
+                    ExaError.messageBuilder("E-PK-20").message("Could not find {{changes file}}.")
+                            .parameter("changes file", changesFileRelativeToProjectRoot).toString(),
+                    getFix(changesFile, changesFileRelativeToProjectRoot)));
         } else {
             checkFileIsDifferentToTemplate(findingConsumer, changesFile);
         }
@@ -60,11 +62,14 @@ public class ChangelogValidator implements Validator {
             final File changesFile) {
         try {
             if (Files.readString(changesFile.toPath()).equals(getTemplate())) {
-                findingConsumer.accept(
-                        new ValidationFinding("E-PK-22 Please change the content of '" + changesFile + "' by hand!"));
+                findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-22")
+                        .message("Please change the content of {{changes file}} by hand!")
+                        .parameter("changes file", changesFile).toString()));
             }
         } catch (final IOException exception) {
-            throw new IllegalStateException("E-PK-23 Failed to open '" + changesFile + "' for read.", exception);
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-23")
+                    .message("Failed to open changesFile for read.").parameter("changesFile", changesFile).toString(),
+                    exception);
         }
     }
 
@@ -77,7 +82,9 @@ public class ChangelogValidator implements Validator {
                 }
                 log.warn("Created '" + changesFileRelativeToProjectRoot + "'. Don't forget to update it's content!");
             } catch (final IOException exception) {
-                throw new IllegalStateException("E-PK-21 Failed to create '" + changesFileRelativeToProjectRoot + "'. ",
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-21")
+                        .message("Failed to create {{changesFileRelativeToProjectRoot}}. ")
+                        .parameter("changesFileRelativeToProjectRoot", changesFileRelativeToProjectRoot).toString(),
                         exception);
             }
         };

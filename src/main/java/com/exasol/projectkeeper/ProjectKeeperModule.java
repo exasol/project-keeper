@@ -3,6 +3,8 @@ package com.exasol.projectkeeper;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.exasol.errorreporting.ExaError;
+
 /**
  * Enum of supported modules.
  */
@@ -20,10 +22,13 @@ public enum ProjectKeeperModule {
         try {
             return valueOf(moduleName.toUpperCase());
         } catch (final IllegalArgumentException exception) {
-            throw new IllegalArgumentException("E-PK-4: Unknown module: '" + moduleName + "'. "
-                    + "Please update your <modules> configuration in the pom.file to only use supported modules: "
-                    + Arrays.stream(ProjectKeeperModule.values()).map(ProjectKeeperModule::name)
-                            .map(String::toLowerCase).collect(Collectors.joining(", ")),
+            final String supportedModules = Arrays.stream(ProjectKeeperModule.values()).map(ProjectKeeperModule::name)
+                    .map(String::toLowerCase).collect(Collectors.joining(", "));
+            throw new IllegalArgumentException(
+                    ExaError.messageBuilder("E-PK-4").message("Unknown module: {{module name}}. "
+                            + "Please update your <modules> configuration in the pom.file to use one of the supported modules: {{supported modules}}")
+                            .parameter("module name", moduleName).parameter("supported modules", supportedModules)
+                            .toString(),
                     exception);
         }
     }

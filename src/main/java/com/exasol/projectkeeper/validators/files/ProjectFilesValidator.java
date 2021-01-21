@@ -1,12 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
+import java.io.*;
+import java.nio.file.*;
 import java.util.Collection;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -14,14 +9,10 @@ import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.logging.Log;
 
-import com.exasol.projectkeeper.ExcludedFilesMatcher;
-import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.*;
 
-import io.github.classgraph.ClassGraph;
-import io.github.classgraph.Resource;
-import io.github.classgraph.ScanResult;
+import io.github.classgraph.*;
 
 /**
  * Validator for the projects file structure.
@@ -63,7 +54,9 @@ public class ProjectFilesValidator implements Validator {
     public void validate(final FileTemplate template, final Consumer<ValidationFinding> findingConsumer) {
         final File projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
         if (!projectFile.exists()) {
-            findingConsumer.accept(new ValidationFinding("E-PK-17: Missing required: " + template.fileName,
+            findingConsumer.accept(new ValidationFinding(
+                    ExaError.messageBuilder("E-PK-17").message("Missing required: {{required file}}")
+                            .parameter("required file", template.fileName).toString(),
                     (Log log) -> fixFile(projectFile, template.template)));
             return;
         }
@@ -78,14 +71,18 @@ public class ProjectFilesValidator implements Validator {
             Files.copy(templateStream, projectFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    "E-PK-16: Failed to create or replace '" + projectFile.getAbsolutePath() + "'.", exception);
+                    ExaError.messageBuilder("E-PK-16").message("Failed to create or replace {{required file}}.")
+                            .parameter("required file", projectFile.getAbsolutePath()).toString(),
+                    exception);
         }
     }
 
     private void validateContent(final FileTemplate template, final Consumer<ValidationFinding> findingConsumer,
             final File projectFile) {
         if (!isFileEqualWithTemplate(template, projectFile)) {
-            findingConsumer.accept(new ValidationFinding("E-PK-18: Outdated content: " + template.fileName,
+            findingConsumer.accept(new ValidationFinding(
+                    ExaError.messageBuilder("E-PK-18").message("Outdated content: {{file name}}")
+                            .parameter("file name", template.fileName).toString(),
                     (Log log) -> fixFile(projectFile, template.template)));
         }
     }
@@ -96,7 +93,9 @@ public class ProjectFilesValidator implements Validator {
                 final FileInputStream actualInputStream = new FileInputStream(projectFile)) {
             return COMPARATOR.areStreamsEqual(actualInputStream, templateStream);
         } catch (final IOException exception) {
-            throw new IllegalStateException("E-PK-19: Failed validate '" + template.fileName + "' 's content.",
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("E-PK-19").message("Failed to validate {{file name}}'s content.")
+                            .parameter("file name", template.fileName).toString(),
                     exception);
         }
     }
@@ -109,7 +108,8 @@ public class ProjectFilesValidator implements Validator {
                 return TemplateType.valueOf(templateTypeString.toUpperCase());
             } catch (final IllegalArgumentException exception) {
                 throw new IllegalArgumentException(
-                        "F-PK-3: Unknown template type " + templateTypeString + ". Please open an issue.");
+                        ExaError.messageBuilder("F-PK-3").message("Unknown template type {{type}}.")
+                                .parameter("type", templateTypeString).ticketMitigation().toString());
             }
         }
     }
@@ -132,7 +132,8 @@ public class ProjectFilesValidator implements Validator {
             final String resourceName = templateResource.getURI().toString();
             final Matcher matcher = TEMPLATE_NAME_PATTERN.matcher(resourceName);
             if (!matcher.matches()) {
-                throw new IllegalStateException("F-PK-1: Template name had invalid format. Please open an issue.");
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-1")
+                        .message("Template name had invalid format.").ticketMitigation().toString());
             }
             final ProjectKeeperModule module = ProjectKeeperModule.getModuleByName(matcher.group(1));
             final TemplateType templateType = TemplateType.fromString(matcher.group(2));

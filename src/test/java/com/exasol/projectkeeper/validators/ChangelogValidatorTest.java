@@ -25,7 +25,7 @@ class ChangelogValidatorTest {
     void testValidation(@TempDir final File tempDir) {
         final MavenProject project = createProject(tempDir, TEST_VERSION);
         assertThat(new ChangelogValidator(project),
-                hasValidationFindingWithMessage("E-PK-20 Could not find 'doc/changes/changes_1.2.3.md'."));
+                hasValidationFindingWithMessage("E-PK-20: Could not find 'doc/changes/changes_1.2.3.md'."));
     }
 
     @Test
@@ -50,8 +50,8 @@ class ChangelogValidatorTest {
         new ChangelogValidator(project).validate(finding -> finding.getFix().fixError(mock(Log.class)));
         assertThat(new ChangelogValidator(project),
                 validationErrorMessages(
-                        hasItems(matchesPattern(Pattern.quote("E-PK-22 Please change the content of '/tmp/") + ".*"
-                                + Pattern.quote("/doc/changes/changes_1.2.3.md' by hand!")))));
+                        hasItems(matchesPattern(Pattern.quote("E-PK-22: Please change the content of /tmp/") + ".*"
+                                + Pattern.quote("/doc/changes/changes_1.2.3.md by hand!")))));
     }
 
     private MavenProject createProject(final File tempDir, final String version) {

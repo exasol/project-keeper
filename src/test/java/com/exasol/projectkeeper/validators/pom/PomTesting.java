@@ -1,10 +1,8 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
+import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
@@ -12,17 +10,13 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.*;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.*;
 
 public class PomTesting {
     public static final String POM_WITH_NO_PLUGINS = "pomWithNoPlugins.xml";

@@ -3,7 +3,7 @@ package com.exasol.projectkeeper.validators.pom.plugin;
 import static com.exasol.projectkeeper.ProjectKeeperModule.INTEGRATION_TESTS;
 import static com.exasol.projectkeeper.ProjectKeeperModule.UDF_COVERAGE;
 import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
-import static com.exasol.xpath.XPathErrorHanlingWrapper.runXPath;
+import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
