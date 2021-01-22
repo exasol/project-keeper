@@ -21,7 +21,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
 /**
- * This integration test tests the maven plugin in a save environment. Since we don't want to install the plugin to the
+ * This integration test tests the maven plugin in a safe environment. Since we don't want to install the plugin to the
  * user's maven repository, it creates a temporary maven home, and installs the plugin there. Then the test creates a
  * temporary project, runs the plugin on that project and checks the output.
  */
@@ -30,7 +30,7 @@ class ProjectKeeperIT {
     private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.5.0.jar").toFile();
     private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
     /**
-     * When you enable debugging here, connect with a debugger to localhost:8000 during the test run. Since zhe test
+     * When you enable debugging here, connect with a debugger to localhost:8000 during the test run. Since the tests
      * wait for the debugger, this should be disabled on commits so that CI runs through.
      */
     private static final boolean DEBUG = false;
