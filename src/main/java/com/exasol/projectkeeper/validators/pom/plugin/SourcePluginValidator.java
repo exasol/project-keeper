@@ -9,15 +9,15 @@ import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
 
 /**
- * Validator for maven-gpg-plugin.
+ * Validator for maven-source-plugin.
  */
-public class GpgPluginValidator extends AbstractPluginPomValidator {
+public class SourcePluginValidator extends AbstractPluginPomValidator {
 
     /**
-     * Create a new instance of {@link GpgPluginValidator}.
+     * Create a new instance of {@link SourcePluginValidator}.
      */
-    public GpgPluginValidator() {
-        super("maven_templates/maven-gpg-plugin.xml");
+    public SourcePluginValidator() {
+        super("maven_templates/maven-source-plugin.xml");
     }
 
     @Override

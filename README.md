@@ -1,7 +1,7 @@
 # Project Keeper Maven Plugin
 
 [![Build Status](https://travis-ci.com/exasol/project-keeper-maven-plugin.svg?branch=master)](https://travis-ci.com/exasol/project-keeper-maven-plugin)
-[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin) 
+[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
 
@@ -22,6 +22,7 @@ This maven plugin checks and unifies the project's structure according to the Ex
 Install this plugin by adding the following lines to your project's `pom.xml` file:
 
 ```xml
+
 <plugins>
     <plugin>
         <groupId>com.exasol</groupId>
@@ -36,7 +37,7 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
         </executions>
         <configuration>
             <modules>
-                <!-- add modules here: --> 
+                <!-- add modules here: -->
                 <!-- <module>For available modules see below.</module>-->
             </modules>
         </configuration>
@@ -57,6 +58,7 @@ This plugin provides different template modules for different kinds of projects.
     * [ossindex-maven-plugin](https://sonatype.github.io/ossindex-maven/maven-plugin/)
     * [maven-enforcer-plugin](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
     * [maven-surefire-plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
+    * [error-code-crawler-maven-plugin](https://github.com/exasol/error-code-crawler-maven-plugin)
 
 #### `jar_artifact`
 
@@ -80,14 +82,15 @@ This module checks the required configuration for releasing on maven central.
 * required maven plugins
     * [maven-gpg-plugin](https://maven.apache.org/plugins/maven-gpg-plugin/)
     * [maven-deploy-plugin](https://maven.apache.org/plugins/maven-deploy-plugin/)
+    * [maven-source-plugin](https://maven.apache.org/plugins/maven-source-plugin/)
+    * [maven-javadoc-plugin](https://maven.apache.org/plugins/maven-javadoc-plugin/)
     * [nexus-staging-maven-plugin](https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin)
-    
+
 #### `udf_coverage`
 
 This module configures the pom for extracting the code coverage from UDF executions.
 
-In addition, you need to upload the Jacoco agent to BucketFS and run it using JVM options.
-You can use the [Udf-Debugging-Java](https://github.com/exasol/udf-debugging-java/) to do so.
+In addition, you need to upload the Jacoco agent to BucketFS and run it using JVM options. You can use the [Udf-Debugging-Java](https://github.com/exasol/udf-debugging-java/) to do so.
 
 It makes no sense to use this module without the `integration_tests` module
 
@@ -96,12 +99,13 @@ It makes no sense to use this module without the `integration_tests` module
     * [mvn-dependency-plugin](https://maven.apache.org/plugins/maven-dependency-plugin/) configured to export jacoco-agent to `target/`
 * required dependencies
     * `org.jacoco:org.jacoco.agent`
-    
+
 ### Excluding Files
 
 Using the `excludedFiles` you can tell project-keeper to ignore some files:
 
 ```xml
+
 <configuration>
     <excludedFiles>
         <excludedFile>test/fileToExclude.md</excludedFile>
@@ -112,11 +116,10 @@ Using the `excludedFiles` you can tell project-keeper to ignore some files:
 ```
 
 Inside of the `<excludedFile>` tag you can use GLOB wildcards.
-    
+
 ## Usage
 
-The verification is bound to the maven `package` lifecycle phase.
-So it is automatically executed if you run `mvn package` or `mvn verify`.
+The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.
 
 You can also run the checks manually using:
 
@@ -135,22 +138,17 @@ mvn project-keeper:fix
 ### Adding a Required File
 
 Copy the file to `src/main/resources/templates/<module>/<require_exist | require_exact>`
-For `module` use the name of the module you want to add the required files to.
-If you want this plugin to only check that the file exists, put it into `require_exist`.
-If you also want that it check that the file has the same content like the template, add it to `require_exact`.
-Inside of these folders you can also create sub folders.
-The sub folder structure of the templates defines the folder structure of the repository.
+For `module` use the name of the module you want to add the required files to. If you want this plugin to only check that the file exists, put it into `require_exist`. If you also want that it check that the file has the same content like the template, add it to `require_exact`. Inside of these folders you can also create sub folders. The sub folder structure of the templates defines the folder structure of the repository.
 
 **Example:**
- 
+
 You created the file `src/main/resources/templates/default/require_exist/test/my_file.md`
 
 This makes the project-keeper check that in all repositories exists the file `test/my_file.md`.
 
 ### Adding a Pom File Validation.
 
-Validations for the POM file are defined using code.
-For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
+Validations for the POM file are defined using code. For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
 
 ## Additional Resources
 

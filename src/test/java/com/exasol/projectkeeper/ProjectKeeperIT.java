@@ -102,6 +102,8 @@ class ProjectKeeperIT {
                         containsString(
                                 "E-PK-15: Missing maven plugin com.exasol:artifact-reference-checker-maven-plugin.")), //
                 () -> assertThat(output,
+                        containsString("E-PK-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin.")), //
+                () -> assertThat(output,
                         containsString(
                                 "E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-surefire-plugin.")), //
                 () -> assertThat(output,
@@ -116,6 +118,10 @@ class ProjectKeeperIT {
                         containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-deploy-plugin.")), //
                 () -> assertThat(output,
                         containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-gpg-plugin.")), //
+                () -> assertThat(output,
+                        containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-source-plugin.")), //
+                () -> assertThat(output,
+                        containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-javadoc-plugin.")), //
                 () -> assertThat(output,
                         containsString(
                                 "E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-dependency-plugin.")), //

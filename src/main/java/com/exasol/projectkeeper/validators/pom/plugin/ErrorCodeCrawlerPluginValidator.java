@@ -9,20 +9,20 @@ import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
 
 /**
- * Validator for maven-gpg-plugin.
+ * Validator for error-code-crawler-maven-plugin.
  */
-public class GpgPluginValidator extends AbstractPluginPomValidator {
+public class ErrorCodeCrawlerPluginValidator extends AbstractPluginPomValidator {
 
     /**
-     * Create a new instance of {@link GpgPluginValidator}.
+     * Create a new instance of {@link ErrorCodeCrawlerPluginValidator}.
      */
-    public GpgPluginValidator() {
-        super("maven_templates/maven-gpg-plugin.xml");
+    public ErrorCodeCrawlerPluginValidator() {
+        super("maven_templates/error-code-crawler-maven-plugin.xml");
     }
 
     @Override
     public ProjectKeeperModule getModule() {
-        return ProjectKeeperModule.MAVEN_CENTRAL;
+        return ProjectKeeperModule.DEFAULT;
     }
 
     @Override
