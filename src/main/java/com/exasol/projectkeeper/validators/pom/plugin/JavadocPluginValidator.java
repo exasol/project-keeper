@@ -9,15 +9,15 @@ import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
 
 /**
- * Validator for maven-gpg-plugin.
+ * Validator for maven-javadoc-plugin.
  */
-public class GpgPluginValidator extends AbstractPluginPomValidator {
+public class JavadocPluginValidator extends AbstractPluginPomValidator {
 
     /**
-     * Create a new instance of {@link GpgPluginValidator}.
+     * Create a new instance of {@link JavadocPluginValidator}.
      */
-    public GpgPluginValidator() {
-        super("maven_templates/maven-gpg-plugin.xml");
+    public JavadocPluginValidator() {
+        super("maven_templates/maven-javadoc-plugin.xml");
     }
 
     @Override
@@ -29,5 +29,6 @@ public class GpgPluginValidator extends AbstractPluginPomValidator {
     protected void validatePluginConfiguration(final Node plugin, final Collection<ProjectKeeperModule> enabledModules,
             final Consumer<ValidationFinding> findingConsumer) {
         verifyPluginPropertyHasExactValue(plugin, "executions", findingConsumer);
+        verifyPluginPropertyHasExactValue(plugin, "configuration", findingConsumer);
     }
 }
