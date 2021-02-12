@@ -100,7 +100,7 @@ public class ChangelogValidator implements Validator {
         templateBuilder.append(LocalDateTime.now().getYear());
         templateBuilder.append("-??-??");
         templateBuilder.append("\n\n");
-        templateBuilder.append("## Code name: \n\n");
+        templateBuilder.append("Code name: \n\n");
         templateBuilder.append("## Features / Enhancements\n\n* ISSUE_NUMBER: description\n");
         return templateBuilder.toString();
     }
