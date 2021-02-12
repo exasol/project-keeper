@@ -1,4 +1,4 @@
-# Project keeper maven plugin 0.5.0, released 2021-02-12
+# Project keeper maven plugin 0.5.0, released 2021-01-22
 
 Code name: Completed the maven central validation; Added error-code-crawler
 
@@ -8,6 +8,7 @@ Code name: Completed the maven central validation; Added error-code-crawler
 * #61: Updated the template for Maven Central release workflow.
 * #18: Added validations for maven-source-plugin and maven-javadoc-plugin
 * #56: Added validation for error-code-crawler-maven-plugin
+* #67: Added broken links checker workflow
 
 ## Refactoring
 
@@ -17,7 +18,6 @@ Code name: Completed the maven central validation; Added error-code-crawler
 ## Bugfixes
 
 * #55: Fixed CVE-2020-8908 by excluding guava dependency
-* #70: Fixed changes template
 
 ## Dependency Updates:
 
