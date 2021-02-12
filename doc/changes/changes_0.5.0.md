@@ -8,6 +8,7 @@ Code name: Completed the maven central validation; Added error-code-crawler
 * #61: Updated the template for Maven Central release workflow.
 * #18: Added validations for maven-source-plugin and maven-javadoc-plugin
 * #56: Added validation for error-code-crawler-maven-plugin
+* #67: Added broken links checker workflow
 
 ## Refactoring
 
