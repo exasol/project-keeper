@@ -56,6 +56,21 @@ class GitRepositoryTest {
     }
 
     @Test
+    void testGetTagsFromDetachedHead() throws GitAPIException, IOException {
+        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+            git.checkout().setName("main").setOrphan(true).call();
+            makeCommitAndTag(git, 1, true);
+            final RevCommit secondCommit = makeCommitAndTag(git, 2, true);
+            git.checkout().setName(secondCommit.getName()).call();
+            final GitRepository repository = new GitRepository(this.tempDir);
+            final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
+            final List<String> tagNames = result.stream().map(taggedCommit -> taggedCommit.getTag().getName())
+                    .collect(Collectors.toList());
+            assertThat(tagNames, contains("tag2", "tag1"));
+        }
+    }
+
+    @Test
     void testGetTagsInNoGitDirectory() {
         final GitRepository repository = new GitRepository(this.tempDir);
         final IllegalStateException exception = assertThrows(IllegalStateException.class,

@@ -38,7 +38,7 @@ public class GitRepository {
      */
     public List<TaggedCommit> getTagsInCurrentBranch() {
         try (final Git git = openLocalGithubRepository()) {
-            final String currentBranch = git.getRepository().getBranch();
+            final String currentBranch = git.getRepository().getFullBranch();
             if (currentBranch == null) {
                 throw new IllegalStateException(
                         ExaError.messageBuilder("E-PK-37").message("Could not get checked out branch of repository.")
@@ -55,8 +55,7 @@ public class GitRepository {
 
     private List<TaggedCommit> getTagsInBranch(final Git git, final String branchName) throws IOException {
         final org.eclipse.jgit.lib.Repository repository = git.getRepository();
-        final String branchUrl = "refs/heads/" + branchName;
-        final ObjectId branch = repository.resolve(branchUrl);
+        final ObjectId branch = repository.resolve(branchName);
         final Map<ObjectId, List<GitTag>> tags = getTagsByTheIdOfTheCommitTheyPointTo(git);
         final RevWalk commitWalker = new RevWalk(repository);
         try {
