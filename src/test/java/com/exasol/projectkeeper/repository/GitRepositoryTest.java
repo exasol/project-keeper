@@ -108,8 +108,9 @@ class GitRepositoryTest {
     @Test
     void testReadFileAtCommitInNoGitDirectory() {
         final GitRepository repository = new GitRepository(this.tempDir);
+        final Path testPath = Path.of("test.md");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> repository.readFileAtCommit(Path.of("test.md"), null));
+                () -> repository.readFileAtCommit(testPath, null));
         assertThat(exception.getMessage(), startsWith("E-PK-32"));
     }
 
