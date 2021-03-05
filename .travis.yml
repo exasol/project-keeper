@@ -3,6 +3,8 @@ sudo: required
 matrix:
   include:
     - jdk: openjdk11
+git:
+  depth: false
 addons:
   sonarcloud:
     organization: exasol
