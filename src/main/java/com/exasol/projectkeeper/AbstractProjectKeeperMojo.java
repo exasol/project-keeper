@@ -9,8 +9,8 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
-import com.exasol.projectkeeper.validators.ChangelogValidator;
 import com.exasol.projectkeeper.validators.DeletedFilesValidator;
+import com.exasol.projectkeeper.validators.changelog.ChangelogValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;

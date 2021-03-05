@@ -17,6 +17,8 @@ import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
 import org.apache.maven.shared.utils.io.FileUtils;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -69,10 +71,11 @@ class ProjectKeeperIT {
     }
 
     @BeforeEach
-    void beforeEach() throws IOException {
+    void beforeEach() throws IOException, GitAPIException {
         this.eachTestsTemp = Files.createTempDirectory("pk-test");
         this.projectDir = ResourceExtractor
                 .extractResourcePath(ProjectKeeperIT.class, TEST_PROJECT, this.eachTestsTemp.toFile(), true).toPath();
+        Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
     @AfterEach
@@ -160,25 +163,21 @@ class ProjectKeeperIT {
         verifier.verifyErrorFreeLog();
     }
 
+    // TODO enable after #74 is fixed
+    void testValidAfterFix() throws VerificationException {
+        final Verifier verifier = getVerifier();
+        verifier.executeGoal("project-keeper:fix");
+        verifier.executeGoal("project-keeper:verify");
+    }
+
     @Test
     void testJacocoAgentIsExtracted() throws VerificationException {
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
+        verifier.executeGoal("project-keeper:fix");// TODO remove after #74 is fixed
         verifier.executeGoal("package");
         assertThat(this.projectDir.resolve(Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar")).toFile(),
                 anExistingFile());
-    }
-
-    @Test
-    void testManualFixRequired() throws IOException, InterruptedException, VerificationException {
-        Files.delete(this.projectDir.resolve(Path.of("doc", "changes", "changes_1.0.0.md")));
-        final Verifier verifier = getVerifier();
-        verifier.executeGoal("project-keeper:fix");
-        final VerificationException verificationException = assertThrows(VerificationException.class,
-                () -> verifier.executeGoal("project-keeper:verify"));
-        final String output = verificationException.getMessage();
-        assertThat(output, containsString(
-                "E-PK-25: This projects structure does not conform with the template. Please fix it manually."));
     }
 
     private Verifier getVerifier() throws VerificationException {

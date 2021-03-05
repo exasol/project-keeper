@@ -1,0 +1,53 @@
+package com.exasol.projectkeeper.validators.changelog.dependencies;
+
+/**
+ * This class renders dependency changes in the format of the Exasol changelog.
+ */
+class DependencyChangeRenderer {
+
+    /**
+     * Render a dependency change in the format of the Exasol changelog.
+     * 
+     * @param dependencyChange dependency change to render
+     * @return rendered string
+     */
+    public String render(final DependencyChange dependencyChange) {
+        final RenderVisitor visitor = new RenderVisitor();
+        dependencyChange.accept(visitor);
+        return visitor.getRendered();
+    }
+
+    private static class RenderVisitor implements DependencyChangeVisitor {
+        private String rendered;
+
+        @Override
+        public void visit(final DependencyAdd addedDependency) {
+            this.rendered = "* Added " + renderDependencyChange(addedDependency);
+        }
+
+        @Override
+        public void visit(final DependencyRemove removedDependency) {
+            this.rendered = "* Removed " + renderDependencyChange(removedDependency);
+        }
+
+        @Override
+        public void visit(final DependencyUpdate updatedDependency) {
+            this.rendered = "* Updated " + renderDependencyChange(updatedDependency) + " to "
+                    + updatedDependency.getNewVersion();
+        }
+
+        private String renderDependencyChange(final DependencyChange addedDependency) {
+            return "`" + addedDependency.getGroupId() + ":" + addedDependency.getArtifactId() + ":"
+                    + addedDependency.getVersion() + "`";
+        }
+
+        /**
+         * Get the rendered result.
+         *
+         * @return rendered result
+         */
+        public String getRendered() {
+            return this.rendered;
+        }
+    }
+}
