@@ -13,6 +13,7 @@ addons:
 install:
   - git config remote.origin.fetch +refs/heads/*:refs/remotes/origin/*
   - git fetch --tags
+  - git tag
 script:
   - mvn clean install sonar:sonar project-keeper:verify
 cache:
