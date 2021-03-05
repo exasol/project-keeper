@@ -46,7 +46,9 @@ public class ChangelogValidator implements Validator {
             final ChangelogFile fixedChangelog = fixChangelogSections(changelogFile);
             if (!changelogFile.equals(fixedChangelog)) {
                 findingConsumer.accept(new ValidationFinding(
-                        ExaError.messageBuilder("E-PK-40").message("Changes file is invalid.").toString(),
+                        ExaError.messageBuilder("E-PK-40")
+                                .message("Changes file is invalid.\nExpected content:\n{expected content}")
+                                .parameter("expected content", fixedChangelog.toString()).toString(),
                         (log -> new ChangelogIO().write(fixedChangelog, this.changesFileAbsolutePath))));
             }
         }

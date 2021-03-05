@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators.changelog;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * This class represents a doc/changes/changes_x.x.x.md file.
@@ -74,7 +75,8 @@ public class ChangelogFile {
 
     @Override
     public String toString() {
-        return "ChangelogFile{" + "header=" + this.header + ", sections=" + this.sections + '}';
+        return String.join("\n", this.header) + "\n"
+                + this.sections.stream().map(ChangelogSection::toString).collect(Collectors.joining("\n"));
     }
 
     /**
