@@ -91,7 +91,7 @@ public class GitRepository {
         for (final Ref tagRef : repository.getRefDatabase().getRefsByPrefix(R_TAGS)) {
             final String tagName = tagRef.getName().replace(R_TAGS, "");
             final ObjectId commitId = getTaggedCommitId(repository, tagRef);
-            taggedResources.computeIfAbsent(commitId, commit -> new LinkedList<>()).add(new String(tagName));
+            taggedResources.computeIfAbsent(commitId, commit -> new LinkedList<>()).add(tagName);
         }
         return taggedResources;
     }
