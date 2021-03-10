@@ -7,7 +7,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
  */
 public class TaggedCommit {
     private final GitCommit commit;
-    private final GitTag tag;
+    private final String tag;
 
     /**
      * Create a new instance of {@link TaggedCommit}.
@@ -15,7 +15,7 @@ public class TaggedCommit {
      * @param commit git commit
      * @param tag    git tag
      */
-    public TaggedCommit(final RevCommit commit, final GitTag tag) {
+    public TaggedCommit(final RevCommit commit, final String tag) {
         this.commit = new GitCommit(commit);
         this.tag = tag;
     }
@@ -25,7 +25,7 @@ public class TaggedCommit {
      * 
      * @return git tag
      */
-    public GitTag getTag() {
+    public String getTag() {
         return this.tag;
     }
 

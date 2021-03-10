@@ -54,7 +54,7 @@ class DependencySectionFixer {
         final List<ChangelogSection> sections = new ArrayList<>(changelogFile.getSections());
         removeDependencySection(sections);
         sections.add(new ChangelogSection(renderedReport));
-        return new ChangelogFile(List.copyOf(changelogFile.getHeader()), sections);
+        return new ChangelogFile(List.copyOf(changelogFile.getHeaderLines()), sections);
     }
 
     private void removeDependencySection(final List<ChangelogSection> sections) {

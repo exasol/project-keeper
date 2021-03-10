@@ -8,17 +8,17 @@ import java.util.stream.Collectors;
  */
 public class ChangelogFile {
     public static final String DEPENDENCY_UPDATES_HEADLINE = "## Dependency Updates";
-    private final List<String> header;
+    private final List<String> headerLines;
     private final List<ChangelogSection> sections;
 
     /**
      * Create a new instance of {@link ChangelogFile}.
      * 
-     * @param header   header of the changelog file
-     * @param sections sections of the changelog file
+     * @param headerLines header of the changelog file
+     * @param sections    sections of the changelog file
      */
-    public ChangelogFile(final List<String> header, final List<ChangelogSection> sections) {
-        this.header = header;
+    public ChangelogFile(final List<String> headerLines, final List<ChangelogSection> sections) {
+        this.headerLines = headerLines;
         this.sections = sections;
     }
 
@@ -36,8 +36,8 @@ public class ChangelogFile {
      *
      * @return list of lines of the header
      */
-    public List<String> getHeader() {
-        return this.header;
+    public List<String> getHeaderLines() {
+        return this.headerLines;
     }
 
     /**
@@ -46,7 +46,7 @@ public class ChangelogFile {
      * @return headline
      */
     public String getHeadline() {
-        return this.header.get(0);
+        return this.headerLines.get(0);
     }
 
     /**
@@ -65,17 +65,17 @@ public class ChangelogFile {
         if (other == null || getClass() != other.getClass())
             return false;
         final ChangelogFile that = (ChangelogFile) other;
-        return Objects.equals(this.header, that.header) && Objects.equals(this.sections, that.sections);
+        return Objects.equals(this.headerLines, that.headerLines) && Objects.equals(this.sections, that.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.header, this.sections);
+        return Objects.hash(this.headerLines, this.sections);
     }
 
     @Override
     public String toString() {
-        return String.join("\n", this.header) + "\n"
+        return String.join("\n", this.headerLines) + "\n"
                 + this.sections.stream().map(ChangelogSection::toString).collect(Collectors.joining("\n"));
     }
 

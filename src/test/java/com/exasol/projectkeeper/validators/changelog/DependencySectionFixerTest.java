@@ -61,6 +61,6 @@ class DependencySectionFixerTest {
         final ChangelogFile changelogFile = ChangelogFile.builder().setHeader(List.of("headline"))
                 .addSection(List.of(DEPENDENCY_UPDATES_HEADLINE, "myLine")).build();
         final ChangelogFile fixedChangelogFile = new DependencySectionFixer(tempDir).fix(changelogFile);
-        assertThat(changelogFile.getHeader(), equalTo(fixedChangelogFile.getHeader()));
+        assertThat(changelogFile.getHeaderLines(), equalTo(fixedChangelogFile.getHeaderLines()));
     }
 }

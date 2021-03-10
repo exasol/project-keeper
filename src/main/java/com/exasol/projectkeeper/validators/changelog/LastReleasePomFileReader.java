@@ -22,8 +22,7 @@ public class LastReleasePomFileReader {
         final GitRepository gitRepository = new GitRepository(projectDirectory);
         final ExasolVersionMatcher exasolVersionMatcher = new ExasolVersionMatcher();
         final Optional<TaggedCommit> latestCommitWithExasolVersionTag = gitRepository.getTagsInCurrentBranch().stream()
-                .filter(taggedCommit -> exasolVersionMatcher.isExasolVersion(taggedCommit.getTag().getName()))
-                .findFirst();
+                .filter(taggedCommit -> exasolVersionMatcher.isExasolStyleVersion(taggedCommit.getTag())).findFirst();
         return latestCommitWithExasolVersionTag
                 .map(taggedCommit -> gitRepository.readFileAtCommit(POM_PATH, taggedCommit.getCommit()));
     }

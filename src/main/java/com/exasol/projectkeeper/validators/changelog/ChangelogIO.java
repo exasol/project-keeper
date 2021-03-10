@@ -63,7 +63,7 @@ public class ChangelogIO {
      */
     public void write(final ChangelogFile changelog, final Path destinationFile) {
         try (final BufferedWriter fileWriter = new BufferedWriter(new FileWriter(destinationFile.toFile()))) {
-            writeSection(fileWriter, changelog.getHeader());
+            writeSection(fileWriter, changelog.getHeaderLines());
             for (final ChangelogSection section : changelog.getSections()) {
                 writeSection(fileWriter, section.getContent());
             }

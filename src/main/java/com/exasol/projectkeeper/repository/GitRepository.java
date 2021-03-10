@@ -39,12 +39,8 @@ public class GitRepository {
     public List<TaggedCommit> getTagsInCurrentBranch() {
         try (final Git git = openLocalGithubRepository()) {
             final String currentBranch = git.getRepository().getFullBranch();
-            if (currentBranch == null) {
-                throw new IllegalStateException(
-                        ExaError.messageBuilder("E-PK-37").message("Could not get checked out branch of repository.")
-                                .mitigation("Create a branch and check it out.").toString());
-            }
-            return getTagsInBranch(git, currentBranch);
+            validateBranchExists(currentBranch);
+            return getTagsInBranch(git.getRepository(), currentBranch);
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-33")
@@ -53,10 +49,18 @@ public class GitRepository {
         }
     }
 
-    private List<TaggedCommit> getTagsInBranch(final Git git, final String branchName) throws IOException {
-        final org.eclipse.jgit.lib.Repository repository = git.getRepository();
+    private void validateBranchExists(final String currentBranch) {
+        if (currentBranch == null) {
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("E-PK-37").message("Could not get checked out branch of repository.")
+                            .mitigation("Create a branch and check it out.").toString());
+        }
+    }
+
+    private List<TaggedCommit> getTagsInBranch(final Repository repository, final String branchName)
+            throws IOException {
         final ObjectId branch = repository.resolve(branchName);
-        final Map<ObjectId, List<GitTag>> tags = getTagsByTheIdOfTheCommitTheyPointTo(git);
+        final Map<ObjectId, List<String>> tags = getTagsByTheIdOfTheCommitTheyPointTo(repository);
         final RevWalk commitWalker = new RevWalk(repository);
         try {
             commitWalker.markStart(commitWalker.parseCommit(branch));
@@ -65,11 +69,15 @@ public class GitRepository {
             return Collections.emptyList();
         }
         commitWalker.sort(RevSort.COMMIT_TIME_DESC);
+        return readTagsFromCommits(tags, commitWalker);
+    }
+
+    private List<TaggedCommit> readTagsFromCommits(final Map<ObjectId, List<String>> tags, final RevWalk commitWalker) {
         final List<TaggedCommit> result = new ArrayList<>();
         for (final RevCommit commit : commitWalker) {
             if (tags.containsKey(commit.getId())) {
-                final List<GitTag> commitsTags = tags.get(commit.getId());
-                for (final GitTag tag : commitsTags) {
+                final List<String> commitsTags = tags.get(commit.getId());
+                for (final String tag : commitsTags) {
                     result.add(new TaggedCommit(commit, tag));
                 }
             }
@@ -77,12 +85,13 @@ public class GitRepository {
         return result;
     }
 
-    private Map<ObjectId, List<GitTag>> getTagsByTheIdOfTheCommitTheyPointTo(final Git git) throws IOException {
-        final Map<ObjectId, List<GitTag>> taggedResources = new HashMap<>();
-        for (final Ref tagRef : git.getRepository().getRefDatabase().getRefsByPrefix(R_TAGS)) {
+    private Map<ObjectId, List<String>> getTagsByTheIdOfTheCommitTheyPointTo(final Repository repository)
+            throws IOException {
+        final Map<ObjectId, List<String>> taggedResources = new HashMap<>();
+        for (final Ref tagRef : repository.getRefDatabase().getRefsByPrefix(R_TAGS)) {
             final String tagName = tagRef.getName().replace(R_TAGS, "");
-            final ObjectId commitId = getTaggedCommitId(git.getRepository(), tagRef);
-            taggedResources.computeIfAbsent(commitId, commit -> new LinkedList<>()).add(new GitTag(tagName));
+            final ObjectId commitId = getTaggedCommitId(repository, tagRef);
+            taggedResources.computeIfAbsent(commitId, commit -> new LinkedList<>()).add(new String(tagName));
         }
         return taggedResources;
     }

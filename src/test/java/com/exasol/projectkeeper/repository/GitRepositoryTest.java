@@ -32,7 +32,7 @@ class GitRepositoryTest {
             makeCommitAndTag(git, 3, false);
             final GitRepository repository = new GitRepository(this.tempDir);
             final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
-            final List<String> tagNames = result.stream().map(taggedCommit -> taggedCommit.getTag().getName())
+            final List<String> tagNames = result.stream().map(taggedCommit -> taggedCommit.getTag())
                     .collect(Collectors.toList());
             assertThat(tagNames, contains("tag3", "tag1"));
         }
@@ -49,8 +49,7 @@ class GitRepositoryTest {
             makeCommitAndTag(git, 1, true);
             final GitRepository repository = new GitRepository(this.tempDir);
             final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
-            final List<String> tagNames = result.stream().map(taggedCommit -> taggedCommit.getTag().getName())
-                    .collect(Collectors.toList());
+            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
             assertThat(tagNames, contains("tag1"));
         }
     }
@@ -64,8 +63,7 @@ class GitRepositoryTest {
             git.checkout().setName(secondCommit.getName()).call();
             final GitRepository repository = new GitRepository(this.tempDir);
             final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
-            final List<String> tagNames = result.stream().map(taggedCommit -> taggedCommit.getTag().getName())
-                    .collect(Collectors.toList());
+            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
             assertThat(tagNames, contains("tag2", "tag1"));
         }
     }

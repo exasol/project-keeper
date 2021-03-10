@@ -14,7 +14,7 @@ public class ExasolVersionMatcher {
      * @param tag string to match
      * @return {@code true} if string matches the format
      */
-    public boolean isExasolVersion(final String tag) {
+    public boolean isExasolStyleVersion(final String tag) {
         return EXASOL_VERSION_PATTERN.matcher(tag).matches();
     }
 }

@@ -21,6 +21,6 @@ class ExasolVersionMatcherTest {
             "1.1.1a, false",//
     })
     void testMatching(final String input, final boolean expectedResult) {
-        assertThat(EXASOL_VERSION_MATCHER.isExasolVersion(input), equalTo(expectedResult));
+        assertThat(EXASOL_VERSION_MATCHER.isExasolStyleVersion(input), equalTo(expectedResult));
     }
 }
