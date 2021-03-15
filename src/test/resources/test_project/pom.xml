@@ -9,9 +9,22 @@
     <packaging>jar</packaging>
     <name>Test MyMojo</name>
     <properties>
-        <my.property>1.2.3</my.property>
+        <my.property>0.2.2</my.property>
         <jacoco.version>0.8.5</jacoco.version>
     </properties>
+    <dependencies>
+        <dependency><!-- just a few dependencies to test release letter generation -->
+            <groupId>com.exasol</groupId>
+            <artifactId>error-reporting-java</artifactId>
+            <version>${my.property}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>hamcrest-resultset-matcher</artifactId>
+            <version>1.4.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
     <build>
         <plugins>
             <plugin>
@@ -36,6 +49,10 @@
                         <excludedFile>**/logging.properties</excludedFile>
                     </excludedFiles>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
             </plugin>
         </plugins>
     </build>

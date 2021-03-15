@@ -21,12 +21,12 @@ Renamed file:
 ## Features / Enhancements
 
 * #21: Added validation for doc/changes/changelog_X.X.X.md
-* #24: Updates in the templates 
+* #24: Updates in the templates
 
 ## Bugfixes:
 
 * #26: Don't require -SNAPSHOT changes files
-    This bug was introduced in #21 and never released
+  This bug was introduced in #21 and never released
 
 ## Dependency Updates:
 
