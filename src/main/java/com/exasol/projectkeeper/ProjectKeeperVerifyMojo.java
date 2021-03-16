@@ -17,12 +17,11 @@ import com.exasol.errorreporting.ExaError;
  */
 @Mojo(name = "verify", defaultPhase = LifecyclePhase.PACKAGE)
 public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         final AtomicBoolean hadFindingsWithFix = new AtomicBoolean(false);
         final AtomicBoolean hadFindingsWithoutFix = new AtomicBoolean(false);
-        getValidators(getPomFile()).forEach(validator -> validator.validate(finding -> {
+        getValidators().forEach(validator -> validator.validate(finding -> {
             getLog().error(finding.getMessage());
             if (finding.hasFix()) {
                 hadFindingsWithFix.set(true);

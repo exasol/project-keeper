@@ -163,7 +163,7 @@ class ProjectKeeperIT {
         verifier.verifyErrorFreeLog();
     }
 
-    // TODO enable after #74 is fixed
+    @Test
     void testValidAfterFix() throws VerificationException {
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
