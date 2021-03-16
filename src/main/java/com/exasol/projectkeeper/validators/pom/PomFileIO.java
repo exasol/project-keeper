@@ -17,7 +17,7 @@ import com.exasol.errorreporting.ExaError;
 /**
  * This class implements access to a pom file.
  */
-public class PomFileIO {
+class PomFileIO {
     private final File pomFile;
     private final Document content;
 

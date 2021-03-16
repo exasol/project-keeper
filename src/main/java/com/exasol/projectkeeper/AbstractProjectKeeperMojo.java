@@ -12,7 +12,6 @@ import org.apache.maven.project.MavenProject;
 import com.exasol.projectkeeper.validators.DeletedFilesValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
-import com.exasol.projectkeeper.validators.pom.PomFileIO;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 
 /**
@@ -45,15 +44,11 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         ).collect(Collectors.toSet());
     }
 
-    protected PomFileIO getPomFile() {
-        return new PomFileIO(this.project.getModel().getPomFile());
-    }
-
-    protected List<Validator> getValidators(final PomFileIO pomFile) {
+    protected List<Validator> getValidators() {
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
         final ExcludedFilesMatcher excludedFilesMatcher = new ExcludedFilesMatcher(this.excludedFiles);
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
-                new PomFileValidator(enabledModules, pomFile),
+                new PomFileValidator(enabledModules, this.project.getModel().getPomFile()),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(),
                         this.project.getBasedir().toPath()),
                 new DeletedFilesValidator(this.project.getBasedir().toPath(), excludedFilesMatcher));

@@ -1,9 +1,11 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import java.util.Collection;
-import java.util.List;
+import java.io.File;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.validators.pom.dependencies.JacocoAgentDependencyValidator;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
@@ -20,7 +22,7 @@ public class PomFileValidator implements Validator {
             new JacocoAgentDependencyValidator(), new DependencyPluginValidator(), new SourcePluginValidator(),
             new JavadocPluginValidator(), new ErrorCodeCrawlerPluginValidator());
     final Collection<ProjectKeeperModule> enabledModules;
-    private final PomFileIO pomFile;
+    private final PomFileIO pomFileIO;
 
     /**
      * Create a new instance of {@link PomFileValidator}.
@@ -28,15 +30,36 @@ public class PomFileValidator implements Validator {
      * @param enabledModules list of enables modules
      * @param pomFile        pom file to create the runner for.
      */
-    public PomFileValidator(final Collection<ProjectKeeperModule> enabledModules, final PomFileIO pomFile) {
+    public PomFileValidator(final Collection<ProjectKeeperModule> enabledModules, final File pomFile) {
         this.enabledModules = enabledModules;
-        this.pomFile = pomFile;
+        this.pomFileIO = new PomFileIO(pomFile);
     }
 
     @Override
     public PomFileValidator validate(final Consumer<ValidationFinding> findingConsumer) {
+        final List<ValidationFinding> findings = new ArrayList<>();
         ALL_VALIDATORS.stream().filter(validator -> this.enabledModules.contains(validator.getModule())).forEach(
-                template -> template.validate(this.pomFile.getContent(), this.enabledModules, findingConsumer));
+                template -> template.validate(this.pomFileIO.getContent(), this.enabledModules, findings::add));
+        if (!findings.isEmpty()) {
+            getCompoundFinding(findingConsumer, findings);
+        }
         return this;
+    }
+
+    private void getCompoundFinding(final Consumer<ValidationFinding> findingConsumer,
+            final List<ValidationFinding> findings) {
+        final String pomFindingMessages = findings.stream().map(ValidationFinding::getMessage)
+                .collect(Collectors.joining("\n"));
+        findingConsumer.accept(new ValidationFinding(
+                ExaError.messageBuilder("E-PK-45")
+                        .message("Pom file is invalid:\n{{pom findings|uq}}", pomFindingMessages).toString(),
+                getFix(findings)));
+    }
+
+    private ValidationFinding.Fix getFix(final List<ValidationFinding> findings) {
+        return log -> {
+            findings.forEach(finding -> finding.getFix().fixError(log));
+            this.pomFileIO.writeChanges();
+        };
     }
 }
