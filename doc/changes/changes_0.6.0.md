@@ -1,6 +1,10 @@
 # Project keeper maven plugin 0.6.0, released 2021-XX-XX
 
-Code name:
+Code name: Validation of dependency update section in changes file.
+
+## Summary
+
+This release adds validation for dependency changes in the changes file.
 
 ## Features
 
@@ -12,6 +16,7 @@ Code name:
 * #70: Fixed changes template
 * #76: Dependencies with property versions break dependency section validation
 * #74: Fixed a bug that the project was only valid after running fix twice
+* #78: Fixed that plugins with no versions were ignored in changelog
 
 ## Dependency Updates
 

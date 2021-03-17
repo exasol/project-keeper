@@ -20,9 +20,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.exasol.projectkeeper.validators.*;
+
 class ChangesFileValidatorTest {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
+    private static final MavenModelReader MAVEN_MODEL_READER = new SimpleMavenModelReader();
 
     @TempDir
     File tempDir;
@@ -42,8 +45,8 @@ class ChangesFileValidatorTest {
     @Test
     void testValidationForSnapshotVersion() throws IOException {
         createTestSetup();
-        assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir.toPath()),
-                hasNoValidationFindings());
+        assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir.toPath(),
+                MAVEN_MODEL_READER), hasNoValidationFindings());
     }
 
     @Test
@@ -77,7 +80,7 @@ class ChangesFileValidatorTest {
     }
 
     private ChangesFileValidator createValidator() {
-        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir.toPath());
+        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir.toPath(), MAVEN_MODEL_READER);
     }
 
     private void createTestSetup() throws IOException {

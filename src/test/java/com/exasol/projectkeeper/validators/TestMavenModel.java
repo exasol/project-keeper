@@ -1,6 +1,7 @@
-package com.exasol.projectkeeper.validators.changesfile;
+package com.exasol.projectkeeper.validators;
 
-import java.io.*;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Path;
 
 import org.apache.maven.model.*;
@@ -16,14 +17,18 @@ public class TestMavenModel extends Model {
         this.setVersion("0.1.0");
         this.setArtifactId("my-test-project");
         this.setGroupId("com.example");
-        this.setModelVersion("3.0.0");
+        this.setModelVersion("4.0.0");
     }
 
     public void addDependency() {
+        addDependency(DEFAULT_DEPENDENCY_VERSION);
+    }
+
+    public void addDependency(final String version) {
         final Dependency dependency = new Dependency();
         dependency.setGroupId(DEPENDENCY_GROUP_ID);
         dependency.setArtifactId(DEPENDENCY_ARTIFACT_ID);
-        dependency.setVersion(DEFAULT_DEPENDENCY_VERSION);
+        dependency.setVersion(version);
         dependency.setScope("");
         this.addDependency(dependency);
     }
@@ -31,13 +36,6 @@ public class TestMavenModel extends Model {
     public void writeAsPomToProject(final Path projectDir) throws IOException {
         try (final FileWriter fileWriter = new FileWriter(projectDir.resolve("pom.xml").toFile())) {
             new MavenXpp3Writer().write(fileWriter, this);
-        }
-    }
-
-    public String asPomString() throws IOException {
-        try (final StringWriter stringWriter = new StringWriter()) {
-            new MavenXpp3Writer().write(stringWriter, this);
-            return stringWriter.toString();
         }
     }
 }
