@@ -3,9 +3,14 @@ package com.exasol.projectkeeper.validators;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collection;
+import java.util.List;
 
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
+
+import com.exasol.projectkeeper.ProjectKeeperModule;
 
 public class TestMavenModel extends Model {
     public final static String DEPENDENCY_GROUP_ID = "com.example";
@@ -37,5 +42,29 @@ public class TestMavenModel extends Model {
         try (final FileWriter fileWriter = new FileWriter(projectDir.resolve("pom.xml").toFile())) {
             new MavenXpp3Writer().write(fileWriter, this);
         }
+    }
+
+    public void addProjectKeeperPlugin(final Collection<ProjectKeeperModule> enabledModules) {
+        final Plugin projectKeeperPlugin = new Plugin();
+        projectKeeperPlugin.setGroupId("com.exasol");
+        projectKeeperPlugin.setArtifactId("project-keeper-maven-plugin");
+        final Xpp3Dom configuration = new Xpp3Dom("configuration");
+        final Xpp3Dom modules = buildModulesConfiguration(enabledModules);
+        configuration.addChild(modules);
+        projectKeeperPlugin.setConfiguration(configuration);
+        final PluginExecution execution = new PluginExecution();
+        execution.setGoals(List.of("verify"));
+        projectKeeperPlugin.setExecutions(List.of(execution));
+        this.getBuild().addPlugin(projectKeeperPlugin);
+    }
+
+    private Xpp3Dom buildModulesConfiguration(final Collection<ProjectKeeperModule> enabledModules) {
+        final Xpp3Dom modules = new Xpp3Dom("modules");
+        for (final ProjectKeeperModule enabledModule : enabledModules) {
+            final Xpp3Dom module = new Xpp3Dom("module");
+            module.setValue(enabledModule.name());
+            modules.addChild(module);
+        }
+        return modules;
     }
 }

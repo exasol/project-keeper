@@ -173,16 +173,11 @@ class ProjectKeeperIT {
     @Test
     void testChangesFileGeneration() throws IOException, GitAPIException, VerificationException {
         final Git git = Git.open(this.projectDir.toFile());
-        final TestMavenModel testMavenModel = new TestMavenModel();
-        testMavenModel.addDependency("1.0.0");
-        testMavenModel.writeAsPomToProject(this.projectDir);
+        writePomWithOneDependency("0.1.0", "1.0.0");
         git.add().addFilepattern("pom.xml").call();
         git.commit().setMessage("first commit").call();
         git.tag().setName("0.1.0").call();
-        final TestMavenModel testMavenModel2 = new TestMavenModel();
-        testMavenModel2.addDependency("1.0.1");
-        testMavenModel2.setVersion("0.2.0");
-        testMavenModel2.writeAsPomToProject(this.projectDir);
+        writePomWithOneDependency("0.2.0", "1.0.1");
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
@@ -191,6 +186,19 @@ class ProjectKeeperIT {
                 () -> assertThat(generatedChangesFile, containsString("* Updated `com.example:my-lib:1.0.0` to 1.0.1")),
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `org.apache.maven.plugins:maven-surefire-plugin:2.12.4` to")));
+    }
+
+    private void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) throws IOException {
+        final TestMavenModel testMavenModel = getTestMavenModelWithProjectKeeperPlugin();
+        testMavenModel.setVersion(pomVersion);
+        testMavenModel.addDependency(dependencyVersion);
+        testMavenModel.writeAsPomToProject(this.projectDir);
+    }
+
+    private TestMavenModel getTestMavenModelWithProjectKeeperPlugin() {
+        final TestMavenModel testMavenModel = new TestMavenModel();
+        testMavenModel.addProjectKeeperPlugin(List.of(ProjectKeeperModule.DEFAULT));
+        return testMavenModel;
     }
 
     @Test
