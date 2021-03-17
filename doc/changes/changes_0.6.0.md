@@ -6,6 +6,7 @@ Code name:
 
 * #67: Added broken links checker workflow
 * #25: Added validation for dependency update section in changelog
+* #85: Added support for new release-droid version
 
 ## Bugfixes
 
