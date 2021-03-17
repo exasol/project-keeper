@@ -12,7 +12,7 @@ import com.exasol.errorreporting.ExaError;
 /**
  * This class reads a maven {@link Model} from pom file.
  * <p>
- * In contrast to the plain {@link MavenXpp3Reader} this class also resolves parses the model and resolves properties
+ * In contrast to the plain {@link MavenXpp3Reader} this class also parses the model and resolves properties
  * and plugin versions.
  * </p>
  */
