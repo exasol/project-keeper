@@ -12,8 +12,8 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 
+import com.exasol.projectkeeper.validators.DefaultMavenModelReader;
 import com.exasol.projectkeeper.validators.DeletedFilesValidator;
-import com.exasol.projectkeeper.validators.MavenInjectedMavenModelReader;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
@@ -61,7 +61,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                 new PomFileValidator(enabledModules, this.project.getModel().getPomFile()),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(),
                         this.project.getBasedir().toPath(),
-                        new MavenInjectedMavenModelReader(this.mavenProjectBuilder, this.session)),
+                        new DefaultMavenModelReader(this.mavenProjectBuilder, this.session)),
                 new DeletedFilesValidator(this.project.getBasedir().toPath(), excludedFilesMatcher));
     }
 }
