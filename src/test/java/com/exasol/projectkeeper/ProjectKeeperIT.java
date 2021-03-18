@@ -1,11 +1,9 @@
 package com.exasol.projectkeeper;
 
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +19,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
+
+import com.exasol.projectkeeper.validators.TestMavenModel;
 
 /**
  * This integration test tests the maven plugin in a safe environment. Since we don't want to install the plugin to the
@@ -167,14 +167,44 @@ class ProjectKeeperIT {
     void testValidAfterFix() throws VerificationException {
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
-        verifier.executeGoal("project-keeper:verify");
+        assertDoesNotThrow(() -> verifier.executeGoal("project-keeper:verify"));
+    }
+
+    @Test
+    void testChangesFileGeneration() throws IOException, GitAPIException, VerificationException {
+        final Git git = Git.open(this.projectDir.toFile());
+        writePomWithOneDependency("0.1.0", "1.0.0");
+        git.add().addFilepattern("pom.xml").call();
+        git.commit().setMessage("first commit").call();
+        git.tag().setName("0.1.0").call();
+        writePomWithOneDependency("0.2.0", "1.0.1");
+        final Verifier verifier = getVerifier();
+        verifier.executeGoal("project-keeper:fix");
+        final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
+        assertAll(//
+                () -> assertThat(generatedChangesFile, startsWith("# my-test-project 0.2.0, released")),
+                () -> assertThat(generatedChangesFile, containsString("* Updated `com.example:my-lib:1.0.0` to 1.0.1")),
+                () -> assertThat(generatedChangesFile,
+                        containsString("* Updated `org.apache.maven.plugins:maven-surefire-plugin:2.12.4` to")));
+    }
+
+    private void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) throws IOException {
+        final TestMavenModel testMavenModel = getTestMavenModelWithProjectKeeperPlugin();
+        testMavenModel.setVersion(pomVersion);
+        testMavenModel.addDependency(dependencyVersion);
+        testMavenModel.writeAsPomToProject(this.projectDir);
+    }
+
+    private TestMavenModel getTestMavenModelWithProjectKeeperPlugin() {
+        final TestMavenModel testMavenModel = new TestMavenModel();
+        testMavenModel.addProjectKeeperPlugin(List.of(ProjectKeeperModule.DEFAULT));
+        return testMavenModel;
     }
 
     @Test
     void testJacocoAgentIsExtracted() throws VerificationException {
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
-        verifier.executeGoal("project-keeper:fix");// TODO remove after #74 is fixed
         verifier.executeGoal("package");
         assertThat(this.projectDir.resolve(Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar")).toFile(),
                 anExistingFile());

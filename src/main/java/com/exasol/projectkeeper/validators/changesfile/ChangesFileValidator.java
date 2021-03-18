@@ -10,6 +10,7 @@ import org.apache.maven.plugin.logging.Log;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.validators.MavenModelReader;
 
 /**
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
@@ -20,6 +21,7 @@ public class ChangesFileValidator implements Validator {
     private final Path changesFileAbsolutePath;
     private final Path projectDirectory;
     private final String projectVersion;
+    private final MavenModelReader mavenModelReader;
 
     /**
      * Create a new instance of {@link ChangesFileValidator}
@@ -27,13 +29,16 @@ public class ChangesFileValidator implements Validator {
      * @param projectVersion   version of the project to validate
      * @param projectName      name of the maven project
      * @param projectDirectory root directory of the maven project
+     * @param mavenModelReader reader for maven models
      */
-    public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory) {
+    public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
+            final MavenModelReader mavenModelReader) {
         this.projectVersion = projectVersion;
         this.relativePathToChangesFile = Path.of("doc", "changes", "changes_" + projectVersion + ".md");
         this.projectName = projectName;
         this.changesFileAbsolutePath = projectDirectory.resolve(this.relativePathToChangesFile);
         this.projectDirectory = projectDirectory;
+        this.mavenModelReader = mavenModelReader;
     }
 
     @Override
@@ -59,7 +64,8 @@ public class ChangesFileValidator implements Validator {
     }
 
     private ChangesFile fixSections(final ChangesFile changesFile) {
-        final DependencySectionFixer dependencySectionFixer = new DependencySectionFixer(this.projectDirectory);
+        final DependencySectionFixer dependencySectionFixer = new DependencySectionFixer(this.mavenModelReader,
+                this.projectDirectory);
         return dependencySectionFixer.fix(changesFile);
     }
 
