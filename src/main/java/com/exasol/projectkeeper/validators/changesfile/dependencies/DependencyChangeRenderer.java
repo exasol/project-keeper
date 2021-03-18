@@ -32,8 +32,8 @@ class DependencyChangeRenderer {
 
         @Override
         public void visit(final UpdatedDependency updatedDependency) {
-            this.rendered = "* Updated " + renderDependencyChange(updatedDependency) + " to "
-                    + updatedDependency.getNewVersion();
+            this.rendered = "* Updated " + renderDependencyChange(updatedDependency) + " to `"
+                    + updatedDependency.getNewVersion() + "`";
         }
 
         private String renderDependencyChange(final DependencyChange addedDependency) {
