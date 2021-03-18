@@ -20,6 +20,10 @@ This release adds validation for dependency changes in the changes file.
 * #78: Fixed that plugins with no versions were ignored in changelog
 * #83: Fixed wrong format for updated dependencies
 
+## Refactoring
+
+* #91: Update version of links' checker workflow
+
 ## Dependency Updates
 
 ### Compile Dependency Updates
