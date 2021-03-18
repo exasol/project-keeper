@@ -183,7 +183,8 @@ class ProjectKeeperIT {
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
         assertAll(//
                 () -> assertThat(generatedChangesFile, startsWith("# my-test-project 0.2.0, released")),
-                () -> assertThat(generatedChangesFile, containsString("* Updated `com.example:my-lib:1.0.0` to 1.0.1")),
+                () -> assertThat(generatedChangesFile,
+                        containsString("* Updated `com.example:my-lib:1.0.0` to `1.0.1`")),
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `org.apache.maven.plugins:maven-surefire-plugin:2.12.4` to")));
     }

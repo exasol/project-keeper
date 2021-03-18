@@ -17,7 +17,7 @@ class DependencyChangeRendererTest {
     @Test
     void testRenderUpdate() {
         final DependencyChange dependencyChange = new UpdatedDependency("com.example", "my-lib", "1.0.0", "1.0.1");
-        assertThat(RENDERER.render(dependencyChange), equalTo("* Updated `com.example:my-lib:1.0.0` to 1.0.1"));
+        assertThat(RENDERER.render(dependencyChange), equalTo("* Updated `com.example:my-lib:1.0.0` to `1.0.1`"));
     }
 
     @Test
