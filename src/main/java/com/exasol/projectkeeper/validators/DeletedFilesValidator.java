@@ -8,19 +8,21 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ExcludedFilesMatcher;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.*;
 
 /**
  * {@link Validator} that checks that specific files do not exist.
  */
 public class DeletedFilesValidator implements Validator {
+    private static final String GITHUB_WORKFLOWS = ".github/workflows";
     private static final Map<Path, String> FILES_THAT_MUST_NOT_EXIST = Map.of(//
-            Path.of(".github", "workflows", "maven.yml"), "We renamed maven.yml to dependencies_check.yml", //
+            Path.of(GITHUB_WORKFLOWS, "maven.yml"), "We renamed maven.yml to dependencies_check.yml", //
             Path.of("assembly", "all-dependencies.xml"),
-            "We moved assembly/all-dependencies.xml to src/assembly/all-dependencies.xml"//
-    );
+            "We moved assembly/all-dependencies.xml to src/assembly/all-dependencies.xml",
+            Path.of(GITHUB_WORKFLOWS, "maven_central_release.yml"),
+            "We renamed maven.yml to release_droid_release_on_maven_central.yml",
+            Path.of(GITHUB_WORKFLOWS, "github_release.yml"),
+            "We renamed maven.yml to release_droid_upload_github_release_assets.yml");
     private final Path projectDirectory;
     private final ExcludedFilesMatcher excludedFiles;
 

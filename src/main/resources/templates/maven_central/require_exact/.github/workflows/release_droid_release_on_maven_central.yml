@@ -1,4 +1,4 @@
-name: Maven Central Release
+name: Release Droid - Release On Maven Central
 
 on:
   workflow_dispatch:
