@@ -1,4 +1,4 @@
-name: Prepare Original Checksum
+name: Release Droid - Print Quick Checksum
 
 on:
   workflow_dispatch:
@@ -20,13 +20,8 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Run tests and build with Maven
-        run: mvn -B clean verify --file pom.xml
-      - name: Prepare checksum
-        run: find target -maxdepth 1 -name *.jar -exec sha256sum "{}" + > original_checksum
-      - name: Upload checksum to the artifactory
-        uses: actions/upload-artifact@v2
-        with:
-          name: original_checksum
-          retention-days: 5
-          path: original_checksum
+      - name: Build with Maven skipping tests
+        run: mvn -B clean verify -DskipTests
+      - name: Print checksum
+        run: echo 'checksum_start==';find target -maxdepth 1 -name *.jar -exec sha256sum "{}" + | xargs;echo '==checksum_end'
+
