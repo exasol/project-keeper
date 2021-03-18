@@ -66,7 +66,7 @@ class DependencySectionFixer {
 
     private Model getOldModel() {
         final Optional<String> lastReleasesPomFile = new LastReleasePomFileReader()
-                .readLatestReleasesPomFile(this.projectDirectory);
+                .readLatestReleasesPomFile(this.projectDirectory, this.currentMavenModel.getVersion());
         if (lastReleasesPomFile.isPresent()) {
             return parseOldPomFile(lastReleasesPomFile.get());
         } else {
