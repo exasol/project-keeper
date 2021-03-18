@@ -2,39 +2,42 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import static com.exasol.projectkeeper.validators.changesfile.ChangesFile.DEPENDENCY_UPDATES_HEADING;
 
-import java.io.*;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.building.ModelBuildingException;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.validators.MavenModelReader;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.*;
 
 /**
  * This class fixes the dependency section of a {@link ChangesFile}.
  */
 class DependencySectionFixer {
+    private final MavenModelReader mavenModelReader;
     private final Path projectDirectory;
     private final Model currentMavenModel;
 
     /**
      * Create a new instance of {@link DependencySectionFixer}.
-     * 
+     *
+     * @param mavenModelReader reader for maven model
      * @param projectDirectory projects root directory
      */
-    public DependencySectionFixer(final Path projectDirectory) {
+    public DependencySectionFixer(final MavenModelReader mavenModelReader, final Path projectDirectory) {
+        this.mavenModelReader = mavenModelReader;
         this.projectDirectory = projectDirectory;
         this.currentMavenModel = parseCurrentPomFile(projectDirectory.resolve("pom.xml"));
     }
 
-    private static Model parseCurrentPomFile(final Path pomFile) {
-        try (final FileReader reader = new FileReader(pomFile.toFile())) {
-            return new MavenModelReader().readModel(reader);
-        } catch (final XmlPullParserException | IOException | ModelBuildingException exception) {
+    private Model parseCurrentPomFile(final Path pomFile) {
+        try {
+            return this.mavenModelReader.readModel(pomFile.toFile());
+        } catch (final MavenModelReader.ReadFailedException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-42").message("Failed to parse current pom file.").toString(),
                     exception);
@@ -74,12 +77,33 @@ class DependencySectionFixer {
         }
     }
 
-    private Model parseOldPomFile(final String pomFile) {
-        try (final StringReader reader = new StringReader(pomFile)) {
-            return new MavenModelReader().readModel(reader);
-        } catch (final XmlPullParserException | IOException | ModelBuildingException exception) {
+    private Model parseOldPomFile(final String pomFileContents) {
+        try (final TemporaryPomFile temporaryPomFile = new TemporaryPomFile(pomFileContents)) {
+            return this.mavenModelReader.readModel(temporaryPomFile.getPomFile().toFile());
+        } catch (final MavenModelReader.ReadFailedException | IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-38")
                     .message("Failed to parse pom file of previous release.").toString(), exception);
+        }
+    }
+
+    private static class TemporaryPomFile implements AutoCloseable {
+        private final Path pomFile;
+        private final Path tempDirectory;
+
+        public TemporaryPomFile(final String content) throws IOException {
+            this.tempDirectory = Files.createTempDirectory("pom");
+            this.pomFile = this.tempDirectory.resolve("pom.xml");
+            Files.writeString(this.pomFile, content);
+        }
+
+        @Override
+        public void close() throws IOException {
+            Files.delete(this.pomFile);
+            Files.delete(this.tempDirectory);
+        }
+
+        public Path getPomFile() {
+            return this.pomFile;
         }
     }
 }

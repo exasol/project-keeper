@@ -18,10 +18,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-class DependencySectionFixerTest {
+import com.exasol.projectkeeper.validators.*;
 
+class DependencySectionFixerTest {
     @TempDir
     static Path tempDir;
+    private static final MavenModelReader MAVEN_MODEL_READER = new SimpleMavenModelReader();
 
     @BeforeAll
     static void beforeAll() throws GitAPIException, IOException {
@@ -40,7 +42,8 @@ class DependencySectionFixerTest {
     @Test
     void testSectionIsAdded() {
         final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading")).build();
-        final List<ChangesFileSection> sections = new DependencySectionFixer(tempDir).fix(changesFile).getSections();
+        final List<ChangesFileSection> sections = new DependencySectionFixer(MAVEN_MODEL_READER, tempDir)
+                .fix(changesFile).getSections();
         assertThat(sections.size(), equalTo(1));
         assertThat(sections.get(0).getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
     }
@@ -49,7 +52,7 @@ class DependencySectionFixerTest {
     void testSectionIsUpdated() {
         final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading"))
                 .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
-        final ChangesFile fixedChangesFile = new DependencySectionFixer(tempDir).fix(changesFile);
+        final ChangesFile fixedChangesFile = new DependencySectionFixer(MAVEN_MODEL_READER, tempDir).fix(changesFile);
         final List<ChangesFileSection> sections = fixedChangesFile.getSections();
         assertThat(sections.size(), equalTo(1));
         assertThat(sections.get(0).getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
@@ -60,7 +63,7 @@ class DependencySectionFixerTest {
     void testHeaderIsPreserved() {
         final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading"))
                 .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
-        final ChangesFile fixedChangesFile = new DependencySectionFixer(tempDir).fix(changesFile);
+        final ChangesFile fixedChangesFile = new DependencySectionFixer(MAVEN_MODEL_READER, tempDir).fix(changesFile);
         assertThat(changesFile.getHeaderSectionLines(), equalTo(fixedChangesFile.getHeaderSectionLines()));
     }
 }
