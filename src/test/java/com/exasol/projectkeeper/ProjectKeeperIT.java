@@ -190,14 +190,14 @@ class ProjectKeeperIT {
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
         final Git git = Git.open(this.projectDir.toFile());
         writePomWithOneDependency("0.1.0", "1.0.0");
-        makeRelease(git, "0.1.0");
+        commitAndMakeTag(git, "0.1.0");
         writePomWithOneDependency("0.2.0", "1.0.1");
         if (released) {
-            makeRelease(git, "0.2.0");
+            commitAndMakeTag(git, "0.2.0");
         }
     }
 
-    private void makeRelease(final Git git, final String releaseTag) throws GitAPIException {
+    private void commitAndMakeTag(final Git git, final String releaseTag) throws GitAPIException {
         git.add().addFilepattern("pom.xml").call();
         git.commit().setMessage("commit for release " + releaseTag).call();
         git.tag().setName(releaseTag).call();
