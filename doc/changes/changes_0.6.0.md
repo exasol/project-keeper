@@ -4,13 +4,14 @@ Code name: Validation of dependency update section in changes file.
 
 ## Summary
 
-This release adds validation for dependency changes in the changes file.
+This release adds validation for dependency changes in the changes file. In addition, it updates the project configuration for releasing with release-droid 0.4.0.
 
 ## Features
 
 * #67: Added broken links checker workflow
 * #25: Added validation for dependency update section in changelog
 * #85: Added support for new release-droid version
+* #93: Added validation for reproducible-build-maven-plugin
 
 ## Bugfixes
 
@@ -40,3 +41,4 @@ This release adds validation for dependency changes in the changes file.
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:project-keeper-maven-plugin:0.5.0` to `0.6.0`
+* Added `io.github.zlika:reproducible-build-maven-plugin:0.13`
