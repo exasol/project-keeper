@@ -22,7 +22,7 @@ public class ReproducibleBuildPluginValidator extends AbstractPluginPomValidator
 
     @Override
     public ProjectKeeperModule getModule() {
-        return ProjectKeeperModule.MAVEN_CENTRAL;
+        return ProjectKeeperModule.DEFAULT;
     }
 
     @Override
