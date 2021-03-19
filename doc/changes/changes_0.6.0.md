@@ -21,6 +21,10 @@ This release adds validation for dependency changes in the changes file.
 * #83: Fixed wrong format for updated dependencies
 * #87: Fixed failing dependency section validation after release
 
+## Refactoring
+
+* #91: Update version of links' checker workflow
+
 ## Dependency Updates
 
 ### Compile Dependency Updates
