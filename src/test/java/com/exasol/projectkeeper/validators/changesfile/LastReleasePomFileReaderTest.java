@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class LastReleasePomFileReaderTest {
-
+    private static final String CURRENT_VERSION = "1.0.0";
     @TempDir
     Path tempDir;
 
@@ -24,7 +24,7 @@ class LastReleasePomFileReaderTest {
         try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
             final String myContent = "myContent";
             makeRelease(git, "0.1.0", myContent);
-            final Optional<String> result = new LastReleasePomFileReader().readLatestReleasesPomFile(this.tempDir);
+            final Optional<String> result = runLatestReleasePomFileReader();
             assertThat(result.orElseThrow(), equalTo(myContent));
         }
     }
@@ -35,7 +35,7 @@ class LastReleasePomFileReaderTest {
             final String myContent = "myContent";
             makeRelease(git, "0.1.0", myContent);
             makeRelease(git, "jutATag", "otherContent");
-            final Optional<String> result = new LastReleasePomFileReader().readLatestReleasesPomFile(this.tempDir);
+            final Optional<String> result = runLatestReleasePomFileReader();
             assertThat(result.orElseThrow(), equalTo(myContent));
         }
     }
@@ -46,7 +46,7 @@ class LastReleasePomFileReaderTest {
             final String myContent = "myContent";
             makeRelease(git, "0.1.0", "original content");
             makeRelease(git, "0.2.0", myContent);
-            final Optional<String> result = new LastReleasePomFileReader().readLatestReleasesPomFile(this.tempDir);
+            final Optional<String> result = runLatestReleasePomFileReader();
             assertThat(result.orElseThrow(), equalTo(myContent));
         }
     }
@@ -54,7 +54,7 @@ class LastReleasePomFileReaderTest {
     @Test
     void testReadingWithNoCommits() throws GitAPIException {
         try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            final Optional<String> result = new LastReleasePomFileReader().readLatestReleasesPomFile(this.tempDir);
+            final Optional<String> result = runLatestReleasePomFileReader();
             assertTrue(result.isEmpty());
         }
     }
@@ -63,9 +63,24 @@ class LastReleasePomFileReaderTest {
     void testReadingNoRelease() throws GitAPIException, IOException {
         try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
             makeRelease(git, "jutATag", "otherContent");
-            final Optional<String> result = new LastReleasePomFileReader().readLatestReleasesPomFile(this.tempDir);
+            final Optional<String> result = runLatestReleasePomFileReader();
             assertTrue(result.isEmpty());
         }
+    }
+
+    @Test
+    void testCurrentReleaseIsSkipped() throws IOException, GitAPIException {
+        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+            final String originalContent = "original content";
+            makeRelease(git, "0.1.0", originalContent);
+            makeRelease(git, CURRENT_VERSION, "other content");
+            final Optional<String> result = runLatestReleasePomFileReader();
+            assertThat(result.orElseThrow(), equalTo(originalContent));
+        }
+    }
+
+    private Optional<String> runLatestReleasePomFileReader() {
+        return new LastReleasePomFileReader().readLatestReleasesPomFile(this.tempDir, CURRENT_VERSION);
     }
 
     private void makeRelease(final Git git, final String name, final String content)

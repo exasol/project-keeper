@@ -19,6 +19,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
@@ -170,14 +172,10 @@ class ProjectKeeperIT {
         assertDoesNotThrow(() -> verifier.executeGoal("project-keeper:verify"));
     }
 
-    @Test
-    void testChangesFileGeneration() throws IOException, GitAPIException, VerificationException {
-        final Git git = Git.open(this.projectDir.toFile());
-        writePomWithOneDependency("0.1.0", "1.0.0");
-        git.add().addFilepattern("pom.xml").call();
-        git.commit().setMessage("first commit").call();
-        git.tag().setName("0.1.0").call();
-        writePomWithOneDependency("0.2.0", "1.0.1");
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void testChangesFileGeneration(final boolean released) throws IOException, GitAPIException, VerificationException {
+        setupDemoProjectWithDependencyChange(released);
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
@@ -187,6 +185,22 @@ class ProjectKeeperIT {
                         containsString("* Updated `com.example:my-lib:1.0.0` to `1.0.1`")),
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `org.apache.maven.plugins:maven-surefire-plugin:2.12.4` to")));
+    }
+
+    private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
+        final Git git = Git.open(this.projectDir.toFile());
+        writePomWithOneDependency("0.1.0", "1.0.0");
+        commitAndMakeTag(git, "0.1.0");
+        writePomWithOneDependency("0.2.0", "1.0.1");
+        if (released) {
+            commitAndMakeTag(git, "0.2.0");
+        }
+    }
+
+    private void commitAndMakeTag(final Git git, final String releaseTag) throws GitAPIException {
+        git.add().addFilepattern("pom.xml").call();
+        git.commit().setMessage("commit for release " + releaseTag).call();
+        git.tag().setName(releaseTag).call();
     }
 
     private void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) throws IOException {
