@@ -65,7 +65,7 @@ public class ProjectDependencyReader {
             final List<License> licenses = dependenciesPom.getLicenses().stream()
                     .map(license -> new License(license.getName(), license.getUrl())).collect(Collectors.toList());
             return new ProjectDependency(getDependencyName(dependenciesPom), dependenciesPom.getUrl(), licenses,
-                    mapScope(dependency.getScope()));
+                    mapScopeToDependencyType(dependency.getScope()));
         } catch (final ProjectBuildingException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-49")
                     .message("Failed to get license information for dependency {{groupId}}:{{artifactId}}.",
@@ -82,7 +82,7 @@ public class ProjectDependencyReader {
         }
     }
 
-    private ProjectDependency.Type mapScope(final String scope) {
+    private ProjectDependency.Type mapScopeToDependencyType(final String scope) {
         if (scope == null) {
             return COMPILE;
         } else {

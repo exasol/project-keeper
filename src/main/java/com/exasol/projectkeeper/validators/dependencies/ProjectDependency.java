@@ -3,7 +3,7 @@ package com.exasol.projectkeeper.validators.dependencies;
 import java.util.List;
 
 /**
- * Maven ProjectDependency.
+ * Maven dependency.
  */
 public class ProjectDependency {
     private final String name;

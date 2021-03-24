@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.validators.dependencies.renderer;
 
+import static com.exasol.projectkeeper.validators.dependencies.ProjectDependency.Type.*;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -14,14 +16,10 @@ public class DependencyPageRenderer {
         final StringBuilder reportBuilder = new StringBuilder();
         reportBuilder.append("<!-- @formatter:off -->\n");
         reportBuilder.append("# Dependencies\n");
-        reportBuilder.append(
-                buildDependencySectionForScope(dependencies, ProjectDependency.Type.COMPILE, markdownReferenceBuilder));
-        reportBuilder.append(
-                buildDependencySectionForScope(dependencies, ProjectDependency.Type.TEST, markdownReferenceBuilder));
-        reportBuilder.append(
-                buildDependencySectionForScope(dependencies, ProjectDependency.Type.RUNTIME, markdownReferenceBuilder));
-        reportBuilder.append(
-                buildDependencySectionForScope(dependencies, ProjectDependency.Type.PLUGIN, markdownReferenceBuilder));
+        reportBuilder.append(buildDependencySectionForScope(dependencies, COMPILE, markdownReferenceBuilder));
+        reportBuilder.append(buildDependencySectionForScope(dependencies, TEST, markdownReferenceBuilder));
+        reportBuilder.append(buildDependencySectionForScope(dependencies, RUNTIME, markdownReferenceBuilder));
+        reportBuilder.append(buildDependencySectionForScope(dependencies, PLUGIN, markdownReferenceBuilder));
         reportBuilder.append("\n");
         reportBuilder.append(markdownReferenceBuilder.getReferences());
         return reportBuilder.toString();

@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 class ChangesFileIOTest {
-
     @TempDir
     Path tempDir;
 
@@ -27,7 +26,7 @@ class ChangesFileIOTest {
                 .collect(Collectors.toList());
         assertThat(changesFile.getHeading(), equalTo("# My Project 0.1.0, released 1980-01-01"));
         assertThat(headings, contains("## Summary", "## Features", "## Bug Fixes", "## Documentation", "## Refactoring",
-                "## ProjectDependency Updates"));
+                "## Dependency Updates"));
     }
 
     @Test
