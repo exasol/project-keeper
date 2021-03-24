@@ -19,10 +19,10 @@ public class DependencyChangeReportRenderer {
     public List<String> render(final DependencyChangeReport report) {
         final List<String> lines = new ArrayList<>();
         lines.add(ChangesFile.DEPENDENCY_UPDATES_HEADING);
-        addDependencyChanges("### Compile Dependency Updates", report.getCompileDependencyChanges(), lines);
-        addDependencyChanges("### Runtime Dependency Updates", report.getRuntimeDependencyChanges(), lines);
-        addDependencyChanges("### Test Dependency Updates", report.getTestDependencyChanges(), lines);
-        addDependencyChanges("### Plugin Dependency Updates", report.getPluginDependencyChanges(), lines);
+        addDependencyChanges("### Compile ProjectDependency Updates", report.getCompileDependencyChanges(), lines);
+        addDependencyChanges("### Runtime ProjectDependency Updates", report.getRuntimeDependencyChanges(), lines);
+        addDependencyChanges("### Test ProjectDependency Updates", report.getTestDependencyChanges(), lines);
+        addDependencyChanges("### Plugin ProjectDependency Updates", report.getPluginDependencyChanges(), lines);
         return lines;
     }
 

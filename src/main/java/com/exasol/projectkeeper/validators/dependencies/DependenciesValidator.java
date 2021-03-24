@@ -18,7 +18,7 @@ import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageR
  */
 public class DependenciesValidator implements Validator {
     private final File pomFile;
-    private final MavenDependencyReader mavenDependencyReader;
+    private final ProjectDependencyReader projectDependencyReader;
     private final Path dependenciesFile;
 
     /**
@@ -31,14 +31,14 @@ public class DependenciesValidator implements Validator {
      */
     public DependenciesValidator(final MavenFileModelReader fileModelReader,
             final MavenArtifactModelReader artifactModelReader, final File pomFile, final Path projectDirectory) {
-        this.mavenDependencyReader = new MavenDependencyReader(fileModelReader, artifactModelReader);
+        this.projectDependencyReader = new ProjectDependencyReader(fileModelReader, artifactModelReader);
         this.pomFile = pomFile;
         this.dependenciesFile = projectDirectory.resolve("dependencies.md");
     }
 
     @Override
     public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
-        final List<Dependency> dependencies = this.mavenDependencyReader.readDependencies(this.pomFile);
+        final List<ProjectDependency> dependencies = this.projectDependencyReader.readDependencies(this.pomFile);
         final String expectedDependenciesPage = new DependencyPageRenderer().render(dependencies);
         if (!this.dependenciesFile.toFile().exists()) {
             findingConsumer

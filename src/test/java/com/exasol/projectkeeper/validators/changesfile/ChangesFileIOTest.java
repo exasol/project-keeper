@@ -27,7 +27,7 @@ class ChangesFileIOTest {
                 .collect(Collectors.toList());
         assertThat(changesFile.getHeading(), equalTo("# My Project 0.1.0, released 1980-01-01"));
         assertThat(headings, contains("## Summary", "## Features", "## Bug Fixes", "## Documentation", "## Refactoring",
-                "## Dependency Updates"));
+                "## ProjectDependency Updates"));
     }
 
     @Test
