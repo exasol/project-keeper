@@ -10,21 +10,16 @@ Code name:
 
 ### Compile Dependency Updates
 
-* Updated `com.exasol:error-reporting-java:0.2.2` to `0.4.0`
 * Updated `io.github.classgraph:classgraph:4.8.98` to `4.8.102`
 * Added `net.steppschuh.markdowngenerator:markdowngenerator:1.3.1.1`
-* Added `org.apache.maven:maven-core:3.6.3`
-* Added `org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r`
 
 ### Test Dependency Updates
 
 * Updated `junit:junit:4.13.1` to `4.13.2`
-* Removed `org.apache.maven:maven-core:3.6.3`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.7.0` to `5.7.1`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.7.0` to `5.7.1`
 * Updated `org.mockito:mockito-core:3.7.0` to `3.8.0`
 
 ### Plugin Dependency Updates
 
-* Updated `com.exasol:project-keeper-maven-plugin:0.5.0` to `0.7.0`
-* Added `io.github.zlika:reproducible-build-maven-plugin:0.13`
+* Updated `com.exasol:project-keeper-maven-plugin:0.6.0` to `0.7.0`
