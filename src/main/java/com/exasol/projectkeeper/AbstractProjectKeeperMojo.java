@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -11,10 +12,12 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
+import org.apache.maven.repository.RepositorySystem;
 
-import com.exasol.projectkeeper.validators.DefaultMavenModelReader;
+import com.exasol.projectkeeper.pom.*;
 import com.exasol.projectkeeper.validators.DeletedFilesValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
+import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 
@@ -38,6 +41,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
 
+    @Component
+    RepositorySystem repositorySystem;
+
     /**
      * Get a list of enabled modules.
      * 
@@ -57,11 +63,17 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     protected List<Validator> getValidators() {
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
         final ExcludedFilesMatcher excludedFilesMatcher = new ExcludedFilesMatcher(this.excludedFiles);
+        final DefaultMavenFileModelReader mavenModelReader = new DefaultMavenFileModelReader(this.mavenProjectBuilder,
+                this.session);
+        final MavenArtifactModelReader artifactReader = new DefaultMavenArtifactModelReader(this.mavenProjectBuilder,
+                this.session, this.repositorySystem);
+        final File pomFile = this.project.getModel().getPomFile();
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
-                new PomFileValidator(enabledModules, this.project.getModel().getPomFile()),
+                new PomFileValidator(enabledModules, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(),
-                        this.project.getBasedir().toPath(),
-                        new DefaultMavenModelReader(this.mavenProjectBuilder, this.session)),
+                        this.project.getBasedir().toPath(), mavenModelReader),
+                new DependenciesValidator(mavenModelReader, artifactReader, pomFile,
+                        this.project.getBasedir().toPath()),
                 new DeletedFilesValidator(this.project.getBasedir().toPath(), excludedFilesMatcher));
     }
 }

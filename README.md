@@ -59,6 +59,7 @@ This plugin provides different template modules for different kinds of projects.
     * [maven-enforcer-plugin](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
     * [maven-surefire-plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
     * [error-code-crawler-maven-plugin](https://github.com/exasol/error-code-crawler-maven-plugin)
+    * [reproducible-build-maven-plugin](https://zlika.github.io/reproducible-build-maven-plugin/)
 
 #### `jar_artifact`
 

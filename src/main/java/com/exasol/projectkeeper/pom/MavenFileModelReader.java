@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators;
+package com.exasol.projectkeeper.pom;
 
 import java.io.File;
 
@@ -7,7 +7,7 @@ import org.apache.maven.model.Model;
 /**
  * Interfaces for classes that read a maven {@link Model} from a pom.xml file.
  */
-public interface MavenModelReader {
+public interface MavenFileModelReader {
     /**
      * Read a maven model.
      *

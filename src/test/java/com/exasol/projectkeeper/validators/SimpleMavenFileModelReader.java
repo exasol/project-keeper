@@ -8,11 +8,12 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.pom.MavenFileModelReader;
 
 /**
- * Simplified {@link MavenModelReader} that works without injected dependencies.
+ * Simplified {@link MavenFileModelReader} that works without injected dependencies.
  */
-public class SimpleMavenModelReader implements MavenModelReader {
+public class SimpleMavenFileModelReader implements MavenFileModelReader {
     @Override
     public Model readModel(final File pomFile) throws ReadFailedException {
         try (final FileReader reader = new FileReader(pomFile)) {
