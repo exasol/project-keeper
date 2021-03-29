@@ -1,32 +1,28 @@
-package com.exasol.projectkeeper.validators;
+package com.exasol.projectkeeper.pom;
 
 import java.io.File;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.apache.maven.project.*;
 
 import com.exasol.errorreporting.ExaError;
 
 /**
- * This class reads a maven {@link Model} from pom file.
- * <p>
- * In contrast to the plain {@link MavenXpp3Reader} this class also parses the model and resolves properties and plugin
- * versions.
- * </p>
+ * Implementation of {@link MavenFileModelReader} using the {@link ProjectBuilder} that is injected by Maven core to
+ * Mojo.
  */
-public class DefaultMavenModelReader implements MavenModelReader {
+public class DefaultMavenFileModelReader implements MavenFileModelReader {
     private final ProjectBuilder mavenProjectBuilder;
     private final MavenSession session;
 
     /**
-     * Create a new instance of {@link DefaultMavenModelReader}.
-     * 
+     * Create a new instance of {@link DefaultMavenFileModelReader}.
+     *
      * @param mavenProjectBuilder maven project builder
      * @param session             maven session
      */
-    public DefaultMavenModelReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session) {
+    public DefaultMavenFileModelReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session) {
         this.mavenProjectBuilder = mavenProjectBuilder;
         this.session = session;
     }

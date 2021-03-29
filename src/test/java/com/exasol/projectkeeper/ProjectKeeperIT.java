@@ -5,24 +5,18 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.*;
-import java.util.List;
 import java.util.Objects;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
-import org.apache.maven.shared.utils.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
-
-import com.exasol.projectkeeper.validators.TestMavenModel;
 
 /**
  * This integration test tests the maven plugin in a safe environment. Since we don't want to install the plugin to the
@@ -30,60 +24,7 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
  * temporary project, runs the plugin on that project and checks the output.
  */
 @Tag("integration")
-class ProjectKeeperIT {
-    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.6.0.jar").toFile();
-    private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
-    /**
-     * When you enable debugging here, connect with a debugger to localhost:8000 during the test run. Since the tests
-     * wait for the debugger, this should be disabled on commits so that CI runs through.
-     */
-    private static final boolean DEBUG = false;
-    private static final String TEST_PROJECT = "/test_project";
-
-    @TempDir
-    static Path mavenRepo;
-
-    /**
-     * TempDir only supports one temp directory per test class. For that we can not use it here again but create and
-     * drop it by hand.
-     */
-    private Path eachTestsTemp;
-    private Path projectDir;
-
-    @BeforeAll
-    static void beforeAll() throws VerificationException, IOException {
-        installThisPluginToTestMavenRepo();
-    }
-
-    private static void installThisPluginToTestMavenRepo() throws IOException, VerificationException {
-        final Path testProjectDir = Files.createTempDirectory("pk-test");
-        final File testDir = ResourceExtractor.extractResourcePath(ProjectKeeperIT.class, TEST_PROJECT,
-                testProjectDir.toFile(), true);
-        try {
-            final Verifier verifier = new Verifier(testDir.getAbsolutePath());
-            verifier.setCliOptions(List.of(//
-                    "-Dfile=" + PLUGIN.getAbsolutePath(), //
-                    "-DlocalRepositoryPath=" + mavenRepo.toAbsolutePath(), //
-                    "-DpomFile=" + PLUGIN_POM.getAbsolutePath()));
-            verifier.executeGoal("install:install-file");
-            verifier.verifyErrorFreeLog();
-        } finally {
-            org.apache.commons.io.FileUtils.deleteDirectory(testProjectDir.toFile());
-        }
-    }
-
-    @BeforeEach
-    void beforeEach() throws IOException, GitAPIException {
-        this.eachTestsTemp = Files.createTempDirectory("pk-test");
-        this.projectDir = ResourceExtractor
-                .extractResourcePath(ProjectKeeperIT.class, TEST_PROJECT, this.eachTestsTemp.toFile(), true).toPath();
-        Git.init().setDirectory(this.projectDir.toFile()).call().close();
-    }
-
-    @AfterEach
-    void afterEach() throws IOException {
-        FileUtils.deleteDirectory(this.eachTestsTemp.toFile());
-    }
+class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     void testVerify() throws VerificationException {
@@ -182,16 +123,16 @@ class ProjectKeeperIT {
         assertAll(//
                 () -> assertThat(generatedChangesFile, startsWith("# my-test-project 0.2.0, released")),
                 () -> assertThat(generatedChangesFile,
-                        containsString("* Updated `com.example:my-lib:1.0.0` to `1.0.1`")),
+                        containsString("* Updated `com.exasol:error-reporting-java:0.1.0` to `0.2.0`")),
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `org.apache.maven.plugins:maven-surefire-plugin:2.12.4` to")));
     }
 
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
         final Git git = Git.open(this.projectDir.toFile());
-        writePomWithOneDependency("0.1.0", "1.0.0");
+        writePomWithOneDependency("0.1.0", "0.1.0");
         commitAndMakeTag(git, "0.1.0");
-        writePomWithOneDependency("0.2.0", "1.0.1");
+        writePomWithOneDependency("0.2.0", "0.2.0");
         if (released) {
             commitAndMakeTag(git, "0.2.0");
         }
@@ -203,19 +144,6 @@ class ProjectKeeperIT {
         git.tag().setName(releaseTag).call();
     }
 
-    private void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) throws IOException {
-        final TestMavenModel testMavenModel = getTestMavenModelWithProjectKeeperPlugin();
-        testMavenModel.setVersion(pomVersion);
-        testMavenModel.addDependency(dependencyVersion);
-        testMavenModel.writeAsPomToProject(this.projectDir);
-    }
-
-    private TestMavenModel getTestMavenModelWithProjectKeeperPlugin() {
-        final TestMavenModel testMavenModel = new TestMavenModel();
-        testMavenModel.addProjectKeeperPlugin(List.of(ProjectKeeperModule.DEFAULT));
-        return testMavenModel;
-    }
-
     @Test
     void testJacocoAgentIsExtracted() throws VerificationException {
         final Verifier verifier = getVerifier();
@@ -223,15 +151,5 @@ class ProjectKeeperIT {
         verifier.executeGoal("package");
         assertThat(this.projectDir.resolve(Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar")).toFile(),
                 anExistingFile());
-    }
-
-    private Verifier getVerifier() throws VerificationException {
-        final Verifier verifier = new Verifier(this.projectDir.toFile().getAbsolutePath());
-        verifier.setLocalRepo(mavenRepo.toAbsolutePath().toString());
-        if (DEBUG) {
-            verifier.setDebug(true);
-            verifier.setDebugJvm(true);
-        }
-        return verifier;
     }
 }

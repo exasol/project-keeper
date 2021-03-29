@@ -30,11 +30,15 @@ public class TestMavenModel extends Model {
     }
 
     public void addDependency(final String version) {
+        addDependency(DEPENDENCY_ARTIFACT_ID, DEPENDENCY_GROUP_ID, "", version);
+    }
+
+    public void addDependency(final String artifactId, final String groupId, final String scope, final String version) {
         final Dependency dependency = new Dependency();
-        dependency.setGroupId(DEPENDENCY_GROUP_ID);
-        dependency.setArtifactId(DEPENDENCY_ARTIFACT_ID);
+        dependency.setGroupId(groupId);
+        dependency.setArtifactId(artifactId);
         dependency.setVersion(version);
-        dependency.setScope("");
+        dependency.setScope(scope);
         this.addDependency(dependency);
     }
 
@@ -44,10 +48,11 @@ public class TestMavenModel extends Model {
         }
     }
 
-    public void addProjectKeeperPlugin(final Collection<ProjectKeeperModule> enabledModules) {
+    public void addProjectKeeperPlugin(final Collection<ProjectKeeperModule> enabledModules, final String version) {
         final Plugin projectKeeperPlugin = new Plugin();
         projectKeeperPlugin.setGroupId("com.exasol");
         projectKeeperPlugin.setArtifactId("project-keeper-maven-plugin");
+        projectKeeperPlugin.setVersion(version);
         final Xpp3Dom configuration = new Xpp3Dom("configuration");
         final Xpp3Dom modules = buildModulesConfiguration(enabledModules);
         configuration.addChild(modules);
