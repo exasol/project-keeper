@@ -31,7 +31,7 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
  */
 @Tag("integration")
 class ProjectKeeperIT {
-    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.6.0.jar").toFile();
+    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.6.1.jar").toFile();
     private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
     /**
      * When you enable debugging here, connect with a debugger to localhost:8000 during the test run. Since the tests
