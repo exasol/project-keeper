@@ -28,6 +28,7 @@ public class DependenciesValidator implements Validator {
      * @param artifactModelReader maven dependency reader
      * @param pomFile             pom file to validate
      * @param projectDirectory    project root directory
+     * @param brokenLinkReplacer  dependency injection for broken link replacer
      */
     public DependenciesValidator(final MavenFileModelReader fileModelReader,
             final MavenArtifactModelReader artifactModelReader, final File pomFile, final Path projectDirectory,
