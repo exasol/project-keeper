@@ -22,4 +22,4 @@ Code name:
 
 ### Plugin Dependency Updates
 
-* Updated `com.exasol:project-keeper-maven-plugin:0.6.0` to `0.7.0`
+* Updated `com.exasol:project-keeper-maven-plugin:0.6.1` to `0.7.0`
