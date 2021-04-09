@@ -118,6 +118,25 @@ Using the `excludedFiles` you can tell project-keeper to ignore some files:
 
 Inside of the `<excludedFile>` tag you can use GLOB wildcards.
 
+### Replacing Broken Links
+
+Some maven projects define invalid / outdated links to their project homepage. PK writes these links to the `dependencies.md` file. This will make the link checker break the build since a project file contains broken links.
+
+The best way to solve this is to open an issue / pull request at the projects that contain the wrong url. Since this is, however not always possible you can, as a mitigation, also define a replacement for links:
+
+```xml
+
+<configuration>
+    <linkReplacements>
+        <linkReplacement>http://broken.com|http://example.com/</linkReplacement>
+    </linkReplacements>
+</configuration>
+```
+
+The syntax for the `linkReplacement` is `broken-url|replacement`.
+
+Project-keeper will then apply the use the replacement in the `dependencies.md` file instead of the original url.
+
 ## Usage
 
 The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.

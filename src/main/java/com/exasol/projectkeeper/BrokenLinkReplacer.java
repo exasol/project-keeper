@@ -14,12 +14,19 @@ import com.exasol.errorreporting.ExaError;
  * </p>
  */
 public class BrokenLinkReplacer {
-    private static final Map<String, String> BUILTIN_REPLACEMENTS = Map.of("http://org.jacoco.agent/",
-            "https://www.eclemma.org/jacoco/index.html", "http://org.jacoco.core/", "http://org.jacoco.agent/",
+    private static final String JACOCO_HOMEPAGE = "https://www.eclemma.org/jacoco/index.html";
+    private static final Map<String, String> BUILTIN_REPLACEMENTS = Map.of(//
+            "http://org.jacoco.agent", JACOCO_HOMEPAGE, //
+            "http://org.jacoco.core", JACOCO_HOMEPAGE, //
+            "http://jacoco-maven-plugin", JACOCO_HOMEPAGE, //
             "https://eclipse-ee4j.github.io/jaxb-ri/jaxb-runtime-parent/jaxb-runtime",
             "https://eclipse-ee4j.github.io/jaxb-ri/", //
             "https://www.eclipse.org/jgit//org.eclipse.jgit", "https://www.eclipse.org/jgit/", //
-            "http://maven.apache.org/maven-project", "http://maven.apache.org/");
+            "http://maven.apache.org/maven-project", "http://maven.apache.org/",
+            "https://sonatype.github.io/ossindex-maven/ossindex-maven-plugin/",
+            "https://sonatype.github.io/ossindex-maven/maven-plugin/", "https://github.com/javaee/jaxb-spec/jaxb-api",
+            "https://github.com/eclipse-ee4j/jaxb-api", "https://github.com/exasol/error-code-crawler-maven-plugint",
+            "https://github.com/exasol/error-code-crawler-maven-plugin");
     private final Map<String, String> replacements = new HashMap<>(BUILTIN_REPLACEMENTS);
 
     public BrokenLinkReplacer(final List<String> replacementParameters) {
