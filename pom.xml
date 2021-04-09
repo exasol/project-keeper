@@ -428,6 +428,9 @@
                         <module>maven_central</module>
                         <module>integration_tests</module>
                     </modules>
+                    <linkReplacements>
+
+                    </linkReplacements>
                 </configuration>
             </plugin>
             <plugin>

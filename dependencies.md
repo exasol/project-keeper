@@ -59,14 +59,15 @@
 | [Maven Site Plugin 3][82]                               | [The Apache Software License, Version 2.0][5] |
 
 [64]: https://github.com/exasol/project-keeper-maven-plugin
-[11]: https://eclipse-ee4j.github.io/jaxb-ri/jaxb-runtime-parent/jaxb-runtime
 [15]: https://github.com/exasol/error-reporting-java
 [5]: http://www.apache.org/licenses/LICENSE-2.0.txt
+[11]: https://eclipse-ee4j.github.io/jaxb-ri/
 [48]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [74]: http://maven.apache.org/plugins/maven-clean-plugin/
 [40]: https://maven.apache.org/shared/maven-verifier/
 [16]: https://opensource.org/licenses/MIT
 [34]: https://github.com/mockito/mockito
+[4]: http://maven.apache.org/
 [50]: http://www.mojohaus.org/versions-maven-plugin/
 [29]: http://opensource.org/licenses/BSD-3-Clause
 [42]: https://maven.apache.org/plugins/maven-compiler-plugin/
@@ -91,7 +92,6 @@
 [76]: http://maven.apache.org/plugins/maven-resources-plugin/
 [0]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [60]: http://jacoco-maven-plugin
-[17]: https://www.eclipse.org/jgit//org.eclipse.jgit
 [68]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [46]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [7]: http://opensource.org/licenses/MIT
@@ -101,9 +101,9 @@
 [12]: http://www.eclipse.org/org/documents/edl-v10.php
 [1]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [62]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
-[4]: http://maven.apache.org/maven-project
 [25]: https://www.eclipse.org/legal/epl-v20.html
 [80]: http://maven.apache.org/plugins/maven-install-plugin/
+[17]: https://www.eclipse.org/jgit/
 [70]: https://github.com/exasol/error-code-crawler-maven-plugint
 [52]: https://sonatype.github.io/ossindex-maven/ossindex-maven-plugin/
 [8]: https://github.com/javaee/jaxb-spec/jaxb-api

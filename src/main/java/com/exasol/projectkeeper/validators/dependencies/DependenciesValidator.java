@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.pom.MavenArtifactModelReader;
 import com.exasol.projectkeeper.pom.MavenFileModelReader;
 import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageRenderer;
@@ -20,6 +19,7 @@ public class DependenciesValidator implements Validator {
     private final File pomFile;
     private final ProjectDependencyReader projectDependencyReader;
     private final Path dependenciesFile;
+    private final BrokenLinkReplacer brokenLinkReplacer;
 
     /**
      * Create a new instance of {@link DependenciesValidator}.
@@ -30,7 +30,9 @@ public class DependenciesValidator implements Validator {
      * @param projectDirectory    project root directory
      */
     public DependenciesValidator(final MavenFileModelReader fileModelReader,
-            final MavenArtifactModelReader artifactModelReader, final File pomFile, final Path projectDirectory) {
+            final MavenArtifactModelReader artifactModelReader, final File pomFile, final Path projectDirectory,
+            final BrokenLinkReplacer brokenLinkReplacer) {
+        this.brokenLinkReplacer = brokenLinkReplacer;
         this.projectDependencyReader = new ProjectDependencyReader(fileModelReader, artifactModelReader);
         this.pomFile = pomFile;
         this.dependenciesFile = projectDirectory.resolve("dependencies.md");
@@ -39,7 +41,9 @@ public class DependenciesValidator implements Validator {
     @Override
     public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
         final List<ProjectDependency> dependencies = this.projectDependencyReader.readDependencies(this.pomFile);
-        final String expectedDependenciesPage = new DependencyPageRenderer().render(dependencies);
+        final List<ProjectDependency> dependenciesWithFixedLinks = new DependenciesBrokenLinkReplacer(
+                this.brokenLinkReplacer).replaceBrokenLinks(dependencies);
+        final String expectedDependenciesPage = new DependencyPageRenderer().render(dependenciesWithFixedLinks);
         if (!this.dependenciesFile.toFile().exists()) {
             findingConsumer
                     .accept(new ValidationFinding(
