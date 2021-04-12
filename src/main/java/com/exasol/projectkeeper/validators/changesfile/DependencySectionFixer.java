@@ -5,6 +5,7 @@ import static com.exasol.projectkeeper.validators.changesfile.ChangesFile.DEPEND
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.attribute.*;
 import java.util.*;
 
 import org.apache.maven.model.Build;
@@ -91,7 +92,9 @@ class DependencySectionFixer {
         private final Path tempDirectory;
 
         public TemporaryPomFile(final String content) throws IOException {
-            this.tempDirectory = Files.createTempDirectory("pom");
+            final FileAttribute<Set<PosixFilePermission>> fileAttributes = PosixFilePermissions
+                    .asFileAttribute(PosixFilePermissions.fromString("w+"));
+            this.tempDirectory = Files.createTempDirectory("pom", fileAttributes);
             this.pomFile = this.tempDirectory.resolve("pom.xml");
             Files.writeString(this.pomFile, content);
         }

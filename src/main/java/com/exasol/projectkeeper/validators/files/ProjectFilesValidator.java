@@ -4,8 +4,6 @@ import java.io.*;
 import java.nio.file.*;
 import java.util.Collection;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.maven.plugin.logging.Log;
 
@@ -18,8 +16,6 @@ import io.github.classgraph.*;
  * Validator for the projects file structure.
  */
 public class ProjectFilesValidator implements Validator {
-    private static final Pattern TEMPLATE_NAME_PATTERN = Pattern
-            .compile(".*\\/templates\\/([^\\/]+)\\/([^\\/]+)\\/(.*)");
     private static final InputStreamComparator COMPARATOR = new InputStreamComparator();
     private final Collection<ProjectKeeperModule> enabledModules;
     private final File projectDirectory;
@@ -130,15 +126,29 @@ public class ProjectFilesValidator implements Validator {
 
         public static FileTemplate fromResource(final Resource templateResource) {
             final String resourceName = templateResource.getURI().toString();
-            final Matcher matcher = TEMPLATE_NAME_PATTERN.matcher(resourceName);
-            if (!matcher.matches()) {
+            final Path resourcePath = Path.of(resourceName);
+            final int templatesFolderIndex = getTemplatesFolderIndex(resourcePath);
+            if (templatesFolderIndex == -1 || resourcePath.getNameCount() - templatesFolderIndex < 3) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-1")
                         .message("Template name had invalid format.").ticketMitigation().toString());
             }
-            final ProjectKeeperModule module = ProjectKeeperModule.getModuleByName(matcher.group(1));
-            final TemplateType templateType = TemplateType.fromString(matcher.group(2));
-            final String fileName = matcher.group(3);
+            final Path pathRelativeToTemplates = resourcePath.subpath(templatesFolderIndex + 1,
+                    resourcePath.getNameCount());
+            final ProjectKeeperModule module = ProjectKeeperModule
+                    .getModuleByName(pathRelativeToTemplates.getName(0).toString());
+            final TemplateType templateType = TemplateType.fromString(pathRelativeToTemplates.getName(1).toString());
+            final String fileName = pathRelativeToTemplates.subpath(2, pathRelativeToTemplates.getNameCount())
+                    .toString();
             return new FileTemplate(templateResource, templateType, fileName, module);
+        }
+
+        private static int getTemplatesFolderIndex(final Path resourcePath) {
+            for (int index = 0; index < resourcePath.getNameCount(); index++) {
+                if (resourcePath.getName(index).toString().equals("templates")) {
+                    return index;
+                }
+            }
+            return -1;
         }
     }
 }

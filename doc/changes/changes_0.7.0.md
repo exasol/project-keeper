@@ -7,6 +7,10 @@ Code name:
 * #95: Added validation for `dependencies.md`
 * #99: Added replacement of broken urls
 
+## Bugfixes
+
+* #106: Fixed sonar security hotspots
+
 ## Dependency Updates
 
 ### Compile Dependency Updates
