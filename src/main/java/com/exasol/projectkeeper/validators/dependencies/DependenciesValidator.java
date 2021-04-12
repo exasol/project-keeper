@@ -41,10 +41,7 @@ public class DependenciesValidator implements Validator {
 
     @Override
     public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
-        final List<ProjectDependency> dependencies = this.projectDependencyReader.readDependencies(this.pomFile);
-        final List<ProjectDependency> dependenciesWithFixedLinks = new DependenciesBrokenLinkReplacer(
-                this.brokenLinkReplacer).replaceBrokenLinks(dependencies);
-        final String expectedDependenciesPage = new DependencyPageRenderer().render(dependenciesWithFixedLinks);
+        final String expectedDependenciesPage = generateExpectedReport();
         if (!this.dependenciesFile.toFile().exists()) {
             findingConsumer
                     .accept(new ValidationFinding(
@@ -55,6 +52,13 @@ public class DependenciesValidator implements Validator {
             validateFileContent(findingConsumer, expectedDependenciesPage);
         }
         return this;
+    }
+
+    private String generateExpectedReport() {
+        final List<ProjectDependency> dependencies = this.projectDependencyReader.readDependencies(this.pomFile);
+        final List<ProjectDependency> dependenciesWithFixedLinks = new DependenciesBrokenLinkReplacer(
+                this.brokenLinkReplacer).replaceBrokenLinks(dependencies);
+        return new DependencyPageRenderer().render(dependenciesWithFixedLinks);
     }
 
     private void validateFileContent(final Consumer<ValidationFinding> findingConsumer,
