@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #95: Added validation for `dependencies.md`
+* #99: Added replacement of broken urls
 
 ## Dependency Updates
 

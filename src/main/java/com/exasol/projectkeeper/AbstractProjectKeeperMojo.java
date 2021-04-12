@@ -32,6 +32,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     @Parameter(property = "excludeFiles")
     private List<String> excludedFiles;
 
+    @Parameter(property = "linkReplacements")
+    private List<String> linkReplacements;
+
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
@@ -61,6 +64,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     }
 
     protected List<Validator> getValidators() {
+        final BrokenLinkReplacer brokenLinkReplacer = new BrokenLinkReplacer(this.linkReplacements);
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
         final ExcludedFilesMatcher excludedFilesMatcher = new ExcludedFilesMatcher(this.excludedFiles);
         final DefaultMavenFileModelReader mavenModelReader = new DefaultMavenFileModelReader(this.mavenProjectBuilder,
@@ -72,8 +76,8 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                 new PomFileValidator(enabledModules, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(),
                         this.project.getBasedir().toPath(), mavenModelReader),
-                new DependenciesValidator(mavenModelReader, artifactReader, pomFile,
-                        this.project.getBasedir().toPath()),
+                new DependenciesValidator(mavenModelReader, artifactReader, pomFile, this.project.getBasedir().toPath(),
+                        brokenLinkReplacer),
                 new DeletedFilesValidator(this.project.getBasedir().toPath(), excludedFilesMatcher));
     }
 }
