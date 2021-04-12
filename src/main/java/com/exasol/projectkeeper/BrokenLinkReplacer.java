@@ -29,6 +29,11 @@ public class BrokenLinkReplacer {
             "https://github.com/exasol/error-code-crawler-maven-plugin");
     private final Map<String, String> replacements = new HashMap<>(BUILTIN_REPLACEMENTS);
 
+    /**
+     * Create a new instance of {@link BrokenLinkReplacer}.
+     * 
+     * @param replacementParameters list of replacement parameters in the format {@code original|replacement}
+     */
     public BrokenLinkReplacer(final List<String> replacementParameters) {
         readReplacementParameter(replacementParameters);
     }
@@ -51,6 +56,12 @@ public class BrokenLinkReplacer {
         }
     }
 
+    /**
+     * Get an replacement for a link in cast it's known as broken. Otherwise get the original link.
+     * 
+     * @param originalLink link to check
+     * @return original link or replacement
+     */
     public String replaceIfBroken(final String originalLink) {
         if (originalLink == null) {
             return null;

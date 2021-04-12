@@ -5,13 +5,30 @@ import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.BrokenLinkReplacer;
 
+/**
+ * This class replaces broken links in {@link ProjectDependency}s.
+ * <p>
+ * This is necessary since some maven projects have outdated / broken links in their pom file.
+ * </p>
+ */
 public class DependenciesBrokenLinkReplacer {
     private final BrokenLinkReplacer brokenLinkReplacer;
 
+    /**
+     * Create a new instance of {@link DependenciesBrokenLinkReplacer}.
+     * 
+     * @param brokenLinkReplacer broken link replacer dependency injection
+     */
     public DependenciesBrokenLinkReplacer(final BrokenLinkReplacer brokenLinkReplacer) {
         this.brokenLinkReplacer = brokenLinkReplacer;
     }
 
+    /**
+     * Replace broken links in a list of {@link ProjectDependency}s.
+     * 
+     * @param dependencies list of dependencies
+     * @return list of dependencies with replaced links
+     */
     public List<ProjectDependency> replaceBrokenLinks(final List<ProjectDependency> dependencies) {
         return dependencies.stream().map(this::replaceBrokenLinks).collect(Collectors.toList());
     }
