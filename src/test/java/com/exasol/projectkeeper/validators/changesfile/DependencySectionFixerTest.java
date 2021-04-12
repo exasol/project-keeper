@@ -18,12 +18,14 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.validators.*;
+import com.exasol.projectkeeper.pom.MavenFileModelReader;
+import com.exasol.projectkeeper.validators.SimpleMavenFileModelReader;
+import com.exasol.projectkeeper.validators.TestMavenModel;
 
 class DependencySectionFixerTest {
     @TempDir
     static Path tempDir;
-    private static final MavenModelReader MAVEN_MODEL_READER = new SimpleMavenModelReader();
+    private static final MavenFileModelReader MAVEN_MODEL_READER = new SimpleMavenFileModelReader();
 
     @BeforeAll
     static void beforeAll() throws GitAPIException, IOException {

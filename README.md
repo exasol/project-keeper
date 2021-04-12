@@ -59,6 +59,7 @@ This plugin provides different template modules for different kinds of projects.
     * [maven-enforcer-plugin](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
     * [maven-surefire-plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
     * [error-code-crawler-maven-plugin](https://github.com/exasol/error-code-crawler-maven-plugin)
+    * [reproducible-build-maven-plugin](https://zlika.github.io/reproducible-build-maven-plugin/)
 
 #### `jar_artifact`
 
@@ -116,6 +117,25 @@ Using the `excludedFiles` you can tell project-keeper to ignore some files:
 ```
 
 Inside of the `<excludedFile>` tag you can use GLOB wildcards.
+
+### Replacing Broken Links
+
+Some maven projects define invalid / outdated links to their project homepage. PK writes these links to the `dependencies.md` file. This will make the link checker break the build since a project file contains broken links.
+
+The best way to solve this is to open an issue / pull request at the projects that contain the wrong url. Since this is, however not always possible you can, as a mitigation, also define a replacement for links:
+
+```xml
+
+<configuration>
+    <linkReplacements>
+        <linkReplacement>http://broken.com|http://example.com/</linkReplacement>
+    </linkReplacements>
+</configuration>
+```
+
+The syntax for the `linkReplacement` is `broken-url|replacement`.
+
+Project-keeper will then apply the use the replacement in the `dependencies.md` file instead of the original url.
 
 ## Usage
 

@@ -22,13 +22,15 @@ Goals of this plugin:
 Features are the highest level requirements in this document that describe the main functionality of ETC.
 
 ### Verify Repository
+
 `feat~verify-repo-setup~1`
 
-This plugin can verify if the repository setup. 
+This plugin can verify if the repository setup.
 
 Needs: req
 
 ### Fix Repository
+
 `feat~fix-repo-setup~1`
 
 This plugin can fix the repository setup.
@@ -38,10 +40,10 @@ Needs: req
 ## Requirements
 
 ### Defined Repository Structure
+
 `req~repository-structure~1`
 
-We define the structure of the repositories by implementing this plugin.
-That means that each change of the template structure is rolled out over a new release of this plugin. 
+We define the structure of the repositories by implementing this plugin. That means that each change of the template structure is rolled out over a new release of this plugin.
 
 Covers:
 
@@ -51,10 +53,10 @@ Covers:
 Needs: dsn
 
 ### Convenient Repository Structure Definition
+
 `req~convenient-repository-structure~1`
 
-Since the template is updated often and by different team members, the way, 
-in that we define the template inside of this plugin, must be convenient and easily adaptable.
+Since the template is updated often and by different team members, the way, in that we define the template inside of this plugin, must be convenient and easily adaptable.
 
 Covers:
 
@@ -64,6 +66,7 @@ Covers:
 Needs: dsn
 
 ### Checking Repository Structure During Build
+
 `req~verify-repo-structure~1`
 
 This plugin checks the repository structure during the build.
@@ -78,6 +81,7 @@ Covers:
 Needs: dsn
 
 ### Checking Maven Plugins
+
 `req~verify-repo-structure~1`
 
 This plugin checks if the project has configured a minimum set of maven plugins.
@@ -89,13 +93,37 @@ Covers:
 Needs: dsn
 
 ### Fixing Repository Structure
+
 `req~fix-repo-structure~1`
 
-This plugin provides a command that automatically creates or updates the files so that they fit 
-the required project structure.
+This plugin provides a command that automatically creates or updates the files so that they fit the required project structure.
 
 Covers:
 
 * [feat~fix-repo-setup~1](#fix-repository-structure)
 
 Needs: dsn
+
+### Verify changes file
+
+`req~verify-changes-file~1`
+
+PK makes sure that the project contains a `doc/changes/changes_X.X.X.md` file.
+
+Needs: impl, itest, utest
+
+Covers:
+
+* [feat~verify-repo-setup~1](#verify-repository-structure)
+
+### Verify dependencies file
+
+`req~verify-dependencies-file~1`
+
+PK makes sure that the repository contains a `dependencies.md`  that contains a Markdown table with all dependencies (name + link) and their licenses (name + link).
+
+Covers:
+
+* [feat~verify-repo-setup~1](#verify-repository-structure)
+
+Needs: impl, itest

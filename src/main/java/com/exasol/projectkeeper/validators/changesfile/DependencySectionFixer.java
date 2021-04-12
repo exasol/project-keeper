@@ -11,14 +11,14 @@ import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.validators.MavenModelReader;
+import com.exasol.projectkeeper.pom.MavenFileModelReader;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.*;
 
 /**
  * This class fixes the dependency section of a {@link ChangesFile}.
  */
 class DependencySectionFixer {
-    private final MavenModelReader mavenModelReader;
+    private final MavenFileModelReader mavenModelReader;
     private final Path projectDirectory;
     private final Model currentMavenModel;
 
@@ -28,7 +28,7 @@ class DependencySectionFixer {
      * @param mavenModelReader reader for maven model
      * @param projectDirectory projects root directory
      */
-    public DependencySectionFixer(final MavenModelReader mavenModelReader, final Path projectDirectory) {
+    public DependencySectionFixer(final MavenFileModelReader mavenModelReader, final Path projectDirectory) {
         this.mavenModelReader = mavenModelReader;
         this.projectDirectory = projectDirectory;
         this.currentMavenModel = parseCurrentPomFile(projectDirectory.resolve("pom.xml"));
@@ -37,7 +37,7 @@ class DependencySectionFixer {
     private Model parseCurrentPomFile(final Path pomFile) {
         try {
             return this.mavenModelReader.readModel(pomFile.toFile());
-        } catch (final MavenModelReader.ReadFailedException exception) {
+        } catch (final MavenFileModelReader.ReadFailedException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-42").message("Failed to parse current pom file.").toString(),
                     exception);
@@ -80,7 +80,7 @@ class DependencySectionFixer {
     private Model parseOldPomFile(final String pomFileContents) {
         try (final TemporaryPomFile temporaryPomFile = new TemporaryPomFile(pomFileContents)) {
             return this.mavenModelReader.readModel(temporaryPomFile.getPomFile().toFile());
-        } catch (final MavenModelReader.ReadFailedException | IOException exception) {
+        } catch (final MavenFileModelReader.ReadFailedException | IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-38")
                     .message("Failed to parse pom file of previous release.").toString(), exception);
         }
