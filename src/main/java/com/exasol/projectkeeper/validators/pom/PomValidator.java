@@ -33,4 +33,11 @@ public interface PomValidator {
      * @return module this template belongs to
      */
     public ProjectKeeperModule getModule();
+
+    /**
+     * Get if this validator is excluded by the excluded plugins.
+     * 
+     * @param excludedPlugins list of excluded plugins (group_id:artifact_id)
+     */
+    public boolean isExcluded(Collection<String> excludedPlugins);
 }

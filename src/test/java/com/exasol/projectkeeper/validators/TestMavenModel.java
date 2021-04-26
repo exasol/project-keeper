@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
@@ -48,14 +49,12 @@ public class TestMavenModel extends Model {
         }
     }
 
-    public void addProjectKeeperPlugin(final Collection<ProjectKeeperModule> enabledModules, final String version) {
+    public void addProjectKeeperPlugin(final ProjectKeeperPluginDeclaration declaration) {
         final Plugin projectKeeperPlugin = new Plugin();
         projectKeeperPlugin.setGroupId("com.exasol");
         projectKeeperPlugin.setArtifactId("project-keeper-maven-plugin");
-        projectKeeperPlugin.setVersion(version);
-        final Xpp3Dom configuration = new Xpp3Dom("configuration");
-        final Xpp3Dom modules = buildModulesConfiguration(enabledModules);
-        configuration.addChild(modules);
+        projectKeeperPlugin.setVersion(declaration.getVersion());
+        final Xpp3Dom configuration = buildConfiguration(declaration);
         projectKeeperPlugin.setConfiguration(configuration);
         final PluginExecution execution = new PluginExecution();
         execution.setGoals(List.of("verify"));
@@ -63,12 +62,52 @@ public class TestMavenModel extends Model {
         this.getBuild().addPlugin(projectKeeperPlugin);
     }
 
-    private Xpp3Dom buildModulesConfiguration(final Collection<ProjectKeeperModule> enabledModules) {
-        final Xpp3Dom modules = new Xpp3Dom("modules");
-        for (final ProjectKeeperModule enabledModule : enabledModules) {
-            final Xpp3Dom module = new Xpp3Dom("module");
-            module.setValue(enabledModule.name());
-            modules.addChild(module);
+    private Xpp3Dom buildConfiguration(final ProjectKeeperPluginDeclaration declaration) {
+        final Xpp3Dom configuration = new Xpp3Dom("configuration");
+        addEnabledModules(declaration, configuration);
+        addExcludedFiles(declaration, configuration);
+        addExcludedPlugins(declaration, configuration);
+        addLinkReplacements(declaration, configuration);
+        return configuration;
+    }
+
+    private void addEnabledModules(final ProjectKeeperPluginDeclaration declaration, final Xpp3Dom configuration) {
+        if (declaration.getEnabledModules() != null) {
+            final Xpp3Dom modules = buildXmlList("modules", "module", declaration.getEnabledModules().stream()
+                    .map(ProjectKeeperModule::name).collect(Collectors.toList()));
+            configuration.addChild(modules);
+        }
+    }
+
+    private void addExcludedFiles(final ProjectKeeperPluginDeclaration declaration, final Xpp3Dom configuration) {
+        if (declaration.getExcludedFiles() != null) {
+            final Xpp3Dom excludedFiles = buildXmlList("excludedFiles", "excludedFile", declaration.getExcludedFiles());
+            configuration.addChild(excludedFiles);
+        }
+    }
+
+    private void addExcludedPlugins(final ProjectKeeperPluginDeclaration declaration, final Xpp3Dom configuration) {
+        if (declaration.getExcludedPlugins() != null) {
+            final Xpp3Dom excludedPlugins = buildXmlList("excludedPlugins", "excludedPlugin",
+                    declaration.getExcludedPlugins());
+            configuration.addChild(excludedPlugins);
+        }
+    }
+
+    private void addLinkReplacements(final ProjectKeeperPluginDeclaration declaration, final Xpp3Dom configuration) {
+        if (declaration.getLinkReplacements() != null) {
+            final Xpp3Dom linkReplacements = buildXmlList("linkReplacements", "linkReplacement",
+                    declaration.getLinkReplacements());
+            configuration.addChild(linkReplacements);
+        }
+    }
+
+    private Xpp3Dom buildXmlList(final String containerName, final String itemName, final Collection<String> items) {
+        final Xpp3Dom modules = new Xpp3Dom(containerName);
+        for (final String item : items) {
+            final Xpp3Dom xmlItem = new Xpp3Dom(itemName);
+            xmlItem.setValue(item);
+            modules.addChild(xmlItem);
         }
         return modules;
     }

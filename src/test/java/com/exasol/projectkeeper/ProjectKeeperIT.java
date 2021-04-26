@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper;
 
+import static com.exasol.projectkeeper.ProjectKeeperModule.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
@@ -18,6 +19,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
+import com.exasol.projectkeeper.validators.TestMavenModel;
+
 /**
  * This integration test tests the maven plugin in a safe environment. Since we don't want to install the plugin to the
  * user's maven repository, it creates a temporary maven home, and installs the plugin there. Then the test creates a
@@ -27,7 +31,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
-    void testVerify() throws VerificationException {
+    void testVerify() throws VerificationException, IOException {
+        final var pom = new TestMavenModel();
+        pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION).withEnabledModules(MAVEN_CENTRAL,
+                INTEGRATION_TESTS, JAR_ARTIFACT, UDF_COVERAGE));
+        pom.writeAsPomToProject(this.projectDir);
         final Verifier verifier = getVerifier();
         final VerificationException verificationException = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
@@ -71,14 +79,50 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
                 () -> assertThat(output,
                         containsString(
                                 "E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-dependency-plugin.")), //
-                () -> assertThat(output,
-                        containsString("E-PK-26: '.github/workflows/maven.yml' exists but must not exist.")), //
                 () -> assertThat(output, containsString("E-PK-29: Missing dependency 'org.jacoco:org.jacoco.agent'.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin.")), //
-                () -> assertThat(output, not(containsString("logging.properties")))//
+                () -> assertThat(output, containsString(
+                        "E-PK-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin.")) //
         );
+    }
+
+    @Test
+    void testVerifyWithExcludedFile() throws VerificationException, IOException {
+        final var pom = new TestMavenModel();
+        pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION)
+                .withEnabledModules(INTEGRATION_TESTS).withExcludedFiles("**/logging.properties"));
+        pom.writeAsPomToProject(this.projectDir);
+        final Verifier verifier = getVerifier();
+        final VerificationException verificationException = assertThrows(VerificationException.class,
+                () -> verifier.executeGoal("project-keeper:verify"));
+        final String output = verificationException.getMessage();
+        assertThat(output, not(containsString("logging.properties")));
+    }
+
+    @Test
+    void testVerifyWithAFileThatMustNotExist() throws VerificationException, IOException {
+        final Path fileThatMustNotExist = this.projectDir.resolve(".github/workflows/maven.yml");
+        fileThatMustNotExist.toFile().getParentFile().mkdirs();
+        Files.writeString(fileThatMustNotExist, "some content");
+        final Verifier verifier = getVerifier();
+        final VerificationException verificationException = assertThrows(VerificationException.class,
+                () -> verifier.executeGoal("project-keeper:verify"));
+        final String output = verificationException.getMessage();
+        assertThat(output, containsString("E-PK-26: '.github/workflows/maven.yml' exists but must not exist."));
+    }
+
+    @Test
+    void testExcludedPlugin() throws IOException, VerificationException {
+        final var pom = new TestMavenModel();
+        pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION)
+                .withEnabledModules(MAVEN_CENTRAL, INTEGRATION_TESTS, JAR_ARTIFACT, UDF_COVERAGE)
+                .withExcludedPlugins("com.exasol:error-code-crawler-maven-plugin"));
+        pom.writeAsPomToProject(this.projectDir);
+        final Verifier verifier = getVerifier();
+        final VerificationException verificationException = assertThrows(VerificationException.class,
+                () -> verifier.executeGoal("project-keeper:verify"));
+        final String output = verificationException.getMessage();
+        assertThat(output,
+                not(containsString("E-PK-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin.")));
     }
 
     @Test

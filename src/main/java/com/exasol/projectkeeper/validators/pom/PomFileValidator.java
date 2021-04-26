@@ -23,24 +23,29 @@ public class PomFileValidator implements Validator {
             new JavadocPluginValidator(), new ErrorCodeCrawlerPluginValidator(),
             new ReproducibleBuildPluginValidator());
     final Collection<ProjectKeeperModule> enabledModules;
+    private final Collection<String> excludedPlugins;
     private final PomFileIO pomFileIO;
 
     /**
      * Create a new instance of {@link PomFileValidator}.
      *
-     * @param enabledModules list of enables modules
-     * @param pomFile        pom file to create the runner for.
+     * @param enabledModules  list of enables modules
+     * @param excludedPlugins list of plugins (group_id:artifact_id) to exclude
+     * @param pomFile         pom file to create the runner for.
      */
-    public PomFileValidator(final Collection<ProjectKeeperModule> enabledModules, final File pomFile) {
+    public PomFileValidator(final Collection<ProjectKeeperModule> enabledModules,
+            final Collection<String> excludedPlugins, final File pomFile) {
         this.enabledModules = enabledModules;
+        this.excludedPlugins = excludedPlugins;
         this.pomFileIO = new PomFileIO(pomFile);
     }
 
     @Override
     public PomFileValidator validate(final Consumer<ValidationFinding> findingConsumer) {
         final List<ValidationFinding> findings = new ArrayList<>();
-        ALL_VALIDATORS.stream().filter(validator -> this.enabledModules.contains(validator.getModule())).forEach(
-                template -> template.validate(this.pomFileIO.getContent(), this.enabledModules, findings::add));
+        ALL_VALIDATORS.stream().filter(validator -> this.enabledModules.contains(validator.getModule()))
+                .filter(validator -> !validator.isExcluded(this.excludedPlugins)).forEach(
+                        template -> template.validate(this.pomFileIO.getContent(), this.enabledModules, findings::add));
         if (!findings.isEmpty()) {
             getCompoundFinding(findingConsumer, findings);
         }

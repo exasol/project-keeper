@@ -15,11 +15,12 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 
+import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 public class ProjectKeeperAbstractIT {
     private static final Logger LOGGER = Logger.getLogger(ProjectKeeperAbstractIT.class.getName());
-    private static final String CURRENT_VERSION = "0.7.0"; // todo add automatically
+    protected static final String CURRENT_VERSION = "0.7.0"; // todo add automatically
     private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.7.0.jar").toFile();
     private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
     /**
@@ -104,7 +105,7 @@ public class ProjectKeeperAbstractIT {
 
     protected TestMavenModel getTestMavenModelWithProjectKeeperPlugin() {
         final TestMavenModel testMavenModel = new TestMavenModel();
-        testMavenModel.addProjectKeeperPlugin(List.of(ProjectKeeperModule.DEFAULT), CURRENT_VERSION);
+        testMavenModel.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION));
         return testMavenModel;
     }
 
