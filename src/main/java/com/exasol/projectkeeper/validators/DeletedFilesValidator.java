@@ -54,8 +54,8 @@ public class DeletedFilesValidator implements Validator {
     }
 
     private String getFileExistsErrorMessage(final Path fileThatMustNotExist, final String reason) {
-        return ExaError.messageBuilder("E-PK-26").message("{{FILE}} exists but must not exist. Reason: {{REASON}}")
-                .parameter("FILE", fileThatMustNotExist.toString()).unquotedParameter("REASON", reason).toString();
+        return ExaError.messageBuilder("E-PK-26").message("{{FILE}} exists but must not exist. Reason: {{REASON|uq}}",
+                fileThatMustNotExist.toString(), reason).toString();
     }
 
     private ValidationFinding.Fix getFix(final String fileName, final File file) {
