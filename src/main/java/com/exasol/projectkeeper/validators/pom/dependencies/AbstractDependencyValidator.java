@@ -122,4 +122,9 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
     enum Scope {
         COMPILE, PROVIDED, RUNTIME, TEST
     }
+
+    @Override
+    public boolean isExcluded(final Collection<String> excludedPlugins) {
+        return false;
+    }
 }

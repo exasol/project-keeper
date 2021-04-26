@@ -29,8 +29,11 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     @Parameter(property = "modules")
     private List<String> modules;
 
-    @Parameter(property = "excludeFiles")
+    @Parameter(property = "excludedFiles")
     private List<String> excludedFiles;
+
+    @Parameter(property = "excludedPlugins")
+    private Set<String> excludedPlugins;
 
     @Parameter(property = "linkReplacements")
     private List<String> linkReplacements;
@@ -73,7 +76,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                 this.session, this.repositorySystem);
         final File pomFile = this.project.getModel().getPomFile();
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
-                new PomFileValidator(enabledModules, pomFile),
+                new PomFileValidator(enabledModules, this.excludedPlugins, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(),
                         this.project.getBasedir().toPath(), mavenModelReader),
                 new DependenciesValidator(mavenModelReader, artifactReader, pomFile, this.project.getBasedir().toPath(),

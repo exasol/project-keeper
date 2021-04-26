@@ -1,11 +1,12 @@
-# Project keeper maven plugin 0.7.0, released 2021-??-??
+# Project keeper maven plugin 0.7.0, released 2021-04-26
 
-Code name:
+Code name: Added validation for dependencies.md
 
 ## Features
 
 * #95: Added validation for `dependencies.md`
 * #99: Added replacement of broken urls
+* #66: Added property for excluding plugins
 
 ## Bugfixes
 

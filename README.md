@@ -118,6 +118,21 @@ Using the `excludedFiles` you can tell project-keeper to ignore some files:
 
 Inside of the `<excludedFile>` tag you can use GLOB wildcards.
 
+## Excluding Plugins
+
+Using the `excludedPlugins`configuration you can tell Project Keeper to ignore some missing or differently configured maven plugins:
+
+```xml
+
+<configuration>
+    <excludedPlugins>
+        <excludedPlugin>com.exasol:error-code-crawler</excludedPlugin>
+    </excludedPlugins>
+</configuration>
+```
+
+The syntax is `<group_id>:<artifact_id>`.
+
 ### Replacing Broken Links
 
 Some maven projects define invalid / outdated links to their project homepage. PK writes these links to the `dependencies.md` file. This will make the link checker break the build since a project file contains broken links.

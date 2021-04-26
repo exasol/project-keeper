@@ -234,4 +234,9 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
                     }));
         }
     }
+
+    @Override
+    public boolean isExcluded(final Collection<String> excludedPlugins) {
+        return excludedPlugins.contains(this.pluginGroupId + ":" + this.pluginArtifactId);
+    }
 }

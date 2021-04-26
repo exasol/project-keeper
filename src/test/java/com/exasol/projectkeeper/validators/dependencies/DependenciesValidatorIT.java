@@ -10,11 +10,10 @@ import java.nio.file.Files;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.apache.maven.model.Plugin;
-import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.ProjectKeeperAbstractIT;
+import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
@@ -54,26 +53,14 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
 
     @Test
     void testBrokenLinkReplacing() throws IOException, VerificationException {
-        final TestMavenModel pomModel = getTestMavenModelWithProjectKeeperPlugin();
-        addLinkReplacementConfiguration(pomModel,
-                "https://www.apache.org/licenses/LICENSE-2.0.txt|https://my-replacement.de");
+        final TestMavenModel pomModel = new TestMavenModel();
+        pomModel.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION)
+                .withLinkReplacements("https://www.apache.org/licenses/LICENSE-2.0.txt|https://my-replacement.de"));
         pomModel.writeAsPomToProject(this.projectDir);
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         final String dependenciesFileContent = Files.readString(this.projectDir.resolve("dependencies.md"));
         assertThat(dependenciesFileContent, containsString("https://my-replacement.de"));
-    }
-
-    private void addLinkReplacementConfiguration(final TestMavenModel pomModel, final String linkReplacementValue) {
-        final Plugin projectKeeperPlugin = pomModel.getBuild().getPlugins().stream()
-                .filter(plugin -> plugin.getArtifactId().equals("project-keeper-maven-plugin")).findFirst()
-                .orElseThrow();
-        final Xpp3Dom configuration = (Xpp3Dom) projectKeeperPlugin.getConfiguration();
-        final Xpp3Dom linkReplacements = new Xpp3Dom("linkReplacements");
-        final Xpp3Dom linkReplacement = new Xpp3Dom("linkReplacement");
-        linkReplacement.setValue(linkReplacementValue);
-        linkReplacements.addChild(linkReplacement);
-        configuration.addChild(linkReplacements);
     }
 
     private void createExamplePomFile() throws IOException {
