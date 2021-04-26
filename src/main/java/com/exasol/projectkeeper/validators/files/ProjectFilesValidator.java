@@ -128,7 +128,7 @@ public class ProjectFilesValidator implements Validator {
             final String resourceName = templateResource.getURI().toString();
             final Path resourcePath = Path.of(resourceName);
             final int templatesFolderIndex = getTemplatesFolderIndex(resourcePath);
-            if (templatesFolderIndex == -1 || resourcePath.getNameCount() - templatesFolderIndex < 3) {
+            if (isTemplatePathSyntax(resourcePath, templatesFolderIndex)) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-1")
                         .message("Template name had invalid format.").ticketMitigation().toString());
             }
@@ -140,6 +140,10 @@ public class ProjectFilesValidator implements Validator {
             final String fileName = pathRelativeToTemplates.subpath(2, pathRelativeToTemplates.getNameCount())
                     .toString();
             return new FileTemplate(templateResource, templateType, fileName, module);
+        }
+
+        private static boolean isTemplatePathSyntax(final Path resourcePath, final int templatesFolderIndex) {
+            return templatesFolderIndex == -1 || resourcePath.getNameCount() - templatesFolderIndex < 3;
         }
 
         private static int getTemplatesFolderIndex(final Path resourcePath) {
