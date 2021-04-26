@@ -5,6 +5,10 @@ import java.util.List;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
+/**
+ * This class defines the declaration of the project-keeper plugin in a pom file. It's used for building test setups
+ * using {@link TestMavenModel}.
+ */
 public class ProjectKeeperPluginDeclaration {
     private final String version;
     private List<ProjectKeeperModule> enabledModules;

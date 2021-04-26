@@ -33,7 +33,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     private List<String> excludedFiles;
 
     @Parameter(property = "excludedPlugins")
-    private List<String> excludedPlugins;
+    private Set<String> excludedPlugins;
 
     @Parameter(property = "linkReplacements")
     private List<String> linkReplacements;
