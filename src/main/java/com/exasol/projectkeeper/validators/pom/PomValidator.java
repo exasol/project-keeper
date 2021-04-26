@@ -38,6 +38,7 @@ public interface PomValidator {
      * Get if this validator is excluded by the excluded plugins.
      * 
      * @param excludedPlugins list of excluded plugins (group_id:artifact_id)
+     * @return {@code true} if the validator is excluded
      */
     public boolean isExcluded(Collection<String> excludedPlugins);
 }
