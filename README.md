@@ -120,7 +120,7 @@ Inside of the `<excludedFile>` tag you can use GLOB wildcards.
 
 ## Excluding Plugins
 
-Using the `excludedPlugins` you can tell project-keeper to ignore some missing or different configured maven plugins:
+Using the `excludedPlugins`configuration you can tell Project Keeper to ignore some missing or differently configured maven plugins:
 
 ```xml
 
