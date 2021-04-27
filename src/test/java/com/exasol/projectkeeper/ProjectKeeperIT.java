@@ -7,8 +7,8 @@ import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.Objects;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
@@ -32,10 +32,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     void testVerify() throws VerificationException, IOException {
-        final var pom = new TestMavenModel();
-        pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION).withEnabledModules(MAVEN_CENTRAL,
-                INTEGRATION_TESTS, JAR_ARTIFACT, UDF_COVERAGE));
-        pom.writeAsPomToProject(this.projectDir);
+        writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         final VerificationException verificationException = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
@@ -85,6 +82,13 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         );
     }
 
+    private void writePomWithAllProjectKeeperPlugins() throws IOException {
+        final var pom = new TestMavenModel();
+        pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION).withEnabledModules(MAVEN_CENTRAL,
+                INTEGRATION_TESTS, JAR_ARTIFACT, UDF_COVERAGE));
+        pom.writeAsPomToProject(this.projectDir);
+    }
+
     @Test
     void testVerifyWithExcludedFile() throws VerificationException, IOException {
         final var pom = new TestMavenModel();
@@ -100,6 +104,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     void testVerifyWithAFileThatMustNotExist() throws VerificationException, IOException {
+        writePomWithAllProjectKeeperPlugins();
         final Path fileThatMustNotExist = this.projectDir.resolve(".github/workflows/maven.yml");
         fileThatMustNotExist.toFile().getParentFile().mkdirs();
         Files.writeString(fileThatMustNotExist, "some content");
@@ -127,10 +132,10 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     void testOnlyPomInvalid() throws IOException, VerificationException {
+        writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
-        Files.copy(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("test_project/pom.xml")),
-                this.projectDir.resolve("pom.xml"), StandardCopyOption.REPLACE_EXISTING);
+        writePomWithAllProjectKeeperPlugins();// override pom
         final VerificationException verificationException = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = verificationException.getMessage();
@@ -144,14 +149,16 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
-    void testFix() throws VerificationException {
+    void testFix() throws VerificationException, IOException {
+        writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         verifier.verifyErrorFreeLog();
     }
 
     @Test
-    void testValidAfterFix() throws VerificationException {
+    void testValidAfterFix() throws VerificationException, IOException {
+        writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         assertDoesNotThrow(() -> verifier.executeGoal("project-keeper:verify"));
@@ -189,7 +196,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
-    void testJacocoAgentIsExtracted() throws VerificationException {
+    void testJacocoAgentIsExtracted() throws VerificationException, IOException {
+        writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");

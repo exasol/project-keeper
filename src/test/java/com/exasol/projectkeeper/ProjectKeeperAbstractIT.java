@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper;
 
+import static com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter.getCurrentProjectVersion;
+
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -9,7 +11,6 @@ import java.util.logging.Logger;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -20,8 +21,9 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
 
 public class ProjectKeeperAbstractIT {
     private static final Logger LOGGER = Logger.getLogger(ProjectKeeperAbstractIT.class.getName());
-    protected static final String CURRENT_VERSION = "0.7.0"; // todo add automatically
-    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-0.7.0.jar").toFile();
+    protected static final String CURRENT_VERSION = getCurrentProjectVersion();
+    private static final File PLUGIN = Path.of("target", "project-keeper-maven-plugin-" + CURRENT_VERSION + ".jar")
+            .toFile();
     private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
     /**
      * When you enable debugging here, connect with a debugger to localhost:8000 during the test run. Since the tests
@@ -31,12 +33,12 @@ public class ProjectKeeperAbstractIT {
     private static final String TEST_PROJECT = "/test_project";
 
     static Path mavenRepo;
-    protected Path projectDir;
+
     /**
      * TempDir only supports one temp directory per test class. For that we can not use it here again but create and
      * drop it by hand.
      */
-    private Path eachTestsTemp;
+    protected Path projectDir;
 
     @BeforeAll
     static void beforeAll() throws VerificationException, IOException {
@@ -62,11 +64,10 @@ public class ProjectKeeperAbstractIT {
 
     private static void installThisPluginToTestMavenRepo() throws IOException, VerificationException {
         removeProjectKeeperFromRepository();
-        final Path testProjectDir = Files.createTempDirectory("pk-test");
-        final File testDir = ResourceExtractor.extractResourcePath(ProjectKeeperIT.class, TEST_PROJECT,
-                testProjectDir.toFile(), true);
+        final Path tmpProjectDir = Files.createTempDirectory("pk-test");
+        new TestMavenModel().writeAsPomToProject(tmpProjectDir);
         try {
-            final Verifier verifier = new Verifier(testDir.getAbsolutePath());
+            final Verifier verifier = new Verifier(tmpProjectDir.toString());
             verifier.setCliOptions(List.of(//
                     "-Dfile=" + PLUGIN.getAbsolutePath(), //
                     "-DlocalRepositoryPath=" + mavenRepo.toAbsolutePath(), //
@@ -74,7 +75,7 @@ public class ProjectKeeperAbstractIT {
             verifier.executeGoal("install:install-file");
             verifier.verifyErrorFreeLog();
         } finally {
-            org.apache.commons.io.FileUtils.deleteDirectory(testProjectDir.toFile());
+            org.apache.commons.io.FileUtils.deleteDirectory(tmpProjectDir.toFile());
         }
     }
 
@@ -84,15 +85,13 @@ public class ProjectKeeperAbstractIT {
 
     @BeforeEach
     void beforeEach() throws IOException, GitAPIException {
-        this.eachTestsTemp = Files.createTempDirectory("pk-test");
-        this.projectDir = ResourceExtractor
-                .extractResourcePath(ProjectKeeperIT.class, TEST_PROJECT, this.eachTestsTemp.toFile(), true).toPath();
+        this.projectDir = Files.createTempDirectory("pk-test");
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
     @AfterEach
     void afterEach() throws IOException {
-        FileUtils.deleteDirectory(this.eachTestsTemp.toFile());
+        FileUtils.deleteDirectory(this.projectDir.toFile());
     }
 
     protected void writePomWithOneDependency(final String pomVersion, final String dependencyVersion)
