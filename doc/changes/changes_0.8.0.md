@@ -8,13 +8,20 @@ Code name:
 
 * #97: Removed hard-coded version number from tests
 * #110: Replaced explicit types by var
+* #111: Extract coverage from integration tests
 
 ## Dependency Updates
+
+### Runtime Dependency Updates
+
+* Added `org.jacoco:org.jacoco.agent:0.8.5`
 
 ### Test Dependency Updates
 
 * Added `com.exasol:maven-project-version-getter:0.1.0`
+* Removed `org.jacoco:org.jacoco.agent:0.8.5`
 
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:project-keeper-maven-plugin:0.7.0` to `0.8.0`
+* Added `org.apache.maven.plugins:maven-dependency-plugin:2.8`

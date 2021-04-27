@@ -16,21 +16,7 @@
             </goals>
         </execution>
         <execution>
-            <id>report</id>
-            <phase>test</phase>
-            <goals>
-                <goal>report</goal>
-            </goals>
-        </execution>
-        <execution>
-            <id>report-integration</id>
-            <phase>verify</phase>
-            <goals>
-                <goal>report-integration</goal>
-            </goals>
-        </execution>
-        <execution>
-            <id>merge-it-results</id>
+            <id>merge-results</id>
             <phase>verify</phase>
             <goals>
                 <goal>merge</goal>
@@ -40,22 +26,21 @@
                     <fileSet>
                         <directory>${project.build.directory}/</directory>
                         <includes>
-                            <include>jacoco-it.exec</include>
-                            <include>jacoco-udf.exec</include>
+                            <include>jacoco*.exec</include>
                         </includes>
                     </fileSet>
                 </fileSets>
-                <destFile>${project.build.directory}/aggregate-it.exec</destFile>
+                <destFile>${project.build.directory}/aggregate.exec</destFile>
             </configuration>
         </execution>
         <execution>
-            <id>report-integration-with-udf</id>
+            <id>report</id>
             <phase>verify</phase>
             <goals>
-                <goal>report-integration</goal>
+                <goal>report</goal>
             </goals>
             <configuration>
-                <dataFile>${project.build.directory}/aggregate-it.exec</dataFile>
+                <dataFile>${project.build.directory}/aggregate.exec</dataFile>
             </configuration>
         </execution>
     </executions>
