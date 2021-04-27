@@ -7,8 +7,8 @@ import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.Objects;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
@@ -135,8 +135,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
-        Files.copy(Objects.requireNonNull(getClass().getClassLoader().getResourceAsStream("test_project/pom.xml")),
-                this.projectDir.resolve("pom.xml"), StandardCopyOption.REPLACE_EXISTING);
+        writePomWithAllProjectKeeperPlugins();// override pom
         final VerificationException verificationException = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = verificationException.getMessage();
