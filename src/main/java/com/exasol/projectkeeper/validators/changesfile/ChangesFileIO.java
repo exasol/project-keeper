@@ -22,10 +22,10 @@ public class ChangesFileIO {
      * @return read {@link ChangesFile}
      */
     public ChangesFile read(final Path file) {
-        try (final BufferedReader fileReader = new BufferedReader(new FileReader(file.toFile()))) {
+        try (final var fileReader = new BufferedReader(new FileReader(file.toFile()))) {
             String sectionHeader = null;
             String line;
-            final ChangesFile.Builder builder = ChangesFile.builder();
+            final var builder = ChangesFile.builder();
             final List<String> lineBuffer = new ArrayList<>();
             while ((line = fileReader.readLine()) != null) {
                 if (SECTION_HEADING_PATTERN.matcher(line).matches()) {
@@ -62,7 +62,7 @@ public class ChangesFileIO {
      * @param destinationFile file to write to
      */
     public void write(final ChangesFile changesFile, final Path destinationFile) {
-        try (final BufferedWriter fileWriter = new BufferedWriter(new FileWriter(destinationFile.toFile()))) {
+        try (final var fileWriter = new BufferedWriter(new FileWriter(destinationFile.toFile()))) {
             writeSection(fileWriter, changesFile.getHeaderSectionLines());
             for (final ChangesFileSection section : changesFile.getSections()) {
                 writeSection(fileWriter, section.getContent());

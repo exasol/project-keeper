@@ -18,11 +18,11 @@ public class XPathSplitter {
      * @return fragments
      */
     public static List<String> split(final String xPath) {
-        int nestLevel = 0;
+        var nestLevel = 0;
         final List<String> fragments = new ArrayList<>();
-        StringBuilder fragmentBuilder = new StringBuilder();
-        for (int position = 0; position < xPath.length(); position++) {
-            final char currentChar = xPath.charAt(position);
+        var fragmentBuilder = new StringBuilder();
+        for (var position = 0; position < xPath.length(); position++) {
+            final var currentChar = xPath.charAt(position);
             if (currentChar == '[') {
                 nestLevel++;
                 fragmentBuilder.append(currentChar);
@@ -36,7 +36,7 @@ public class XPathSplitter {
                 fragmentBuilder.append(currentChar);
             }
         }
-        final String fragment = fragmentBuilder.toString();
+        final var fragment = fragmentBuilder.toString();
         if (!fragment.isEmpty()) {
             fragments.add(fragment);
         }

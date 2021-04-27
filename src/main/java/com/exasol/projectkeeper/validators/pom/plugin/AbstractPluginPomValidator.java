@@ -3,13 +3,13 @@ package com.exasol.projectkeeper.validators.pom.plugin;
 import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Document;
@@ -79,7 +79,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
             final Collection<ProjectKeeperModule> enabledModules) {
         return (Log log) -> {
             createObjectPathIfNotExists(runXPath(pom, "/project"), List.of("build", "plugins"));
-            final Node plugin = pom.importNode(getPluginTemplate(), true);
+            final var plugin = pom.importNode(getPluginTemplate(), true);
             validatePluginConfiguration(plugin, enabledModules, finding -> finding.getFix().fixError(log));
             runXPath(pom, PLUGINS_XPATH).appendChild(plugin);
         };
@@ -95,15 +95,14 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     }
 
     private Node readPluginTemplate(final String templateResourceName) {
-        try (final InputStream templateInputStream = getClass().getClassLoader()
-                .getResourceAsStream(templateResourceName)) {
+        try (final var templateInputStream = getClass().getClassLoader().getResourceAsStream(templateResourceName)) {
             if (templateInputStream == null) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-11")
                         .message("Failed to open {{plugin name|uq}}'s template.", this.pluginArtifactId).toString());
             }
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+            final var documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
             return documentBuilder.parse(templateInputStream).getFirstChild();
         } catch (final IOException | SAXException | ParserConfigurationException e) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-10")
@@ -161,8 +160,8 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     }
 
     private void findAndCopyFirstMissingPropertyFromTemplate(final Node plugin, final List<String> pathSegments) {
-        for (int pathLength = 1; pathLength <= pathSegments.size(); pathLength++) {
-            final String currentXpath = String.join("/", pathSegments.subList(0, pathLength));
+        for (var pathLength = 1; pathLength <= pathSegments.size(); pathLength++) {
+            final var currentXpath = String.join("/", pathSegments.subList(0, pathLength));
             if (runXPath(plugin, currentXpath) == null) {
                 final Node parent = runXpathFromSegments(plugin, pathSegments, pathLength - 1);
                 copyPropertyFromTemplate(plugin, currentXpath, parent);
@@ -172,8 +171,8 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     }
 
     private void copyPropertyFromTemplate(final Node plugin, final String xPath, final Node parent) {
-        final Node node = runXPath(getPluginTemplate(), xPath);
-        final Node importedNode = plugin.getOwnerDocument().importNode(node, true);
+        final var node = runXPath(getPluginTemplate(), xPath);
+        final var importedNode = plugin.getOwnerDocument().importNode(node, true);
         parent.appendChild(importedNode);
     }
 
@@ -211,7 +210,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
      */
     protected void verifyPluginDoesNotHaveProperty(final Node plugin, final String propertyXpath,
             final Consumer<ValidationFinding> findingConsumer) {
-        final Node node = runXPath(plugin, propertyXpath);
+        final var node = runXPath(plugin, propertyXpath);
         if (node != null) {
             findingConsumer.accept(new ValidationFinding(
                     ExaError.messageBuilder("E-PK-28")
@@ -229,7 +228,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
                     .message("The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value.",
                             this.pluginArtifactId, propertyXpath)
                     .toString(), (Log log) -> {
-                        final Node importedProperty = plugin.getOwnerDocument().importNode(templateProperty, true);
+                        final var importedProperty = plugin.getOwnerDocument().importNode(templateProperty, true);
                         property.getParentNode().replaceChild(importedProperty, property);
                     }));
         }

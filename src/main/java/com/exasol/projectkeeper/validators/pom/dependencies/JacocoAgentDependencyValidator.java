@@ -2,8 +2,6 @@ package com.exasol.projectkeeper.validators.pom.dependencies;
 
 import java.util.function.Consumer;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
@@ -32,8 +30,8 @@ public class JacocoAgentDependencyValidator extends AbstractDependencyValidator 
     }
 
     private void validateClassifier(final Node dependency, final Consumer<ValidationFinding> findingConsumer) {
-        final Document pom = dependency.getOwnerDocument();
-        final Element classifier = pom.createElement("classifier");
+        final var pom = dependency.getOwnerDocument();
+        final var classifier = pom.createElement("classifier");
         classifier.appendChild(pom.createTextNode("runtime"));
         validateDependencyHasProperty(classifier, dependency, findingConsumer);
     }

@@ -37,7 +37,7 @@ public class GitRepository {
      * @return descending ordered list of tags
      */
     public List<TaggedCommit> getTagsInCurrentBranch() {
-        try (final Git git = openLocalGithubRepository()) {
+        try (final var git = openLocalGithubRepository()) {
             final String currentBranch = git.getRepository().getFullBranch();
             validateBranchExists(currentBranch);
             return getTagsInBranch(git.getRepository(), currentBranch);
@@ -61,7 +61,7 @@ public class GitRepository {
             throws IOException {
         final ObjectId branch = repository.resolve(branchName);
         final Map<ObjectId, List<String>> tags = getTagsByTheIdOfTheCommitTheyPointTo(repository);
-        final RevWalk commitWalker = new RevWalk(repository);
+        final var commitWalker = new RevWalk(repository);
         try {
             commitWalker.markStart(commitWalker.parseCommit(branch));
         } catch (final NullPointerException exception) {
@@ -97,8 +97,8 @@ public class GitRepository {
     }
 
     private ObjectId getTaggedCommitId(final Repository repository, final Ref tagRef) throws IOException {
-        try (final RevWalk tagSearcher = new RevWalk(repository)) {
-            final RevObject revObject = tagSearcher.parseAny(tagRef.getObjectId());
+        try (final var tagSearcher = new RevWalk(repository)) {
+            final var revObject = tagSearcher.parseAny(tagRef.getObjectId());
             if (revObject instanceof RevCommit) {
                 return revObject.getId();
             } else if (revObject instanceof RevTag) {
@@ -119,7 +119,7 @@ public class GitRepository {
      * @return file contents
      */
     public String readFileAtCommit(final Path relativeFilePath, final GitCommit commit) {
-        try (final Git git = openLocalGithubRepository()) {
+        try (final var git = openLocalGithubRepository()) {
             return readFileAtCommit(relativeFilePath, git, commit.getCommit());
         } catch (final IOException exception) {
             throw new IllegalStateException(
@@ -131,18 +131,18 @@ public class GitRepository {
 
     private String readFileAtCommit(final Path relativeFilePath, final Git git, final RevCommit commit)
             throws IOException {
-        final org.eclipse.jgit.lib.Repository repository = git.getRepository();
-        final ObjectReader reader = repository.newObjectReader();
-        final CanonicalTreeParser treeParser = new CanonicalTreeParser(null, reader, commit.getTree());
+        final var repository = git.getRepository();
+        final var reader = repository.newObjectReader();
+        final var treeParser = new CanonicalTreeParser(null, reader, commit.getTree());
         if (!treeParser.findFile(relativeFilePath.toString())) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-35")
                     .message("Failed to read file {{file path}} from commit {{commit id}}.")
                     .parameter("file path", relativeFilePath).parameter("commit id", commit.getName())
                     .mitigation("Make sure that the file exists at the given commit.").toString());
         }
-        final ObjectId objectForVersionOfFile = treeParser.getEntryObjectId();
-        final ObjectLoader objectLoader = reader.open(objectForVersionOfFile);
-        final ByteArrayOutputStream contentBuffer = new ByteArrayOutputStream();
+        final var objectForVersionOfFile = treeParser.getEntryObjectId();
+        final var objectLoader = reader.open(objectForVersionOfFile);
+        final var contentBuffer = new ByteArrayOutputStream();
         objectLoader.copyTo(contentBuffer);
         return contentBuffer.toString(StandardCharsets.UTF_8);
     }

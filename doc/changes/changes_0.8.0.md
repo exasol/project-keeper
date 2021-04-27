@@ -7,6 +7,7 @@ Code name:
 ## Refactoring:
 
 * #97: Removed hard-coded version number from tests
+* #110: Replaced explicit types by var
 
 ## Dependency Updates
 

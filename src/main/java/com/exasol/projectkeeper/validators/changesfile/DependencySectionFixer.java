@@ -53,7 +53,7 @@ class DependencySectionFixer {
      * @return fixed changes file.
      */
     public ChangesFile fix(final ChangesFile changesFile) {
-        final Model oldModel = getOldModel();
+        final var oldModel = getOldModel();
         final DependencyChangeReport report = new DependencyChangeReportReader().read(oldModel, this.currentMavenModel);
         final List<String> renderedReport = new DependencyChangeReportRenderer().render(report);
         final List<ChangesFileSection> sections = new ArrayList<>(changesFile.getSections());
@@ -72,15 +72,15 @@ class DependencySectionFixer {
         if (lastReleasesPomFile.isPresent()) {
             return parseOldPomFile(lastReleasesPomFile.get());
         } else {
-            final Model emptyModel = new Model();
-            final Build build = new Build();
+            final var emptyModel = new Model();
+            final var build = new Build();
             emptyModel.setBuild(build);
             return emptyModel;
         }
     }
 
     private Model parseOldPomFile(final String pomFileContents) {
-        try (final TemporaryPomFile temporaryPomFile = new TemporaryPomFile(pomFileContents)) {
+        try (final var temporaryPomFile = new TemporaryPomFile(pomFileContents)) {
             return this.mavenModelReader.readModel(temporaryPomFile.getPomFile().toFile());
         } catch (final MavenFileModelReader.ReadFailedException | IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-38")

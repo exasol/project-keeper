@@ -40,7 +40,7 @@ public class ProjectDependencyReader {
      * @return list of dependencies
      */
     public List<ProjectDependency> readDependencies(final File pomFile) {
-        final Model model = parsePomFile(pomFile);
+        final var model = parsePomFile(pomFile);
         return getDependenciesIncludingPlugins(model).map(this::getDependenciesLicense).collect(Collectors.toList());
     }
 
@@ -50,7 +50,7 @@ public class ProjectDependencyReader {
     }
 
     private Dependency convertPluginToDependency(final Plugin plugin) {
-        final Dependency dependency = new Dependency();
+        final var dependency = new Dependency();
         dependency.setGroupId(plugin.getGroupId());
         dependency.setArtifactId(plugin.getArtifactId());
         dependency.setVersion(plugin.getVersion());
@@ -60,7 +60,7 @@ public class ProjectDependencyReader {
 
     private ProjectDependency getDependenciesLicense(final Dependency dependency) {
         try {
-            final Model dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
+            final var dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
                     dependency.getGroupId(), dependency.getVersion());
             final List<License> licenses = dependenciesPom.getLicenses().stream()
                     .map(license -> new License(license.getName(), license.getUrl())).collect(Collectors.toList());

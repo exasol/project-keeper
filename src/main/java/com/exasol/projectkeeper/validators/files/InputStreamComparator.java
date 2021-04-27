@@ -18,10 +18,10 @@ public class InputStreamComparator {
      * @throws IOException if reading fails
      */
     public boolean areStreamsEqual(final InputStream inputStream1, final InputStream inputStream2) throws IOException {
-        final byte[] buffer1 = new byte[1024 * 10];
-        final byte[] buffer2 = new byte[1024 * 10];
-        int numberOfBytesRead1 = 0;
-        int numberOfBytesRead2 = 0;
+        final var buffer1 = new byte[1024 * 10];
+        final var buffer2 = new byte[1024 * 10];
+        var numberOfBytesRead1 = 0;
+        var numberOfBytesRead2 = 0;
         while (true) {
             numberOfBytesRead1 = inputStream1.read(buffer1);
             numberOfBytesRead2 = inputStream2.read(buffer2);

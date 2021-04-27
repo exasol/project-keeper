@@ -18,7 +18,7 @@ class MarkdownReferenceBuilder {
      * @return reference
      */
     public String getReferenceForUrl(final String name, final String url) {
-        final String referenceName = String.valueOf(this.referenceCounter);
+        final var referenceName = String.valueOf(this.referenceCounter);
         this.referenceCounter++;
         if (!this.references.containsKey(url)) {
             this.references.put(url, referenceName);
@@ -34,7 +34,7 @@ class MarkdownReferenceBuilder {
      * @return string with the reference mapping. Example: {@code [0]: https://exasol.com}
      */
     public String getReferences() {
-        final StringBuilder stringBuilder = new StringBuilder();
+        final var stringBuilder = new StringBuilder();
         for (final Map.Entry<String, String> reference : this.references.entrySet()) {
             stringBuilder.append("[").append(reference.getValue()).append("]: ").append(reference.getKey())
                     .append("\n");

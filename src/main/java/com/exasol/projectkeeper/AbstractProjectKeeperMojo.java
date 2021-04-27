@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper;
 
-import java.io.File;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -67,14 +66,13 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     }
 
     protected List<Validator> getValidators() {
-        final BrokenLinkReplacer brokenLinkReplacer = new BrokenLinkReplacer(this.linkReplacements);
+        final var brokenLinkReplacer = new BrokenLinkReplacer(this.linkReplacements);
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
-        final ExcludedFilesMatcher excludedFilesMatcher = new ExcludedFilesMatcher(this.excludedFiles);
-        final DefaultMavenFileModelReader mavenModelReader = new DefaultMavenFileModelReader(this.mavenProjectBuilder,
-                this.session);
+        final var excludedFilesMatcher = new ExcludedFilesMatcher(this.excludedFiles);
+        final var mavenModelReader = new DefaultMavenFileModelReader(this.mavenProjectBuilder, this.session);
         final MavenArtifactModelReader artifactReader = new DefaultMavenArtifactModelReader(this.mavenProjectBuilder,
                 this.session, this.repositorySystem);
-        final File pomFile = this.project.getModel().getPomFile();
+        final var pomFile = this.project.getModel().getPomFile();
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
                 new PomFileValidator(enabledModules, this.excludedPlugins, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(),

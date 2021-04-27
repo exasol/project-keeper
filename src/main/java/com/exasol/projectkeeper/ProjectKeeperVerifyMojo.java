@@ -22,8 +22,8 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final AtomicBoolean hadFindingsWithFix = new AtomicBoolean(false);
-        final AtomicBoolean hadFindingsWithoutFix = new AtomicBoolean(false);
+        final var hadFindingsWithFix = new AtomicBoolean(false);
+        final var hadFindingsWithoutFix = new AtomicBoolean(false);
         getValidators().forEach(validator -> validator.validate(finding -> {
             getLog().error(finding.getMessage());
             if (finding.hasFix()) {

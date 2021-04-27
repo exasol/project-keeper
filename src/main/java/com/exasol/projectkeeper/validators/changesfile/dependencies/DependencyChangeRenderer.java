@@ -12,7 +12,7 @@ class DependencyChangeRenderer {
      * @return rendered string
      */
     public String render(final DependencyChange dependencyChange) {
-        final RenderVisitor visitor = new RenderVisitor();
+        final var visitor = new RenderVisitor();
         dependencyChange.accept(visitor);
         return visitor.getRendered();
     }
