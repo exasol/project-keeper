@@ -11,7 +11,6 @@ import java.util.logging.Logger;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
 import org.apache.maven.shared.utils.io.FileUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -65,11 +64,10 @@ public class ProjectKeeperAbstractIT {
 
     private static void installThisPluginToTestMavenRepo() throws IOException, VerificationException {
         removeProjectKeeperFromRepository();
-        final Path testProjectDir = Files.createTempDirectory("pk-test");
-        final File testDir = ResourceExtractor.extractResourcePath(ProjectKeeperIT.class, TEST_PROJECT,
-                testProjectDir.toFile(), true);
+        final Path tmpProjectDir = Files.createTempDirectory("pk-test");
+        new TestMavenModel().writeAsPomToProject(tmpProjectDir);
         try {
-            final Verifier verifier = new Verifier(testDir.getAbsolutePath());
+            final Verifier verifier = new Verifier(tmpProjectDir.toString());
             verifier.setCliOptions(List.of(//
                     "-Dfile=" + PLUGIN.getAbsolutePath(), //
                     "-DlocalRepositoryPath=" + mavenRepo.toAbsolutePath(), //
@@ -77,7 +75,7 @@ public class ProjectKeeperAbstractIT {
             verifier.executeGoal("install:install-file");
             verifier.verifyErrorFreeLog();
         } finally {
-            org.apache.commons.io.FileUtils.deleteDirectory(testProjectDir.toFile());
+            org.apache.commons.io.FileUtils.deleteDirectory(tmpProjectDir.toFile());
         }
     }
 
