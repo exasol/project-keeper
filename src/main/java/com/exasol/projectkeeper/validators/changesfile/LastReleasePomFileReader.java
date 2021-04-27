@@ -20,8 +20,8 @@ public class LastReleasePomFileReader {
      * @return content of the pom file
      */
     public Optional<String> readLatestReleasesPomFile(final Path projectDirectory, final String currentVersion) {
-        final GitRepository gitRepository = new GitRepository(projectDirectory);
-        final ExasolVersionMatcher exasolVersionMatcher = new ExasolVersionMatcher();
+        final var gitRepository = new GitRepository(projectDirectory);
+        final var exasolVersionMatcher = new ExasolVersionMatcher();
         final Optional<TaggedCommit> latestCommitWithExasolVersionTag = gitRepository.getTagsInCurrentBranch().stream()
                 .filter(taggedCommit -> exasolVersionMatcher.isExasolStyleVersion(taggedCommit.getTag()))//
                 .filter(taggedCommit -> !taggedCommit.getTag().equals(currentVersion))//

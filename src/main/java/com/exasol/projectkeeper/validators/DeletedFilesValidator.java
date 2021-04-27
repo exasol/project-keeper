@@ -40,11 +40,11 @@ public class DeletedFilesValidator implements Validator {
     @Override
     public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
         FILES_THAT_MUST_NOT_EXIST.forEach((fileThatMustNotExist, reason) -> {
-            final Path pathThatMustExist = this.projectDirectory.resolve(fileThatMustNotExist);
+            final var pathThatMustExist = this.projectDirectory.resolve(fileThatMustNotExist);
             if (this.excludedFiles.isFileExcluded(this.projectDirectory.relativize(pathThatMustExist))) {
                 return;
             }
-            final File file = pathThatMustExist.toFile();
+            final var file = pathThatMustExist.toFile();
             if (file.exists()) {
                 findingConsumer.accept(new ValidationFinding(getFileExistsErrorMessage(fileThatMustNotExist, reason),
                         getFix(fileThatMustNotExist.toString(), file)));

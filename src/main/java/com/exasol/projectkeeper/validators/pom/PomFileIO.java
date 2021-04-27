@@ -3,8 +3,10 @@ package com.exasol.projectkeeper.validators.pom;
 import java.io.*;
 
 import javax.xml.XMLConstants;
-import javax.xml.parsers.*;
-import javax.xml.transform.*;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -48,12 +50,12 @@ class PomFileIO {
      */
     public void writeChanges() {
         try {
-            final TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            final var transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
-            final Transformer transformer = transformerFactory.newTransformer();
-            final DOMSource domSource = new DOMSource(this.content);
-            final StreamResult streamResult = new StreamResult(this.pomFile);
+            final var transformer = transformerFactory.newTransformer();
+            final var domSource = new DOMSource(this.content);
+            final var streamResult = new StreamResult(this.pomFile);
             transformer.transform(domSource, streamResult);
         } catch (final TransformerException exception) {
             throw new IllegalStateException(
@@ -63,10 +65,10 @@ class PomFileIO {
 
     private Document parsePomFile() {
         try (final InputStream pomFileStream = new FileInputStream(this.pomFile)) {
-            final DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+            final var documentBuilderFactory = DocumentBuilderFactory.newInstance();
             documentBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             documentBuilderFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-            final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
+            final var documentBuilder = documentBuilderFactory.newDocumentBuilder();
             return documentBuilder.parse(pomFileStream);
         } catch (final ParserConfigurationException | IOException | SAXException exception) {
             throw new IllegalStateException(

@@ -64,7 +64,7 @@ public class DependenciesValidator implements Validator {
     private void validateFileContent(final Consumer<ValidationFinding> findingConsumer,
             final String expectedDependenciesPage) {
         try {
-            final String actualContent = Files.readString(this.dependenciesFile);
+            final var actualContent = Files.readString(this.dependenciesFile);
             if (!actualContent.equals(expectedDependenciesPage)) {
                 findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-53").message(
                         "The dependencies.md file has a outdated content.\nExpected content:\n{{expected content|uq}}",

@@ -51,8 +51,8 @@ public class ChangesFileValidator implements Validator {
 
     private void runValidation(final Consumer<ValidationFinding> findingConsumer) {
         if (validateThatChangesFileExists(findingConsumer)) {
-            final ChangesFile changesFile = new ChangesFileIO().read(this.changesFileAbsolutePath);
-            final ChangesFile fixedSections = fixSections(changesFile);
+            final var changesFile = new ChangesFileIO().read(this.changesFileAbsolutePath);
+            final var fixedSections = fixSections(changesFile);
             if (!changesFile.equals(fixedSections)) {
                 findingConsumer.accept(new ValidationFinding(
                         ExaError.messageBuilder("E-PK-40")
@@ -64,8 +64,7 @@ public class ChangesFileValidator implements Validator {
     }
 
     private ChangesFile fixSections(final ChangesFile changesFile) {
-        final DependencySectionFixer dependencySectionFixer = new DependencySectionFixer(this.mavenModelReader,
-                this.projectDirectory);
+        final var dependencySectionFixer = new DependencySectionFixer(this.mavenModelReader, this.projectDirectory);
         return dependencySectionFixer.fix(changesFile);
     }
 
@@ -90,7 +89,7 @@ public class ChangesFileValidator implements Validator {
     }
 
     private ChangesFile getTemplate() {
-        final ChangesFile changesFile = ChangesFile.builder()
+        final var changesFile = ChangesFile.builder()
                 .setHeader(List.of("# " + this.projectName + " " + this.projectVersion + ", released "
                         + LocalDateTime.now().getYear() + "-??-??", ""))//
                 .addSection(List.of("## Features", "", "* ISSUE_NUMBER: description"))//

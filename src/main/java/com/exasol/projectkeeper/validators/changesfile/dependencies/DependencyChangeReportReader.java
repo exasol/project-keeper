@@ -60,7 +60,7 @@ public class DependencyChangeReportReader {
     }
 
     private Dependency convertPluginToDependency(final Plugin plugin) {
-        final Dependency dependency = new Dependency();
+        final var dependency = new Dependency();
         dependency.setGroupId(plugin.getGroupId());
         dependency.setArtifactId(plugin.getArtifactId());
         dependency.setVersion(plugin.getVersion());

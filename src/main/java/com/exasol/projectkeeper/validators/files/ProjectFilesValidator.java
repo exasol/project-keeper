@@ -10,7 +10,8 @@ import org.apache.maven.plugin.logging.Log;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 
-import io.github.classgraph.*;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.Resource;
 
 /**
  * Validator for the projects file structure.
@@ -37,7 +38,7 @@ public class ProjectFilesValidator implements Validator {
 
     @Override
     public ProjectFilesValidator validate(final Consumer<ValidationFinding> findingConsumer) {
-        try (final ScanResult scanResult = new ClassGraph().acceptPaths("templates/").scan()) {
+        try (final var scanResult = new ClassGraph().acceptPaths("templates/").scan()) {
             scanResult.getAllResources().stream()//
                     .map(FileTemplate::fromResource)//
                     .filter(template -> this.enabledModules.contains(template.module))
@@ -48,7 +49,7 @@ public class ProjectFilesValidator implements Validator {
     }
 
     public void validate(final FileTemplate template, final Consumer<ValidationFinding> findingConsumer) {
-        final File projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
+        final var projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
         if (!projectFile.exists()) {
             findingConsumer.accept(new ValidationFinding(
                     ExaError.messageBuilder("E-PK-17").message("Missing required: {{required file}}")
@@ -86,7 +87,7 @@ public class ProjectFilesValidator implements Validator {
     private boolean isFileEqualWithTemplate(final FileTemplate template, final File projectFile) {
         try (template.template;
                 final InputStream templateStream = template.template.open();
-                final FileInputStream actualInputStream = new FileInputStream(projectFile)) {
+                final var actualInputStream = new FileInputStream(projectFile)) {
             return COMPARATOR.areStreamsEqual(actualInputStream, templateStream);
         } catch (final IOException exception) {
             throw new IllegalStateException(
@@ -125,20 +126,18 @@ public class ProjectFilesValidator implements Validator {
         }
 
         public static FileTemplate fromResource(final Resource templateResource) {
-            final String resourceName = templateResource.getURI().toString();
-            final Path resourcePath = Path.of(resourceName);
+            final var resourceName = templateResource.getURI().toString();
+            final var resourcePath = Path.of(resourceName);
             final int templatesFolderIndex = getTemplatesFolderIndex(resourcePath);
             if (isTemplatePathSyntax(resourcePath, templatesFolderIndex)) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-1")
                         .message("Template name had invalid format.").ticketMitigation().toString());
             }
-            final Path pathRelativeToTemplates = resourcePath.subpath(templatesFolderIndex + 1,
+            final var pathRelativeToTemplates = resourcePath.subpath(templatesFolderIndex + 1,
                     resourcePath.getNameCount());
-            final ProjectKeeperModule module = ProjectKeeperModule
-                    .getModuleByName(pathRelativeToTemplates.getName(0).toString());
-            final TemplateType templateType = TemplateType.fromString(pathRelativeToTemplates.getName(1).toString());
-            final String fileName = pathRelativeToTemplates.subpath(2, pathRelativeToTemplates.getNameCount())
-                    .toString();
+            final var module = ProjectKeeperModule.getModuleByName(pathRelativeToTemplates.getName(0).toString());
+            final var templateType = TemplateType.fromString(pathRelativeToTemplates.getName(1).toString());
+            final var fileName = pathRelativeToTemplates.subpath(2, pathRelativeToTemplates.getNameCount()).toString();
             return new FileTemplate(templateResource, templateType, fileName, module);
         }
 
@@ -147,7 +146,7 @@ public class ProjectFilesValidator implements Validator {
         }
 
         private static int getTemplatesFolderIndex(final Path resourcePath) {
-            for (int index = 0; index < resourcePath.getNameCount(); index++) {
+            for (var index = 0; index < resourcePath.getNameCount(); index++) {
                 if (resourcePath.getName(index).toString().equals("templates")) {
                     return index;
                 }

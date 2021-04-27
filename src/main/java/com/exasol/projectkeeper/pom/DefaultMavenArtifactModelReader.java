@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.pom;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
 import org.apache.maven.project.*;
@@ -32,7 +31,7 @@ public class DefaultMavenArtifactModelReader implements MavenArtifactModelReader
     @Override
     public Model readModel(final String artifactId, final String groupId, final String version)
             throws ProjectBuildingException {
-        final Artifact artifact = this.repositorySystem.createProjectArtifact(groupId, artifactId, version);
+        final var artifact = this.repositorySystem.createProjectArtifact(groupId, artifactId, version);
         final ProjectBuildingResult build = this.mavenProjectBuilder.build(artifact,
                 this.session.getProjectBuildingRequest());
         return build.getProject().getModel();

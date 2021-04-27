@@ -32,7 +32,7 @@ public class DependencyChangeReportRenderer {
             lines.add("");
             lines.add(heading);
             lines.add("");
-            final DependencyChangeRenderer dependencyChangeRenderer = new DependencyChangeRenderer();
+            final var dependencyChangeRenderer = new DependencyChangeRenderer();
             for (final DependencyChange dependencyChange : dependencyChanges) {
                 lines.add(dependencyChangeRenderer.render(dependencyChange));
             }

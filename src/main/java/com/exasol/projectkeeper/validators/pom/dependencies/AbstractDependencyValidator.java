@@ -68,21 +68,21 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
     protected abstract void validateDetails(final Node dependency, final Consumer<ValidationFinding> findingConsumer);
 
     private void validateScope(final Node dependency, final Consumer<ValidationFinding> findingConsumer) {
-        final Document pom = dependency.getOwnerDocument();
-        final Element expectedScope = pom.createElement("scope");
+        final var pom = dependency.getOwnerDocument();
+        final var expectedScope = pom.createElement("scope");
         expectedScope.appendChild(pom.createTextNode(this.scope.name().toLowerCase()));
         validateDependencyHasProperty(expectedScope, dependency, findingConsumer);
     }
 
     private Element createTemplate(final Document pom, final Log log) {
-        final Element dependencyTemplate = pom.createElement("dependency");
-        final Element artifactIdField = pom.createElement("artifactId");
+        final var dependencyTemplate = pom.createElement("dependency");
+        final var artifactIdField = pom.createElement("artifactId");
         artifactIdField.appendChild(pom.createTextNode(this.artifactId));
         dependencyTemplate.appendChild(artifactIdField);
-        final Element groupIdField = pom.createElement("groupId");
+        final var groupIdField = pom.createElement("groupId");
         groupIdField.appendChild(pom.createTextNode(this.groupId));
         dependencyTemplate.appendChild(groupIdField);
-        final Element versionField = pom.createElement("version");
+        final var versionField = pom.createElement("version");
         versionField.appendChild(pom.createTextNode(this.version));
         dependencyTemplate.appendChild(versionField);
         validateDependency(dependencyTemplate, finding -> finding.getFix().fixError(log));

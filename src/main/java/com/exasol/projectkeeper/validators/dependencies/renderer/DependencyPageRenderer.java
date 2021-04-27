@@ -12,8 +12,8 @@ import net.steppschuh.markdowngenerator.table.Table;
 
 public class DependencyPageRenderer {
     public String render(final List<ProjectDependency> dependencies) {
-        final MarkdownReferenceBuilder markdownReferenceBuilder = new MarkdownReferenceBuilder();
-        final StringBuilder reportBuilder = new StringBuilder();
+        final var markdownReferenceBuilder = new MarkdownReferenceBuilder();
+        final var reportBuilder = new StringBuilder();
         reportBuilder.append("<!-- @formatter:off -->\n");
         reportBuilder.append("# Dependencies\n");
         reportBuilder.append(buildDependencySectionForScope(dependencies, COMPILE, markdownReferenceBuilder));
@@ -39,7 +39,7 @@ public class DependencyPageRenderer {
 
     private String buildTable(final List<ProjectDependency> dependencies,
             final MarkdownReferenceBuilder markdownReferenceBuilder) {
-        final Table.Builder tableBuilder = new Table.Builder().withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT);
+        final var tableBuilder = new Table.Builder().withAlignments(Table.ALIGN_LEFT, Table.ALIGN_LEFT);
         tableBuilder.addRow("Dependency", "License");
         dependencies.forEach(dependency -> {
             final String name = renderDependencyName(dependency, markdownReferenceBuilder);
@@ -69,8 +69,8 @@ public class DependencyPageRenderer {
     }
 
     private String capitalizeFirstLetter(final String string) {
-        final String lowerCase = string.toLowerCase();
-        final String firstLetter = lowerCase.substring(0, 1);
+        final var lowerCase = string.toLowerCase();
+        final var firstLetter = lowerCase.substring(0, 1);
         return firstLetter.toUpperCase() + lowerCase.substring(1);
     }
 }
