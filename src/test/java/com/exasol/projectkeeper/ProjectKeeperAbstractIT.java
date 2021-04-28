@@ -16,6 +16,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
@@ -108,6 +109,8 @@ public class ProjectKeeperAbstractIT {
         return testMavenModel;
     }
 
+    private static int jacocoAgentCounter = 0;
+
     protected Verifier getVerifier() throws VerificationException {
         final Verifier verifier = new Verifier(this.projectDir.toFile().getAbsolutePath());
         verifier.setLocalRepo(mavenRepo.toAbsolutePath().toString());
@@ -115,6 +118,20 @@ public class ProjectKeeperAbstractIT {
             verifier.setDebug(true);
             verifier.setDebugJvm(true);
         }
+        addJacocoAgent(verifier);
         return verifier;
+    }
+
+    private void addJacocoAgent(final Verifier verifier) {
+        final var agentPath = Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar").toAbsolutePath();
+        if (!agentPath.toFile().exists()) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-56").message(
+                    "Could not find jacoco agent at {{path}}. The agent is exported by the maven-dependency-plugin during build.")
+                    .mitigation("Run `mvn package`.").toString());
+        }
+        final var reportPath = Path.of("target", "jacoco-mvn-" + jacocoAgentCounter + ".exec").toAbsolutePath();
+        jacocoAgentCounter++;
+        final String jacocoAgentParameter = "-javaagent:" + agentPath + "=output=file,destfile=" + reportPath;
+        verifier.setEnvironmentVariable("MAVEN_OPTS", jacocoAgentParameter);
     }
 }

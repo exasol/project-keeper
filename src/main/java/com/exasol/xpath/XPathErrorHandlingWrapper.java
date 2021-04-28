@@ -27,9 +27,8 @@ public class XPathErrorHandlingWrapper {
         try {
             return (Node) X_PATH_FACTORY.newXPath().compile(xPath).evaluate(current, XPathConstants.NODE);
         } catch (final XPathExpressionException exception) {
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("F-PK-9").message("Invalid xpath {{xpath}}.").ticketMitigation().toString(),
-                    exception);
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-9").message("Invalid xpath {{xpath}}.", xPath)
+                    .ticketMitigation().toString(), exception);
         }
     }
 }
