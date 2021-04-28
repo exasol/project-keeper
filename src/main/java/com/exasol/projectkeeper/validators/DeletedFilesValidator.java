@@ -39,7 +39,7 @@ public class DeletedFilesValidator implements Validator {
 
     @Override
     public List<ValidationFinding> validate() {
-        return FILES_THAT_MUST_NOT_EXIST.entrySet().stream().map((entry) -> {
+        return FILES_THAT_MUST_NOT_EXIST.entrySet().stream().map(entry -> {
             final var fileThatMustNotExist = entry.getKey();
             final var reason = entry.getValue();
             final var pathThatMustExist = this.projectDirectory.resolve(fileThatMustNotExist);
