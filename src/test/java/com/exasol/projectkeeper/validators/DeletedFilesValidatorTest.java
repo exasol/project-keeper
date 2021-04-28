@@ -8,6 +8,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -19,13 +20,14 @@ class DeletedFilesValidatorTest {
 
     @Test
     void testValidation(@TempDir final Path tempDir) {
-        assertThat(new DeletedFilesValidator(tempDir, new ExcludedFilesMatcher(List.of())), hasNoValidationFindings());
+        assertThat(new DeletedFilesValidator(tempDir, new ExcludedFilesMatcher(Collections.emptyList())),
+                hasNoValidationFindings());
     }
 
     @Test
     void testValidationWithFileThatMustNotExist(@TempDir final Path tempDir) throws IOException {
         createdIllegalFile(tempDir);
-        assertThat(new DeletedFilesValidator(tempDir, new ExcludedFilesMatcher(List.of())),
+        assertThat(new DeletedFilesValidator(tempDir, new ExcludedFilesMatcher(Collections.emptyList())),
                 hasValidationFindingWithMessage(
                         "E-PK-26: '.github/workflows/maven.yml' exists but must not exist. Reason: We renamed maven.yml to dependencies_check.yml"));
     }
@@ -40,7 +42,7 @@ class DeletedFilesValidatorTest {
     @Test
     void testFix(@TempDir final Path tempDir) throws IOException {
         createdIllegalFile(tempDir);
-        assertThat(new DeletedFilesValidator(tempDir, new ExcludedFilesMatcher(List.of())),
+        assertThat(new DeletedFilesValidator(tempDir, new ExcludedFilesMatcher(Collections.emptyList())),
                 hasNoMoreFindingsAfterApplyingFixes());
     }
 

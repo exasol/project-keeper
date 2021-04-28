@@ -25,23 +25,23 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
                 .collect(Collectors.toList());
         final var log = getLog();
         findings.forEach(finding -> log.error(finding.getMessage()));
-        final var hadFindingsWithFix = findings.stream().anyMatch(ValidationFinding::hasFix);
-        final var hadFindingsWithoutFix = findings.stream().anyMatch(finding -> !finding.hasFix());
-        printValidationFailedMessageIfRequired(hadFindingsWithFix, hadFindingsWithoutFix);
+        final var hasFindingsWithFix = findings.stream().anyMatch(ValidationFinding::hasFix);
+        final var hasFindingsWithoutFix = findings.stream().anyMatch(finding -> !finding.hasFix());
+        failIfValidationFailed(hasFindingsWithFix, hasFindingsWithoutFix);
     }
 
-    private void printValidationFailedMessageIfRequired(final boolean hadFindingsWithFix,
-            final boolean hadFindingsWithoutFix) throws MojoFailureException {
-        if (hadFindingsWithoutFix && hadFindingsWithFix) {
+    private void failIfValidationFailed(final boolean hasFindingsWithFix, final boolean hasFindingsWithoutFix)
+            throws MojoFailureException {
+        if (hasFindingsWithoutFix && hasFindingsWithFix) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-24").message(INVALID_STRUCTURE_MESSAGE)
                     .mitigation(
                             "You can automatically fix some of the issues by running mvn project-keeper:fix but some also need to be fixed manually.")
                     .toString());
-        } else if (hadFindingsWithFix) {
+        } else if (hasFindingsWithFix) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-6").message(INVALID_STRUCTURE_MESSAGE)
-                    .mitigation("You can automatically fix them by running mvn project-keeper:fix").toString());
+                    .mitigation("Run mvn project-keeper:fix to fix the issues automatically.").toString());
 
-        } else if (hadFindingsWithoutFix) {
+        } else if (hasFindingsWithoutFix) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-25").message(INVALID_STRUCTURE_MESSAGE)
                     .mitigation("Please fix it manually.").toString());
         }

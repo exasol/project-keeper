@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.validators.files;
 
 import java.io.*;
 import java.nio.file.*;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.logging.Log;
@@ -60,7 +59,7 @@ public class ProjectFilesValidator implements Validator {
         if (template.type.equals(TemplateType.REQUIRE_EXACT)) {
             return validateContent(template, projectFile);
         } else {
-            return List.of();
+            return Collections.emptyList();
         }
     }
 
@@ -83,7 +82,7 @@ public class ProjectFilesValidator implements Validator {
                             .parameter("file name", template.fileName).toString(),
                     (Log log) -> fixFile(projectFile, template.template.getPath())));
         } else {
-            return List.of();
+            return Collections.emptyList();
         }
     }
 

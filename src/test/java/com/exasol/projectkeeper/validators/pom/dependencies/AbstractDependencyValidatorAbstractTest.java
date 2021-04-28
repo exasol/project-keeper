@@ -6,7 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collections;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -25,10 +25,10 @@ abstract class AbstractDependencyValidatorAbstractTest {
     @Test
     void testFixFixesValidation() throws ParserConfigurationException, SAXException, IOException {
         final Document pom = readXmlFromResources(POM_WITH_NO_PLUGINS);
-        assertThat(validationOf(this.validator, pom, List.of()), hasNoMoreFindingsAfterApplyingFixes());
+        assertThat(validationOf(this.validator, pom, Collections.emptyList()), hasNoMoreFindingsAfterApplyingFixes());
     }
 
     protected void applyFixes(final Document pom) {
-        this.validator.validate(pom, List.of(), finding -> finding.getFix().fixError(mock(Log.class)));
+        this.validator.validate(pom, Collections.emptyList(), finding -> finding.getFix().fixError(mock(Log.class)));
     }
 }

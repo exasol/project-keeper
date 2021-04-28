@@ -8,8 +8,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,7 +32,8 @@ class AbstractDependencyValidatorTest extends AbstractDependencyValidatorAbstrac
     void testValidation() throws ParserConfigurationException, SAXException, IOException {
         final Document pom = readXmlFromResources(POM_WITH_NO_PLUGINS);
         final List<String> findings = new ArrayList<>();
-        new DependencyValidatorStub().validate(pom, List.of(), finding -> findings.add(finding.getMessage()));
+        new DependencyValidatorStub().validate(pom, Collections.emptyList(),
+                finding -> findings.add(finding.getMessage()));
         assertThat(findings, containsInAnyOrder("E-PK-29: Missing dependency 'com.example:my-artifact'."));
     }
 
