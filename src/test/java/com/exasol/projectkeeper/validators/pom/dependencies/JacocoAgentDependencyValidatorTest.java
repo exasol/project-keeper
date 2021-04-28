@@ -6,7 +6,7 @@ import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Collections;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -26,8 +26,9 @@ class JacocoAgentDependencyValidatorTest extends AbstractDependencyValidatorAbst
         applyFixes(pom);
         final Node classifier = runXPath(pom, "/project/dependencies/dependency/classifier");
         classifier.getParentNode().removeChild(classifier);
-        assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, List.of()), hasValidationFindingWithMessage(
-                "E-PK-30: Missing property 'classifier' in dependency 'org.jacoco:org.jacoco.agent'."));
+        assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, Collections.emptyList()),
+                hasValidationFindingWithMessage(
+                        "E-PK-30: Missing property 'classifier' in dependency 'org.jacoco:org.jacoco.agent'."));
     }
 
     @Test
@@ -38,7 +39,8 @@ class JacocoAgentDependencyValidatorTest extends AbstractDependencyValidatorAbst
         final Element wrongClassifier = pom.createElement("classifier");
         classifier.appendChild(pom.createTextNode("other"));
         classifier.getParentNode().replaceChild(wrongClassifier, classifier);
-        assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, List.of()), hasValidationFindingWithMessage(
-                "E-PK-31: The property 'classifier' of the dependency 'org.jacoco:org.jacoco.agent' has an illegal value."));
+        assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, Collections.emptyList()),
+                hasValidationFindingWithMessage(
+                        "E-PK-31: The property 'classifier' of the dependency 'org.jacoco:org.jacoco.agent' has an illegal value."));
     }
 }

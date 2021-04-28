@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper;
 
-import java.util.function.Consumer;
+import java.util.List;
 
 /**
  * Interface for project validators.
@@ -10,8 +10,7 @@ public interface Validator {
     /**
      * Validate the current project.
      * 
-     * @param findingConsumer consumer to report the findings to
-     * @return self for fluent programming
+     * @return list of findings
      */
-    public Validator validate(final Consumer<ValidationFinding> findingConsumer);
+    public List<ValidationFinding> validate();
 }

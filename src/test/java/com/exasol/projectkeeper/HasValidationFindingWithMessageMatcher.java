@@ -23,15 +23,15 @@ public class HasValidationFindingWithMessageMatcher<T extends Iterable<? extends
 
     public static Matcher<Validator> validationErrorMessages(
             final Matcher<? extends Iterable<? extends String>> messagesMatcher) {
-        return new HasValidationFindingWithMessageMatcher(messagesMatcher);
+        return new HasValidationFindingWithMessageMatcher<>(messagesMatcher);
     }
 
     public static Matcher<Validator> hasNoValidationFindings() {
-        return new HasValidationFindingWithMessageMatcher(empty());
+        return new HasValidationFindingWithMessageMatcher<>(empty());
     }
 
     public static Matcher<Validator> hasValidationFindings() {
-        return new HasValidationFindingWithMessageMatcher(not(empty()));
+        return new HasValidationFindingWithMessageMatcher<>(not(empty()));
     }
 
     @Override

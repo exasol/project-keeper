@@ -5,9 +5,7 @@ import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
-import java.util.Objects;
-import java.util.function.Consumer;
+import java.util.*;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
@@ -66,9 +64,10 @@ public class PomTesting {
         }
 
         @Override
-        public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
-            this.validator.validate(this.pom, this.enabledModules, findingConsumer);
-            return this;
+        public List<ValidationFinding> validate() {
+            final var findings = new ArrayList<ValidationFinding>();
+            this.validator.validate(this.pom, this.enabledModules, findings::add);
+            return findings;
         }
     }
 }

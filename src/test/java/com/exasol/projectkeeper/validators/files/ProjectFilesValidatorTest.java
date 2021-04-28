@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 
 import java.io.*;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -27,7 +28,7 @@ class ProjectFilesValidatorTest {
             throw new IllegalStateException("Failed to create test files.");
         }
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
-                new ExcludedFilesMatcher(List.of()));
+                new ExcludedFilesMatcher(Collections.emptyList()));
         assertThat(validator,
                 validationErrorMessages(hasItems("E-PK-17: Missing required: '.settings/org.eclipse.jdt.core.prefs'",
                         "E-PK-17: Missing required: 'README.md'",
@@ -45,15 +46,15 @@ class ProjectFilesValidatorTest {
     @Test
     void testFix(@TempDir final File tempDir) {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
-                new ExcludedFilesMatcher(List.of()));
+                new ExcludedFilesMatcher(Collections.emptyList()));
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
     void testDifferentContent(@TempDir final File tempDir) throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
-                new ExcludedFilesMatcher(List.of()));
-        validator.validate(finding -> finding.getFix().fixError(mock(Log.class)));// fix everything
+                new ExcludedFilesMatcher(Collections.emptyList()));
+        validator.validate().forEach(finding -> finding.getFix().fixError(mock(Log.class))); // fix all findings
         final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
         changeFile(testFile);
         assertThat(validator,
@@ -63,8 +64,8 @@ class ProjectFilesValidatorTest {
     @Test
     void testFixDifferentContent(@TempDir final File tempDir) throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
-                new ExcludedFilesMatcher(List.of()));
-        validator.validate(finding -> finding.getFix().fixError(mock(Log.class)));// fix everything
+                new ExcludedFilesMatcher(Collections.emptyList()));
+        validator.validate().forEach(finding -> finding.getFix().fixError(mock(Log.class))); // fix all findings
         final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
         changeFile(testFile);
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
@@ -76,10 +77,11 @@ class ProjectFilesValidatorTest {
             throw new IllegalStateException("Failed to set temp dir read-only.");
         }
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
-                new ExcludedFilesMatcher(List.of()));
+                new ExcludedFilesMatcher(Collections.emptyList()));
+        final List<ValidationFinding> findings = validator.validate();
         final Consumer<ValidationFinding> findingFixer = finding -> finding.getFix().fixError(mock(Log.class));
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> validator.validate(findingFixer));
+                () -> findings.forEach(findingFixer));
         assertThat(exception.getMessage(), startsWith("E-PK-16: Failed to create or replace '"));
     }
 

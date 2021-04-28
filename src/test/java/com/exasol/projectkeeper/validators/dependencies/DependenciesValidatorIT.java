@@ -10,12 +10,14 @@ import java.nio.file.Files;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.ProjectKeeperAbstractIT;
 import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
+@Tag("integration")
 class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     @Test
     void testVerify() throws IOException, VerificationException {

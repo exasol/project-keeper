@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
 import static com.exasol.projectkeeper.FileContentMatcher.hasContent;
+import static com.exasol.projectkeeper.HasNoMoreFindingsAfterApplyingFixesMatcher.hasNoMoreFindingsAfterApplyingFixes;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasNoValidationFindings;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindingWithMessage;
 import static org.hamcrest.CoreMatchers.containsString;
@@ -55,7 +56,7 @@ class ChangesFileValidatorTest {
     void testFixCreatedTemplate() throws IOException {
         createTestSetup();
         final Log log = mock(Log.class);
-        createValidator().validate(finding -> finding.getFix().fixError(log));
+        createValidator().validate().forEach(finding -> finding.getFix().fixError(log));
         final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
         verify(log).warn("Created 'doc/changes/changes_1.2.3.md'. Don't forget to update it's content!");
@@ -67,7 +68,7 @@ class ChangesFileValidatorTest {
         model.addDependency();
         createTestSetup(model);
         final Log log = mock(Log.class);
-        createValidator().validate(finding -> finding.getFix().fixError(log));
+        createValidator().validate().forEach(finding -> finding.getFix().fixError(log));
         final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(containsString(TestMavenModel.DEPENDENCY_ARTIFACT_ID)));
     }
@@ -77,8 +78,8 @@ class ChangesFileValidatorTest {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency();
         createTestSetup(model);
-        createValidator().validate(finding -> finding.getFix().fixError(mock(Log.class)));
-        assertThat(createValidator(), hasNoValidationFindings());
+        createValidator().validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
+        assertThat(createValidator(), hasNoMoreFindingsAfterApplyingFixes());
     }
 
     private ChangesFileValidator createValidator() {

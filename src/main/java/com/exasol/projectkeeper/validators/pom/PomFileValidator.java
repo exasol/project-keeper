@@ -2,7 +2,6 @@ package com.exasol.projectkeeper.validators.pom;
 
 import java.io.File;
 import java.util.*;
-import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
@@ -41,23 +40,22 @@ public class PomFileValidator implements Validator {
     }
 
     @Override
-    public PomFileValidator validate(final Consumer<ValidationFinding> findingConsumer) {
+    public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
         ALL_VALIDATORS.stream().filter(validator -> this.enabledModules.contains(validator.getModule()))
                 .filter(validator -> !validator.isExcluded(this.excludedPlugins)).forEach(
                         template -> template.validate(this.pomFileIO.getContent(), this.enabledModules, findings::add));
         if (!findings.isEmpty()) {
-            getCompoundFinding(findingConsumer, findings);
+            return List.of(getCompoundFinding(findings));
+        } else {
+            return Collections.emptyList();
         }
-        return this;
     }
 
-    private void getCompoundFinding(final Consumer<ValidationFinding> findingConsumer,
-            final List<ValidationFinding> findings) {
-        final var finding = new ValidationFinding(ExaError.messageBuilder("E-PK-45")
+    private ValidationFinding getCompoundFinding(final List<ValidationFinding> findings) {
+        return new ValidationFinding(ExaError.messageBuilder("E-PK-45")
                 .message("Pom file is invalid:\n{{pom findings|uq}}", concatFindingMessages(findings)).toString(),
                 getFix(findings));
-        findingConsumer.accept(finding);
     }
 
     private String concatFindingMessages(final List<ValidationFinding> findings) {

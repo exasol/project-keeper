@@ -15,6 +15,6 @@ public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         final var log = getLog();
-        getValidators().forEach(validator -> validator.validate(finding -> finding.getFix().fixError(log)));
+        getValidators().forEach(validator -> validator.validate().forEach(finding -> finding.getFix().fixError(log)));
     }
 }

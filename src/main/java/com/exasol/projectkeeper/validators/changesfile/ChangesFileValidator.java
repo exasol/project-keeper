@@ -2,8 +2,8 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
 import org.apache.maven.plugin.logging.Log;
 
@@ -42,42 +42,50 @@ public class ChangesFileValidator implements Validator {
     }
 
     @Override
-    public ChangesFileValidator validate(final Consumer<ValidationFinding> findingConsumer) {
+    public List<ValidationFinding> validate() {
         if (!new ExasolVersionMatcher().isSnapshotVersion(this.projectVersion)) {
-            runValidation(findingConsumer);
+            return runValidation();
+        } else {
+            return Collections.emptyList();
         }
-        return this;
     }
 
-    private void runValidation(final Consumer<ValidationFinding> findingConsumer) {
-        if (validateThatChangesFileExists(findingConsumer)) {
-            final var changesFile = new ChangesFileIO().read(this.changesFileAbsolutePath);
-            final var fixedSections = fixSections(changesFile);
-            if (!changesFile.equals(fixedSections)) {
-                findingConsumer.accept(new ValidationFinding(
-                        ExaError.messageBuilder("E-PK-40")
-                                .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
-                                .parameter("expected content", fixedSections.toString()).toString(),
-                        (log -> new ChangesFileIO().write(fixedSections, this.changesFileAbsolutePath))));
-            }
+    private List<ValidationFinding> runValidation() {
+        if (!this.changesFileAbsolutePath.toFile().exists()) {
+            return List.of(getMissingChangesFileFinding());
+        } else {
+            return validateContent();
         }
+    }
+
+    private List<ValidationFinding> validateContent() {
+        final var changesFile = new ChangesFileIO().read(this.changesFileAbsolutePath);
+        final var fixedSections = fixSections(changesFile);
+        if (!changesFile.equals(fixedSections)) {
+            return List.of(getWrongContentFinding(fixedSections));
+        } else {
+            return Collections.emptyList();
+        }
+    }
+
+    private ValidationFinding getWrongContentFinding(final ChangesFile fixedSections) {
+        return new ValidationFinding(
+                ExaError.messageBuilder("E-PK-40")
+                        .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
+                        .parameter("expected content", fixedSections.toString()).toString(),
+                (log -> new ChangesFileIO().write(fixedSections, this.changesFileAbsolutePath)));
+    }
+
+    private ValidationFinding getMissingChangesFileFinding() {
+        return new ValidationFinding(
+                ExaError.messageBuilder("E-PK-20").message("Could not find {{changes file}}.")
+                        .parameter("changes file", this.relativePathToChangesFile.toString()).toString(),
+                getCreateFileFix(this.changesFileAbsolutePath));
     }
 
     private ChangesFile fixSections(final ChangesFile changesFile) {
         final var dependencySectionFixer = new DependencySectionFixer(this.mavenModelReader, this.projectDirectory);
         return dependencySectionFixer.fix(changesFile);
-    }
-
-    private boolean validateThatChangesFileExists(final Consumer<ValidationFinding> findingConsumer) {
-        if (!this.changesFileAbsolutePath.toFile().exists()) {
-            findingConsumer.accept(new ValidationFinding(
-                    ExaError.messageBuilder("E-PK-20").message("Could not find {{changes file}}.")
-                            .parameter("changes file", this.relativePathToChangesFile.toString()).toString(),
-                    getCreateFileFix(this.changesFileAbsolutePath)));
-            return false;
-        } else {
-            return true;
-        }
     }
 
     private ValidationFinding.Fix getCreateFileFix(final Path changesFile) {
