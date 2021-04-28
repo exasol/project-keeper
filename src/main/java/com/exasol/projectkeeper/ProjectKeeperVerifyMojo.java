@@ -1,8 +1,10 @@
 package com.exasol.projectkeeper;
 
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
@@ -21,12 +23,12 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
 
     @Override
     public void execute() throws MojoFailureException {
-        final var findings = getValidators().stream().flatMap(validator -> validator.validate().stream())
-                .collect(Collectors.toList());
-        final var log = getLog();
+        final List<ValidationFinding> findings = getValidators().stream()
+                .flatMap(validator -> validator.validate().stream()).collect(Collectors.toList());
+        final Log log = getLog();
         findings.forEach(finding -> log.error(finding.getMessage()));
-        final var hasFindingsWithFix = findings.stream().anyMatch(ValidationFinding::hasFix);
-        final var hasFindingsWithoutFix = findings.stream().anyMatch(finding -> !finding.hasFix());
+        final boolean hasFindingsWithFix = findings.stream().anyMatch(ValidationFinding::hasFix);
+        final boolean hasFindingsWithoutFix = findings.stream().anyMatch(finding -> !finding.hasFix());
         failIfValidationFailed(hasFindingsWithFix, hasFindingsWithoutFix);
     }
 
