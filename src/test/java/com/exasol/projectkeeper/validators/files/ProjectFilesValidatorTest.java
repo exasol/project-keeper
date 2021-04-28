@@ -53,7 +53,7 @@ class ProjectFilesValidatorTest {
     void testDifferentContent(@TempDir final File tempDir) throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
                 new ExcludedFilesMatcher(List.of()));
-        validator.validate(finding -> finding.getFix().fixError(mock(Log.class)));// fix everything
+        validator.validate().forEach(finding -> finding.getFix().fixError(mock(Log.class))); // fix all findings
         final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
         changeFile(testFile);
         assertThat(validator,
@@ -64,7 +64,7 @@ class ProjectFilesValidatorTest {
     void testFixDifferentContent(@TempDir final File tempDir) throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
                 new ExcludedFilesMatcher(List.of()));
-        validator.validate(finding -> finding.getFix().fixError(mock(Log.class)));// fix everything
+        validator.validate().forEach(finding -> finding.getFix().fixError(mock(Log.class))); // fix all findings
         final File testFile = tempDir.toPath().resolve(".settings/org.eclipse.jdt.core.prefs").toFile();
         changeFile(testFile);
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
@@ -77,9 +77,10 @@ class ProjectFilesValidatorTest {
         }
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir,
                 new ExcludedFilesMatcher(List.of()));
+        final List<ValidationFinding> findings = validator.validate();
         final Consumer<ValidationFinding> findingFixer = finding -> finding.getFix().fixError(mock(Log.class));
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> validator.validate(findingFixer));
+                () -> findings.forEach(findingFixer));
         assertThat(exception.getMessage(), startsWith("E-PK-16: Failed to create or replace '"));
     }
 

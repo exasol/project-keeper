@@ -9,6 +9,7 @@ Code name:
 * #97: Removed hard-coded version number from tests
 * #110: Replaced explicit types by var
 * #111: Extracted coverage from integration tests
+* #80: Made validation API functional
 
 ## Dependency Updates
 

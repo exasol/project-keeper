@@ -4,8 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Map;
-import java.util.function.Consumer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
@@ -38,19 +38,21 @@ public class DeletedFilesValidator implements Validator {
     }
 
     @Override
-    public Validator validate(final Consumer<ValidationFinding> findingConsumer) {
-        FILES_THAT_MUST_NOT_EXIST.forEach((fileThatMustNotExist, reason) -> {
+    public List<ValidationFinding> validate() {
+        return FILES_THAT_MUST_NOT_EXIST.entrySet().stream().map((entry) -> {
+            final var fileThatMustNotExist = entry.getKey();
+            final var reason = entry.getValue();
             final var pathThatMustExist = this.projectDirectory.resolve(fileThatMustNotExist);
             if (this.excludedFiles.isFileExcluded(this.projectDirectory.relativize(pathThatMustExist))) {
-                return;
+                return null;
             }
             final var file = pathThatMustExist.toFile();
             if (file.exists()) {
-                findingConsumer.accept(new ValidationFinding(getFileExistsErrorMessage(fileThatMustNotExist, reason),
-                        getFix(fileThatMustNotExist.toString(), file)));
+                return new ValidationFinding(getFileExistsErrorMessage(fileThatMustNotExist, reason),
+                        getFix(fileThatMustNotExist.toString(), file));
             }
-        });
-        return this;
+            return null;
+        }).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
     private String getFileExistsErrorMessage(final Path fileThatMustNotExist, final String reason) {

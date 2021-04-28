@@ -3,7 +3,8 @@ package com.exasol.projectkeeper.validators.files;
 import java.io.*;
 import java.nio.file.*;
 import java.util.Collection;
-import java.util.function.Consumer;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.logging.Log;
 
@@ -37,33 +38,34 @@ public class ProjectFilesValidator implements Validator {
     }
 
     @Override
-    public ProjectFilesValidator validate(final Consumer<ValidationFinding> findingConsumer) {
+    public List<ValidationFinding> validate() {
         try (final var scanResult = new ClassGraph().acceptPaths("templates/").scan()) {
-            scanResult.getAllResources().stream()//
+            return scanResult.getAllResources().stream()//
                     .map(FileTemplate::fromResource)//
                     .filter(template -> this.enabledModules.contains(template.module))
                     .filter(template -> !this.excludedFilesMatcher.isFileExcluded(Path.of(template.fileName)))
-                    .forEach(template -> validate(template, findingConsumer));
+                    .flatMap(template -> validate(template).stream())//
+                    .collect(Collectors.toList());
         }
-        return this;
     }
 
-    public void validate(final FileTemplate template, final Consumer<ValidationFinding> findingConsumer) {
+    public List<ValidationFinding> validate(final FileTemplate template) {
         final var projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
         if (!projectFile.exists()) {
-            findingConsumer.accept(new ValidationFinding(
+            return List.of(new ValidationFinding(
                     ExaError.messageBuilder("E-PK-17").message("Missing required: {{required file}}")
                             .parameter("required file", template.fileName).toString(),
-                    (Log log) -> fixFile(projectFile, template.template)));
-            return;
+                    (Log log) -> fixFile(projectFile, template.template.getPath())));
         }
         if (template.type.equals(TemplateType.REQUIRE_EXACT)) {
-            validateContent(template, findingConsumer, projectFile);
+            return validateContent(template, projectFile);
+        } else {
+            return List.of();
         }
     }
 
-    private void fixFile(final File projectFile, final Resource templateFile) {
-        try (templateFile; final InputStream templateStream = templateFile.open()) {
+    private void fixFile(final File projectFile, final String templateFilePath) {
+        try (final InputStream templateStream = getClass().getClassLoader().getResourceAsStream(templateFilePath)) {
             projectFile.mkdirs();
             Files.copy(templateStream, projectFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
         } catch (final IOException exception) {
@@ -74,13 +76,14 @@ public class ProjectFilesValidator implements Validator {
         }
     }
 
-    private void validateContent(final FileTemplate template, final Consumer<ValidationFinding> findingConsumer,
-            final File projectFile) {
+    private List<ValidationFinding> validateContent(final FileTemplate template, final File projectFile) {
         if (!isFileEqualWithTemplate(template, projectFile)) {
-            findingConsumer.accept(new ValidationFinding(
+            return List.of(new ValidationFinding(
                     ExaError.messageBuilder("E-PK-18").message("Outdated content: {{file name}}")
                             .parameter("file name", template.fileName).toString(),
-                    (Log log) -> fixFile(projectFile, template.template)));
+                    (Log log) -> fixFile(projectFile, template.template.getPath())));
+        } else {
+            return List.of();
         }
     }
 
