@@ -182,9 +182,9 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven.shared</groupId>
-            <artifactId>maven-verifier</artifactId>
-            <version>1.7.2</version>
+            <groupId>com.exasol</groupId>
+            <artifactId>maven-plugin-integration-testing</artifactId>
+            <version>0.1.0</version>
             <scope>test</scope>
         </dependency>
     </dependencies>

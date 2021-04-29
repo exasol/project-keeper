@@ -10,8 +10,13 @@ Code name:
 * #110: Replaced explicit types by var
 * #111: Extracted coverage from integration tests
 * #80: Made validation API functional
+* #114: Extracted library for maven plugin testing
 
 ## Dependency Updates
+
+### Compile Dependency Updates
+
+* Added `com.exasol:maven-plugin-integration-testing:0.1.0`
 
 ### Runtime Dependency Updates
 
@@ -20,6 +25,7 @@ Code name:
 ### Test Dependency Updates
 
 * Added `com.exasol:maven-project-version-getter:0.1.0`
+* Removed `org.apache.maven.shared:maven-verifier:1.7.2`
 * Removed `org.jacoco:org.jacoco.agent:0.8.5`
 
 ### Plugin Dependency Updates
