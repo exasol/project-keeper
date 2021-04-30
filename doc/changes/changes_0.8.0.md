@@ -10,6 +10,7 @@ Code name:
 * #110: Replaced explicit types by var
 * #111: Extracted coverage from integration tests
 * #80: Made validation API functional
+* #79: Added builder for ValidationFinding
 
 ## Dependency Updates
 
