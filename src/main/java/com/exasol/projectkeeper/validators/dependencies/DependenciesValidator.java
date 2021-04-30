@@ -43,11 +43,10 @@ public class DependenciesValidator implements Validator {
     public List<ValidationFinding> validate() {
         final String expectedDependenciesPage = generateExpectedReport();
         if (!this.dependenciesFile.toFile().exists()) {
-            return List
-                    .of(new ValidationFinding(
-                            ExaError.messageBuilder("E-PK-50")
-                                    .message("This project does not have a dependencies.md file.").toString(),
-                            getFix(expectedDependenciesPage)));
+            return List.of(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-50")
+                            .message("This project does not have a dependencies.md file.").toString())
+                    .andFix(getFix(expectedDependenciesPage)).build());
         } else {
             return validateFileContent(expectedDependenciesPage);
         }
@@ -64,9 +63,10 @@ public class DependenciesValidator implements Validator {
         try {
             final var actualContent = Files.readString(this.dependenciesFile);
             if (!actualContent.equals(expectedDependenciesPage)) {
-                return List.of(new ValidationFinding(ExaError.messageBuilder("E-PK-53").message(
+                return List.of(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-53").message(
                         "The dependencies.md file has a outdated content.\nExpected content:\n{{expected content|uq}}",
-                        expectedDependenciesPage).toString(), getFix(expectedDependenciesPage)));
+                        expectedDependenciesPage).toString())//
+                        .andFix(getFix(expectedDependenciesPage)).build());
             }
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-52")

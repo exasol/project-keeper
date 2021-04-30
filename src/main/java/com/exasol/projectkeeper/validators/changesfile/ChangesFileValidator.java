@@ -69,18 +69,18 @@ public class ChangesFileValidator implements Validator {
     }
 
     private ValidationFinding getWrongContentFinding(final ChangesFile fixedSections) {
-        return new ValidationFinding(
-                ExaError.messageBuilder("E-PK-40")
+        return ValidationFinding
+                .withMessage(ExaError.messageBuilder("E-PK-40")
                         .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
-                        .parameter("expected content", fixedSections.toString()).toString(),
-                (log -> new ChangesFileIO().write(fixedSections, this.changesFileAbsolutePath)));
+                        .parameter("expected content", fixedSections.toString()).toString())
+                .andFix((log -> new ChangesFileIO().write(fixedSections, this.changesFileAbsolutePath))).build();
     }
 
     private ValidationFinding getMissingChangesFileFinding() {
-        return new ValidationFinding(
-                ExaError.messageBuilder("E-PK-20").message("Could not find {{changes file}}.")
-                        .parameter("changes file", this.relativePathToChangesFile.toString()).toString(),
-                getCreateFileFix(this.changesFileAbsolutePath));
+        return ValidationFinding
+                .withMessage(ExaError.messageBuilder("E-PK-20").message("Could not find {{changes file}}.")
+                        .parameter("changes file", this.relativePathToChangesFile.toString()).toString())
+                .andFix(getCreateFileFix(this.changesFileAbsolutePath)).build();
     }
 
     private ChangesFile fixSections(final ChangesFile changesFile) {

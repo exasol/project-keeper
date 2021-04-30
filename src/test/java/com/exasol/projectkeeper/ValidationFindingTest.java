@@ -9,14 +9,14 @@ class ValidationFindingTest {
 
     @Test
     void testWithFix() {
-        final ValidationFinding finding = new ValidationFinding("", (log) -> {
-        });
+        final ValidationFinding finding = ValidationFinding.withMessage("").andFix((log) -> {
+        }).build();
         assertThat(finding.hasFix(), equalTo(true));
     }
 
     @Test
     void testWithoutFix() {
-        final ValidationFinding finding = new ValidationFinding("");
+        final ValidationFinding finding = ValidationFinding.withMessage("").build();
         assertThat(finding.hasFix(), equalTo(false));
     }
 }

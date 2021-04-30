@@ -53,9 +53,9 @@ public class PomFileValidator implements Validator {
     }
 
     private ValidationFinding getCompoundFinding(final List<ValidationFinding> findings) {
-        return new ValidationFinding(ExaError.messageBuilder("E-PK-45")
-                .message("Pom file is invalid:\n{{pom findings|uq}}", concatFindingMessages(findings)).toString(),
-                getFix(findings));
+        return ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-45")
+                .message("Pom file is invalid:\n{{pom findings|uq}}", concatFindingMessages(findings)).toString())
+                .andFix(getFix(findings)).build();
     }
 
     private String concatFindingMessages(final List<ValidationFinding> findings) {
