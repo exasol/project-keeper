@@ -1,7 +1,7 @@
 name: Test on windows
 
 on:
-  workflow_dispatch:
+  push:
 
 jobs:
   publish:
