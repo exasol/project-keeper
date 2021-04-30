@@ -17,19 +17,9 @@ public class ValidationFinding {
      * @param message error message
      * @param fix     function that fixes the error.
      */
-    public ValidationFinding(final String message, final Fix fix) {
+    private ValidationFinding(final String message, final Fix fix) {
         this.message = message;
         this.fix = fix;
-    }
-
-    /**
-     * Create a new instance of {@link ValidationFinding} without a fix.
-     *
-     * @param message error message
-     */
-    public ValidationFinding(final String message) {
-        this.message = message;
-        this.fix = null;
     }
 
     /**
@@ -68,5 +58,45 @@ public class ValidationFinding {
          * @param log Logger for log messages
          */
         void fixError(Log log);
+    }
+
+    /**
+     * Get a {@link Builder} for {@link ValidationFinding}.
+     * 
+     * @param message finding message
+     * @return builder
+     */
+    public static Builder withMessage(final String message) {
+        return new Builder(message);
+    }
+
+    /**
+     * Builder for {@link ValidationFinding}.
+     */
+    public static class Builder {
+        private final String message;
+        private Fix fix;
+
+        public Builder(final String message) {
+            this.message = message;
+        }
+
+        /**
+         * Add an optional fix to the finding.
+         * <p>
+         * You can only add one fix. If you call this method multiple times the fix will be overwritten.
+         * </p>
+         * 
+         * @param fix function that fixes the finding
+         * @return self for fluent programming
+         */
+        public Builder andFix(final Fix fix) {
+            this.fix = fix;
+            return this;
+        }
+
+        public ValidationFinding build() {
+            return new ValidationFinding(this.message, this.fix);
+        }
     }
 }

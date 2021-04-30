@@ -51,10 +51,10 @@ public class ProjectFilesValidator implements Validator {
     public List<ValidationFinding> validate(final FileTemplate template) {
         final var projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
         if (!projectFile.exists()) {
-            return List.of(new ValidationFinding(
-                    ExaError.messageBuilder("E-PK-17").message("Missing required: {{required file}}")
-                            .parameter("required file", template.fileName).toString(),
-                    (Log log) -> fixFile(projectFile, template.template.getPath())));
+            return List.of(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-17").message("Missing required: {{required file}}")
+                            .parameter("required file", template.fileName).toString())
+                    .andFix((Log log) -> fixFile(projectFile, template.template.getPath())).build());
         }
         if (template.type.equals(TemplateType.REQUIRE_EXACT)) {
             return validateContent(template, projectFile);
@@ -77,10 +77,10 @@ public class ProjectFilesValidator implements Validator {
 
     private List<ValidationFinding> validateContent(final FileTemplate template, final File projectFile) {
         if (!isFileEqualWithTemplate(template, projectFile)) {
-            return List.of(new ValidationFinding(
-                    ExaError.messageBuilder("E-PK-18").message("Outdated content: {{file name}}")
-                            .parameter("file name", template.fileName).toString(),
-                    (Log log) -> fixFile(projectFile, template.template.getPath())));
+            return List.of(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-18").message("Outdated content: {{file name}}")
+                            .parameter("file name", template.fileName).toString())
+                    .andFix((Log log) -> fixFile(projectFile, template.template.getPath())).build());
         } else {
             return Collections.emptyList();
         }
