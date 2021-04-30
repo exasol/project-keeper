@@ -82,9 +82,9 @@ public class ValidationFinding {
         }
 
         /**
-         * Add a fix to the finding (optional).
+         * Add an optional fix to the finding.
          * <p>
-         * You can only add one fix. IF you call this method multiple times the fix will be overwritten.
+         * You can only add one fix. If you call this method multiple times the fix will be overwritten.
          * </p>
          * 
          * @param fix function that fixes the finding
