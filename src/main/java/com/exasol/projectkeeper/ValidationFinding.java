@@ -61,7 +61,7 @@ public class ValidationFinding {
     }
 
     /**
-     * Get a {@limk Builder} for {@link ValidationFinding}.
+     * Get a {@link Builder} for {@link ValidationFinding}.
      * 
      * @param message finding message
      * @return builder
