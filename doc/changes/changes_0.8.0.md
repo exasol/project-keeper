@@ -18,16 +18,22 @@ Code name:
 
 ## Dependency Updates
 
+### Compile Dependency Updates
+
+* Updated `org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r` to `5.11.0.202103091610-r`
+
 ### Runtime Dependency Updates
 
-* Added `org.jacoco:org.jacoco.agent:0.8.5`
+* Added `org.jacoco:org.jacoco.agent:0.8.6`
 
 ### Test Dependency Updates
 
 * Added `com.exasol:maven-project-version-getter:0.1.0`
 * Removed `org.jacoco:org.jacoco.agent:0.8.5`
+* Updated `org.jacoco:org.jacoco.core:0.8.5` to `0.8.6`
 
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:project-keeper-maven-plugin:0.7.0` to `0.8.0`
 * Added `org.apache.maven.plugins:maven-dependency-plugin:2.8`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.5` to `0.8.6`
