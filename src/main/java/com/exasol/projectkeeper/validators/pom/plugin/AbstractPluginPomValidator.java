@@ -19,7 +19,9 @@ import org.xml.sax.SAXException;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.validators.pom.*;
+import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
+import com.exasol.projectkeeper.validators.pom.PomFileValidator;
+import com.exasol.projectkeeper.validators.pom.PomValidator;
 import com.exasol.xpath.XPathSplitter;
 
 /**
@@ -33,7 +35,7 @@ import com.exasol.xpath.XPathSplitter;
  * </p>
  */
 public abstract class AbstractPluginPomValidator extends AbstractPomValidator implements PomValidator {
-    public static final String GROUP_ID_XPATH = "groupId";
+    private static final String GROUP_ID_XPATH = "groupId";
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
     @SuppressWarnings("java:S1075") // not an customizable url
     private static final String PLUGINS_XPATH = "/project/build/plugins";

@@ -1,14 +1,25 @@
 package com.exasol.projectkeeper.validators.files;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.logging.Log;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
+import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.Validator;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.Resource;
@@ -48,7 +59,7 @@ public class ProjectFilesValidator implements Validator {
         }
     }
 
-    public List<ValidationFinding> validate(final FileTemplate template) {
+    private List<ValidationFinding> validate(final FileTemplate template) {
         final var projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
         if (!projectFile.exists()) {
             return List.of(ValidationFinding
@@ -128,32 +139,27 @@ public class ProjectFilesValidator implements Validator {
         }
 
         public static FileTemplate fromResource(final Resource templateResource) {
-            final var resourceName = templateResource.getURI().toString();
-            final var resourcePath = Path.of(resourceName);
+            final String resourceName = templateResource.getURI().toString();
+            final List<String> resourcePath = Arrays.asList(resourceName.split("/"));
             final int templatesFolderIndex = getTemplatesFolderIndex(resourcePath);
             if (isTemplatePathSyntax(resourcePath, templatesFolderIndex)) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-1")
                         .message("Template name had invalid format.").ticketMitigation().toString());
             }
-            final var pathRelativeToTemplates = resourcePath.subpath(templatesFolderIndex + 1,
-                    resourcePath.getNameCount());
-            final var module = ProjectKeeperModule.getModuleByName(pathRelativeToTemplates.getName(0).toString());
-            final var templateType = TemplateType.fromString(pathRelativeToTemplates.getName(1).toString());
-            final var fileName = pathRelativeToTemplates.subpath(2, pathRelativeToTemplates.getNameCount()).toString();
+            final var pathRelativeToTemplates = resourcePath.subList(templatesFolderIndex + 1, resourcePath.size());
+            final var module = ProjectKeeperModule.getModuleByName(pathRelativeToTemplates.get(0));
+            final var templateType = TemplateType.fromString(pathRelativeToTemplates.get(1));
+            final var fileName = String.join(File.separator,
+                    pathRelativeToTemplates.subList(2, pathRelativeToTemplates.size()));
             return new FileTemplate(templateResource, templateType, fileName, module);
         }
 
-        private static boolean isTemplatePathSyntax(final Path resourcePath, final int templatesFolderIndex) {
-            return templatesFolderIndex == -1 || resourcePath.getNameCount() - templatesFolderIndex < 3;
+        private static boolean isTemplatePathSyntax(final List<String> resourcePath, final int templatesFolderIndex) {
+            return templatesFolderIndex == -1 || resourcePath.size() - templatesFolderIndex < 3;
         }
 
-        private static int getTemplatesFolderIndex(final Path resourcePath) {
-            for (var index = 0; index < resourcePath.getNameCount(); index++) {
-                if (resourcePath.getName(index).toString().equals("templates")) {
-                    return index;
-                }
-            }
-            return -1;
+        private static int getTemplatesFolderIndex(final List<String> resourcePath) {
+            return resourcePath.indexOf("templates");
         }
     }
 }

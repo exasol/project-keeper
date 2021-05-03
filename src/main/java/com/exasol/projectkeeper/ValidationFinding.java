@@ -50,6 +50,9 @@ public class ValidationFinding {
         return this.fix != null;
     }
 
+    /**
+     * Functional interface for a method that fixes the finding.
+     */
     @FunctionalInterface
     public interface Fix {
         /**
@@ -77,7 +80,7 @@ public class ValidationFinding {
         private final String message;
         private Fix fix;
 
-        public Builder(final String message) {
+        private Builder(final String message) {
             this.message = message;
         }
 
@@ -95,6 +98,11 @@ public class ValidationFinding {
             return this;
         }
 
+        /**
+         * Build the {@link ValidationFinding}.
+         * 
+         * @return built {@link ValidationFinding}
+         */
         public ValidationFinding build() {
             return new ValidationFinding(this.message, this.fix);
         }

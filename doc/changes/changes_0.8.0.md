@@ -12,6 +12,10 @@ Code name:
 * #80: Made validation API functional
 * #79: Added builder for ValidationFinding
 
+## Bugfixes
+
+* #119: Fixed windows compatibility issues 
+
 ## Dependency Updates
 
 ### Runtime Dependency Updates

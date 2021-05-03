@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
  */
 public class ExasolVersionMatcher {
     private static final Pattern EXASOL_VERSION_PATTERN = Pattern.compile("\\d+\\.\\d+\\.\\d+");
+    /** Suffix for snapshot versions. */
     public static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
 
     /**

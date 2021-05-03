@@ -6,16 +6,25 @@ import java.util.List;
 
 import org.w3c.dom.Node;
 import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.diff.*;
+import org.xmlunit.diff.DefaultNodeMatcher;
+import org.xmlunit.diff.Diff;
+import org.xmlunit.diff.ElementSelectors;
 
 /**
  * Abstract basis for {@link PomValidator}s.
  */
 public class AbstractPomValidator {
-    protected void createObjectPathIfNotExists(final Node root, final List<String> objects) {
-        for (var pathLength = 0; pathLength < objects.size(); pathLength++) {
-            final var parentXPath = String.join("/", objects.subList(0, pathLength));
-            createObjectIfNotExists(root, parentXPath, objects.get(pathLength));
+
+    /**
+     * Create an path of cascaded xml nodes if they don't exist.
+     * 
+     * @param root xml root node
+     * @param path path of nodes-names to create
+     */
+    protected void createObjectPathIfNotExists(final Node root, final List<String> path) {
+        for (var pathLength = 0; pathLength < path.size(); pathLength++) {
+            final var parentXPath = String.join("/", path.subList(0, pathLength));
+            createObjectIfNotExists(root, parentXPath, path.get(pathLength));
         }
     }
 
@@ -27,6 +36,13 @@ public class AbstractPomValidator {
         }
     }
 
+    /**
+     * Compare two XML nodes.
+     * 
+     * @param property1 first node
+     * @param property2 second node
+     * @return {@code true} if the nodes are equal
+     */
     protected boolean isXmlEqual(final Node property1, final Node property2) {
         final Diff comparison = DiffBuilder.compare(property1).withTest(property2).ignoreComments().ignoreWhitespace()
                 .checkForSimilar().withNodeMatcher(new DefaultNodeMatcher(ElementSelectors.byNameAndText)).build();

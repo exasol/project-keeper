@@ -12,6 +12,9 @@ import com.exasol.projectkeeper.ValidationFinding;
  * Validator for nexus-staging-maven-plugin.
  */
 public class NexusStagingPluginValidator extends AbstractPluginPomValidator {
+    /**
+     * Create a new instance of {@link NexusStagingPluginValidator}.
+     */
     public NexusStagingPluginValidator() {
         super("maven_templates/nexus-staging-maven-plugin.xml");
     }

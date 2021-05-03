@@ -9,7 +9,26 @@ import com.exasol.errorreporting.ExaError;
  * Enum of supported modules.
  */
 public enum ProjectKeeperModule {
-    DEFAULT, MAVEN_CENTRAL, JAR_ARTIFACT, INTEGRATION_TESTS, UDF_COVERAGE;
+    /**
+     * Default module.
+     */
+    DEFAULT,
+    /**
+     * Module for project that are released on maven-central.
+     */
+    MAVEN_CENTRAL,
+    /**
+     * Module for projects that are released as a fat-jar.
+     */
+    JAR_ARTIFACT,
+    /**
+     * Module for projects with integration tests.
+     */
+    INTEGRATION_TESTS,
+    /**
+     * Module for projects where code coverage should be extracted from external JVMs.
+     */
+    UDF_COVERAGE;
 
     /**
      * Get {@link ProjectKeeperModule} by its name.

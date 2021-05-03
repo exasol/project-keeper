@@ -67,6 +67,13 @@ public class ProjectDependency {
      * Type of a {@link ProjectDependency}.
      */
     public enum Type {
-        COMPILE, RUNTIME, TEST, PLUGIN
+        /** Compile dependency. */
+        COMPILE,
+        /** Runtime dependency */
+        RUNTIME,
+        /** Test dependency */
+        TEST,
+        /** Plugin */
+        PLUGIN
     }
 }
