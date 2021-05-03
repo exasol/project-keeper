@@ -4,7 +4,7 @@ on:
   push:
 
 jobs:
-  publish:
+  test:
     runs-on: windows-latest
     steps:
       - name: Checkout the repository
@@ -23,4 +23,4 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Run tests
-        run: mvn clean verify
+        run: mvn clean install project-keeper:verify
