@@ -41,8 +41,8 @@ class ChangesFileValidatorTest {
     @Test
     void testValidation() throws IOException {
         createTestSetup();
-        assertThat(createValidator(),
-                hasValidationFindingWithMessage("E-PK-20: Could not find 'doc/changes/changes_1.2.3.md'."));
+        assertThat(createValidator(), hasValidationFindingWithMessage(
+                "E-PK-20: Could not find 'doc" + File.separator + "changes" + File.separator + "changes_1.2.3.md'."));
     }
 
     @Test
@@ -59,7 +59,8 @@ class ChangesFileValidatorTest {
         createValidator().validate().forEach(finding -> finding.getFix().fixError(log));
         final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
-        verify(log).warn("Created 'doc/changes/changes_1.2.3.md'. Don't forget to update it's content!");
+        verify(log).warn("Created 'doc" + File.separator + "changes" + File.separator
+                + "changes_1.2.3.md'. Don't forget to update it's content!");
     }
 
     @Test

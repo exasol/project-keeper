@@ -1,20 +1,22 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
 import static com.exasol.projectkeeper.validators.changesfile.ChangesFile.DEPENDENCY_UPDATES_HEADING;
-import static java.nio.file.attribute.PosixFilePermission.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.attribute.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.MavenFileModelReader;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.*;
+import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReport;
+import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportReader;
+import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportRenderer;
 
 /**
  * This class fixes the dependency section of a {@link ChangesFile}.
@@ -93,9 +95,13 @@ class DependencySectionFixer {
         private final Path tempDirectory;
 
         public TemporaryPomFile(final String content) throws IOException {
-            final FileAttribute<Set<PosixFilePermission>> fileAttributes = PosixFilePermissions
-                    .asFileAttribute(Set.of(OWNER_READ, OWNER_WRITE, OWNER_EXECUTE));
-            this.tempDirectory = Files.createTempDirectory("pom", fileAttributes);
+            this.tempDirectory = Files.createTempDirectory("pom");
+            this.tempDirectory.toFile().setReadable(false);
+            this.tempDirectory.toFile().setWritable(false);
+            this.tempDirectory.toFile().setExecutable(false);
+            this.tempDirectory.toFile().setReadable(true, true);
+            this.tempDirectory.toFile().setWritable(true, true);
+            this.tempDirectory.toFile().setExecutable(true, true);
             this.pomFile = this.tempDirectory.resolve("pom.xml");
             Files.writeString(this.pomFile, content);
         }

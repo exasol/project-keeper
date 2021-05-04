@@ -24,3 +24,4 @@ Scripts
 .directory
 venv/
 pom.xml.versionsBackup
+.git.lock

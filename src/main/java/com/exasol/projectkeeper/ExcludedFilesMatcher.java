@@ -26,7 +26,7 @@ public class ExcludedFilesMatcher {
     }
 
     private static String removeTrailingSlash(final String fileName) {
-        if (fileName.startsWith(FILE_SYSTEM.getSeparator())) {
+        if (fileName.startsWith("/")) {
             return fileName.substring(1);
         } else {
             return fileName;

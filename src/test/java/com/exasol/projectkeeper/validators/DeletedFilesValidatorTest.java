@@ -28,8 +28,8 @@ class DeletedFilesValidatorTest {
     void testValidationWithFileThatMustNotExist(@TempDir final Path tempDir) throws IOException {
         createdIllegalFile(tempDir);
         assertThat(new DeletedFilesValidator(tempDir, new ExcludedFilesMatcher(Collections.emptyList())),
-                hasValidationFindingWithMessage(
-                        "E-PK-26: '.github/workflows/maven.yml' exists but must not exist. Reason: We renamed maven.yml to dependencies_check.yml"));
+                hasValidationFindingWithMessage("E-PK-26: '.github" + File.separator + "workflows" + File.separator
+                        + "maven.yml' exists but must not exist. Reason: We renamed maven.yml to dependencies_check.yml"));
     }
 
     @Test

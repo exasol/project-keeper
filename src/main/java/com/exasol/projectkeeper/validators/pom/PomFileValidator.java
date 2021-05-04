@@ -1,11 +1,16 @@
 package com.exasol.projectkeeper.validators.pom;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.pom.dependencies.JacocoAgentDependencyValidator;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
 
@@ -13,6 +18,7 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
  * Validator for the pom.xml file. This class runs different {@link PomValidator}s.
  */
 public class PomFileValidator implements Validator {
+    /** List of all validators. */
     public static final Collection<PomValidator> ALL_VALIDATORS = List.of(new VersionMavenPluginPomValidator(),
             new OssindexMavenPluginPomValidator(), new EnforcerMavenPluginPomValidator(),
             new AssemblyPluginPomValidator(), new ArtifactReferenceCheckerPluginPomValidator(),

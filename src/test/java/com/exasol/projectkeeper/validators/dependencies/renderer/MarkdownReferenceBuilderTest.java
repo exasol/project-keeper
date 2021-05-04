@@ -11,7 +11,7 @@ class MarkdownReferenceBuilderTest {
     void testReferenceDeclarations() {
         final MarkdownReferenceBuilder referenceBuilder = new MarkdownReferenceBuilder();
         referenceBuilder.getReferenceForUrl("Exasol Website", "https://exasol.com");
-        assertThat(referenceBuilder.getReferences(), equalTo("[0]: https://exasol.com\n"));
+        assertThat(referenceBuilder.getReferences(), equalTo("[0]: https://exasol.com" + System.lineSeparator()));
     }
 
     @Test
