@@ -37,7 +37,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
         final VerificationException verificationException = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = verificationException.getMessage();
-        assertThat(output, containsString("[ERROR] E-PK-53: The dependencies.md file has a outdated content."));
+        assertThat(output, containsString("[ERROR] E-PK-53: The dependencies.md file has outdated content."));
     }
 
     @Test
