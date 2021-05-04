@@ -24,7 +24,6 @@ class GitRepositoryTest {
     @Test
     void testGetTags() throws GitAPIException, IOException {
         try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            git.checkout().setName("main").setOrphan(true).call();
             makeCommitAndTag(git, 1, false);
             git.branchCreate().setName("other").call();
             makeCommitAndTag(git, 2, false);
@@ -45,7 +44,6 @@ class GitRepositoryTest {
     @Test
     void testGetLightweightTag() throws GitAPIException, IOException {
         try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            git.checkout().setName("main").setOrphan(true).call();
             makeCommitAndTag(git, 1, true);
             final GitRepository repository = new GitRepository(this.tempDir);
             final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
@@ -57,7 +55,6 @@ class GitRepositoryTest {
     @Test
     void testGetTagsFromDetachedHead() throws GitAPIException, IOException {
         try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            git.checkout().setName("main").setOrphan(true).call();
             makeCommitAndTag(git, 1, true);
             final RevCommit secondCommit = makeCommitAndTag(git, 2, true);
             git.checkout().setName(secondCommit.getName()).call();
