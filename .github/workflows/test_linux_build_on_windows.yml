@@ -49,6 +49,6 @@ jobs:
       - name: ls
         run: ls
       - name: install project-keeper
-        run: mvn install:install-file -Dfile=project-keeper-maven-plugin-0.8.0.jar -D pomFile=./pom.xml
+        run: mvn install:install-file -Dfile="project-keeper-maven-plugin-0.8.0.jar" -D pomFile="pom.xml"
       - name: run project-keeper
         run: mvn project-keeper:verify
