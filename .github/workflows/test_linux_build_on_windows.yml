@@ -22,8 +22,8 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Run tests
-        run: mvn clean verify
+      - name: Build project-keeper
+        run: mvn clean package -DskipTests
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
@@ -32,6 +32,7 @@ jobs:
 
   run-on-windows:
     runs-on: windows-latest
+    needs: build-on-linux
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v2
