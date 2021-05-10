@@ -10,17 +10,28 @@ import com.exasol.projectkeeper.validators.dependencies.ProjectDependency;
 
 import net.steppschuh.markdowngenerator.table.Table;
 
+/**
+ * String renderer for a dependencies report.
+ */
 public class DependencyPageRenderer {
+    private static final String NEWLINE = System.lineSeparator();
+
+    /**
+     * Convert a list of dependencies into a markdown dependency report.
+     * 
+     * @param dependencies list of dependencies
+     * @return rendered report
+     */
     public String render(final List<ProjectDependency> dependencies) {
         final var markdownReferenceBuilder = new MarkdownReferenceBuilder();
         final var reportBuilder = new StringBuilder();
-        reportBuilder.append("<!-- @formatter:off -->\n");
-        reportBuilder.append("# Dependencies\n");
+        reportBuilder.append("<!-- @formatter:off -->" + NEWLINE);
+        reportBuilder.append("# Dependencies" + NEWLINE);
         reportBuilder.append(buildDependencySectionForScope(dependencies, COMPILE, markdownReferenceBuilder));
         reportBuilder.append(buildDependencySectionForScope(dependencies, TEST, markdownReferenceBuilder));
         reportBuilder.append(buildDependencySectionForScope(dependencies, RUNTIME, markdownReferenceBuilder));
         reportBuilder.append(buildDependencySectionForScope(dependencies, PLUGIN, markdownReferenceBuilder));
-        reportBuilder.append("\n");
+        reportBuilder.append(NEWLINE);
         reportBuilder.append(markdownReferenceBuilder.getReferences());
         return reportBuilder.toString();
     }
@@ -33,7 +44,8 @@ public class DependencyPageRenderer {
             return "";
         } else {
             final String heading = "## " + capitalizeFirstLetter(type.name()) + " Dependencies";
-            return "\n" + heading + "\n\n" + buildTable(dependenciesOfThisScope, markdownReferenceBuilder) + "\n";
+            return NEWLINE + heading + NEWLINE + NEWLINE + buildTable(dependenciesOfThisScope, markdownReferenceBuilder)
+                    + NEWLINE;
         }
     }
 

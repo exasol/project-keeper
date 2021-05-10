@@ -1,12 +1,16 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
  * This class represents a doc/changes/changes_x.x.x.md file.
  */
 public class ChangesFile {
+    /** Headline of the dependency updates section. */
     public static final String DEPENDENCY_UPDATES_HEADING = "## Dependency Updates";
     private final List<String> headerSectionLines;
     private final List<ChangesFileSection> sections;

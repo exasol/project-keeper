@@ -17,7 +17,8 @@ class DependencyPageRendererTest {
         final ProjectDependency dependency = buildDependency(ProjectDependency.Type.COMPILE);
         final String result = new DependencyPageRenderer().render(List.of(dependency));
         assertThat(result, equalTo(
-                "<!-- @formatter:off -->\n# Dependencies\n\n## Compile Dependencies\n\n| Dependency  | License          |\n| ----------- | ---------------- |\n| [my-lib][0] | [MIT License][1] |\n\n[0]: https://exasmple.com/mylib\n[1]: https://mit.edu\n"));
+                "<!-- @formatter:off -->\n# Dependencies\n\n## Compile Dependencies\n\n| Dependency  | License          |\n| ----------- | ---------------- |\n| [my-lib][0] | [MIT License][1] |\n\n[0]: https://exasmple.com/mylib\n[1]: https://mit.edu\n"
+                        .replace("\n", System.lineSeparator())));
     }
 
     @Test

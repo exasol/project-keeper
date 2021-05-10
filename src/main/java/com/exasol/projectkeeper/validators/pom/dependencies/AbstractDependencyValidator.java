@@ -7,7 +7,9 @@ import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.maven.plugin.logging.Log;
-import org.w3c.dom.*;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
@@ -27,6 +29,14 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
     private final String version;
     private final Scope scope;
 
+    /**
+     * Create a new instance of {@link AbstractDependencyValidator}.
+     * 
+     * @param groupId    dependency group-id
+     * @param artifactId dependency artifact-id
+     * @param version    dependency version
+     * @param scope      dependency scope
+     */
     protected AbstractDependencyValidator(final String groupId, final String artifactId, final String version,
             final Scope scope) {
         this.groupId = groupId;
@@ -41,11 +51,10 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         final Node dependency = runXPath(pom, DEPENDENCIES_XPATH + "/dependency[artifactId/text() = '" + this.artifactId
                 + "' and groupId/text() = '" + this.groupId + "']");
         if (dependency == null) {
-            findingConsumer
-                    .accept(new ValidationFinding(
-                            ExaError.messageBuilder("E-PK-29").message("Missing dependency {{DEPENDENCY}}.")
-                                    .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString(),
-                            getFix(pom)));
+            findingConsumer.accept(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-29").message("Missing dependency {{DEPENDENCY}}.")
+                            .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString())
+                    .andFix(getFix(pom)).build());
         } else {
             validateDependency(dependency, findingConsumer);
         }
@@ -65,6 +74,12 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         };
     }
 
+    /**
+     * Validate the dependency details.
+     * 
+     * @param dependency      dependency
+     * @param findingConsumer consumer for validation findings
+     */
     protected abstract void validateDetails(final Node dependency, final Consumer<ValidationFinding> findingConsumer);
 
     private void validateScope(final Node dependency, final Consumer<ValidationFinding> findingConsumer) {
@@ -89,23 +104,30 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         return dependencyTemplate;
     }
 
+    /**
+     * Validate that a dependency has a given XML property.
+     * 
+     * @param expectedProperty property name
+     * @param dependency       dependency
+     * @param findingConsumer  consumer for validation findings
+     */
     protected void validateDependencyHasProperty(final Element expectedProperty, final Node dependency,
             final Consumer<ValidationFinding> findingConsumer) {
         final Node property = runXPath(dependency, expectedProperty.getTagName());
         if (property == null) {
-            findingConsumer.accept(new ValidationFinding(
-                    ExaError.messageBuilder("E-PK-30")
+            findingConsumer.accept(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-30")
                             .message("Missing property {{PROPERTY}} in dependency {{DEPENDENCY}}.")
                             .parameter("PROPERTY", expectedProperty.getTagName())
-                            .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString(),
-                    getMissingPropertyFix(expectedProperty, dependency)));
+                            .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString())
+                    .andFix(getMissingPropertyFix(expectedProperty, dependency)).build());
         } else {
             if (!isXmlEqual(property, expectedProperty)) {
-                findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-31")
+                findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-31")
                         .message("The property {{PROPERTY}} of the dependency {{DEPENDENCY}} has an illegal value.")
                         .parameter("PROPERTY", expectedProperty.getTagName())
-                        .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString(),
-                        getWrongPropertyValueFix(expectedProperty, dependency, property)));
+                        .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString())
+                        .andFix(getWrongPropertyValueFix(expectedProperty, dependency, property)).build());
             }
         }
     }

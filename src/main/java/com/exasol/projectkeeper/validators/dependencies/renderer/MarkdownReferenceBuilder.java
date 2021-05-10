@@ -37,7 +37,7 @@ class MarkdownReferenceBuilder {
         final var stringBuilder = new StringBuilder();
         for (final Map.Entry<String, String> reference : this.references.entrySet()) {
             stringBuilder.append("[").append(reference.getValue()).append("]: ").append(reference.getKey())
-                    .append("\n");
+                    .append(System.lineSeparator());
         }
         return stringBuilder.toString();
     }

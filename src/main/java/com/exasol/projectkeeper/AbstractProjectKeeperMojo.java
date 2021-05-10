@@ -13,7 +13,9 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.repository.RepositorySystem;
 
-import com.exasol.projectkeeper.pom.*;
+import com.exasol.projectkeeper.pom.DefaultMavenArtifactModelReader;
+import com.exasol.projectkeeper.pom.DefaultMavenFileModelReader;
+import com.exasol.projectkeeper.pom.MavenArtifactModelReader;
 import com.exasol.projectkeeper.validators.DeletedFilesValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
@@ -65,6 +67,11 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         ).collect(Collectors.toSet());
     }
 
+    /**
+     * Get a list of {@link Validator}s.
+     * 
+     * @return list of {@link Validator}s
+     */
     protected List<Validator> getValidators() {
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.linkReplacements);
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();

@@ -2,12 +2,16 @@ package com.exasol.projectkeeper.validators.dependencies;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Collections;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.BrokenLinkReplacer;
+import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.pom.MavenArtifactModelReader;
 import com.exasol.projectkeeper.pom.MavenFileModelReader;
 import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageRenderer;
@@ -43,11 +47,10 @@ public class DependenciesValidator implements Validator {
     public List<ValidationFinding> validate() {
         final String expectedDependenciesPage = generateExpectedReport();
         if (!this.dependenciesFile.toFile().exists()) {
-            return List
-                    .of(new ValidationFinding(
-                            ExaError.messageBuilder("E-PK-50")
-                                    .message("This project does not have a dependencies.md file.").toString(),
-                            getFix(expectedDependenciesPage)));
+            return List.of(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-50")
+                            .message("This project does not have a dependencies.md file.").toString())
+                    .andFix(getFix(expectedDependenciesPage)).build());
         } else {
             return validateFileContent(expectedDependenciesPage);
         }
@@ -64,9 +67,10 @@ public class DependenciesValidator implements Validator {
         try {
             final var actualContent = Files.readString(this.dependenciesFile);
             if (!actualContent.equals(expectedDependenciesPage)) {
-                return List.of(new ValidationFinding(ExaError.messageBuilder("E-PK-53").message(
-                        "The dependencies.md file has a outdated content.\nExpected content:\n{{expected content|uq}}",
-                        expectedDependenciesPage).toString(), getFix(expectedDependenciesPage)));
+                return List.of(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-53").message(
+                        "The dependencies.md file has outdated content.\nExpected content:\n{{expected content|uq}}",
+                        expectedDependenciesPage).toString())//
+                        .andFix(getFix(expectedDependenciesPage)).build());
             }
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-52")

@@ -19,7 +19,9 @@ import org.xml.sax.SAXException;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.validators.pom.*;
+import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
+import com.exasol.projectkeeper.validators.pom.PomFileValidator;
+import com.exasol.projectkeeper.validators.pom.PomValidator;
 import com.exasol.xpath.XPathSplitter;
 
 /**
@@ -33,7 +35,7 @@ import com.exasol.xpath.XPathSplitter;
  * </p>
  */
 public abstract class AbstractPluginPomValidator extends AbstractPomValidator implements PomValidator {
-    public static final String GROUP_ID_XPATH = "groupId";
+    private static final String GROUP_ID_XPATH = "groupId";
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
     @SuppressWarnings("java:S1075") // not an customizable url
     private static final String PLUGINS_XPATH = "/project/build/plugins";
@@ -62,13 +64,12 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     private boolean validatePluginExists(final Document pom, final Collection<ProjectKeeperModule> enabledModules,
             final Consumer<ValidationFinding> findingConsumer) {
         if (runXPath(pom, this.pluginXPath) == null) {
-            findingConsumer
-                    .accept(new ValidationFinding(
-                            ExaError.messageBuilder("E-PK-15")
-                                    .message("Missing maven plugin {{plugin group|uq}}:{{plugin name|uq}}.",
-                                            this.pluginGroupId, this.pluginArtifactId)
-                                    .toString(),
-                            getFixForMissingPlugin(pom, enabledModules)));
+            findingConsumer.accept(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-15")
+                            .message("Missing maven plugin {{plugin group|uq}}:{{plugin name|uq}}.", this.pluginGroupId,
+                                    this.pluginArtifactId)
+                            .toString())
+                    .andFix(getFixForMissingPlugin(pom, enabledModules)).build());
             return false;
         } else {
             return true;
@@ -143,11 +144,10 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         if (runXPath(plugin, xPath) != null) {
             return true;
         } else {
-            findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-13").message(
+            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-13").message(
                     "The {{plugin|uq}}'s configuration does not contain the required property {{required property}}.",
-                    this.pluginArtifactId, xPath)
-
-                    .toString(), getCopyFixForMissingProperty(plugin, xPath)));
+                    this.pluginArtifactId, xPath).toString())//
+                    .andFix(getCopyFixForMissingProperty(plugin, xPath)).build());
             return false;
         }
     }
@@ -212,25 +212,26 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
             final Consumer<ValidationFinding> findingConsumer) {
         final var node = runXPath(plugin, propertyXpath);
         if (node != null) {
-            findingConsumer.accept(new ValidationFinding(
-                    ExaError.messageBuilder("E-PK-28")
+            findingConsumer.accept(ValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-28")
                             .message("The plugin {{PLUGIN}} has an illegal property {{PROPERTY}}.")
                             .mitigation("Please remove it.").parameter("PLUGIN", this.pluginArtifactId)
-                            .parameter("PROPERTY", propertyXpath).toString(),
-                    log -> node.getParentNode().removeChild(node)));
+                            .parameter("PROPERTY", propertyXpath).toString())
+                    .andFix(log -> node.getParentNode().removeChild(node)).build());
         }
     }
 
     private void validatePropertiesAreEqual(final Node plugin, final String propertyXpath,
             final Consumer<ValidationFinding> findingConsumer, final Node property, final Node templateProperty) {
         if (!isXmlEqual(property, templateProperty)) {
-            findingConsumer.accept(new ValidationFinding(ExaError.messageBuilder("E-PK-14")
+            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-14")
                     .message("The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value.",
                             this.pluginArtifactId, propertyXpath)
-                    .toString(), (Log log) -> {
+                    .toString())//
+                    .andFix((Log log) -> {
                         final var importedProperty = plugin.getOwnerDocument().importNode(templateProperty, true);
                         property.getParentNode().replaceChild(importedProperty, property);
-                    }));
+                    }).build());
         }
     }
 

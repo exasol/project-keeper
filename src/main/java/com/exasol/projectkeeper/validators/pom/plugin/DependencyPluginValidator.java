@@ -12,6 +12,10 @@ import com.exasol.projectkeeper.ValidationFinding;
  * Validator for the maven-dependency-plugin.
  */
 public class DependencyPluginValidator extends AbstractPluginPomValidator {
+
+    /**
+     * Create a new instance of {@link DependencyPluginValidator}.
+     */
     public DependencyPluginValidator() {
         super("maven_templates/maven-dependency-plugin.xml");
     }

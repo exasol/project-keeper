@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -40,7 +41,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         assertAll(//
                 () -> assertThat(output, containsString("E-PK-6")),
                 () -> assertThat(output,
-                        containsString("E-PK-17: Missing required: '.settings/org.eclipse.jdt.core.prefs'")),
+                        containsString("E-PK-17: Missing required: '.settings" + File.separator
+                                + "org.eclipse.jdt.core.prefs'")),
                 () -> assertThat(output,
                         containsString("E-PK-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.")),
                 () -> assertThat(output,
@@ -112,7 +114,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         final VerificationException verificationException = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = verificationException.getMessage();
-        assertThat(output, containsString("E-PK-26: '.github/workflows/maven.yml' exists but must not exist."));
+        assertThat(output, containsString("E-PK-26: '.github" + File.separator + "workflows" + File.separator
+                + "maven.yml' exists but must not exist."));
     }
 
     @Test
@@ -142,7 +145,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         assertAll(//
                 () -> assertThat(output, containsString("E-PK-6")),
                 () -> assertThat(output,
-                        not(containsString("E-PK-17: Missing required: .settings/org.eclipse.jdt.core.prefs"))),
+                        not(containsString("E-PK-17: Missing required: .settings" + File.separator
+                                + "org.eclipse.jdt.core.prefs"))),
                 () -> assertThat(output,
                         containsString("E-PK-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))//
         );
@@ -180,12 +184,13 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
-        final Git git = Git.open(this.projectDir.toFile());
-        writePomWithOneDependency("0.1.0", "0.1.0");
-        commitAndMakeTag(git, "0.1.0");
-        writePomWithOneDependency("0.2.0", "0.2.0");
-        if (released) {
-            commitAndMakeTag(git, "0.2.0");
+        try (final Git git = Git.open(this.projectDir.toFile())) {
+            writePomWithOneDependency("0.1.0", "0.1.0");
+            commitAndMakeTag(git, "0.1.0");
+            writePomWithOneDependency("0.2.0", "0.2.0");
+            if (released) {
+                commitAndMakeTag(git, "0.2.0");
+            }
         }
     }
 

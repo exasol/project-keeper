@@ -48,8 +48,8 @@ public class DeletedFilesValidator implements Validator {
             }
             final var file = pathThatMustExist.toFile();
             if (file.exists()) {
-                return new ValidationFinding(getFileExistsErrorMessage(fileThatMustNotExist, reason),
-                        getFix(fileThatMustNotExist.toString(), file));
+                return ValidationFinding.withMessage(getFileExistsErrorMessage(fileThatMustNotExist, reason))
+                        .andFix(getFix(fileThatMustNotExist.toString(), file)).build();
             }
             return null;
         }).filter(Objects::nonNull).collect(Collectors.toList());
