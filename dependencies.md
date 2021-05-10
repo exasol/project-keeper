@@ -30,7 +30,7 @@
 | [SLF4J JDK14 Binding][34]              | [MIT License][35]                             |
 | [mockito-core][36]                     | [The MIT License][37]                         |
 | [JaCoCo :: Core][38]                   | [Eclipse Public License 2.0][39]              |
-| [maven-plugin-integration-testing][40] | [MIT][16]                                     |
+| [Maven Plugin Integration Testing][40] | [MIT][16]                                     |
 
 ## Runtime Dependencies
 
