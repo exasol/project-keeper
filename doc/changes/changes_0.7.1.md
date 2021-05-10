@@ -36,6 +36,6 @@ Code name: Fixed on Windows
 
 ### Plugin Dependency Updates
 
-* Updated `com.exasol:project-keeper-maven-plugin:0.7.0` to `0.8.0`
+* Updated `com.exasol:project-keeper-maven-plugin:0.7.0` to `0.7.1`
 * Added `org.apache.maven.plugins:maven-dependency-plugin:2.8`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.5` to `0.8.6`
