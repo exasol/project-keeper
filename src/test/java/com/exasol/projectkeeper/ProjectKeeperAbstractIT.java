@@ -7,17 +7,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-<<<<<<< HEAD
-=======
 import org.apache.commons.io.FileUtils;
-import org.apache.maven.it.VerificationException;
->>>>>>> main
 import org.apache.maven.it.Verifier;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
