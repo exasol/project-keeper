@@ -19,18 +19,18 @@
 
 ## Test Dependencies
 
-| Dependency                            | License                                       |
-| ------------------------------------- | --------------------------------------------- |
-| [maven-project-version-getter][22]    | [MIT][16]                                     |
-| [JUnit][24]                           | [Eclipse Public License 1.0][25]              |
-| [JUnit Jupiter Engine][26]            | [Eclipse Public License v2.0][27]             |
-| [JUnit Jupiter Params][26]            | [Eclipse Public License v2.0][27]             |
-| [Hamcrest][30]                        | [BSD License 3][31]                           |
-| [org.xmlunit:xmlunit-matchers][13]    | [The Apache Software License, Version 2.0][5] |
-| [SLF4J JDK14 Binding][34]             | [MIT License][35]                             |
-| [mockito-core][36]                    | [The MIT License][37]                         |
-| [JaCoCo :: Core][38]                  | [Eclipse Public License 2.0][39]              |
-| [Apache Maven Verifier Component][40] | [Apache License, Version 2.0][1]              |
+| Dependency                             | License                                       |
+| -------------------------------------- | --------------------------------------------- |
+| [maven-project-version-getter][22]     | [MIT][16]                                     |
+| [JUnit][24]                            | [Eclipse Public License 1.0][25]              |
+| [JUnit Jupiter Engine][26]             | [Eclipse Public License v2.0][27]             |
+| [JUnit Jupiter Params][26]             | [Eclipse Public License v2.0][27]             |
+| [Hamcrest][30]                         | [BSD License 3][31]                           |
+| [org.xmlunit:xmlunit-matchers][13]     | [The Apache Software License, Version 2.0][5] |
+| [SLF4J JDK14 Binding][34]              | [MIT License][35]                             |
+| [mockito-core][36]                     | [The MIT License][37]                         |
+| [JaCoCo :: Core][38]                   | [Eclipse Public License 2.0][39]              |
+| [Maven Plugin Integration Testing][40] | [MIT][16]                                     |
 
 ## Runtime Dependencies
 
@@ -72,7 +72,6 @@
 [11]: https://eclipse-ee4j.github.io/jaxb-ri/
 [50]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [78]: http://maven.apache.org/plugins/maven-clean-plugin/
-[40]: https://maven.apache.org/shared/maven-verifier/
 [16]: https://opensource.org/licenses/MIT
 [36]: https://github.com/mockito/mockito
 [4]: http://maven.apache.org/
@@ -113,6 +112,7 @@
 [84]: http://maven.apache.org/plugins/maven-install-plugin/
 [54]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [17]: https://www.eclipse.org/jgit/
+[40]: https://github.com/exasol/maven-plugin-integration-testing
 [68]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [86]: http://maven.apache.org/plugins/maven-site-plugin/
 [58]: https://maven.apache.org/plugins/maven-javadoc-plugin/

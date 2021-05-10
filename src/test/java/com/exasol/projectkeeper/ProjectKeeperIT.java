@@ -32,7 +32,7 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
 class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
-    void testVerify() throws VerificationException, IOException {
+    void testVerify() throws IOException {
         writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         final VerificationException verificationException = assertThrows(VerificationException.class,
