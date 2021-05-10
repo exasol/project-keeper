@@ -15,6 +15,7 @@ Code name: Support running on Windows
 
 * #119: Fixed windows compatibility issues
 * #123: Fixed jar compatibility (jar built on linux did not work as expected on Windows)
+* #125: Fixed sonar findings
 
 ## Dependency Updates
 
