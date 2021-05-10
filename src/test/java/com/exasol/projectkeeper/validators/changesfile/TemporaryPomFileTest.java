@@ -2,11 +2,10 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.Assert.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
@@ -24,11 +23,5 @@ class TemporaryPomFileTest {
         final TemporaryPomFile pomFile = new TemporaryPomFile("test");
         pomFile.close();
         assertFalse(Files.exists(pomFile.getPomFile()));
-    }
-
-    @Test
-    void test() throws IOException {
-        final Path tempFile = Files.createTempFile("pom-file-cache", ".xml");
-        System.out.println(tempFile);
     }
 }
