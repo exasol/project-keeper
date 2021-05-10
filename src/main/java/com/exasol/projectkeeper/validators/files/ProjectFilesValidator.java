@@ -1,25 +1,16 @@
 package com.exasol.projectkeeper.validators.files;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.apache.maven.plugin.logging.Log;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ExcludedFilesMatcher;
-import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.*;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.Resource;
@@ -61,23 +52,24 @@ public class ProjectFilesValidator implements Validator {
 
     private List<ValidationFinding> validate(final FileTemplate template) {
         final var projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
+        final String templateContent = template.getContent();
         if (!projectFile.exists()) {
             return List.of(ValidationFinding
                     .withMessage(ExaError.messageBuilder("E-PK-17").message("Missing required: {{required file}}")
                             .parameter("required file", template.fileName).toString())
-                    .andFix((Log log) -> fixFile(projectFile, template.template.getPath())).build());
+                    .andFix((Log log) -> fixFile(projectFile, templateContent)).build());
         }
         if (template.type.equals(TemplateType.REQUIRE_EXACT)) {
-            return validateContent(template, projectFile);
+            return validateContent(template.getContent(), template.fileName, projectFile);
         } else {
             return Collections.emptyList();
         }
     }
 
-    private void fixFile(final File projectFile, final String templateFilePath) {
-        try (final InputStream templateStream = getClass().getClassLoader().getResourceAsStream(templateFilePath)) {
-            projectFile.mkdirs();
-            Files.copy(templateStream, projectFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    private void fixFile(final File projectFile, final String templateContent) {
+        try {
+            projectFile.getParentFile().mkdirs();
+            Files.writeString(projectFile.toPath(), templateContent);
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-16").message("Failed to create or replace {{required file}}.")
@@ -86,26 +78,26 @@ public class ProjectFilesValidator implements Validator {
         }
     }
 
-    private List<ValidationFinding> validateContent(final FileTemplate template, final File projectFile) {
-        if (!isFileEqualWithTemplate(template, projectFile)) {
+    private List<ValidationFinding> validateContent(final String templateContent, final String templateName,
+            final File projectFile) {
+        if (!isFileEqualWithTemplate(templateContent, projectFile)) {
             return List.of(ValidationFinding
                     .withMessage(ExaError.messageBuilder("E-PK-18").message("Outdated content: {{file name}}")
-                            .parameter("file name", template.fileName).toString())
-                    .andFix((Log log) -> fixFile(projectFile, template.template.getPath())).build());
+                            .parameter("file name", templateName).toString())
+                    .andFix((Log log) -> fixFile(projectFile, templateContent)).build());
         } else {
             return Collections.emptyList();
         }
     }
 
-    private boolean isFileEqualWithTemplate(final FileTemplate template, final File projectFile) {
-        try (template.template;
-                final InputStream templateStream = template.template.open();
-                final var actualInputStream = new FileInputStream(projectFile)) {
-            return COMPARATOR.areStreamsEqual(actualInputStream, templateStream);
+    private boolean isFileEqualWithTemplate(final String templateContent, final File projectFile) {
+        try {
+            final String actualContent = Files.readString(projectFile.toPath());
+            return actualContent.equals(templateContent);
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-19").message("Failed to validate {{file name}}'s content.")
-                            .parameter("file name", template.fileName).toString(),
+                            .parameter("file name", projectFile).toString(),
                     exception);
         }
     }
@@ -152,6 +144,26 @@ public class ProjectFilesValidator implements Validator {
             final var fileName = String.join(File.separator,
                     pathRelativeToTemplates.subList(2, pathRelativeToTemplates.size()));
             return new FileTemplate(templateResource, templateType, fileName, module);
+        }
+
+        /**
+         * Get the content of the template.
+         * <p>
+         * This method gets the content of the template dependant of the format of the current OS (windows / linux line
+         * endings).
+         * </p>
+         * 
+         * @return template's content
+         */
+        public String getContent() {
+            try {
+                final String templateContent = this.template.getContentAsString();
+                return templateContent.replace("\r", "").replace("\n", System.lineSeparator());
+            } catch (final IOException exception) {
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-57")
+                        .message("Failed to read template {{template}}.", this.template.getPath()).ticketMitigation()
+                        .toString(), exception);
+            }
         }
 
         private static boolean isTemplatePathSyntax(final List<String> resourcePath, final int templatesFolderIndex) {

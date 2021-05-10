@@ -1,0 +1,56 @@
+name: Test Linux build on windows
+
+on:
+  push:
+
+jobs:
+  build-on-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Build project-keeper
+        run: mvn clean package -DskipTests
+      - name: Strip version number
+        run: cp $(find target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\.jar") target/project-keeper.jar
+      - name: Upload artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: project-keeper-jar
+          path: target/project-keeper.jar
+
+  run-on-windows:
+    runs-on: windows-latest
+    needs: build-on-linux
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set up Java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+      - name: Download jar
+        uses: actions/download-artifact@v2
+        with:
+          name: project-keeper-jar
+      - name: ls
+        run: ls
+      - name: install project-keeper
+        run: mvn install:install-file -Dfile="project-keeper.jar" -D pomFile="pom.xml"
+      - name: run project-keeper
+        run: mvn project-keeper:verify
