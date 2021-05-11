@@ -41,6 +41,11 @@ class TemporaryPomFile implements AutoCloseable {
         }
     }
 
+    /**
+     * Get the path of the pom file on disc.
+     * 
+     * @return path of the pom file
+     */
     public Path getPomFile() {
         return this.pomFile;
     }
