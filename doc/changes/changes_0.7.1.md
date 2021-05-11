@@ -1,4 +1,4 @@
-# Project keeper maven plugin 0.7.1, released 2021-05-10
+# Project keeper maven plugin 0.7.1, released 2021-05-12
 
 Code name: Support running on Windows
 
