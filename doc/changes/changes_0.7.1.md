@@ -1,4 +1,4 @@
-# Project keeper maven plugin 0.7.1, released 2021-05-10
+# Project keeper maven plugin 0.7.1, released 2021-05-12
 
 Code name: Support running on Windows
 
@@ -15,6 +15,7 @@ Code name: Support running on Windows
 
 * #119: Fixed windows compatibility issues
 * #123: Fixed jar compatibility (jar built on linux did not work as expected on Windows)
+* #125: Fixed sonar findings
 
 ## Dependency Updates
 
