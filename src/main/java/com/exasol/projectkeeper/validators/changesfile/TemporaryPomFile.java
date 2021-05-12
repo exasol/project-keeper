@@ -6,7 +6,7 @@ import java.nio.file.*;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * This class temporary saves a pom file so that it can be parsed by the
+ * This class temporarily saves a pom file so that it can be parsed by the
  * {@link org.apache.maven.project.MavenProjectBuildingResult} that unfortunately only can parse files.
  */
 class TemporaryPomFile implements AutoCloseable {
@@ -23,7 +23,7 @@ class TemporaryPomFile implements AutoCloseable {
             Files.writeString(this.pomFile, content, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-58").message("Failed to temporary store pom file on disk.")
+                    ExaError.messageBuilder("E-PK-58").message("Failed to temporarily store pom file on disk.")
                             .mitigation("Check the permissions for the temp directory of your OS.").toString(),
                     exception);
         }
@@ -42,7 +42,7 @@ class TemporaryPomFile implements AutoCloseable {
     }
 
     /**
-     * Get the path of the pom file on disc.
+     * Get the path of the pom file on disk.
      * 
      * @return path of the pom file
      */
