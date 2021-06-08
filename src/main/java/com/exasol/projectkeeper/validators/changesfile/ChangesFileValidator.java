@@ -10,7 +10,7 @@ import org.apache.maven.plugin.logging.Log;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.Validator;
-import com.exasol.projectkeeper.pom.MavenFileModelReader;
+import com.exasol.projectkeeper.pom.MavenFileProjectReader;
 
 /**
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
@@ -21,7 +21,7 @@ public class ChangesFileValidator implements Validator {
     private final Path changesFileAbsolutePath;
     private final Path projectDirectory;
     private final String projectVersion;
-    private final MavenFileModelReader mavenModelReader;
+    private final MavenFileProjectReader mavenModelReader;
 
     /**
      * Create a new instance of {@link ChangesFileValidator}
@@ -32,7 +32,7 @@ public class ChangesFileValidator implements Validator {
      * @param mavenModelReader reader for maven models
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
-            final MavenFileModelReader mavenModelReader) {
+            final MavenFileProjectReader mavenModelReader) {
         this.projectVersion = projectVersion;
         this.relativePathToChangesFile = Path.of("doc", "changes", "changes_" + projectVersion + ".md");
         this.projectName = projectName;

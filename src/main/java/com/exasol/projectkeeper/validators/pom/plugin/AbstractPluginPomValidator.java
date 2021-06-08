@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -19,10 +19,8 @@ import org.xml.sax.SAXException;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
-import com.exasol.projectkeeper.validators.pom.PomFileValidator;
-import com.exasol.projectkeeper.validators.pom.PomValidator;
-import com.exasol.xpath.XPathSplitter;
+import com.exasol.projectkeeper.validators.pom.*;
+import com.exasol.projectkeeper.xpath.XPathSplitter;
 
 /**
  * Abstract basis for maven plugin configuration validation.

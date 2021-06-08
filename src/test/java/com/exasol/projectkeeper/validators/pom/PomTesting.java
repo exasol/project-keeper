@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.*;
 import java.nio.file.Files;

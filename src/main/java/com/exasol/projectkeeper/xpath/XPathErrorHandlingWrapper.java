@@ -1,4 +1,4 @@
-package com.exasol.xpath;
+package com.exasol.projectkeeper.xpath;
 
 import javax.xml.xpath.*;
 

@@ -85,11 +85,10 @@
 [24]: http://junit.org
 [39]: https://www.eclipse.org/legal/epl-2.0/
 [13]: https://www.xmlunit.org/
-[20]: https://maven.apache.org/ref/3.6.3/maven-core/
+[37]: https://github.com/mockito/mockito/blob/main/LICENSE
 [74]: http://zlika.github.io/reproducible-build-maven-plugin
 [35]: http://www.opensource.org/licenses/mit-license.php
 [6]: https://github.com/classgraph/classgraph
-[37]: https://github.com/mockito/mockito/blob/release/3.x/LICENSE
 [8]: https://github.com/eclipse-ee4j/jaxb-api
 [26]: https://junit.org/junit5/
 [46]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
@@ -99,11 +98,11 @@
 [80]: http://maven.apache.org/plugins/maven-resources-plugin/
 [0]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [70]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
+[20]: https://maven.apache.org/ref/3.8.1/maven-core/
 [48]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [76]: http://maven.apache.org/plugins/maven-dependency-plugin/
 [7]: http://opensource.org/licenses/MIT
 [25]: http://www.eclipse.org/legal/epl-v10.html
-[2]: https://maven.apache.org/ref/3.6.3/maven-plugin-api/
 [82]: http://maven.apache.org/plugins/maven-jar-plugin/
 [12]: http://www.eclipse.org/org/documents/edl-v10.php
 [1]: https://www.apache.org/licenses/LICENSE-2.0.txt
@@ -115,5 +114,6 @@
 [40]: https://github.com/exasol/maven-plugin-integration-testing
 [68]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [86]: http://maven.apache.org/plugins/maven-site-plugin/
+[2]: https://maven.apache.org/ref/3.8.1/maven-plugin-api/
 [58]: https://maven.apache.org/plugins/maven-javadoc-plugin/
 [72]: https://github.com/exasol/error-code-crawler-maven-plugin

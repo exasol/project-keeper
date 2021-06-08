@@ -1,14 +1,12 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.util.List;
 
 import org.w3c.dom.Node;
 import org.xmlunit.builder.DiffBuilder;
-import org.xmlunit.diff.DefaultNodeMatcher;
-import org.xmlunit.diff.Diff;
-import org.xmlunit.diff.ElementSelectors;
+import org.xmlunit.diff.*;
 
 /**
  * Abstract basis for {@link PomValidator}s.

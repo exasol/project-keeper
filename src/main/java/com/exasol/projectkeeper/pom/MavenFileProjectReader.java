@@ -3,11 +3,12 @@ package com.exasol.projectkeeper.pom;
 import java.io.File;
 
 import org.apache.maven.model.Model;
+import org.apache.maven.project.MavenProject;
 
 /**
  * Interfaces for classes that read a maven {@link Model} from a pom.xml file.
  */
-public interface MavenFileModelReader {
+public interface MavenFileProjectReader {
     /**
      * Read a maven model.
      *
@@ -15,7 +16,7 @@ public interface MavenFileModelReader {
      * @return read model
      * @throws ReadFailedException if reading failed
      */
-    Model readModel(File pomFile) throws ReadFailedException;
+    MavenProject readModel(File pomFile) throws ReadFailedException;
 
     /**
      * Exception that is thrown if the reading failed.

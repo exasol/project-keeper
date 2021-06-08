@@ -5,7 +5,7 @@
     <groupId>com.exasol</groupId>
     <artifactId>project-keeper-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>0.7.1</version>
+    <version>0.7.2</version>
     <name>Project keeper maven plugin</name>
     <description>This maven plugin checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
@@ -45,8 +45,8 @@
     </scm>
 
     <properties>
-        <maven.version>3.6.3</maven.version>
-        <junit.version>5.7.1</junit.version>
+        <maven.version>3.8.1</maven.version>
+        <junit.version>5.7.2</junit.version>
         <java.version>11</java.version>
         <junit.platform.version>1.6.2</junit.platform.version>
         <jacoco.version>0.8.6</jacoco.version>
@@ -58,7 +58,7 @@
         <dependency>
             <groupId>org.apache.maven.plugin-tools</groupId>
             <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.6.0</version>
+            <version>3.6.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -74,7 +74,7 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.102</version>
+            <version>4.8.108</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -84,7 +84,7 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>
@@ -99,7 +99,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.11.0.202103091610-r</version>
+            <version>5.11.1.202105131744-r</version>
         </dependency>
         <dependency>
             <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -165,7 +165,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.8.0</version>
+            <version>3.11.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -453,7 +453,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>0.1.1</version>
+                <version>0.4.0</version>
                 <executions>
                     <execution>
                         <goals>

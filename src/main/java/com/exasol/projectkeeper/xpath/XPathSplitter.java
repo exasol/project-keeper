@@ -1,4 +1,4 @@
-package com.exasol.xpath;
+package com.exasol.projectkeeper.xpath;
 
 import java.util.ArrayList;
 import java.util.List;

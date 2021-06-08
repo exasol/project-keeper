@@ -8,17 +8,18 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.*;
+import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.MavenArtifactModelReader;
-import com.exasol.projectkeeper.pom.MavenFileModelReader;
+import com.exasol.projectkeeper.pom.MavenFileProjectReader;
 
 /**
  * This class reads all dependencies of a pom file (including the plugins) together with their license.
  */
 public class ProjectDependencyReader {
-    private final MavenFileModelReader fileModelReader;
+    private final MavenFileProjectReader fileModelReader;
     private final MavenArtifactModelReader artifactModelReader;
 
     /**
@@ -27,7 +28,7 @@ public class ProjectDependencyReader {
      * @param fileModelReader     pom file parser
      * @param artifactModelReader maven dependency reader
      */
-    public ProjectDependencyReader(final MavenFileModelReader fileModelReader,
+    public ProjectDependencyReader(final MavenFileProjectReader fileModelReader,
             final MavenArtifactModelReader artifactModelReader) {
         this.fileModelReader = fileModelReader;
         this.artifactModelReader = artifactModelReader;
@@ -40,8 +41,9 @@ public class ProjectDependencyReader {
      * @return list of dependencies
      */
     public List<ProjectDependency> readDependencies(final File pomFile) {
-        final var model = parsePomFile(pomFile);
-        return getDependenciesIncludingPlugins(model).map(this::getDependenciesLicense).collect(Collectors.toList());
+        final var project = parsePomFile(pomFile);
+        return getDependenciesIncludingPlugins(project.getModel())
+                .map(dependency -> getDependenciesLicense(dependency, project)).collect(Collectors.toList());
     }
 
     private Stream<Dependency> getDependenciesIncludingPlugins(final Model model) {
@@ -58,10 +60,10 @@ public class ProjectDependencyReader {
         return dependency;
     }
 
-    private ProjectDependency getDependenciesLicense(final Dependency dependency) {
+    private ProjectDependency getDependenciesLicense(final Dependency dependency, final MavenProject project) {
         try {
             final var dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
-                    dependency.getGroupId(), dependency.getVersion());
+                    dependency.getGroupId(), dependency.getVersion(), project.getRemoteArtifactRepositories());
             final List<License> licenses = dependenciesPom.getLicenses().stream()
                     .map(license -> new License(license.getName(), license.getUrl())).collect(Collectors.toList());
             return new ProjectDependency(getDependencyName(dependenciesPom), dependenciesPom.getUrl(), licenses,
@@ -105,10 +107,10 @@ public class ProjectDependencyReader {
         }
     }
 
-    private Model parsePomFile(final File pomFile) {
+    private MavenProject parsePomFile(final File pomFile) {
         try {
             return this.fileModelReader.readModel(pomFile);
-        } catch (final MavenFileModelReader.ReadFailedException exception) {
+        } catch (final MavenFileProjectReader.ReadFailedException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-48").message("Failed to parse pom.xml file.").toString(), exception);
         }
