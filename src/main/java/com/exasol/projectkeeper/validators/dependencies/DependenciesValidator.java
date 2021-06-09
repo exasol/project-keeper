@@ -8,8 +8,8 @@ import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
-import com.exasol.projectkeeper.pom.MavenArtifactModelReader;
-import com.exasol.projectkeeper.pom.MavenFileProjectReader;
+import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
+import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageRenderer;
 
 /**
@@ -30,8 +30,8 @@ public class DependenciesValidator implements Validator {
      * @param projectDirectory    project root directory
      * @param brokenLinkReplacer  dependency injection for broken link replacer
      */
-    public DependenciesValidator(final MavenFileProjectReader fileModelReader,
-            final MavenArtifactModelReader artifactModelReader, final File pomFile, final Path projectDirectory,
+    public DependenciesValidator(final MavenProjectFromFileReader fileModelReader,
+            final MavenModelFromRepositoryReader artifactModelReader, final File pomFile, final Path projectDirectory,
             final BrokenLinkReplacer brokenLinkReplacer) {
         this.brokenLinkReplacer = brokenLinkReplacer;
         this.projectDependencyReader = new ProjectDependencyReader(fileModelReader, artifactModelReader);

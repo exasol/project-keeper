@@ -21,14 +21,14 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.pom.MavenFileProjectReader;
-import com.exasol.projectkeeper.validators.SimpleMavenFileProjectReader;
+import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
+import com.exasol.projectkeeper.validators.SimpleMavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 class ChangesFileValidatorTest {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
-    private static final MavenFileProjectReader MAVEN_MODEL_READER = new SimpleMavenFileProjectReader();
+    private static final MavenProjectFromFileReader MAVEN_MODEL_READER = new SimpleMavenProjectFromFileReader();
 
     @TempDir
     File tempDir;

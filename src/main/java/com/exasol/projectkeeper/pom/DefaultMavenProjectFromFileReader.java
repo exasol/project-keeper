@@ -8,26 +8,26 @@ import org.apache.maven.project.*;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * Implementation of {@link MavenFileProjectReader} using the {@link ProjectBuilder} that is injected by Maven core to
- * Mojo.
+ * Implementation of {@link MavenProjectFromFileReader} using the {@link ProjectBuilder} that is injected by Maven core
+ * to Mojo.
  */
-public class DefaultMavenFileProjectReader implements MavenFileProjectReader {
+public class DefaultMavenProjectFromFileReader implements MavenProjectFromFileReader {
     private final ProjectBuilder mavenProjectBuilder;
     private final MavenSession session;
 
     /**
-     * Create a new instance of {@link DefaultMavenFileProjectReader}.
+     * Create a new instance of {@link DefaultMavenProjectFromFileReader}.
      *
      * @param mavenProjectBuilder maven project builder
      * @param session             maven session
      */
-    public DefaultMavenFileProjectReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session) {
+    public DefaultMavenProjectFromFileReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session) {
         this.mavenProjectBuilder = mavenProjectBuilder;
         this.session = session;
     }
 
     @Override
-    public MavenProject readModel(final File pomFile) throws ReadFailedException {
+    public MavenProject readProject(final File pomFile) throws ReadFailedException {
         try {
             final ProjectBuildingResult build = this.mavenProjectBuilder.build(pomFile,
                     this.session.getProjectBuildingRequest());

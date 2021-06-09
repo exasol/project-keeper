@@ -8,7 +8,7 @@ import org.apache.maven.project.MavenProject;
 /**
  * Interfaces for classes that read a maven {@link Model} from a pom.xml file.
  */
-public interface MavenFileProjectReader {
+public interface MavenProjectFromFileReader {
     /**
      * Read a maven model.
      *
@@ -16,7 +16,7 @@ public interface MavenFileProjectReader {
      * @return read model
      * @throws ReadFailedException if reading failed
      */
-    MavenProject readModel(File pomFile) throws ReadFailedException;
+    MavenProject readProject(File pomFile) throws ReadFailedException;
 
     /**
      * Exception that is thrown if the reading failed.

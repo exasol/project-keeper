@@ -13,19 +13,19 @@ import org.apache.maven.repository.RepositorySystem;
  * Read a maven {@link Model} from an artifact of the maven repository using the {@link ProjectBuilder} that is injected
  * by Maven core to Mojo.
  */
-public class MavenArtifactModelReader {
+public class MavenModelFromRepositoryReader {
     private final ProjectBuilder mavenProjectBuilder;
     private final MavenSession session;
     private final RepositorySystem repositorySystem;
 
     /**
-     * Create a new instance of {@link MavenArtifactModelReader}.
-     * 
+     * Create a new instance of {@link MavenModelFromRepositoryReader}.
+     *
      * @param mavenProjectBuilder maven project builder
      * @param session             maven session
      * @param repositorySystem    maven repository system
      */
-    public MavenArtifactModelReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session,
+    public MavenModelFromRepositoryReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session,
             final RepositorySystem repositorySystem) {
         this.mavenProjectBuilder = mavenProjectBuilder;
         this.session = session;
