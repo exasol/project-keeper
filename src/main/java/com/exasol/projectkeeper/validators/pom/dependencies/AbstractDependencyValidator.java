@@ -1,15 +1,13 @@
 package com.exasol.projectkeeper.validators.pom.dependencies;
 
-import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
 import org.apache.maven.plugin.logging.Log;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
+import org.w3c.dom.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;

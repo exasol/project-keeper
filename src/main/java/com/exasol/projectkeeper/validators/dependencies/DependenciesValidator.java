@@ -2,18 +2,14 @@ package com.exasol.projectkeeper.validators.dependencies;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.Collections;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.BrokenLinkReplacer;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
-import com.exasol.projectkeeper.pom.MavenArtifactModelReader;
-import com.exasol.projectkeeper.pom.MavenFileModelReader;
+import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
+import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageRenderer;
 
 /**
@@ -34,8 +30,8 @@ public class DependenciesValidator implements Validator {
      * @param projectDirectory    project root directory
      * @param brokenLinkReplacer  dependency injection for broken link replacer
      */
-    public DependenciesValidator(final MavenFileModelReader fileModelReader,
-            final MavenArtifactModelReader artifactModelReader, final File pomFile, final Path projectDirectory,
+    public DependenciesValidator(final MavenProjectFromFileReader fileModelReader,
+            final MavenModelFromRepositoryReader artifactModelReader, final File pomFile, final Path projectDirectory,
             final BrokenLinkReplacer brokenLinkReplacer) {
         this.brokenLinkReplacer = brokenLinkReplacer;
         this.projectDependencyReader = new ProjectDependencyReader(fileModelReader, artifactModelReader);

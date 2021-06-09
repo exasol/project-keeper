@@ -5,17 +5,18 @@ import java.io.*;
 import org.apache.maven.model.Model;
 import org.apache.maven.model.building.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.pom.MavenFileModelReader;
+import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 
 /**
- * Simplified {@link MavenFileModelReader} that works without injected dependencies.
+ * Simplified {@link MavenProjectFromFileReader} that works without injected dependencies.
  */
-public class SimpleMavenFileModelReader implements MavenFileModelReader {
+public class SimpleMavenProjectFromFileReader implements MavenProjectFromFileReader {
     @Override
-    public Model readModel(final File pomFile) throws ReadFailedException {
+    public MavenProject readProject(final File pomFile) throws ReadFailedException {
         try (final FileReader reader = new FileReader(pomFile)) {
             final Model rawModel = new MavenXpp3Reader().read(reader);
             final ModelBuildingRequest modelRequest = new DefaultModelBuildingRequest();
@@ -25,7 +26,7 @@ public class SimpleMavenFileModelReader implements MavenFileModelReader {
             modelRequest.setSystemProperties(System.getProperties()); // for Java version property
             final DefaultModelBuilder modelBuilder = new DefaultModelBuilderFactory().newInstance();
             final ModelBuildingResult result = modelBuilder.build(modelRequest);
-            return result.getEffectiveModel();
+            return new MavenProject(result.getEffectiveModel());
         } catch (final IOException | ModelBuildingException | XmlPullParserException exception) {
             throw new ReadFailedException(
                     ExaError.messageBuilder("E-PK-47").message("Failed to build maven model.").toString(), exception);

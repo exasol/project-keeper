@@ -10,6 +10,7 @@ import java.nio.file.Files;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
+import org.apache.maven.model.Repository;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
@@ -32,6 +33,17 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     @Test
     void testWrongContent() throws IOException, VerificationException {
         createExamplePomFile();
+        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
+        final Verifier verifier = getVerifier();
+        final VerificationException verificationException = assertThrows(VerificationException.class,
+                () -> verifier.executeGoal("project-keeper:verify"));
+        final String output = verificationException.getMessage();
+        assertThat(output, containsString("[ERROR] E-PK-53: The dependencies.md file has outdated content."));
+    }
+
+    @Test
+    void testWrongContentWithNonDefaultRepository() throws IOException, VerificationException {
+        createExamplePomFileWithNonDefaultRepo();
         Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
         final Verifier verifier = getVerifier();
         final VerificationException verificationException = assertThrows(VerificationException.class,
@@ -67,6 +79,16 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     private void createExamplePomFile() throws IOException {
         final TestMavenModel pomModel = getTestMavenModelWithProjectKeeperPlugin();
         pomModel.addDependency("error-reporting-java", "com.exasol", "compile", "0.1.0");
+        pomModel.writeAsPomToProject(this.projectDir);
+    }
+
+    private void createExamplePomFileWithNonDefaultRepo() throws IOException {
+        final TestMavenModel pomModel = getTestMavenModelWithProjectKeeperPlugin();
+        final Repository exasolRepo = new Repository();
+        exasolRepo.setUrl("https://maven.exasol.com/artifactory/exasol-releases");
+        exasolRepo.setId("maven.exasol.com");
+        pomModel.addRepository(exasolRepo);
+        pomModel.addDependency("exasol-jdbc", "com.exasol", "compile", "7.0.4");
         pomModel.writeAsPomToProject(this.projectDir);
     }
 }

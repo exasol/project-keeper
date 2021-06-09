@@ -13,9 +13,8 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.repository.RepositorySystem;
 
-import com.exasol.projectkeeper.pom.DefaultMavenArtifactModelReader;
-import com.exasol.projectkeeper.pom.DefaultMavenFileModelReader;
-import com.exasol.projectkeeper.pom.MavenArtifactModelReader;
+import com.exasol.projectkeeper.pom.DefaultMavenProjectFromFileReader;
+import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
 import com.exasol.projectkeeper.validators.DeletedFilesValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
@@ -76,9 +75,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.linkReplacements);
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
         final var excludedFilesMatcher = new ExcludedFilesMatcher(this.excludedFiles);
-        final var mavenModelReader = new DefaultMavenFileModelReader(this.mavenProjectBuilder, this.session);
-        final MavenArtifactModelReader artifactReader = new DefaultMavenArtifactModelReader(this.mavenProjectBuilder,
-                this.session, this.repositorySystem);
+        final var mavenModelReader = new DefaultMavenProjectFromFileReader(this.mavenProjectBuilder, this.session);
+        final MavenModelFromRepositoryReader artifactReader = new MavenModelFromRepositoryReader(
+                this.mavenProjectBuilder, this.session, this.repositorySystem);
         final var pomFile = this.project.getModel().getPomFile();
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
                 new PomFileValidator(enabledModules, this.excludedPlugins, pomFile),

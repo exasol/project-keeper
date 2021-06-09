@@ -2,7 +2,7 @@ package com.exasol.projectkeeper.validators.pom.dependencies;
 
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindingWithMessage;
 import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
-import static com.exasol.xpath.XPathErrorHandlingWrapper.runXPath;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.IOException;
