@@ -1,5 +1,7 @@
 # Project keeper maven plugin 0.7.2, released 2021-06-09
 
+Code name: Bug Fix: Dependency crawling for non maven central dependencies
+
 ## Bug Fixes
 
 * #131: Fixed dependency crawling for artifact that are not on maven central
