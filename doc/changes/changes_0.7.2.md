@@ -1,4 +1,4 @@
-# Project keeper maven plugin 0.7.2, released 2021-06-08
+# Project keeper maven plugin 0.7.2, released 2021-06-09
 
 ## Bug Fixes
 
