@@ -1,9 +1,6 @@
 package com.exasol.projectkeeper;
 
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Path;
-import java.nio.file.PathMatcher;
+import java.nio.file.*;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -20,6 +17,7 @@ public class ExcludedFilesMatcher {
      * 
      * @param excludedFilePatterns list of glob patterns to exclude
      */
+    // [impl->dsn~excluding-files~1]
     public ExcludedFilesMatcher(final Collection<String> excludedFilePatterns) {
         this.matchers = excludedFilePatterns.stream().map(ExcludedFilesMatcher::removeTrailingSlash)
                 .map(fileName -> FILE_SYSTEM.getPathMatcher("glob:" + fileName)).collect(Collectors.toList());

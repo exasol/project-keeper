@@ -18,6 +18,7 @@ import io.github.classgraph.Resource;
 /**
  * Validator for the projects file structure.
  */
+//[impl->dsn~required-files-validator~1]
 public class ProjectFilesValidator implements Validator {
     private static final InputStreamComparator COMPARATOR = new InputStreamComparator();
     private final Collection<ProjectKeeperModule> enabledModules;

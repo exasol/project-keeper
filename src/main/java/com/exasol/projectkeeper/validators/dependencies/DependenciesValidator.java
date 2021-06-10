@@ -15,6 +15,7 @@ import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageR
 /**
  * {@link Validator} for the dependencies.md file.
  */
+//[impl->dsn~depnedency.md-file-validator~1]
 public class DependenciesValidator implements Validator {
     private final File pomFile;
     private final ProjectDependencyReader projectDependencyReader;

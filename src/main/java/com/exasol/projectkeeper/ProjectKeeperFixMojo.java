@@ -11,6 +11,7 @@ import org.apache.maven.plugins.annotations.Mojo;
  * </p>
  */
 @Mojo(name = "fix")
+// [impl->dsn~mvn-fix-goal~1]
 public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {

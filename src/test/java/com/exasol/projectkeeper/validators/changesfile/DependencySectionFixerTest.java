@@ -22,6 +22,7 @@ import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.SimpleMavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
+//[utest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
 class DependencySectionFixerTest {
     @TempDir
     static Path tempDir;

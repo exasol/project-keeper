@@ -22,6 +22,7 @@ import org.xmlunit.matchers.EvaluateXPathMatcher;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
 
+// [utest->dsn~mvn-dependency-validator~1]
 class AbstractDependencyValidatorTest extends AbstractDependencyValidatorAbstractTest {
 
     AbstractDependencyValidatorTest() {

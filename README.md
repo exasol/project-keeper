@@ -17,6 +17,8 @@
 
 This maven plugin checks and unifies the project's structure according to the Exasol integration team's repository standards.
 
+[Features](doc/system_requirements.md)
+
 ## Installation
 
 Install this plugin by adding the following lines to your project's `pom.xml` file:
@@ -187,5 +189,7 @@ Validations for the POM file are defined using code. For maven plugins there is 
 
 ## Additional Resources
 
-* [Dependencies](NOTICE)
+* [Dependencies](dependencies.md)
 * [Changelog](doc/changes/changelog.md)
+* [Features & Requirements](doc/system_requirements.md)
+* [Design](doc/design.md)

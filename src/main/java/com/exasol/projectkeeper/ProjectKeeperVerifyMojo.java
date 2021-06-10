@@ -17,6 +17,7 @@ import com.exasol.errorreporting.ExaError;
  * </p>
  */
 @Mojo(name = "verify", defaultPhase = LifecyclePhase.PACKAGE)
+// [impl->dsn~mvn-verify-goal~1]
 public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
 
     private static final String INVALID_STRUCTURE_MESSAGE = "This projects structure does not conform with the template.";

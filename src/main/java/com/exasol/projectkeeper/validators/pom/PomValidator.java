@@ -40,5 +40,6 @@ public interface PomValidator {
      * @param excludedPlugins list of excluded plugins (group_id:artifact_id)
      * @return {@code true} if the validator is excluded
      */
+    // [impl->dsn~exclduding-mvn-plugins~1]
     public boolean isExcluded(Collection<String> excludedPlugins);
 }

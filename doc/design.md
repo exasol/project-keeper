@@ -1,51 +1,203 @@
 # Design
 
-## Project Structure Definition
-`dsn~project-structure-definition~1`
+## Validators
 
-The project structure is defined by a file structure in the resources folder of this plugin.
-There are two folders: `require_exist` and `require_exact`. 
-For files in the `require_exist` folder, this plugin only checks if they exist.
-If they don't exist it creates the file with the content from the file in `require_exist` as a template.
+`dsn~validators~1`
 
-For the files in the `require_exact` this plugin also validates that the content is exactly the same.
+As an interface for the different validations we created the `Validator` interface. It only contains the `validate` method:
 
-Rationale:
-This way of defining the project structure makes it very convenient to add new content.
-Now knowledge about the internal implementation of this plugin is required.
-That allows users to quickly add or modify the template.
+```java
+public List<ValidationFinding> validate();
+```
 
-It is not a problem that both folders overlap. In case a file is defined in both directories, 
-this plugin validates it as if it would only exist in `require_exact`. 
+The `ValidationFinding` consists of:
+
+* A massage
+* Optionally: A fix for the finding (function closure that changes the project so that the finding will not happen again)
+
+We decided for this interface since it allows us to:
+
+* Report errors that can't be fixed automatically
+* Report error and directly provide a fix for it
+
+A problem with this approach is that some validation-fixes change a resource (typically files). If a validator creates multiple validation findings for the same resource, each fix needs to read and write the file. Consider for example the plugin validator for the pom file. If the pom file validator detects multiple missing plugins, each of the fixes would need to write the file. Since the fixes are executed by the surrounding code and not in a specific order. To solve this used the trick to create a compound finding. So basically one finding with one error message that combines the one of all it's sub findings. Its fix is a method that runs the fixes of all sub-findings and then writes the pom file.
 
 Covers:
 
-* `req~repository-structure~1`
-* `req~convenient-repository-structure~1`
+* feat~fix-findings~1
 
 Needs: impl
 
-## Maven Verify Goal
-`dsn~mvn-verify-goal~1`
+### Required Files Validator
 
-This plugin defines a maven goal named `verify` that checks if the project matches the defined structure.
-The default maven lifecycle phase for this goal is the `package` phase.
+`dsn~required-files-validator~1`
+
+We decided to add the template for the required files by a file structure in the resources of this project. There are two folders: `require_exist` and `require_exact`. For files in the `require_exist` folder, PK only checks if they exist in the project. If they don't exist it creates the file with the content from the file in `require_exist` as a template.
+
+For the files in the `require_exact` PK also validates that the content is exactly the same.
+
+Rationale:
+This way of defining the project structure makes it very convenient to add new content. Now knowledge about the internal implementation of this plugin is required. That allows users to quickly add or modify the template.
+
+An alternative would be to define the files by Java classes. In order to contain the contents of the required files, these classes would contain many String concatenations which would be very unreadable.
 
 Covers:
 
-* `req~verify-repo-structure~1`
+* `req~verify-that-files-exist~1`
+
+Needs: impl, utest, itest
+
+### Deleted Files Validator
+
+`dsn~deleted-files-validator~1`
+
+For configuring the deleted files validator we decided for a Java API. For each deleted file one can specify a reason that will be printed as error message. By that one can for example tell that the file was moved.
+
+Covers:
+
+* `req~verify-that-files-do-not-exist~1`
+
+Needs: impl, utest, itest
+
+### Maven Plugin Validator
+
+`dsn~mvn-plugin-validator~1`
+
+We decided to implement the verification of the pom plugins using a combination of xml files and Java code. The XML files (in resources/mvn_templates) contain the XML of a typical plugin definition. The Java class defines which XML properties must be like define in the template.
+
+This approach allows us to quickly add new templates by copying an exemplary plugin definition from a pom.xml file, and the defining which parts are mandatory using Java.
+
+Covers:
+
+* `req~verify-mvn-plugins~1`
+
+Needs: impl, utest, itest
+
+### Mvn Dependency Validator
+
+`dsn~mvn-dependency-validator~1`
+
+We implemented the validation for dependency declaration using Java code. That allows us to add specific validations for certain dependencies. For example for the jacoco dependency we need to validate the scope.
+
+However, implementing it purely via configuration would probably also be a good solution. In the future maybe even a better one, depending on how many dependencies should get validated.
+
+Covers:
+
+* `req~verify-maven-dependencies~1`
+
+Needs: impl, utest, itest
+
+### Dependency Changes Section in changes_x.x.x.md File Validator
+
+`dsn~dependency-section-in-changes_x.x.x.md-file-validator~1`
+
+The basic approach for this validator is to generate the markdown for the `Dependency Changes` section and then compare the content of the project's file with that generated content. In case they differ the validation fails. The automatic fix of the validation error is to override the section with the generated one.
+
+For this feature we need to generate the list of dependency changes since the last release. We decided to generate this list by comparing the dependencies of the last release with the dependencies of this release.
+
+For both versions we [read the project's dependencies](#reading-project-dependencies) and create a java model that we then compare to extract the diffs.
+
+For getting the last release we use git. We detect the previous release by walking through the commits on the current branch in reverse order. If we find a tag that looks like a version number we extract the pom.xml file from this commit and analyze its dependencies.
+
+We separated the crawling of the dependencies from the rendering of the table, so that we can add different crawlers for other languages or build systems in the future.
+
+Needs: impl, utest, itest
+
+Covers:
+
+* `req~verify-dependency-section-in-changes_x.x.x.md-file~1`
+
+### Dependencies.md File Validator
+
+`dsn~depnedency.md-file-validator~1`
+
+For validating the `dependencies.md` file we first generate the expected content and then compare the actual file with the expected content.
+
+For generating the content we first [read the project's dependencies](#reading-project-dependencies) and then use the maven API to get the project information. To do so, we again use the maven `ProjectBuilder`. This maven class can fetch the dependency from the maven repository (local or remote) and provide a java representation of the pom file.
+
+We separated the crawling of the dependency information from the rendering of the files so that we can add support for different languages or build systems in the future.
+
+Covers:
+
+* `req~verify-dependencies-file~1`
 
 Needs: impl, itest
 
-## Maven fix Gaol
-`dsn~mvn-fix-goal~1`
+### Reading Project Dependencies
 
-This plugin defines a maven goal named `fix` that creates or updates the project files so that they match 
-the required project structure. 
+`dsn~reading-project-dependencies~1`
+
+For reading the project's dependencies we decided to use the maven `ProjectBuilder`. Maven injects this object to the main class of this maven plugin. In contrast to simply instantiating it, this approach introduces coupling and makes unit tests impossible. For that reason in the future we might want to move the dependency discovery into a dedicated maven plugin and call it via exec.
+
+Unit testing is not possible since `ProjectBuilder` needs to be injected by maven.
+
+Needs: impl, itest
+
+## Maven Integration
+
+### Maven Verify Goal
+
+`dsn~mvn-verify-goal~1`
+
+This plugin defines a maven goal named `verify` that checks if the project matches the defined structure. The default maven lifecycle phase for this goal is the `package` phase.
 
 Covers:
 
-* `req~fix-repo-structure~1`
-* `req~verify-repo-structure~1`
+* `feat~mvn-integration~1`
+
+Needs: impl, itest
+
+### Maven fix Gaol
+
+`dsn~mvn-fix-goal~1`
+
+This plugin defines a maven goal named `fix` that creates or updates the project files so that they match the required project structure.
+
+Covers:
+
+* `feat~mvn-integration~1`
+
+Needs: impl, itest
+
+## Configuration
+
+### Modules
+
+`dsn~modules~1`
+
+We decided to group sets of validations into modules. These modules represent typical use cases. For example one module is `maven_central` which contains the validations for publishing on maven central.
+
+Covers:
+
+* `feat~configuration~1`
+
+Needs: impl, utest
+
+### Excluding Files
+
+`dsn~excluding-files~1`
+
+We added the possibility to exclude files from the validation.
+
+Rationale:
+
+* Some projects need a non default configuration
+* Sometimes it's required for trying something out
+
+Covers:
+
+* `feat~configuration~1`
+
+Needs: impl, utest, itest
+
+### Excluding Plugins
+
+`dsn~exclduding-mvn-plugins~1`
+
+We added the possibility to exclude maven plugins from the validation.
+
+Covers:
+
+* `feat~configuration~1`
 
 Needs: impl, itest

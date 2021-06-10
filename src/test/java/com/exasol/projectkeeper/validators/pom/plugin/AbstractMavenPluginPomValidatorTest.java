@@ -26,6 +26,7 @@ import org.xml.sax.SAXException;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
+// [utest->dsn~mvn-plugin-validator~1]
 abstract class AbstractMavenPluginPomValidatorTest {
     private final AbstractPluginPomValidator template;
 

@@ -19,6 +19,8 @@ import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 @Tag("integration")
+//[itest->dsn~depnedency.md-file-validator~1]
+// [itest->dsn~reading-project-dependencies~1]
 class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     @Test
     void testVerify() throws IOException, VerificationException {

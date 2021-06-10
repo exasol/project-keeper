@@ -32,6 +32,10 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
 class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
+    // [itest->dsn~mvn-plugin-validator~1]
+    // [itest->dsn~mvn-dependency-validator~1]
+    // [itest->dsn~mvn-verify-goal~1]
+    // [itest->dsn~required-files-validator~1]
     void testVerify() throws IOException {
         writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
@@ -92,7 +96,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
-    void testVerifyWithExcludedFile() throws VerificationException, IOException {
+    // [itest->dsn~excluding-files~1]
+    void testVerifyWithExcludedFile() throws IOException {
         final var pom = new TestMavenModel();
         pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION)
                 .withEnabledModules(INTEGRATION_TESTS).withExcludedFiles("**/logging.properties"));
@@ -105,6 +110,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
+    // [itest->dsn~deleted-files-validator~1]
     void testVerifyWithAFileThatMustNotExist() throws VerificationException, IOException {
         writePomWithAllProjectKeeperPlugins();
         final Path fileThatMustNotExist = this.projectDir.resolve(".github/workflows/maven.yml");
@@ -119,6 +125,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
+    // [itest->dsn~exclduding-mvn-plugins~1]
     void testExcludedPlugin() throws IOException, VerificationException {
         final var pom = new TestMavenModel();
         pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION)
@@ -153,6 +160,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
+    // [itest->dsn~mvn-fix-goal~1]
     void testFix() throws VerificationException, IOException {
         writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
@@ -170,6 +178,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
+    // [itest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
     void testChangesFileGeneration(final boolean released) throws IOException, GitAPIException, VerificationException {
         setupDemoProjectWithDependencyChange(released);
         final Verifier verifier = getVerifier();
