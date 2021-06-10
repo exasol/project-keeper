@@ -20,7 +20,7 @@ We decided for this interface since it allows us to:
 * Report errors that can't be fixed automatically
 * Report error and directly provide a fix for it
 
-A problem with this approach is that some validation-fixes change a resource (typically files). If a validator creates multiple validation findings for the same resource, each fix needs to read and write the file. Consider for example the plugin validator for the pom file. If the pom file validator detects multiple missing plugins, each of the fixes would need to write the file. Since the fixes are executed by the surrounding code and not in a specific order. To solve this used the trick to create a compound finding. So basically one finding with one error message that combines the one of all it's sub findings. Its fix is a method that runs the fixes of all sub-findings and then writes the pom file.
+A problem with this approach is that some validation-fixes change a resource (typically files). If a validator creates multiple validation findings for the same resource, each fix needs to read and write the file. Consider for example the plugin validator for the pom file. If the pom file validator detects multiple missing plugins, each of the fixes would need to write the file. Since the fixes are executed by the surrounding code and not in a specific order. To solve this, we used the trick to create a compound finding. So basically one finding with one error message that combines the one of all it's sub findings. Its fix is a method that runs the fixes of all sub-findings and then writes the pom file.
 
 Covers:
 

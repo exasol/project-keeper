@@ -1,4 +1,4 @@
-# System Requirement Specification Exasol Test Container
+# System Requirement Specification for Project Keeper
 
 ## Introduction
 
