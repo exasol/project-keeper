@@ -12,7 +12,7 @@ public List<ValidationFinding> validate();
 
 The `ValidationFinding` consists of:
 
-* A massage
+* A message
 * Optionally: A fix for the finding (function closure that changes the project so that the finding will not happen again)
 
 We decided for this interface since it allows us to:
@@ -37,7 +37,7 @@ We decided to add the template for the required files by a file structure in the
 For the files in the `require_exact` PK also validates that the content is exactly the same.
 
 Rationale:
-This way of defining the project structure makes it very convenient to add new content. Now knowledge about the internal implementation of this plugin is required. That allows users to quickly add or modify the template.
+This way of defining the project structure makes it very convenient to add new content. No knowledge about the internal implementation of this plugin is required. That allows users to quickly add or modify the template.
 
 An alternative would be to define the files by Java classes. In order to contain the contents of the required files, these classes would contain many String concatenations which would be very unreadable.
 
