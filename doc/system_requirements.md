@@ -39,7 +39,7 @@ Needs: req
 
 `req~verify-mvn-plugins~1`
 
-PK can verify that a project's pom.xml file contains certain plugins.
+PK can verify that a project's pom.xml file contains commonly used plugins.
 
 Covers:
 
@@ -71,7 +71,7 @@ Needs: req
 
 `req~verify-dependency-section-in-changes_x.x.x.md-file~1`
 
-PK verifies that the `## Dependency Updates` section in the `changes_X.X.X.md` file contains a list of the project dependencies that were added, updated or removed since the last projects release. PK formats the report like the following example:
+PK verifies that the `## Dependency Updates` section in the `changes_X.X.X.md` file contains a list of the project dependencies that were added, updated, or removed since the last release of the project. PK formats the report like the following example:
 
 ```md
 \#\# Dependency Updates
@@ -103,7 +103,7 @@ Needs: dsn
 
 `req~verify-dependencies-file~1`
 
-PK verifies that the repository contains a `dependencies.md` file that contains a Markdown table with all dependencies (name + link), and their licenses (name + link). PK groups the table into sections for compile, runtime, test anbd plugin dependencies.
+PK verifies that the repository contains a `dependencies.md` file that contains a Markdown table with all dependencies, and their licenses. The table contains URL to dependency and license websites. PK groups the table into sections for compile, runtime, test and plugin dependencies.
 
 The dependencies table also includes the build plugins.
 
@@ -117,13 +117,13 @@ Needs: dsn
 
 `req~verify-that-files-exist~1`
 
-PK verifies that certain files exist in the repository (with an arbitrary content).
+PK verifies that certain files exist in the repository. PK does not check content of these files.
 
 Examples: `README.md`, `travis.yml`.
 
 Covers:
 
-* [feat~verify-repo-setup~1](#verify-repository)
+* [`feat~verify-repo-setup~1`](#verify-repository)
 
 Needs: dsn
 
@@ -141,7 +141,7 @@ From time to time we rename a required file. In that case, PK should make sure t
 
 Covers:
 
-* [feat~verify-repo-setup~1](#verify-repository)
+* [`feat~verify-repo-setup~1`](#verify-repository)
 
 Needs: dsn
 
@@ -153,7 +153,7 @@ Wherever possible, PK can automatically fix the validation findings.
 
 Rationale:
 
-Fixing the findings by hand would be a wast of time.
+Fixing the findings using PK improves productivity.
 
 Needs: dsn
 
@@ -161,11 +161,11 @@ Needs: dsn
 
 `feat~configuration~1`
 
-Users can configure the project template to a certain degree.
+PK allows users to configure the project with different templates.
 
 Rationale:
 
-Different projects require different project structures. For example projects that are released on maven central need more maven plugin than other projects.
+Different projects require different project structures. For example, projects that are released on maven central need more maven plugins than other projects.
 
 Needs: dsn
 
@@ -173,6 +173,6 @@ Needs: dsn
 
 `feat~mvn-integration~1`
 
-PK can be integrated in the maven lifecycle. By that it can break the CI build if the project structure is invalid.
+PK can be integrated into the maven lifecycle. By that, it can break the Continuous Integration (CI) build if the project structure is invalid.
 
 Needs: dsn
