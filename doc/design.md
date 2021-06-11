@@ -43,7 +43,7 @@ An alternative would be to define the files by Java classes. In order to contain
 
 Covers:
 
-* `req~verify-that-files-exist~1`
+* `req~verify-existence-of-files~1`
 
 Needs: impl, utest, itest
 
@@ -55,7 +55,7 @@ For configuring the deleted files validator we decided for a Java API. For each 
 
 Covers:
 
-* `req~verify-that-files-do-not-exist~1`
+* `req~verify-non-existence-of-files~1`
 
 Needs: impl, utest, itest
 

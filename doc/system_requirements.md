@@ -12,6 +12,7 @@ Goals of this plugin:
 
 * Fasten repository creation
 * Keep repository structure and common files up to date
+* Unify repository structure
 
 ## Stakeholders
 
@@ -71,27 +72,7 @@ Needs: req
 
 `req~verify-dependency-section-in-changes_x.x.x.md-file~1`
 
-PK verifies that the `## Dependency Updates` section in the `changes_X.X.X.md` file contains a list of the project dependencies that were added, updated, or removed since the last release of the project. PK formats the report like the following example:
-
-```md
-\#\# Dependency Updates
-
-\#\#\# Compile Dependency Updates
-
-* Updated `org.eclipse.jgit:org.eclipse.jgit:5.10.0.202012080955-r` to `5.11.0.202103091610-r`
-
-\#\#\# Runtime Dependency Updates
-
-* Added `org.jacoco:org.jacoco.agent:0.8.6`
-
-\#\#\# Test Dependency Updates
-
-* Removed `com.exasol:maven-plugin-integration-testing:0.1.0`
-
-\#\#\# Plugin Dependency Updates
-
-* Updated `org.jacoco:jacoco-maven-plugin:0.8.5` to `0.8.6`
-```
+PK verifies that the `## Dependency Updates` section in the `changes_X.X.X.md` file contains a list of the project dependencies that were added, updated, or removed since the last release of the project. PK formats the report in a clear bulleted lists.
 
 Covers:
 
@@ -113,9 +94,9 @@ Covers:
 
 Needs: dsn
 
-#### Verify That Files Exist
+#### Verify Existence of Files
 
-`req~verify-that-files-exist~1`
+`req~verify-existence-of-files~1`
 
 PK verifies that certain files exist in the repository. PK does not check content of these files.
 
@@ -127,9 +108,9 @@ Covers:
 
 Needs: dsn
 
-#### Verify That Files do not Exist
+#### Verify non Existence of Files
 
-`req~verify-that-files-do-not-exist~1`
+`req~verify-non-existence-of-files~1`
 
 PK verifies that certain files do not exist in the repository.
 
