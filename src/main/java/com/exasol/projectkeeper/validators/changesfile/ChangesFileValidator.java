@@ -99,7 +99,7 @@ public class ChangesFileValidator implements Validator {
     private ChangesFile getTemplate() {
         final var changesFile = ChangesFile.builder()
                 .setHeader(List.of("# " + this.projectName + " " + this.projectVersion + ", released "
-                        + LocalDateTime.now().getYear() + "-??-??", ""))//
+                        + LocalDateTime.now().getYear() + "-??-??", "", "Code name:", ""))//
                 .addSection(List.of("## Features", "", "* ISSUE_NUMBER: description"))//
                 .build();
         return fixSections(changesFile);
