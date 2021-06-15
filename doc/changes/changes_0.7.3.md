@@ -9,6 +9,7 @@ Project-Keeper crawls the licenses of the dependencies of the project. In this r
 ## Bug Fixes:
 
 * #138: Fixed dependency crawling for dependencies with unreachable dependencies
+* #134: Fixed missing code name in changes_x.x.x.md template
 
 ## Dependency Updates
 
