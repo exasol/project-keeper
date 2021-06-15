@@ -6,6 +6,7 @@ import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.project.*;
 import org.apache.maven.repository.RepositorySystem;
 
@@ -15,8 +16,8 @@ import org.apache.maven.repository.RepositorySystem;
  */
 public class MavenModelFromRepositoryReader {
     private final ProjectBuilder mavenProjectBuilder;
-    private final MavenSession session;
     private final RepositorySystem repositorySystem;
+    private final ProjectBuildingRequest projectBuildingRequest;
 
     /**
      * Create a new instance of {@link MavenModelFromRepositoryReader}.
@@ -28,8 +29,10 @@ public class MavenModelFromRepositoryReader {
     public MavenModelFromRepositoryReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session,
             final RepositorySystem repositorySystem) {
         this.mavenProjectBuilder = mavenProjectBuilder;
-        this.session = session;
         this.repositorySystem = repositorySystem;
+        this.projectBuildingRequest = new DefaultProjectBuildingRequest(session.getProjectBuildingRequest());
+        this.projectBuildingRequest.setValidationLevel(ModelBuildingRequest.VALIDATION_LEVEL_MINIMAL)
+                .setResolveDependencies(false).setProcessPlugins(false);
     }
 
     /**
@@ -45,9 +48,9 @@ public class MavenModelFromRepositoryReader {
     public Model readModel(final String artifactId, final String groupId, final String version,
             final List<ArtifactRepository> remoteRepositories) throws ProjectBuildingException {
         final Artifact artifactDescription = this.repositorySystem.createProjectArtifact(groupId, artifactId, version);
-        final ProjectBuildingRequest projectBuildingRequest = this.session.getProjectBuildingRequest();
-        projectBuildingRequest.setRemoteRepositories(remoteRepositories);
-        final ProjectBuildingResult build = this.mavenProjectBuilder.build(artifactDescription, projectBuildingRequest);
+        this.projectBuildingRequest.setRemoteRepositories(remoteRepositories);
+        final ProjectBuildingResult build = this.mavenProjectBuilder.build(artifactDescription, true,
+                this.projectBuildingRequest);
         return build.getProject().getModel();
     }
 }
