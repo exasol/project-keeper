@@ -10,5 +10,5 @@ Code name:
 
 ### Plugin Dependency Updates
 
-* Updated `com.exasol:project-keeper-maven-plugin:0.7.2` to `0.8.0`
+* Updated `com.exasol:project-keeper-maven-plugin:0.7.3` to `0.8.0`
 * Added `org.itsallcode:openfasttrace-maven-plugin:1.2.0`
