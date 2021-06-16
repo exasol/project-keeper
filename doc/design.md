@@ -13,7 +13,9 @@ public List<ValidationFinding> validate();
 The `ValidationFinding` consists of:
 
 * A message
-* Optionally: A fix for the finding (function closure that changes the project so that the finding will not happen again)
+* An optional fix for the violation finding
+
+A fix is a function closure that changes the project so that the fixed finding does not happen again.
 
 We decided on this interface since it allows us to:
 
