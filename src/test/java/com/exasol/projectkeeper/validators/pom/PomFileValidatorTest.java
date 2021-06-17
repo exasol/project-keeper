@@ -39,6 +39,7 @@ class PomFileValidatorTest {
     }
 
     @Test
+    // [utest->dsn~modules~1]
     void testNoErrorsOnNoModules(@TempDir final File tempDir) throws IOException {
         final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
         final PomFileValidator runner = new PomFileValidator(Collections.emptyList(), Collections.emptyList(), pomFile);

@@ -1,8 +1,8 @@
-# System Requirement Specification Exasol Test Container
+# System Requirement Specification for Project Keeper
 
 ## Introduction
 
-This maven plugin checks and unifies a project's structure according to the Exasol integration team's repository standards.
+Project Keeper (PK) is a tool that unifies the structure of repositories of the Exasol integration team.
 
 ## About This Document
 
@@ -12,6 +12,7 @@ Goals of this plugin:
 
 * Fasten repository creation
 * Keep repository structure and common files up to date
+* Unify repository structure
 
 ## Stakeholders
 
@@ -19,111 +20,140 @@ Goals of this plugin:
 
 ## Features
 
-Features are the highest level requirements in this document that describe the main functionality of ETC.
+Features are the highest level requirements in this document that describe the main functionality of PK.
 
 ### Verify Repository
 
 `feat~verify-repo-setup~1`
 
-This plugin can verify if the repository setup.
+PK can check if the repository structure is up to date.
 
 Needs: req
 
-### Fix Repository
+#### Verify POM File
 
-`feat~fix-repo-setup~1`
-
-This plugin can fix the repository setup.
+`req~verify-pom-file~1`
 
 Needs: req
 
-## Requirements
+##### Verify Maven Plugins
 
-### Defined Repository Structure
+`req~verify-mvn-plugins~1`
 
-`req~repository-structure~1`
+PK can verify that a project's pom.xml file contains commonly used plugins.
 
-We define the structure of the repositories by implementing this plugin. That means that each change of the template structure is rolled out over a new release of this plugin.
+Covers:
+
+* `req~verify-pom-file~1`
+
+Needs: dsn
+
+##### Verify Maven Dependencies
+
+`req~verify-maven-dependencies~1`
+
+PK can verify that a project's pom file contains certain mandatory dependencies.
+
+Covers:
+
+* `req~verify-pom-file~1`
+
+Needs: dsn
+
+#### Verify changes_x.x.x.md file
+
+`req~verify-changes_x.x.x.md-file~1`
+
+PK verifies the content of the `doc/changes/changes_X.X.X.md` file for the project's current version.
+
+Needs: req
+
+##### Verify Dependency Changes Section in changes_x.x.x.md File
+
+`req~verify-dependency-section-in-changes_x.x.x.md-file~1`
+
+PK verifies that the `## Dependency Updates` section in the `changes_X.X.X.md` file contains a list of the project dependencies that were added, updated, or removed since the last release of the project. PK formats the report in a clear bulleted lists.
+
+Covers:
+
+* `req~verify-changes_x.x.x.md-file~1`
+
+Needs: dsn
+
+#### Verify dependencies.md File
+
+`req~verify-dependencies-file~1`
+
+PK verifies that the repository contains a `dependencies.md` file that contains a Markdown table with all dependencies, and their licenses. The table contains URL to dependency and license websites. PK groups the table into sections for compile, runtime, test and plugin dependencies.
+
+The dependencies table also includes the build plugins.
 
 Covers:
 
 * [feat~verify-repo-setup~1](#verify-repository)
-* [feat~fix-repo-setup~1](#fix-repository)
 
 Needs: dsn
 
-### Convenient Repository Structure Definition
+#### Verify Existence of Files
 
-`req~convenient-repository-structure~1`
+`req~verify-existence-of-files~1`
 
-Since the template is updated often and by different team members, the way, in that we define the template inside of this plugin, must be convenient and easily adaptable.
+PK verifies that certain files exist in the repository. PK does not check content of these files.
+
+Examples: `README.md`, `travis.yml`.
 
 Covers:
 
-* [feat~verify-repo-setup~1](#verify-repository-structure)
-* [feat~fix-repo-setup~1](#fix-repository-structure)
+* [`feat~verify-repo-setup~1`](#verify-repository)
 
 Needs: dsn
 
-### Checking Repository Structure During Build
+#### Verify non Existence of Files
 
-`req~verify-repo-structure~1`
+`req~verify-non-existence-of-files~1`
 
-This plugin checks the repository structure during the build.
+PK verifies that certain files do not exist in the repository.
+
+Example: Broken-Link checker GitHub workflow
 
 Rationale:
-As a build-breaker, the checks are automatically executed locally and in the CI process.
+
+From time to time we rename a required file. In that case, PK should make sure that the old version of the file no longer exists in the repositories.
 
 Covers:
 
-* [feat~verify-repo-setup~1](#verify-repository-structure)
+* [`feat~verify-repo-setup~1`](#verify-repository)
 
 Needs: dsn
 
-### Checking Maven Plugins
+### Fix Findings
 
-`req~verify-repo-structure~1`
+`feat~fix-findings~1`
 
-This plugin checks if the project has configured a minimum set of maven plugins.
+Wherever possible, PK can automatically fix the validation findings.
 
-Covers:
+Rationale:
 
-* [feat~verify-repo-setup~1](#verify-repository-structure)
-
-Needs: dsn
-
-### Fixing Repository Structure
-
-`req~fix-repo-structure~1`
-
-This plugin provides a command that automatically creates or updates the files so that they fit the required project structure.
-
-Covers:
-
-* [feat~fix-repo-setup~1](#fix-repository-structure)
+Fixing the findings using PK improves productivity.
 
 Needs: dsn
 
-### Verify changes file
+### Configuration
 
-`req~verify-changes-file~1`
+`feat~configuration~1`
 
-PK makes sure that the project contains a `doc/changes/changes_X.X.X.md` file.
+PK allows users to configure the project with different templates.
 
-Needs: impl, itest, utest
+Rationale:
 
-Covers:
+Different projects require different project structures. For example, projects that are released on maven central need more maven plugins than other projects.
 
-* [feat~verify-repo-setup~1](#verify-repository-structure)
+Needs: dsn
 
-### Verify dependencies file
+### Maven Integration
 
-`req~verify-dependencies-file~1`
+`feat~mvn-integration~1`
 
-PK makes sure that the repository contains a `dependencies.md`  that contains a Markdown table with all dependencies (name + link) and their licenses (name + link).
+PK can be integrated into the maven lifecycle. By that, it can break the Continuous Integration (CI) build if the project structure is invalid.
 
-Covers:
-
-* [feat~verify-repo-setup~1](#verify-repository-structure)
-
-Needs: impl, itest
+Needs: dsn

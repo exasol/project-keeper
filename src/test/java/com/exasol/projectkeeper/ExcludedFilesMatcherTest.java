@@ -9,6 +9,7 @@ import java.util.List;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+// [utest->dsn~excluding-files~1]
 class ExcludedFilesMatcherTest {
 
     @ParameterizedTest

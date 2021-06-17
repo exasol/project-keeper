@@ -15,6 +15,7 @@ import com.exasol.projectkeeper.validators.changesfile.dependencies.*;
 /**
  * This class fixes the dependency section of a {@link ChangesFile}.
  */
+//[impl->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
 class DependencySectionFixer {
     private final MavenProjectFromFileReader mavenModelReader;
     private final Path projectDirectory;

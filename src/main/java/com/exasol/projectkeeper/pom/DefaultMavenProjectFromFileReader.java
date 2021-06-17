@@ -11,6 +11,7 @@ import com.exasol.errorreporting.ExaError;
  * Implementation of {@link MavenProjectFromFileReader} using the {@link ProjectBuilder} that is injected by Maven core
  * to Mojo.
  */
+//[impl->dsn~reading-project-dependencies~1]
 public class DefaultMavenProjectFromFileReader implements MavenProjectFromFileReader {
     private final ProjectBuilder mavenProjectBuilder;
     private final MavenSession session;

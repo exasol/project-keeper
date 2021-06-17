@@ -18,6 +18,7 @@ import com.exasol.projectkeeper.validators.pom.PomValidator;
 /**
  * Abstract basis for {@link PomValidator}s that validate pom dependencies.
  */
+// [impl->dsn~mvn-dependency-validator~1]
 @SuppressWarnings("java:S1192") // parameter DEPENDENCY for error reporting can not be replaced by a constant
 public abstract class AbstractDependencyValidator extends AbstractPomValidator implements PomValidator {
     @SuppressWarnings("java:S1075") // not a configurable URL

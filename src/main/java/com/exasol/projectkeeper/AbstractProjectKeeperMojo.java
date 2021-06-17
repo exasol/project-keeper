@@ -27,11 +27,14 @@ import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
 
     @Parameter(property = "modules")
+    // [impl->dsn~modules~1]
     private List<String> modules;
 
+    // [impl->dsn~excluding-files~1]
     @Parameter(property = "excludedFiles")
     private List<String> excludedFiles;
 
+    // [impl->dsn~exclduding-mvn-plugins~1]
     @Parameter(property = "excludedPlugins")
     private Set<String> excludedPlugins;
 
@@ -59,6 +62,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
      * 
      * @return list of enabled modules.
      */
+    // [impl->dsn~modules~1]
     public Set<ProjectKeeperModule> getEnabledModules() {
         return Stream.concat(//
                 Stream.of(ProjectKeeperModule.DEFAULT), //

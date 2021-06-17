@@ -16,6 +16,7 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.ExcludedFilesMatcher;
 
+// [utest->dsn~deleted-files-validator~1]
 class DeletedFilesValidatorTest {
 
     @Test

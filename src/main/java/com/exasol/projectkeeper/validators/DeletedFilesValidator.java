@@ -13,6 +13,7 @@ import com.exasol.projectkeeper.*;
 /**
  * {@link Validator} that checks that specific files do not exist.
  */
+// [impl->dsn~deleted-files-validator~1]
 public class DeletedFilesValidator implements Validator {
     private static final String GITHUB_WORKFLOWS = ".github/workflows";
     private static final Map<Path, String> FILES_THAT_MUST_NOT_EXIST = Map.of(//

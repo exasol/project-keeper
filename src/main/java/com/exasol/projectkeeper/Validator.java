@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * Interface for project validators.
  */
+// [impl->dsn~validators~1]
 public interface Validator {
 
     /**

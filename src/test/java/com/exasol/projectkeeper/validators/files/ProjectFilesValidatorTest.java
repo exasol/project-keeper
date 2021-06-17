@@ -6,9 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +18,7 @@ import org.junit.jupiter.api.io.TempDir;
 import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
+//[utest->dsn~required-files-validator~1]
 class ProjectFilesValidatorTest {
     private static final List<ProjectKeeperModule> PROJECT_KEEPER_MODULES = List.of(ProjectKeeperModule.DEFAULT);
 

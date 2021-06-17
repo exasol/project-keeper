@@ -32,6 +32,7 @@ import com.exasol.projectkeeper.xpath.XPathSplitter;
  * {@link PomFileValidator#ALL_VALIDATORS}.
  * </p>
  */
+// [impl->dsn~mvn-plugin-validator~1]
 public abstract class AbstractPluginPomValidator extends AbstractPomValidator implements PomValidator {
     private static final String GROUP_ID_XPATH = "groupId";
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
