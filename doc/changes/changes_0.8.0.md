@@ -2,6 +2,10 @@
 
 Code name:
 
+## Features:
+
+* #127: Added maven-jar-plugin configuration for disabling default (non-fat) jar on jar_artifact builds
+
 ## Documentation
 
 * #20: Added requirements and design

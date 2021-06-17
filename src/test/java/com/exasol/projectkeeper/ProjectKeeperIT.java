@@ -80,6 +80,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
                 () -> assertThat(output,
                         containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-javadoc-plugin.")), //
                 () -> assertThat(output,
+                        containsString("E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-jar-plugin.")), //
+                () -> assertThat(output,
                         containsString(
                                 "E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-dependency-plugin.")), //
                 () -> assertThat(output, containsString("E-PK-29: Missing dependency 'org.jacoco:org.jacoco.agent'.")), //

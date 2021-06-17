@@ -1,16 +1,11 @@
 package com.exasol.projectkeeper.validators.pom;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.validators.pom.dependencies.JacocoAgentDependencyValidator;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
 
@@ -25,8 +20,8 @@ public class PomFileValidator implements Validator {
             new SurefirePluginPomValidator(), new JacocoPluginPomValidator(), new FailsafePluginPomValidator(),
             new GpgPluginValidator(), new DeployPluginValidator(), new NexusStagingPluginValidator(),
             new JacocoAgentDependencyValidator(), new DependencyPluginValidator(), new SourcePluginValidator(),
-            new JavadocPluginValidator(), new ErrorCodeCrawlerPluginValidator(),
-            new ReproducibleBuildPluginValidator());
+            new JavadocPluginValidator(), new ErrorCodeCrawlerPluginValidator(), new ReproducibleBuildPluginValidator(),
+            new JarPluginExclusionValidator());
     final Collection<ProjectKeeperModule> enabledModules;
     private final Collection<String> excludedPlugins;
     private final PomFileIO pomFileIO;
