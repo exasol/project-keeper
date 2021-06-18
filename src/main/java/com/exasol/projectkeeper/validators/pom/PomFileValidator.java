@@ -21,7 +21,7 @@ public class PomFileValidator implements Validator {
             new GpgPluginValidator(), new DeployPluginValidator(), new NexusStagingPluginValidator(),
             new JacocoAgentDependencyValidator(), new DependencyPluginValidator(), new SourcePluginValidator(),
             new JavadocPluginValidator(), new ErrorCodeCrawlerPluginValidator(), new ReproducibleBuildPluginValidator(),
-            new JarPluginExclusionValidator());
+            new JarPluginValidator());
     final Collection<ProjectKeeperModule> enabledModules;
     private final Collection<String> excludedPlugins;
     private final PomFileIO pomFileIO;

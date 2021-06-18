@@ -14,10 +14,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class JarPluginExclusionValidatorTest extends AbstractMavenPluginPomValidatorTest {
+class JarPluginValidatorTest extends AbstractMavenPluginPomValidatorTest {
 
-    JarPluginExclusionValidatorTest() {
-        super(new JarPluginExclusionValidator());
+    JarPluginValidatorTest() {
+        super(new JarPluginValidator());
     }
 
     @ValueSource(strings = { "executions", "executions/execution" })

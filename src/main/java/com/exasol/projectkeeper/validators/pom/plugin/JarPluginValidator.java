@@ -11,12 +11,12 @@ import com.exasol.projectkeeper.ValidationFinding;
 /**
  * Validator for exclusion of the maven-jar-plugin.
  */
-public class JarPluginExclusionValidator extends AbstractPluginPomValidator {
+public class JarPluginValidator extends AbstractPluginPomValidator {
 
     /**
-     * Create a new instance of {@link JarPluginExclusionValidator}.
+     * Create a new instance of {@link JarPluginValidator}.
      */
-    public JarPluginExclusionValidator() {
+    public JarPluginValidator() {
         super("maven_templates/maven-jar-plugin-exclusion.xml");
     }
 
