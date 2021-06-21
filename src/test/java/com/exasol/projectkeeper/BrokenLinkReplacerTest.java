@@ -19,6 +19,13 @@ class BrokenLinkReplacerTest {
     }
 
     @Test
+    void testReplaceParametersWithWhitespace() {
+        final BrokenLinkReplacer replacer = new BrokenLinkReplacer(
+                List.of("\n         http://exxxample.com|http://example.com\n       "));
+        assertThat(replacer.replaceIfBroken("http://exxxample.com"), equalTo("http://example.com"));
+    }
+
+    @Test
     void testInvalidSyntax() {
         final List<String> replacementParameters = List.of("http://exxxample.com");
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,

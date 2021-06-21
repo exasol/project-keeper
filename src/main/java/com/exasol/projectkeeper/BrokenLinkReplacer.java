@@ -42,7 +42,7 @@ public class BrokenLinkReplacer {
         for (final String replacementParameter : replacementParameters) {
             final String[] parts = replacementParameter.split("\\|");
             checkSyntax(replacementParameter, parts);
-            this.replacements.put(parts[0].toLowerCase(), parts[1]);
+            this.replacements.put(parts[0].toLowerCase().trim(), parts[1].trim());
         }
     }
 
