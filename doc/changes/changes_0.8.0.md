@@ -10,6 +10,10 @@ Code name:
 
 * #20: Added requirements and design
 
+## Bug Fixes:
+
+* #144 Fixed that whitespace in linkReplacement was not stripped
+
 ## Dependency Updates
 
 ### Plugin Dependency Updates
