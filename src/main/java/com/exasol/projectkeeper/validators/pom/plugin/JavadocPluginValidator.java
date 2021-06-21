@@ -29,6 +29,10 @@ public class JavadocPluginValidator extends AbstractPluginPomValidator {
     protected void validatePluginConfiguration(final Node plugin, final Collection<ProjectKeeperModule> enabledModules,
             final Consumer<ValidationFinding> findingConsumer) {
         verifyPluginPropertyHasExactValue(plugin, "executions", findingConsumer);
-        verifyPluginPropertyHasExactValue(plugin, "configuration", findingConsumer);
+        verifyPluginPropertyHasExactValue(plugin, "configuration/charset", findingConsumer);
+        verifyPluginPropertyHasExactValue(plugin, "configuration/doclint", findingConsumer);
+        verifyPluginPropertyHasExactValue(plugin, "configuration/serialwarn", findingConsumer);
+        verifyPluginPropertyHasExactValue(plugin, "configuration/failOnError", findingConsumer);
+        verifyPluginPropertyHasExactValue(plugin, "configuration/failOnWarnings", findingConsumer);
     }
 }
