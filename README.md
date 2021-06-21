@@ -128,7 +128,7 @@ Using the `excludedPlugins`configuration you can tell Project Keeper to ignore s
 
 <configuration>
     <excludedPlugins>
-        <excludedPlugin>com.exasol:error-code-crawler</excludedPlugin>
+        <excludedPlugin>com.exasol:error-code-crawler-maven-plugin</excludedPlugin>
     </excludedPlugins>
 </configuration>
 ```
