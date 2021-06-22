@@ -20,7 +20,7 @@ class JavadocPluginValidatorTest extends AbstractMavenPluginPomValidatorTest {
         super(new JavadocPluginValidator());
     }
 
-    @ValueSource(strings = { "executions", "executions/execution", "configuration" })
+    @ValueSource(strings = { "executions", "executions/execution", "configuration", "configuration/serialwarn" })
     @ParameterizedTest
     void testMissingExecutions(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException {
