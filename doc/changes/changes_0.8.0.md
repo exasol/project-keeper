@@ -4,7 +4,7 @@ Code name: Added Jar Plugin
 
 ## Summary
 
-In this release we added a configuration for the maven-jar-plugin to disabling default (non-fat) jar on jar_artifact builds. In addition, we added a requirement specification and design and fixed some bugs.
+In this release we added a configuration for the maven-jar-plugin to disabe default (non-fat) jar on jar_artifact builds. In addition, we added a requirement specification and design and fixed some bugs.
 
 ## Features
 
