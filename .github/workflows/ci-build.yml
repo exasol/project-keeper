@@ -1,10 +1,7 @@
 name: CI Build
 
 on:
-  push:
-    branches:
-      - main
-    pull_request:
+  - push
 
 jobs:
   build:
