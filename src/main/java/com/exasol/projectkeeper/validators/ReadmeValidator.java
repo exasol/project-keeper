@@ -53,10 +53,15 @@ public class ReadmeValidator extends AbstractFileStringValidator {
                     .toString()).build());
         }
         if (!content.contains(getBadges())) {
-            findings.add(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-62")
-                    .message("The project's README.md does not contain a valid badges block.")
-                    .mitigation("Please add or replace the following badges: \n{{badge}}.", getBadges()).toString())
-                    .build());
+            findings.add(
+                    ValidationFinding
+                            .withMessage(
+                                    ExaError.messageBuilder("E-PK-62")
+                                            .message("The project's README.md does not contain a valid badges block.")
+                                            .mitigation("Please add or replace the following badges: "
+                                                    + System.lineSeparator() + "{{badge}}.", getBadges())
+                                            .toString())
+                            .build());
         }
         return findings;
     }

@@ -171,7 +171,8 @@ public class GitRepository {
                     .findAny();
             if (origin.isPresent()) {
                 final String path = origin.get().getURIs().get(0).getPath();
-                final String repoName = path.split("/")[1].replace(".git", "");
+                final String[] pathParts = path.split("/");
+                final String repoName = pathParts[pathParts.length - 1].replace(".git", "");
                 return Optional.of(repoName);
             } else {
                 return Optional.empty();

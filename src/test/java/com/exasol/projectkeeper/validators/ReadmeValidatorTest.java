@@ -52,7 +52,7 @@ class ReadmeValidatorTest {
         assertThat(validator, validationErrorMessages(hasItems(
                 containsString("The project's README.md does not reference the dependencies.md file."), //
                 startsWith(
-                        "E-PK-62: The project's README.md does not contain a valid badges block. Please add or replace the following badges: \n"
-                                + "'[![Build Status]"))));
+                        "E-PK-62: The project's README.md does not contain a valid badges block. Please add or replace the following badges: "
+                                + System.lineSeparator() + "'[![Build Status]"))));
     }
 }
