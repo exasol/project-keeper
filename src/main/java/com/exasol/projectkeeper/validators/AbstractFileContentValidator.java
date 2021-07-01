@@ -12,14 +12,14 @@ import com.exasol.projectkeeper.Validator;
 /**
  * This class is a abstract basis for {@link Validator}s that validate a files content as string.
  */
-public abstract class AbstractFileStringValidator extends AbstractFileValidator {
+public abstract class AbstractFileContentValidator extends AbstractFileValidator {
     /**
-     * Create a new instance of {@link AbstractFileStringValidator}.
+     * Create a new instance of {@link AbstractFileContentValidator}.
      *
      * @param projectDirectory project's root directory
      * @param filePath         path of the file to validate relative to projectDirectory
      */
-    protected AbstractFileStringValidator(final Path projectDirectory, final Path filePath) {
+    protected AbstractFileContentValidator(final Path projectDirectory, final Path filePath) {
         super(projectDirectory, filePath);
     }
 

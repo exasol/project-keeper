@@ -12,7 +12,7 @@ import com.exasol.projectkeeper.*;
  * This is a {@link Validator} for the README.md.
  */
 // [impl->dsn~readme-validator~1]
-public class ReadmeValidator extends AbstractFileStringValidator {
+public class ReadmeValidator extends AbstractFileContentValidator {
     private static final String NL = System.lineSeparator();
     private final String projectName;
     private final String artifactId;
