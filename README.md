@@ -1,3 +1,5 @@
+edited
+
 # Project Keeper Maven Plugin
 
 [![Build Status](https://travis-ci.com/exasol/project-keeper-maven-plugin.svg?branch=main)](https://travis-ci.com/exasol/project-keeper-maven-plugin)
