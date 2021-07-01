@@ -220,4 +220,19 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         assertThat(this.projectDir.resolve(Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar")).toFile(),
                 anExistingFile());
     }
+
+    @Test
+    // [itest->dsn~readme-validator~1]
+    void testVerifyReadme() throws IOException {
+        writePomWithAllProjectKeeperPlugins();
+        Files.writeString(this.projectDir.resolve("README.md"), "");
+        final Verifier verifier = getVerifier();
+        final VerificationException verificationException = assertThrows(VerificationException.class,
+                () -> verifier.executeGoal("project-keeper:verify"));
+        final String output = verificationException.getMessage();
+        assertAll(//
+                () -> assertThat(output, containsString("E-PK-61")), //
+                () -> assertThat(output, containsString("E-PK-62"))//
+        );
+    }
 }

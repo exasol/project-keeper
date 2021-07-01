@@ -94,6 +94,22 @@ Covers:
 
 Needs: dsn
 
+#### Verify README.md File
+
+`req~verify-readme~1`
+
+PK verifies that the README.md file:
+
+* Contains certain build badges (CI status, sonar cloud analysis, ...).
+* Contains a link to the dependencies.md file.
+* Contains a link to the changelog.md file.
+
+Covers:
+
+* [feat~verify-repo-setup~1](#verify-repository)
+
+Needs: dsn
+
 #### Verify Existence of Files
 
 `req~verify-existence-of-files~1`

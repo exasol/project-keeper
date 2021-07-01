@@ -41,8 +41,8 @@ class ChangesFileValidatorTest {
     @Test
     void testValidation() throws IOException {
         createTestSetup();
-        assertThat(createValidator(), hasValidationFindingWithMessage(
-                "E-PK-20: Could not find 'doc" + File.separator + "changes" + File.separator + "changes_1.2.3.md'."));
+        assertThat(createValidator(), hasValidationFindingWithMessage("E-PK-56: Could not find required file 'doc"
+                + File.separator + "changes" + File.separator + "changes_1.2.3.md'."));
     }
 
     @Test

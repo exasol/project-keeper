@@ -33,7 +33,6 @@ class ProjectFilesValidatorTest {
         assertThat(validator,
                 validationErrorMessages(hasItems(
                         "E-PK-17: Missing required: '.settings" + File.separator + "org.eclipse.jdt.core.prefs'",
-                        "E-PK-17: Missing required: 'README.md'",
                         "E-PK-18: Outdated content: '.settings" + File.separator + "org.eclipse.jdt.ui.prefs'")));
     }
 
