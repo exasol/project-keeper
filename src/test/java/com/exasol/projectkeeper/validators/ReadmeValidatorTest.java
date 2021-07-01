@@ -22,7 +22,7 @@ class ReadmeValidatorTest {
     void testCreateFile(@TempDir final Path tempDir) throws IOException {
         getValidator(tempDir).validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
         final String readme = Files.readString(tempDir.resolve("README.md"));
-        assertThat(readme, Matchers.equalTo("# My Project\n" + "\n"
+        assertThat(readme, Matchers.equalTo(("# My Project\n" + "\n"
                 + "[![Build Status](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml)\n"
                 + "[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/my-project)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-pluginmy-project)\n"
                 + "\n"
@@ -38,7 +38,7 @@ class ReadmeValidatorTest {
                 + "[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Amy-project&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.exasol%3Amy-project)\n"
                 + "[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Amy-project&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.exasol%3Amy-project)\n"
                 + "\n" + "## Additional Information\n" + "\n" + "* [Changelog](doc/changes/changelog.md)\n"
-                + "* [Dependencies](dependencies.md)"));
+                + "* [Dependencies](dependencies.md)").replace("\n", System.lineSeparator())));
     }
 
     private ReadmeValidator getValidator(final Path tempDir) {
