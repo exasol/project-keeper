@@ -134,7 +134,7 @@ Needs: impl, itest
 
 `dsn~readme-validator~1`
 
-We decided that the readme validator should not be too strict. THat means, that it should not enforce a specific structure but only check that the required parts are somewhere in the file. That also means, that the PK can't automatically fix the findings. By that PK makes sure the the README.md contains the required parts, but still leaves users a lot of freedom.
+We decided that the readme validator should not be too strict. That means, that it should not enforce a specific structure but only check that the required parts are somewhere in the file. That also means, that the PK can't automatically fix the findings. By that PK makes sure the the `README.md` contains the required parts, but still leaves users a lot of freedom.
 
 Needs: impl,utest, itest
 

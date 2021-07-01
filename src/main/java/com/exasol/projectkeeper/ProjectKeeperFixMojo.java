@@ -34,7 +34,7 @@ public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
         }
         if (!unfixedFindings.isEmpty()) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-65").message(
-                    "Could not fix all of the findings automatically. There are some leftovers that you need to fix by hand. (This is an error and not a warning sinc no one checks for warnings in maven builds...).")
+                    "PK could not fix all of the findings automatically. There are findings that you need to fix by hand. (This is an error instead of a warning since no one checks for warnings in maven builds...).")
                     .toString());
         }
     }

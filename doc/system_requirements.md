@@ -106,7 +106,7 @@ PK verifies that the README.md file:
 
 Covers:
 
-* [feat~verify-repo-setup~1](#verify-repository)
+* [`feat~verify-repo-setup~1`](#verify-repository)
 
 Needs: dsn
 

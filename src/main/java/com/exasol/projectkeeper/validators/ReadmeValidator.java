@@ -101,7 +101,7 @@ public class ReadmeValidator extends AbstractFileStringValidator {
 
     private String getMavenCentralBadge() {
         return getBadge("Maven Central", "https://img.shields.io/maven-central/v/com.exasol/" + this.artifactId,
-                "https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin" + this.artifactId);
+                "https://search.maven.org/artifact/com.exasol/" + this.artifactId);
     }
 
     private String getBadge(final String name, final String image, final String link) {

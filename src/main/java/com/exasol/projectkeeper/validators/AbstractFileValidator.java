@@ -68,9 +68,10 @@ public abstract class AbstractFileValidator implements Validator {
     }
 
     /**
-     * Create the file with a template content. The {@link AbstractFileValidator} calls this method when it applies the
-     * fix for a missing file.
-     * 
+     *  Create a new file with a template content. 
+     * <p>
+     * The {@link AbstractFileValidator} calls this method when it applies the fix for a missing file.
+     * </p>
      * @param target file to create
      * @throws IOException if creation fails
      */
