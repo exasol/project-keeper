@@ -1,7 +1,7 @@
 # Project Keeper Maven Plugin
 
 [![Build Status](https://github.com/exasol/project-keeper-maven-plugin/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/project-keeper-maven-plugin/actions/workflows/ci-build.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-pluginproject-keeper-maven-plugin)
+[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
 
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
 
