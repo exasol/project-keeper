@@ -24,7 +24,7 @@ class ReadmeValidatorTest {
         final String readme = Files.readString(tempDir.resolve("README.md"));
         assertThat(readme, Matchers.equalTo(("# My Project\n" + "\n"
                 + "[![Build Status](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml)\n"
-                + "[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/my-project)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-pluginmy-project)\n"
+                + "[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/my-project)](https://search.maven.org/artifact/com.exasol/my-project)\n"
                 + "\n"
                 + "[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Amy-project&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Amy-project)\n"
                 + "\n"

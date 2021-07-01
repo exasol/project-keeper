@@ -30,7 +30,8 @@ public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
             }
         }));
         for (final ValidationFinding unfixedFinding : unfixedFindings) {
-            log.warn("Could not auto-fix: " + unfixedFinding.getMessage());
+            log.warn(ExaError.messageBuilder("W-PK-67")
+                    .message("Could not auto-fix: {{finding message|uq}}", unfixedFinding.getMessage()).toString());
         }
         if (!unfixedFindings.isEmpty()) {
             throw new MojoFailureException(ExaError.messageBuilder("E-PK-65").message(
