@@ -11,6 +11,7 @@ import java.util.*;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.*;
+import org.eclipse.jgit.transport.RemoteConfig;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
 import com.exasol.errorreporting.ExaError;
@@ -155,6 +156,29 @@ public class GitRepository {
                     .message("Failed to open local git repository {{repository}}.")
                     .mitigation("If this is a new project you maybe need to create the git project using `git init`.")
                     .parameter("repository", this.projectDirectory.toString()).toString(), exception);
+        }
+    }
+
+    /**
+     * Try to get a the name of the repository from the git remote configuration.
+     * 
+     * @return repository name
+     */
+    public Optional<String> getRepoNameFromRemote() {
+        try {
+            final List<RemoteConfig> remotes = openLocalGithubRepository().remoteList().call();
+            final Optional<RemoteConfig> origin = remotes.stream().filter(remote -> remote.getName().equals("origin"))
+                    .findAny();
+            if (origin.isPresent()) {
+                final String path = origin.get().getURIs().get(0).getPath();
+                final String[] pathParts = path.split("/");
+                final String repoName = pathParts[pathParts.length - 1].replace(".git", "");
+                return Optional.of(repoName);
+            } else {
+                return Optional.empty();
+            }
+        } catch (final Exception exception) {
+            return Optional.empty();
         }
     }
 }

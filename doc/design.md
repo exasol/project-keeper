@@ -22,7 +22,7 @@ We decided on this interface since it allows us to:
 * Report errors that can't be fixed automatically
 * Report an error and directly provide a fix for it
 
-A problem with this approach is that some validation fixes change a resource such as files. If a validator creates multiple validation findings for the same resource, each fix needs to read and write the file. 
+A problem with this approach is that some validation fixes change a resource such as files. If a validator creates multiple validation findings for the same resource, each fix needs to read and write the file.
 
 Consider, for example, the plugin validator for the pom file. If the pom file validator detects multiple missing plugins, each of these fixes would need to write the file since the fixes are executed by the surrounding code and not in a specific order. To solve this, we used the trick to create a compound finding. So basically one finding with one error message that combines one of all its sub findings. Its fix is a method that runs the fixes of all sub-findings and then writes the pom file.
 
@@ -36,7 +36,7 @@ Needs: impl
 
 `dsn~required-files-validator~1`
 
-We decided to add the template for the required files by a file structure in the resources of this project. There are two folders: `require_exist` and `require_exact`. 
+We decided to add the template for the required files by a file structure in the resources of this project. There are two folders: `require_exist` and `require_exact`.
 
 For files in the `require_exist` folder, PK only checks if they exist in the project. If they don't exist it creates the file with the content from the file in `require_exist` as a template.
 
@@ -129,6 +129,18 @@ Covers:
 * `req~verify-dependencies-file~1`
 
 Needs: impl, itest
+
+### Readme.md File Validator
+
+`dsn~readme-validator~1`
+
+We decided that the readme validator should not be too strict. That means, that it should not enforce a specific structure but only check that the required parts are somewhere in the file. That also means, that the PK can't automatically fix the findings. By that PK makes sure the the `README.md` contains the required parts, but still leaves users a lot of freedom.
+
+Needs: impl,utest, itest
+
+Covers:
+
+* `req~verify-readme~1`
 
 ### Reading Project Dependencies
 

@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.URIish;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -118,6 +120,16 @@ class GitRepositoryTest {
             final IllegalStateException exception = assertThrows(IllegalStateException.class,
                     () -> repository.readFileAtCommit(nonExistingPath, commit));
             assertThat(exception.getMessage(), startsWith("E-PK-35"));
+        }
+    }
+
+    @Test
+    void testGetRepoName() throws GitAPIException, IOException, URISyntaxException {
+        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+            git.remoteAdd().setName("origin")
+                    .setUri(new URIish("git@github.com:exasol/project-keeper-maven-plugin.git")).call();
+            final GitRepository repository = new GitRepository(this.tempDir);
+            assertThat(repository.getRepoNameFromRemote().orElseThrow(), equalTo("project-keeper-maven-plugin"));
         }
     }
 }
