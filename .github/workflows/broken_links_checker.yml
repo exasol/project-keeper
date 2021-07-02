@@ -13,5 +13,7 @@ jobs:
       - name: lychee Link Checker
         id: lc
         uses: lycheeverse/lychee-action@v1.0.6
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Fail if there were link errors
         run: exit ${{ steps.lc.outputs.exit_code }}
