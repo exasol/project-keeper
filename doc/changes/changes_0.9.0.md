@@ -1,4 +1,4 @@
-# Project keeper maven plugin 0.9.0, released 2021-??-??
+# Project keeper maven plugin 0.9.0, released 2021-07-02
 
 Code name: Migrated from Travis CI to GitHub Actions
 
