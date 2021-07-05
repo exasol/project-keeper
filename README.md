@@ -67,7 +67,7 @@ This plugin provides different template modules for different kinds of projects.
 
 This module creates a "fat" JAR, containing not only the project binary, but also the runtime dependencies.
 
-* [required files (must have same content)](src/main/resources/templates/jarArtifact/require_exact)
+* [required files (must have same content)](src/main/resources/templates/jar_artifact/require_exact)
 * required maven plugins
     * [maven-assembly-plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
     * [artifact-reference-checker-maven-plugin](https://github.com/exasol/artifact-reference-checker-maven-plugin)
