@@ -2,6 +2,10 @@
 
 Code name:
 
+## Features:
+
+* #156: Change GitHub release action to upload error-code-report
+
 ## Bug Fixes:
 
 * #154: Added GitHub token to broken-link-checker
