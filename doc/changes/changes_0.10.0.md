@@ -1,10 +1,11 @@
-# Project keeper maven plugin 0.10.0, released 2021-??-??
+# Project keeper maven plugin 0.10.0, released 2021-07-08
 
-Code name:
+Code name: Improved GitHub Actions
 
 ## Features:
 
 * #156: Change GitHub release action to upload error-code-report
+* #158: Improved CI build template
 
 ## Bug Fixes:
 
