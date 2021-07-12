@@ -110,6 +110,20 @@ Covers:
 
 Needs: dsn
 
+#### Verify LICENSE File
+
+`req~verify-license-file~1`
+
+PK verifies that the project has a `LICENSE` file.
+
+If not, PK can create the file with a MIT license and copyright statement for the current year.
+
+Covers:
+
+* [`feat~verify-repo-setup~1`](#verify-repository)
+
+Needs: dsn
+
 #### Verify Existence of Files
 
 `req~verify-existence-of-files~1`

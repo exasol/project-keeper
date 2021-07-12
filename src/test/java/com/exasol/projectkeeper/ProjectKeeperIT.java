@@ -163,11 +163,13 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     // [itest->dsn~mvn-fix-goal~1]
+    // [itest->dsn~license-file-validator~1]
     void testFix() throws VerificationException, IOException {
         writePomWithAllProjectKeeperPlugins();
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         verifier.verifyErrorFreeLog();
+        assertThat(this.projectDir.resolve("LICENSE").toFile(), anExistingFile());
     }
 
     @Test

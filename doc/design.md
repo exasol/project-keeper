@@ -136,11 +136,23 @@ Needs: impl, itest
 
 We decided that the readme validator should not be too strict. That means, that it should not enforce a specific structure but only check that the required parts are somewhere in the file. That also means, that the PK can't automatically fix the findings. By that PK makes sure the the `README.md` contains the required parts, but still leaves users a lot of freedom.
 
-Needs: impl,utest, itest
+Needs: impl, utest, itest
 
 Covers:
 
 * `req~verify-readme~1`
+
+### License File Validator
+
+`dsn~license-file-validator~1`
+
+We decided that the License validator only inserts the current date on creation. Another option would have been to add a date range and also validate that it's always up to date. However, since it's not very likely that these projects require a copyright longer than 50-70 years, we decided adding the creation date is enough. In case it still required one can of course add a date range by hand.
+
+Needs: impl, utest, itest
+
+Covers:
+
+* `req~verify-license-file~1`
 
 ### Reading Project Dependencies
 
