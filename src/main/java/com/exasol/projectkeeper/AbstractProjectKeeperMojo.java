@@ -17,8 +17,7 @@ import org.apache.maven.repository.RepositorySystem;
 import com.exasol.projectkeeper.pom.DefaultMavenProjectFromFileReader;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
 import com.exasol.projectkeeper.repository.GitRepository;
-import com.exasol.projectkeeper.validators.DeletedFilesValidator;
-import com.exasol.projectkeeper.validators.ReadmeValidator;
+import com.exasol.projectkeeper.validators.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
@@ -89,8 +88,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                 this.mavenProjectBuilder, this.session, this.repositorySystem);
         final var pomFile = this.project.getModel().getPomFile();
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
-                new ReadmeValidator(projectDir, this.project.getName(), this.project.getArtifactId(),
+                new ReadmeFileValidator(projectDir, this.project.getName(), this.project.getArtifactId(),
                         gitRepository.getRepoNameFromRemote().orElse(this.project.getArtifactId()), enabledModules),
+                new LicenseFileValidator(projectDir),
                 new PomFileValidator(enabledModules, this.excludedPlugins, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(), projectDir,
                         mavenModelReader),

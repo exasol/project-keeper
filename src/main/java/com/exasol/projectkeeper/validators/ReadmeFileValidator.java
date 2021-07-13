@@ -12,7 +12,7 @@ import com.exasol.projectkeeper.*;
  * This is a {@link Validator} for the README.md.
  */
 // [impl->dsn~readme-validator~1]
-public class ReadmeValidator extends AbstractFileContentValidator {
+public class ReadmeFileValidator extends AbstractFileContentValidator {
     private static final String NL = System.lineSeparator();
     private final String projectName;
     private final String artifactId;
@@ -20,7 +20,7 @@ public class ReadmeValidator extends AbstractFileContentValidator {
     private final Collection<ProjectKeeperModule> enabledModules;
 
     /**
-     * Create a new instance of {@link ReadmeValidator}.
+     * Create a new instance of {@link ReadmeFileValidator}.
      * 
      * @param projectDirectory project's root directory
      * @param projectName      project name
@@ -28,7 +28,7 @@ public class ReadmeValidator extends AbstractFileContentValidator {
      * @param repoName         name of the repository
      * @param enabledModules   list of enable modules
      */
-    public ReadmeValidator(final Path projectDirectory, final String projectName, final String artifactId,
+    public ReadmeFileValidator(final Path projectDirectory, final String projectName, final String artifactId,
             final String repoName, final Collection<ProjectKeeperModule> enabledModules) {
         super(projectDirectory, Path.of("README.md"));
         this.projectName = projectName;

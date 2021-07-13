@@ -17,7 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 // [utest->dsn~readme-validator~1]
-class ReadmeValidatorTest {
+class ReadmeFileValidatorTest {
     @Test
     void testCreateFile(@TempDir final Path tempDir) throws IOException {
         getValidator(tempDir).validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
@@ -41,14 +41,14 @@ class ReadmeValidatorTest {
                 + "* [Dependencies](dependencies.md)").replace("\n", System.lineSeparator())));
     }
 
-    private ReadmeValidator getValidator(final Path tempDir) {
-        return new ReadmeValidator(tempDir, "My Project", "my-project", "my-project-repo", List.of(MAVEN_CENTRAL));
+    private ReadmeFileValidator getValidator(final Path tempDir) {
+        return new ReadmeFileValidator(tempDir, "My Project", "my-project", "my-project-repo", List.of(MAVEN_CENTRAL));
     }
 
     @Test
     void testValidation(@TempDir final Path tempDir) throws IOException {
         Files.writeString(tempDir.resolve("README.md"), "");
-        final ReadmeValidator validator = getValidator(tempDir);
+        final ReadmeFileValidator validator = getValidator(tempDir);
         assertThat(validator, validationErrorMessages(hasItems(
                 containsString("The project's README.md does not reference the dependencies.md file."), //
                 startsWith(
