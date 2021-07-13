@@ -6,6 +6,7 @@ import static org.mockito.Mockito.mock;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Calendar;
 
 import org.apache.maven.plugin.logging.Log;
 import org.hamcrest.Matchers;
@@ -18,7 +19,8 @@ class LicenseFileValidatorTest {
     void testCreateFile(@TempDir final Path tempDir) throws IOException {
         getValidator(tempDir).validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
         final String readme = Files.readString(tempDir.resolve("LICENSE"));
-        assertThat(readme, Matchers.containsString("Copyright (c) 20"));
+        final int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        assertThat(readme, Matchers.containsString("Copyright (c) " + currentYear));
     }
 
     private LicenseFileValidator getValidator(final Path tempDir) {

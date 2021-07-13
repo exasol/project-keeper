@@ -146,7 +146,7 @@ Covers:
 
 `dsn~license-file-validator~1`
 
-We decided that the License validator only inserts the current date on creation. Another option would have been to add a date range and also validate that it's always up to date. However, since it's not very likely that these projects require a copyright longer than 50-70 years, we decided adding the creation date is enough. In case it still required one can of course add a date range by hand.
+We decided that the license validator only inserts the current year on creation. Another option would have been to add a year range and also validate that it's always up to date. However, since it's not very likely that these projects require a copyright longer than 50-70 years, we decided adding the creation year is enough. In case it still required one can of course add a date range by hand.
 
 Needs: impl, utest, itest
 

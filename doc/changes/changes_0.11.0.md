@@ -4,7 +4,7 @@ Code name:
 
 ## Features
 
-* #69: Made year in license variable
+* #69: Made copyright-year in license variable
 
 ## Dependency Updates
 
