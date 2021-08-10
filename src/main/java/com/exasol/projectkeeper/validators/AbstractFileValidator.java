@@ -54,7 +54,7 @@ public abstract class AbstractFileValidator implements Validator {
                 .andFix(getCreateFileFix()).build();
     }
 
-    private ValidationFinding.Fix getCreateFileFix() {
+    protected ValidationFinding.Fix getCreateFileFix() {
         return (Log log) -> {
             try {
                 Files.createDirectories(this.absoluteFilePath.getParent());
@@ -68,10 +68,11 @@ public abstract class AbstractFileValidator implements Validator {
     }
 
     /**
-     *  Create a new file with a template content. 
+     * Create a new file with a template content.
      * <p>
      * The {@link AbstractFileValidator} calls this method when it applies the fix for a missing file.
      * </p>
+     * 
      * @param target file to create
      * @throws IOException if creation fails
      */

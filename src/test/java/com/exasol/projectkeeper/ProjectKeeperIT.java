@@ -196,6 +196,16 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
                         containsString("* Updated `org.apache.maven.plugins:maven-surefire-plugin:2.12.4` to")));
     }
 
+    @Test
+    // [itest->dsn~verify-changelog-file~1]
+    void testChangesFileGeneration() throws IOException, GitAPIException, VerificationException {
+        setupDemoProjectWithDependencyChange(true);
+        final Verifier verifier = getVerifier();
+        verifier.executeGoal("project-keeper:fix");
+        final String generatedChangelog = Files.readString(this.projectDir.resolve("doc/changes/changelog.md"));
+        assertThat(generatedChangelog, containsString("[0.2.0](changes_0.2.0.md)"));
+    }
+
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
         try (final Git git = Git.open(this.projectDir.toFile())) {
             writePomWithOneDependency("0.1.0", "0.1.0");

@@ -80,6 +80,14 @@ Covers:
 
 Needs: dsn
 
+#### Verify Changelog.md File
+
+`req~verify-changelog-file~1`
+
+PK verifies that the `changelog.md` file exists and contains links to all `changes_x.x.x.md` files.
+
+Needs: dsn
+
 #### Verify dependencies.md File
 
 `req~verify-dependencies-file~1`
