@@ -54,6 +54,11 @@ public abstract class AbstractFileValidator implements Validator {
                 .andFix(getCreateFileFix()).build();
     }
 
+    /**
+     * Get a method that creates the missing file.
+     * 
+     * @return method (closure)
+     */
     protected ValidationFinding.Fix getCreateFileFix() {
         return (Log log) -> {
             try {

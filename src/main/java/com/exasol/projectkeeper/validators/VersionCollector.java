@@ -12,15 +12,15 @@ import com.exasol.errorreporting.ExaError;
 /**
  * This class list all project-versions by scanning the doc/changes/ folder.
  */
-public class VersionLister {
+public class VersionCollector {
     private final Path projectDirectory;
 
     /**
-     * Create a new instance of {@link VersionLister}.
+     * Create a new instance of {@link VersionCollector}.
      * 
      * @param projectDirectory projects root directory.
      */
-    public VersionLister(final Path projectDirectory) {
+    public VersionCollector(final Path projectDirectory) {
         this.projectDirectory = projectDirectory;
     }
 
@@ -29,15 +29,14 @@ public class VersionLister {
      * 
      * @return list of project versions
      */
-    public List<String> listVersions() {
+    public List<String> collectVersions() {
         try (final Stream<Path> filesStream = Files.walk(this.projectDirectory.resolve(Path.of("doc", "changes")))) {
             return filesStream.map(path -> path.getFileName().toString())
                     .filter(fileName -> fileName.startsWith("changes_"))
                     .map(fileName -> fileName.replace("changes_", "").replace(".md", "")).collect(Collectors.toList());
         } catch (final IOException exception) {
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-66").message("Failed to list changes_x.x.x.md files.").toString(),
-                    exception);
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-66")
+                    .message("Failed to collect versions from changes files.").toString(), exception);
         }
     }
 }

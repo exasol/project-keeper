@@ -7,7 +7,7 @@ import java.util.List;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.validators.AbstractFileContentValidator;
-import com.exasol.projectkeeper.validators.VersionLister;
+import com.exasol.projectkeeper.validators.VersionCollector;
 
 //[impl->dsn~verify-changelog-file~1]
 public class ChangelogFileValidator extends AbstractFileContentValidator {
@@ -38,7 +38,7 @@ public class ChangelogFileValidator extends AbstractFileContentValidator {
 
     @Override
     protected String getTemplate() {
-        final List<String> versions = new VersionLister(this.projectDirectory).listVersions();
+        final List<String> versions = new VersionCollector(this.projectDirectory).collectVersions();
         return new ChangelogFileGenerator().generate(versions);
     }
 }
