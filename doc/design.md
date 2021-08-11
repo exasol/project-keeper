@@ -114,6 +114,18 @@ Covers:
 
 * `req~verify-dependency-section-in-changes_x.x.x.md-file~1`
 
+### Changelog.md File Validator
+
+`dsn~verify-changelog-file~1`
+
+For validating the `changelog.md` file we first generate the expected content and then compare the actual file with the expected content.
+
+Covers:
+
+* `req~verify-changelog-file~1`
+
+Needs: impl, utest, itest
+
 ### Dependencies.md File Validator
 
 `dsn~depnedency.md-file-validator~1`

@@ -5,8 +5,13 @@ Code name:
 ## Features
 
 * #69: Made copyright-year in license variable
+* #164: Added validation for changelog.md file
 
 ## Dependency Updates
+
+### Compile Dependency Updates
+
+* Added `com.vdurmont:semver4j:3.1.0`
 
 ### Plugin Dependency Updates
 

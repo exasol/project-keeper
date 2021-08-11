@@ -18,6 +18,7 @@ import com.exasol.projectkeeper.pom.DefaultMavenProjectFromFileReader;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
 import com.exasol.projectkeeper.repository.GitRepository;
 import com.exasol.projectkeeper.validators.*;
+import com.exasol.projectkeeper.validators.changelog.ChangelogFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
@@ -94,6 +95,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                 new PomFileValidator(enabledModules, this.excludedPlugins, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(), projectDir,
                         mavenModelReader),
+                new ChangelogFileValidator(projectDir),
                 new DependenciesValidator(mavenModelReader, artifactReader, pomFile, projectDir, brokenLinkReplacer),
                 new DeletedFilesValidator(projectDir, excludedFilesMatcher));
     }
