@@ -7,11 +7,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Calendar;
+import java.util.Collections;
 
 import org.apache.maven.plugin.logging.Log;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 
 //[utest->dsn~license-file-validator~1]
 class LicenseFileValidatorTest {
@@ -24,6 +27,6 @@ class LicenseFileValidatorTest {
     }
 
     private LicenseFileValidator getValidator(final Path tempDir) {
-        return new LicenseFileValidator(tempDir);
+        return new LicenseFileValidator(tempDir, new ExcludedFilesMatcher(Collections.emptyList()));
     }
 }

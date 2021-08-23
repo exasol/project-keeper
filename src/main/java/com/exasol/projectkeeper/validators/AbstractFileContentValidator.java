@@ -6,8 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.*;
 
 /**
  * This class is a abstract basis for {@link Validator}s that validate a files content as string.
@@ -18,9 +17,11 @@ public abstract class AbstractFileContentValidator extends AbstractFileValidator
      *
      * @param projectDirectory project's root directory
      * @param filePath         path of the file to validate relative to projectDirectory
+     * @param excludedFiles    matcher for excluded files
      */
-    protected AbstractFileContentValidator(final Path projectDirectory, final Path filePath) {
-        super(projectDirectory, filePath);
+    protected AbstractFileContentValidator(final Path projectDirectory, final Path filePath,
+            final ExcludedFilesMatcher excludedFiles) {
+        super(projectDirectory, filePath, excludedFiles);
     }
 
     @Override
