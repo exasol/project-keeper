@@ -6,6 +6,7 @@ Code name:
 
 * #69: Made copyright-year in license variable
 * #164: Added validation for changelog.md file
+* #166: Update for release_droid_upload_github_release_assets.yml file
 
 ## Dependency Updates
 
