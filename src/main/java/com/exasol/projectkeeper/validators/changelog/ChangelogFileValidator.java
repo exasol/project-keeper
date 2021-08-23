@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.validators.AbstractFileContentValidator;
 import com.exasol.projectkeeper.validators.VersionCollector;
@@ -17,9 +18,10 @@ public class ChangelogFileValidator extends AbstractFileContentValidator {
      * Create a new instance of {@link ChangelogFileValidator}.
      * 
      * @param projectDirectory project's root directory
+     * @param excludedFiles    matcher for excluded files
      */
-    public ChangelogFileValidator(final Path projectDirectory) {
-        super(projectDirectory, Path.of("doc/changes/changelog.md"));
+    public ChangelogFileValidator(final Path projectDirectory, final ExcludedFilesMatcher excludedFiles) {
+        super(projectDirectory, Path.of("doc/changes/changelog.md"), excludedFiles);
         this.projectDirectory = projectDirectory;
     }
 

@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ValidationFinding;
 import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.AbstractFileValidator;
@@ -27,10 +28,11 @@ public class ChangesFileValidator extends AbstractFileValidator {
      * @param projectName      name of the maven project
      * @param projectDirectory root directory of the maven project
      * @param mavenModelReader reader for maven models
+     * @param excludedFiles    matcher for excluded files
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
-            final MavenProjectFromFileReader mavenModelReader) {
-        super(projectDirectory, Path.of("doc", "changes", "changes_" + projectVersion + ".md"));
+            final MavenProjectFromFileReader mavenModelReader, final ExcludedFilesMatcher excludedFiles) {
+        super(projectDirectory, Path.of("doc", "changes", "changes_" + projectVersion + ".md"), excludedFiles);
         this.projectVersion = projectVersion;
         this.projectName = projectName;
         this.projectDirectory = projectDirectory;

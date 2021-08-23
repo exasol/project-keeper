@@ -90,12 +90,13 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         final var pomFile = this.project.getModel().getPomFile();
         return List.of(new ProjectFilesValidator(enabledModules, this.project.getBasedir(), excludedFilesMatcher),
                 new ReadmeFileValidator(projectDir, this.project.getName(), this.project.getArtifactId(),
-                        gitRepository.getRepoNameFromRemote().orElse(this.project.getArtifactId()), enabledModules),
-                new LicenseFileValidator(projectDir),
+                        gitRepository.getRepoNameFromRemote().orElse(this.project.getArtifactId()), enabledModules,
+                        excludedFilesMatcher),
+                new LicenseFileValidator(projectDir, excludedFilesMatcher),
                 new PomFileValidator(enabledModules, this.excludedPlugins, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(), projectDir,
-                        mavenModelReader),
-                new ChangelogFileValidator(projectDir),
+                        mavenModelReader, excludedFilesMatcher),
+                new ChangelogFileValidator(projectDir, excludedFilesMatcher),
                 new DependenciesValidator(mavenModelReader, artifactReader, pomFile, projectDir, brokenLinkReplacer),
                 new DeletedFilesValidator(projectDir, excludedFilesMatcher));
     }

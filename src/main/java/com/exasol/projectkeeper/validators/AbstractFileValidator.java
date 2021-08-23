@@ -9,8 +9,7 @@ import java.util.List;
 import org.apache.maven.plugin.logging.Log;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ValidationFinding;
-import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.*;
 
 /**
  * This class is a abstract basis for {@link Validator}s that validate files.
@@ -18,21 +17,25 @@ import com.exasol.projectkeeper.Validator;
 public abstract class AbstractFileValidator implements Validator {
     private final Path absoluteFilePath;
     private final Path relativeFilePath;
+    private final ExcludedFilesMatcher excludedFiles;
 
     /**
      * Create a new instance of {@link AbstractFileValidator}.
      * 
      * @param projectDirectory project's root directory
      * @param filePath         path of the file to validate relative to projectDirectory
+     * @param excludedFiles    matcher for excluded files
      */
-    protected AbstractFileValidator(final Path projectDirectory, final Path filePath) {
+    protected AbstractFileValidator(final Path projectDirectory, final Path filePath,
+            final ExcludedFilesMatcher excludedFiles) {
         this.relativeFilePath = filePath;
+        this.excludedFiles = excludedFiles;
         this.absoluteFilePath = projectDirectory.resolve(filePath);
     }
 
     @Override
     public final List<ValidationFinding> validate() {
-        if (isValidationEnabled()) {
+        if (!this.excludedFiles.isFileExcluded(this.relativeFilePath) && isValidationEnabled()) {
             return runValidation();
         } else {
             return Collections.emptyList();

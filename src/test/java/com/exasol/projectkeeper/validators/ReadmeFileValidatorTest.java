@@ -9,12 +9,15 @@ import static org.mockito.Mockito.mock;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
 import org.apache.maven.plugin.logging.Log;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 
 // [utest->dsn~readme-validator~1]
 class ReadmeFileValidatorTest {
@@ -42,7 +45,8 @@ class ReadmeFileValidatorTest {
     }
 
     private ReadmeFileValidator getValidator(final Path tempDir) {
-        return new ReadmeFileValidator(tempDir, "My Project", "my-project", "my-project-repo", List.of(MAVEN_CENTRAL));
+        return new ReadmeFileValidator(tempDir, "My Project", "my-project", "my-project-repo", List.of(MAVEN_CENTRAL),
+                new ExcludedFilesMatcher(Collections.emptyList()));
     }
 
     @Test

@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ValidationFinding;
 
 /**
@@ -22,9 +23,10 @@ public class LicenseFileValidator extends AbstractFileContentValidator {
      * Create a new instance of {@link LicenseFileValidator}.
      *
      * @param projectDirectory project's root directory
+     * @param excludedFiles    matcher for excluded files
      */
-    public LicenseFileValidator(final Path projectDirectory) {
-        super(projectDirectory, Path.of("LICENSE"));
+    public LicenseFileValidator(final Path projectDirectory, final ExcludedFilesMatcher excludedFiles) {
+        super(projectDirectory, Path.of("LICENSE"), excludedFiles);
     }
 
     @Override

@@ -27,10 +27,12 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
      * @param artifactId       artifact id of the maven artifact
      * @param repoName         name of the repository
      * @param enabledModules   list of enable modules
+     * @param excludedFiles    matcher for excluded files
      */
     public ReadmeFileValidator(final Path projectDirectory, final String projectName, final String artifactId,
-            final String repoName, final Collection<ProjectKeeperModule> enabledModules) {
-        super(projectDirectory, Path.of("README.md"));
+            final String repoName, final Collection<ProjectKeeperModule> enabledModules,
+            final ExcludedFilesMatcher excludedFiles) {
+        super(projectDirectory, Path.of("README.md"), excludedFiles);
         this.projectName = projectName;
         this.artifactId = artifactId;
         this.repoName = repoName;

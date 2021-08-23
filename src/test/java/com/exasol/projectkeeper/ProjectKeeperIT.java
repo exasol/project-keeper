@@ -247,4 +247,21 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
                 () -> assertThat(output, containsString("E-PK-62"))//
         );
     }
+
+    @Test
+    void testExcludedReadme() throws IOException {
+        final var pom = new TestMavenModel();
+        pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION)
+                .withEnabledModules(MAVEN_CENTRAL, INTEGRATION_TESTS, JAR_ARTIFACT, UDF_COVERAGE)
+                .withExcludedFiles("README.md"));
+        pom.writeAsPomToProject(this.projectDir);
+        final Verifier verifier = getVerifier();
+        final VerificationException verificationException = assertThrows(VerificationException.class,
+                () -> verifier.executeGoal("project-keeper:verify"));
+        final String output = verificationException.getMessage();
+        assertAll(//
+                () -> assertThat(output, not(containsString("README.md"))), //
+                () -> assertThat(output, not(containsString("README.md")))//
+        );
+    }
 }
