@@ -30,7 +30,7 @@ public enum ProjectKeeperModule {
      */
     UDF_COVERAGE,
     /**
-     * Module for project that use project Lombok.
+     * Module for projects that use Project Lombok.
      */
     LOMBOK;
 
