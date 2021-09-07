@@ -28,6 +28,7 @@ public class PomPropertyValidator extends AbstractPomValidator implements PomVal
      * 
      * @param propertyXPath path of the property
      * @param expectedValue expected value
+     * @param module        module that requires this property
      */
     public PomPropertyValidator(final String propertyXPath, final String expectedValue,
             final ProjectKeeperModule module) {
