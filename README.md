@@ -105,15 +105,14 @@ It makes no sense to use this module without the `integration_tests` module
 
 #### `lombok`
 
-This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/). In addition, you need to add a dependency to Lombok itself.
+This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).
 
-Required maven plugins:
-
-* `lombok-maven-plugin`
-
-Enforced configuration:
-
-Modified `sourcePaths` for the `error-code-crawler-maven-plugin`.
+* Required maven plugins:
+    * [`lombok-maven-plugin`](https://projectlombok.org/setup/maven)
+* Enforced configuration:
+    * Modified `sourcePaths` for the `error-code-crawler-maven-plugin`.
+* Required dependencies:
+    * `org.projectlombok:lombok`
 
 ### Excluding Files
 

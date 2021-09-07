@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.validators.pom.dependencies.JacocoAgentDependencyValidator;
+import com.exasol.projectkeeper.validators.pom.dependencies.LombokDependencyValidator;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
 import com.exasol.projectkeeper.validators.pom.properties.PomPropertyValidator;
 
@@ -28,7 +29,8 @@ public class PomFileValidator implements Validator {
             new JarPluginValidator(), new LombokPluginValidator(),
             new PomPropertyValidator("/project/properties/project.build.sourceEncoding", "UTF-8", DEFAULT),
             new PomPropertyValidator("/project/properties/project.reporting.outputEncoding", "UTF-8", DEFAULT),
-            new PomPropertyValidator("/project/properties/gpg.skip", "true", MAVEN_CENTRAL));
+            new PomPropertyValidator("/project/properties/gpg.skip", "true", MAVEN_CENTRAL),
+            new LombokDependencyValidator());
     final Collection<ProjectKeeperModule> enabledModules;
     private final Collection<String> excludedPlugins;
     private final PomFileIO pomFileIO;

@@ -87,6 +87,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
                 () -> assertThat(output, containsString("E-PK-29: Missing dependency 'org.jacoco:org.jacoco.agent'.")), //
                 () -> assertThat(output, containsString(
                         "E-PK-72: Missing required property '/project/properties/project.build.sourceEncoding' in pom.xml.")), //
+                () -> assertThat(output, containsString("E-PK-29: Missing dependency 'org.projectlombok:lombok'.")), //
                 () -> assertThat(output, containsString(
                         "E-PK-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin.")) //
         );
