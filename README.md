@@ -103,6 +103,18 @@ It makes no sense to use this module without the `integration_tests` module
 * required dependencies
     * `org.jacoco:org.jacoco.agent`
 
+#### `lombok`
+
+This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).
+
+Required maven plugins:
+
+* `lombok-maven-plugin`
+
+Enforced configuration:
+
+Modified `sourcePaths` for the `error-code-crawler-maven-plugin`.
+
 ### Excluding Files
 
 Using the `excludedFiles` you can tell project-keeper to ignore some files:

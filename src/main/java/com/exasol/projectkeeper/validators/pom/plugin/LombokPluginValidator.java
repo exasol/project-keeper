@@ -9,27 +9,25 @@ import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
 
 /**
- * Validator for the maven-assembly-plugin's configuration.
+ * Validator for lombok-maven-plugin.
  */
-public class AssemblyPluginPomValidator extends AbstractPluginPomValidator {
+public class LombokPluginValidator extends AbstractPluginPomValidator {
 
     /**
-     * Create a new instance of {@link AssemblyPluginPomValidator}.
+     * Create a new instance of {@link LombokPluginValidator}.
      */
-    public AssemblyPluginPomValidator() {
-        super("maven_templates/maven-assembly-plugin.xml");
+    public LombokPluginValidator() {
+        super("maven_templates/lombok-maven-plugin.xml");
     }
 
     @Override
     public ProjectKeeperModule getModule() {
-        return ProjectKeeperModule.JAR_ARTIFACT;
+        return ProjectKeeperModule.LOMBOK;
     }
 
     @Override
     protected void validatePluginConfiguration(final Node plugin, final Collection<ProjectKeeperModule> enabledModules,
             final Consumer<ValidationFinding> findingConsumer) {
-        verifyPluginPropertyHasExactValue(plugin, "configuration/descriptors/descriptor", findingConsumer);
         verifyPluginPropertyHasExactValue(plugin, "executions", findingConsumer);
-        verifyPluginHasPropertyWithDefaultFromTemplate(plugin, "configuration/finalName", findingConsumer);
     }
 }

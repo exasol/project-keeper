@@ -5,7 +5,7 @@
     <groupId>com.exasol</groupId>
     <artifactId>project-keeper-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
     <name>Project keeper maven plugin</name>
     <description>This maven plugin checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
@@ -42,13 +42,12 @@
         </developerConnection>
         <url>https://github.com/exasol/project-keeper-maven-plugin/tree/master</url>
     </scm>
-
     <properties>
-        <maven.version>3.8.1</maven.version>
+        <maven.version>3.8.2</maven.version>
         <junit.version>5.7.2</junit.version>
         <java.version>11</java.version>
         <junit.platform.version>1.6.2</junit.platform.version>
-        <jacoco.version>0.8.6</jacoco.version>
+        <jacoco.version>0.8.7</jacoco.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gpg.skip>true</gpg.skip>
@@ -73,7 +72,7 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.108</version>
+            <version>4.8.115</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -83,7 +82,7 @@
         <dependency>
             <groupId>org.glassfish.jaxb</groupId>
             <artifactId>jaxb-runtime</artifactId>
-            <version>3.0.1</version>
+            <version>3.0.2</version>
         </dependency>
         <dependency>
             <groupId>org.xmlunit</groupId>
@@ -98,7 +97,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.11.1.202105131744-r</version>
+            <version>5.12.0.202106070339-r</version>
         </dependency>
         <dependency>
             <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -163,13 +162,13 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
-            <version>1.7.30</version>
+            <version>1.7.32</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>3.11.0</version>
+            <version>3.12.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -236,7 +235,7 @@
                 <version>3.0.0-M3</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we
-                      have a chance to reach branches in the logging lambdas too. -->
+                                have a chance to reach branches in the logging lambdas too. -->
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                     <excludes>
                         <exclude>**IT.java</exclude>
@@ -415,7 +414,8 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>${version}</version>
+                <version>1.1.0
+                </version>
                 <!-- no execution configured on purpose. Run manually -->
                 <configuration>
                     <modules>
@@ -457,7 +457,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>0.5.0</version>
+                <version>0.6.0</version>
                 <executions>
                     <execution>
                         <goals>

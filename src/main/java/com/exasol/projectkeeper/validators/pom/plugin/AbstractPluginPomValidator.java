@@ -113,7 +113,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     /**
      * Hook for validating the plugin specific parts.
      * <p>
-     * Hint: use {@link #verifyPluginHasProperty(Node, String, Consumer)} or
+     * Hint: use {@link #verifyPluginHasPropertyWithDefaultFromTemplate(Node, String, Consumer)} or
      * {@link #verifyPluginPropertyHasExactValue(Node, String, Consumer)} in this method's implementation.
      * </p>
      *
@@ -138,7 +138,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
      * @param findingConsumer to report the validation findings to
      * @return {@code true} if validation had no findings.
      */
-    protected boolean verifyPluginHasProperty(final Node plugin, final String xPath,
+    protected boolean verifyPluginHasPropertyWithDefaultFromTemplate(final Node plugin, final String xPath,
             final Consumer<ValidationFinding> findingConsumer) {
         if (runXPath(plugin, xPath) != null) {
             return true;
@@ -193,11 +193,46 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
      */
     protected void verifyPluginPropertyHasExactValue(final Node plugin, final String propertyXpath,
             final Consumer<ValidationFinding> findingConsumer) {
-        if (verifyPluginHasProperty(plugin, propertyXpath, findingConsumer)) {
+        if (verifyPluginHasPropertyWithDefaultFromTemplate(plugin, propertyXpath, findingConsumer)) {
             final Node property = runXPath(plugin, propertyXpath);
             final Node templateProperty = runXPath(getPluginTemplate(), propertyXpath);
             validatePropertiesAreEqual(plugin, propertyXpath, findingConsumer, property, templateProperty);
         }
+    }
+
+    protected void verifyPluginPropertyHasExactValue(final Node plugin, final String propertyXpath,
+            final Node expectedProperty, final Consumer<ValidationFinding> findingConsumer) {
+        if (verifyPluginHasPropertyWithGivenDefault(plugin, propertyXpath, expectedProperty, findingConsumer)) {
+            final Node property = runXPath(plugin, propertyXpath);
+            if (!isXmlEqual(property, expectedProperty)) {
+                findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-71")
+                        .message("The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value.",
+                                this.pluginArtifactId, propertyXpath)
+                        .toString()).andFix(log -> setExpectedValue(plugin, propertyXpath, expectedProperty)).build());
+            }
+        }
+    }
+
+    private boolean verifyPluginHasPropertyWithGivenDefault(final Node plugin, final String propertyXpath,
+            final Node expectedValue, final Consumer<ValidationFinding> findingConsumer) {
+        final Node property = runXPath(plugin, propertyXpath);
+        if (property != null) {
+            return true;
+        } else {
+            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-70").message(
+                    "The {{plugin|uq}}'s configuration does not contain the required property {{required property}}.",
+                    this.pluginArtifactId, propertyXpath).toString())//
+                    .andFix(log -> {
+                        createObjectPathIfNotExists(plugin, XPathSplitter.split(propertyXpath));
+                        setExpectedValue(plugin, propertyXpath, expectedValue);
+                    }).build());
+            return false;
+        }
+    }
+
+    private void setExpectedValue(final Node plugin, final String propertyXpath, final Node expectedValue) {
+        final Node property = runXPath(plugin, propertyXpath);
+        property.getParentNode().replaceChild(plugin.getOwnerDocument().adoptNode(expectedValue), property);
     }
 
     /**

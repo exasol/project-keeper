@@ -86,6 +86,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
                                 "E-PK-15: Missing maven plugin org.apache.maven.plugins:maven-dependency-plugin.")), //
                 () -> assertThat(output, containsString("E-PK-29: Missing dependency 'org.jacoco:org.jacoco.agent'.")), //
                 () -> assertThat(output, containsString(
+                        "E-PK-72: Missing required property '/project/properties/project.build.sourceEncoding' in pom.xml.")), //
+                () -> assertThat(output, containsString(
                         "E-PK-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin.")) //
         );
     }
@@ -93,7 +95,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     private void writePomWithAllProjectKeeperPlugins() throws IOException {
         final var pom = new TestMavenModel();
         pom.addProjectKeeperPlugin(new ProjectKeeperPluginDeclaration(CURRENT_VERSION).withEnabledModules(MAVEN_CENTRAL,
-                INTEGRATION_TESTS, JAR_ARTIFACT, UDF_COVERAGE));
+                INTEGRATION_TESTS, JAR_ARTIFACT, UDF_COVERAGE, LOMBOK));
         pom.writeAsPomToProject(this.projectDir);
     }
 
