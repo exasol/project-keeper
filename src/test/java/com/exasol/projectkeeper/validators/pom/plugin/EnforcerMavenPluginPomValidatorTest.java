@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class EnforcerMavenPluginPomValidatorTest extends AbstractMavenPluginPomValidatorTest {
+class EnforcerMavenPluginPomValidatorTest extends AbstractMavenPluginPomValidatorTestBase {
 
     EnforcerMavenPluginPomValidatorTest() {
         super(new EnforcerMavenPluginPomValidator());

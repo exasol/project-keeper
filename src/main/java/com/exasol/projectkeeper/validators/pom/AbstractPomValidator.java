@@ -4,6 +4,7 @@ import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.util.List;
 
+import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xmlunit.builder.DiffBuilder;
 import org.xmlunit.diff.*;
@@ -29,8 +30,16 @@ public class AbstractPomValidator {
     private void createObjectIfNotExists(final Node root, final String parentXPath, final String objectName) {
         final Node parent = parentXPath.isEmpty() ? root : runXPath(root, parentXPath);
         if (runXPath(parent, objectName) == null) {
-            final var newNode = root.getOwnerDocument().createElement(objectName);
+            final var newNode = getDocument(root).createElement(objectName);
             parent.appendChild(newNode);
+        }
+    }
+
+    private Document getDocument(final Node root) {
+        if (root instanceof Document) {
+            return (Document) root;
+        } else {
+            return root.getOwnerDocument();
         }
     }
 

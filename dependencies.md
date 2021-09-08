@@ -52,7 +52,7 @@
 | [Apache Maven Source Plugin][58]                        | [Apache License, Version 2.0][1]              |
 | [Apache Maven Javadoc Plugin][60]                       | [Apache License, Version 2.0][1]              |
 | [Apache Maven GPG Plugin][62]                           | [Apache License, Version 2.0][5]              |
-| [JaCoCo :: Maven Plugin][40]                            | [Eclipse Public License 2.0][41]              |
+| [JaCoCo :: Maven Plugin][64]                            | [Eclipse Public License 2.0][41]              |
 | [OpenFastTrace Maven Plugin][66]                        | [GNU General Public License v3.0][67]         |
 | [Apache Maven Enforcer Plugin][68]                      | [Apache License, Version 2.0][1]              |
 | [Project keeper maven plugin][70]                       | [MIT][16]                                     |
@@ -83,10 +83,12 @@
 [46]: https://maven.apache.org/plugins/maven-compiler-plugin/
 [9]: https://oss.oracle.com/licenses/CDDL+GPL-1.1
 [62]: http://maven.apache.org/plugins/maven-gpg-plugin/
+[2]: https://maven.apache.org/ref/3.8.2/maven-plugin-api/
 [18]: https://github.com/Steppschuh/Java-Markdown-Generator
 [66]: https://github.com/itsallcode/openfasttrace-maven-plugin
 [26]: http://junit.org
 [41]: https://www.eclipse.org/legal/epl-2.0/
+[64]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
 [13]: https://www.xmlunit.org/
 [39]: https://github.com/mockito/mockito/blob/main/LICENSE
 [78]: http://zlika.github.io/reproducible-build-maven-plugin
@@ -100,9 +102,9 @@
 [36]: http://www.slf4j.org
 [84]: http://maven.apache.org/plugins/maven-resources-plugin/
 [0]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
+[22]: https://maven.apache.org/ref/3.8.2/maven-core/
 [20]: https://github.com/vdurmont/semver4j
 [74]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
-[22]: https://maven.apache.org/ref/3.8.1/maven-core/
 [50]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [80]: http://maven.apache.org/plugins/maven-dependency-plugin/
 [7]: http://opensource.org/licenses/MIT
@@ -119,6 +121,5 @@
 [42]: https://github.com/exasol/maven-plugin-integration-testing
 [72]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [90]: http://maven.apache.org/plugins/maven-site-plugin/
-[2]: https://maven.apache.org/ref/3.8.1/maven-plugin-api/
 [60]: https://maven.apache.org/plugins/maven-javadoc-plugin/
 [76]: https://github.com/exasol/error-code-crawler-maven-plugin

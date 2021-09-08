@@ -1,5 +1,8 @@
 package com.exasol.projectkeeper.validators.pom;
 
+import static com.exasol.projectkeeper.ProjectKeeperModule.DEFAULT;
+import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
+
 import java.io.File;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -7,7 +10,9 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.validators.pom.dependencies.JacocoAgentDependencyValidator;
+import com.exasol.projectkeeper.validators.pom.dependencies.LombokDependencyValidator;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
+import com.exasol.projectkeeper.validators.pom.properties.PomPropertyValidator;
 
 /**
  * Validator for the pom.xml file. This class runs different {@link PomValidator}s.
@@ -21,7 +26,11 @@ public class PomFileValidator implements Validator {
             new GpgPluginValidator(), new DeployPluginValidator(), new NexusStagingPluginValidator(),
             new JacocoAgentDependencyValidator(), new DependencyPluginValidator(), new SourcePluginValidator(),
             new JavadocPluginValidator(), new ErrorCodeCrawlerPluginValidator(), new ReproducibleBuildPluginValidator(),
-            new JarPluginValidator());
+            new JarPluginValidator(), new LombokPluginValidator(),
+            new PomPropertyValidator("/project/properties/project.build.sourceEncoding", "UTF-8", DEFAULT),
+            new PomPropertyValidator("/project/properties/project.reporting.outputEncoding", "UTF-8", DEFAULT),
+            new PomPropertyValidator("/project/properties/gpg.skip", "true", MAVEN_CENTRAL),
+            new LombokDependencyValidator());
     final Collection<ProjectKeeperModule> enabledModules;
     private final Collection<String> excludedPlugins;
     private final PomFileIO pomFileIO;

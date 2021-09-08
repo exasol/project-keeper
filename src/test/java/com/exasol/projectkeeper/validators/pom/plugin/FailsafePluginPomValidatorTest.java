@@ -22,7 +22,7 @@ import org.xmlunit.matchers.EvaluateXPathMatcher;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
-class FailsafePluginPomValidatorTest extends AbstractMavenPluginPomValidatorTest {
+class FailsafePluginPomValidatorTest extends AbstractMavenPluginPomValidatorTestBase {
 
     FailsafePluginPomValidatorTest() {
         super(new FailsafePluginPomValidator());

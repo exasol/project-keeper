@@ -28,7 +28,11 @@ public enum ProjectKeeperModule {
     /**
      * Module for projects where code coverage should be extracted from external JVMs.
      */
-    UDF_COVERAGE;
+    UDF_COVERAGE,
+    /**
+     * Module for projects that use Project Lombok.
+     */
+    LOMBOK;
 
     /**
      * Get {@link ProjectKeeperModule} by its name.

@@ -14,13 +14,13 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class GpgPluginValidatorTest extends AbstractMavenPluginPomValidatorTestBase {
+class LombokPluginValidatorTest extends AbstractMavenPluginPomValidatorTestBase {
 
-    GpgPluginValidatorTest() {
-        super(new GpgPluginValidator());
+    LombokPluginValidatorTest() {
+        super(new LombokPluginValidator());
     }
 
-    @ValueSource(strings = { "executions", "executions/execution", "executions/execution/configuration" })
+    @ValueSource(strings = { "executions" })
     @ParameterizedTest
     void testMissingExecutions(final String removeXpath)
             throws ParserConfigurationException, SAXException, IOException {
