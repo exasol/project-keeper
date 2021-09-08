@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class LombokPluginValidatorTest extends AbstractMavenPluginPomValidatorTest {
+class LombokPluginValidatorTest extends AbstractMavenPluginPomValidatorTestBase {
 
     LombokPluginValidatorTest() {
         super(new LombokPluginValidator());

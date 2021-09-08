@@ -8,7 +8,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -27,7 +27,7 @@ public class PomRenderer {
      * @param xmlDocument XML document to render
      * @return XML string
      */
-    public static String renderPom(final Document xmlDocument) {
+    public static String renderPom(final Node xmlDocument) {
         try {
             final var transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");

@@ -14,7 +14,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-class DeployPluginValidatorTest extends AbstractMavenPluginPomValidatorTest {
+class DeployPluginValidatorTest extends AbstractMavenPluginPomValidatorTestBase {
 
     DeployPluginValidatorTest() {
         super(new DeployPluginValidator());

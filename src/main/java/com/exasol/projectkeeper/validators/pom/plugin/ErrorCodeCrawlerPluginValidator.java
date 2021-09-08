@@ -30,13 +30,13 @@ public class ErrorCodeCrawlerPluginValidator extends AbstractPluginPomValidator 
             final Consumer<ValidationFinding> findingConsumer) {
         verifyPluginPropertyHasExactValue(plugin, "executions", findingConsumer);
         if (enabledModules.contains(ProjectKeeperModule.LOMBOK)) {
-            verifySourcePath(plugin, findingConsumer);
+            verifyLombokSourcePath(plugin, findingConsumer);
         } else {
             verifyPluginDoesNotHaveProperty(plugin, "configuration/sourcePaths", findingConsumer);
         }
     }
 
-    private void verifySourcePath(final Node plugin, final Consumer<ValidationFinding> findingConsumer) {
+    private void verifyLombokSourcePath(final Node plugin, final Consumer<ValidationFinding> findingConsumer) {
         final Document document = plugin.getOwnerDocument();
         final Element sourcePaths = document.createElement("sourcePaths");
         sourcePaths.appendChild(createSourcePathElement(document, "target/delombok/main"));

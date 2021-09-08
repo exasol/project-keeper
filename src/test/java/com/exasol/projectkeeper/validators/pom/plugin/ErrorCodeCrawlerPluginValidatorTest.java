@@ -24,7 +24,7 @@ import org.xml.sax.SAXException;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
-class ErrorCodeCrawlerPluginValidatorTest extends AbstractMavenPluginPomValidatorTest {
+class ErrorCodeCrawlerPluginValidatorTest extends AbstractMavenPluginPomValidatorTestBase {
 
     ErrorCodeCrawlerPluginValidatorTest() {
         super(new ErrorCodeCrawlerPluginValidator());

@@ -205,10 +205,11 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         if (verifyPluginHasPropertyWithGivenDefault(plugin, propertyXpath, expectedProperty, findingConsumer)) {
             final Node property = runXPath(plugin, propertyXpath);
             if (!isXmlEqual(property, expectedProperty)) {
-                findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-71")
-                        .message("The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value.",
-                                this.pluginArtifactId, propertyXpath)
-                        .toString()).andFix(log -> setExpectedValue(plugin, propertyXpath, expectedProperty)).build());
+                findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-71").message(
+                        "The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value. Actual value: {{actual}}. Expected value: {{expected}}.",
+                        this.pluginArtifactId, propertyXpath, PomRenderer.renderPom(property),
+                        PomRenderer.renderPom(expectedProperty)).toString())
+                        .andFix(log -> setExpectedValue(plugin, propertyXpath, expectedProperty)).build());
             }
         }
     }
