@@ -37,7 +37,6 @@ class AbstractPluginPomValidatorTest {
         final Element property = plugin.getOwnerDocument().createElement("test");
         property.setTextContent("otherValue");
         plugin.appendChild(property);
-        System.out.println(PomRenderer.renderPom(plugin));
         final List<ValidationFinding> findings = new ArrayList<>();
         final Element expectedProperty = plugin.getOwnerDocument().createElement("test");
         expectedProperty.setTextContent("expectedValue");
