@@ -9,6 +9,7 @@ In this release we added a property that allows users to skip the execution of p
 ## Features
 
 * #176: Added skip property
+* #178: Moved jacoco dependency to test scope
 
 ## Dependency Updates
 

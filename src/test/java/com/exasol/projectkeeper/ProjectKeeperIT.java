@@ -228,7 +228,11 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     void testJacocoAgentIsExtracted() throws VerificationException, IOException {
-        writePomWithAllProjectKeeperPlugins();
+        final var pom = new TestMavenModel();
+        pom.addProjectKeeperPlugin(
+                new ProjectKeeperPluginDeclaration(CURRENT_VERSION).withEnabledModules(INTEGRATION_TESTS, UDF_COVERAGE)
+                        .withExcludedPlugins("com.exasol:error-code-crawler-maven-plugin"));
+        pom.writeAsPomToProject(this.projectDir);
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");
