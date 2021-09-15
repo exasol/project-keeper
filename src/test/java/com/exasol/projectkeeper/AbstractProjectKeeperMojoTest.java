@@ -10,6 +10,7 @@ import java.lang.reflect.Field;
 import java.util.Collections;
 import java.util.List;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 class AbstractProjectKeeperMojoTest {
@@ -44,6 +45,19 @@ class AbstractProjectKeeperMojoTest {
                 abstractProjectKeeperMojo::getEnabledModules);
         assertThat(exception.getMessage(), startsWith(
                 "E-PK-4: Unknown module: 'unknown'. Please update your <modules> configuration in the pom.file to use one of the supported modules:"));
+    }
+
+    @Test
+    void testInvalidSkipValue() throws NoSuchFieldException, IllegalAccessException {
+        final AbstractProjectKeeperMojo abstractProjectKeeperMojo = getAbstractProjectKeeperMojo(
+                Collections.emptyList());
+        final Field skipField = AbstractProjectKeeperMojo.class.getDeclaredField("skip");
+        skipField.setAccessible(true);
+        skipField.set(abstractProjectKeeperMojo, "otherValue");
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                abstractProjectKeeperMojo::isEnabled);
+        assertThat(exception.getMessage(), Matchers.equalTo(
+                "E-PK-75: Invalid value 'otherValue' for property 'project-keeper.skip'. Please set the property to 'true' or 'false'."));
     }
 
     private AbstractProjectKeeperMojo getAbstractProjectKeeperMojo(final List<String> modules)

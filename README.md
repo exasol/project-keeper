@@ -181,6 +181,8 @@ In addition this plugin can also fix the project structure. For that use:
 mvn project-keeper:fix
 ```
 
+You can skip the execution of project-keeper by adding `-Dproject-keper.skip=true` to your maven command.
+
 ## Development
 
 ### Adding a Required File
