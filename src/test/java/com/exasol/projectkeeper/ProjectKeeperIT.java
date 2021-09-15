@@ -267,4 +267,14 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
                 () -> assertThat(output, not(containsString("README.md")))//
         );
     }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "verify", "fix" })
+    void testSkip(final String phase) throws IOException, VerificationException {
+        writePomWithAllProjectKeeperPlugins();
+        final Verifier verifier = getVerifier();
+        verifier.setSystemProperty("project-keeper.skip", "true");
+        verifier.executeGoal("project-keeper:" + phase);
+        verifier.verifyTextInLog("Skipping project-keeper.");
+    }
 }

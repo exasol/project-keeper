@@ -14,6 +14,7 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.repository.RepositorySystem;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.DefaultMavenProjectFromFileReader;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
 import com.exasol.projectkeeper.repository.GitRepository;
@@ -32,6 +33,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     @Parameter(property = "modules")
     // [impl->dsn~modules~1]
     private List<String> modules;
+
+    @Parameter(property = "project-keeper.skip", defaultValue = "false")
+    private String skip;
 
     // [impl->dsn~excluding-files~1]
     @Parameter(property = "excludedFiles")
@@ -71,6 +75,19 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                 Stream.of(ProjectKeeperModule.DEFAULT), //
                 this.modules.stream().map(ProjectKeeperModule::getModuleByName)//
         ).collect(Collectors.toSet());
+    }
+
+    protected boolean isEnabled() {
+        if ("true".equals(this.skip)) {
+            getLog().info("Skipping project-keeper.");
+            return false;
+        } else if ("false".equals(this.skip)) {
+            return true;
+        } else {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-75")
+                    .message("Invalid value {{value}} for property 'project-keeper.skip'.", this.skip)
+                    .mitigation("Please set the property to 'true' or 'false'.").toString());
+        }
     }
 
     /**

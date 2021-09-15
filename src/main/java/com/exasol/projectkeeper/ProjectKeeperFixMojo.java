@@ -20,23 +20,25 @@ import com.exasol.errorreporting.ExaError;
 public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
-        final var log = getLog();
-        final List<ValidationFinding> unfixedFindings = new ArrayList<>();
-        getValidators().forEach(validator -> validator.validate().forEach(finding -> {
-            if (finding.hasFix()) {
-                finding.getFix().fixError(log);
-            } else {
-                unfixedFindings.add(finding);
+        if (isEnabled()) {
+            final var log = getLog();
+            final List<ValidationFinding> unfixedFindings = new ArrayList<>();
+            getValidators().forEach(validator -> validator.validate().forEach(finding -> {
+                if (finding.hasFix()) {
+                    finding.getFix().fixError(log);
+                } else {
+                    unfixedFindings.add(finding);
+                }
+            }));
+            for (final ValidationFinding unfixedFinding : unfixedFindings) {
+                log.warn(ExaError.messageBuilder("W-PK-67")
+                        .message("Could not auto-fix: {{finding message|uq}}", unfixedFinding.getMessage()).toString());
             }
-        }));
-        for (final ValidationFinding unfixedFinding : unfixedFindings) {
-            log.warn(ExaError.messageBuilder("W-PK-67")
-                    .message("Could not auto-fix: {{finding message|uq}}", unfixedFinding.getMessage()).toString());
-        }
-        if (!unfixedFindings.isEmpty()) {
-            throw new MojoFailureException(ExaError.messageBuilder("E-PK-65").message(
-                    "PK could not fix all of the findings automatically. There are findings that you need to fix by hand. (This is an error instead of a warning since no one checks for warnings in maven builds...).")
-                    .toString());
+            if (!unfixedFindings.isEmpty()) {
+                throw new MojoFailureException(ExaError.messageBuilder("E-PK-65").message(
+                        "PK could not fix all of the findings automatically. There are findings that you need to fix by hand. (This is an error instead of a warning since no one checks for warnings in maven builds...).")
+                        .toString());
+            }
         }
     }
 }

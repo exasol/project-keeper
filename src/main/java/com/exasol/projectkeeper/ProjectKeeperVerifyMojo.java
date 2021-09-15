@@ -24,13 +24,15 @@ public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
 
     @Override
     public void execute() throws MojoFailureException {
-        final List<ValidationFinding> findings = getValidators().stream()
-                .flatMap(validator -> validator.validate().stream()).collect(Collectors.toList());
-        final Log log = getLog();
-        findings.forEach(finding -> log.error(finding.getMessage()));
-        final boolean hasFindingsWithFix = findings.stream().anyMatch(ValidationFinding::hasFix);
-        final boolean hasFindingsWithoutFix = findings.stream().anyMatch(finding -> !finding.hasFix());
-        failIfValidationFailed(hasFindingsWithFix, hasFindingsWithoutFix);
+        if (isEnabled()) {
+            final List<ValidationFinding> findings = getValidators().stream()
+                    .flatMap(validator -> validator.validate().stream()).collect(Collectors.toList());
+            final Log log = getLog();
+            findings.forEach(finding -> log.error(finding.getMessage()));
+            final boolean hasFindingsWithFix = findings.stream().anyMatch(ValidationFinding::hasFix);
+            final boolean hasFindingsWithoutFix = findings.stream().anyMatch(finding -> !finding.hasFix());
+            failIfValidationFailed(hasFindingsWithFix, hasFindingsWithoutFix);
+        }
     }
 
     private void failIfValidationFailed(final boolean hasFindingsWithFix, final boolean hasFindingsWithoutFix)
