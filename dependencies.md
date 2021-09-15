@@ -30,14 +30,9 @@
 | [org.xmlunit:xmlunit-matchers][13]     | [The Apache Software License, Version 2.0][5] |
 | [SLF4J JDK14 Binding][36]              | [MIT License][21]                             |
 | [mockito-core][38]                     | [The MIT License][39]                         |
+| [JaCoCo :: Agent][40]                  | [Eclipse Public License 2.0][41]              |
 | [JaCoCo :: Core][40]                   | [Eclipse Public License 2.0][41]              |
-| [Maven Plugin Integration Testing][42] | [MIT][16]                                     |
-
-## Runtime Dependencies
-
-| Dependency            | License                          |
-| --------------------- | -------------------------------- |
-| [JaCoCo :: Agent][40] | [Eclipse Public License 2.0][41] |
+| [Maven Plugin Integration Testing][44] | [MIT][16]                                     |
 
 ## Plugin Dependencies
 
@@ -118,7 +113,7 @@
 [88]: http://maven.apache.org/plugins/maven-install-plugin/
 [56]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [17]: https://www.eclipse.org/jgit/
-[42]: https://github.com/exasol/maven-plugin-integration-testing
+[44]: https://github.com/exasol/maven-plugin-integration-testing
 [72]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [90]: http://maven.apache.org/plugins/maven-site-plugin/
 [60]: https://maven.apache.org/plugins/maven-javadoc-plugin/

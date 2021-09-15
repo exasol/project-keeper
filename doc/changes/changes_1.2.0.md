@@ -13,6 +13,14 @@ In this release we added a property that allows users to skip the execution of p
 
 ## Dependency Updates
 
+### Runtime Dependency Updates
+
+* Removed `org.jacoco:org.jacoco.agent:0.8.7`
+
+### Test Dependency Updates
+
+* Added `org.jacoco:org.jacoco.agent:0.8.7`
+
 ### Plugin Dependency Updates
 
 * Updated `com.exasol:project-keeper-maven-plugin:1.1.0` to `1.2.0`
