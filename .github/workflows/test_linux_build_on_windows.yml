@@ -25,7 +25,7 @@ jobs:
       - name: Build project-keeper
         run: mvn clean package -DskipTests
       - name: Strip version number
-        run: cp $(find target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\.jar") target/project-keeper.jar
+        run: cp $(find target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") target/project-keeper.jar
       - name: Upload artifact
         uses: actions/upload-artifact@master
         with:
