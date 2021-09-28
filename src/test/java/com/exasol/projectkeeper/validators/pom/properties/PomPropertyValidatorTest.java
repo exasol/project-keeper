@@ -52,6 +52,16 @@ class PomPropertyValidatorTest {
     }
 
     @Test
+    void testInvalid() throws ParserConfigurationException {
+        final Document document = createDocumentWithMyProperty("wrongValue");
+        final List<ValidationFinding> findings = runValidation(document);
+        final List<String> findingMessages = findings.stream().map(ValidationFinding::getMessage)
+                .collect(Collectors.toList());
+        assertThat(findingMessages, contains(
+                "E-PK-73: The required property '/project/myProperty' pom.xml has an illegal value. Set the required property '/project/myProperty' to 'myValue'."));
+    }
+
+    @Test
     void testFix() throws ParserConfigurationException {
         final Document document = createDocument();
         runValidation(document).forEach(finding -> finding.getFix().fixError(mock(Log.class)));
