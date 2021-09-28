@@ -12,7 +12,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.plugin.logging.Log;
 import org.junit.jupiter.api.Test;
-import org.w3c.dom.Document;
+import org.w3c.dom.*;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.ValidationFinding;
@@ -26,6 +26,29 @@ class PomPropertyValidatorTest {
                 .collect(Collectors.toList());
         assertThat(findingMessages, contains(
                 "E-PK-72: Missing required property '/project/myProperty' in pom.xml. Set the required property '/project/myProperty' to 'myValue'."));
+    }
+
+    @Test
+    void testValid() throws ParserConfigurationException {
+        final Document document = createDocumentWithMyProperty("myValue");
+        final List<ValidationFinding> findings = runValidation(document);
+        assertThat(findings, is(empty()));
+    }
+
+    private Document createDocumentWithMyProperty(final String propertyValue) throws ParserConfigurationException {
+        final Document document = createDocument();
+        final Element myProperty = document.createElement("myProperty");
+        myProperty.setTextContent(propertyValue);
+        final Node project = document.getFirstChild();
+        project.appendChild(myProperty);
+        return document;
+    }
+
+    @Test
+    void testValidWithWhitespace() throws ParserConfigurationException {
+        final Document document = createDocumentWithMyProperty("\n  \tmyValue\n  \t");
+        final List<ValidationFinding> findings = runValidation(document);
+        assertThat(findings, is(empty()));
     }
 
     @Test
