@@ -136,7 +136,7 @@ Needs: dsn
 
 `req~verify-gitignore-file~1`
 
-PK verifies that the project has a `gitignore` file.
+PK verifies that the project has a `.gitignore` file.
 
 It checks that the file contains certain required entries.
 

@@ -63,7 +63,7 @@ public class GitignoreFileValidator extends AbstractFileContentValidator {
             try {
                 Files.writeString(getAbsoluteFilePath(), newContent);
             } catch (final IOException exception) {
-                throw new IllegalStateException(
+                throw new UncheckedIOException(
                         ExaError.messageBuilder("E-PK-77").message("Failed to write fixed .gitignore file.").toString(),
                         exception);
             }
