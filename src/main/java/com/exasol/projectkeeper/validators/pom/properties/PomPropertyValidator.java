@@ -54,7 +54,7 @@ public class PomPropertyValidator extends AbstractPomValidator implements PomVal
 
     private void verifyPropertyValue(final Consumer<ValidationFinding> findingConsumer, final Node property) {
         final String actualValue = property.getTextContent();
-        if (!this.expectedValue.equals(actualValue)) {
+        if (!this.expectedValue.equals(actualValue.trim())) {
             findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-73")
                     .message("The required property {{property}} pom.xml has an illegal value.")
                     .mitigation("Set the required property {{property}} to {{value}}.")
