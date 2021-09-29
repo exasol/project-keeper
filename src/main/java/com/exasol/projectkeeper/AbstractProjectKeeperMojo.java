@@ -115,6 +115,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                         mavenModelReader, excludedFilesMatcher),
                 new ChangelogFileValidator(projectDir, excludedFilesMatcher),
                 new DependenciesValidator(mavenModelReader, artifactReader, pomFile, projectDir, brokenLinkReplacer),
-                new DeletedFilesValidator(projectDir, excludedFilesMatcher));
+                new DeletedFilesValidator(projectDir, excludedFilesMatcher),
+                new GitignoreFileValidator(projectDir, excludedFilesMatcher));
     }
 }

@@ -166,6 +166,16 @@ Covers:
 
 * `req~verify-license-file~1`
 
+## Gitignore Validator
+
+`dsn~gitignore-validator~1`
+
+Needs: impl, utest, itest
+
+Covers:
+
+* `req~verify-gitignore-file~1`
+
 ### Reading Project Dependencies
 
 `dsn~reading-project-dependencies~1`

@@ -102,4 +102,13 @@ public abstract class AbstractFileValidator implements Validator {
     protected boolean isValidationEnabled() {
         return true;
     }
+
+    /**
+     * Get the absolute path of the file to validate.
+     * 
+     * @return absolute path of the file to validate
+     */
+    protected Path getAbsoluteFilePath() {
+        return this.absoluteFilePath;
+    }
 }
