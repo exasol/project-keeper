@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
