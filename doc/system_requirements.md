@@ -132,6 +132,16 @@ Covers:
 
 Needs: dsn
 
+#### Verify Gitignore File
+
+`req~verify-gitignore-file~1`
+
+PK verifies that the project has a `.gitignore` file.
+
+It checks that the file contains certain required entries.
+
+Needs: dsn
+
 #### Verify Existence of Files
 
 `req~verify-existence-of-files~1`

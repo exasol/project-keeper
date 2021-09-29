@@ -25,3 +25,10 @@ Scripts
 venv/
 pom.xml.versionsBackup
 .git.lock
+
+~*
+*.lock
+*.bak
+*.orig
+*.old
+*.md.html
