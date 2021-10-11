@@ -51,7 +51,7 @@
 | [OpenFastTrace Maven Plugin][66]                        | [GNU General Public License v3.0][67]         |
 | [Apache Maven Enforcer Plugin][68]                      | [Apache License, Version 2.0][1]              |
 | [Project keeper maven plugin][70]                       | [MIT][16]                                     |
-| [Maven Deploy Plugin][72]                               | [The Apache Software License, Version 2.0][5] |
+| [Apache Maven Deploy Plugin][72]                        | [Apache License, Version 2.0][1]              |
 | [Nexus Staging Maven Plugin][74]                        | [Eclipse Public License][27]                  |
 | [error-code-crawler-maven-plugin][76]                   | [MIT][16]                                     |
 | [Reproducible Build Maven Plugin][78]                   | [Apache 2.0][5]                               |
@@ -82,6 +82,7 @@
 [66]: https://github.com/itsallcode/openfasttrace-maven-plugin
 [26]: http://junit.org
 [41]: https://www.eclipse.org/legal/epl-2.0/
+[72]: https://maven.apache.org/plugins/maven-deploy-plugin/
 [64]: https://www.jacoco.org/jacoco/trunk/doc/maven.html
 [13]: https://www.xmlunit.org/
 [39]: https://github.com/mockito/mockito/blob/main/LICENSE
@@ -114,7 +115,6 @@
 [17]: https://www.eclipse.org/jgit/
 [62]: https://maven.apache.org/plugins/maven-gpg-plugin/
 [44]: https://github.com/exasol/maven-plugin-integration-testing
-[72]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [90]: http://maven.apache.org/plugins/maven-site-plugin/
 [60]: https://maven.apache.org/plugins/maven-javadoc-plugin/
 [76]: https://github.com/exasol/error-code-crawler-maven-plugin

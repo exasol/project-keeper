@@ -414,7 +414,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>${version}</version>
+                <version>${project.version}</version>
                 <!-- no execution configured on purpose. Run manually -->
                 <configuration>
                     <modules>
@@ -430,6 +430,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.0.0-M1</version>
                 <configuration>
                     <skip>true</skip>
                 </configuration>
