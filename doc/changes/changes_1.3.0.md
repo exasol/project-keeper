@@ -4,7 +4,7 @@ Code name: Test with Java 17
 
 ## Summary
 
-This release adds a GitHub action that verifies that the project builds with Java 17.
+This release adds a GitHub action that verifies that the project builds with Java 17. It also updates the Eclipse settings files for code formatter and save actions to Eclipse 2021-09.
 
 ## Features
 
