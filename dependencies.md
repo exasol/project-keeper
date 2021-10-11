@@ -22,7 +22,7 @@
 
 | Dependency                             | License                                       |
 | -------------------------------------- | --------------------------------------------- |
-| [maven-project-version-getter][24]     | [MIT][16]                                     |
+| [Maven Project Version Getter][24]     | [MIT][16]                                     |
 | [JUnit][26]                            | [Eclipse Public License 1.0][27]              |
 | [JUnit Jupiter Engine][28]             | [Eclipse Public License v2.0][29]             |
 | [JUnit Jupiter Params][28]             | [Eclipse Public License v2.0][29]             |
@@ -46,7 +46,7 @@
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][56] | [ASL2][5]                                     |
 | [Apache Maven Source Plugin][58]                        | [Apache License, Version 2.0][1]              |
 | [Apache Maven Javadoc Plugin][60]                       | [Apache License, Version 2.0][1]              |
-| [Apache Maven GPG Plugin][62]                           | [Apache License, Version 2.0][5]              |
+| [Apache Maven GPG Plugin][62]                           | [Apache License, Version 2.0][1]              |
 | [JaCoCo :: Maven Plugin][64]                            | [Eclipse Public License 2.0][41]              |
 | [OpenFastTrace Maven Plugin][66]                        | [GNU General Public License v3.0][67]         |
 | [Apache Maven Enforcer Plugin][68]                      | [Apache License, Version 2.0][1]              |
@@ -69,6 +69,7 @@
 [11]: https://eclipse-ee4j.github.io/jaxb-ri/
 [52]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [82]: http://maven.apache.org/plugins/maven-clean-plugin/
+[2]: https://maven.apache.org/ref/3.8.3/maven-plugin-api/
 [16]: https://opensource.org/licenses/MIT
 [38]: https://github.com/mockito/mockito
 [4]: http://maven.apache.org/
@@ -77,8 +78,6 @@
 [33]: http://opensource.org/licenses/BSD-3-Clause
 [46]: https://maven.apache.org/plugins/maven-compiler-plugin/
 [9]: https://oss.oracle.com/licenses/CDDL+GPL-1.1
-[62]: http://maven.apache.org/plugins/maven-gpg-plugin/
-[2]: https://maven.apache.org/ref/3.8.2/maven-plugin-api/
 [18]: https://github.com/Steppschuh/Java-Markdown-Generator
 [66]: https://github.com/itsallcode/openfasttrace-maven-plugin
 [26]: http://junit.org
@@ -97,7 +96,7 @@
 [36]: http://www.slf4j.org
 [84]: http://maven.apache.org/plugins/maven-resources-plugin/
 [0]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[22]: https://maven.apache.org/ref/3.8.2/maven-core/
+[22]: https://maven.apache.org/ref/3.8.3/maven-core/
 [20]: https://github.com/vdurmont/semver4j
 [74]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [50]: https://maven.apache.org/surefire/maven-failsafe-plugin/
@@ -113,6 +112,7 @@
 [88]: http://maven.apache.org/plugins/maven-install-plugin/
 [56]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [17]: https://www.eclipse.org/jgit/
+[62]: https://maven.apache.org/plugins/maven-gpg-plugin/
 [44]: https://github.com/exasol/maven-plugin-integration-testing
 [72]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [90]: http://maven.apache.org/plugins/maven-site-plugin/
