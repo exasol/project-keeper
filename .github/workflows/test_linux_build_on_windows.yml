@@ -51,7 +51,7 @@ jobs:
         with:
           name: project-keeper-jar
       - name: List files
-        run: ls -lah
+        run: ls
       - name: Install project-keeper
         run: mvn --batch-mode install:install-file -Dfile="project-keeper.jar" -D pomFile="pom.xml"
       - name: run project-keeper
