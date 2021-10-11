@@ -7,9 +7,13 @@ import java.util.List;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.AbstractFileContentValidator;
 import com.exasol.projectkeeper.validators.VersionCollector;
 
+/**
+ * This is a {@link Validator} for the changelog files.
+ */
 //[impl->dsn~verify-changelog-file~1]
 public class ChangelogFileValidator extends AbstractFileContentValidator {
     private final Path projectDirectory;

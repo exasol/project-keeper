@@ -77,6 +77,11 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         ).collect(Collectors.toSet());
     }
 
+    /**
+     * Check if the project-keeper is enabled.
+     * 
+     * @return {@code true} if the plugin is enabled, else {@code false}
+     */
     protected boolean isEnabled() {
         if ("true".equals(this.skip)) {
             getLog().info("Skipping project-keeper.");

@@ -35,6 +35,12 @@ public abstract class AbstractFileContentValidator extends AbstractFileValidator
         }
     }
 
+    /**
+     * Validate the given file content and return a list of validation findings.
+     * 
+     * @param content file content
+     * @return list of {@link ValidationFinding}s or an empty list if there are no findings
+     */
     protected abstract List<ValidationFinding> validateContent(final String content);
 
     @Override
@@ -42,5 +48,10 @@ public abstract class AbstractFileContentValidator extends AbstractFileValidator
         Files.writeString(target, getTemplate());
     }
 
+    /**
+     * Get the template content for the file in case it does not exist.
+     * 
+     * @return template content.
+     */
     protected abstract String getTemplate();
 }
