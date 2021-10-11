@@ -9,7 +9,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 
 /**
- * This is a {@link Validator} for the README.md.
+ * This is a {@link Validator} for the {@code README.md} file.
  */
 // [impl->dsn~readme-validator~1]
 public class ReadmeFileValidator extends AbstractFileContentValidator {
@@ -72,6 +72,11 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
                 "* [Dependencies](dependencies.md)";
     }
 
+    /**
+     * Build the markdown content containing the badges for Build, Maven Central (if enabled) and Sonar.
+     * 
+     * @return makrdown content
+     */
     public String getBadges() {
         String badges = getBuildBadge() + NL;
         if (this.enabledModules.contains(MAVEN_CENTRAL)) {

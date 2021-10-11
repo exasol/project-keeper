@@ -200,7 +200,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         }
     }
 
-    protected void verifyPluginPropertyHasExactValue(final Node plugin, final String propertyXpath,
+    void verifyPluginPropertyHasExactValue(final Node plugin, final String propertyXpath,
             final Node expectedProperty, final Consumer<ValidationFinding> findingConsumer) {
         if (verifyPluginHasPropertyWithGivenDefault(plugin, propertyXpath, expectedProperty, findingConsumer)) {
             final Node property = runXPath(plugin, propertyXpath);

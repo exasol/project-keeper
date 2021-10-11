@@ -10,7 +10,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 
 /**
- * This is a {@link Validator} for the README.md.
+ * This is a {@link Validator} for the {@code .gitignore} file.
  */
 // [impl->dsn~gitignore-validator~1]
 public class GitignoreFileValidator extends AbstractFileContentValidator {
