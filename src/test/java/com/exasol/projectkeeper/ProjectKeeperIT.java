@@ -240,7 +240,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     private void commitAndMakeTag(final Git git, final String releaseTag) throws GitAPIException {
-        git.add().addFilepattern("*").call();
+        git.add().addFilepattern("pom.xml").call();
         git.commit().setMessage("commit for release " + releaseTag).call();
         git.tag().setName(releaseTag).call();
     }
