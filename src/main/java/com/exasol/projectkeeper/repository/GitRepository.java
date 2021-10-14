@@ -117,6 +117,7 @@ public class GitRepository {
      * @param relativeFilePath file path
      * @param commit           commit
      * @return file contents
+     * @throws FileNotFoundException if the file does not exist in the repo
      */
     public String readFileAtCommit(final Path relativeFilePath, final GitCommit commit) throws FileNotFoundException {
         try (final var git = openLocalGithubRepository()) {
