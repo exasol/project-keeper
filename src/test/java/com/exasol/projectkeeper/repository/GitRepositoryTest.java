@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
@@ -117,7 +118,7 @@ class GitRepositoryTest {
             final GitCommit commit = new GitCommit(makeCommitAndTag(git, 1, false));
             final GitRepository repository = new GitRepository(this.tempDir);
             final Path nonExistingPath = Path.of("nonExistingFile.md");
-            final IllegalStateException exception = assertThrows(IllegalStateException.class,
+            final FileNotFoundException exception = assertThrows(FileNotFoundException.class,
                     () -> repository.readFileAtCommit(nonExistingPath, commit));
             assertThat(exception.getMessage(), startsWith("E-PK-35"));
         }

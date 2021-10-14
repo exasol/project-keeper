@@ -203,12 +203,21 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     // [itest->dsn~verify-changelog-file~1]
-    void testChangesFileGeneration() throws IOException, GitAPIException, VerificationException {
+    void testChangelogFileGeneration() throws IOException, GitAPIException, VerificationException {
         setupDemoProjectWithDependencyChange(true);
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         final String generatedChangelog = Files.readString(this.projectDir.resolve("doc/changes/changelog.md"));
         assertThat(generatedChangelog, containsString("[0.2.0](changes_0.2.0.md)"));
+    }
+
+    @Test
+    void testChangesFileGenerationWithNoPomInPrevVersion() throws IOException, GitAPIException, VerificationException {
+        setupDemoProjectWithPomAddedInThisVersion();
+        final Verifier verifier = getVerifier();
+        verifier.executeGoal("project-keeper:fix");
+        final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
+        assertThat(generatedChangesFile, containsString("* Added `com.exasol:error-reporting-java:0.2.0`"));
     }
 
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
@@ -222,8 +231,16 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         }
     }
 
+    private void setupDemoProjectWithPomAddedInThisVersion() throws IOException, GitAPIException {
+        try (final Git git = Git.open(this.projectDir.toFile())) {
+            Files.writeString(this.projectDir.resolve("a-file.txt"), "some content");
+            commitAndMakeTag(git, "0.1.0");
+            writePomWithOneDependency("0.2.0", "0.2.0");
+        }
+    }
+
     private void commitAndMakeTag(final Git git, final String releaseTag) throws GitAPIException {
-        git.add().addFilepattern("pom.xml").call();
+        git.add().addFilepattern("*").call();
         git.commit().setMessage("commit for release " + releaseTag).call();
         git.tag().setName(releaseTag).call();
     }

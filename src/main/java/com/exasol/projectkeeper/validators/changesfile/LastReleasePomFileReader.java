@@ -1,7 +1,9 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 import com.exasol.projectkeeper.repository.GitRepository;
 import com.exasol.projectkeeper.repository.TaggedCommit;
@@ -10,6 +12,7 @@ import com.exasol.projectkeeper.repository.TaggedCommit;
  * This class reads the pom file of the latest previous release on the current branch.
  */
 public class LastReleasePomFileReader {
+    private static final Logger LOGGER = Logger.getLogger(LastReleasePomFileReader.class.getName());
     private static final Path POM_PATH = Path.of("pom.xml");
 
     /**
@@ -26,7 +29,15 @@ public class LastReleasePomFileReader {
                 .filter(taggedCommit -> exasolVersionMatcher.isExasolStyleVersion(taggedCommit.getTag()))//
                 .filter(taggedCommit -> !taggedCommit.getTag().equals(currentVersion))//
                 .findFirst();
-        return latestCommitWithExasolVersionTag
-                .map(taggedCommit -> gitRepository.readFileAtCommit(POM_PATH, taggedCommit.getCommit()));
+        return latestCommitWithExasolVersionTag.flatMap(taggedCommit -> readPomFile(gitRepository, taggedCommit));
+    }
+
+    private Optional<String> readPomFile(final GitRepository gitRepository, final TaggedCommit taggedCommit) {
+        try {
+            return Optional.of(gitRepository.readFileAtCommit(POM_PATH, taggedCommit.getCommit()));
+        } catch (final FileNotFoundException exception) {
+            LOGGER.warning("Could not read pom file from previous release. Assuming empty file.");
+            return Optional.empty();
+        }
     }
 }

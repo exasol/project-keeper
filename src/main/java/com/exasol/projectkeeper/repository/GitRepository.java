@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.repository;
 
 import static org.eclipse.jgit.lib.Constants.R_TAGS;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.*;
@@ -119,9 +118,11 @@ public class GitRepository {
      * @param commit           commit
      * @return file contents
      */
-    public String readFileAtCommit(final Path relativeFilePath, final GitCommit commit) {
+    public String readFileAtCommit(final Path relativeFilePath, final GitCommit commit) throws FileNotFoundException {
         try (final var git = openLocalGithubRepository()) {
             return readFileAtCommit(relativeFilePath, git, commit.getCommit());
+        } catch (final FileNotFoundException exception) {
+            throw exception;
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-43")
@@ -136,7 +137,7 @@ public class GitRepository {
         final var reader = repository.newObjectReader();
         final var treeParser = new CanonicalTreeParser(null, reader, commit.getTree());
         if (!treeParser.findFile(relativeFilePath.toString())) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-35")
+            throw new FileNotFoundException(ExaError.messageBuilder("E-PK-35")
                     .message("Failed to read file {{file path}} from commit {{commit id}}.")
                     .parameter("file path", relativeFilePath).parameter("commit id", commit.getName())
                     .mitigation("Make sure that the file exists at the given commit.").toString());
