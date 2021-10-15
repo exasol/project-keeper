@@ -5,7 +5,7 @@
     <groupId>com.exasol</groupId>
     <artifactId>project-keeper-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.3.0</version>
+    <version>1.3.1</version>
     <name>Project keeper maven plugin</name>
     <description>This maven plugin checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.125</version>
+            <version>4.8.128</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -235,7 +235,7 @@
                 <version>3.0.0-M3</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we
-                                have a chance to reach branches in the logging lambdas too. -->
+                                          have a chance to reach branches in the logging lambdas too. -->
                     <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                     <excludes>
                         <exclude>**IT.java</exclude>
@@ -457,7 +457,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>0.6.0</version>
+                <version>0.7.0</version>
                 <executions>
                     <execution>
                         <goals>
