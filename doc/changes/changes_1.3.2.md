@@ -1,12 +1,15 @@
-# Project keeper maven plugin 1.3.2, released 2021-??-??
+# Project keeper maven plugin 1.3.2, released 2021-11-05
 
-Code name:
-
-## Features
+Code name: Fixed ci-build Template
 
 ## Bugfixes
 
 * #189: Fixed mvn command in ci-build.yml template
+* #193: Renamed next-java github-actions job
+
+## Documentation
+
+* #168: Added troubleshooting section
 
 ## Dependency Updates
 
