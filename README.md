@@ -202,7 +202,7 @@ Validations for the POM file are defined using code. For maven plugins there is 
 
 ## Troubleshooting
 
-**Problem:** Validation on CI fails but locally succeeds. In the CI PK want's to list all dependencies as `Added`.
+**Problem:** Validation on CI fails but locally succeeds. In the CI PK wants to list all dependencies as `Added`.
 
 PK retrieves the dependency update information from the git history. In CI sometimes only the latest commit is fetched. Then PK thinks that the latest release would be the very first one.
 
