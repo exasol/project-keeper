@@ -200,6 +200,27 @@ This makes the project-keeper check that in all repositories exists the file `te
 
 Validations for the POM file are defined using code. For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
 
+## Troubleshooting
+
+**Problem:** Validation on CI fails but locally succeeds. In the CI PK wants to list all dependencies as `Added`.
+
+PK retrieves the dependency update information from the git history. In CI sometimes only the latest commit is fetched. Then PK thinks that the latest release would be the very first one.
+
+For GitHub Actions you can solve this by adding `fetch-depth: 0` to the checkout action:
+
+```yaml
+- name: Checkout the repository
+    uses: actions/checkout@v2
+    with:
+      fetch-depth: 0
+```
+
+---------
+
+**Problem:** PK locally shows more dependency changes than in CI.
+
+Typically, this happens if you did not fetch all tags. Simply run `git pull`.
+
 ## Additional Resources
 
 * [Dependencies](dependencies.md)
