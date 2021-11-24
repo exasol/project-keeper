@@ -69,7 +69,6 @@
 [11]: https://eclipse-ee4j.github.io/jaxb-ri/
 [52]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [82]: http://maven.apache.org/plugins/maven-clean-plugin/
-[2]: https://maven.apache.org/ref/3.8.3/maven-plugin-api/
 [16]: https://opensource.org/licenses/MIT
 [38]: https://github.com/mockito/mockito
 [4]: http://maven.apache.org/
@@ -97,7 +96,8 @@
 [36]: http://www.slf4j.org
 [84]: http://maven.apache.org/plugins/maven-resources-plugin/
 [0]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[22]: https://maven.apache.org/ref/3.8.3/maven-core/
+[2]: https://maven.apache.org/ref/3.8.4/maven-plugin-api/
+[22]: https://maven.apache.org/ref/3.8.4/maven-core/
 [20]: https://github.com/vdurmont/semver4j
 [74]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [50]: https://maven.apache.org/surefire/maven-failsafe-plugin/
