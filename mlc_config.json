@@ -1,7 +1,0 @@
-{
-  "ignorePatterns": [
-    {
-      "pattern": "^changes_0.1.0.md"
-    }
-  ]
-}
