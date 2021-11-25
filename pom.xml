@@ -5,7 +5,7 @@
     <groupId>com.exasol</groupId>
     <artifactId>project-keeper-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <version>1.3.2</version>
+    <version>1.3.3</version>
     <name>Project keeper maven plugin</name>
     <description>This maven plugin checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
@@ -43,7 +43,7 @@
         <url>https://github.com/exasol/project-keeper-maven-plugin/tree/master</url>
     </scm>
     <properties>
-        <maven.version>3.8.3</maven.version>
+        <maven.version>3.8.4</maven.version>
         <junit.version>5.8.1</junit.version>
         <java.version>11</java.version>
         <junit.platform.version>1.6.2</junit.platform.version>
@@ -72,7 +72,7 @@
         <dependency>
             <groupId>io.github.classgraph</groupId>
             <artifactId>classgraph</artifactId>
-            <version>4.8.129</version>
+            <version>4.8.135</version>
         </dependency>
         <dependency>
             <groupId>javax.xml.bind</groupId>
@@ -92,7 +92,7 @@
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>error-reporting-java</artifactId>
-            <version>0.4.0</version>
+            <version>0.4.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
@@ -168,7 +168,7 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
-            <version>4.0.0</version>
+            <version>4.1.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>

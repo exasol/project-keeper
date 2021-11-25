@@ -24,10 +24,13 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Build project-keeper
-        run: mvn clean package -DskipTests
+        run: |
+          mvn clean package -DskipTests \
+            --batch-mode \
+            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - name: Strip version number
         run: cp $(find target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") target/project-keeper.jar
-      - name: Upload artifact
+      - name: Upload jar artifact
         uses: actions/upload-artifact@master
         with:
           name: project-keeper-jar
@@ -46,6 +49,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
       - name: Download jar
         uses: actions/download-artifact@v2
         with:
@@ -53,6 +63,11 @@ jobs:
       - name: List files
         run: ls
       - name: Install project-keeper
-        run: mvn --batch-mode install:install-file -Dfile="project-keeper.jar" -D pomFile="pom.xml"
+        shell: pwsh
+        run: |
+          New-Item -Path "." -Name "target/unpacked-jar" -ItemType "directory"
+          Expand-Archive -Path project-keeper.jar -DestinationPath "target/unpacked-jar"
+          mvn install:install-file -Dfile="project-keeper.jar" -DpomFile="target/unpacked-jar/META-INF/maven/com.exasol/project-keeper-maven-plugin/pom.xml" --batch-mode
       - name: run project-keeper
+        shell: pwsh
         run: mvn project-keeper:verify
