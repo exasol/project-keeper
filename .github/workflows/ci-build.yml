@@ -32,7 +32,7 @@ jobs:
           restore-keys: ${{ runner.os }}-sonar
       - name: Run tests and build with Maven
         run: |
-          mvn --batch-mode clean verify \
+          mvn --batch-mode clean verify install \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
       - name: Publish Test Report
