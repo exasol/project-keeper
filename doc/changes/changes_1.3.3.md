@@ -9,6 +9,7 @@ Code name:
 * #196: Updated maven version required by maven-enforcer plugin to 3.6.3
 * #175: Updated broken links checker to accept rate limited requests with status 429
 * #180: Added pull_request trigger to support building on forks, skipping build steps that require secrets
+* #181: Added dependabot configuration for checking that GitHub Actions in this repository are up-to-date
 
 ## Dependency Updates
 
