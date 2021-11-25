@@ -4,7 +4,7 @@ Code name:
 
 ## Features
 
-* #190: Reduce maven log verbosity
+* #190: Reduced maven log verbosity
 
 ## Dependency Updates
 
