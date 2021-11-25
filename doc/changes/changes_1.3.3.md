@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #190: Reduced maven log verbosity
+* #191: Added caching for sonar packages
 
 ## Dependency Updates
 
