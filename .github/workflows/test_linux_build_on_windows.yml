@@ -69,7 +69,7 @@ jobs:
           Expand-Archive -Path project-keeper.jar -DestinationPath "target/unpacked-jar"
           mvn --batch-mode install:install-file -Dfile="project-keeper.jar" `
             -DpomFile="target/unpacked-jar/META-INF/maven/com.exasol/project-keeper-maven-plugin/pom.xml" `
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+            "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
       - name: run project-keeper
         shell: pwsh
         run: mvn project-keeper:verify
