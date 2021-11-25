@@ -65,12 +65,8 @@ jobs:
       - name: Install project-keeper
         shell: pwsh
         run: |
-          mvn --version
           New-Item -Path "." -Name "target/unpacked-jar" -ItemType "directory"
-          ls target
           Expand-Archive -Path project-keeper.jar -DestinationPath "target/unpacked-jar"
-          ls target/unpacked-jar
-          ls target/unpacked-jar/META-INF/maven/com.exasol/project-keeper-maven-plugin/
           mvn install:install-file -Dfile="project-keeper.jar" -DpomFile="target/unpacked-jar/META-INF/maven/com.exasol/project-keeper-maven-plugin/pom.xml" --batch-mode
       - name: run project-keeper
         shell: pwsh
