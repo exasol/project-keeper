@@ -2,6 +2,7 @@ name: Test on windows
 
 on:
   push:
+  pull_request:
 
 jobs:
   test:
