@@ -6,6 +6,7 @@ Code name:
 
 * #190: Reduced maven log verbosity
 * #191: Added caching for sonar packages
+* #196: Updated maven version required by maven-enforcer plugin to 3.6.3
 
 ## Dependency Updates
 
