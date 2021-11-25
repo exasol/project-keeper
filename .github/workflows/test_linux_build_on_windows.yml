@@ -56,7 +56,8 @@ jobs:
       - name: List files
         run: ls
       - name: Install project-keeper
-        run: mvn install:install-file -Dfile="project-keeper.jar" `
+        run: |
+          mvn install:install-file -Dfile="project-keeper.jar" `
             --batch-mode `
             -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - name: run project-keeper
