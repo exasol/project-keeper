@@ -7,6 +7,7 @@ Code name:
 * #190: Reduced maven log verbosity
 * #191: Added caching for sonar packages
 * #196: Updated maven version required by maven-enforcer plugin to 3.6.3
+* #175: Updated broken links checker to accept rate limited requests with status 429
 * #180: Added pull_request trigger to support building on forks, skipping build steps that require secrets
 
 ## Dependency Updates
