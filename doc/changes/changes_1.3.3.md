@@ -1,6 +1,6 @@
-# Project keeper maven plugin 1.3.3, released 2021-11-??
+# Project keeper maven plugin 1.3.3, released 2021-11-25
 
-Code name:
+Code name: Many small improvements
 
 ## Features
 
