@@ -2,6 +2,7 @@ name: Test Linux build on windows
 
 on:
   push:
+  pull_request:
 
 jobs:
   build-on-linux:

@@ -2,6 +2,7 @@ name: CI Build next Java
 
 on:
   - push
+  - pull_request
 
 jobs:
   java-17-compatibility:
