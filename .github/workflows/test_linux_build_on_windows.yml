@@ -49,6 +49,13 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 11
+      - name: Cache local Maven repository
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
       - name: Download jar
         uses: actions/download-artifact@v2
         with:
@@ -58,9 +65,8 @@ jobs:
       - name: Install project-keeper
         shell: pwsh
         run: |
-          mvn install:install-file -Dfile="project-keeper.jar" `
-            --batch-mode `
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+          mvn --version
+          mvn install:install-file -Dfile="project-keeper.jar" --batch-mode
       - name: run project-keeper
         shell: pwsh
         run: mvn project-keeper:verify
