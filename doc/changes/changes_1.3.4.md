@@ -7,6 +7,10 @@ Code name: Bugfixes
 * #205: Replaced file broken_links_checker.json that was reformatted
 * #207: Fix GitHub Actions trigger to avoid running Actions twice
 
+## Refactoring
+
+* #212: Decoupled maven plugin as executor from maven project analysis
+
 ## Dependency Updates
 
 ### Plugin Dependency Updates
