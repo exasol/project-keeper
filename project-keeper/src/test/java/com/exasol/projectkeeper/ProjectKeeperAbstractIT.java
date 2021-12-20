@@ -45,7 +45,7 @@ public class ProjectKeeperAbstractIT {
     @BeforeAll
     static void beforeAll() {
         mavenIntegrationTestEnvironment = new MavenIntegrationTestEnvironment();
-        mavenIntegrationTestEnvironment.installPluginWithoutJar(PARENT_POM);
+        mavenIntegrationTestEnvironment.installWithoutJar(PARENT_POM);
         mavenIntegrationTestEnvironment.installPlugin(SHARED_MODEL, SHARED_MODEL_POM,
                 "project-keeper-shared-model-classes", "com.exasol", CURRENT_VERSION);
         mavenIntegrationTestEnvironment.installPlugin(JAVA_CRAWLER, JAVA_CRAWLER_POM,
