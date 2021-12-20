@@ -20,7 +20,7 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.NewDependency;
 
-class JavaProjectCrawlerRunnerTest {
+class JavaProjectCrawlerRunnerIT {
     private static final String DEPENDENCY_ID = "error-reporting-java";
     private static final String DEPENDENCY_GROUP = "com.exasol";
     private static final String DEPENDENCY_VERSION = "0.4.1";

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.io.TempDir;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 //[utest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
-class DependencySectionFixerTest {
+class DependencySectionFixerIT {
     @TempDir
     static Path tempDir;
 

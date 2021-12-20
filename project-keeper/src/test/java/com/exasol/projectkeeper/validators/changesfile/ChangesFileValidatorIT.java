@@ -25,7 +25,7 @@ import org.junit.jupiter.api.io.TempDir;
 import com.exasol.projectkeeper.ExcludedFilesMatcher;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
-class ChangesFileValidatorTest {
+class ChangesFileValidatorIT {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
 
