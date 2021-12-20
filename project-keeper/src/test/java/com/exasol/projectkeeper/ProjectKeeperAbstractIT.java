@@ -17,20 +17,23 @@ import com.exasol.projectkeeper.validators.ProjectKeeperPluginDeclaration;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 public class ProjectKeeperAbstractIT {
-
-    protected static final String CURRENT_VERSION = MavenProjectVersionGetter.getProjectRevision(Path.of("../pom.xml"));
-    private static final File PARENT_POM = Path.of("../pom.xml").toFile();
+    private static final String PROJECT_ROOT_OFFSET = "../";
+    private static final File PARENT_POM = Path.of(PROJECT_ROOT_OFFSET, "parent-pom/pom.xml").toFile();
+    protected static final String CURRENT_VERSION = MavenProjectVersionGetter.getProjectRevision(PARENT_POM.toPath());
     private static final File SHARED_MODEL = Path
-            .of("../sharedModelClasses/target/project-keeper-shared-model-classes-" + CURRENT_VERSION + ".jar")
+            .of(PROJECT_ROOT_OFFSET,
+                    "sharedModelClasses/target/project-keeper-shared-model-classes-" + CURRENT_VERSION + ".jar")
             .toFile();
-    private static final File SHARED_MODEL_POM = Path.of("../sharedModelClasses/pom.xml").toFile();
     private static final File JAVA_CRAWLER = Path
-            .of("../javaProjectCrawler/target/project-keeper-java-project-crawler-" + CURRENT_VERSION + ".jar")
+            .of(PROJECT_ROOT_OFFSET,
+                    "javaProjectCrawler/target/project-keeper-java-project-crawler-" + CURRENT_VERSION + ".jar")
             .toFile();
-    private static final File JAVA_CRAWLER_POM = Path.of("../javaProjectCrawler/pom.xml").toFile();
-    private static final File PLUGIN = Path.of("target/project-keeper-maven-plugin-" + CURRENT_VERSION + ".jar")
+    private static final File PLUGIN = Path
+            .of(PROJECT_ROOT_OFFSET, "project-keeper/target/project-keeper-maven-plugin-" + CURRENT_VERSION + ".jar")
             .toFile();
-    private static final File PLUGIN_POM = Path.of("pom.xml").toFile();
+    private static final File SHARED_MODEL_POM = Path.of(PROJECT_ROOT_OFFSET, "sharedModelClasses/pom.xml").toFile();
+    private static final File JAVA_CRAWLER_POM = Path.of(PROJECT_ROOT_OFFSET, "javaProjectCrawler/pom.xml").toFile();
+    private static final File PLUGIN_POM = Path.of(PROJECT_ROOT_OFFSET, "project-keeper/pom.xml").toFile();
 
     /**
      * TempDir only supports one temp directory per test class. For that we can not use it here again but create and
