@@ -3,6 +3,8 @@ package com.exasol.projectkeeper;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -15,9 +17,20 @@ public class JavaProjectCrawlerRunner {
     private static final String RESPONSE_END_TOKEN = "###SerializedResponseEnd###";
     private static final Logger LOGGER = Logger.getLogger(JavaProjectCrawlerRunner.class.getName());
     private final Path pomFile;
+    private final Path mvnRepositoryOverride;
+    private final String ownVersion;
 
-    public JavaProjectCrawlerRunner(Path pomFile) {
+    /**
+     * Create a new instance of {@link JavaProjectCrawlerRunner}.
+     * 
+     * @param pomFile               path to the pom file to analyze.
+     * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
+     * @param ownVersion            project-keeper version
+     */
+    public JavaProjectCrawlerRunner(final Path pomFile, final Path mvnRepositoryOverride, final String ownVersion) {
         this.pomFile = pomFile;
+        this.mvnRepositoryOverride = mvnRepositoryOverride;
+        this.ownVersion = ownVersion;
     }
 
     public DependencyChangeReport getDependencyChanges() {
@@ -30,37 +43,48 @@ public class JavaProjectCrawlerRunner {
         return ProjectDependencies.fromJson(json);
     }
 
-    private String runCrawlerPlugin(String goal) {
+    private String runCrawlerPlugin(final String goal) {
         try {
-            Runtime rt = Runtime.getRuntime();
-            String[] commands = { "mvn", "project-keeper-java-project-crawler:" + goal, "--file", pomFile.toString() };
-            Process proc = rt.exec(commands);
+            final Runtime rt = Runtime.getRuntime();
+            final List<String> commandParts = new ArrayList<>(
+                    List.of("mvn", "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal,
+                            "--file", this.pomFile.toString()));
+            if (this.mvnRepositoryOverride != null) {
+                commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
+            }
+            final Process proc = rt.exec(commandParts.toArray(String[]::new));
             final int exitCode = proc.waitFor();
+            final String output = readFromStream(proc.getInputStream());
             if (exitCode != 0) {
-                try (InputStream inputStream = proc.getErrorStream()) {
-                    final String errorMessage = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                    LOGGER.log(Level.SEVERE, errorMessage);
-                    throw new IllegalStateException(ExaError.messageBuilder("E-PK-78").message(
-                            "Failed to run project-keeper-java-project-crawler maven plugin Exit code was {{exit code}}.",
-                            exitCode).toString());
-                }
+                LOGGER.log(Level.SEVERE, output);
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-78").message(
+                        "Failed to run project-keeper-java-project-crawler maven plugin Exit code was {{exit code}}.",
+                        exitCode).toString());
             }
-            try (InputStream inputStream = proc.getInputStream()) {
-                final String output = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-                final int startIndex = output.indexOf(RESPONSE_START_TOKEN);
-                final int responseStartIndex = startIndex + RESPONSE_START_TOKEN.length() + 1;
-                final int endIndex = output.indexOf(RESPONSE_END_TOKEN);
-                if (startIndex == -1 || endIndex == -1 || responseStartIndex > endIndex) {
-                    throw new IllegalStateException(ExaError.messageBuilder("F-PK-79")
-                            .message("Invalid response from crawler plugin.").ticketMitigation().toString());
-                }
-                return output.substring(responseStartIndex, endIndex);
+            final int startIndex = output.indexOf(RESPONSE_START_TOKEN);
+            final int responseStartIndex = startIndex + RESPONSE_START_TOKEN.length() + 1;
+            final int endIndex = output.indexOf(RESPONSE_END_TOKEN);
+            if (startIndex == -1 || endIndex == -1 || responseStartIndex > endIndex) {
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-79")
+                        .message("Invalid response from crawler plugin.").ticketMitigation().toString());
             }
-        } catch (IOException exception) {
-            throw new UncheckedIOException("", exception);// todo
-        } catch (InterruptedException exception) {
+            return output.substring(responseStartIndex, endIndex);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(getRunFailedMessage(), exception);
+        } catch (final InterruptedException exception) {
             Thread.currentThread().interrupt();
-            throw new IllegalStateException("", exception);// todo
+            throw new IllegalStateException(getRunFailedMessage(), exception);
+        }
+    }
+
+    private String getRunFailedMessage() {
+        return ExaError.messageBuilder("E-PK-80").message("Failed to run project-keeper-java-project-crawler.")
+                .toString();
+    }
+
+    private String readFromStream(final InputStream stream) throws IOException {
+        try (final InputStream inputStream = stream) {
+            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
         }
     }
 }

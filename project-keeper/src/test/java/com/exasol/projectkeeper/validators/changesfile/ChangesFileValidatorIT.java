@@ -18,11 +18,12 @@ import java.util.Collections;
 import org.apache.maven.plugin.logging.Log;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import com.exasol.projectkeeper.ExcludedFilesMatcher;
+import com.exasol.projectkeeper.TestEnvBuilder;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 class ChangesFileValidatorIT {
@@ -31,6 +32,14 @@ class ChangesFileValidatorIT {
 
     @TempDir
     File tempDir;
+
+    private static Path testMavenRepo;
+
+    @BeforeAll
+    static void beforeAll() {
+        final MavenIntegrationTestEnvironment testEnv = TestEnvBuilder.getTestEnv();
+        testMavenRepo = testEnv.getLocalMavenRepository();
+    }
 
     @BeforeEach
     void beforeEach() throws GitAPIException {
@@ -47,9 +56,8 @@ class ChangesFileValidatorIT {
     @Test
     void testValidationForSnapshotVersion() throws IOException {
         createTestSetup();
-        assertThat(
-                new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir.toPath(),
-                        new ExcludedFilesMatcher(Collections.emptyList())),
+        assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir.toPath(),
+                new ExcludedFilesMatcher(Collections.emptyList()), testMavenRepo, TestEnvBuilder.CURRENT_VERSION),
                 hasNoValidationFindings());
     }
 
@@ -86,7 +94,7 @@ class ChangesFileValidatorIT {
 
     private ChangesFileValidator createValidator() {
         return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir.toPath(),
-                new ExcludedFilesMatcher(Collections.emptyList()));
+                new ExcludedFilesMatcher(Collections.emptyList()), testMavenRepo, TestEnvBuilder.CURRENT_VERSION);
     }
 
     private void createTestSetup() throws IOException {

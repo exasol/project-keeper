@@ -6,6 +6,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -44,6 +45,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
 
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
+
+    @Parameter(defaultValue = "${session}", readonly = true)
+    private MavenSession session;
 
     /**
      * Get a list of enabled modules.
@@ -87,7 +91,8 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
      */
     protected List<Validator> getValidators() {
         final Path projectDir = this.project.getBasedir().toPath();
-
+        final Path mvnRepo = Path.of(this.session.getLocalRepository().getBasedir());
+        final String ownVersion = getClass().getPackage().getImplementationVersion();
         final GitRepository gitRepository = new GitRepository(projectDir);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.linkReplacements);
         final Set<ProjectKeeperModule> enabledModules = getEnabledModules();
@@ -100,9 +105,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
                 new LicenseFileValidator(projectDir, excludedFilesMatcher),
                 new PomFileValidator(enabledModules, this.excludedPlugins, pomFile),
                 new ChangesFileValidator(this.project.getVersion(), this.project.getName(), projectDir,
-                        excludedFilesMatcher),
+                        excludedFilesMatcher, mvnRepo, ownVersion),
                 new ChangelogFileValidator(projectDir, excludedFilesMatcher),
-                new DependenciesValidator(pomFile, projectDir, brokenLinkReplacer),
+                new DependenciesValidator(pomFile, projectDir, brokenLinkReplacer, mvnRepo, ownVersion),
                 new DeletedFilesValidator(projectDir, excludedFilesMatcher),
                 new GitignoreFileValidator(projectDir, excludedFilesMatcher));
     }

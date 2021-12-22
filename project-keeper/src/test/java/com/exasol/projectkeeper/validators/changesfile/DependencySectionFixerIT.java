@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
+import static com.exasol.projectkeeper.TestEnvBuilder.CURRENT_VERSION;
 import static com.exasol.projectkeeper.validators.changesfile.ChangesFile.DEPENDENCY_UPDATES_HEADING;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -18,12 +19,15 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
+import com.exasol.projectkeeper.TestEnvBuilder;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 //[utest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
 class DependencySectionFixerIT {
     @TempDir
     static Path tempDir;
+    private static Path testMavenRepo;
 
     @BeforeAll
     static void beforeAll() throws GitAPIException, IOException {
@@ -31,6 +35,8 @@ class DependencySectionFixerIT {
         try (final FileWriter fileWriter = new FileWriter(tempDir.resolve("pom.xml").toFile())) {
             new MavenXpp3Writer().write(fileWriter, createModelWithDependency());
         }
+        final MavenIntegrationTestEnvironment testEnv = TestEnvBuilder.getTestEnv();
+        testMavenRepo = testEnv.getLocalMavenRepository();
     }
 
     private static Model createModelWithDependency() {
@@ -42,7 +48,7 @@ class DependencySectionFixerIT {
     @Test
     void testSectionIsAdded() {
         final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading")).build();
-        final List<ChangesFileSection> sections = new DependencySectionFixer(tempDir)
+        final List<ChangesFileSection> sections = new DependencySectionFixer(tempDir, testMavenRepo, CURRENT_VERSION)
                 .fix(changesFile).getSections();
         assertThat(sections.size(), equalTo(1));
         assertThat(sections.get(0).getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
@@ -52,7 +58,8 @@ class DependencySectionFixerIT {
     void testSectionIsUpdated() {
         final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading"))
                 .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
-        final ChangesFile fixedChangesFile = new DependencySectionFixer(tempDir).fix(changesFile);
+        final ChangesFile fixedChangesFile = new DependencySectionFixer(tempDir, testMavenRepo, CURRENT_VERSION)
+                .fix(changesFile);
         final List<ChangesFileSection> sections = fixedChangesFile.getSections();
         assertThat(sections.size(), equalTo(1));
         assertThat(sections.get(0).getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
@@ -63,7 +70,8 @@ class DependencySectionFixerIT {
     void testHeaderIsPreserved() {
         final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading"))
                 .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
-        final ChangesFile fixedChangesFile = new DependencySectionFixer(tempDir).fix(changesFile);
+        final ChangesFile fixedChangesFile = new DependencySectionFixer(tempDir, testMavenRepo, CURRENT_VERSION)
+                .fix(changesFile);
         assertThat(changesFile.getHeaderSectionLines(), equalTo(fixedChangesFile.getHeaderSectionLines()));
     }
 }

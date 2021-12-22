@@ -23,14 +23,17 @@ public class DependenciesValidator implements Validator {
     /**
      * Create a new instance of {@link DependenciesValidator}.
      * 
-     * @param pomFile            pom file to validate
-     * @param projectDirectory   project root directory
-     * @param brokenLinkReplacer dependency injection for broken link replacer
+     * @param pomFile               pom file to validate
+     * @param projectDirectory      project root directory
+     * @param brokenLinkReplacer    dependency injection for broken link replacer
+     * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
+     * @param ownVersion            project-keeper version
      */
     public DependenciesValidator(final File pomFile, final Path projectDirectory,
-            final BrokenLinkReplacer brokenLinkReplacer) {
+            final BrokenLinkReplacer brokenLinkReplacer, final Path mvnRepositoryOverride, final String ownVersion) {
         this.brokenLinkReplacer = brokenLinkReplacer;
-        javaProjectCrawlerRunner = new JavaProjectCrawlerRunner(pomFile.toPath());
+        this.javaProjectCrawlerRunner = new JavaProjectCrawlerRunner(pomFile.toPath(), mvnRepositoryOverride,
+                ownVersion);
         this.dependenciesFile = projectDirectory.resolve("dependencies.md");
     }
 
@@ -48,7 +51,7 @@ public class DependenciesValidator implements Validator {
     }
 
     private String generateExpectedReport() {
-        final List<ProjectDependency> dependencies = javaProjectCrawlerRunner.getDependencies().getDependencies();
+        final List<ProjectDependency> dependencies = this.javaProjectCrawlerRunner.getDependencies().getDependencies();
         final List<ProjectDependency> dependenciesWithFixedLinks = new DependenciesBrokenLinkReplacer(
                 this.brokenLinkReplacer).replaceBrokenLinks(dependencies);
         return new DependencyPageRenderer().render(dependenciesWithFixedLinks);

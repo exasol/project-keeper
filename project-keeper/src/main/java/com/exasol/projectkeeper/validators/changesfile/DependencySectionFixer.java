@@ -20,11 +20,14 @@ class DependencySectionFixer {
     /**
      * Create a new instance of {@link DependencySectionFixer}.
      *
-     * @param projectDirectory projects root directory
+     * @param projectDirectory      projects root directory
+     * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
+     * @param ownVersion            project keeper-version
      */
-    public DependencySectionFixer(final Path projectDirectory) {
-        dependencyChangeReport = new JavaProjectCrawlerRunner(projectDirectory.resolve("pom.xml"))
-                .getDependencyChanges();
+    public DependencySectionFixer(final Path projectDirectory, final Path mvnRepositoryOverride,
+            final String ownVersion) {
+        this.dependencyChangeReport = new JavaProjectCrawlerRunner(projectDirectory.resolve("pom.xml"),
+                mvnRepositoryOverride, ownVersion).getDependencyChanges();
     }
 
     /**
@@ -34,7 +37,7 @@ class DependencySectionFixer {
      * @return fixed changes file.
      */
     public ChangesFile fix(final ChangesFile changesFile) {
-        final List<String> renderedReport = new DependencyChangeReportRenderer().render(dependencyChangeReport);
+        final List<String> renderedReport = new DependencyChangeReportRenderer().render(this.dependencyChangeReport);
         final List<ChangesFileSection> sections = new ArrayList<>(changesFile.getSections());
         removeDependencySection(sections);
         sections.add(new ChangesFileSection(renderedReport));

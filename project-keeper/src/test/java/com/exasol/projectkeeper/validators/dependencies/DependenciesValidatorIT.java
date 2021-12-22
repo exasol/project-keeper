@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
+import static com.exasol.projectkeeper.TestEnvBuilder.CURRENT_VERSION;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertAll;

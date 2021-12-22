@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.ProjectKeeperModule.*;
+import static com.exasol.projectkeeper.TestEnvBuilder.CURRENT_VERSION;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
