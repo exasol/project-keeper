@@ -54,7 +54,7 @@ public class JavaProjectCrawlerRunner {
                 commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
             }
             final Process proc = rt.exec(commandParts.toArray(String[]::new));
-            if (!proc.waitFor(20, TimeUnit.SECONDS)) {
+            if (!proc.waitFor(60, TimeUnit.SECONDS)) {
                 final String output = readFromStream(proc.getInputStream());
                 LOGGER.log(Level.SEVERE, output);
                 final String errors = readFromStream(proc.getErrorStream());
