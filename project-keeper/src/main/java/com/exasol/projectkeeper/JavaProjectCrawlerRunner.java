@@ -47,12 +47,17 @@ public class JavaProjectCrawlerRunner {
     private String runCrawlerPlugin(final String goal) {
         try {
             final Runtime rt = Runtime.getRuntime();
-            final List<String> commandParts = new ArrayList<>(
-                    List.of("mvn", "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal,
-                            "--file", this.pomFile.toString()));
-            if (this.mvnRepositoryOverride != null) {
-                commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
-            }
+            /*
+             * final List<String> commandParts = new ArrayList<>(List.of("mvn", "--batch-mode",
+             * "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
+             * "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal, "--file",
+             * this.pomFile.toString()));
+             */
+            final List<String> commandParts = new ArrayList<>(List.of("ls"));
+            /*
+             * if (this.mvnRepositoryOverride != null) { commandParts.add("-Dmaven.repo.local=" +
+             * this.mvnRepositoryOverride); }
+             */
             final Process proc = rt.exec(commandParts.toArray(String[]::new));
             if (!proc.waitFor(60, TimeUnit.SECONDS)) {
                 final String output = readFromStream(proc.getInputStream());
