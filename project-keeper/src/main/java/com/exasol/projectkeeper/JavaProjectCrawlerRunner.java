@@ -5,6 +5,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -53,7 +54,14 @@ public class JavaProjectCrawlerRunner {
                 commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
             }
             final Process proc = rt.exec(commandParts.toArray(String[]::new));
-            final int exitCode = proc.waitFor();
+            if (!proc.waitFor(20, TimeUnit.SECONDS)) {
+                final String output = readFromStream(proc.getInputStream());
+                LOGGER.log(Level.SEVERE, output);
+                final String errors = readFromStream(proc.getErrorStream());
+                LOGGER.log(Level.SEVERE, errors);
+                throw new IllegalStateException("timeout!!!");// TODO
+            }
+            final int exitCode = proc.exitValue();
             final String output = readFromStream(proc.getInputStream());
             if (exitCode != 0) {
                 LOGGER.log(Level.SEVERE, output);
