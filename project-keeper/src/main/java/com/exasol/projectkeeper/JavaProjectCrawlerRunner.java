@@ -61,7 +61,8 @@ public class JavaProjectCrawlerRunner {
                 LOGGER.log(Level.SEVERE, output);
                 final String errors = readFromStream(proc.getErrorStream());
                 LOGGER.log(Level.SEVERE, errors);
-                throw new IllegalStateException("timeout!!!");// TODO
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-81")
+                        .message("Timeout while executing project-keeper-java-project-crawler.").toString());
             }
             final int exitCode = proc.exitValue();
             final String output = readFromStream(proc.getInputStream());
