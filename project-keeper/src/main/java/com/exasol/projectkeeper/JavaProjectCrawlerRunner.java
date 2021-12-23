@@ -53,7 +53,7 @@ public class JavaProjectCrawlerRunner {
              * "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal, "--file",
              * this.pomFile.toString()));
              */
-            final List<String> commandParts = new ArrayList<>(List.of("ls"));
+            final List<String> commandParts = new ArrayList<>(List.of("sleep 2"));
             /*
              * if (this.mvnRepositoryOverride != null) { commandParts.add("-Dmaven.repo.local=" +
              * this.mvnRepositoryOverride); }
