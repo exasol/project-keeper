@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.eclipse</groupId>
             <artifactId>yasson</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
         </dependency>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -51,7 +51,7 @@
         <dependency>
             <groupId>org.eclipse.jgit</groupId>
             <artifactId>org.eclipse.jgit</artifactId>
-            <version>5.13.0.202109080827-r</version>
+            <version>6.0.0.202111291000-r</version>
         </dependency>
         <!-- test dependencies -->
         <dependency>
