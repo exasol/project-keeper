@@ -73,6 +73,7 @@ jobs:
           mvn --batch-mode install:install-file -Dfile="project-keeper.jar" `
             -DpomFile="target/unpacked-jar/META-INF/maven/com.exasol/project-keeper-maven-plugin/pom.xml" `
             "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-      - name: run project-keeper
-        shell: pwsh
-        run: mvn project-keeper:verify
+      # disabled. Waiting for https://github.com/exasol/project-keeper-maven-plugin/issues/214
+      #- name: run project-keeper
+      #  shell: pwsh
+      #  run: mvn --batch-mode project-keeper:verify
