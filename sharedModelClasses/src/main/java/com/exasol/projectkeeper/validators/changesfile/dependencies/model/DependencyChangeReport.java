@@ -29,6 +29,12 @@ public class DependencyChangeReport {
     /** Dependency changes in plugin scope */
     private List<DependencyChange> pluginDependencyChanges;
 
+    /**
+     * Deserialize {@link DependencyChangeReport} from JSON string.
+     * 
+     * @param json serialized JSON
+     * @return deserialized {@link DependencyChangeReport}.
+     */
     public static DependencyChangeReport fromJson(String json) {
         JsonbConfig config = new JsonbConfig().withDeserializers(new DependencyChangeDeserializer());
         try (final Jsonb jsonb = JsonbBuilder.create(config)) {
@@ -54,7 +60,7 @@ public class DependencyChangeReport {
         }
     }
 
-    /*
+    /**
      * Custom serialization can be replaced once https://github.com/eclipse-ee4j/jsonb-api/pull/284 is available.
      */
     public static class DependencyChangeSerializer implements JsonbSerializer<DependencyChange> {
@@ -73,6 +79,9 @@ public class DependencyChangeReport {
         }
     }
 
+    /**
+     * A JSON deserializer for a {@link DependencyChange}.
+     */
     public static class DependencyChangeDeserializer implements JsonbDeserializer<DependencyChange> {
         @Override
         public DependencyChange deserialize(JsonParser parser, DeserializationContext ctx, Type rtType) {
