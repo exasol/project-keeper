@@ -7,9 +7,9 @@
     <packaging>pom</packaging>
     <version>0.0.0</version>
     <modules>
-        <module>sharedModelClasses</module>
+        <module>shared-model-classes</module>
         <module>project-keeper</module>
-        <module>javaProjectCrawler</module>
+        <module>maven-project-crawler</module>
     </modules>
     <name>Project Keeper Project</name>
     <build>

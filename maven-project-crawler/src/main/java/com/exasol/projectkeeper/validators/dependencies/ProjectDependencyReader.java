@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
-
 import static com.exasol.projectkeeper.dependencies.ProjectDependency.Type.*;
 
 import java.util.List;
@@ -27,8 +26,7 @@ public class ProjectDependencyReader {
      *
      * @param artifactModelReader maven dependency reader
      */
-    public ProjectDependencyReader(
-            final MavenModelFromRepositoryReader artifactModelReader) {
+    public ProjectDependencyReader(final MavenModelFromRepositoryReader artifactModelReader) {
         this.artifactModelReader = artifactModelReader;
     }
 
@@ -40,8 +38,7 @@ public class ProjectDependencyReader {
      */
     public ProjectDependencies readDependencies(final MavenProject project) {
         final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins(project.getModel())
-                .map(dependency -> getLicense(dependency, project))
-                .collect(Collectors.toList());
+                .map(dependency -> getLicense(dependency, project)).collect(Collectors.toList());
         return new ProjectDependencies(dependencies);
     }
 
