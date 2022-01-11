@@ -54,5 +54,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      - name: Run project-keeper itself
-        run: mvn project-keeper:verify
+      # disabled. Waiting for https://github.com/exasol/project-keeper-maven-plugin/issues/214
+      #- name: Run project-keeper itself
+      #  run: mvn project-keeper:verify
