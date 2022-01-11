@@ -12,6 +12,9 @@ import com.exasol.projectkeeper.pom.DefaultMavenProjectFromFileReader;
 import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
+/**
+ * Maven mojo that prints the {@link DependencyChangeReport} to standard out.
+ */
 @Mojo(name = "getDependencyUpdates")
 public class DependencyUpdateReaderMojo extends AbstractMojo {
 

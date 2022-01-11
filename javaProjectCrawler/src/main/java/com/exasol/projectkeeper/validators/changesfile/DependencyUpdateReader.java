@@ -11,19 +11,22 @@ import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportReader;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
-public class DependencyUpdateReader {
+/**
+ * Calculate the dependencies updated since the last release.
+ */
+class DependencyUpdateReader {
     private final MavenProjectFromFileReader mavenModelReader;
     private final Path projectDirectory;
     private final Model currentMavenModel;
 
-    public DependencyUpdateReader(MavenProjectFromFileReader mavenModelReader, Path projectDirectory,
+    DependencyUpdateReader(MavenProjectFromFileReader mavenModelReader, Path projectDirectory,
             Model currentMavenModel) {
         this.mavenModelReader = mavenModelReader;
         this.projectDirectory = projectDirectory;
         this.currentMavenModel = currentMavenModel;
     }
 
-    public DependencyChangeReport getDependencyUpdates() {
+    DependencyChangeReport getDependencyUpdates() {
         return new DependencyChangeReportReader().read(getOldModel(), currentMavenModel);
     }
 

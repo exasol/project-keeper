@@ -13,6 +13,9 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
+/**
+ * Runs the maven plugin goal on the current repository and returns the parsed result.
+ */
 public class JavaProjectCrawlerRunner {
     private static final String RESPONSE_START_TOKEN = "###SerializedResponseStart###";
     private static final String RESPONSE_END_TOKEN = "###SerializedResponseEnd###";
@@ -34,11 +37,21 @@ public class JavaProjectCrawlerRunner {
         this.ownVersion = ownVersion;
     }
 
+    /**
+     * Get a {@link DependencyChangeReport} for the project.
+     * 
+     * @return the {@link DependencyChangeReport}
+     */
     public DependencyChangeReport getDependencyChanges() {
         final String json = runCrawlerPlugin("getDependencyUpdates");
         return DependencyChangeReport.fromJson(json);
     }
 
+    /**
+     * Get the {@link ProjectDependencies} for the project.
+     * 
+     * @return the {@link ProjectDependencies}
+     */
     public ProjectDependencies getDependencies() {
         final String json = runCrawlerPlugin("getProjectDependencies");
         return ProjectDependencies.fromJson(json);

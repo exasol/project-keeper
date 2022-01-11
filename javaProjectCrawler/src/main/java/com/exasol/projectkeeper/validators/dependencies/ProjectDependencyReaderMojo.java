@@ -11,6 +11,9 @@ import com.exasol.projectkeeper.ResponseEncoder;
 import com.exasol.projectkeeper.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
 
+/**
+ * Maven mojo that prints a report {@link ProjectDependencies} to stdandard out.
+ */
 @Mojo(name = "getProjectDependencies")
 public class ProjectDependencyReaderMojo extends AbstractMojo {
 

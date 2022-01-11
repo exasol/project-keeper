@@ -8,6 +8,9 @@ import com.exasol.projectkeeper.validators.changesfile.dependencies.model.Depend
 import jakarta.json.bind.*;
 import lombok.*;
 
+/**
+ * The dependencies of a project.
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
