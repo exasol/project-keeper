@@ -1,0 +1,46 @@
+package com.exasol.projectkeeper;
+
+import java.io.File;
+import java.nio.file.Path;
+
+import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
+import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
+
+public class TestEnvBuilder {
+    private static final String PROJECT_ROOT_OFFSET = "../";
+    private static final File PARENT_POM = Path.of(PROJECT_ROOT_OFFSET, "parent-pom/pom.xml").toFile();
+    public static final String CURRENT_VERSION = MavenProjectVersionGetter.getProjectRevision(PARENT_POM.toPath());
+    private static final File SHARED_MODEL = Path
+            .of(PROJECT_ROOT_OFFSET,
+                    "sharedModelClasses/target/project-keeper-shared-model-classes-" + CURRENT_VERSION + ".jar")
+            .toFile();
+    private static final File JAVA_CRAWLER = Path
+            .of(PROJECT_ROOT_OFFSET,
+                    "javaProjectCrawler/target/project-keeper-java-project-crawler-" + CURRENT_VERSION + ".jar")
+            .toFile();
+    private static final File PLUGIN = Path
+            .of(PROJECT_ROOT_OFFSET, "project-keeper/target/project-keeper-maven-plugin-" + CURRENT_VERSION + ".jar")
+            .toFile();
+    private static final File SHARED_MODEL_POM = Path.of(PROJECT_ROOT_OFFSET, "sharedModelClasses/pom.xml").toFile();
+    private static final File JAVA_CRAWLER_POM = Path.of(PROJECT_ROOT_OFFSET, "javaProjectCrawler/pom.xml").toFile();
+    private static final File PLUGIN_POM = Path.of(PROJECT_ROOT_OFFSET, "project-keeper/pom.xml").toFile();
+    private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
+
+    public static MavenIntegrationTestEnvironment getTestEnv() {
+        if (mavenIntegrationTestEnvironment == null) {
+            mavenIntegrationTestEnvironment = createTestEnv();
+        }
+        return mavenIntegrationTestEnvironment;
+    }
+
+    private static MavenIntegrationTestEnvironment createTestEnv() {
+        final MavenIntegrationTestEnvironment testEnv = new MavenIntegrationTestEnvironment();
+        testEnv.installWithoutJar(PARENT_POM);
+        testEnv.installPlugin(SHARED_MODEL, SHARED_MODEL_POM, "project-keeper-shared-model-classes", "com.exasol",
+                CURRENT_VERSION);
+        testEnv.installPlugin(JAVA_CRAWLER, JAVA_CRAWLER_POM, "project-keeper-java-project-crawler", "com.exasol",
+                CURRENT_VERSION);
+        testEnv.installPlugin(PLUGIN, PLUGIN_POM, "project-keeper-maven-plugin", "com.exasol", CURRENT_VERSION);
+        return testEnv;
+    }
+}
