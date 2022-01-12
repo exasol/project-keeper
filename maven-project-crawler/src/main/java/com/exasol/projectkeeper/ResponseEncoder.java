@@ -15,10 +15,10 @@ public class ResponseEncoder {
      * @param response the response to print.
      */
     @SuppressWarnings("java:S106") // printing is intended here.
-    public void printResponse(String response) {
+    public void printResponse(final String response) {
         if (response.contains(START_TOKEN) || response.contains(END_TOKEN)) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-JPC-1")
-                    .message("Response contained invalid token.").toString().toString());
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("F-PK-JPC-1").message("Response contained invalid token.").toString());
         }
         System.out.println(START_TOKEN);
         System.out.println(response);
