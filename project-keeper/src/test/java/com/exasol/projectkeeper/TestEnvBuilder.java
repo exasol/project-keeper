@@ -12,17 +12,17 @@ public class TestEnvBuilder {
     public static final String CURRENT_VERSION = MavenProjectVersionGetter.getProjectRevision(PARENT_POM.toPath());
     private static final File SHARED_MODEL = Path
             .of(PROJECT_ROOT_OFFSET,
-                    "sharedModelClasses/target/project-keeper-shared-model-classes-" + CURRENT_VERSION + ".jar")
+                    "shared-model-classes/target/project-keeper-shared-model-classes-" + CURRENT_VERSION + ".jar")
             .toFile();
     private static final File JAVA_CRAWLER = Path
             .of(PROJECT_ROOT_OFFSET,
-                    "javaProjectCrawler/target/project-keeper-java-project-crawler-" + CURRENT_VERSION + ".jar")
+                    "maven-project-crawler/target/project-keeper-java-project-crawler-" + CURRENT_VERSION + ".jar")
             .toFile();
     private static final File PLUGIN = Path
             .of(PROJECT_ROOT_OFFSET, "project-keeper/target/project-keeper-maven-plugin-" + CURRENT_VERSION + ".jar")
             .toFile();
-    private static final File SHARED_MODEL_POM = Path.of(PROJECT_ROOT_OFFSET, "sharedModelClasses/pom.xml").toFile();
-    private static final File JAVA_CRAWLER_POM = Path.of(PROJECT_ROOT_OFFSET, "javaProjectCrawler/pom.xml").toFile();
+    private static final File SHARED_MODEL_POM = Path.of(PROJECT_ROOT_OFFSET, "shared-model-classes/pom.xml").toFile();
+    private static final File JAVA_CRAWLER_POM = Path.of(PROJECT_ROOT_OFFSET, "maven-project-crawler/pom.xml").toFile();
     private static final File PLUGIN_POM = Path.of(PROJECT_ROOT_OFFSET, "project-keeper/pom.xml").toFile();
     private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
 

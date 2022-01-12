@@ -17,6 +17,8 @@ class TemporaryPomFile implements AutoCloseable {
      * 
      * @param content pom file content
      */
+    @SuppressWarnings("java:S5443") // not attack-able via file manipulation in tmp since attacker must be on same
+                                    // machine
     public TemporaryPomFile(final String content) {
         try {
             this.pomFile = Files.createTempFile("pom-file-cache", ".xml");

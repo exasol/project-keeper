@@ -6,9 +6,9 @@ import java.util.regex.Pattern;
  * This class matches version numbers in the format used for Exasol open-source projects (major.minor.fix).
  */
 public class ExasolVersionMatcher {
-    private static final Pattern EXASOL_VERSION_PATTERN = Pattern.compile("\\d+\\.\\d+\\.\\d+");
     /** Suffix for snapshot versions. */
     public static final String SNAPSHOT_SUFFIX = "-SNAPSHOT";
+    private static final Pattern EXASOL_VERSION_PATTERN = Pattern.compile("\\d+\\.\\d+\\.\\d+");
 
     /**
      * Match version numbers in the format used for Exasol open-source projects (major.minor.fix).
