@@ -32,12 +32,12 @@ jobs:
             --batch-mode \
             -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - name: Strip version number
-        run: cp $(find project-keeper/target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") project-keeper/target/project-keeper.jar
+        run: cp $(find project-keeper/target/ -regextype sed -regex ".*/project-keeper-core-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") project-keeper/target/project-keeper-core.jar
       - name: Upload jar artifact
         uses: actions/upload-artifact@master
         with:
           name: project-keeper-jar
-          path: project-keeper/target/project-keeper.jar
+          path: project-keeper/target/project-keeper-core.jar
 
   run-on-windows:
     runs-on: windows-latest
@@ -69,7 +69,7 @@ jobs:
         shell: pwsh
         run: |
           New-Item -Path "." -Name "target/unpacked-jar" -ItemType "directory"
-          Expand-Archive -Path project-keeper.jar -DestinationPath "target/unpacked-jar"
+          Expand-Archive -Path project-keeper-core.jar -DestinationPath "target/unpacked-jar"
           mvn --batch-mode install:install-file -Dfile="project-keeper.jar" `
             -DpomFile="target/unpacked-jar/META-INF/maven/com.exasol/project-keeper-maven-plugin/pom.xml" `
             "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
