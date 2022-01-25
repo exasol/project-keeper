@@ -115,8 +115,6 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         pom.writeAsPomToProject(this.projectDir);
     }
 
-    // todo test with config file
-
     @Test
     // [itest->dsn~excluding~1]
     void testVerifyWithExcludedFile() throws IOException {

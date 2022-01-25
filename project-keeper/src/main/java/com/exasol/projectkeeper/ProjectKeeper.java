@@ -85,7 +85,6 @@ public class ProjectKeeper {
     }
 
     private static ProjectKeeperConfig readConfig(final Path projectDir) {
-        // todo check that we run in project-root (.git exists)
         return new ProjectKeeperConfigReader().readConfig(projectDir);
     }
 

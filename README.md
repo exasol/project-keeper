@@ -37,15 +37,29 @@ Install this plugin by adding the following lines to your project's `pom.xml` fi
                 </goals>
             </execution>
         </executions>
-        <configuration>
-            <modules>
-                <!-- add modules here: -->
-                <!-- <module>For available modules see below.</module>-->
-            </modules>
-        </configuration>
     </plugin>
 </plugins>
 ```
+
+## Configuration
+
+Create a `.project-keeper.yml` configuration file in the project's root directory:
+
+```yml
+sources:
+  - type: maven
+    path: pom.xml
+    modules:
+      - maven_central
+```
+
+### Sources
+
+For project-keeper a 'source' is a project inside a repository. For example a maven-project. In the future project-keeper will be able to crawl multiple source-projects from one repository. However, For now, you must specify exactly one maven source.
+
+Supported project types:
+
+* `maven`: Projects with maven build. The path mus point to the pom.xml file.
 
 ### Modules
 
@@ -116,35 +130,24 @@ This module configures the pom.xml for the use of [Project Lombok](https://proje
 
 ### Excluding Files
 
-Using the `excludedFiles` you can tell project-keeper to ignore some files:
+Using the `excludes` you can tell project-keeper some error-messages:
 
-```xml
-
-<configuration>
-    <excludedFiles>
-        <excludedFile>test/fileToExclude.md</excludedFile>
-        <excludedFile>doc/*</excludedFile>
-        <excludedFile>**/excludeNoMatterWhere.md</excludedFile>
-    </excludedFiles>
-</configuration>
+```yml
+sources:
+  - type: maven
+  path: pom.xml
+  modules:
+    - maven_central
+  excludes:
+    - "E-PK-CORE-17: Missing required: '.github/workflows/broken_links_checker.yml'."
+excludes:
+  - "E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."
+  - regex: "E-PK-CORE-16: .*"
 ```
 
-Inside of the `<excludedFile>` tag you can use GLOB wildcards.
+Not that you can also use regular expressions (see example above). If a finding is excluded it will not show up on validation and will not be fixed.
 
-## Excluding Plugins
-
-Using the `excludedPlugins`configuration you can tell Project Keeper to ignore some missing or differently configured maven plugins:
-
-```xml
-
-<configuration>
-    <excludedPlugins>
-        <excludedPlugin>com.exasol:error-code-crawler-maven-plugin</excludedPlugin>
-    </excludedPlugins>
-</configuration>
-```
-
-The syntax is `<group_id>:<artifact_id>`.
+You can define excludes globally (like `E-PK-CORE-15` and `E-PK-CORE-16` in the example) or scoped for one source (like `E-PK-CORE-17`).
 
 ### Replacing Broken Links
 
@@ -152,16 +155,15 @@ Some maven projects define invalid / outdated links to their project homepage. P
 
 The best way to solve this is to open an issue / pull request at the projects that contain the wrong url. Since this is, however not always possible you can, as a mitigation, also define a replacement for links:
 
-```xml
-
-<configuration>
-    <linkReplacements>
-        <linkReplacement>http://broken.com|http://example.com/</linkReplacement>
-    </linkReplacements>
-</configuration>
+```yml
+sources:
+  - type: maven
+  path: pom.xml
+linkReplacements:
+  - "http://wrong-url.com|my-dependency.de"
 ```
 
-The syntax for the `linkReplacement` is `broken-url|replacement`.
+The syntax for a replacement is `broken-url|replacement`.
 
 Project-keeper will then apply the use the replacement in the `dependencies.md` file instead of the original url.
 

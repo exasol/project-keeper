@@ -12,6 +12,8 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Abstract basis for Mojos in this project.
  */
@@ -26,6 +28,11 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
 
+    /**
+     * Get a project-keeper core.
+     * 
+     * @return project-keeper core
+     */
     protected ProjectKeeper getProjectKeeper() {
         return ProjectKeeper.createProjectKeeper(new MvnLogger(getLog()), this.project.getBasedir().toPath(),
                 this.project.getName(), this.project.getArtifactId(), this.project.getVersion(),
@@ -50,12 +57,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         }
     }
 
-    public static class MvnLogger implements Logger {
+    @RequiredArgsConstructor
+    private static class MvnLogger implements Logger {
         private final Log mvnLog;
-
-        public MvnLogger(final Log mvnLog) {
-            this.mvnLog = mvnLog;
-        }
 
         @Override
         public void info(final String message) {
