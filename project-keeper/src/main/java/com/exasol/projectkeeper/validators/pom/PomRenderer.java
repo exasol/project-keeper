@@ -40,7 +40,8 @@ public class PomRenderer {
             return targetStream.toString(StandardCharsets.UTF_8);
         } catch (final TransformerException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-74").message("Failed to render XML document.").toString(), exception);
+                    ExaError.messageBuilder("E-PK-CORE-74").message("Failed to render XML document.").toString(),
+                    exception);
         }
     }
 }

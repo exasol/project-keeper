@@ -4,26 +4,21 @@ import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.va
 import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.maven.plugin.logging.Log;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-
-import com.exasol.projectkeeper.ExcludedFilesMatcher;
 
 // [utest->dsn~readme-validator~1]
 class ReadmeFileValidatorTest {
     @Test
     void testCreateFile(@TempDir final Path tempDir) throws IOException {
-        getValidator(tempDir).validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
+        getValidator(tempDir).validate().forEach(FindingFixHelper::fix);
         final String readme = Files.readString(tempDir.resolve("README.md"));
         assertThat(readme, Matchers.equalTo(("# My Project\n" + "\n"
                 + "[![Build Status](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml)\n"
@@ -45,8 +40,7 @@ class ReadmeFileValidatorTest {
     }
 
     private ReadmeFileValidator getValidator(final Path tempDir) {
-        return new ReadmeFileValidator(tempDir, "My Project", "my-project", "my-project-repo", List.of(MAVEN_CENTRAL),
-                new ExcludedFilesMatcher(Collections.emptyList()));
+        return new ReadmeFileValidator(tempDir, "My Project", "my-project", "my-project-repo", List.of(MAVEN_CENTRAL));
     }
 
     @Test
@@ -56,6 +50,6 @@ class ReadmeFileValidatorTest {
         assertThat(validator, validationErrorMessages(hasItems(
                 containsString("The project's README.md does not reference the dependencies.md file."), //
                 startsWith(
-                        "E-PK-62: The project's README.md does not contain a valid badges block. Please add or replace the following badges: \n'[![Build Status]"))));
+                        "E-PK-CORE-62: The project's README.md does not contain a valid badges block. Please add or replace the following badges: \n'[![Build Status]"))));
     }
 }

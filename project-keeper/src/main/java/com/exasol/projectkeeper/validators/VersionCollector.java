@@ -35,7 +35,7 @@ public class VersionCollector {
                     .filter(fileName -> fileName.startsWith("changes_"))
                     .map(fileName -> fileName.replace("changes_", "").replace(".md", "")).collect(Collectors.toList());
         } catch (final IOException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-66")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-66")
                     .message("Failed to collect versions from changes files.").toString(), exception);
         }
     }

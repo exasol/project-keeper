@@ -48,7 +48,7 @@ public class BrokenLinkReplacer {
 
     private void checkSyntax(final String replacementParameter, final String[] parts) {
         if (parts.length != 2) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-55")
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-55")
                     .message("Invalid link replacement {{link replacement}}. ", replacementParameter)
                     .message(
                             "The link replacement should have the syntax '<linkReplacement>originalLink|replacement</linkReplacement>'.")

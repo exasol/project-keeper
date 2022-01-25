@@ -11,6 +11,7 @@ import static org.hamcrest.Matchers.hasItems;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -23,26 +24,24 @@ class PomFileValidatorTest {
 
     @Test
     void testMissingPlugin(@TempDir final File tempDir) throws IOException {
-        final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
-        final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()),
-                Collections.emptyList(), pomFile);
-        assertThat(runner, validationErrorMessages(
-                hasItems(containsString("E-PK-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))));
+        final Path pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
+        final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()), pomFile);
+        assertThat(runner, validationErrorMessages(hasItems(
+                containsString("E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))));
     }
 
     @Test
     void testFixMissingPlugin(@TempDir final File tempDir) throws IOException {
-        final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
-        final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()),
-                Collections.emptyList(), pomFile);
+        final Path pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
+        final PomFileValidator runner = new PomFileValidator(Arrays.asList(ProjectKeeperModule.values()), pomFile);
         assertThat(runner, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
     // [utest->dsn~modules~1]
     void testNoErrorsOnNoModules(@TempDir final File tempDir) throws IOException {
-        final File pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
-        final PomFileValidator runner = new PomFileValidator(Collections.emptyList(), Collections.emptyList(), pomFile);
+        final Path pomFile = writeResourceToTempFile(tempDir, POM_WITH_NO_PLUGINS);
+        final PomFileValidator runner = new PomFileValidator(Collections.emptyList(), pomFile);
         assertThat(runner, hasNoValidationFindings());
     }
 }

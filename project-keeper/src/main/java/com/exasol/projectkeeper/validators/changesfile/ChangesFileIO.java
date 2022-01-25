@@ -37,7 +37,7 @@ public class ChangesFileIO {
             makeSection(sectionHeader, builder, lineBuffer);
             return builder.build();
         } catch (final IOException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-39")
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-39")
                     .message("Failed to read changes file {{file}}.").parameter("file", file.toString()).toString(),
                     exception);
         }
@@ -70,7 +70,7 @@ public class ChangesFileIO {
             fileWriter.flush();
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-41").message("Failed to write changes file {{file name}}.")
+                    ExaError.messageBuilder("E-PK-CORE-41").message("Failed to write changes file {{file name}}.")
                             .parameter("file name", destinationFile).toString(),
                     exception);
         }

@@ -6,8 +6,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.ExasolVersionMatcher;
+import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.validators.AbstractFileValidator;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
@@ -25,13 +28,12 @@ public class ChangesFileValidator extends AbstractFileValidator {
      * @param projectVersion        version of the project to validate
      * @param projectName           name of the maven project
      * @param projectDirectory      root directory of the maven project
-     * @param excludedFiles         matcher for excluded files
      * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
      * @param ownVersion            project-keeper version
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
-            final ExcludedFilesMatcher excludedFiles, final Path mvnRepositoryOverride, final String ownVersion) {
-        super(projectDirectory, Path.of("doc", "changes", "changes_" + projectVersion + ".md"), excludedFiles);
+            final Path mvnRepositoryOverride, final String ownVersion) {
+        super(projectDirectory, Path.of("doc", "changes", "changes_" + projectVersion + ".md"));
         this.projectVersion = projectVersion;
         this.projectName = projectName;
         this.projectDirectory = projectDirectory;
@@ -61,11 +63,11 @@ public class ChangesFileValidator extends AbstractFileValidator {
     }
 
     private ValidationFinding getWrongContentFinding(final ChangesFile fixedSections, final Path file) {
-        return ValidationFinding
-                .withMessage(ExaError.messageBuilder("E-PK-40")
+        return SimpleValidationFinding
+                .withMessage(ExaError.messageBuilder("E-PK-CORE-40")
                         .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
                         .parameter("expected content", fixedSections.toString()).toString())
-                .andFix((log -> new ChangesFileIO().write(fixedSections, file))).build();
+                .andFix(((Logger log) -> new ChangesFileIO().write(fixedSections, file))).build();
     }
 
     private ChangesFile fixSections(final ChangesFile changesFile) {

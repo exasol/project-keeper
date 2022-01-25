@@ -6,7 +6,10 @@ import java.nio.file.Path;
 import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * This is a {@link Validator} for the {@code README.md} file.
@@ -27,12 +30,10 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
      * @param artifactId       artifact id of the maven artifact
      * @param repoName         name of the repository
      * @param enabledModules   list of enable modules
-     * @param excludedFiles    matcher for excluded files
      */
     public ReadmeFileValidator(final Path projectDirectory, final String projectName, final String artifactId,
-            final String repoName, final Collection<ProjectKeeperModule> enabledModules,
-            final ExcludedFilesMatcher excludedFiles) {
-        super(projectDirectory, Path.of("README.md"), excludedFiles);
+            final String repoName, final Collection<ProjectKeeperModule> enabledModules) {
+        super(projectDirectory, Path.of("README.md"));
         this.projectName = projectName;
         this.artifactId = artifactId;
         this.repoName = repoName;
@@ -43,19 +44,19 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
     protected List<ValidationFinding> validateContent(final String content) {
         final List<ValidationFinding> findings = new ArrayList<>();
         if (!content.contains("](dependencies.md)")) {
-            findings.add(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-61")
+            findings.add(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-61")
                     .message("The project's README.md does not reference the dependencies.md file.'")
                     .mitigation("Please add a link like '[Dependencies](dependencies.md)' to the README.md.")
                     .toString()).build());
         }
         if (!content.contains("](doc/changes/changelog.md)")) {
-            findings.add(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-64")
+            findings.add(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-64")
                     .message("The project's README.md does not reference the changelog.md file.'")
                     .mitigation("Please add a link like '[Changelog](doc/changes/changelog.md)' to the changelog.md.")
                     .toString()).build());
         }
         if (!content.contains(getBadges())) {
-            findings.add(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-62")
+            findings.add(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-62")
                     .message("The project's README.md does not contain a valid badges block.")
                     .mitigation("Please add or replace the following badges: \n{{badge}}.", getBadges()).toString())
                     .build());

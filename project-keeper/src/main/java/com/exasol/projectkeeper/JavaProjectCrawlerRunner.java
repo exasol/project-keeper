@@ -74,14 +74,14 @@ public class JavaProjectCrawlerRunner {
                 LOGGER.log(Level.SEVERE, output);
                 final String errors = readFromStream(proc.getErrorStream());
                 LOGGER.log(Level.SEVERE, errors);
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-81")
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
                         .message("Timeout while executing project-keeper-java-project-crawler.").toString());
             }
             final int exitCode = proc.exitValue();
             final String output = readFromStream(proc.getInputStream());
             if (exitCode != 0) {
                 LOGGER.log(Level.SEVERE, output);
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-78").message(
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78").message(
                         "Failed to run project-keeper-java-project-crawler maven plugin Exit code was {{exit code}}.",
                         exitCode).toString());
             }
@@ -89,7 +89,7 @@ public class JavaProjectCrawlerRunner {
             final int responseStartIndex = startIndex + RESPONSE_START_TOKEN.length() + 1;
             final int endIndex = output.indexOf(RESPONSE_END_TOKEN);
             if (startIndex == -1 || endIndex == -1 || responseStartIndex > endIndex) {
-                throw new IllegalStateException(ExaError.messageBuilder("F-PK-79")
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-79")
                         .message("Invalid response from crawler plugin.").ticketMitigation().toString());
             }
             return output.substring(responseStartIndex, endIndex);
@@ -102,7 +102,7 @@ public class JavaProjectCrawlerRunner {
     }
 
     private String getRunFailedMessage() {
-        return ExaError.messageBuilder("E-PK-80").message("Failed to run project-keeper-java-project-crawler.")
+        return ExaError.messageBuilder("E-PK-CORE-80").message("Failed to run project-keeper-java-project-crawler.")
                 .toString();
     }
 

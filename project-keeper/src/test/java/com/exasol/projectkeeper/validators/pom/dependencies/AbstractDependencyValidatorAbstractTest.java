@@ -7,13 +7,16 @@ import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.maven.plugin.logging.Log;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 
 abstract class AbstractDependencyValidatorAbstractTest {
     private final AbstractDependencyValidator validator;
@@ -29,6 +32,7 @@ abstract class AbstractDependencyValidatorAbstractTest {
     }
 
     protected void applyFixes(final Document pom) {
-        this.validator.validate(pom, Collections.emptyList(), finding -> finding.getFix().fixError(mock(Log.class)));
+        this.validator.validate(pom, Collections.emptyList(),
+                finding -> new FindingsFixer().fixFindings(List.of(finding), mock(Logger.class)));
     }
 }

@@ -1,0 +1,24 @@
+sources:
+  - type: maven
+    path: maven-project-crawler/pom.xml
+    modules:
+      - maven_central
+  - type: maven
+    path: project-keeper/pom.xml
+    modules:
+      - maven_central
+  - type: maven
+    path: shared-model-classes/pom.xml
+    excludes:
+      - "E-PK-17: Missing required: '.github/workflows/broken_links_checker.yml'"
+      - regex: ""
+    modules:
+      -
+  - type: python
+excludedFiles:
+  - ".github/workflows/ci-build.yml"
+broken_link_replacements:
+  - "http://wrong-url.com|my-dependency.de"
+
+E-PK-17:
+  Missing required: '.github/workflows/broken_links_checker.yml'. You can exclude by adding E-PK-17(.github/workflows/broken_links_checker.yml) to e3xcludes

@@ -5,18 +5,20 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 
-class ValidationFindingTest {
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+
+class SimpleValidationFindingTest {
 
     @Test
     void testWithFix() {
-        final ValidationFinding finding = ValidationFinding.withMessage("").andFix((log) -> {
+        final SimpleValidationFinding finding = SimpleValidationFinding.withMessage("").andFix((Logger log) -> {
         }).build();
         assertThat(finding.hasFix(), equalTo(true));
     }
 
     @Test
     void testWithoutFix() {
-        final ValidationFinding finding = ValidationFinding.withMessage("").build();
+        final SimpleValidationFinding finding = SimpleValidationFinding.withMessage("").build();
         assertThat(finding.hasFix(), equalTo(false));
     }
 }

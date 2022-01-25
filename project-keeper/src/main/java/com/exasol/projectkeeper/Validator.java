@@ -2,6 +2,8 @@ package com.exasol.projectkeeper;
 
 import java.util.List;
 
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
+
 /**
  * Interface for project validators.
  */

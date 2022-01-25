@@ -28,7 +28,7 @@ class JacocoAgentDependencyValidatorTest extends AbstractDependencyValidatorAbst
         classifier.getParentNode().removeChild(classifier);
         assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, Collections.emptyList()),
                 hasValidationFindingWithMessage(
-                        "E-PK-30: Missing property 'classifier' in dependency 'org.jacoco:org.jacoco.agent'."));
+                        "E-PK-CORE-30: Missing property 'classifier' in dependency 'org.jacoco:org.jacoco.agent'."));
     }
 
     @Test
@@ -41,6 +41,6 @@ class JacocoAgentDependencyValidatorTest extends AbstractDependencyValidatorAbst
         classifier.getParentNode().replaceChild(wrongClassifier, classifier);
         assertThat(validationOf(new JacocoAgentDependencyValidator(), pom, Collections.emptyList()),
                 hasValidationFindingWithMessage(
-                        "E-PK-31: The property 'classifier' of the dependency 'org.jacoco:org.jacoco.agent' has an illegal value."));
+                        "E-PK-CORE-31: The property 'classifier' of the dependency 'org.jacoco:org.jacoco.agent' has an illegal value."));
     }
 }

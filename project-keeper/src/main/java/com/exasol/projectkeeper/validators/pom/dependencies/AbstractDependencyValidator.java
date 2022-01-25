@@ -6,12 +6,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.*;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
 import com.exasol.projectkeeper.validators.pom.PomValidator;
 
@@ -50,8 +50,8 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         final Node dependency = runXPath(pom, DEPENDENCIES_XPATH + "/dependency[artifactId/text() = '" + this.artifactId
                 + "' and groupId/text() = '" + this.groupId + "']");
         if (dependency == null) {
-            findingConsumer.accept(ValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-29").message("Missing dependency {{DEPENDENCY}}.")
+            findingConsumer.accept(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-29").message("Missing dependency {{DEPENDENCY}}.")
                             .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString())
                     .andFix(getFix(pom)).build());
         } else {
@@ -64,8 +64,8 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         validateScope(dependency, findingConsumer);
     }
 
-    private ValidationFinding.Fix getFix(final Document pom) {
-        return log -> {
+    private SimpleValidationFinding.Fix getFix(final Document pom) {
+        return (Logger log) -> {
             createObjectPathIfNotExists(runXPath(pom, "/project"), List.of("dependencies"));
             final Node dependencies = runXPath(pom, DEPENDENCIES_XPATH);
             final Element dependencyTemplate = createTemplate(pom, log);
@@ -88,7 +88,7 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         validateDependencyHasProperty(expectedScope, dependency, findingConsumer);
     }
 
-    private Element createTemplate(final Document pom, final Log log) {
+    private Element createTemplate(final Document pom, final Logger log) {
         final var dependencyTemplate = pom.createElement("dependency");
         final var artifactIdField = pom.createElement("artifactId");
         artifactIdField.appendChild(pom.createTextNode(this.artifactId));
@@ -99,7 +99,7 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         final var versionField = pom.createElement("version");
         versionField.appendChild(pom.createTextNode(this.version));
         dependencyTemplate.appendChild(versionField);
-        validateDependency(dependencyTemplate, finding -> finding.getFix().fixError(log));
+        validateDependency(dependencyTemplate, finding -> new FindingsFixer().fixFindings(List.of(finding), log));
         return dependencyTemplate;
     }
 
@@ -114,15 +114,15 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
             final Consumer<ValidationFinding> findingConsumer) {
         final Node property = runXPath(dependency, expectedProperty.getTagName());
         if (property == null) {
-            findingConsumer.accept(ValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-30")
+            findingConsumer.accept(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-30")
                             .message("Missing property {{PROPERTY}} in dependency {{DEPENDENCY}}.")
                             .parameter("PROPERTY", expectedProperty.getTagName())
                             .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString())
                     .andFix(getMissingPropertyFix(expectedProperty, dependency)).build());
         } else {
             if (!isXmlEqual(property, expectedProperty)) {
-                findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-31")
+                findingConsumer.accept(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-31")
                         .message("The property {{PROPERTY}} of the dependency {{DEPENDENCY}} has an illegal value.")
                         .parameter("PROPERTY", expectedProperty.getTagName())
                         .parameter("DEPENDENCY", this.groupId + ":" + this.artifactId).toString())
@@ -131,21 +131,17 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         }
     }
 
-    private ValidationFinding.Fix getMissingPropertyFix(final Element expectedProperty, final Node dependency) {
-        return log -> dependency.appendChild(dependency.getOwnerDocument().adoptNode(expectedProperty));
+    private SimpleValidationFinding.Fix getMissingPropertyFix(final Element expectedProperty, final Node dependency) {
+        return (Logger log) -> dependency.appendChild(dependency.getOwnerDocument().adoptNode(expectedProperty));
     }
 
-    private ValidationFinding.Fix getWrongPropertyValueFix(final Element expectedProperty, final Node dependency,
+    private SimpleValidationFinding.Fix getWrongPropertyValueFix(final Element expectedProperty, final Node dependency,
             final Node property) {
-        return log -> dependency.replaceChild(dependency.getOwnerDocument().adoptNode(expectedProperty), property);
+        return (Logger log) -> dependency.replaceChild(dependency.getOwnerDocument().adoptNode(expectedProperty),
+                property);
     }
 
     enum Scope {
         COMPILE, PROVIDED, RUNTIME, TEST
-    }
-
-    @Override
-    public boolean isExcluded(final Collection<String> excludedPlugins) {
-        return false;
     }
 }

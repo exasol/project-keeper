@@ -1,11 +1,10 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
+import static com.exasol.projectkeeper.validators.FindingMatcher.hasFindingWithMessage;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -14,7 +13,7 @@ import org.junit.jupiter.api.Test;
 import org.w3c.dom.*;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 class AbstractPluginPomValidatorTest {
 
@@ -25,9 +24,8 @@ class AbstractPluginPomValidatorTest {
         final Element expectedProperty = plugin.getOwnerDocument().createElement("test");
         expectedProperty.setTextContent("expectedValue");
         new StubPluginValidator().verifyPluginPropertyHasExactValue(plugin, "/test", expectedProperty, findings::add);
-        final List<String> messages = findings.stream().map(ValidationFinding::getMessage).collect(Collectors.toList());
-        assertThat(messages, contains(
-                "E-PK-70: The maven-dependency-plugin's configuration does not contain the required property '/test'."));
+        assertThat(findings, hasFindingWithMessage(
+                "E-PK-CORE-70: The maven-dependency-plugin's configuration does not contain the required property '/test'."));
     }
 
     @Test
@@ -40,9 +38,8 @@ class AbstractPluginPomValidatorTest {
         final Element expectedProperty = plugin.getOwnerDocument().createElement("test");
         expectedProperty.setTextContent("expectedValue");
         new StubPluginValidator().verifyPluginPropertyHasExactValue(plugin, "test", expectedProperty, findings::add);
-        final List<String> messages = findings.stream().map(ValidationFinding::getMessage).collect(Collectors.toList());
-        assertThat(messages, contains(
-                "E-PK-71: The maven-dependency-plugin's configuration-property 'test' has an illegal value. Actual value: '<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>otherValue</test>'. Expected value: '<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>expectedValue</test>'."));
+        assertThat(findings, hasFindingWithMessage(
+                "E-PK-CORE-71: The maven-dependency-plugin's configuration-property 'test' has an illegal value. Actual value: '<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>otherValue</test>'. Expected value: '<?xml version=\"1.0\" encoding=\"UTF-8\"?><test>expectedValue</test>'."));
     }
 
     private Node createPlugin() throws ParserConfigurationException {

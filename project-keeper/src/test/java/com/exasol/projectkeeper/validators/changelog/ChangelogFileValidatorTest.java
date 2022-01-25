@@ -8,16 +8,14 @@ import static org.mockito.Mockito.mock;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.List;
 
-import org.apache.maven.plugin.logging.Log;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.ExcludedFilesMatcher;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.validators.finding.*;
 
 //[utest->dsn~verify-changelog-file~1]
 class ChangelogFileValidatorTest {
@@ -35,17 +33,18 @@ class ChangelogFileValidatorTest {
     @Test
     void testValidateWrongContent() {
         final List<ValidationFinding> findings = getValidator().validate();
-        assertThat(findings.get(0).getMessage(),
-                startsWith("E-PK-69: The changelog.md file has an outdated content. Expected content:"));
+        assertThat(((SimpleValidationFinding) findings.get(0)).getMessage(),
+                startsWith("E-PK-CORE-69: The changelog.md file has an outdated content. Expected content:"));
     }
 
     private ChangelogFileValidator getValidator() {
-        return new ChangelogFileValidator(this.tempDir, new ExcludedFilesMatcher(Collections.emptyList()));
+        return new ChangelogFileValidator(this.tempDir);
     }
 
     @Test
     void testFix() {
-        getValidator().validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
+        final List<ValidationFinding> findings = getValidator().validate();
+        new FindingsFixer().fixFindings(findings, mock(Logger.class));
         final List<ValidationFinding> findingsInSecondRun = getValidator().validate();
         assertThat(findingsInSecondRun.size(), equalTo(0));
     }

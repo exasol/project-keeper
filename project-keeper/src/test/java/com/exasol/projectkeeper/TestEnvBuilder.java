@@ -18,12 +18,8 @@ public class TestEnvBuilder {
             .of(PROJECT_ROOT_OFFSET,
                     "maven-project-crawler/target/project-keeper-java-project-crawler-" + CURRENT_VERSION + ".jar")
             .toFile();
-    private static final File PLUGIN = Path
-            .of(PROJECT_ROOT_OFFSET, "project-keeper/target/project-keeper-maven-plugin-" + CURRENT_VERSION + ".jar")
-            .toFile();
     private static final File SHARED_MODEL_POM = Path.of(PROJECT_ROOT_OFFSET, "shared-model-classes/pom.xml").toFile();
     private static final File JAVA_CRAWLER_POM = Path.of(PROJECT_ROOT_OFFSET, "maven-project-crawler/pom.xml").toFile();
-    private static final File PLUGIN_POM = Path.of(PROJECT_ROOT_OFFSET, "project-keeper/pom.xml").toFile();
     private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
 
     public static MavenIntegrationTestEnvironment getTestEnv() {
@@ -40,7 +36,6 @@ public class TestEnvBuilder {
                 CURRENT_VERSION);
         testEnv.installPlugin(JAVA_CRAWLER, JAVA_CRAWLER_POM, "project-keeper-java-project-crawler", "com.exasol",
                 CURRENT_VERSION);
-        testEnv.installPlugin(PLUGIN, PLUGIN_POM, "project-keeper-maven-plugin", "com.exasol", CURRENT_VERSION);
         return testEnv;
     }
 }

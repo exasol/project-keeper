@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.AbstractFileContentValidator;
 import com.exasol.projectkeeper.validators.VersionCollector;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * This is a {@link Validator} for the changelog files.
@@ -20,10 +22,9 @@ public class ChangelogFileValidator extends AbstractFileContentValidator {
      * Create a new instance of {@link ChangelogFileValidator}.
      * 
      * @param projectDirectory project's root directory
-     * @param excludedFiles    matcher for excluded files
      */
-    public ChangelogFileValidator(final Path projectDirectory, final ExcludedFilesMatcher excludedFiles) {
-        super(projectDirectory, Path.of("doc/changes/changelog.md"), excludedFiles);
+    public ChangelogFileValidator(final Path projectDirectory) {
+        super(projectDirectory, Path.of("doc/changes/changelog.md"));
         this.projectDirectory = projectDirectory;
     }
 
@@ -31,7 +32,7 @@ public class ChangelogFileValidator extends AbstractFileContentValidator {
     protected List<ValidationFinding> validateContent(final String content) {
         final String expectedContent = getTemplate();
         if (!content.trim().equals(expectedContent.trim())) {
-            return List.of(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-69")
+            return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-69")
                     .message("The changelog.md file has an outdated content. Expected content: {{expected}}",
                             expectedContent)
                     .toString()).andFix(getCreateFileFix()).build());

@@ -9,8 +9,10 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 import com.exasol.projectkeeper.validators.pom.AbstractPomValidator;
 import com.exasol.projectkeeper.validators.pom.PomValidator;
 import com.exasol.projectkeeper.xpath.XPathSplitter;
@@ -44,22 +46,22 @@ public class PomPropertyValidator extends AbstractPomValidator implements PomVal
         if (property != null) {
             verifyPropertyValue(findingConsumer, property);
         } else {
-            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-72")
+            findingConsumer.accept(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-72")
                     .message("Missing required property {{property}} in pom.xml.")
                     .mitigation("Set the required property {{property}} to {{value}}.")
                     .parameter("property", this.propertyXPath).parameter("value", this.expectedValue).toString())
-                    .andFix(log -> createMissingProperty(pom)).build());
+                    .andFix((Logger log) -> createMissingProperty(pom)).build());
         }
     }
 
     private void verifyPropertyValue(final Consumer<ValidationFinding> findingConsumer, final Node property) {
         final String actualValue = property.getTextContent();
         if (!this.expectedValue.equals(actualValue.trim())) {
-            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-73")
+            findingConsumer.accept(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-73")
                     .message("The required property {{property}} pom.xml has an illegal value.")
                     .mitigation("Set the required property {{property}} to {{value}}.")
                     .parameter("property", this.propertyXPath).parameter("value", this.expectedValue).toString())
-                    .andFix(log -> property.setNodeValue(this.expectedValue)).build());
+                    .andFix((Logger log) -> property.setNodeValue(this.expectedValue)).build());
         }
     }
 
@@ -71,10 +73,5 @@ public class PomPropertyValidator extends AbstractPomValidator implements PomVal
     @Override
     public ProjectKeeperModule getModule() {
         return this.module;
-    }
-
-    @Override
-    public boolean isExcluded(final Collection<String> excludedPlugins) {
-        return false;
     }
 }

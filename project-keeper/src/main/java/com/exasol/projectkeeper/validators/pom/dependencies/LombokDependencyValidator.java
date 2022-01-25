@@ -7,7 +7,7 @@ import java.util.function.Consumer;
 import org.w3c.dom.Node;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * This class verifies that projects using lombok have a dependency for lombok.

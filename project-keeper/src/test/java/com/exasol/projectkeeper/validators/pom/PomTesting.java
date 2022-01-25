@@ -3,8 +3,7 @@ package com.exasol.projectkeeper.validators.pom;
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 import java.util.*;
 
 import javax.xml.XMLConstants;
@@ -14,7 +13,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 public class PomTesting {
     public static final String POM_WITH_NO_PLUGINS = "pomWithNoPlugins.xml";
@@ -38,10 +39,10 @@ public class PomTesting {
         }
     }
 
-    public static File writeResourceToTempFile(final File tempDir, final String resourceName) throws IOException {
-        final File pomFile = File.createTempFile("pom", ".xml", tempDir);
+    public static Path writeResourceToTempFile(final File tempDir, final String resourceName) throws IOException {
+        final Path pomFile = File.createTempFile("pom", ".xml", tempDir).toPath();
         try (final InputStream pomStream = PomTesting.class.getClassLoader().getResourceAsStream(resourceName)) {
-            Files.copy(Objects.requireNonNull(pomStream), pomFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(Objects.requireNonNull(pomStream), pomFile, StandardCopyOption.REPLACE_EXISTING);
         }
         return pomFile;
     }
