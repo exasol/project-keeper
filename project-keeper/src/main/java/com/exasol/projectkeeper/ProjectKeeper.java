@@ -16,13 +16,16 @@ import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 
+/**
+ * This is the entry-point class of project-keeper-core.
+ */
 public class ProjectKeeper {
     private static final String INVALID_STRUCTURE_MESSAGE = "This projects structure does not conform with the template.";
     private final List<Validator> validators;
     private final Logger logger;
     private final List<String> excludes;
 
-    ProjectKeeper(final Logger logger, final Path projectDir, final String projectName, final String artifactId,
+    private ProjectKeeper(final Logger logger, final Path projectDir, final String projectName, final String artifactId,
             final String projectVersion, final Path mvnRepo, final ProjectKeeperConfig config,
             final String ownVersion) {
         this.logger = logger;
@@ -42,6 +45,17 @@ public class ProjectKeeper {
                 new DeletedFilesValidator(projectDir), new GitignoreFileValidator(projectDir));
     }
 
+    /**
+     * Create a new instance of {@link ProjectKeeper}.
+     * 
+     * @param logger         logger
+     * @param projectDir     project directory
+     * @param projectName    name of the project
+     * @param artifactId     artifact-id
+     * @param projectVersion project version
+     * @param mvnRepo        maven repository (null if unknown)
+     * @return built {@link ProjectKeeper}
+     */
     public static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir,
             final String projectName, final String artifactId, final String projectVersion, final Path mvnRepo) {
         final String ownVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
@@ -49,6 +63,21 @@ public class ProjectKeeper {
                 readConfig(projectDir), ownVersion);
     }
 
+    /**
+     * Create a new instance of {@link ProjectKeeper}.
+     * <p>
+     * This factory method is for testing only!
+     * </p>
+     *
+     * @param logger         logger
+     * @param projectDir     project directory
+     * @param projectName    name of the project
+     * @param artifactId     artifact-id
+     * @param projectVersion project version
+     * @param mvnRepo        maven repository (null if unknown)
+     * @param ownVersion     version of project-keeper
+     * @return built {@link ProjectKeeper}
+     */
     static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final String projectName,
             final String artifactId, final String projectVersion, final Path mvnRepo, final String ownVersion) {
         return new ProjectKeeper(logger, projectDir, projectName, artifactId, projectVersion, mvnRepo,

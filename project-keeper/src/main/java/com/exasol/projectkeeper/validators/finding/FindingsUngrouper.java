@@ -5,6 +5,9 @@ import java.util.List;
 
 import lombok.Getter;
 
+/**
+ * This class ungroups all {@link ValidationFindingGroup}s into one flat list.
+ */
 public class FindingsUngrouper {
 
     /**

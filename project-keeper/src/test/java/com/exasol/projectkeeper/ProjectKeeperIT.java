@@ -185,7 +185,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         writeDefaultPom();
         writeConfig(createConfigWithAllModules());
         runFix();
-        asserVerifySucceeds();
+        assertVerifySucceeds();
     }
 
     @ParameterizedTest

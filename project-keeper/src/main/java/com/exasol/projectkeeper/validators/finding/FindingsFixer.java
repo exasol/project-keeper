@@ -8,6 +8,9 @@ import com.exasol.projectkeeper.Logger;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This class runs the {@link SimpleValidationFinding.Fix} callbacks of {@link ValidationFinding}s.
+ */
 public class FindingsFixer {
 
     /**

@@ -4,6 +4,9 @@ import java.util.List;
 
 import lombok.Data;
 
+/**
+ * Group of validation findings with a callback to run after all fixes are applied.
+ */
 @Data
 public class ValidationFindingGroup implements ValidationFinding {
     /** Findings to group */
