@@ -44,7 +44,7 @@ class ChangelogFileValidatorTest {
     @Test
     void testFix() {
         final List<ValidationFinding> findings = getValidator().validate();
-        new FindingsFixer().fixFindings(findings, mock(Logger.class));
+        new FindingsFixer(mock(Logger.class)).fixFindings(findings);
         final List<ValidationFinding> findingsInSecondRun = getValidator().validate();
         assertThat(findingsInSecondRun.size(), equalTo(0));
     }

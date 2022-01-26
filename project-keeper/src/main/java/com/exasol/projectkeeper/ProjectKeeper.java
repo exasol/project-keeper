@@ -116,21 +116,21 @@ public class ProjectKeeper {
         findingsFlat.forEach(finding -> this.logger.error(finding.getMessage()));
         final boolean hasFindingsWithFix = findingsFlat.stream().anyMatch(SimpleValidationFinding::hasFix);
         final boolean hasFindingsWithoutFix = findingsFlat.stream().anyMatch(finding -> !finding.hasFix());
-        logValidationFailure(hasFindingsWithFix, hasFindingsWithoutFix, this.logger);
+        logValidationFailure(hasFindingsWithFix, hasFindingsWithoutFix);
         return findings.isEmpty();
     }
 
     private void logValidationFailure(final boolean hasFindingsWithFix, final boolean hasFindingsWithoutFix) {
         if (hasFindingsWithoutFix && hasFindingsWithFix) {
-            logger.error(ExaError.messageBuilder("E-PK-CORE-24").message(INVALID_STRUCTURE_MESSAGE).mitigation(
+            this.logger.error(ExaError.messageBuilder("E-PK-CORE-24").message(INVALID_STRUCTURE_MESSAGE).mitigation(
                     "You can automatically fix some of the issues by running mvn project-keeper:fix but some also need to be fixed manually.")
                     .toString());
         } else if (hasFindingsWithFix) {
-            logger.error(ExaError.messageBuilder("E-PK-CORE-6").message(INVALID_STRUCTURE_MESSAGE)
+            this.logger.error(ExaError.messageBuilder("E-PK-CORE-6").message(INVALID_STRUCTURE_MESSAGE)
                     .mitigation("Run mvn project-keeper:fix to fix the issues automatically.").toString());
 
         } else if (hasFindingsWithoutFix) {
-            logger.error(ExaError.messageBuilder("E-PK-CORE-25").message(INVALID_STRUCTURE_MESSAGE)
+            this.logger.error(ExaError.messageBuilder("E-PK-CORE-25").message(INVALID_STRUCTURE_MESSAGE)
                     .mitigation("Please fix it manually.").toString());
         }
     }
@@ -152,7 +152,7 @@ public class ProjectKeeper {
         for (final Validator validator : this.validators) {
             // it's important to run fixes after each validator since they can influence the next validator.
             final List<ValidationFinding> findings = filter.filterFindings(validator.validate());
-            unfixedFindings.addAll(new FindingsFixer().fixFindings(findings, this.logger));
+            unfixedFindings.addAll(new FindingsFixer(this.logger).fixFindings(findings));
         }
         for (final SimpleValidationFinding unfixedFinding : unfixedFindings) {
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-67")

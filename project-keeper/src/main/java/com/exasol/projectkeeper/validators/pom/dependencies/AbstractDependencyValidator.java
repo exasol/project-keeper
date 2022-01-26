@@ -99,7 +99,7 @@ public abstract class AbstractDependencyValidator extends AbstractPomValidator i
         final var versionField = pom.createElement("version");
         versionField.appendChild(pom.createTextNode(this.version));
         dependencyTemplate.appendChild(versionField);
-        validateDependency(dependencyTemplate, finding -> new FindingsFixer().fixFindings(List.of(finding), log));
+        validateDependency(dependencyTemplate, finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         return dependencyTemplate;
     }
 

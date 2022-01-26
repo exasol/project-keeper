@@ -63,7 +63,7 @@ class PomPropertyValidatorTest {
     void testFix() throws ParserConfigurationException {
         final Document document = createDocument();
         final List<ValidationFinding> findingsInFirstRun = runValidation(document);
-        new FindingsFixer().fixFindings(findingsInFirstRun, mock(Logger.class));
+        new FindingsFixer(mock(Logger.class)).fixFindings(findingsInFirstRun);
         final List<ValidationFinding> findingsInSecondRun = runValidation(document);
         assertThat(findingsInSecondRun, is(empty()));
     }

@@ -17,12 +17,9 @@ import com.exasol.projectkeeper.ProjectKeeper;
 public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
 
     @Override
-    public void execute() throws MojoFailureException {
-        if (isEnabled()) {
-            final ProjectKeeper projectKeeper = getProjectKeeper();
-            if (!projectKeeper.verify()) {
-                throw new MojoFailureException("Validation failed. See above.");
-            }
+    protected void runProjectKeeper(final ProjectKeeper projectKeeper) throws MojoFailureException {
+        if (!projectKeeper.verify()) {
+            throw new MojoFailureException("Validation failed. See above.");
         }
     }
 }

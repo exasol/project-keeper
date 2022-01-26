@@ -33,6 +33,6 @@ abstract class AbstractDependencyValidatorAbstractTest {
 
     protected void applyFixes(final Document pom) {
         this.validator.validate(pom, Collections.emptyList(),
-                finding -> new FindingsFixer().fixFindings(List.of(finding), mock(Logger.class)));
+                finding -> new FindingsFixer(mock(Logger.class)).fixFindings(List.of(finding)));
     }
 }

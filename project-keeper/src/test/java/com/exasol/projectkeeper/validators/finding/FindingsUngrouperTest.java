@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.validators.finding;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.hamcrest.Matchers;
@@ -22,5 +23,11 @@ class FindingsUngrouperTest {
                 }));
         final List<SimpleValidationFinding> ungroupFindings = new FindingsUngrouper().ungroupFindings(findings);
         assertThat(ungroupFindings, Matchers.contains(FINDING_1, FINDING_2, FINDING_3));
+    }
+
+    @Test
+    void testWithNoFindings() {
+        final List<SimpleValidationFinding> result = new FindingsUngrouper().ungroupFindings(Collections.emptyList());
+        assertThat(result, Matchers.empty());
     }
 }

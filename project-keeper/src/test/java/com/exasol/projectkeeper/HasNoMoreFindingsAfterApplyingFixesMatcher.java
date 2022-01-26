@@ -17,7 +17,7 @@ public class HasNoMoreFindingsAfterApplyingFixesMatcher extends AbstractValidati
 
     @Override
     protected boolean matchesSafely(final Validator item) {
-        item.validate().forEach(finding -> new FindingsFixer().fixFindings(List.of(finding), mock(Logger.class)));
+        item.validate().forEach(finding -> new FindingsFixer(mock(Logger.class)).fixFindings(List.of(finding)));
         return getMessages(item).isEmpty();
     }
 

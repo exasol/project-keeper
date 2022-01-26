@@ -4,6 +4,7 @@ import java.nio.file.Path;
 
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -33,11 +34,20 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
      * 
      * @return project-keeper core
      */
-    protected ProjectKeeper getProjectKeeper() {
+    private ProjectKeeper createProjectKeeper() {
         return ProjectKeeper.createProjectKeeper(new MvnLogger(getLog()), this.project.getBasedir().toPath(),
                 this.project.getName(), this.project.getArtifactId(), this.project.getVersion(),
                 Path.of(this.session.getLocalRepository().getBasedir()));
     }
+
+    @Override
+    public final void execute() throws MojoFailureException {
+        if (isEnabled()) {
+            runProjectKeeper(createProjectKeeper());
+        }
+    }
+
+    protected abstract void runProjectKeeper(ProjectKeeper projectKeeper) throws MojoFailureException;
 
     /**
      * Check if the project-keeper is enabled.

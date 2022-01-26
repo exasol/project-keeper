@@ -11,6 +11,6 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 public class FindingFixHelper {
 
     public static void fix(final ValidationFinding finding) {
-        new FindingsFixer().fixFindings(List.of(finding), mock(Logger.class));
+        new FindingsFixer(mock(Logger.class)).fixFindings(List.of(finding));
     }
 }

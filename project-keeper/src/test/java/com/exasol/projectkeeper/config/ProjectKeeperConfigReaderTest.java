@@ -108,8 +108,7 @@ class ProjectKeeperConfigReaderTest {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), invalidExcludes);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> this.reader.readConfig(this.tempDir));
-        assertThat(exception.getMessage(),
-                startsWith("E-PK-CORE-87: Invalid .project-keeper.yml. Invalid value for property 'excludes'."));
+        assertThat(exception.getMessage(), startsWith("E-PK-CORE-87: Invalid .project-keeper.yml. Invalid value "));
     }
 
     @Test

@@ -81,7 +81,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
             createObjectPathIfNotExists(runXPath(pom, "/project"), List.of("build", "plugins"));
             final var plugin = pom.importNode(getPluginTemplate(), true);
             validatePluginConfiguration(plugin, enabledModules,
-                    finding -> new FindingsFixer().fixFindings(List.of(finding), log));
+                    finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
             runXPath(pom, PLUGINS_XPATH).appendChild(plugin);
         };
     }

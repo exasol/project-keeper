@@ -66,7 +66,7 @@ class ChangesFileValidatorIT {
     void testFixCreatedTemplate() throws IOException {
         createTestSetup();
         final Logger log = mock(Logger.class);
-        createValidator().validate().forEach(finding -> new FindingsFixer().fixFindings(List.of(finding), log));
+        createValidator().validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
         verify(log).warn("Created 'doc" + File.separator + "changes" + File.separator

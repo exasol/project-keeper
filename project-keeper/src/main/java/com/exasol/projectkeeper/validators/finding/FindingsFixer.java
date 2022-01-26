@@ -12,16 +12,25 @@ import lombok.RequiredArgsConstructor;
  * This class runs the {@link SimpleValidationFinding.Fix} callbacks of {@link ValidationFinding}s.
  */
 public class FindingsFixer {
+    private final Logger logger;
+
+    /**
+     * Create a new instance of {@link FindingsFixer}.
+     * 
+     * @param logger logger to log to
+     */
+    public FindingsFixer(final Logger logger) {
+        this.logger = logger;
+    }
 
     /**
      * Fix the given findings if they contain a fix.
      * 
      * @param findings list of validation findings
-     * @param logger   logger to log to
      * @return flat list of findings that do not contain a fix
      */
-    public List<SimpleValidationFinding> fixFindings(final List<ValidationFinding> findings, final Logger logger) {
-        final FixingVisitor visitor = new FixingVisitor(logger);
+    public List<SimpleValidationFinding> fixFindings(final List<ValidationFinding> findings) {
+        final FixingVisitor visitor = new FixingVisitor(this.logger);
         for (final ValidationFinding finding : findings) {
             finding.accept(visitor);
         }
