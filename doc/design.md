@@ -36,17 +36,7 @@ Needs: impl
 
 `dsn~required-files-validator~1`
 
-We decided to add the template for the required files by a file structure in the resources of this project. There are two folders: `require_exist` and `require_exact`.
-
-For files in the `require_exist` folder, PK only checks if they exist in the project. If they don't exist it creates the file with the content from the file in `require_exist` as a template.
-
-For the files in the `require_exact` folder, PK also validates that the content is exactly the same.
-
-Rationale:
-
-This way of defining the project structure makes it very convenient to add new content. No knowledge about the internal implementation of this plugin is required. That allows users to quickly add or modify the template.
-
-An alternative would be to define the files by Java classes. In order to contain the contents of the required files, these classes would contain many string concatenations which would be very unreadable.
+We decided to add the template as resources and describe them in a Java structure (`FileTemplates`).
 
 Covers:
 

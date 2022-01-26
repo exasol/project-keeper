@@ -13,6 +13,7 @@ This release has **breaking changes**:
 * #212: Decoupled maven plugin as executor from maven project analysis
 * #135: Add unified exclude mechanism
 * #224: Moved configuration to config file
+* #227: Declared file templates in Java code
 
 ## Dependency Updates
 

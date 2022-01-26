@@ -6,7 +6,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItems;
 
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -21,11 +23,9 @@ class ProjectFilesValidatorTest {
     private static final List<ProjectKeeperModule> PROJECT_KEEPER_MODULES = List.of(ProjectKeeperModule.DEFAULT);
 
     @Test
-    void testValidation(@TempDir final File tempDir) throws IOException {
-        if (!tempDir.toPath().resolve(".settings").toFile().mkdir() || !tempDir.toPath()
-                .resolve(Path.of(".settings", "org.eclipse.jdt.ui.prefs")).toFile().createNewFile()) {
-            throw new IllegalStateException("Failed to create test files.");
-        }
+    void testValidation(@TempDir final Path tempDir) throws IOException {
+        Files.createDirectories(tempDir.resolve(".settings"));
+        Files.createFile(tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.ui.prefs")));
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
         assertThat(validator,
                 validationErrorMessages(hasItems(
@@ -34,35 +34,31 @@ class ProjectFilesValidatorTest {
     }
 
     @Test
-    void testFix(@TempDir final File tempDir) {
+    void testFix(@TempDir final Path tempDir) {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
-    void testDifferentContent(@TempDir final File tempDir) throws IOException {
+    void testDifferentContent(@TempDir final Path tempDir) throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
         validator.validate().forEach(FindingFixHelper::fix); // fix all findings
-        final File testFile = tempDir.toPath().resolve(".settings" + File.separator + "org.eclipse.jdt.core.prefs")
-                .toFile();
+        final Path testFile = tempDir.resolve(".settings" + File.separator + "org.eclipse.jdt.core.prefs");
         changeFile(testFile);
         assertThat(validator, validationErrorMessages(contains(
                 "E-PK-CORE-18: Outdated content: '.settings" + File.separator + "org.eclipse.jdt.core.prefs'")));
     }
 
     @Test
-    void testFixDifferentContent(@TempDir final File tempDir) throws IOException {
+    void testFixDifferentContent(@TempDir final Path tempDir) throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(PROJECT_KEEPER_MODULES, tempDir);
         validator.validate().forEach(FindingFixHelper::fix); // fix all findings
-        final File testFile = tempDir.toPath().resolve(Path.of(".settings", "org.eclipse.jdt.core.prefs")).toFile();
+        final Path testFile = tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.core.prefs"));
         changeFile(testFile);
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
     }
 
-    private void changeFile(final File testFile) throws IOException {
-        try (final FileWriter fileWriter = new FileWriter(testFile)) {
-            fileWriter.write("something");
-            fileWriter.flush();
-        }
+    private void changeFile(final Path testFile) throws IOException {
+        Files.writeString(testFile, "something");
     }
 }
