@@ -6,7 +6,11 @@ import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateTyp
 
 import java.util.List;
 
+/**
+ * File templates.
+ */
 class FileTemplates {
+    /** Enum with file templates. */
     static final List<FileTemplate> FILE_TEMPLATES = List.of(//
             // default
             FileTemplate.of(".settings/org.eclipse.jdt.ui.prefs", DEFAULT, REQUIRE_EXACT), //
