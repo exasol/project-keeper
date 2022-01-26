@@ -17,7 +17,7 @@ public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
         if (isEnabled()) {
             final boolean success = getProjectKeeper().fix();
             if (!success) {
-                throw new MojoExecutionException("project-keeper:fix failed. See above");
+                throw new MojoExecutionException("project-keeper:fix failed. See log messages above for details");
             }
         }
     }

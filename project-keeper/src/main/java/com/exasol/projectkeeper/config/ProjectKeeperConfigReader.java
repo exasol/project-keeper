@@ -108,7 +108,7 @@ public class ProjectKeeperConfigReader {
             }
         } catch (final ClassCastException | NullPointerException exception) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-87")
-                    .message(INVALID_CONFIG_FILE + " Invalid value for property 'excludes'.")
+                    .message(INVALID_CONFIG_FILE + " Invalid value {{value}} for property 'excludes'.", rawExclude)
                     .mitigation("Please use either a string or 'regex: \"my-regx\"'.").mitigation(CHECK_THE_USER_GUIDE)
                     .toString());
         }

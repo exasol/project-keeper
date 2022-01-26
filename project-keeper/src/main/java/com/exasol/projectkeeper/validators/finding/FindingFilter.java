@@ -14,8 +14,9 @@ public class FindingFilter {
     private final List<Pattern> denyListPatterns;
 
     /**
-     * 
-     * @param denyList denyList regular expressions for finding messages to exclude
+     * Create a new instance.
+     *
+     * @param denyList regular expressions for finding messages to exclude
      */
     public FindingFilter(final List<String> denyList) {
         this.denyListPatterns = denyList.stream().map(Pattern::compile).collect(Collectors.toList());

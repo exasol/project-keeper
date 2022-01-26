@@ -55,11 +55,11 @@ sources:
 
 ### Sources
 
-For project-keeper a 'source' is a project inside a repository. For example a maven-project. In the future project-keeper will be able to crawl multiple source-projects from one repository. However, For now, you must specify exactly one maven source.
+For project-keeper a 'source' is a project inside a repository. For example a maven-project. In the future project-keeper will be able to crawl multiple source-projects from one repository. However, for now, you must specify exactly one maven source.
 
 Supported project types:
 
-* `maven`: Projects with maven build. The path mus point to the pom.xml file.
+* `maven`: Projects with maven build. The path must point to the `pom.xml` file.
 
 ### Modules
 
@@ -130,7 +130,7 @@ This module configures the pom.xml for the use of [Project Lombok](https://proje
 
 ### Excluding Files
 
-Using the `excludes` you can tell project-keeper some error-messages:
+Using the `excludes` tag you can tell project-keeper to ignore some error-messages:
 
 ```yml
 sources:
@@ -145,13 +145,13 @@ excludes:
   - regex: "E-PK-CORE-16: .*"
 ```
 
-Not that you can also use regular expressions (see example above). If a finding is excluded it will not show up on validation and will not be fixed.
+Note that you can also use regular expressions (see example above). If a finding is excluded it will not show up on validation and will not be fixed.
 
-You can define excludes globally (like `E-PK-CORE-15` and `E-PK-CORE-16` in the example) or scoped for one source (like `E-PK-CORE-17`).
+You can define excludes globally (like `E-PK-CORE-15` and `E-PK-CORE-16` in the example) or scoped for one source directory (like `E-PK-CORE-17`).
 
 ### Replacing Broken Links
 
-Some maven projects define invalid / outdated links to their project homepage. PK writes these links to the `dependencies.md` file. This will make the link checker break the build since a project file contains broken links.
+Some dependencies define invalid / outdated links to their project homepage. PK writes these links to the `dependencies.md` file. This will make the link checker break the build since a project file contains broken links.
 
 The best way to solve this is to open an issue / pull request at the projects that contain the wrong url. Since this is, however not always possible you can, as a mitigation, also define a replacement for links:
 
@@ -160,12 +160,12 @@ sources:
   - type: maven
   path: pom.xml
 linkReplacements:
-  - "http://wrong-url.com|my-dependency.de"
+  - "http://wrong-url.com|https://www.my-dependency.de"
 ```
 
 The syntax for a replacement is `broken-url|replacement`.
 
-Project-keeper will then apply the use the replacement in the `dependencies.md` file instead of the original url.
+Project-keeper will then use the replacement in the `dependencies.md` file instead of the original url.
 
 ## Usage
 

@@ -63,7 +63,6 @@ class ProjectKeeperMojoIT {
                         "    modules:\n" + //
                         "      - integration_tests\n" + //
                         "      - udf_coverage\n");
-        // .withExcludedPlugins("com.exasol:error-code-crawler-maven-plugin"));
         final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");

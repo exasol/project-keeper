@@ -88,7 +88,7 @@ public class ProjectKeeper {
         return new ProjectKeeperConfigReader().readConfig(projectDir);
     }
 
-    private ProjectKeeperConfig.Source getMavenSource(final ProjectKeeperConfig config) {
+    private static ProjectKeeperConfig.Source getMavenSource(final ProjectKeeperConfig config) {
         if (config.getSources().size() != 1) {
             throw getWrongSourceException();
         }
@@ -99,7 +99,7 @@ public class ProjectKeeper {
         return source;
     }
 
-    private UnsupportedOperationException getWrongSourceException() {
+    private static UnsupportedOperationException getWrongSourceException() {
         return new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-88")
                 .message("Currently project-keeper only supports exactly one mvn source.")
                 .mitigation("Remove additional sources.").mitigation("Wait for this to be fixed.").toString());
@@ -117,11 +117,10 @@ public class ProjectKeeper {
         final boolean hasFindingsWithFix = findingsFlat.stream().anyMatch(SimpleValidationFinding::hasFix);
         final boolean hasFindingsWithoutFix = findingsFlat.stream().anyMatch(finding -> !finding.hasFix());
         logValidationFailure(hasFindingsWithFix, hasFindingsWithoutFix, this.logger);
-        return !hasFindingsWithFix && !hasFindingsWithoutFix;
+        return findings.isEmpty();
     }
 
-    private void logValidationFailure(final boolean hasFindingsWithFix, final boolean hasFindingsWithoutFix,
-            final Logger logger) {
+    private void logValidationFailure(final boolean hasFindingsWithFix, final boolean hasFindingsWithoutFix) {
         if (hasFindingsWithoutFix && hasFindingsWithFix) {
             logger.error(ExaError.messageBuilder("E-PK-CORE-24").message(INVALID_STRUCTURE_MESSAGE).mitigation(
                     "You can automatically fix some of the issues by running mvn project-keeper:fix but some also need to be fixed manually.")
@@ -161,7 +160,7 @@ public class ProjectKeeper {
         }
         if (!unfixedFindings.isEmpty()) {
             this.logger.error(ExaError.messageBuilder("E-PK-CORE-65").message(
-                    "PK could not fix all of the findings automatically. There are findings that you need to fix by hand. (This is an error instead of a warning since no one checks for warnings in maven builds...).")
+                    "PK could not fix all of the findings automatically. There are findings that you need to fix by hand.")
                     .toString());
             return false;
         } else {
