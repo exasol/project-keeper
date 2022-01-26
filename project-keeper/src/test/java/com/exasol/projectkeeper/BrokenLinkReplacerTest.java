@@ -30,7 +30,8 @@ class BrokenLinkReplacerTest {
         final List<String> replacementParameters = List.of("http://exxxample.com");
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> new BrokenLinkReplacer(replacementParameters));
-        assertThat(exception.getMessage(), startsWith("E-PK-55: Invalid link replacement 'http://exxxample.com'."));
+        assertThat(exception.getMessage(),
+                startsWith("E-PK-CORE-55: Invalid link replacement 'http://exxxample.com'."));
     }
 
     @Test

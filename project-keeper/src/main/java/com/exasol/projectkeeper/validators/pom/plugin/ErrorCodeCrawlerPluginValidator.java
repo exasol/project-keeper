@@ -6,7 +6,7 @@ import java.util.function.Consumer;
 import org.w3c.dom.*;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * Validator for error-code-crawler-maven-plugin.

@@ -8,7 +8,10 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * {@link Validator} that checks that specific files do not exist.
@@ -25,17 +28,14 @@ public class DeletedFilesValidator implements Validator {
             Path.of(GITHUB_WORKFLOWS, "github_release.yml"),
             "We renamed maven.yml to release_droid_upload_github_release_assets.yml");
     private final Path projectDirectory;
-    private final ExcludedFilesMatcher excludedFiles;
 
     /**
      * Create a new instance of {@link DeletedFilesValidator}.
      *
      * @param projectDirectory project's root directory
-     * @param excludedFiles    matcher for explicitly excluded files
      */
-    public DeletedFilesValidator(final Path projectDirectory, final ExcludedFilesMatcher excludedFiles) {
+    public DeletedFilesValidator(final Path projectDirectory) {
         this.projectDirectory = projectDirectory;
-        this.excludedFiles = excludedFiles;
     }
 
     @Override
@@ -44,12 +44,9 @@ public class DeletedFilesValidator implements Validator {
             final var fileThatMustNotExist = entry.getKey();
             final String reason = entry.getValue();
             final Path pathThatMustExist = this.projectDirectory.resolve(fileThatMustNotExist);
-            if (this.excludedFiles.isFileExcluded(this.projectDirectory.relativize(pathThatMustExist))) {
-                return null;
-            }
             final var file = pathThatMustExist.toFile();
             if (file.exists()) {
-                return ValidationFinding.withMessage(getFileExistsErrorMessage(fileThatMustNotExist, reason))
+                return SimpleValidationFinding.withMessage(getFileExistsErrorMessage(fileThatMustNotExist, reason))
                         .andFix(getFix(fileThatMustNotExist.toString(), file)).build();
             }
             return null;
@@ -57,17 +54,19 @@ public class DeletedFilesValidator implements Validator {
     }
 
     private String getFileExistsErrorMessage(final Path fileThatMustNotExist, final String reason) {
-        return ExaError.messageBuilder("E-PK-26").message("{{FILE}} exists but must not exist. Reason: {{REASON|uq}}",
-                fileThatMustNotExist.toString(), reason).toString();
+        return ExaError.messageBuilder("E-PK-CORE-26")
+                .message("{{FILE}} exists but must not exist. Reason: {{REASON|uq}}", fileThatMustNotExist.toString(),
+                        reason)
+                .toString();
     }
 
-    private ValidationFinding.Fix getFix(final String fileName, final File file) {
-        return log -> {
+    private SimpleValidationFinding.Fix getFix(final String fileName, final File file) {
+        return (Logger log) -> {
             try {
                 Files.delete(file.toPath());
             } catch (final IOException exception) {
                 throw new IllegalStateException(
-                        ExaError.messageBuilder("E-PK-27").message("Failed to delete {{FILE}}.")
+                        ExaError.messageBuilder("E-PK-CORE-27").message("Failed to delete {{FILE}}.")
                                 .parameter("FILE", fileName).mitigation("Check file permissions.").toString(),
                         exception);
             }

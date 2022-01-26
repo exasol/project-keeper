@@ -7,8 +7,7 @@ import java.nio.file.Path;
 import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ExcludedFilesMatcher;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * This is a {@link com.exasol.projectkeeper.Validator} for the LICENSE file.
@@ -23,10 +22,9 @@ public class LicenseFileValidator extends AbstractFileContentValidator {
      * Create a new instance of {@link LicenseFileValidator}.
      *
      * @param projectDirectory project's root directory
-     * @param excludedFiles    matcher for excluded files
      */
-    public LicenseFileValidator(final Path projectDirectory, final ExcludedFilesMatcher excludedFiles) {
-        super(projectDirectory, Path.of("LICENSE"), excludedFiles);
+    public LicenseFileValidator(final Path projectDirectory) {
+        super(projectDirectory, Path.of("LICENSE"));
     }
 
     @Override
@@ -44,7 +42,7 @@ public class LicenseFileValidator extends AbstractFileContentValidator {
         try (final InputStream templateStream = getClass().getClassLoader().getResourceAsStream("LICENSE-template")) {
             return new String(templateStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (final IOException | NullPointerException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-68")
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-68")
                     .message("Failed to open LICENSE file template.").ticketMitigation().toString(), exception);
         }
     }

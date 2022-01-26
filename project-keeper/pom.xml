@@ -2,11 +2,10 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>project-keeper-maven-plugin</artifactId>
-    <packaging>maven-plugin</packaging>
-    <name>Project keeper maven plugin</name>
-    <description>This maven plugin checks and unifies a project's structure according to the Exasol integration team's
-        repository standards.
+    <artifactId>project-keeper-core</artifactId>
+    <packaging>jar</packaging>
+    <name>Project keeper core</name>
+    <description>Project keeper is a tool that verifies and fixes project setups.
     </description>
     <parent>
         <relativePath>../parent-pom/pom.xml</relativePath>
@@ -23,21 +22,6 @@
             <groupId>com.exasol</groupId>
             <artifactId>project-keeper-java-project-crawler</artifactId>
             <scope>runtime</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-project</artifactId>
-            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>io.github.classgraph</groupId>
@@ -67,12 +51,16 @@
             <groupId>com.vdurmont</groupId>
             <artifactId>semver4j</artifactId>
         </dependency>
-        <!-- test -->
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-core</artifactId>
+            <artifactId>lombok</artifactId>
+            <groupId>org.projectlombok</groupId>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <!-- test -->
         <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>maven-project-version-getter</artifactId>
@@ -99,24 +87,13 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-jdk14</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.agent</artifactId>
-            <classifier>runtime</classifier>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.jacoco</groupId>
-            <artifactId>org.jacoco.core</artifactId>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -127,48 +104,6 @@
     </dependencies>
     <build>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.6.2</version>
-            </plugin>
-
-            <plugin>
-                <groupId>com.exasol</groupId>
-                <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <!-- no execution configured on purpose. Run manually -->
-                <configuration>
-                    <modules>
-                        <module>maven_central</module>
-                        <module>integration_tests</module>
-                        <module>udf_coverage</module>
-                    </modules>
-                    <excludedPlugins>
-                        <excludedPlugin/>
-                    </excludedPlugins>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-jacoco</id>
-                        <goals>
-                            <goal>copy-dependencies</goal>
-                        </goals>
-                        <phase>compile</phase>
-                        <configuration>
-                            <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
-                            <includeClassifiers>runtime</includeClassifiers>
-                            <outputDirectory>${project.build.directory}/jacoco-agent</outputDirectory>
-                            <stripVersion>true</stripVersion>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -191,6 +126,43 @@
                         <goals>
                             <goal>verify</goal>
                         </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sourcePaths>
+                        <sourcePath>target/delombok/main</sourcePath>
+                        <sourcePath>target/delombok/test</sourcePath>
+                    </sourcePaths>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.projectlombok</groupId>
+                <artifactId>lombok-maven-plugin</artifactId>
+                <version>1.18.20.0</version>
+                <executions>
+                    <execution>
+                        <id>delombok-main</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>delombok</goal>
+                        </goals>
+                        <configuration>
+                            <addOutputDirectory>false</addOutputDirectory>
+                            <sourceDirectory>src/main/java</sourceDirectory>
+                            <outputDirectory>target/delombok/main</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>delombok-test</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>testDelombok</goal>
+                        </goals>
+                        <configuration>
+                            <addOutputDirectory>false</addOutputDirectory>
+                            <sourceDirectory>src/test/java</sourceDirectory>
+                            <outputDirectory>target/delombok/test</outputDirectory>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

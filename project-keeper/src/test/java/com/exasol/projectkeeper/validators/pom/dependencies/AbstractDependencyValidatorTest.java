@@ -1,9 +1,9 @@
 package com.exasol.projectkeeper.validators.pom.dependencies;
 
+import static com.exasol.projectkeeper.validators.FindingMatcher.hasFindingWithMessage;
 import static com.exasol.projectkeeper.validators.pom.PomTesting.POM_WITH_NO_PLUGINS;
 import static com.exasol.projectkeeper.validators.pom.PomTesting.readXmlFromResources;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -20,7 +20,7 @@ import org.xml.sax.SAXException;
 import org.xmlunit.matchers.EvaluateXPathMatcher;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 // [utest->dsn~mvn-dependency-validator~1]
 class AbstractDependencyValidatorTest extends AbstractDependencyValidatorAbstractTest {
@@ -32,10 +32,9 @@ class AbstractDependencyValidatorTest extends AbstractDependencyValidatorAbstrac
     @Test
     void testValidation() throws ParserConfigurationException, SAXException, IOException {
         final Document pom = readXmlFromResources(POM_WITH_NO_PLUGINS);
-        final List<String> findings = new ArrayList<>();
-        new DependencyValidatorStub().validate(pom, Collections.emptyList(),
-                finding -> findings.add(finding.getMessage()));
-        assertThat(findings, containsInAnyOrder("E-PK-29: Missing dependency 'com.example:my-artifact'."));
+        final List<ValidationFinding> findings = new ArrayList<>();
+        new DependencyValidatorStub().validate(pom, Collections.emptyList(), findings::add);
+        assertThat(findings, hasFindingWithMessage("E-PK-CORE-29: Missing dependency 'com.example:my-artifact'."));
     }
 
     @Test

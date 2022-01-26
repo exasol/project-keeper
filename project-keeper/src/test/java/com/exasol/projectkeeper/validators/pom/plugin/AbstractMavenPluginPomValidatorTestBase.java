@@ -6,7 +6,6 @@ import static com.exasol.projectkeeper.validators.pom.PomTesting.*;
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.mock;
 import static org.xmlunit.matchers.HasXPathMatcher.hasXPath;
 
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.maven.plugin.logging.Log;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -25,6 +23,7 @@ import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.validators.FindingFixHelper;
 
 // [utest->dsn~mvn-plugin-validator~1]
 abstract class AbstractMavenPluginPomValidatorTestBase {
@@ -72,7 +71,7 @@ abstract class AbstractMavenPluginPomValidatorTestBase {
 
     protected void runAllFixesGeneratedByValidation(final Document pom,
             final Collection<ProjectKeeperModule> enabledModules) {
-        this.template.validate(pom, enabledModules, finding -> finding.getFix().fixError(mock(Log.class)));
+        this.template.validate(pom, enabledModules, FindingFixHelper::fix);
     }
 
     protected boolean isPluginConfigurationValid(final Node plugin,
@@ -84,7 +83,6 @@ abstract class AbstractMavenPluginPomValidatorTestBase {
 
     protected void runFixesFromValidatePluginConfiguration(final Node plugin,
             final Collection<ProjectKeeperModule> enabledModules) {
-        this.template.validatePluginConfiguration(plugin, enabledModules,
-                finding -> finding.getFix().fixError(mock(Log.class)));
+        this.template.validatePluginConfiguration(plugin, enabledModules, FindingFixHelper::fix);
     }
 }

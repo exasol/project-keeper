@@ -5,7 +5,7 @@ import java.util.function.Consumer;
 import org.w3c.dom.Node;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * Validator for the dependency to jacoco.agent.

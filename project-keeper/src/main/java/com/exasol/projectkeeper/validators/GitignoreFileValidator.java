@@ -7,7 +7,10 @@ import java.nio.file.Path;
 import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * This is a {@link Validator} for the {@code .gitignore} file.
@@ -23,10 +26,9 @@ public class GitignoreFileValidator extends AbstractFileContentValidator {
      * Create a new instance of {@link GitignoreFileValidator}.
      * 
      * @param projectDirectory project's root directory
-     * @param excludedFiles    matcher for excluded files
      */
-    public GitignoreFileValidator(final Path projectDirectory, final ExcludedFilesMatcher excludedFiles) {
-        super(projectDirectory, Path.of(".gitignore"), excludedFiles);
+    public GitignoreFileValidator(final Path projectDirectory) {
+        super(projectDirectory, Path.of(".gitignore"));
     }
 
     @Override
@@ -40,8 +42,8 @@ public class GitignoreFileValidator extends AbstractFileContentValidator {
             }
         }
         if (!missingEntries.isEmpty()) {
-            findings.add(ValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-76").message("Invalid content of .gitignore.")
+            findings.add(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-76").message("Invalid content of .gitignore.")
                             .mitigation("Please add the following required entries: {{list of missing entries}}",
                                     missingEntries)
                             .toString())
@@ -58,15 +60,15 @@ public class GitignoreFileValidator extends AbstractFileContentValidator {
         return entries;
     }
 
-    private ValidationFinding.Fix getAddMissingEntriesFix(final String content, final List<String> missingEntries) {
-        return log -> {
+    private SimpleValidationFinding.Fix getAddMissingEntriesFix(final String content,
+            final List<String> missingEntries) {
+        return (Logger log) -> {
             final String newContent = content + NL + String.join(NL, missingEntries);
             try {
                 Files.writeString(getAbsoluteFilePath(), newContent);
             } catch (final IOException exception) {
-                throw new UncheckedIOException(
-                        ExaError.messageBuilder("E-PK-77").message("Failed to write fixed .gitignore file.").toString(),
-                        exception);
+                throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-77")
+                        .message("Failed to write fixed .gitignore file.").toString(), exception);
             }
         };
     }

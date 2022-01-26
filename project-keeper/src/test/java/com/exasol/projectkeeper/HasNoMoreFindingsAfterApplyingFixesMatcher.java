@@ -2,9 +2,12 @@ package com.exasol.projectkeeper;
 
 import static org.mockito.Mockito.mock;
 
-import org.apache.maven.plugin.logging.Log;
+import java.util.List;
+
 import org.hamcrest.Description;
 import org.hamcrest.Matcher;
+
+import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 
 public class HasNoMoreFindingsAfterApplyingFixesMatcher extends AbstractValidationMatcher {
 
@@ -14,7 +17,7 @@ public class HasNoMoreFindingsAfterApplyingFixesMatcher extends AbstractValidati
 
     @Override
     protected boolean matchesSafely(final Validator item) {
-        item.validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
+        item.validate().forEach(finding -> new FindingsFixer(mock(Logger.class)).fixFindings(List.of(finding)));
         return getMessages(item).isEmpty();
     }
 

@@ -6,7 +6,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * This class is a abstract basis for {@link Validator}s that validate a files content as string.
@@ -17,11 +19,9 @@ public abstract class AbstractFileContentValidator extends AbstractFileValidator
      *
      * @param projectDirectory project's root directory
      * @param filePath         path of the file to validate relative to projectDirectory
-     * @param excludedFiles    matcher for excluded files
      */
-    protected AbstractFileContentValidator(final Path projectDirectory, final Path filePath,
-            final ExcludedFilesMatcher excludedFiles) {
-        super(projectDirectory, filePath, excludedFiles);
+    protected AbstractFileContentValidator(final Path projectDirectory, final Path filePath) {
+        super(projectDirectory, filePath);
     }
 
     @Override
@@ -30,7 +30,7 @@ public abstract class AbstractFileContentValidator extends AbstractFileValidator
             final String content = Files.readString(file);
             return validateContent(content);
         } catch (final IOException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-60")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-60")
                     .message("Failed to read file {{file name}} for validation.", file).toString());
         }
     }
@@ -39,7 +39,7 @@ public abstract class AbstractFileContentValidator extends AbstractFileValidator
      * Validate the given file content and return a list of validation findings.
      * 
      * @param content file content
-     * @return list of {@link ValidationFinding}s or an empty list if there are no findings
+     * @return list of {@link SimpleValidationFinding}s or an empty list if there are no findings
      */
     protected abstract List<ValidationFinding> validateContent(final String content);
 

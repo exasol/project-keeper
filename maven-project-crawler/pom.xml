@@ -64,10 +64,17 @@
             <groupId>com.vdurmont</groupId>
             <artifactId>semver4j</artifactId>
         </dependency>
+
         <!-- test -->
         <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <!-- overriding vulnerable transitive version -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
             <scope>provided</scope>
         </dependency>
         <dependency>

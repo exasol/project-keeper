@@ -6,7 +6,8 @@ import java.util.function.Consumer;
 import org.w3c.dom.Document;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * Interface for Pom file validation templates.
@@ -21,8 +22,8 @@ public interface PomValidator {
      * 
      * @param pom             pom document
      * @param enabledModules  list of enabled modules
-     * @param findingConsumer Consumer that accepts the {@link ValidationFinding}s. The findings must be fixed in the
-     *                        order, they are reported.
+     * @param findingConsumer Consumer that accepts the {@link SimpleValidationFinding}s. The findings must be fixed in
+     *                        the order, they are reported.
      */
     public void validate(final Document pom, final Collection<ProjectKeeperModule> enabledModules,
             Consumer<ValidationFinding> findingConsumer);
@@ -33,13 +34,4 @@ public interface PomValidator {
      * @return module this template belongs to
      */
     public ProjectKeeperModule getModule();
-
-    /**
-     * Get if this validator is excluded by the excluded plugins.
-     * 
-     * @param excludedPlugins list of excluded plugins (group_id:artifact_id)
-     * @return {@code true} if the validator is excluded
-     */
-    // [impl->dsn~exclduding-mvn-plugins~1]
-    public boolean isExcluded(Collection<String> excludedPlugins);
 }

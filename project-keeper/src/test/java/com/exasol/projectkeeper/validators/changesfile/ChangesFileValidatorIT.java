@@ -13,19 +13,21 @@ import static org.mockito.Mockito.verify;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.List;
 
-import org.apache.maven.plugin.logging.Log;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
-import com.exasol.projectkeeper.ExcludedFilesMatcher;
+import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.TestEnvBuilder;
+import com.exasol.projectkeeper.validators.FindingFixHelper;
 import com.exasol.projectkeeper.validators.TestMavenModel;
+import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 
+@Tag("integration")
 class ChangesFileValidatorIT {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
@@ -49,7 +51,7 @@ class ChangesFileValidatorIT {
     @Test
     void testValidation() throws IOException {
         createTestSetup();
-        assertThat(createValidator(), hasValidationFindingWithMessage("E-PK-56: Could not find required file 'doc"
+        assertThat(createValidator(), hasValidationFindingWithMessage("E-PK-CORE-56: Could not find required file 'doc"
                 + File.separator + "changes" + File.separator + "changes_1.2.3.md'."));
     }
 
@@ -57,15 +59,14 @@ class ChangesFileValidatorIT {
     void testValidationForSnapshotVersion() throws IOException {
         createTestSetup();
         assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir.toPath(),
-                new ExcludedFilesMatcher(Collections.emptyList()), testMavenRepo, TestEnvBuilder.CURRENT_VERSION),
-                hasNoValidationFindings());
+                testMavenRepo, TestEnvBuilder.CURRENT_VERSION), hasNoValidationFindings());
     }
 
     @Test
     void testFixCreatedTemplate() throws IOException {
         createTestSetup();
-        final Log log = mock(Log.class);
-        createValidator().validate().forEach(finding -> finding.getFix().fixError(log));
+        final Logger log = mock(Logger.class);
+        createValidator().validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
         verify(log).warn("Created 'doc" + File.separator + "changes" + File.separator
@@ -77,8 +78,7 @@ class ChangesFileValidatorIT {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency();
         createTestSetup(model);
-        final Log log = mock(Log.class);
-        createValidator().validate().forEach(finding -> finding.getFix().fixError(log));
+        createValidator().validate().forEach(FindingFixHelper::fix);
         final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(containsString(TestMavenModel.DEPENDENCY_ARTIFACT_ID)));
     }
@@ -88,13 +88,13 @@ class ChangesFileValidatorIT {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency();
         createTestSetup(model);
-        createValidator().validate().forEach(finding -> finding.getFix().fixError(mock(Log.class)));
+        createValidator().validate().forEach(FindingFixHelper::fix);
         assertThat(createValidator(), hasNoMoreFindingsAfterApplyingFixes());
     }
 
     private ChangesFileValidator createValidator() {
-        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir.toPath(),
-                new ExcludedFilesMatcher(Collections.emptyList()), testMavenRepo, TestEnvBuilder.CURRENT_VERSION);
+        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir.toPath(), testMavenRepo,
+                TestEnvBuilder.CURRENT_VERSION);
     }
 
     private void createTestSetup() throws IOException {

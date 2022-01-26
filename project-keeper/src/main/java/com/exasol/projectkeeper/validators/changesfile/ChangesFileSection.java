@@ -21,7 +21,7 @@ public class ChangesFileSection {
      */
     public ChangesFileSection(final List<String> content) {
         if (content.isEmpty()) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-36")
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-36")
                     .message("changes file sections must not be empty.").ticketMitigation().toString());
         }
         this.content = content;

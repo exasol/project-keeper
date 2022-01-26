@@ -1,31 +1,31 @@
 package com.exasol.projectkeeper.validators.pom.properties;
 
+import static com.exasol.projectkeeper.validators.FindingMatcher.hasFindingWithMessage;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.maven.plugin.logging.Log;
 import org.junit.jupiter.api.Test;
 import org.w3c.dom.*;
 
+import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.FindingsFixer;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 class PomPropertyValidatorTest {
     @Test
     void testValidation() throws ParserConfigurationException {
         final Document document = createDocument();
         final List<ValidationFinding> findings = runValidation(document);
-        final List<String> findingMessages = findings.stream().map(ValidationFinding::getMessage)
-                .collect(Collectors.toList());
-        assertThat(findingMessages, contains(
-                "E-PK-72: Missing required property '/project/myProperty' in pom.xml. Set the required property '/project/myProperty' to 'myValue'."));
+        assertThat(findings, hasFindingWithMessage(
+                "E-PK-CORE-72: Missing required property '/project/myProperty' in pom.xml. Set the required property '/project/myProperty' to 'myValue'."));
     }
 
     @Test
@@ -55,18 +55,17 @@ class PomPropertyValidatorTest {
     void testInvalid() throws ParserConfigurationException {
         final Document document = createDocumentWithMyProperty("wrongValue");
         final List<ValidationFinding> findings = runValidation(document);
-        final List<String> findingMessages = findings.stream().map(ValidationFinding::getMessage)
-                .collect(Collectors.toList());
-        assertThat(findingMessages, contains(
-                "E-PK-73: The required property '/project/myProperty' pom.xml has an illegal value. Set the required property '/project/myProperty' to 'myValue'."));
+        assertThat(findings, hasFindingWithMessage(
+                "E-PK-CORE-73: The required property '/project/myProperty' pom.xml has an illegal value. Set the required property '/project/myProperty' to 'myValue'."));
     }
 
     @Test
     void testFix() throws ParserConfigurationException {
         final Document document = createDocument();
-        runValidation(document).forEach(finding -> finding.getFix().fixError(mock(Log.class)));
-        final List<ValidationFinding> findings = runValidation(document);
-        assertThat(findings, is(empty()));
+        final List<ValidationFinding> findingsInFirstRun = runValidation(document);
+        new FindingsFixer(mock(Logger.class)).fixFindings(findingsInFirstRun);
+        final List<ValidationFinding> findingsInSecondRun = runValidation(document);
+        assertThat(findingsInSecondRun, is(empty()));
     }
 
     private Document createDocument() throws ParserConfigurationException {

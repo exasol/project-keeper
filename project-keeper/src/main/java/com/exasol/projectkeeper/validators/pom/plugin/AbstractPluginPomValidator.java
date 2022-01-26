@@ -11,14 +11,14 @@ import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.maven.plugin.logging.Log;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.ValidationFinding;
+import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.*;
 import com.exasol.projectkeeper.xpath.XPathSplitter;
 
@@ -63,8 +63,8 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     private boolean validatePluginExists(final Document pom, final Collection<ProjectKeeperModule> enabledModules,
             final Consumer<ValidationFinding> findingConsumer) {
         if (runXPath(pom, this.pluginXPath) == null) {
-            findingConsumer.accept(ValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-15")
+            findingConsumer.accept(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-15")
                             .message("Missing maven plugin {{plugin group|uq}}:{{plugin name|uq}}.", this.pluginGroupId,
                                     this.pluginArtifactId)
                             .toString())
@@ -75,12 +75,13 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         }
     }
 
-    private ValidationFinding.Fix getFixForMissingPlugin(final Document pom,
+    private SimpleValidationFinding.Fix getFixForMissingPlugin(final Document pom,
             final Collection<ProjectKeeperModule> enabledModules) {
-        return (Log log) -> {
+        return (Logger log) -> {
             createObjectPathIfNotExists(runXPath(pom, "/project"), List.of("build", "plugins"));
             final var plugin = pom.importNode(getPluginTemplate(), true);
-            validatePluginConfiguration(plugin, enabledModules, finding -> finding.getFix().fixError(log));
+            validatePluginConfiguration(plugin, enabledModules,
+                    finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
             runXPath(pom, PLUGINS_XPATH).appendChild(plugin);
         };
     }
@@ -97,7 +98,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
     private Node readPluginTemplate(final String templateResourceName) {
         try (final var templateInputStream = getClass().getClassLoader().getResourceAsStream(templateResourceName)) {
             if (templateInputStream == null) {
-                throw new IllegalStateException(ExaError.messageBuilder("F-PK-11")
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-11")
                         .message("Failed to open {{plugin name|uq}}'s template.", this.pluginArtifactId).toString());
             }
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
@@ -105,7 +106,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
             final var documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
             return documentBuilder.parse(templateInputStream).getFirstChild();
         } catch (final IOException | SAXException | ParserConfigurationException e) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-10")
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-10")
                     .message("Failed to parse {{plugin name|uq}}'s template.", this.pluginArtifactId).toString());
         }
     }
@@ -143,7 +144,7 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         if (runXPath(plugin, xPath) != null) {
             return true;
         } else {
-            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-13").message(
+            findingConsumer.accept(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-13").message(
                     "The {{plugin|uq}}'s configuration does not contain the required property {{required property}}.",
                     this.pluginArtifactId, xPath).toString())//
                     .andFix(getCopyFixForMissingProperty(plugin, xPath)).build());
@@ -151,8 +152,9 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         }
     }
 
-    private ValidationFinding.Fix getCopyFixForMissingProperty(final Node plugin, final String missingPropertiesXPath) {
-        return (Log log) -> {
+    private SimpleValidationFinding.Fix getCopyFixForMissingProperty(final Node plugin,
+            final String missingPropertiesXPath) {
+        return (Logger log) -> {
             final List<String> pathSegments = XPathSplitter.split(missingPropertiesXPath);
             findAndCopyFirstMissingPropertyFromTemplate(plugin, pathSegments);
         };
@@ -200,16 +202,17 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         }
     }
 
-    void verifyPluginPropertyHasExactValue(final Node plugin, final String propertyXpath,
-            final Node expectedProperty, final Consumer<ValidationFinding> findingConsumer) {
+    void verifyPluginPropertyHasExactValue(final Node plugin, final String propertyXpath, final Node expectedProperty,
+            final Consumer<ValidationFinding> findingConsumer) {
         if (verifyPluginHasPropertyWithGivenDefault(plugin, propertyXpath, expectedProperty, findingConsumer)) {
             final Node property = runXPath(plugin, propertyXpath);
             if (!isXmlEqual(property, expectedProperty)) {
-                findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-71").message(
-                        "The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value. Actual value: {{actual}}. Expected value: {{expected}}.",
-                        this.pluginArtifactId, propertyXpath, PomRenderer.renderPom(property),
-                        PomRenderer.renderPom(expectedProperty)).toString())
-                        .andFix(log -> setExpectedValue(plugin, propertyXpath, expectedProperty)).build());
+                findingConsumer.accept(SimpleValidationFinding
+                        .withMessage(ExaError.messageBuilder("E-PK-CORE-71").message(
+                                "The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value. Actual value: {{actual}}. Expected value: {{expected}}.",
+                                this.pluginArtifactId, propertyXpath, PomRenderer.renderPom(property),
+                                PomRenderer.renderPom(expectedProperty)).toString())
+                        .andFix((Logger log) -> setExpectedValue(plugin, propertyXpath, expectedProperty)).build());
             }
         }
     }
@@ -220,10 +223,10 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
         if (property != null) {
             return true;
         } else {
-            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-70").message(
+            findingConsumer.accept(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-70").message(
                     "The {{plugin|uq}}'s configuration does not contain the required property {{required property}}.",
                     this.pluginArtifactId, propertyXpath).toString())//
-                    .andFix(log -> {
+                    .andFix((Logger log) -> {
                         createObjectPathIfNotExists(plugin, XPathSplitter.split(propertyXpath));
                         setExpectedValue(plugin, propertyXpath, expectedValue);
                     }).build());
@@ -247,31 +250,26 @@ public abstract class AbstractPluginPomValidator extends AbstractPomValidator im
             final Consumer<ValidationFinding> findingConsumer) {
         final var node = runXPath(plugin, propertyXpath);
         if (node != null) {
-            findingConsumer.accept(ValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-28")
+            findingConsumer.accept(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-28")
                             .message("The plugin {{PLUGIN}} has an illegal property {{PROPERTY}}.")
                             .mitigation("Please remove it.").parameter("PLUGIN", this.pluginArtifactId)
                             .parameter("PROPERTY", propertyXpath).toString())
-                    .andFix(log -> node.getParentNode().removeChild(node)).build());
+                    .andFix((Logger log) -> node.getParentNode().removeChild(node)).build());
         }
     }
 
     private void validatePropertiesAreEqual(final Node plugin, final String propertyXpath,
             final Consumer<ValidationFinding> findingConsumer, final Node property, final Node templateProperty) {
         if (!isXmlEqual(property, templateProperty)) {
-            findingConsumer.accept(ValidationFinding.withMessage(ExaError.messageBuilder("E-PK-14")
+            findingConsumer.accept(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-14")
                     .message("The {{plugin|uq}}'s configuration-property {{property path}} has an illegal value.",
                             this.pluginArtifactId, propertyXpath)
                     .toString())//
-                    .andFix((Log log) -> {
+                    .andFix((Logger log) -> {
                         final var importedProperty = plugin.getOwnerDocument().importNode(templateProperty, true);
                         property.getParentNode().replaceChild(importedProperty, property);
                     }).build());
         }
-    }
-
-    @Override
-    public boolean isExcluded(final Collection<String> excludedPlugins) {
-        return excludedPlugins.contains(this.pluginGroupId + ":" + this.pluginArtifactId);
     }
 }

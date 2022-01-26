@@ -3,14 +3,13 @@ package com.exasol.projectkeeper.validators.files;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.apache.maven.plugin.logging.Log;
-
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.Resource;
@@ -20,23 +19,18 @@ import io.github.classgraph.Resource;
  */
 //[impl->dsn~required-files-validator~1]
 public class ProjectFilesValidator implements Validator {
-    private static final InputStreamComparator COMPARATOR = new InputStreamComparator();
     private final Collection<ProjectKeeperModule> enabledModules;
     private final File projectDirectory;
-    private final ExcludedFilesMatcher excludedFilesMatcher;
 
     /**
      * Crate a new instance of {@link ProjectFilesValidator}.
      * 
-     * @param enabledModules       list of enabled {@link ProjectKeeperModule}s
-     * @param projectDirectory     project's root directory
-     * @param excludedFilesMatcher files to exclude from validation
+     * @param enabledModules   list of enabled {@link ProjectKeeperModule}s
+     * @param projectDirectory project's root directory
      */
-    public ProjectFilesValidator(final Collection<ProjectKeeperModule> enabledModules, final File projectDirectory,
-            final ExcludedFilesMatcher excludedFilesMatcher) {
+    public ProjectFilesValidator(final Collection<ProjectKeeperModule> enabledModules, final File projectDirectory) {
         this.enabledModules = enabledModules;
         this.projectDirectory = projectDirectory;
-        this.excludedFilesMatcher = excludedFilesMatcher;
     }
 
     @Override
@@ -45,7 +39,6 @@ public class ProjectFilesValidator implements Validator {
             return scanResult.getAllResources().stream()//
                     .map(FileTemplate::fromResource)//
                     .filter(template -> this.enabledModules.contains(template.module))
-                    .filter(template -> !this.excludedFilesMatcher.isFileExcluded(Path.of(template.fileName)))
                     .flatMap(template -> validate(template).stream())//
                     .collect(Collectors.toList());
         }
@@ -55,10 +48,10 @@ public class ProjectFilesValidator implements Validator {
         final var projectFile = this.projectDirectory.toPath().resolve(template.fileName).toFile();
         final String templateContent = template.getContent();
         if (!projectFile.exists()) {
-            return List.of(ValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-17").message("Missing required: {{required file}}")
+            return List.of(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-17").message("Missing required: {{required file}}")
                             .parameter("required file", template.fileName).toString())
-                    .andFix((Log log) -> fixFile(projectFile, templateContent)).build());
+                    .andFix((Logger log) -> fixFile(projectFile, templateContent)).build());
         }
         if (template.type.equals(TemplateType.REQUIRE_EXACT)) {
             return validateContent(template.getContent(), template.fileName, projectFile);
@@ -73,7 +66,7 @@ public class ProjectFilesValidator implements Validator {
             Files.writeString(projectFile.toPath(), templateContent);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-16").message("Failed to create or replace {{required file}}.")
+                    ExaError.messageBuilder("E-PK-CORE-16").message("Failed to create or replace {{required file}}.")
                             .parameter("required file", projectFile.getAbsolutePath()).toString(),
                     exception);
         }
@@ -82,10 +75,10 @@ public class ProjectFilesValidator implements Validator {
     private List<ValidationFinding> validateContent(final String templateContent, final String templateName,
             final File projectFile) {
         if (!isFileEqualWithTemplate(templateContent, projectFile)) {
-            return List.of(ValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-18").message("Outdated content: {{file name}}")
+            return List.of(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-18").message("Outdated content: {{file name}}")
                             .parameter("file name", templateName).toString())
-                    .andFix((Log log) -> fixFile(projectFile, templateContent)).build());
+                    .andFix((Logger log) -> fixFile(projectFile, templateContent)).build());
         } else {
             return Collections.emptyList();
         }
@@ -97,7 +90,7 @@ public class ProjectFilesValidator implements Validator {
             return actualContent.equals(templateContent);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-19").message("Failed to validate {{file name}}'s content.")
+                    ExaError.messageBuilder("E-PK-CORE-19").message("Failed to validate {{file name}}'s content.")
                             .parameter("file name", projectFile).toString(),
                     exception);
         }
@@ -111,7 +104,7 @@ public class ProjectFilesValidator implements Validator {
                 return TemplateType.valueOf(templateTypeString.toUpperCase());
             } catch (final IllegalArgumentException exception) {
                 throw new IllegalArgumentException(
-                        ExaError.messageBuilder("F-PK-3").message("Unknown template type {{type}}.")
+                        ExaError.messageBuilder("F-PK-CORE-3").message("Unknown template type {{type}}.")
                                 .parameter("type", templateTypeString).ticketMitigation().toString());
             }
         }
@@ -136,7 +129,7 @@ public class ProjectFilesValidator implements Validator {
             final List<String> resourcePath = Arrays.asList(resourceName.split("/"));
             final int templatesFolderIndex = getTemplatesFolderIndex(resourcePath);
             if (isTemplatePathSyntax(resourcePath, templatesFolderIndex)) {
-                throw new IllegalStateException(ExaError.messageBuilder("F-PK-1")
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-1")
                         .message("Template name had invalid format.").ticketMitigation().toString());
             }
             final var pathRelativeToTemplates = resourcePath.subList(templatesFolderIndex + 1, resourcePath.size());
@@ -161,7 +154,7 @@ public class ProjectFilesValidator implements Validator {
                 final String templateContent = this.template.getContentAsString();
                 return templateContent.replace("\r", "").replace("\n", System.lineSeparator());
             } catch (final IOException exception) {
-                throw new IllegalStateException(ExaError.messageBuilder("F-PK-57")
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-57")
                         .message("Failed to read template {{template}}.", this.template.getPath()).ticketMitigation()
                         .toString(), exception);
             }

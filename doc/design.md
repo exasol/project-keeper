@@ -226,11 +226,15 @@ Covers:
 
 Needs: impl, utest
 
-### Excluding Files
+### Excluding Validation Findings
 
-`dsn~excluding-files~1`
+`dsn~excluding~1`
 
-We added the possibility to exclude files from the validation.
+We added the possibility to exclude validation findings.
+
+We decided for an exclude-mechanism where users provide regular expressions that match the messages to exclude.
+
+That allows users to define all kinds of validation findings. In addition, it does not add coupling between config and possible validations.
 
 Rationale:
 
@@ -242,15 +246,3 @@ Covers:
 * `feat~configuration~1`
 
 Needs: impl, utest, itest
-
-### Excluding Plugins
-
-`dsn~exclduding-mvn-plugins~1`
-
-We added the possibility to exclude maven plugins from the validation.
-
-Covers:
-
-* `feat~configuration~1`
-
-Needs: impl, itest
