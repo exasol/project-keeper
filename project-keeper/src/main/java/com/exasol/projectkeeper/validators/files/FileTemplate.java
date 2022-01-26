@@ -16,7 +16,7 @@ import lombok.Data;
  */
 @Data
 class FileTemplate {
-    private final String templateInResources;
+    private final String templateResourceName;
     private final Path pathInProject;
     private final ProjectKeeperModule module;
     private final TemplateType templateType;
@@ -50,12 +50,12 @@ class FileTemplate {
 
     private String readResource() {
         try (final InputStream resourceAsStream = getClass().getClassLoader()
-                .getResourceAsStream(this.templateInResources)) {
+                .getResourceAsStream(this.templateResourceName)) {
             return new String(Objects.requireNonNull(resourceAsStream).readAllBytes(), StandardCharsets.UTF_8);
-        } catch (final IOException exception) {
+        } catch (final IOException | NullPointerException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-57")
-                    .message("Failed to read template from resource {{resource name}}.", this.templateInResources).ticketMitigation()
-                    .toString(), exception);
+                    .message("Failed to read template from resource {{resource name}}.", this.templateResourceName)
+                    .ticketMitigation().toString(), exception);
         }
     }
 
