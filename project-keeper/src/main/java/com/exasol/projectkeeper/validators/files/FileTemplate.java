@@ -18,9 +18,6 @@ import lombok.Data;
 class FileTemplate {
     private final String templateInResources;
     private final Path pathInProject;
-    /**
-     * If true content must match. Otherwise, the file must only exist.
-     */
     private final ProjectKeeperModule module;
     private final TemplateType templateType;
 
@@ -57,7 +54,7 @@ class FileTemplate {
             return new String(Objects.requireNonNull(resourceAsStream).readAllBytes(), StandardCharsets.UTF_8);
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-57")
-                    .message("Failed to read template {{template}}.", this.templateInResources).ticketMitigation()
+                    .message("Failed to read template from resource {{resource name}}.", this.templateInResources).ticketMitigation()
                     .toString(), exception);
         }
     }
