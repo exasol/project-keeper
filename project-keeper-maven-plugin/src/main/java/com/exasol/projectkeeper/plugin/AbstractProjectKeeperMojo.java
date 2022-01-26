@@ -47,6 +47,12 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * Run project keeper.
+     * 
+     * @param projectKeeper project keeper
+     * @throws MojoFailureException on validation errors
+     */
     protected abstract void runProjectKeeper(ProjectKeeper projectKeeper) throws MojoFailureException;
 
     /**
