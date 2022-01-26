@@ -20,8 +20,11 @@ class FileTemplates {
             FileTemplate.of(".github/workflows/release_droid_print_quick_checksum.yml", DEFAULT, REQUIRE_EXACT), //
             FileTemplate.of(".github/workflows/release_droid_upload_github_release_assets.yml", DEFAULT, REQUIRE_EXACT), //
             FileTemplate.of(".github/workflows/ci-build.yml", DEFAULT, REQUIRE_EXIST), //
+            // jar_artifact
             FileTemplate.of("src/assembly/all-dependencies.xml", JAR_ARTIFACT, REQUIRE_EXACT), //
+            // lombok
             FileTemplate.of("lombok.config", LOMBOK, REQUIRE_EXACT), //
+            // maven_central
             FileTemplate.of(".github/workflows/release_droid_release_on_maven_central.yml", MAVEN_CENTRAL,
                     REQUIRE_EXACT)//
     );

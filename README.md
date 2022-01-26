@@ -67,8 +67,8 @@ This plugin provides different template modules for different kinds of projects.
 
 #### `default` (always included)
 
-* [required files (must exist)](project-keeper/src/main/resources/templates/default/require_exist)
-* [required files (must have same content)](project-keeper/src/main/resources/templates/default/require_exact)
+* [required files (must exist)](project-keeper/src/main/java/com/exasol/projectkeeper/validators/files/FileTemplates.java)
+* [required files (must have same content)](project-keeper/src/main/java/com/exasol/projectkeeper/validators/files/FileTemplates.java)
 * required maven plugins
     * [maven-versions-plugin](https://www.mojohaus.org/versions-maven-plugin/)
     * [ossindex-maven-plugin](https://sonatype.github.io/ossindex-maven/maven-plugin/)
@@ -81,7 +81,7 @@ This plugin provides different template modules for different kinds of projects.
 
 This module creates a "fat" JAR, containing not only the project binary, but also the runtime dependencies.
 
-* [required files (must have same content)](project-keeper/src/main/resources/templates/jar_artifact/require_exact)
+* [required files (must have same content)](project-keeper/src/main/java/com/exasol/projectkeeper/validators/files/FileTemplates.java)
 * required maven plugins
     * [maven-assembly-plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
     * [artifact-reference-checker-maven-plugin](https://github.com/exasol/artifact-reference-checker-maven-plugin)
@@ -127,6 +127,7 @@ This module configures the pom.xml for the use of [Project Lombok](https://proje
     * Modified `sourcePaths` for the `error-code-crawler-maven-plugin`.
 * Required dependencies:
     * `org.projectlombok:lombok`
+* Required [lombok.config](./project-keeper/src/main/resources/templates/lombok.config)
 
 ### Excluding Files
 
