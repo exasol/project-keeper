@@ -35,7 +35,7 @@ public class ProjectKeeper {
         final var brokenLinkReplacer = new BrokenLinkReplacer(config.getLinkReplacements());
         final Set<ProjectKeeperModule> enabledModules = new HashSet<>(mavenSource.getModules());
         final var pomFile = mavenSource.getPath();
-        this.validators = List.of(new ProjectFilesValidator(enabledModules, projectDir.toFile()),
+        this.validators = List.of(new ProjectFilesValidator(enabledModules, projectDir),
                 new ReadmeFileValidator(projectDir, projectName, artifactId,
                         gitRepository.getRepoNameFromRemote().orElse(artifactId), enabledModules),
                 new LicenseFileValidator(projectDir), new PomFileValidator(enabledModules, pomFile),
