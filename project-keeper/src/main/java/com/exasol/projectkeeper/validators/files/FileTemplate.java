@@ -1,10 +1,26 @@
 package com.exasol.projectkeeper.validators.files;
 
+/** Interface for templates for project files. */
 public interface FileTemplate {
+    /**
+     * Get the expected content.
+     * 
+     * @return expected content
+     */
     String getContent();
 
+    /**
+     * Get the path of the file in the project.
+     * 
+     * @return path
+     */
     java.nio.file.Path getPathInProject();
 
+    /**
+     * Get the template type
+     * 
+     * @return template type
+     */
     TemplateType getTemplateType();
 
     /**

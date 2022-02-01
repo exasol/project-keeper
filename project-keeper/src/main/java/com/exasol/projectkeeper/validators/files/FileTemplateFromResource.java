@@ -4,6 +4,9 @@ import java.nio.file.Path;
 
 import lombok.*;
 
+/**
+ * {@link FileTemplate} that reads the content from a resources.
+ */
 @EqualsAndHashCode
 @RequiredArgsConstructor
 public class FileTemplateFromResource implements FileTemplate {
