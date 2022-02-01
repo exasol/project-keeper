@@ -1,69 +1,39 @@
 package com.exasol.projectkeeper.validators.files;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.util.Objects;
-
-import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ProjectKeeperModule;
-
-import lombok.Data;
-
-/**
- * This class represents a template for project files.
- */
-@Data
-class FileTemplate {
-    private final String templateResourceName;
-    private final Path pathInProject;
-    private final ProjectKeeperModule module;
-    private final TemplateType templateType;
-
+/** Interface for templates for project files. */
+public interface FileTemplate {
     /**
-     * Create an instance of {@link FileTemplate} for a template from resources.
+     * Get the expected content.
      * 
-     * @param pathInProject path of the file in the project
-     * @param module        project-keeper module
-     * @param templateType  type of the template
-     * @return built {@link FileTemplate}
+     * @return expected content
      */
-    static FileTemplate of(final String pathInProject, final ProjectKeeperModule module,
-            final TemplateType templateType) {
-        return new FileTemplate("templates/" + pathInProject, Path.of(pathInProject), module, templateType);
-    }
+    String getContent();
 
     /**
-     * Get the content of the template.
-     * <p>
-     * This method gets the content of the template dependant of the format of the current OS (windows / linux line
-     * endings).
-     * </p>
-     *
-     * @return template's content
+     * Get the path of the file in the project.
+     * 
+     * @return path
      */
-    public String getContent() {
-        final String templateContent = readResource();
-        return templateContent.replace("\r", "").replace("\n", System.lineSeparator());
-    }
+    java.nio.file.Path getPathInProject();
 
-    private String readResource() {
-        try (final InputStream resourceAsStream = getClass().getClassLoader()
-                .getResourceAsStream(this.templateResourceName)) {
-            return new String(Objects.requireNonNull(resourceAsStream).readAllBytes(), StandardCharsets.UTF_8);
-        } catch (final IOException | NullPointerException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-57")
-                    .message("Failed to read template from resource {{resource name}}.", this.templateResourceName)
-                    .ticketMitigation().toString(), exception);
-        }
-    }
+    /**
+     * Get the template type
+     * 
+     * @return template type
+     */
+    TemplateType getTemplateType();
 
-    /** Types of templates. */
-    enum TemplateType {
-        /** Verify the file has the same content as the template */
+    /**
+     * Types of templates.
+     */
+    public enum TemplateType {
+        /**
+         * Verify the file has the same content as the template
+         */
         REQUIRE_EXACT,
-        /** Only check that the file exists. If not use the template's content as default. */
+        /**
+         * Only check that the file exists. If not use the template's content as default.
+         */
         REQUIRE_EXIST;
     }
 }

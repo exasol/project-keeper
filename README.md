@@ -65,71 +65,15 @@ Supported project types:
 
 This plugin provides different template modules for different kinds of projects.
 
-#### `default` (always included)
+| Module              | Description                                                                                                 |
+|---------------------|-------------------------------------------------------------------------------------------------------------|
+| `jar_artifact`      | This module creates a "fat" JAR, containing not only the project binary, but also the runtime dependencies. |
+| `integration_tests` | Module for sources with integration tests.                                                                  |
+| `maven_central`     | This module checks the required configuration for releasing on maven central.                               |
+| `udf_coverage`      | This module configures the pom for extracting the code coverage from UDF executions.                        |
+| `lombok`            | This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).             |
 
-* [required files (must exist)](project-keeper/src/main/java/com/exasol/projectkeeper/validators/files/FileTemplates.java)
-* [required files (must have same content)](project-keeper/src/main/java/com/exasol/projectkeeper/validators/files/FileTemplates.java)
-* required maven plugins
-    * [maven-versions-plugin](https://www.mojohaus.org/versions-maven-plugin/)
-    * [ossindex-maven-plugin](https://sonatype.github.io/ossindex-maven/maven-plugin/)
-    * [maven-enforcer-plugin](https://maven.apache.org/enforcer/maven-enforcer-plugin/)
-    * [maven-surefire-plugin](https://maven.apache.org/surefire/maven-surefire-plugin/)
-    * [error-code-crawler-maven-plugin](https://github.com/exasol/error-code-crawler-maven-plugin)
-    * [reproducible-build-maven-plugin](https://zlika.github.io/reproducible-build-maven-plugin/)
-
-#### `jar_artifact`
-
-This module creates a "fat" JAR, containing not only the project binary, but also the runtime dependencies.
-
-* [required files (must have same content)](project-keeper/src/main/java/com/exasol/projectkeeper/validators/files/FileTemplates.java)
-* required maven plugins
-    * [maven-assembly-plugin](http://maven.apache.org/plugins/maven-assembly-plugin/)
-    * [artifact-reference-checker-maven-plugin](https://github.com/exasol/artifact-reference-checker-maven-plugin)
-
-#### `integration_tests`
-
-* required maven plugins
-    * [maven-failsafe-plugin](https://maven.apache.org/surefire/maven-failsafe-plugin/)
-    * jacoco coverage configuration for integration tests
-
-#### `maven_central`
-
-This module checks the required configuration for releasing on maven central.
-
-* required maven plugins
-    * [maven-gpg-plugin](https://maven.apache.org/plugins/maven-gpg-plugin/)
-    * [maven-deploy-plugin](https://maven.apache.org/plugins/maven-deploy-plugin/)
-    * [maven-source-plugin](https://maven.apache.org/plugins/maven-source-plugin/)
-    * [maven-javadoc-plugin](https://maven.apache.org/plugins/maven-javadoc-plugin/)
-    * [nexus-staging-maven-plugin](https://github.com/sonatype/nexus-maven-plugins/tree/master/staging/maven-plugin)
-
-#### `udf_coverage`
-
-This module configures the pom for extracting the code coverage from UDF executions.
-
-In addition, you need to upload the Jacoco agent to BucketFS and run it using JVM options. You can use the [Udf-Debugging-Java](https://github.com/exasol/udf-debugging-java/) to do so.
-
-It makes no sense to use this module without the `integration_tests` module
-
-* required maven plugins
-    * jacoco UDF coverage configuration for integration tests
-    * [mvn-dependency-plugin](https://maven.apache.org/plugins/maven-dependency-plugin/) configured to export jacoco-agent to `target/`
-* required dependencies
-    * `org.jacoco:org.jacoco.agent`
-
-#### `lombok`
-
-This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).
-
-* Required maven plugins:
-    * [`lombok-maven-plugin`](https://projectlombok.org/setup/maven)
-* Enforced configuration:
-    * Modified `sourcePaths` for the `error-code-crawler-maven-plugin`.
-* Required dependencies:
-    * `org.projectlombok:lombok`
-* Required [lombok.config](./project-keeper/src/main/resources/templates/lombok.config)
-
-### Excluding Files
+### Excluding Findings
 
 Using the `excludes` tag you can tell project-keeper to ignore some error-messages:
 

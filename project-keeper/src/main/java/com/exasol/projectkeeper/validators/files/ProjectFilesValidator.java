@@ -6,10 +6,11 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
@@ -18,30 +19,66 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 //[impl->dsn~required-files-validator~1]
 public class ProjectFilesValidator implements Validator {
-    private final Collection<ProjectKeeperModule> enabledModules;
     private final Path projectDirectory;
+    private final List<ProjectKeeperConfig.Source> sources;
+    private final Logger logger;
 
     /**
      * Crate a new instance of {@link ProjectFilesValidator}.
      * 
-     * @param enabledModules   list of enabled {@link ProjectKeeperModule}s
      * @param projectDirectory project's root directory
+     * @param sources          list of sources
+     * @param logger           logger
      */
-    public ProjectFilesValidator(final Collection<ProjectKeeperModule> enabledModules, final Path projectDirectory) {
-        this.enabledModules = enabledModules;
+    public ProjectFilesValidator(final Path projectDirectory, final List<ProjectKeeperConfig.Source> sources,
+            final Logger logger) {
         this.projectDirectory = projectDirectory;
+        this.sources = sources;
+        this.logger = logger;
     }
 
     @Override
     public List<ValidationFinding> validate() {
-        return FileTemplates.FILE_TEMPLATES.stream()
-                .filter(template -> this.enabledModules.contains(template.getModule()))
-                .flatMap(template -> validate(template).stream())//
-                .collect(Collectors.toList());
+        final List<ValidationFinding> findings = new ArrayList<>();
+        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger);
+        findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
+        findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
+        return findings;
     }
 
-    private List<ValidationFinding> validate(final FileTemplate template) {
-        final Path projectFile = this.projectDirectory.resolve(template.getPathInProject());
+    private List<ValidationFinding> validateTemplatesRelativeToSource(final FileTemplatesFactory templatesFactory) {
+        final List<ValidationFinding> findings = new ArrayList<>();
+        for (final ProjectKeeperConfig.Source source : this.sources) {
+            final Path sourceDir = directoryOf(source.getPath());
+            final List<FileTemplate> templates = templatesFactory.getTemplatesForSource(source);
+            findings.addAll(runValidation(templates, sourceDir));
+        }
+        return findings;
+    }
+
+    private List<ValidationFinding> validateTemplatesRelativeToRepo(final FileTemplatesFactory templatesFactory) {
+        final List<FileTemplate> templates = templatesFactory.getGlobalTemplates(this.projectDirectory, this.sources);
+        return runValidation(templates, this.projectDirectory);
+    }
+
+    private List<ValidationFinding> runValidation(final List<FileTemplate> templates, final Path relativeDirectory) {
+        final List<ValidationFinding> findings = new ArrayList<>();
+        for (final FileTemplate template : templates) {
+            findings.addAll(validate(relativeDirectory, template));
+        }
+        return findings;
+    }
+
+    private Path directoryOf(final Path path) {
+        if (Files.isDirectory(path)) {
+            return path;
+        } else {
+            return path.getParent();
+        }
+    }
+
+    private List<ValidationFinding> validate(final Path relativeDirectory, final FileTemplate template) {
+        final Path projectFile = relativeDirectory.resolve(template.getPathInProject());
         final String templateContent = template.getContent();
         if (!Files.exists(projectFile)) {
             return List.of(SimpleValidationFinding
