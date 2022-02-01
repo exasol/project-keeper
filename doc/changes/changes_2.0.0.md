@@ -14,6 +14,7 @@ This release has **breaking changes**:
 * #135: Add unified exclude mechanism
 * #224: Moved configuration to config file
 * #227: Declared file templates in Java code
+* #229: Refactored project files validation to support maven submodules
 
 ## Dependency Updates
 
