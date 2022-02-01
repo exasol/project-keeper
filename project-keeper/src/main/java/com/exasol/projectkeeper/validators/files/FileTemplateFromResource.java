@@ -5,7 +5,7 @@ import java.nio.file.Path;
 import lombok.*;
 
 /**
- * {@link FileTemplate} that reads the content from a resources.
+ * {@link FileTemplate} that reads the content from a resource.
  */
 @EqualsAndHashCode
 @RequiredArgsConstructor

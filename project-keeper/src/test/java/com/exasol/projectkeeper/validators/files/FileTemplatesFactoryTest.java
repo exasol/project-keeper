@@ -77,7 +77,10 @@ class FileTemplatesFactoryTest {
     }
 
     private void assertContainsTemplate(final List<FileTemplate> templates, final String pathInProject) {
-        assertTrue(() -> templates.stream()
-                .anyMatch(template -> template.getPathInProject().equals(Path.of(pathInProject))));
+        assertTrue(
+                () -> templates.stream()
+                        .anyMatch(template -> template.getPathInProject().equals(Path.of(pathInProject))),
+                "Expected template " + pathInProject
+                        + " to exist but templates the generated templates did not contain it.");
     }
 }

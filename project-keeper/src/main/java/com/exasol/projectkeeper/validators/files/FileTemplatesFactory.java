@@ -28,15 +28,7 @@ class FileTemplatesFactory {
         final Optional<ProjectKeeperConfig.Source> mvnRoot = sources.stream()
                 .filter(source -> isMvnRootProject(projectDir, source)).findFirst();
         if (mvnRoot.isPresent()) {
-            templates.add(new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXIST));
-            templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT));
-            templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
-            templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
-                    REQUIRE_EXACT));
-            templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
-                    REQUIRE_EXACT));
-            templates.add(new FileTemplateFromResource(
-                    ".github/workflows/release_droid_upload_github_release_assets.yml", REQUIRE_EXACT));
+            templates.addAll(getGenericMavenTemplates());
             if (mvnRoot.get().getModules().contains(MAVEN_CENTRAL)) {
                 templates.add(new FileTemplateFromResource(
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
@@ -46,6 +38,20 @@ class FileTemplatesFactory {
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
         }
+        return templates;
+    }
+
+    private List<FileTemplate> getGenericMavenTemplates() {
+        final List<FileTemplate> templates = new ArrayList<>();
+        templates.add(new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXIST));
+        templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
+                REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
+                REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_upload_github_release_assets.yml",
+                REQUIRE_EXACT));
         return templates;
     }
 

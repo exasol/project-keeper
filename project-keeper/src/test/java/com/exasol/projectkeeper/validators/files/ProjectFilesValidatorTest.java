@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
@@ -56,7 +57,7 @@ class ProjectFilesValidatorTest {
     void testDifferentContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithAllModules(),
                 mock(Logger.class));
-        validator.validate().forEach(FindingFixHelper::fix); // fix all findings
+        fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve(".settings" + File.separator + "org.eclipse.jdt.core.prefs");
         changeFile(testFile);
         assertThat(validator, validationErrorMessages(contains(
@@ -67,7 +68,7 @@ class ProjectFilesValidatorTest {
     void testFixDifferentContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithAllModules(),
                 mock(Logger.class));
-        validator.validate().forEach(FindingFixHelper::fix); // fix all findings
+        fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.core.prefs"));
         changeFile(testFile);
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
@@ -81,10 +82,18 @@ class ProjectFilesValidatorTest {
                 ProjectKeeperConfig.Source.builder().type(ProjectKeeperConfig.SourceType.MAVEN).modules(DEFAULT_MODULE)
                         .path(this.tempDir.resolve("sub-project/pom.xml")).build());
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, sources, mock(Logger.class));
-        validator.validate().forEach(FindingFixHelper::fix); // fix all findings
-        assertThat(this.tempDir.resolve(".github/workflows/ci-build.yml").toFile(), anExistingFile());
-        assertThat(this.tempDir.resolve(".settings/org.eclipse.jdt.core.prefs").toFile(), anExistingFile());
-        assertThat(this.tempDir.resolve("sub-project/.settings/org.eclipse.jdt.core.prefs").toFile(), anExistingFile());
+        fixAllFindings(validator);
+        assertAll(//
+                () -> assertThat(this.tempDir.resolve(".github/workflows/ci-build.yml").toFile(), anExistingFile()),
+                () -> assertThat(this.tempDir.resolve(".settings/org.eclipse.jdt.core.prefs").toFile(),
+                        anExistingFile()),
+                () -> assertThat(this.tempDir.resolve("sub-project/.settings/org.eclipse.jdt.core.prefs").toFile(),
+                        anExistingFile())//
+        );
+    }
+
+    private void fixAllFindings(final ProjectFilesValidator validator) {
+        validator.validate().forEach(FindingFixHelper::fix);
     }
 
     private void changeFile(final Path testFile) throws IOException {
