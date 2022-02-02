@@ -30,6 +30,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
      * @param projectDirectory project's root directory
      * @param projectName      project name
      * @param repoName         name of the repository
+     * @param sources          analyzed sources projects
      */
     public ReadmeFileValidator(final Path projectDirectory, final String projectName, final String repoName,
             final List<AnalyzedSource> sources) {
