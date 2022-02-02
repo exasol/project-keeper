@@ -47,12 +47,14 @@ class ProjectKeeperConfigReaderTest {
                         "      - maven_central\n" + //
                         "    excludes:\n" + //
                         "      - \"E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.\"\n" + //
+                        "    advertise: false\n" + //
                         "linkReplacements:\n" + //
                         "  - \"http://wrong-url.com|my-dependency.de\"");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
         final ProjectKeeperConfig.Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
+                () -> assertThat(source.isAdvertise(), equalTo(false)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(MAVEN_CENTRAL, DEFAULT)),
                 () -> assertThat(source.getExcludes(),
@@ -78,6 +80,7 @@ class ProjectKeeperConfigReaderTest {
         final ProjectKeeperConfig.Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
+                () -> assertThat(source.isAdvertise(), equalTo(true)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(DEFAULT)),
                 () -> assertThat(source.getExcludes(), equalTo(Collections.emptyList())),

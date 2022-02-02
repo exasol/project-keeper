@@ -1,0 +1,21 @@
+sources:
+  - type: maven
+    path: pom.xml
+  - type: maven
+    path: shared-model-classes/pom.xml
+    modules:
+      - maven_central
+      - lombok
+  - type: maven
+    path: project-keeper/pom.xml
+    modules:
+      - maven_central
+      - integration_tests
+      - lombok
+  - type: maven
+    path: project-keeper-maven-plugin/pom.xml
+    modules:
+      - maven_central
+      - integration_tests
+      - udf_coverage
+      - lombok

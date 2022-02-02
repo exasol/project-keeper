@@ -20,7 +20,8 @@ public class GitignoreFileValidator extends AbstractFileContentValidator {
     private static final String NL = System.lineSeparator();
     private static final List<String> REQUIRED_LINES = List.of(".DS_Store", "*.swp", "local", ".dbeaver*", "**/*.log",
             ".directory", "venv/", ".idea", "*.iml", "target", ".cache", "dependency-reduced-pom.xml", ".project",
-            ".classpath", "pom.xml.versionsBackup", "~*", "*.lock", "*.bak", "*.orig", "*.old", "*.md.html");
+            ".classpath", "pom.xml.versionsBackup", "~*", "*.lock", "*.bak", "*.orig", "*.old", "*.md.html",
+            "*.flattened-pom.xml");
 
     /**
      * Create a new instance of {@link GitignoreFileValidator}.

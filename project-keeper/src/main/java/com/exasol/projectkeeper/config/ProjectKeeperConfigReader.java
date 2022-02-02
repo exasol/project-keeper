@@ -134,7 +134,7 @@ public class ProjectKeeperConfigReader {
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
         final List<String> excludes = convertExcludes(rawSource.getExcludes());
-        return new ProjectKeeperConfig.Source(path, convertType(rawType), modules, excludes);
+        return new ProjectKeeperConfig.Source(path, convertType(rawType), modules, excludes, rawSource.advertise);
     }
 
     private Set<ProjectKeeperModule> convertModules(final List<String> rawModules) {
@@ -213,6 +213,7 @@ public class ProjectKeeperConfigReader {
             private List<String> modules;
             /** String or map (regex: string) */
             private List<Object> excludes;
+            private boolean advertise = true;
         }
     }
 }

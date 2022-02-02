@@ -1,13 +1,18 @@
 package com.exasol.projectkeeper;
 
+import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
+
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.repository.GitRepository;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.sources.SourceAnalyzer;
 import com.exasol.projectkeeper.validators.*;
 import com.exasol.projectkeeper.validators.changelog.ChangelogFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
@@ -33,17 +38,29 @@ public class ProjectKeeper {
         final ProjectKeeperConfig.Source mavenSource = getMavenSource(config);
         final GitRepository gitRepository = new GitRepository(projectDir);
         final var brokenLinkReplacer = new BrokenLinkReplacer(config.getLinkReplacements());
-        final Set<ProjectKeeperModule> enabledModules = new HashSet<>(mavenSource.getModules());
         final var pomFile = mavenSource.getPath();
         final List<ProjectKeeperConfig.Source> sources = config.getSources();
-        this.validators = List.of(new ProjectFilesValidator(projectDir, sources, logger),
-                new ReadmeFileValidator(projectDir, projectName, artifactId,
-                        gitRepository.getRepoNameFromRemote().orElse(artifactId), enabledModules),
-                new LicenseFileValidator(projectDir), new PomFileValidator(enabledModules, pomFile),
+        final List<AnalyzedSource> analyzedSources = new SourceAnalyzer().analyze(projectDir, sources);
+        this.validators = new ArrayList<>(List.of(new ProjectFilesValidator(projectDir, analyzedSources, logger),
+                new ReadmeFileValidator(projectDir, projectName,
+                        gitRepository.getRepoNameFromRemote().orElse(artifactId), analyzedSources)));
+        this.validators.addAll(getValidatorsPerSource(sources));
+        this.validators.addAll(List.of(new LicenseFileValidator(projectDir),
                 new ChangesFileValidator(projectVersion, projectName, projectDir, mvnRepo, ownVersion),
                 new ChangelogFileValidator(projectDir),
                 new DependenciesValidator(pomFile, projectDir, brokenLinkReplacer, mvnRepo, ownVersion),
-                new DeletedFilesValidator(projectDir), new GitignoreFileValidator(projectDir));
+                new DeletedFilesValidator(projectDir), new GitignoreFileValidator(projectDir)));
+    }
+
+    private static ProjectKeeperConfig.Source getMavenSource(final ProjectKeeperConfig config) {
+        if (config.getSources().size() != 1) {
+            throw getWrongSourceException();
+        }
+        final ProjectKeeperConfig.Source source = config.getSources().get(0);
+        if (source.getType() != MAVEN) {
+            throw getWrongSourceException();
+        }
+        return source;
     }
 
     /**
@@ -89,15 +106,14 @@ public class ProjectKeeper {
         return new ProjectKeeperConfigReader().readConfig(projectDir);
     }
 
-    private static ProjectKeeperConfig.Source getMavenSource(final ProjectKeeperConfig config) {
-        if (config.getSources().size() != 1) {
-            throw getWrongSourceException();
+    private List<Validator> getValidatorsPerSource(final List<ProjectKeeperConfig.Source> sources) {
+        final List<Validator> result = new ArrayList<>();
+        for (final ProjectKeeperConfig.Source source : sources) {
+            if (source.getType().equals(MAVEN)) {
+                result.add(new PomFileValidator(source.getModules(), source.getPath()));
+            }
         }
-        final ProjectKeeperConfig.Source source = config.getSources().get(0);
-        if (source.getType() != ProjectKeeperConfig.SourceType.MAVEN) {
-            throw getWrongSourceException();
-        }
-        return source;
+        return result;
     }
 
     private static UnsupportedOperationException getWrongSourceException() {

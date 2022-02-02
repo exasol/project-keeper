@@ -1,17 +1,16 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.ProjectKeeperModule.*;
-import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXACT;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXIST;
 
-import java.nio.file.Path;
 import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -22,11 +21,10 @@ import lombok.RequiredArgsConstructor;
 class FileTemplatesFactory {
     private final Logger logger;
 
-    List<FileTemplate> getGlobalTemplates(final Path projectDir, final List<ProjectKeeperConfig.Source> sources) {
+    List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(new FileTemplateFromResource(".github/workflows/broken_links_checker.yml", REQUIRE_EXACT));
-        final Optional<ProjectKeeperConfig.Source> mvnRoot = sources.stream()
-                .filter(source -> isMvnRootProject(projectDir, source)).findFirst();
+        final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates());
             if (mvnRoot.get().getModules().contains(MAVEN_CENTRAL)) {
@@ -55,12 +53,11 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private boolean isMvnRootProject(final Path projectDir, final ProjectKeeperConfig.Source source) {
-        final Path relativePath = projectDir.relativize(source.getPath());
-        return relativePath.equals(Path.of("pom.xml")) && source.getType().equals(MAVEN);
+    private boolean isMvnRootProject(final AnalyzedSource source) {
+        return source instanceof AnalyzedMavenSource && (((AnalyzedMavenSource) source).isRootProject());
     }
 
-    List<FileTemplate> getTemplatesForSource(final ProjectKeeperConfig.Source source) {
+    List<FileTemplate> getTemplatesForSource(final AnalyzedSource source) {
         final List<FileTemplate> templates = new ArrayList<>();
         final Set<ProjectKeeperModule> enabledModules = source.getModules();
         if (enabledModules.contains(DEFAULT)) {

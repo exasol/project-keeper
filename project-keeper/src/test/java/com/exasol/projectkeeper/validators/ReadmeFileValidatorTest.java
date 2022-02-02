@@ -9,20 +9,24 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Set;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
+
 // [utest->dsn~readme-validator~1]
 class ReadmeFileValidatorTest {
     @Test
-    void testCreateFile(@TempDir final Path tempDir) throws IOException {
-        getValidator(tempDir).validate().forEach(FindingFixHelper::fix);
+    void testCreateFileForSimpleMavenProject(@TempDir final Path tempDir) throws IOException {
+        getValidator(tempDir, getSimpleMavenProject()).validate().forEach(FindingFixHelper::fix);
         final String readme = Files.readString(tempDir.resolve("README.md"));
         assertThat(readme, Matchers.equalTo(("# My Project\n" + "\n"
                 + "[![Build Status](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml)\n"
-                + "[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/my-project)](https://search.maven.org/artifact/com.exasol/my-project)\n"
+                + "[![Maven Central – my project](https://img.shields.io/maven-central/v/com.exasol/my-project)](https://search.maven.org/artifact/com.exasol/my-project)\n"
                 + "\n"
                 + "[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Amy-project&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Amy-project)\n"
                 + "\n"
@@ -39,14 +43,36 @@ class ReadmeFileValidatorTest {
                 + "* [Dependencies](dependencies.md)").replace("\n", System.lineSeparator())));
     }
 
-    private ReadmeFileValidator getValidator(final Path tempDir) {
-        return new ReadmeFileValidator(tempDir, "My Project", "my-project", "my-project-repo", List.of(MAVEN_CENTRAL));
+    @Test
+    void testCreateFileForMavenMultiModuleProject(@TempDir final Path tempDir) throws IOException {
+        getValidator(tempDir, getMavenMultiModuleProject()).validate().forEach(FindingFixHelper::fix);
+        final String readme = Files.readString(tempDir.resolve("README.md"));
+        assertThat(readme, Matchers.startsWith("# My Project\n" + "\n"
+                + "[![Build Status](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml)\n"
+                + "sub 1: [![Maven Central – sub 1](https://img.shields.io/maven-central/v/com.exasol/sub-1)](https://search.maven.org/artifact/com.exasol/sub-1), sub 2: [![Maven Central – sub 2](https://img.shields.io/maven-central/v/com.exasol/sub-2)](https://search.maven.org/artifact/com.exasol/sub-2)\n"));
+    }
+
+    private ReadmeFileValidator getValidator(final Path tempDir, final List<AnalyzedSource> sources) {
+        return new ReadmeFileValidator(tempDir, "My Project", "my-project-repo", sources);
+    }
+
+    private List<AnalyzedSource> getSimpleMavenProject() {
+        return List.of(createSource("my-project", true, true));
+    }
+
+    private List<AnalyzedSource> getMavenMultiModuleProject() {
+        return List.of(createSource("aggregator", true, false), createSource("sub-1", false, true),
+                createSource("sub-2", false, true));
+    }
+
+    private AnalyzedMavenSource createSource(final String id, final boolean isRoot, final boolean advertise) {
+        return new AnalyzedMavenSource(null, Set.of(MAVEN_CENTRAL), advertise, id, id.replace("-", " "), isRoot);
     }
 
     @Test
     void testValidation(@TempDir final Path tempDir) throws IOException {
         Files.writeString(tempDir.resolve("README.md"), "");
-        final ReadmeFileValidator validator = getValidator(tempDir);
+        final ReadmeFileValidator validator = getValidator(tempDir, getSimpleMavenProject());
         assertThat(validator, validationErrorMessages(hasItems(
                 containsString("The project's README.md does not reference the dependencies.md file."), //
                 startsWith(

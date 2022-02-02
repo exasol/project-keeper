@@ -61,6 +61,8 @@ Supported project types:
 
 * `maven`: Projects with maven build. The path must point to the `pom.xml` file.
 
+If you have multiple sources in a project project-keeper will list all of them as badge in the project's README.md. If you want to hide one source, you can set `advertise: false` for this source.
+
 ### Modules
 
 This plugin provides different template modules for different kinds of projects.

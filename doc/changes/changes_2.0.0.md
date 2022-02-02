@@ -15,6 +15,7 @@ This release has **breaking changes**:
 * #224: Moved configuration to config file
 * #227: Declared file templates in Java code
 * #229: Refactored project files validation to support maven submodules
+* #231: Refactored ReadmeValidator to support maven multi-module projects
 
 ## Dependency Updates
 

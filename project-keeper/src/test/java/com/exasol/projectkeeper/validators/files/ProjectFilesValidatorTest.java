@@ -21,19 +21,21 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.FindingFixHelper;
 
 //[utest->dsn~required-files-validator~1]
 class ProjectFilesValidatorTest {
     private static final Set<ProjectKeeperModule> DEFAULT_MODULE = Set.of(ProjectKeeperModule.DEFAULT);
-    private @TempDir Path tempDir;
+    @TempDir
+    Path tempDir;
 
     @Test
     void testValidation() throws IOException {
         Files.createDirectories(this.tempDir.resolve(".settings"));
         Files.createFile(this.tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.ui.prefs")));
-        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithAllModules(),
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
                 mock(Logger.class));
         assertThat(validator,
                 validationErrorMessages(hasItems(
@@ -41,21 +43,21 @@ class ProjectFilesValidatorTest {
                         "E-PK-CORE-18: Outdated content: '.settings" + File.separator + "org.eclipse.jdt.ui.prefs'")));
     }
 
-    private List<ProjectKeeperConfig.Source> getMvnSourceWithAllModules() {
-        return List.of(ProjectKeeperConfig.Source.builder().type(ProjectKeeperConfig.SourceType.MAVEN)
-                .modules(DEFAULT_MODULE).path(this.tempDir.resolve("pom.xml")).build());
+    private List<AnalyzedSource> getMvnSourceWithDefaultModule() {
+        return List
+                .of(new AnalyzedMavenSource(this.tempDir.resolve("pom.xml"), DEFAULT_MODULE, true, null, null, true));
     }
 
     @Test
     void testFix() {
-        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithAllModules(),
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
                 mock(Logger.class));
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
     void testDifferentContent() throws IOException {
-        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithAllModules(),
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
                 mock(Logger.class));
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve(".settings" + File.separator + "org.eclipse.jdt.core.prefs");
@@ -66,7 +68,7 @@ class ProjectFilesValidatorTest {
 
     @Test
     void testFixDifferentContent() throws IOException {
-        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithAllModules(),
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
                 mock(Logger.class));
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.core.prefs"));
@@ -76,11 +78,10 @@ class ProjectFilesValidatorTest {
 
     @Test
     void testMultiSourceProject() {
-        final List<ProjectKeeperConfig.Source> sources = List.of(//
-                ProjectKeeperConfig.Source.builder().type(ProjectKeeperConfig.SourceType.MAVEN).modules(DEFAULT_MODULE)
-                        .path(this.tempDir.resolve("pom.xml")).build(), //
-                ProjectKeeperConfig.Source.builder().type(ProjectKeeperConfig.SourceType.MAVEN).modules(DEFAULT_MODULE)
-                        .path(this.tempDir.resolve("sub-project/pom.xml")).build());
+        final List<AnalyzedSource> sources = List.of(//
+                new AnalyzedMavenSource(this.tempDir.resolve("pom.xml"), DEFAULT_MODULE, true, null, null, true),
+                new AnalyzedMavenSource(this.tempDir.resolve("sub-project/pom.xml"), DEFAULT_MODULE, true, null, null,
+                        false));
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, sources, mock(Logger.class));
         fixAllFindings(validator);
         assertAll(//
