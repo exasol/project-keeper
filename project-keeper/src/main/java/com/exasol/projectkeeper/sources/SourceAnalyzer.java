@@ -5,8 +5,8 @@ import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAV
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
@@ -28,11 +28,7 @@ public class SourceAnalyzer {
      * @return analyzed sources
      */
     public List<AnalyzedSource> analyze(final Path projectDir, final List<ProjectKeeperConfig.Source> sources) {
-        final List<AnalyzedSource> result = new ArrayList<>();
-        for (final ProjectKeeperConfig.Source source : sources) {
-            result.add(analyzeSource(projectDir, source));
-        }
-        return result;
+        return sources.stream().map(source -> analyzeSource(projectDir, source)).collect(Collectors.toList());
     }
 
     private AnalyzedSource analyzeSource(final Path projectDir, final ProjectKeeperConfig.Source source) {
