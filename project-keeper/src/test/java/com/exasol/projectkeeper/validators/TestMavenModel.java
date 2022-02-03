@@ -11,6 +11,7 @@ public class TestMavenModel extends Model {
     public static final String DEPENDENCY_GROUP_ID = "com.example";
     public static final String DEPENDENCY_ARTIFACT_ID = "my-lib";
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
+    public static final String PROJECT_NAME = "my test project";
     public static final String PROJECT_VERSION = "0.1.0";
     private static final String DEFAULT_DEPENDENCY_VERSION = "0.1.0";
 
@@ -18,6 +19,7 @@ public class TestMavenModel extends Model {
         this.setBuild(new Build());
         this.setVersion(PROJECT_VERSION);
         this.setArtifactId(PROJECT_ARTIFACT_ID);
+        this.setName(PROJECT_NAME);
         this.setGroupId("com.example");
         this.setModelVersion("4.0.0");
     }

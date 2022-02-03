@@ -10,7 +10,7 @@ import java.util.*;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.Validator;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
@@ -20,7 +20,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 //[impl->dsn~required-files-validator~1]
 public class ProjectFilesValidator implements Validator {
     private final Path projectDirectory;
-    private final List<ProjectKeeperConfig.Source> sources;
+    private final List<AnalyzedSource> sources;
     private final Logger logger;
 
     /**
@@ -30,8 +30,7 @@ public class ProjectFilesValidator implements Validator {
      * @param sources          list of sources
      * @param logger           logger
      */
-    public ProjectFilesValidator(final Path projectDirectory, final List<ProjectKeeperConfig.Source> sources,
-            final Logger logger) {
+    public ProjectFilesValidator(final Path projectDirectory, final List<AnalyzedSource> sources, final Logger logger) {
         this.projectDirectory = projectDirectory;
         this.sources = sources;
         this.logger = logger;
@@ -48,7 +47,7 @@ public class ProjectFilesValidator implements Validator {
 
     private List<ValidationFinding> validateTemplatesRelativeToSource(final FileTemplatesFactory templatesFactory) {
         final List<ValidationFinding> findings = new ArrayList<>();
-        for (final ProjectKeeperConfig.Source source : this.sources) {
+        for (final AnalyzedSource source : this.sources) {
             final Path sourceDir = directoryOf(source.getPath());
             final List<FileTemplate> templates = templatesFactory.getTemplatesForSource(source);
             findings.addAll(runValidation(templates, sourceDir));
@@ -57,7 +56,7 @@ public class ProjectFilesValidator implements Validator {
     }
 
     private List<ValidationFinding> validateTemplatesRelativeToRepo(final FileTemplatesFactory templatesFactory) {
-        final List<FileTemplate> templates = templatesFactory.getGlobalTemplates(this.projectDirectory, this.sources);
+        final List<FileTemplate> templates = templatesFactory.getGlobalTemplates(this.sources);
         return runValidation(templates, this.projectDirectory);
     }
 

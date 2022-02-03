@@ -51,5 +51,7 @@ public class ProjectKeeperConfig {
         // [impl->dsn~excluding~1]
         @Builder.Default
         private final List<String> excludes = Collections.emptyList();
+        @Builder.Default
+        private final boolean advertise = true;
     }
 }
