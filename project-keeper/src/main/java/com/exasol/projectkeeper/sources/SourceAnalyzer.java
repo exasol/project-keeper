@@ -44,7 +44,7 @@ public class SourceAnalyzer {
                     model.getArtifactId(), model.getName(), isRoot);
         } else {
             throw new UnsupportedOperationException(ExaError.messageBuilder("F-PK-CORE-93")
-                    .message("Analyzing of {{type}}} is not supported yet. ", source.getType()).ticketMitigation()
+                    .message("Analyzing of {{type}}} is not supported yet.", source.getType()).ticketMitigation()
                     .toString());
         }
     }

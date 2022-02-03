@@ -127,7 +127,8 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
         final List<AnalyzedSource> mavenCentralSources = this.sources.stream()
                 .filter(source -> source.getModules().contains(MAVEN_CENTRAL) && source.isAdvertise())
                 .collect(Collectors.toList());
-        return mavenCentralSources.stream().map(source -> getDeploymentBadge(source, mavenCentralSources.size() > 1))
+        boolean hasMultipleModules = mavenCentralSources.size() > 1;
+        return mavenCentralSources.stream().map(source -> getDeploymentBadge(source, hasMultipleModules))
                 .collect(Collectors.joining(", "));
     }
 
@@ -148,7 +149,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
             return getMavenCentralBadge(withProjectName, mavenSource);
         } else {
             throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-92")
-                    .message("Project keeper does not know how to build a badge for this source.").ticketMitigation()
+                    .message("Project keeper does not know how to build a badge for source of type {{source type}}.", source.getClass().getName()).ticketMitigation()
                     .toString());
         }
     }

@@ -6,11 +6,11 @@ import java.util.Set;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
 /**
- * This is an interface for classes collects information about a source projects. For example about a pom source.
+ * This is an interface for classes that collects information about a source project, e.g. about a pom source.
  */
 public interface AnalyzedSource {
     /**
-     * Get Teh path to the sources build file.
+     * Get the path to the sources build file.
      * 
      * @return path
      */
@@ -24,9 +24,9 @@ public interface AnalyzedSource {
     Set<ProjectKeeperModule> getModules();
 
     /**
-     * Get if this source should be advertised.
+     * Check if this source should be advertised.
      * 
-     * @return {@code true} if this source should be advertised. For example in the README.md
+     * @return {@code true} if this source should be advertised, e.g. in the README.md
      */
     boolean isAdvertise();
 }
