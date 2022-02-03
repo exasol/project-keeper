@@ -20,19 +20,16 @@ public class JavaProjectCrawlerRunner {
     private static final String RESPONSE_START_TOKEN = "###SerializedResponseStart###";
     private static final String RESPONSE_END_TOKEN = "###SerializedResponseEnd###";
     private static final Logger LOGGER = Logger.getLogger(JavaProjectCrawlerRunner.class.getName());
-    private final Path pomFile;
     private final Path mvnRepositoryOverride;
     private final String ownVersion;
 
     /**
      * Create a new instance of {@link JavaProjectCrawlerRunner}.
-     * 
-     * @param pomFile               path to the pom file to analyze.
+     *
      * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
      * @param ownVersion            project-keeper version
      */
-    public JavaProjectCrawlerRunner(final Path pomFile, final Path mvnRepositoryOverride, final String ownVersion) {
-        this.pomFile = pomFile;
+    public JavaProjectCrawlerRunner(final Path mvnRepositoryOverride, final String ownVersion) {
         this.mvnRepositoryOverride = mvnRepositoryOverride;
         this.ownVersion = ownVersion;
     }
@@ -40,30 +37,32 @@ public class JavaProjectCrawlerRunner {
     /**
      * Get a {@link DependencyChangeReport} for the project.
      * 
+     * @param pomFile path to the pom file to analyze.
      * @return the {@link DependencyChangeReport}
      */
-    public DependencyChangeReport getDependencyChanges() {
-        final String json = runCrawlerPlugin("getDependencyUpdates");
+    public DependencyChangeReport getDependencyChanges(final Path pomFile) {
+        final String json = runCrawlerPlugin(pomFile, "getDependencyUpdates");
         return DependencyChangeReport.fromJson(json);
     }
 
     /**
      * Get the {@link ProjectDependencies} for the project.
      * 
+     * @param pomFile path to the pom file to analyze.
      * @return the {@link ProjectDependencies}
      */
-    public ProjectDependencies getDependencies() {
-        final String json = runCrawlerPlugin("getProjectDependencies");
+    public ProjectDependencies getDependencies(final Path pomFile) {
+        final String json = runCrawlerPlugin(pomFile, "getProjectDependencies");
         return ProjectDependencies.fromJson(json);
     }
 
-    private String runCrawlerPlugin(final String goal) {
+    private String runCrawlerPlugin(final Path pomFile, final String goal) {
         try {
             final Runtime rt = Runtime.getRuntime();
             final List<String> commandParts = new ArrayList<>(List.of("mvn", "--batch-mode",
                     "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
                     "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal, "--file",
-                    this.pomFile.toString()));
+                    pomFile.toString()));
             if (this.mvnRepositoryOverride != null) {
                 commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
             }

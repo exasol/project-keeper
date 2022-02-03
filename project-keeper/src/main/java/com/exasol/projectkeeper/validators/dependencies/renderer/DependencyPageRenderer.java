@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.dependencies.License;
 import com.exasol.projectkeeper.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
 
 import net.steppschuh.markdowngenerator.table.Table;
 
@@ -19,34 +20,55 @@ public class DependencyPageRenderer {
     /**
      * Convert a list of dependencies into a markdown dependency report.
      * 
-     * @param dependencies list of dependencies
+     * @param projectWithDependencies projects to report
      * @return rendered report
      */
-    public String render(final List<ProjectDependency> dependencies) {
+    public String render(final List<ProjectWithDependencies> projectWithDependencies) {
         final var markdownReferenceBuilder = new MarkdownReferenceBuilder();
         final var reportBuilder = new StringBuilder();
         reportBuilder.append("<!-- @formatter:off -->" + NEWLINE);
         reportBuilder.append("# Dependencies" + NEWLINE);
-        reportBuilder.append(buildDependencySectionForScope(dependencies, COMPILE, markdownReferenceBuilder));
-        reportBuilder.append(buildDependencySectionForScope(dependencies, TEST, markdownReferenceBuilder));
-        reportBuilder.append(buildDependencySectionForScope(dependencies, RUNTIME, markdownReferenceBuilder));
-        reportBuilder.append(buildDependencySectionForScope(dependencies, PLUGIN, markdownReferenceBuilder));
+        for (final ProjectWithDependencies project : projectWithDependencies) {
+            final boolean isMultiSourceProject = projectWithDependencies.size() > 1;
+            reportBuilder
+                    .append(buildDependencySectionForProject(project, markdownReferenceBuilder, isMultiSourceProject));
+        }
         reportBuilder.append(NEWLINE);
         reportBuilder.append(markdownReferenceBuilder.getReferences());
         return reportBuilder.toString();
     }
 
+    private String buildDependencySectionForProject(final ProjectWithDependencies project,
+            final MarkdownReferenceBuilder markdownRefBuilder, final boolean isMultiProject) {
+        final var reportBuilder = new StringBuilder();
+        if (isMultiProject) {
+            reportBuilder.append(NEWLINE + makeHeadline(project.getProjectName(), 2) + NEWLINE);
+        }
+        final List<ProjectDependency> dependencies = project.getDependencies();
+        final int headlineLevel = isMultiProject ? 3 : 2;
+        reportBuilder.append(buildDependencySectionForScope(dependencies, COMPILE, markdownRefBuilder, headlineLevel));
+        reportBuilder.append(buildDependencySectionForScope(dependencies, TEST, markdownRefBuilder, headlineLevel));
+        reportBuilder.append(buildDependencySectionForScope(dependencies, RUNTIME, markdownRefBuilder, headlineLevel));
+        reportBuilder.append(buildDependencySectionForScope(dependencies, PLUGIN, markdownRefBuilder, headlineLevel));
+        return reportBuilder.toString();
+    }
+
     private String buildDependencySectionForScope(final List<ProjectDependency> dependencies,
-            final ProjectDependency.Type type, final MarkdownReferenceBuilder markdownReferenceBuilder) {
+            final ProjectDependency.Type type, final MarkdownReferenceBuilder markdownReferenceBuilder,
+            final int headlineLevel) {
         final List<ProjectDependency> dependenciesOfThisScope = dependencies.stream()
                 .filter(dependency -> dependency.getType().equals(type)).collect(Collectors.toList());
         if (dependenciesOfThisScope.isEmpty()) {
             return "";
         } else {
-            final String heading = "## " + capitalizeFirstLetter(type.name()) + " Dependencies";
+            final String heading = makeHeadline(type.name() + " Dependencies", headlineLevel);
             return NEWLINE + heading + NEWLINE + NEWLINE + buildTable(dependenciesOfThisScope, markdownReferenceBuilder)
                     + NEWLINE;
         }
+    }
+
+    private String makeHeadline(final String text, final int level) {
+        return "#".repeat(level) + " " + capitalizeApStyle(text);
     }
 
     private String buildTable(final List<ProjectDependency> dependencies,
@@ -78,6 +100,27 @@ public class DependencyPageRenderer {
         } else {
             return "[" + name + "][" + markdownReferenceBuilder.getReferenceForUrl(name, url) + "]";
         }
+    }
+
+    private String capitalizeApStyle(final String string) {
+        if (string == null || string.isBlank()) {
+            return "";
+        }
+        final String[] parts = string.split(" ");
+        boolean isFirst = true;
+        final StringBuilder result = new StringBuilder();
+        for (final String part : parts) {
+            if (!isFirst) {
+                result.append(" ");
+            }
+            if (isFirst || part.length() > 3) {
+                result.append(capitalizeFirstLetter(part));
+            } else {
+                result.append(part);
+            }
+            isFirst = false;
+        }
+        return result.toString();
     }
 
     private String capitalizeFirstLetter(final String string) {

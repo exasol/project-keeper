@@ -28,11 +28,13 @@ public class DependenciesBrokenLinkReplacer {
     /**
      * Replace broken links in a list of {@link ProjectDependency}s.
      * 
-     * @param dependencies list of dependencies
+     * @param projectWithDependencies dependencies
      * @return list of dependencies with replaced links
      */
-    public List<ProjectDependency> replaceBrokenLinks(final List<ProjectDependency> dependencies) {
-        return dependencies.stream().map(this::replaceBrokenLinks).collect(Collectors.toList());
+    public ProjectWithDependencies replaceBrokenLinks(final ProjectWithDependencies projectWithDependencies) {
+        final List<ProjectDependency> fixedDependencies = projectWithDependencies.getDependencies().stream()
+                .map(this::replaceBrokenLinks).collect(Collectors.toList());
+        return projectWithDependencies.withDependencies(fixedDependencies);
     }
 
     private ProjectDependency replaceBrokenLinks(final ProjectDependency dependency) {

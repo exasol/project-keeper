@@ -34,10 +34,13 @@ public class SourceAnalyzer {
     private AnalyzedSource analyzeSource(final Path projectDir, final ProjectKeeperConfig.Source source) {
         if (MAVEN.equals(source.getType())) {
             final Model model = readMavenModel(source);
-            model.getArtifactId();
+            final String artifactId = model.getArtifactId();
+            final String rawProjectName = model.getName();
+            final String projectName = (rawProjectName == null || rawProjectName.isBlank()) ? artifactId
+                    : rawProjectName;
             final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("pom.xml"));
-            return new AnalyzedMavenSource(source.getPath(), source.getModules(), source.isAdvertise(),
-                    model.getArtifactId(), model.getName(), isRoot);
+            return new AnalyzedMavenSource(source.getPath(), source.getModules(), source.isAdvertise(), artifactId,
+                    projectName, isRoot);
         } else {
             throw new UnsupportedOperationException(ExaError.messageBuilder("F-PK-CORE-93")
                     .message("Analyzing of {{type}}} is not supported yet.", source.getType()).ticketMitigation()

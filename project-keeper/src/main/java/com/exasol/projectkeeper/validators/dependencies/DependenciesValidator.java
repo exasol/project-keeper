@@ -4,10 +4,13 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageRenderer;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
@@ -18,22 +21,24 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 //[impl->dsn~depnedency.md-file-validator~1]
 public class DependenciesValidator implements Validator {
     private final Path dependenciesFile;
+    private final List<AnalyzedSource> sources;
     private final BrokenLinkReplacer brokenLinkReplacer;
     private final JavaProjectCrawlerRunner javaProjectCrawlerRunner;
 
     /**
      * Create a new instance of {@link DependenciesValidator}.
      * 
-     * @param pomFile               pom file to validate
+     * @param sources               source projects
      * @param projectDirectory      project root directory
      * @param brokenLinkReplacer    dependency injection for broken link replacer
      * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
      * @param ownVersion            project-keeper version
      */
-    public DependenciesValidator(final Path pomFile, final Path projectDirectory,
+    public DependenciesValidator(final List<AnalyzedSource> sources, final Path projectDirectory,
             final BrokenLinkReplacer brokenLinkReplacer, final Path mvnRepositoryOverride, final String ownVersion) {
+        this.sources = sources;
         this.brokenLinkReplacer = brokenLinkReplacer;
-        this.javaProjectCrawlerRunner = new JavaProjectCrawlerRunner(pomFile, mvnRepositoryOverride, ownVersion);
+        this.javaProjectCrawlerRunner = new JavaProjectCrawlerRunner(mvnRepositoryOverride, ownVersion);
         this.dependenciesFile = projectDirectory.resolve("dependencies.md");
     }
 
@@ -51,10 +56,27 @@ public class DependenciesValidator implements Validator {
     }
 
     private String generateExpectedReport() {
-        final List<ProjectDependency> dependencies = this.javaProjectCrawlerRunner.getDependencies().getDependencies();
-        final List<ProjectDependency> dependenciesWithFixedLinks = new DependenciesBrokenLinkReplacer(
-                this.brokenLinkReplacer).replaceBrokenLinks(dependencies);
-        return new DependencyPageRenderer().render(dependenciesWithFixedLinks);
+        final DependenciesBrokenLinkReplacer dependencyLinkReplacer = new DependenciesBrokenLinkReplacer(
+                this.brokenLinkReplacer);
+        final List<ProjectWithDependencies> dependencies = this.sources.stream()//
+                .map(this::getDependencies)//
+                .map(dependencyLinkReplacer::replaceBrokenLinks)//
+                .collect(Collectors.toList());
+        return new DependencyPageRenderer().render(dependencies);
+    }
+
+    private ProjectWithDependencies getDependencies(final AnalyzedSource source) {
+        if (source instanceof AnalyzedMavenSource) {
+            final String projectName = ((AnalyzedMavenSource) source).getProjectName();
+            final List<ProjectDependency> dependencies = this.javaProjectCrawlerRunner.getDependencies(source.getPath())
+                    .getDependencies();
+            return new ProjectWithDependencies(projectName, dependencies);
+        } else {
+            throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-95")
+                    .message("Creating a dependencies report is not yet implemented for {{source type}}.",
+                            source.getClass().getSimpleName())
+                    .toString());
+        }
     }
 
     private List<ValidationFinding> validateFileContent(final String expectedDependenciesPage) {

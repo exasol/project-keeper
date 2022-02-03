@@ -26,8 +26,8 @@ class DependencySectionFixer {
      */
     public DependencySectionFixer(final Path projectDirectory, final Path mvnRepositoryOverride,
             final String ownVersion) {
-        this.dependencyChangeReport = new JavaProjectCrawlerRunner(projectDirectory.resolve("pom.xml"),
-                mvnRepositoryOverride, ownVersion).getDependencyChanges();
+        this.dependencyChangeReport = new JavaProjectCrawlerRunner(mvnRepositoryOverride, ownVersion)
+                .getDependencyChanges(projectDirectory.resolve("pom.xml"));
     }
 
     /**

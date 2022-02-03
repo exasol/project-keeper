@@ -40,8 +40,8 @@ class JavaProjectCrawlerRunnerIT {
         final Path pomFile = tempDir.resolve("pom.xml");
         Git.init().setDirectory(tempDir.toFile()).call().close();
         writePomFile(pomFile);
-        final DependencyChangeReport report = new JavaProjectCrawlerRunner(pomFile, testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION).getDependencyChanges();
+        final DependencyChangeReport report = new JavaProjectCrawlerRunner(testMavenRepo,
+                TestEnvBuilder.CURRENT_VERSION).getDependencyChanges(pomFile);
         assertThat(report.getCompileDependencyChanges(),
                 Matchers.contains(new NewDependency(DEPENDENCY_GROUP, DEPENDENCY_ID, DEPENDENCY_VERSION)));
     }
@@ -50,8 +50,8 @@ class JavaProjectCrawlerRunnerIT {
     void testGetDependencies(@TempDir final Path tempDir) throws IOException {
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
-        final ProjectDependencies dependencies = new JavaProjectCrawlerRunner(pomFile, testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION).getDependencies();
+        final ProjectDependencies dependencies = new JavaProjectCrawlerRunner(testMavenRepo,
+                TestEnvBuilder.CURRENT_VERSION).getDependencies(pomFile);
         assertThat(dependencies.getDependencies(),
                 Matchers.hasItem(
                         new ProjectDependency("error-reporting-java", "https://github.com/exasol/error-reporting-java",
