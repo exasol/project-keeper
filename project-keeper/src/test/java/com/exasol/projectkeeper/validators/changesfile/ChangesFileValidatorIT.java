@@ -23,6 +23,8 @@ import org.junit.jupiter.api.io.TempDir;
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.TestEnvBuilder;
+import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.FindingFixHelper;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
@@ -33,7 +35,7 @@ class ChangesFileValidatorIT {
     private static final String A_PROJECT_NAME = "my-project";
 
     @TempDir
-    File tempDir;
+    Path tempDir;
 
     private static Path testMavenRepo;
 
@@ -45,29 +47,30 @@ class ChangesFileValidatorIT {
 
     @BeforeEach
     void beforeEach() throws GitAPIException {
-        Git.init().setDirectory(this.tempDir).call().close();
+        Git.init().setDirectory(this.tempDir.toFile()).call().close();
     }
 
     @Test
     void testValidation() throws IOException {
-        createTestSetup();
-        assertThat(createValidator(), hasValidationFindingWithMessage("E-PK-CORE-56: Could not find required file 'doc"
-                + File.separator + "changes" + File.separator + "changes_1.2.3.md'."));
+        final AnalyzedMavenSource source = createTestSetup();
+        assertThat(createValidator(source),
+                hasValidationFindingWithMessage("E-PK-CORE-56: Could not find required file 'doc" + File.separator
+                        + "changes" + File.separator + "changes_1.2.3.md'."));
     }
 
     @Test
     void testValidationForSnapshotVersion() throws IOException {
-        createTestSetup();
-        assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir.toPath(),
-                testMavenRepo, TestEnvBuilder.CURRENT_VERSION), hasNoValidationFindings());
+        final AnalyzedMavenSource source = createTestSetup();
+        assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir, testMavenRepo,
+                TestEnvBuilder.CURRENT_VERSION, List.of(source)), hasNoValidationFindings());
     }
 
     @Test
     void testFixCreatedTemplate() throws IOException {
-        createTestSetup();
+        final AnalyzedMavenSource source = createTestSetup();
         final Logger log = mock(Logger.class);
-        createValidator().validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
-        final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
+        createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
+        final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
         verify(log).warn("Created 'doc" + File.separator + "changes" + File.separator
                 + "changes_1.2.3.md'. Don't forget to update it's content!");
@@ -77,9 +80,9 @@ class ChangesFileValidatorIT {
     void testFixContainsDependencyUpdates() throws IOException {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency();
-        createTestSetup(model);
-        createValidator().validate().forEach(FindingFixHelper::fix);
-        final Path changesFile = this.tempDir.toPath().resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
+        final AnalyzedMavenSource source = createTestSetup(model);
+        createValidator(source).validate().forEach(FindingFixHelper::fix);
+        final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(containsString(TestMavenModel.DEPENDENCY_ARTIFACT_ID)));
     }
 
@@ -87,21 +90,22 @@ class ChangesFileValidatorIT {
     void testValidationOnFixedFile() throws IOException {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency();
-        createTestSetup(model);
-        createValidator().validate().forEach(FindingFixHelper::fix);
-        assertThat(createValidator(), hasNoMoreFindingsAfterApplyingFixes());
+        final AnalyzedMavenSource source = createTestSetup(model);
+        createValidator(source).validate().forEach(FindingFixHelper::fix);
+        assertThat(createValidator(source), hasNoMoreFindingsAfterApplyingFixes());
     }
 
-    private ChangesFileValidator createValidator() {
-        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir.toPath(), testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION);
+    private ChangesFileValidator createValidator(final AnalyzedSource source) {
+        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir, testMavenRepo,
+                TestEnvBuilder.CURRENT_VERSION, List.of(source));
     }
 
-    private void createTestSetup() throws IOException {
-        createTestSetup(new TestMavenModel());
+    private AnalyzedMavenSource createTestSetup() throws IOException {
+        return createTestSetup(new TestMavenModel());
     }
 
-    private void createTestSetup(final TestMavenModel mavenModel) throws IOException {
-        mavenModel.writeAsPomToProject(this.tempDir.toPath());
+    private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel) throws IOException {
+        mavenModel.writeAsPomToProject(this.tempDir);
+        return new AnalyzedMavenSource(this.tempDir.resolve("pom.xml"), null, true, null, mavenModel.getName(), true);
     }
 }

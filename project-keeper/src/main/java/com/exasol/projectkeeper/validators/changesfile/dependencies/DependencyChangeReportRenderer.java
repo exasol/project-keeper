@@ -1,9 +1,12 @@
 package com.exasol.projectkeeper.validators.changesfile.dependencies;
 
+import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
+import com.exasol.projectkeeper.validators.changesfile.NamedDependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChange;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
@@ -15,21 +18,39 @@ public class DependencyChangeReportRenderer {
     /**
      * Render a {@link DependencyChangeReport} to string.
      * 
-     * @param report report to render
+     * @param reports reports to render
      * @return rendered report as a list of lines
      */
-    public List<String> render(final DependencyChangeReport report) {
+    public List<String> render(final List<NamedDependencyChangeReport> reports) {
         final List<String> lines = new ArrayList<>();
         lines.add(ChangesFile.DEPENDENCY_UPDATES_HEADING);
-        addDependencyChanges("### Compile Dependency Updates", report.getCompileDependencyChanges(), lines);
-        addDependencyChanges("### Runtime Dependency Updates", report.getRuntimeDependencyChanges(), lines);
-        addDependencyChanges("### Test Dependency Updates", report.getTestDependencyChanges(), lines);
-        addDependencyChanges("### Plugin Dependency Updates", report.getPluginDependencyChanges(), lines);
+        final boolean isMultiReports = reports.size() > 1;
+        for (final NamedDependencyChangeReport report : reports) {
+            lines.addAll(renderProject(report, isMultiReports));
+        }
         return lines;
     }
 
-    private void addDependencyChanges(final String heading, final List<DependencyChange> dependencyChanges,
-            final List<String> lines) {
+    private List<String> renderProject(final NamedDependencyChangeReport namedReport, final boolean isMultiReports) {
+        final List<String> lines = new ArrayList<>();
+        final DependencyChangeReport report = namedReport.getReport();
+        final String headlinePrefix = isMultiReports ? "####" : "###";
+        lines.addAll(renderDependencyChanges(headlinePrefix + " Compile Dependency Updates",
+                report.getCompileDependencyChanges()));
+        lines.addAll(renderDependencyChanges(headlinePrefix + " Runtime Dependency Updates",
+                report.getRuntimeDependencyChanges()));
+        lines.addAll(renderDependencyChanges(headlinePrefix + " Test Dependency Updates",
+                report.getTestDependencyChanges()));
+        lines.addAll(renderDependencyChanges(headlinePrefix + " Plugin Dependency Updates",
+                report.getPluginDependencyChanges()));
+        if (!lines.isEmpty() && isMultiReports) {
+            lines.addAll(0, List.of("", "### " + capitalizeApStyle(namedReport.getProjectName())));
+        }
+        return lines;
+    }
+
+    private List<String> renderDependencyChanges(final String heading, final List<DependencyChange> dependencyChanges) {
+        final List<String> lines = new ArrayList<>();
         if (!dependencyChanges.isEmpty()) {
             lines.add("");
             lines.add(heading);
@@ -39,5 +60,6 @@ public class DependencyChangeReportRenderer {
                 lines.add(dependencyChangeRenderer.render(dependencyChange));
             }
         }
+        return lines;
     }
 }

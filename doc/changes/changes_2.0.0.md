@@ -17,6 +17,7 @@ This release has **breaking changes**:
 * #229: Refactored project files validation to support maven multi-module projects
 * #231: Refactored ReadmeValidator to support maven multi-module projects
 * #233: Refactored DependenciesValidator to support maven multi-module projects
+* #235: Refactored ChangesFileValidator to support maven multi-module projects
 
 ## Dependency Updates
 
