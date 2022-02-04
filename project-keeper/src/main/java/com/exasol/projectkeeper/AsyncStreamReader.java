@@ -4,9 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.UncheckedIOException;
 import java.lang.Thread.UncaughtExceptionHandler;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,16 +17,26 @@ import com.exasol.errorreporting.ExaError;
  * This class starts a new {@link Thread} that reads from an {@link InputStream} and forwards the input line by line to
  * a given {@link Consumer}.
  */
-class AsyncStreamReader implements Runnable {
+class AsyncStreamReader {
 
     private static final Logger LOGGER = Logger.getLogger(AsyncStreamReader.class.getName());
 
-    private final InputStream stream;
-    private final Consumer<String> consumer;
+    private Executor executorService;
 
-    private AsyncStreamReader(InputStream stream, Consumer<String> consumer) {
-        this.stream = stream;
-        this.consumer = consumer;
+    AsyncStreamReader() {
+        this(createThreadExecutor());
+    }
+
+    AsyncStreamReader(Executor executor) {
+        this.executorService = executor;
+    }
+
+    private static Executor createThreadExecutor() {
+        return runnable -> {
+            Thread thread = new Thread(runnable);
+            thread.setUncaughtExceptionHandler(new LoggingExceptionHandler());
+            thread.start();
+        };
     }
 
     /**
@@ -36,37 +46,20 @@ class AsyncStreamReader implements Runnable {
      * @param stream the input stream to read
      * @return a {@link CollectingConsumer} that collects the data from the input stream
      */
-    static CollectingConsumer startCollectingConsumer(InputStream stream) {
+    CollectingConsumer startCollectingConsumer(InputStream stream) {
         CollectingConsumer consumer = new CollectingConsumer();
-        start(stream, consumer);
+        executorService.execute(() -> readStream(stream, consumer));
         return consumer;
     }
 
-    /**
-     * Start a new {@link Thread} that reads from the given {@link InputStream} and forwards the input line by line to
-     * the given {@link Consumer}.
-     * 
-     * @param stream   the input stream to read
-     * @param consumer the consumer
-     * @return the new reader
-     */
-    static AsyncStreamReader start(InputStream stream, Consumer<String> consumer) {
-        AsyncStreamReader reader = new AsyncStreamReader(stream, consumer);
-        Thread thread = new Thread(reader);
-        thread.setUncaughtExceptionHandler(new LoggingExceptionHandler());
-        thread.start();
-        return reader;
-    }
-
-    @Override
-    public void run() {
+    private void readStream(InputStream stream, Consumer<String> consumer) {
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 consumer.accept(line);
             }
         } catch (IOException exception) {
-            throw new UncheckedIOException(
+            LOGGER.log(Level.WARNING,
                     ExaError.messageBuilder("E-PK-CORE-98").message("Failed to read input stream").toString(),
                     exception);
         }

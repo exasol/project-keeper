@@ -70,7 +70,7 @@ public class JavaProjectCrawlerRunner {
             LOGGER.fine(() -> "Executing command " + commandParts);
             final Process proc = new ProcessBuilder(commandParts).redirectErrorStream(true).start();
 
-            CollectingConsumer streamConsumer = AsyncStreamReader.startCollectingConsumer(proc.getInputStream());
+            CollectingConsumer streamConsumer = new AsyncStreamReader().startCollectingConsumer(proc.getInputStream());
 
             if (!proc.waitFor(90, TimeUnit.SECONDS)) {
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
