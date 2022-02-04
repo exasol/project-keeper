@@ -43,11 +43,13 @@ public class ProjectKeeper {
                 new ReadmeFileValidator(projectDir, projectName,
                         gitRepository.getRepoNameFromRemote().orElse(artifactId), analyzedSources)));
         this.validators.addAll(getValidatorsPerSource(sources));
-        this.validators.addAll(List.of(new LicenseFileValidator(projectDir),
-                new ChangesFileValidator(projectVersion, projectName, projectDir, mvnRepo, ownVersion),
-                new ChangelogFileValidator(projectDir),
-                new DependenciesValidator(analyzedSources, projectDir, brokenLinkReplacer, mvnRepo, ownVersion),
-                new DeletedFilesValidator(projectDir), new GitignoreFileValidator(projectDir)));
+        this.validators
+                .addAll(List.of(new LicenseFileValidator(projectDir),
+                        new ChangesFileValidator(projectVersion, projectName, projectDir, mvnRepo, ownVersion,
+                                analyzedSources),
+                        new ChangelogFileValidator(projectDir),
+                        new DependenciesValidator(analyzedSources, projectDir, brokenLinkReplacer, mvnRepo, ownVersion),
+                        new DeletedFilesValidator(projectDir), new GitignoreFileValidator(projectDir)));
     }
 
     /**

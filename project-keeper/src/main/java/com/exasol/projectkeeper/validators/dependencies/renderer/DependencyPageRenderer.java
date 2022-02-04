@@ -1,8 +1,10 @@
 package com.exasol.projectkeeper.validators.dependencies.renderer;
 
+import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 import static com.exasol.projectkeeper.dependencies.ProjectDependency.Type.*;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.dependencies.License;
@@ -68,7 +70,7 @@ public class DependencyPageRenderer {
     }
 
     private String makeHeadline(final String text, final int level) {
-        return "#".repeat(level) + " " + capitalizeApStyle(text);
+        return "#".repeat(level) + " " + capitalizeApStyle(text.toLowerCase(Locale.ROOT));
     }
 
     private String buildTable(final List<ProjectDependency> dependencies,
@@ -100,32 +102,5 @@ public class DependencyPageRenderer {
         } else {
             return "[" + name + "][" + markdownReferenceBuilder.getReferenceForUrl(name, url) + "]";
         }
-    }
-
-    private String capitalizeApStyle(final String string) {
-        if (string == null || string.isBlank()) {
-            return "";
-        }
-        final String[] parts = string.split(" ");
-        boolean isFirst = true;
-        final StringBuilder result = new StringBuilder();
-        for (final String part : parts) {
-            if (!isFirst) {
-                result.append(" ");
-            }
-            if (isFirst || part.length() > 3) {
-                result.append(capitalizeFirstLetter(part));
-            } else {
-                result.append(part);
-            }
-            isFirst = false;
-        }
-        return result.toString();
-    }
-
-    private String capitalizeFirstLetter(final String string) {
-        final var lowerCase = string.toLowerCase();
-        final var firstLetter = lowerCase.substring(0, 1);
-        return firstLetter.toUpperCase() + lowerCase.substring(1);
     }
 }
