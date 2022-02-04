@@ -68,29 +68,31 @@ public class JavaProjectCrawlerRunner {
                 commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
             }
 
+            LOGGER.fine(() -> "Executing command " + commandParts);
             final Process proc = rt.exec(commandParts.toArray(String[]::new));
             if (!proc.waitFor(90, TimeUnit.SECONDS)) {
                 final String output = readFromStream(proc.getInputStream());
-                LOGGER.log(Level.SEVERE, output);
                 final String errors = readFromStream(proc.getErrorStream());
-                LOGGER.log(Level.SEVERE, errors);
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
-                        .message("Timeout while executing project-keeper-java-project-crawler.").toString());
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81").message(
+                        "Timeout while executing command {{executed command|uq}}.\nStandard output: {{standard output|uq}}\nStandard error: {{error output|uq}}",
+                        commandParts, output, errors).toString());
             }
             final int exitCode = proc.exitValue();
             final String output = readFromStream(proc.getInputStream());
+            final String errors = readFromStream(proc.getErrorStream());
             if (exitCode != 0) {
                 LOGGER.log(Level.SEVERE, output);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78").message(
-                        "Failed to run project-keeper-java-project-crawler maven plugin Exit code was {{exit code}}.",
-                        exitCode).toString());
+                        "Failed to run command {{executed command|uq}}, exit code was {{exit code}}.\nStandard output: {{standard output|uq}}\nStandard error: {{error output|uq}}",
+                        commandParts, exitCode, output, errors).toString());
             }
             final int startIndex = output.indexOf(RESPONSE_START_TOKEN);
             final int responseStartIndex = startIndex + RESPONSE_START_TOKEN.length() + 1;
             final int endIndex = output.indexOf(RESPONSE_END_TOKEN);
             if (startIndex == -1 || endIndex == -1 || responseStartIndex > endIndex) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-79")
-                        .message("Invalid response from crawler plugin.").ticketMitigation().toString());
+                        .message("Invalid response from crawler plugin: {{output}}", output).ticketMitigation()
+                        .toString());
             }
             return output.substring(responseStartIndex, endIndex);
         } catch (final IOException exception) {
