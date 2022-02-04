@@ -67,7 +67,7 @@ class AsyncStreamReader implements Runnable {
             }
         } catch (IOException exception) {
             throw new UncheckedIOException(
-                    ExaError.messageBuilder("E-PK-CORE-96").message("Failed to read input stream").toString(),
+                    ExaError.messageBuilder("E-PK-CORE-98").message("Failed to read input stream").toString(),
                     exception);
         }
     }
