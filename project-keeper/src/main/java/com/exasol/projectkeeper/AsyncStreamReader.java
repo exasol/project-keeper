@@ -67,7 +67,7 @@ class AsyncStreamReader implements Runnable {
             }
         } catch (IOException exception) {
             throw new UncheckedIOException(
-                    ExaError.messageBuilder("E-PK-CORE-82").message("Failed to read input stream").toString(),
+                    ExaError.messageBuilder("E-PK-CORE-96").message("Failed to read input stream").toString(),
                     exception);
         }
     }
@@ -90,7 +90,7 @@ class AsyncStreamReader implements Runnable {
     private static class LoggingExceptionHandler implements UncaughtExceptionHandler {
         @Override
         public void uncaughtException(Thread thread, Throwable throwable) {
-            LOGGER.log(Level.SEVERE, ExaError.messageBuilder("E-PK-CORE-83").message("Failed to read input stream")
+            LOGGER.log(Level.SEVERE, ExaError.messageBuilder("E-PK-CORE-97").message("Failed to read input stream")
                     .ticketMitigation().toString(), throwable);
         }
     }
