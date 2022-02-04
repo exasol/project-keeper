@@ -7,19 +7,23 @@ import java.util.Locale;
  *
  * Please keep the notes below as a pseudo-license:
  *
- * http://stackoverflow.com/questions/228477/how-do-i-programmatically-determine-operating-system-in-java
- * compare to
+ * http://stackoverflow.com/questions/228477/how-do-i-programmatically-determine-operating-system-in-java compare to
  * http://svn.terracotta.org/svn/tc/dso/tags/2.6.4/code/base/common/src/com/tc/util/runtime/Os.java
  * http://www.docjar.com/html/api/org/apache/commons/lang/SystemUtils.java.html
  */
-public class OsCheck
-{
+public class OsCheck {
     /**
      * Types of Operating Systems
      */
-    public enum OSType
-    {
-        WINDOWS, MACOS, LINUX, OTHER
+    public enum OSType {
+        /** Windows operating system */
+        WINDOWS,
+        /** macOS operating system */
+        MACOS,
+        /** Linux operating system */
+        LINUX,
+        /** Unknown operating system */
+        OTHER
     }
 
     /**
@@ -27,24 +31,17 @@ public class OsCheck
      * 
      * @return the operating system detected
      */
-    public OSType getOperatingSystemType()
-    {
+    public OSType getOperatingSystemType() {
         return detectOperatingSystemType();
     }
 
-    private static OSType detectOperatingSystemType()
-    {
+    private static OSType detectOperatingSystemType() {
         final String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
-        if ((os.indexOf("mac") >= 0) || (os.indexOf("darwin") >= 0))
-        {
+        if ((os.indexOf("mac") >= 0) || (os.indexOf("darwin") >= 0)) {
             return OSType.MACOS;
-        }
-        else if (os.indexOf("win") >= 0)
-        {
+        } else if (os.indexOf("win") >= 0) {
             return OSType.WINDOWS;
-        }
-        else if (os.indexOf("linux") >= 0)
-        {
+        } else if (os.indexOf("linux") >= 0) {
             return OSType.LINUX;
         }
         return OSType.OTHER;

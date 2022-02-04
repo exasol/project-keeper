@@ -36,7 +36,6 @@ class JavaProjectCrawlerRunnerIT {
 
     @Test
     void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException, IOException {
-
         final Path pomFile = tempDir.resolve("pom.xml");
         Git.init().setDirectory(tempDir.toFile()).call().close();
         writePomFile(pomFile);

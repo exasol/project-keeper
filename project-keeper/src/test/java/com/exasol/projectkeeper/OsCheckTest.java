@@ -23,8 +23,7 @@ class OsCheckTest {
     }
 
     @Test
-    void getOperatingSystemType()
-    {
+    void getOperatingSystemType() {
         assertThat(osCheck.getOperatingSystemType(), allOf(notNullValue(), not(equalTo(OSType.OTHER))));
     }
 
