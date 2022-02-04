@@ -35,10 +35,8 @@ public class ProjectKeeper {
             final String ownVersion) {
         this.logger = logger;
         this.excludes = config.getExcludes();
-        final ProjectKeeperConfig.Source mavenSource = getMavenSource(config);
         final GitRepository gitRepository = new GitRepository(projectDir);
         final var brokenLinkReplacer = new BrokenLinkReplacer(config.getLinkReplacements());
-        final var pomFile = mavenSource.getPath();
         final List<ProjectKeeperConfig.Source> sources = config.getSources();
         final List<AnalyzedSource> analyzedSources = new SourceAnalyzer().analyze(projectDir, sources);
         this.validators = new ArrayList<>(List.of(new ProjectFilesValidator(projectDir, analyzedSources, logger),
@@ -48,19 +46,8 @@ public class ProjectKeeper {
         this.validators.addAll(List.of(new LicenseFileValidator(projectDir),
                 new ChangesFileValidator(projectVersion, projectName, projectDir, mvnRepo, ownVersion),
                 new ChangelogFileValidator(projectDir),
-                new DependenciesValidator(pomFile, projectDir, brokenLinkReplacer, mvnRepo, ownVersion),
+                new DependenciesValidator(analyzedSources, projectDir, brokenLinkReplacer, mvnRepo, ownVersion),
                 new DeletedFilesValidator(projectDir), new GitignoreFileValidator(projectDir)));
-    }
-
-    private static ProjectKeeperConfig.Source getMavenSource(final ProjectKeeperConfig config) {
-        if (config.getSources().size() != 1) {
-            throw getWrongSourceException();
-        }
-        final ProjectKeeperConfig.Source source = config.getSources().get(0);
-        if (source.getType() != MAVEN) {
-            throw getWrongSourceException();
-        }
-        return source;
     }
 
     /**
@@ -114,12 +101,6 @@ public class ProjectKeeper {
             }
         }
         return result;
-    }
-
-    private static UnsupportedOperationException getWrongSourceException() {
-        return new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-88")
-                .message("Currently project-keeper only supports exactly one mvn source.")
-                .mitigation("Remove additional sources.").mitigation("Wait for this to be fixed.").toString());
     }
 
     /**

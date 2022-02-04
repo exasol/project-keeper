@@ -23,22 +23,32 @@ class DependenciesBrokenLinkReplacerTest {
     void testBrokenProjectUrl() {
         final ProjectDependency dependency = new ProjectDependency("test", "http://broken.com", Collections.emptyList(),
                 COMPILE);
-        assertThat(REPLACER.replaceBrokenLinks(List.of(dependency)).get(0).getWebsiteUrl(), equalTo(FIXED_URL));
+        assertThat(runDependencyReplacement(dependency).getWebsiteUrl(), equalTo(FIXED_URL));
+    }
+
+    private ProjectDependency runDependencyReplacement(final ProjectDependency dependency) {
+        return REPLACER.replaceBrokenLinks(new ProjectWithDependencies("", List.of(dependency))).getDependencies()
+                .get(0);
     }
 
     @Test
     void testNonBrokenProjectUrl() {
         final ProjectDependency dependency = new ProjectDependency("test", "http://other.com", Collections.emptyList(),
                 COMPILE);
-        assertThat(REPLACER.replaceBrokenLinks(List.of(dependency)).get(0).getWebsiteUrl(),
-                equalTo("http://other.com"));
+        assertThat(runDependencyReplacement(dependency).getWebsiteUrl(), equalTo("http://other.com"));
     }
 
     @Test
     void testBrokenLicenseUrl() {
         final ProjectDependency dependency = new ProjectDependency("test", "http://other.com",
                 List.of(new License("my license", BROKEN_URL)), COMPILE);
-        assertThat(REPLACER.replaceBrokenLinks(List.of(dependency)).get(0).getLicenses().get(0).getUrl(),
-                equalTo(FIXED_URL));
+        assertThat(runDependencyReplacement(dependency).getLicenses().get(0).getUrl(), equalTo(FIXED_URL));
+    }
+
+    @Test
+    void testProjectNameIsPreserved() {
+        final ProjectWithDependencies projectWithDependencies = new ProjectWithDependencies("my-project",
+                Collections.emptyList());
+        assertThat(REPLACER.replaceBrokenLinks(projectWithDependencies).getProjectName(), equalTo("my-project"));
     }
 }
