@@ -36,4 +36,8 @@ public class ApStyleFormatter {
         final var firstLetter = string.substring(0, 1);
         return firstLetter.toUpperCase() + string.substring(1);
     }
+
+    private ApStyleFormatter() {
+        // static class
+    }
 }
