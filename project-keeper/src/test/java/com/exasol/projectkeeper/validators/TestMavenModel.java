@@ -14,13 +14,14 @@ public class TestMavenModel extends Model {
     public static final String PROJECT_NAME = "my test project";
     public static final String PROJECT_VERSION = "0.1.0";
     private static final String DEFAULT_DEPENDENCY_VERSION = "0.1.0";
+    public static final String PROJECT_GROUP_ID = "com.example";
 
     public TestMavenModel() {
         this.setBuild(new Build());
         this.setVersion(PROJECT_VERSION);
         this.setArtifactId(PROJECT_ARTIFACT_ID);
         this.setName(PROJECT_NAME);
-        this.setGroupId("com.example");
+        this.setGroupId(PROJECT_GROUP_ID);
         this.setModelVersion("4.0.0");
     }
 

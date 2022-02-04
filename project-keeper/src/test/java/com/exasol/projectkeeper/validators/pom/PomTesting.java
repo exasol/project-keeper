@@ -2,9 +2,10 @@ package com.exasol.projectkeeper.validators.pom;
 
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
-import java.io.*;
-import java.nio.file.*;
-import java.util.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
@@ -37,14 +38,6 @@ public class PomTesting {
             final DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             return documentBuilder.parse(pomFileStream);
         }
-    }
-
-    public static Path writeResourceToTempFile(final File tempDir, final String resourceName) throws IOException {
-        final Path pomFile = File.createTempFile("pom", ".xml", tempDir).toPath();
-        try (final InputStream pomStream = PomTesting.class.getClassLoader().getResourceAsStream(resourceName)) {
-            Files.copy(Objects.requireNonNull(pomStream), pomFile, StandardCopyOption.REPLACE_EXISTING);
-        }
-        return pomFile;
     }
 
     public static PomValidationRunner validationOf(final PomValidator validator, final Document pom,

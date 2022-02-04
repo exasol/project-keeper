@@ -46,6 +46,16 @@ public class JavaProjectCrawlerRunner {
     }
 
     /**
+     * Get a flat version of the given pom file. That means that the parent pom is merged.
+     * 
+     * @param pomFile pom file to flatten
+     * @return flattened pom content
+     */
+    public String getFlatPom(final Path pomFile) {
+        return runCrawlerPlugin(pomFile, "getFlatPom");
+    }
+
+    /**
      * Get the {@link ProjectDependencies} for the project.
      * 
      * @param pomFile path to the pom file to analyze.
