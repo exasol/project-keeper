@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.OsCheck.OSType;
 import com.exasol.projectkeeper.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
@@ -59,7 +60,7 @@ public class JavaProjectCrawlerRunner {
     private String runCrawlerPlugin(final Path pomFile, final String goal) {
         try {
             final Runtime rt = Runtime.getRuntime();
-            final List<String> commandParts = new ArrayList<>(List.of("mvn", "--batch-mode",
+            final List<String> commandParts = new ArrayList<>(List.of(getMavenExecutable(), "--batch-mode",
                     "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
                     "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal, "--file",
                     pomFile.toString()));
@@ -97,6 +98,15 @@ public class JavaProjectCrawlerRunner {
         } catch (final InterruptedException exception) {
             Thread.currentThread().interrupt();
             throw new IllegalStateException(getRunFailedMessage(), exception);
+        }
+    }
+
+    private String getMavenExecutable() {
+        OSType osType = new OsCheck().getOperatingSystemType();
+        if (osType == OSType.WINDOWS) {
+            return "mvn.cmd";
+        } else {
+            return "mvn";
         }
     }
 
