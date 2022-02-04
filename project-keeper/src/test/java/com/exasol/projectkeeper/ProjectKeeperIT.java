@@ -120,7 +120,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     void testVerifyWithExcludedFile() throws IOException {
         writeDefaultPom();
         writeConfig(getConfigWithAllModulesBuilder()
-                .excludes(List.of("E-PK-CORE-17: Missing required: 'src/test/resources/logging.properties'")).build());
+                .excludes(List.of("E-PK-CORE-17: Missing required: 'src/test/resources/logging.properties'"
+                .replace('/', File.separatorChar))).build());
         final String output = assertInvalidAndGetOutput();
         assertThat(output, not(containsString("logging.properties")));
     }
