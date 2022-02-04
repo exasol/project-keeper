@@ -32,6 +32,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
      * @param projectDirectory      root directory of the maven project
      * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
      * @param ownVersion            project-keeper version
+     * @param sources               source projects
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
             final Path mvnRepositoryOverride, final String ownVersion, final List<AnalyzedSource> sources) {

@@ -44,7 +44,7 @@ public class DependencyChangeReportRenderer {
         lines.addAll(renderDependencyChanges(headlinePrefix + " Plugin Dependency Updates",
                 report.getPluginDependencyChanges()));
         if (!lines.isEmpty() && isMultiReports) {
-            lines.addAll(0, List.of("", "### " + capitalizeApStyle(namedReport.getProjectName())));
+            lines.addAll(0, List.of("", "### " + capitalizeApStyle(namedReport.getSourceName())));
         }
         return lines;
     }
