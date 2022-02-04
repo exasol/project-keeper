@@ -39,10 +39,11 @@ public class ProjectKeeper {
         final var brokenLinkReplacer = new BrokenLinkReplacer(config.getLinkReplacements());
         final List<ProjectKeeperConfig.Source> sources = config.getSources();
         final List<AnalyzedSource> analyzedSources = new SourceAnalyzer().analyze(projectDir, sources);
+        final JavaProjectCrawlerRunner javaProjectCrawlerRunner = new JavaProjectCrawlerRunner(mvnRepo, ownVersion);
         this.validators = new ArrayList<>(List.of(new ProjectFilesValidator(projectDir, analyzedSources, logger),
                 new ReadmeFileValidator(projectDir, projectName,
                         gitRepository.getRepoNameFromRemote().orElse(artifactId), analyzedSources)));
-        this.validators.addAll(getValidatorsPerSource(sources));
+        this.validators.addAll(getValidatorsPerSource(sources, javaProjectCrawlerRunner));
         this.validators
                 .addAll(List.of(new LicenseFileValidator(projectDir),
                         new ChangesFileValidator(projectVersion, projectName, projectDir, mvnRepo, ownVersion,
@@ -95,11 +96,12 @@ public class ProjectKeeper {
         return new ProjectKeeperConfigReader().readConfig(projectDir);
     }
 
-    private List<Validator> getValidatorsPerSource(final List<ProjectKeeperConfig.Source> sources) {
+    private List<Validator> getValidatorsPerSource(final List<ProjectKeeperConfig.Source> sources,
+            final JavaProjectCrawlerRunner javaProjectCrawlerRunner) {
         final List<Validator> result = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : sources) {
             if (source.getType().equals(MAVEN)) {
-                result.add(new PomFileValidator(source.getModules(), source.getPath()));
+                result.add(new PomFileValidator(source.getModules(), source.getPath(), javaProjectCrawlerRunner));
             }
         }
         return result;
