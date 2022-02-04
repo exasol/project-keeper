@@ -1,15 +1,15 @@
 package com.exasol.projectkeeper;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.AsyncStreamReader.CollectingConsumer;
 import com.exasol.projectkeeper.OsCheck.OSType;
 import com.exasol.projectkeeper.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
@@ -59,7 +59,6 @@ public class JavaProjectCrawlerRunner {
 
     private String runCrawlerPlugin(final Path pomFile, final String goal) {
         try {
-            final Runtime rt = Runtime.getRuntime();
             final List<String> commandParts = new ArrayList<>(List.of(getMavenExecutable(), "--batch-mode",
                     "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
                     "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal, "--file",
@@ -69,22 +68,23 @@ public class JavaProjectCrawlerRunner {
             }
 
             LOGGER.fine(() -> "Executing command " + commandParts);
-            final Process proc = rt.exec(commandParts.toArray(String[]::new));
+            final Process proc = new ProcessBuilder(commandParts).redirectErrorStream(true).start();
+
+            CollectingConsumer streamConsumer = AsyncStreamReader.startCollectingConsumer(proc.getInputStream());
+
             if (!proc.waitFor(90, TimeUnit.SECONDS)) {
-                final String output = readFromStream(proc.getInputStream());
-                final String errors = readFromStream(proc.getErrorStream());
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81").message(
-                        "Timeout while executing command {{executed command|uq}}.\nStandard output: {{standard output|uq}}\nStandard error: {{error output|uq}}",
-                        commandParts, output, errors).toString());
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
+                        .message("Timeout while executing command {{executed command|uq}}. Output was {{output}}",
+                                commandParts, streamConsumer.toString())
+                        .toString());
             }
             final int exitCode = proc.exitValue();
-            final String output = readFromStream(proc.getInputStream());
-            final String errors = readFromStream(proc.getErrorStream());
+            final String output = streamConsumer.toString();
             if (exitCode != 0) {
-                LOGGER.log(Level.SEVERE, output);
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78").message(
-                        "Failed to run command {{executed command|uq}}, exit code was {{exit code}}.\nStandard output: {{standard output|uq}}\nStandard error: {{error output|uq}}",
-                        commandParts, exitCode, output, errors).toString());
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78")
+                        .message("Failed to run command {{executed command|uq}}, exit code was {{exit code}}.",
+                                commandParts, exitCode)
+                        .toString());
             }
             final int startIndex = output.indexOf(RESPONSE_START_TOKEN);
             final int responseStartIndex = startIndex + RESPONSE_START_TOKEN.length() + 1;
@@ -115,11 +115,5 @@ public class JavaProjectCrawlerRunner {
     private String getRunFailedMessage() {
         return ExaError.messageBuilder("E-PK-CORE-80").message("Failed to run project-keeper-java-project-crawler.")
                 .toString();
-    }
-
-    private String readFromStream(final InputStream stream) throws IOException {
-        try (final InputStream inputStream = stream) {
-            return new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        }
     }
 }
