@@ -18,7 +18,6 @@ import com.exasol.errorreporting.ExaError;
  * a given {@link Consumer}.
  */
 class AsyncStreamReader {
-
     private static final Logger LOGGER = Logger.getLogger(AsyncStreamReader.class.getName());
 
     private Executor executorService;
