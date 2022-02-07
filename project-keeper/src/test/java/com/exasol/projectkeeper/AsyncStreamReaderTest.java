@@ -10,7 +10,7 @@ import com.exasol.projectkeeper.AsyncStreamReader.CollectingConsumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class AsyncStreamReaderTest {
+class AsyncStreamReaderTest {
 
     private AsyncStreamReader asyncStreamReader;
 
