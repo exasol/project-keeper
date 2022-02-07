@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper;
+package com.exasol.projectkeeper.stream;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -17,17 +17,17 @@ import com.exasol.errorreporting.ExaError;
  * This class starts a new {@link Thread} that reads from an {@link InputStream} and forwards the input line by line to
  * a given {@link Consumer}.
  */
-class AsyncStreamReader {
+public class AsyncStreamReader {
     private static final Logger LOGGER = Logger.getLogger(AsyncStreamReader.class.getName());
 
-    private Executor executorService;
+    private Executor executor;
 
-    AsyncStreamReader() {
+    public AsyncStreamReader() {
         this(createThreadExecutor());
     }
 
     AsyncStreamReader(Executor executor) {
-        this.executorService = executor;
+        this.executor = executor;
     }
 
     private static Executor createThreadExecutor() {
@@ -45,37 +45,24 @@ class AsyncStreamReader {
      * @param stream the input stream to read
      * @return a {@link CollectingConsumer} that collects the data from the input stream
      */
-    CollectingConsumer startCollectingConsumer(InputStream stream) {
+    public CollectingConsumer startCollectingConsumer(InputStream stream) {
         CollectingConsumer consumer = new CollectingConsumer();
-        executorService.execute(() -> readStream(stream, consumer));
+        executor.execute(() -> readStream(stream, consumer));
         return consumer;
     }
 
-    private void readStream(InputStream stream, Consumer<String> consumer) {
+    private void readStream(InputStream stream, StreamConsumer consumer) {
         try (final BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8))) {
             String line = null;
             while ((line = reader.readLine()) != null) {
                 consumer.accept(line);
             }
+            consumer.readFinished();
         } catch (IOException exception) {
+            consumer.readFailed(exception);
             LOGGER.log(Level.WARNING,
                     ExaError.messageBuilder("E-PK-CORE-98").message("Failed to read input stream").toString(),
                     exception);
-        }
-    }
-
-    static class CollectingConsumer implements Consumer<String> {
-        private final StringBuilder stringBuilder = new StringBuilder();
-
-        @Override
-        public void accept(String line) {
-            LOGGER.fine(() -> "OUTPUT> " + line);
-            stringBuilder.append(line).append("\n");
-        }
-
-        @Override
-        public String toString() {
-            return stringBuilder.toString();
         }
     }
 

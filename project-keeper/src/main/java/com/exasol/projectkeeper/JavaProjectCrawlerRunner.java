@@ -3,15 +3,17 @@ package com.exasol.projectkeeper;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.AsyncStreamReader.CollectingConsumer;
 import com.exasol.projectkeeper.OsCheck.OSType;
 import com.exasol.projectkeeper.dependencies.ProjectDependencies;
+import com.exasol.projectkeeper.stream.AsyncStreamReader;
+import com.exasol.projectkeeper.stream.CollectingConsumer;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
 /**
@@ -21,6 +23,7 @@ public class JavaProjectCrawlerRunner {
     private static final String RESPONSE_START_TOKEN = "###SerializedResponseStart###";
     private static final String RESPONSE_END_TOKEN = "###SerializedResponseEnd###";
     private static final Logger LOGGER = Logger.getLogger(JavaProjectCrawlerRunner.class.getName());
+    private static final Duration STREAM_READING_TIMEOUT = Duration.ofSeconds(1);
     private final Path mvnRepositoryOverride;
     private final String ownVersion;
 
@@ -73,13 +76,14 @@ public class JavaProjectCrawlerRunner {
             CollectingConsumer streamConsumer = new AsyncStreamReader().startCollectingConsumer(proc.getInputStream());
 
             if (!proc.waitFor(90, TimeUnit.SECONDS)) {
+                String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
                         .message("Timeout while executing command {{executed command|uq}}. Output was {{output}}",
-                                commandParts, streamConsumer.toString())
+                                commandParts, output)
                         .toString());
             }
             final int exitCode = proc.exitValue();
-            final String output = streamConsumer.toString();
+            final String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
             if (exitCode != 0) {
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78")
                         .message("Failed to run command {{executed command|uq}}, exit code was {{exit code}}.",
