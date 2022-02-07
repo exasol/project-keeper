@@ -30,14 +30,15 @@ public class CollectingConsumer implements StreamConsumer {
     }
 
     @Override
-    public void readFailed(IOException ioException) {
+    public void readFailed(IOException exception) {
         countDownLatch.countDown();
     }
 
     /**
-     * Waits until the stream was read completely and returns the read content.
+     * Waits until the stream was read completely and returns the read content from the stream.
      * 
      * @param timeout the maximum time to wait
+     * @return the content collected from the stream
      * @throws InterruptedException if the current thread is interrupted while waiting
      */
     public String getContent(Duration timeout) throws InterruptedException {

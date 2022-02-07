@@ -22,6 +22,9 @@ public class AsyncStreamReader {
 
     private Executor executor;
 
+    /**
+     * Creates a new {@link AsyncStreamReader} that starts a new thread for reading the stream.
+     */
     public AsyncStreamReader() {
         this(createThreadExecutor());
     }
