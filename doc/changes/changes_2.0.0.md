@@ -19,6 +19,10 @@ This release has **breaking changes**:
 * #233: Refactored DependenciesValidator to support maven multi-module projects
 * #235: Refactored ChangesFileValidator to support maven multi-module projects
 
+## Bugfixes
+
+* #218: Fixed executing Maven under Windows.
+
 ## Dependency Updates
 
 ### Plugin Dependency Updates
