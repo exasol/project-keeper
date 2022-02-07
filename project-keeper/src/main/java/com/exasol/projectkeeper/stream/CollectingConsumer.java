@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.time.Duration;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -13,14 +12,11 @@ import com.exasol.errorreporting.ExaError;
  * reading has finished.
  */
 public class CollectingConsumer implements StreamConsumer {
-    private static final Logger LOGGER = Logger.getLogger(CollectingConsumer.class.getName());
-
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private final StringBuilder stringBuilder = new StringBuilder();
 
     @Override
     public void accept(String line) {
-        LOGGER.finest(() -> "OUTPUT> " + line);
         stringBuilder.append(line).append("\n");
     }
 
