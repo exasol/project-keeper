@@ -102,21 +102,6 @@
                 <artifactId>maven-plugin-plugin</artifactId>
                 <version>3.6.2</version>
             </plugin>
-
-            <plugin>
-                <groupId>com.exasol</groupId>
-                <artifactId>project-keeper-maven-plugin</artifactId>
-                <version>${project.version}</version>
-                <!-- no execution configured on purpose. Run manually -->
-                <configuration>
-                    <modules>
-                        <module>maven_central</module>
-                        <module>integration_tests</module>
-                        <module>udf_coverage</module>
-                    </modules>
-                </configuration>
-            </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>

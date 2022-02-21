@@ -1,17 +1,15 @@
 package com.exasol.projectkeeper.validators.files;
 
-import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXACT;
+import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.withContentEqualTo;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
-import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
@@ -79,52 +77,7 @@ public class ProjectFilesValidator implements Validator {
     private List<ValidationFinding> validate(final Path relativeDirectory, final FileTemplate template) {
         final Path projectFile = relativeDirectory.resolve(template.getPathInProject());
         final String templateContent = template.getContent();
-        if (!Files.exists(projectFile)) {
-            return List.of(SimpleValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-CORE-17").message("Missing required: {{required file}}")
-                            .parameter("required file", template.getPathInProject().toString()).toString())
-                    .andFix((Logger log) -> fixFile(projectFile, templateContent)).build());
-        }
-        if (template.getTemplateType().equals(REQUIRE_EXACT)) {
-            return validateContent(template.getContent(), template.getPathInProject().toString(), projectFile);
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    private void fixFile(final Path projectFile, final String templateContent) {
-        try {
-            Files.createDirectories(projectFile.getParent());
-            Files.writeString(projectFile, templateContent);
-        } catch (final IOException exception) {
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-CORE-16").message("Failed to create or replace {{required file}}.")
-                            .parameter("required file", projectFile).toString(),
-                    exception);
-        }
-    }
-
-    private List<ValidationFinding> validateContent(final String templateContent, final String templateName,
-            final Path projectFile) {
-        if (!isFileEqualWithTemplate(templateContent, projectFile)) {
-            return List.of(SimpleValidationFinding
-                    .withMessage(ExaError.messageBuilder("E-PK-CORE-18").message("Outdated content: {{file name}}")
-                            .parameter("file name", templateName).toString())
-                    .andFix((Logger log) -> fixFile(projectFile, templateContent)).build());
-        } else {
-            return Collections.emptyList();
-        }
-    }
-
-    private boolean isFileEqualWithTemplate(final String templateContent, final Path projectFile) {
-        try {
-            final String actualContent = Files.readString(projectFile);
-            return actualContent.equals(templateContent);
-        } catch (final IOException exception) {
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-CORE-19").message("Failed to validate {{file name}}'s content.")
-                            .parameter("file name", projectFile).toString(),
-                    exception);
-        }
+        return new RequiredFileValidator().validateFile(relativeDirectory, projectFile,
+                withContentEqualTo(templateContent));
     }
 }
