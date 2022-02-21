@@ -7,8 +7,7 @@ import java.nio.file.Path;
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
@@ -29,13 +28,36 @@ class PomFileIO {
      * @param destinationFile file to write to
      */
     public void writePomFile(final Document document, final Path destinationFile) {
+        try (final FileOutputStream outputStream = new FileOutputStream(destinationFile.toFile())) {
+            writePomFile(document, outputStream);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(
+                    ExaError.messageBuilder("F-PK-CORE-100")
+                            .message("Failed to write xml (pom) to file {file}.", destinationFile).toString(),
+                    exception);
+        }
+    }
+
+    public String writePomFileToString(final Document document) {
+        try (final ByteArrayOutputStream outputStream = new ByteArrayOutputStream()) {
+            writePomFile(document, outputStream);
+            return outputStream.toString(StandardCharsets.UTF_8);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(ExaError.messageBuilder("F-PK-CORE-106")
+                    .message("Failed to convert xml (pom) to string.").toString(), exception);
+        }
+    }
+
+    private void writePomFile(final Document document, final OutputStream outputStream) {
         try {
             final var transformerFactory = TransformerFactory.newInstance();
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             final var transformer = transformerFactory.newTransformer();
+            transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             final var domSource = new DOMSource(document);
-            final var streamResult = new StreamResult(destinationFile.toFile());
+            final var streamResult = new StreamResult(outputStream);
             transformer.transform(domSource, streamResult);
         } catch (final TransformerException exception) {
             throw new IllegalStateException(

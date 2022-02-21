@@ -2,7 +2,6 @@ package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.dependencies.ProjectDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -56,14 +55,6 @@ class JavaProjectCrawlerRunnerIT {
                 Matchers.hasItem(
                         new ProjectDependency("error-reporting-java", "https://github.com/exasol/error-reporting-java",
                                 List.of(new License("MIT", "https://opensource.org/licenses/MIT")), COMPILE)));
-    }
-
-    @Test
-    void testGetFlatPom(@TempDir final Path tempDir) throws IOException {
-        new TestMavenSetupWithParentPom().writeTo(tempDir);
-        final String flatPom = new JavaProjectCrawlerRunner(testMavenRepo, TestEnvBuilder.CURRENT_VERSION)
-                .getFlatPom(tempDir.resolve("pom.xml"));
-        assertThat(flatPom, containsString("error-code-crawler"));
     }
 
     private void writePomFile(final Path pomFile) throws IOException {
