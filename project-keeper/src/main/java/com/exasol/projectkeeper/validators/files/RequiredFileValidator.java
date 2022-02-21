@@ -12,8 +12,17 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This class validates that a required file exists and checks its content.
+ */
 public class RequiredFileValidator {
 
+    /**
+     * Create a {@link ContentValidator} for an expected content.
+     * 
+     * @param content expected content
+     * @return {@link ContentValidator}
+     */
     public static ContentValidator withContentEqualTo(final String content) {
         return new EqualsContentValidator(content);
     }
@@ -76,6 +85,9 @@ public class RequiredFileValidator {
         }
     }
 
+    /**
+     * Interface for classes that validate the content of a file.
+     */
     @FunctionalInterface
     public interface ContentValidator {
         /**
@@ -84,7 +96,7 @@ public class RequiredFileValidator {
          * @param content content to validate, null if file does not exist
          * @return expected content if content is invalid, empty optional otherwise
          */
-        Optional<String> validateContent(String content);
+        public Optional<String> validateContent(String content);
     }
 
     @RequiredArgsConstructor
