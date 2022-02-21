@@ -11,9 +11,18 @@ import org.xml.sax.SAXException;
 
 import com.exasol.errorreporting.ExaError;
 
+/**
+ * This class reads a maven plugin configuration from resources.
+ */
 public class PluginTemplateReader {
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = DocumentBuilderFactory.newInstance();
 
+    /**
+     * Read a maven plugin configuration from resources.
+     * 
+     * @param templateResourceName resource file name
+     * @return XML object
+     */
     public Node readPluginTemplate(final String templateResourceName) {
         try (final var templateInputStream = getClass().getClassLoader().getResourceAsStream(templateResourceName)) {
             if (templateInputStream == null) {

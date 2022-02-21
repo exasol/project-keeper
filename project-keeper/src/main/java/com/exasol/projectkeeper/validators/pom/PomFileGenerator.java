@@ -56,6 +56,10 @@ public class PomFileGenerator {
     /**
      * Generate the expected content of the pom file.
      *
+     * @param enabledModules list of enabled modules
+     * @param groupId        group id for the generated pom file
+     * @param artifactId     artifact id for the generated pom file
+     * @param version        version for the generated pom file
      * @return expected content
      */
     public String generatePomContent(final Collection<ProjectKeeperModule> enabledModules, final String groupId,
