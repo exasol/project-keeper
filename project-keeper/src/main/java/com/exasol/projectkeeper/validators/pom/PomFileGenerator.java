@@ -94,18 +94,26 @@ public class PomFileGenerator {
             addDependency(dependencies, "org.projectlombok", "lombok", "1.18.20", "provided");
         }
         if (enabledModules.contains(UDF_COVERAGE)) {
-            addDependency(dependencies, "org.jacoco", "org.jacoco.agent", "0.8.5", "test");
+            addDependency(dependencies, "org.jacoco", "org.jacoco.agent", "0.8.5", "test", "runtime");
         }
         return dependencies;
     }
 
     private void addDependency(final Element dependencies, final String groupId, final String artifactId,
             final String version, final String scope) {
+        addDependency(dependencies, groupId, artifactId, version, scope, null);
+    }
+
+    private void addDependency(final Element dependencies, final String groupId, final String artifactId,
+            final String version, final String scope, final String classifier) {
         final Element dependency = dependencies.getOwnerDocument().createElement("dependency");
         addTextElement(dependency, "groupId", groupId);
         addTextElement(dependency, "artifactId", artifactId);
         addTextElement(dependency, "version", version);
         addTextElement(dependency, "scope", scope);
+        if (classifier != null) {
+            addTextElement(dependency, "classifier", classifier);
+        }
         dependencies.appendChild(dependency);
     }
 
@@ -140,7 +148,7 @@ public class PomFileGenerator {
             document.setXmlStandalone(false);
             return document;
         } catch (final ParserConfigurationException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-99")
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-109")
                     .message("Failed to create document.").ticketMitigation().toString(), exception);
         }
     }

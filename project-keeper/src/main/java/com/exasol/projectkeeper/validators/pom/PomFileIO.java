@@ -76,7 +76,7 @@ class PomFileIO {
         try (final InputStream pomFileStream = new FileInputStream(pomFile.toFile())) {
             return parsePomFile(pomFileStream);
         } catch (final IOException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-97")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-107")
                     .message("Failed to read pom file {{path}}.", pomFile).toString(), exception);
         }
     }
@@ -93,7 +93,7 @@ class PomFileIO {
             return parsePomFile(pomFileStream);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-CORE-98").message("Failed to read pom file from string.").toString(),
+                    ExaError.messageBuilder("E-PK-CORE-108").message("Failed to read pom file from string.").toString(),
                     exception);
         }
     }
