@@ -39,7 +39,6 @@ public class ProjectKeeper {
         final var brokenLinkReplacer = new BrokenLinkReplacer(config.getLinkReplacements());
         final List<ProjectKeeperConfig.Source> sources = config.getSources();
         final List<AnalyzedSource> analyzedSources = new SourceAnalyzer().analyze(projectDir, sources);
-        final JavaProjectCrawlerRunner javaProjectCrawlerRunner = new JavaProjectCrawlerRunner(mvnRepo, ownVersion);
         this.validators = new ArrayList<>(List.of(new ProjectFilesValidator(projectDir, analyzedSources, logger),
                 new ReadmeFileValidator(projectDir, projectName,
                         gitRepository.getRepoNameFromRemote().orElse(artifactId), analyzedSources)));
