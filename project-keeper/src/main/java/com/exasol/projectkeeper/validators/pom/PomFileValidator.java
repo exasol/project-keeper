@@ -47,7 +47,7 @@ public class PomFileValidator implements Validator {
     public List<ValidationFinding> validate() {
         try {
             final Document pom = new PomFileIO().parsePomFile(this.pomFilePath);
-            final String version = getRequiredTextValue(pom, "/project/version");
+            final String version = getProjectVersion(pom);
             final String artifactId = getRequiredTextValue(pom, "/project/artifactId") + "-generated-parent";
             final String groupId = getGroupId(pom);
             final List<ValidationFinding> findings = new ArrayList<>();
@@ -58,6 +58,20 @@ public class PomFileValidator implements Validator {
             return findings;
         } catch (final InvalidPomException exception) {
             return List.of(SimpleValidationFinding.withMessage(exception.getMessage()).build());
+        }
+    }
+
+    private String getProjectVersion(final Document pom) throws InvalidPomException {
+        final Node versionNode = runXPath(pom, "/project/version");
+        if (versionNode != null) {
+            return versionNode.getTextContent();
+        } else if (this.parentPomRef != null && this.parentPomRef.getVersion() != null) {
+            return this.parentPomRef.getVersion();
+        } else {
+            throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
+                    .message("Invalid pom file {{file}}: Missing required property /project/version.",
+                            this.projectDirectory.relativize(this.pomFilePath))
+                    .mitigation("Please either set /project/version manually.").toString());
         }
     }
 
