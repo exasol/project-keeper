@@ -21,7 +21,6 @@ public class SimplePluginTemplateGenerator implements PluginTemplateGenerator {
      * @param module           module to use this plugin for
      */
     public SimplePluginTemplateGenerator(final String templateResource, final ProjectKeeperModule module) {
-        super();
         this.templateResource = templateResource;
         this.module = module;
     }

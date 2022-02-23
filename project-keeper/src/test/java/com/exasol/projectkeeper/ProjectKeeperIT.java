@@ -114,7 +114,6 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         writeConfig(createConfigWithAllModules());
         final ToStringLogger logger = new ToStringLogger();
         final boolean success = getProjectKeeper(logger).fix();
-        System.out.println(logger);
         assertThat(success, equalTo(true));
         assertThat(this.projectDir.resolve("LICENSE").toFile(), anExistingFile());
     }

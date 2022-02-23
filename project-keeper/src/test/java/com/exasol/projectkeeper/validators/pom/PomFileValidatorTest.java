@@ -55,7 +55,6 @@ class PomFileValidatorTest {
 
     private void runFix() {
         new FindingsFixer(mock(Logger.class)).fixFindings(runValidator());
-
     }
 
     @Test
