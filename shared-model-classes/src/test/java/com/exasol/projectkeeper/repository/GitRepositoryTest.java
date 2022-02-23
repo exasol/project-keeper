@@ -34,8 +34,7 @@ class GitRepositoryTest {
             makeCommitAndTag(git, 3, false);
             final GitRepository repository = new GitRepository(this.tempDir);
             final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
-            final List<String> tagNames = result.stream().map(taggedCommit -> taggedCommit.getTag())
-                    .collect(Collectors.toList());
+            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
             assertThat(tagNames, contains("tag3", "tag1"));
         }
     }
@@ -99,6 +98,26 @@ class GitRepositoryTest {
 
             final GitRepository repository = new GitRepository(this.tempDir);
             final String result = repository.readFileAtCommit(Path.of("myFile.txt"), new GitCommit(initialCommit));
+            assertThat(result, equalTo(fileContent));
+        }
+    }
+
+    @Test
+    void testReadFileAtCommitInSubDir() throws GitAPIException, IOException {
+        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call()) {
+            final Path subdir = this.tempDir.resolve("subdir");
+            Files.createDirectory(subdir);
+            final Path testFile = subdir.resolve("myFile.txt");
+            final String fileContent = "some string";
+            Files.writeString(testFile, fileContent);
+            git.add().addFilepattern("subdir/myFile.txt").call();
+            final RevCommit initialCommit = git.commit().setMessage("initial commit").call();
+            Files.delete(testFile);
+            git.add().addFilepattern("subdir/myFile.txt").call();
+            git.commit().setMessage("removed file").call();
+            final GitRepository repository = new GitRepository(this.tempDir);
+            final String result = repository.readFileAtCommit(Path.of("subdir/myFile.txt"),
+                    new GitCommit(initialCommit));
             assertThat(result, equalTo(fileContent));
         }
     }

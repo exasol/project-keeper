@@ -9,7 +9,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.*;
 import org.eclipse.jgit.revwalk.*;
 import org.eclipse.jgit.transport.RemoteConfig;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.eclipse.jgit.treewalk.TreeWalk;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -133,19 +133,40 @@ public class GitRepository {
     private String readFileAtCommit(final Path relativeFilePath, final Git git, final RevCommit commit)
             throws IOException {
         final var repository = git.getRepository();
-        final var reader = repository.newObjectReader();
-        final var treeParser = new CanonicalTreeParser(null, reader, commit.getTree());
-        if (!treeParser.findFile(relativeFilePath.toString())) {
-            throw new FileNotFoundException(ExaError.messageBuilder("E-PK-35")
-                    .message("Failed to read file {{file path}} from commit {{commit id}}.")
-                    .parameter("file path", relativeFilePath).parameter("commit id", commit.getName())
-                    .mitigation("Make sure that the file exists at the given commit.").toString());
+        final ObjectId objectForVersionOfFile = findFile(commit, repository, relativeFilePath.toString());
+        return readVersionOfFile(repository, objectForVersionOfFile);
+    }
+
+    private String readVersionOfFile(final Repository repository, final ObjectId objectForVersionOfFile)
+            throws IOException {
+        try (final var reader = repository.newObjectReader()) {
+            final var objectLoader = reader.open(objectForVersionOfFile);
+            final var contentBuffer = new ByteArrayOutputStream();
+            objectLoader.copyTo(contentBuffer);
+            return contentBuffer.toString(StandardCharsets.UTF_8);
         }
-        final var objectForVersionOfFile = treeParser.getEntryObjectId();
-        final var objectLoader = reader.open(objectForVersionOfFile);
-        final var contentBuffer = new ByteArrayOutputStream();
-        objectLoader.copyTo(contentBuffer);
-        return contentBuffer.toString(StandardCharsets.UTF_8);
+    }
+
+    private ObjectId findFile(final RevCommit commit, final Repository repository, final String expectedPath)
+            throws IOException {
+        final TreeWalk treeWalk = new TreeWalk(repository);
+        treeWalk.addTree(commit.getTree());
+        treeWalk.setRecursive(true);
+        while (treeWalk.next()) {
+            if (treeWalk.isSubtree()) {
+                if (expectedPath.startsWith(treeWalk.getPathString())) {
+                    treeWalk.enterSubtree();
+                }
+            } else {
+                if (treeWalk.getPathString().equals(expectedPath)) {
+                    return treeWalk.getObjectId(0);
+                }
+            }
+        }
+        throw new FileNotFoundException(ExaError.messageBuilder("E-PK-35")
+                .message("Failed to read file {{file path}} from commit {{commit id}}.")
+                .parameter("file path", expectedPath).parameter("commit id", commit.getName())
+                .mitigation("Make sure that the file exists at the given commit.").toString());
     }
 
     private Git openLocalGithubRepository() {
