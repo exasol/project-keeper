@@ -10,7 +10,7 @@ import org.apache.maven.repository.RepositorySystem;
 import com.exasol.projectkeeper.ResponseEncoder;
 import com.exasol.projectkeeper.pom.DefaultMavenProjectFromFileReader;
 import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
 
 /**
  * Maven mojo that prints the {@link DependencyChangeReport} to standard out.

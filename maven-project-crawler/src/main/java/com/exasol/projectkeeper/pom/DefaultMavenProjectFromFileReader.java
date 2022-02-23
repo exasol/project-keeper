@@ -35,7 +35,8 @@ public class DefaultMavenProjectFromFileReader implements MavenProjectFromFileRe
             return build.getProject();
         } catch (final ProjectBuildingException exception) {
             throw new ReadFailedException(
-                    ExaError.messageBuilder("E-PK-46").message("Failed to build maven model.").toString(), exception);
+                    ExaError.messageBuilder("E-PK-MPC-46").message("Failed to build maven model.").toString(),
+                    exception);
         }
     }
 }

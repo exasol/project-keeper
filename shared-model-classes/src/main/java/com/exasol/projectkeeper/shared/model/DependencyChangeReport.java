@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators.changesfile.dependencies.model;
+package com.exasol.projectkeeper.shared.model;
 
 import java.lang.reflect.Type;
 import java.util.List;

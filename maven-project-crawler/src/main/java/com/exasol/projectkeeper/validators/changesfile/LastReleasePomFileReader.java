@@ -6,9 +6,9 @@ import java.nio.file.Path;
 import java.util.Optional;
 import java.util.logging.Logger;
 
-import com.exasol.projectkeeper.ExasolVersionMatcher;
-import com.exasol.projectkeeper.repository.GitRepository;
-import com.exasol.projectkeeper.repository.TaggedCommit;
+import com.exasol.projectkeeper.shared.ExasolVersionMatcher;
+import com.exasol.projectkeeper.shared.repository.GitRepository;
+import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 
 /**
  * This class reads the pom file of the latest previous release on the current branch.

@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.repository;
+package com.exasol.projectkeeper.shared.repository;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
@@ -41,7 +41,7 @@ public class GitRepository {
             return getTagsInBranch(git.getRepository(), currentBranch);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-33")
+                    ExaError.messageBuilder("E-PK-SMC-33")
                             .message("Failed to retrieve latest tag from the local git repository.").toString(),
                     exception);
         }
@@ -50,7 +50,7 @@ public class GitRepository {
     private void validateBranchExists(final String currentBranch) {
         if (currentBranch == null) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-37").message("Could not get checked out branch of repository.")
+                    ExaError.messageBuilder("E-PK-SMC-37").message("Could not get checked out branch of repository.")
                             .mitigation("Create a branch and check it out.").toString());
         }
     }
@@ -102,7 +102,7 @@ public class GitRepository {
             } else if (revObject instanceof RevTag) {
                 return ((RevTag) revObject).getObject().getId();
             } else {
-                throw new UnsupportedOperationException(ExaError.messageBuilder("F-PK-44")
+                throw new UnsupportedOperationException(ExaError.messageBuilder("F-PK-SMC-44")
                         .message("Unsupported tag target {{target class name}}.")
                         .parameter("target class name", revObject.getClass().getName()).ticketMitigation().toString());
             }
@@ -124,7 +124,7 @@ public class GitRepository {
             throw exception;
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-43")
+                    ExaError.messageBuilder("E-PK-SMC-43")
                             .message("Failed to retrieve latest tag from the local git repository.").toString(),
                     exception);
         }
@@ -163,7 +163,7 @@ public class GitRepository {
                 }
             }
         }
-        throw new FileNotFoundException(ExaError.messageBuilder("E-PK-35")
+        throw new FileNotFoundException(ExaError.messageBuilder("E-PK-SMC-35")
                 .message("Failed to read file {{file path}} from commit {{commit id}}.")
                 .parameter("file path", expectedPath).parameter("commit id", commit.getName())
                 .mitigation("Make sure that the file exists at the given commit.").toString());
@@ -173,7 +173,7 @@ public class GitRepository {
         try {
             return Git.open(this.projectDirectory.toFile());
         } catch (final IOException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-32")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-SMC-32")
                     .message("Failed to open local git repository {{repository}}.")
                     .mitigation("If this is a new project you maybe need to create the git project using `git init`.")
                     .parameter("repository", this.projectDirectory.toString()).toString(), exception);

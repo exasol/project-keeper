@@ -8,8 +8,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.dependencies.License;
-import com.exasol.projectkeeper.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.License;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
 
 class DependencyPageRendererTest {

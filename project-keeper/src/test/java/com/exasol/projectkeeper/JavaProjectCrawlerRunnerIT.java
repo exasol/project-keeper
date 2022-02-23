@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper;
 
-import static com.exasol.projectkeeper.dependencies.ProjectDependency.Type.COMPILE;
+import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.io.FileWriter;
@@ -17,10 +17,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
-import com.exasol.projectkeeper.dependencies.*;
+import com.exasol.projectkeeper.shared.dependencies.*;
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.model.NewDependency;
 import com.exasol.projectkeeper.validators.TestMavenModel;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.NewDependency;
 
 class JavaProjectCrawlerRunnerIT {
     private static final String DEPENDENCY_ID = "error-reporting-java";

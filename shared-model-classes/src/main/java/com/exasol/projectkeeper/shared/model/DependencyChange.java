@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators.changesfile.dependencies.model;
+package com.exasol.projectkeeper.shared.model;
 
 /**
  * Interface for classes that represent dependency changes (add; update or remove).

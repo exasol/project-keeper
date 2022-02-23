@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.repository;
+package com.exasol.projectkeeper.shared.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -72,7 +72,7 @@ class GitRepositoryTest {
         final GitRepository repository = new GitRepository(this.tempDir);
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 repository::getTagsInCurrentBranch);
-        assertThat(exception.getMessage(), startsWith("E-PK-32"));
+        assertThat(exception.getMessage(), startsWith("E-PK-SMC-32"));
     }
 
     private RevCommit makeCommitAndTag(final Git git, final int counter, final boolean lightweight)
@@ -128,7 +128,7 @@ class GitRepositoryTest {
         final Path testPath = Path.of("test.md");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> repository.readFileAtCommit(testPath, null));
-        assertThat(exception.getMessage(), startsWith("E-PK-32"));
+        assertThat(exception.getMessage(), startsWith("E-PK-SMC-32"));
     }
 
     @Test
@@ -139,7 +139,7 @@ class GitRepositoryTest {
             final Path nonExistingPath = Path.of("nonExistingFile.md");
             final FileNotFoundException exception = assertThrows(FileNotFoundException.class,
                     () -> repository.readFileAtCommit(nonExistingPath, commit));
-            assertThat(exception.getMessage(), startsWith("E-PK-35"));
+            assertThat(exception.getMessage(), startsWith("E-PK-SMC-35"));
         }
     }
 

@@ -1,9 +1,9 @@
-package com.exasol.projectkeeper.dependencies;
+package com.exasol.projectkeeper.shared.dependencies;
 
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
 
 import jakarta.json.bind.*;
 import lombok.*;
@@ -23,13 +23,13 @@ public class ProjectDependencies {
      * @param json serialized JSON
      * @return deserialized {@link ProjectDependencies}.
      */
-    public static ProjectDependencies fromJson(String json) {
-        JsonbConfig config = new JsonbConfig()
+    public static ProjectDependencies fromJson(final String json) {
+        final JsonbConfig config = new JsonbConfig()
                 .withDeserializers(new DependencyChangeReport.DependencyChangeDeserializer());
         try (final Jsonb jsonb = JsonbBuilder.create(config)) {
             return jsonb.fromJson(json, ProjectDependencies.class);
         } catch (final Exception exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-SMC-2")
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-SMC-7")
                     .message("Failed to deserialize DependencyChangeReport").ticketMitigation().toString(), exception);
         }
     }

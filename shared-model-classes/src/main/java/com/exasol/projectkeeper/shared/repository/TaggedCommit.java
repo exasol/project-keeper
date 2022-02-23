@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.repository;
+package com.exasol.projectkeeper.shared.repository;
 
 import org.eclipse.jgit.revwalk.RevCommit;
 

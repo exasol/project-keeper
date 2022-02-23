@@ -5,7 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.*;
+import com.exasol.projectkeeper.shared.model.*;
 
 class DependencyChangeRendererTest {
     private static final DependencyChangeRenderer RENDERER = new DependencyChangeRenderer();

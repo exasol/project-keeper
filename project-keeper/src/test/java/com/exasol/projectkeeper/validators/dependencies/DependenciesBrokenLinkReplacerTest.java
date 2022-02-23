@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
-import static com.exasol.projectkeeper.dependencies.ProjectDependency.Type.COMPILE;
+import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -10,8 +10,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.BrokenLinkReplacer;
-import com.exasol.projectkeeper.dependencies.License;
-import com.exasol.projectkeeper.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.License;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
 class DependenciesBrokenLinkReplacerTest {
     private static final String FIXED_URL = "http://example.com";

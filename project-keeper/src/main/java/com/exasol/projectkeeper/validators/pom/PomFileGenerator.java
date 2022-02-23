@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators.pom;
 
 import static com.exasol.projectkeeper.ProjectKeeperModule.*;
+import static com.exasol.projectkeeper.validators.pom.PomFileIO.trimWhitespace;
 import static com.exasol.projectkeeper.validators.pom.XmlHelper.addTextElement;
 
 import java.util.*;
@@ -42,20 +43,6 @@ public class PomFileGenerator {
     private static final String VERSION = "version";
     private static final String ARTIFACT_ID = "artifactId";
     private static final String GROUP_ID = "groupId";
-
-    /*
-     * Inspired by https://stackoverflow.com/a/33564346
-     */
-    private static void trimWhitespace(final Node node) {
-        final NodeList children = node.getChildNodes();
-        for (int index = 0; index < children.getLength(); ++index) {
-            final Node child = children.item(index);
-            if (child.getNodeType() == Node.TEXT_NODE) {
-                child.setTextContent(child.getTextContent().trim());
-            }
-            trimWhitespace(child);
-        }
-    }
 
     /**
      * Generate the content of the pom file.

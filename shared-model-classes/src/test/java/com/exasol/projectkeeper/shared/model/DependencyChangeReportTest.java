@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators.changesfile.dependencies.model;
+package com.exasol.projectkeeper.shared.model;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;

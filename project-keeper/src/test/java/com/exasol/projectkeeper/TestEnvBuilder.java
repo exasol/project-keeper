@@ -18,8 +18,10 @@ public class TestEnvBuilder {
             .of(PROJECT_ROOT_OFFSET,
                     "maven-project-crawler/target/project-keeper-java-project-crawler-" + CURRENT_VERSION + ".jar")
             .toFile();
-    private static final File SHARED_MODEL_POM = Path.of(PROJECT_ROOT_OFFSET, "shared-model-classes/pom.xml").toFile();
-    private static final File JAVA_CRAWLER_POM = Path.of(PROJECT_ROOT_OFFSET, "maven-project-crawler/pom.xml").toFile();
+    private static final File SHARED_MODEL_POM = Path.of(PROJECT_ROOT_OFFSET, "shared-model-classes/.flattened-pom.xml")
+            .toFile();
+    private static final File JAVA_CRAWLER_POM = Path
+            .of(PROJECT_ROOT_OFFSET, "maven-project-crawler/.flattened-pom.xml").toFile();
     private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
 
     public static MavenIntegrationTestEnvironment getTestEnv() {

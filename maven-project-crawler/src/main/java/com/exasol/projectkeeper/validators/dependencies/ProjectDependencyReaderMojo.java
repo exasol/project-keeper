@@ -8,8 +8,8 @@ import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.repository.RepositorySystem;
 
 import com.exasol.projectkeeper.ResponseEncoder;
-import com.exasol.projectkeeper.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 
 /**
  * Maven mojo that prints a report {@link ProjectDependencies} to stdandard out.
@@ -29,9 +29,9 @@ public class ProjectDependencyReaderMojo extends AbstractMojo {
     @Override
     public void execute() {
         final MavenModelFromRepositoryReader modelFromRepositoryReader = new MavenModelFromRepositoryReader(
-                mavenProjectBuilder, session, repositorySystem);
+                this.mavenProjectBuilder, this.session, this.repositorySystem);
         final ProjectDependencies dependencies = new ProjectDependencyReader(modelFromRepositoryReader)
-                .readDependencies(project);
+                .readDependencies(this.project);
         final String response = dependencies.toJson();
         new ResponseEncoder().printResponse(response);
     }

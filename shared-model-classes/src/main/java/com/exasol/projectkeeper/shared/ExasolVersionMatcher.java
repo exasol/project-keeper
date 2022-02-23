@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper;
+package com.exasol.projectkeeper.shared;
 
 import java.util.regex.Pattern;
 

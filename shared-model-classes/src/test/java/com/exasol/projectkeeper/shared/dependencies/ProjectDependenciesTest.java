@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.dependencies;
+package com.exasol.projectkeeper.shared.dependencies;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 

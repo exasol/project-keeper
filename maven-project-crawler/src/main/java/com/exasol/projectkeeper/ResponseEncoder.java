@@ -18,7 +18,7 @@ public class ResponseEncoder {
     public void printResponse(final String response) {
         if (response.contains(START_TOKEN) || response.contains(END_TOKEN)) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("F-PK-JPC-1").message("Response contained invalid token.").toString());
+                    ExaError.messageBuilder("F-PK-MPC-1").message("Response contained invalid token.").toString());
         }
         System.out.println(START_TOKEN);
         System.out.println(response);

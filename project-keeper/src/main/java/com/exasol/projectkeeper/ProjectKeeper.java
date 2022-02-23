@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
-import com.exasol.projectkeeper.repository.GitRepository;
+import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;
 import com.exasol.projectkeeper.validators.*;

@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators.changesfile.dependencies.model;
+package com.exasol.projectkeeper.shared.model;
 
 /**
  * Visitor for the {@link DependencyChange} class structure.
