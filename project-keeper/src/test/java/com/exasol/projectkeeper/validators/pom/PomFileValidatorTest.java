@@ -79,7 +79,7 @@ class PomFileValidatorTest {
 
     private List<ValidationFinding> runValidator() {
         final PomFileValidator validator = new PomFileValidator(this.tempDir, List.of(ProjectKeeperModule.DEFAULT),
-                this.tempDir.resolve("pom.xml"));
+                this.tempDir.resolve("pom.xml"), null);
         return validator.validate();
     }
 

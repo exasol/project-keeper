@@ -12,6 +12,7 @@ import org.w3c.dom.*;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
@@ -24,6 +25,7 @@ public class PomFileValidator implements Validator {
     private final Path projectDirectory;
     final Collection<ProjectKeeperModule> enabledModules;
     private final Path pomFilePath;
+    private final ProjectKeeperConfig.ParentPomRef parentPomRef;
 
     /**
      * Create a new instance of {@link PomFileValidator}.
@@ -31,12 +33,14 @@ public class PomFileValidator implements Validator {
      * @param projectDirectory project directory
      * @param enabledModules   collection of enables modules
      * @param pomFilePath      pom file to create the runner for
+     * @param parentPomRef     reference to a parent pom or {@code null}
      */
     public PomFileValidator(final Path projectDirectory, final Collection<ProjectKeeperModule> enabledModules,
-            final Path pomFilePath) {
+            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef) {
         this.projectDirectory = projectDirectory;
         this.enabledModules = enabledModules;
         this.pomFilePath = pomFilePath;
+        this.parentPomRef = parentPomRef;
     }
 
     @Override
@@ -133,7 +137,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> validateGeneratedPomFile(final String groupId, final String artifactId,
             final String version, final Path generatedPomPath) {
         final String generatedContent = new PomFileGenerator().generatePomContent(this.enabledModules, groupId,
-                artifactId, version);
+                artifactId, version, this.parentPomRef);
         return new RequiredFileValidator().validateFile(this.projectDirectory, generatedPomPath,
                 withContentEqualTo(generatedContent));
     }

@@ -100,7 +100,8 @@ public class ProjectKeeper {
         final List<Validator> result = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : sources) {
             if (source.getType().equals(MAVEN)) {
-                result.add(new PomFileValidator(projectDir, source.getModules(), source.getPath()));
+                result.add(
+                        new PomFileValidator(projectDir, source.getModules(), source.getPath(), source.getParentPom()));
             }
         }
         return result;

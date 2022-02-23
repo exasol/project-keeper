@@ -53,5 +53,17 @@ public class ProjectKeeperConfig {
         private final List<String> excludes = Collections.emptyList();
         @Builder.Default
         private final boolean advertise = true;
+        /**
+         * Reference to the parent pom. For maven sources only. {@code null} if not provided.
+         */
+        private final ParentPomRef parentPom;
+    }
+
+    @Data
+    public static class ParentPomRef {
+        private final String groupId;
+        private final String artifactId;
+        private final String version;
+        private final String relativePath;
     }
 }

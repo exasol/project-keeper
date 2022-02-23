@@ -48,6 +48,11 @@ class ProjectKeeperConfigReaderTest {
                         "    excludes:\n" + //
                         "      - \"E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.\"\n" + //
                         "    advertise: false\n" + //
+                        "    parentPom: \n" + //
+                        "      groupId: \"com.example\"\n" + //
+                        "      artifactId: \"my-parent\"\n" + //
+                        "      version: \"1.2.3\"\n" + //
+                        "      relativePath: \"./my-parent.xml\"\n" + //
                         "linkReplacements:\n" + //
                         "  - \"http://wrong-url.com|my-dependency.de\"");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
@@ -57,12 +62,14 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(source.isAdvertise(), equalTo(false)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(MAVEN_CENTRAL, DEFAULT)),
+                () -> assertThat(source.getParentPom(),
+                        equalTo(new ProjectKeeperConfig.ParentPomRef("com.example", "my-parent", "1.2.3",
+                                "./my-parent.xml"))),
                 () -> assertThat(source.getExcludes(),
                         contains("\\QE-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.\\E")),
-                () -> assertThat(config.getExcludes(),
-                        containsInAnyOrder(
-                                "\\QE-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\\E",
-                                "E-PK-CORE-18: .*")),
+                () -> assertThat(config.getExcludes(), containsInAnyOrder(
+                        "\\QE-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\\E",
+                        "E-PK-CORE-18: .*")),
                 () -> assertThat(config.getLinkReplacements(),
                         Matchers.contains("http://wrong-url.com|my-dependency.de"))//
         );
@@ -84,6 +91,7 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(DEFAULT)),
                 () -> assertThat(source.getExcludes(), equalTo(Collections.emptyList())),
+                () -> assertThat(source.getParentPom(), nullValue()),
                 () -> assertThat(config.getExcludes(), equalTo(Collections.emptyList())),
                 () -> assertThat(config.getLinkReplacements(), equalTo(Collections.emptyList()))//
         );
