@@ -86,7 +86,7 @@ sources:
   modules:
     - maven_central
   excludes:
-    - "E-PK-CORE-17: Missing required: '.github/workflows/broken_links_checker.yml'."
+    - "E-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'."
 excludes:
   - "E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."
   - regex: "E-PK-CORE-16: .*"

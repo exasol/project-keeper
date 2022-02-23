@@ -18,7 +18,6 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 public class ChangesFileValidator extends AbstractFileValidator {
     private final String projectName;
-    private final Path projectDirectory;
     private final Path mvnRepositoryOverride;
     private final String ownVersion;
     private final List<AnalyzedSource> sources;
@@ -39,7 +38,6 @@ public class ChangesFileValidator extends AbstractFileValidator {
         super(projectDirectory, Path.of("doc", "changes", "changes_" + projectVersion + ".md"));
         this.projectVersion = projectVersion;
         this.projectName = projectName;
-        this.projectDirectory = projectDirectory;
         this.mvnRepositoryOverride = mvnRepositoryOverride;
         this.ownVersion = ownVersion;
         this.sources = sources;

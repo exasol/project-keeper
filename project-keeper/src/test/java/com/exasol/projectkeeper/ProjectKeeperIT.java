@@ -6,7 +6,6 @@ import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.IOException;
@@ -35,8 +34,7 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
 class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
-    // [itest->dsn~mvn-plugin-validator~1]
-    // [itest->dsn~mvn-dependency-validator~1]
+    // [itest->dsn~pom-file-validator~1]
     // [itest->dsn~mvn-verify-goal~1]
     // [itest->dsn~required-files-validator~1]
     // [itest->dsn~gitignore-validator~1]
@@ -45,59 +43,14 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         writeConfig(createConfigWithAllModules());
         final String output = assertInvalidAndGetOutput();
         assertAll(//
-                () -> assertThat(output, containsString("E-PK-CORE-6")),
                 () -> assertThat(output,
-                        containsString("E-PK-CORE-17: Missing required: '.settings" + File.separator
+                        containsString("E-PK-CORE-17: Missing required file: '.settings" + File.separator
                                 + "org.eclipse.jdt.core.prefs'")),
                 () -> assertThat(output,
-                        containsString("E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.")),
+                        containsString("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
                 () -> assertThat(output, containsString(
-                        "E-PK-CORE-15: Missing maven plugin org.sonatype.ossindex.maven:ossindex-maven-plugin.")),
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-enforcer-plugin.")), //
-                () -> assertThat(output, containsString(
-                        "E-PK-CORE-15: Missing maven plugin com.exasol:artifact-reference-checker-maven-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-surefire-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-assembly-plugin.")), //
-                () -> assertThat(output,
-                        containsString("E-PK-CORE-15: Missing maven plugin org.jacoco:jacoco-maven-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-failsafe-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-deploy-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-gpg-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-source-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-javadoc-plugin.")), //
-                () -> assertThat(output,
-                        containsString(
-                                "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-jar-plugin.")), //
-                () -> assertThat(output, containsString(
-                        "E-PK-CORE-15: Missing maven plugin org.apache.maven.plugins:maven-dependency-plugin.")), //
-                () -> assertThat(output,
-                        containsString("E-PK-CORE-29: Missing dependency 'org.jacoco:org.jacoco.agent'.")), //
-                () -> assertThat(output, containsString(
-                        "E-PK-CORE-72: Missing required property '/project/properties/project.build.sourceEncoding' in pom.xml.")), //
-                () -> assertThat(output,
-                        containsString("E-PK-CORE-29: Missing dependency 'org.projectlombok:lombok'.")), //
-                () -> assertThat(output, containsString("E-PK-CORE-56: Could not find required file '.gitignore'.")), //
-                () -> assertThat(output, containsString(
-                        "E-PK-CORE-15: Missing maven plugin org.sonatype.plugins:nexus-staging-maven-plugin.")) //
+                        "E-PK-CORE-105: Invalid pom file pom.xml: Missing required property finalName property in maven-assembly-plugin.")),
+                () -> assertThat(output, containsString("E-PK-CORE-56: Could not find required file '.gitignore'.")) //
         );
     }
 
@@ -120,8 +73,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     void testVerifyWithExcludedFile() throws IOException {
         writeDefaultPom();
         writeConfig(getConfigWithAllModulesBuilder()
-                .excludes(List.of("E-PK-CORE-17: Missing required: 'src/test/resources/logging.properties'"
-                .replace('/', File.separatorChar))).build());
+                .excludes(List.of("E-PK-CORE-17: Missing required file: 'src/test/resources/logging.properties'"
+                        .replace('/', File.separatorChar)))
+                .build());
         final String output = assertInvalidAndGetOutput();
         assertThat(output, not(containsString("logging.properties")));
     }
@@ -144,7 +98,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     void testExcludedPlugin() throws IOException {
         writeDefaultPom();
         writeConfig(getConfigWithAllModulesBuilder()
-                .excludes(List.of("E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin."))
+                .excludes(List.of(
+                        "E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin. (in pom.xml)"))
                 .build());
         final String output = assertInvalidAndGetOutput();
         assertThat(output,
@@ -152,36 +107,24 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
-    void testOnlyPomInvalid() throws IOException {
-        writeDefaultPom();
-        writeConfig(createConfigWithAllModules());
-        runFix();
-        writeDefaultPom();// override pom
-        final String output = assertInvalidAndGetOutput();
-        assertAll(//
-                () -> assertThat(output, containsString("E-PK-CORE-6")),
-                () -> assertThat(output,
-                        not(containsString("E-PK-CORE-17: Missing required: .settings" + File.separator
-                                + "org.eclipse.jdt.core.prefs"))),
-                () -> assertThat(output,
-                        containsString("E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."))//
-        );
-    }
-
-    @Test
     // [itest->dsn~mvn-fix-goal~1]
     // [itest->dsn~license-file-validator~1]
     void testFix() throws IOException {
-        writeDefaultPom();
+        final var pom = new TestMavenModel();
+        pom.configureAssemblyPluginFinalName();
+        pom.writeAsPomToProject(this.projectDir);
         writeConfig(createConfigWithAllModules());
-        final boolean success = getProjectKeeper(mock(Logger.class)).fix();
+        final ToStringLogger logger = new ToStringLogger();
+        final boolean success = getProjectKeeper(logger).fix();
         assertThat(success, equalTo(true));
         assertThat(this.projectDir.resolve("LICENSE").toFile(), anExistingFile());
     }
 
     @Test
     void testValidAfterFix() throws IOException {
-        writeDefaultPom();
+        final var pom = new TestMavenModel();
+        pom.configureAssemblyPluginFinalName();
+        pom.writeAsPomToProject(this.projectDir);
         writeConfig(createConfigWithAllModules());
         runFix();
         assertVerifySucceeds();

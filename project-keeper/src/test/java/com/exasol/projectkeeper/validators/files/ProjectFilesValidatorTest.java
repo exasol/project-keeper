@@ -39,7 +39,8 @@ class ProjectFilesValidatorTest {
                 mock(Logger.class));
         assertThat(validator,
                 validationErrorMessages(hasItems(
-                        "E-PK-CORE-17: Missing required: '.settings" + File.separator + "org.eclipse.jdt.core.prefs'",
+                        "E-PK-CORE-17: Missing required file: '.settings" + File.separator
+                                + "org.eclipse.jdt.core.prefs'",
                         "E-PK-CORE-18: Outdated content: '.settings" + File.separator + "org.eclipse.jdt.ui.prefs'")));
     }
 

@@ -42,7 +42,7 @@ public class ProjectKeeper {
         this.validators = new ArrayList<>(List.of(new ProjectFilesValidator(projectDir, analyzedSources, logger),
                 new ReadmeFileValidator(projectDir, projectName,
                         gitRepository.getRepoNameFromRemote().orElse(artifactId), analyzedSources)));
-        this.validators.addAll(getValidatorsPerSource(sources));
+        this.validators.addAll(getValidatorsPerSource(projectDir, sources));
         this.validators
                 .addAll(List.of(new LicenseFileValidator(projectDir),
                         new ChangesFileValidator(projectVersion, projectName, projectDir, mvnRepo, ownVersion,
@@ -95,11 +95,12 @@ public class ProjectKeeper {
         return new ProjectKeeperConfigReader().readConfig(projectDir);
     }
 
-    private List<Validator> getValidatorsPerSource(final List<ProjectKeeperConfig.Source> sources) {
+    private List<Validator> getValidatorsPerSource(final Path projectDir,
+            final List<ProjectKeeperConfig.Source> sources) {
         final List<Validator> result = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : sources) {
             if (source.getType().equals(MAVEN)) {
-                result.add(new PomFileValidator(source.getModules(), source.getPath()));
+                result.add(new PomFileValidator(projectDir, source.getModules(), source.getPath()));
             }
         }
         return result;

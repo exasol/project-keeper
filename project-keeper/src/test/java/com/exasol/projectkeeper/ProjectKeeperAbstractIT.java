@@ -84,7 +84,7 @@ public class ProjectKeeperAbstractIT {
         assertThat(success, equalTo(true));
     }
 
-    private static class ToStringLogger implements Logger {
+    protected static class ToStringLogger implements Logger {
         private final StringBuilder stringBuilder = new StringBuilder();
 
         @Override
