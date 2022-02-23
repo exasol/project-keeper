@@ -60,7 +60,7 @@ Needs: impl, utest, itest
 
 `dsn~pom-file-validator~1`
 
-PK generates a second pom file based on the configuration. This file contains the default plugins and dependencies. This file is not ment to be edited by the user.
+PK generates a second pom file based on the configuration. This file contains the default plugins and dependencies. This file is not meant to be edited by the user.
 
 PK configures the main pom file of the project to use the generated one as a parent. By that users can add additional configuration and also override the generated template.
 
@@ -79,7 +79,7 @@ Needs: impl, utest, itest
 
 Until version 2.0.0 we used a different approach:
 
-We had only one pom file that was ment to be edited by the users. PK checked some constrains and could also fix them. For example check if a certain plugin is defined.
+We had only one pom file that was meant to be edited by the users. PK checked some constrains and could also fix them. For example check if a certain plugin is defined.
 
 This approach failed because a pom file can express the same thing often in multiple ways. For example a plugin's config can be in `configuration/` or in `executions/execution/configuration`. Since we only validated the XML, reflecting this flexibility got too complex.
 

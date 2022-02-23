@@ -56,7 +56,7 @@ public class RequiredFileValidator {
             if (content == null) {
                 return List.of(SimpleValidationFinding
                         .withMessage(
-                                ExaError.messageBuilder("E-PK-CORE-17").message("Missing required: '{{required file}}'")
+                                ExaError.messageBuilder("E-PK-CORE-17").message("Missing required file: '{{required file}}'")
                                         .parameter("required file", projectDir.relativize(file)).toString())
                         .andFix(fix).build());
             } else {

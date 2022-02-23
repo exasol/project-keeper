@@ -15,7 +15,7 @@ import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
 
 /**
- * This class generates the expected content for the auto-generated the pom file.
+ * This class generates the expected content for the auto-generated parent pom file.
  */
 public class PomFileGenerator {
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
@@ -54,13 +54,13 @@ public class PomFileGenerator {
     }
 
     /**
-     * Generate the expected content of the pom file.
+     * Generate the content of the pom file.
      *
      * @param enabledModules list of enabled modules
      * @param groupId        group id for the generated pom file
      * @param artifactId     artifact id for the generated pom file
      * @param version        version for the generated pom file
-     * @return expected content
+     * @return pom file content
      */
     public String generatePomContent(final Collection<ProjectKeeperModule> enabledModules, final String groupId,
             final String artifactId, final String version) {
@@ -82,13 +82,12 @@ public class PomFileGenerator {
         addTextElement(project, "packaging", "pom");
         project.appendChild(buildProperties(enabledModules, document));
 
-        final Element dependencies = addDependencies(enabledModules, document);
-        project.appendChild(dependencies);
+        project.appendChild(buildDependencies(enabledModules, document));
         project.appendChild(buildBuild(enabledModules, document));
         return project;
     }
 
-    private Element addDependencies(final Collection<ProjectKeeperModule> enabledModules, final Document document) {
+    private Element buildDependencies(final Collection<ProjectKeeperModule> enabledModules, final Document document) {
         final Element dependencies = document.createElement("dependencies");
         if (enabledModules.contains(LOMBOK)) {
             addDependency(dependencies, "org.projectlombok", "lombok", "1.18.20", "provided");
@@ -135,6 +134,7 @@ public class PomFileGenerator {
         final Element properties = document.createElement("properties");
         addTextElement(properties, "project.build.sourceEncoding", "UTF-8");
         addTextElement(properties, "project.reporting.outputEncoding", "UTF-8");
+        addTextElement(properties, "java.version", "11");
         if (enabledModules.contains(MAVEN_CENTRAL)) {
             addTextElement(properties, "gpg.skip", "true");
         }

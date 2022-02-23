@@ -28,9 +28,9 @@ public class PomFileValidator implements Validator {
     /**
      * Create a new instance of {@link PomFileValidator}.
      *
-     * @param projectDirectory projectDirectory
-     * @param enabledModules   list of enables modules
-     * @param pomFilePath      pom file to create the runner for.
+     * @param projectDirectory project directory
+     * @param enabledModules   collection of enables modules
+     * @param pomFilePath      pom file to create the runner for
      */
     public PomFileValidator(final Path projectDirectory, final Collection<ProjectKeeperModule> enabledModules,
             final Path pomFilePath) {
