@@ -27,15 +27,17 @@ public class PluginTemplateReader {
         try (final var templateInputStream = getClass().getClassLoader().getResourceAsStream(templateResourceName)) {
             if (templateInputStream == null) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-11")
-                        .message("Failed to open plugins template {{template}}.", templateResourceName).toString());
+                        .message("Failed to open plugins template {{template}}.", templateResourceName)
+                        .ticketMitigation().toString());
             }
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
             DOCUMENT_BUILDER_FACTORY.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
             final var documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
             return documentBuilder.parse(templateInputStream).getFirstChild();
-        } catch (final IOException | SAXException | ParserConfigurationException e) {
+        } catch (final IOException | SAXException | ParserConfigurationException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-10")
-                    .message("Failed to parse plugin template {{template}}.", templateResourceName).toString());
+                    .message("Failed to parse plugin template {{template}}.", templateResourceName).ticketMitigation()
+                    .toString(), exception);
         }
     }
 }

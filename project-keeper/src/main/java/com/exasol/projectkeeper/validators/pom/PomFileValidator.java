@@ -49,7 +49,7 @@ public class PomFileValidator implements Validator {
             final List<ValidationFinding> findings = new ArrayList<>();
             final Path generatedPomPath = this.pomFilePath.getParent().resolve("pk_generated_parent.pom");
             findings.addAll(validateParentTag(pom, version, artifactId, groupId, generatedPomPath));
-            findings.addAll(validateGeneratedPomFile(version, artifactId, groupId, generatedPomPath));
+            findings.addAll(validateGeneratedPomFile(groupId, artifactId, version, generatedPomPath));
             findings.addAll(validateAssemblyPlugin(pom, this.projectDirectory.relativize(this.pomFilePath)));
             return findings;
         } catch (final InvalidPomException exception) {
@@ -130,8 +130,8 @@ public class PomFileValidator implements Validator {
         };
     }
 
-    private List<ValidationFinding> validateGeneratedPomFile(final String version, final String artifactId,
-            final String groupId, final Path generatedPomPath) {
+    private List<ValidationFinding> validateGeneratedPomFile(final String groupId, final String artifactId,
+            final String version, final Path generatedPomPath) {
         final String generatedContent = new PomFileGenerator().generatePomContent(this.enabledModules, groupId,
                 artifactId, version);
         return new RequiredFileValidator().validateFile(this.projectDirectory, generatedPomPath,

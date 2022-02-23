@@ -7,23 +7,15 @@ import org.w3c.dom.Node;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
 
+import lombok.RequiredArgsConstructor;
+
 /**
  * Validator for maven-deploy-plugin.
  */
+@RequiredArgsConstructor
 public class SimplePluginTemplateGenerator implements PluginTemplateGenerator {
     private final String templateResource;
     private final ProjectKeeperModule module;
-
-    /**
-     * Create a new instance of {@link SimplePluginTemplateGenerator}.
-     * 
-     * @param templateResource path to the template
-     * @param module           module to use this plugin for
-     */
-    public SimplePluginTemplateGenerator(final String templateResource, final ProjectKeeperModule module) {
-        this.templateResource = templateResource;
-        this.module = module;
-    }
 
     @Override
     public Optional<Node> generateTemplate(final Collection<ProjectKeeperModule> enabledModules) {

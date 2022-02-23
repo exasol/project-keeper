@@ -44,9 +44,10 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         final String output = assertInvalidAndGetOutput();
         assertAll(//
                 () -> assertThat(output,
-                        containsString("E-PK-CORE-17: Missing required: '.settings" + File.separator
+                        containsString("E-PK-CORE-17: Missing required file: '.settings" + File.separator
                                 + "org.eclipse.jdt.core.prefs'")),
-                () -> assertThat(output, containsString("E-PK-CORE-17: Missing required: 'pk_generated_parent.pom'")),
+                () -> assertThat(output,
+                        containsString("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
                 () -> assertThat(output, containsString(
                         "E-PK-CORE-105: Invalid pom file pom.xml: Missing required property finalName property in maven-assembly-plugin.")),
                 () -> assertThat(output, containsString("E-PK-CORE-56: Could not find required file '.gitignore'.")) //
@@ -72,8 +73,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     void testVerifyWithExcludedFile() throws IOException {
         writeDefaultPom();
         writeConfig(getConfigWithAllModulesBuilder()
-                .excludes(List.of("E-PK-CORE-17: Missing required: 'src/test/resources/logging.properties'"
-                .replace('/', File.separatorChar))).build());
+                .excludes(List.of("E-PK-CORE-17: Missing required file: 'src/test/resources/logging.properties'"
+                        .replace('/', File.separatorChar)))
+                .build());
         final String output = assertInvalidAndGetOutput();
         assertThat(output, not(containsString("logging.properties")));
     }

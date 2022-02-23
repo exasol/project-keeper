@@ -38,7 +38,7 @@ class ProjectKeeperConfigReaderTest {
         Files.writeString(this.tempDir.resolve("my-sub-project/pom.xml"), "");
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
                 "excludes:\n" + //
-                        " - \"E-PK-CORE-17: Missing required: '.github/workflows/broken_links_checker.yml'.\"\n" + //
+                        " - \"E-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\"\n" + //
                         " - regex: \"E-PK-CORE-18: .*\"\n" + //
                         "sources:\n" + //
                         "  - type: maven\n" + //
@@ -61,7 +61,7 @@ class ProjectKeeperConfigReaderTest {
                         contains("\\QE-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.\\E")),
                 () -> assertThat(config.getExcludes(),
                         containsInAnyOrder(
-                                "\\QE-PK-CORE-17: Missing required: '.github/workflows/broken_links_checker.yml'.\\E",
+                                "\\QE-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\\E",
                                 "E-PK-CORE-18: .*")),
                 () -> assertThat(config.getLinkReplacements(),
                         Matchers.contains("http://wrong-url.com|my-dependency.de"))//

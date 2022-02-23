@@ -33,7 +33,7 @@ class PomFileValidatorTest {
         assertAll(
                 () -> assertThat(result, hasFindingWithMessage("E-PK-CORE-103: Missing parent declaration in pom.xml")),
                 () -> assertThat(result,
-                        hasFindingWithMessage("E-PK-CORE-17: Missing required: 'pk_generated_parent.pom'")),
+                        hasFindingWithMessage("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
                 () -> assertThat(result, hasFindingWithMessage(
                         "E-PK-CORE-105: Invalid pom file pom.xml: Missing required property finalName property in maven-assembly-plugin. Use the following template and set finalName:\n<plugin>\n"
                                 + "    <artifactId>maven-assembly-plugin</artifactId>\n"
@@ -50,7 +50,7 @@ class PomFileValidatorTest {
         pom.writeAsPomToProject(this.tempDir);
         runFix();
         final List<ValidationFinding> result = runValidator();
-        assertThat(result, empty());// only E-PK-CORE-105 left
+        assertThat(result, empty());
     }
 
     private void runFix() {
