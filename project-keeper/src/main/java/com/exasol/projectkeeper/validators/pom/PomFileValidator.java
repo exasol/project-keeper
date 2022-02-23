@@ -54,7 +54,9 @@ public class PomFileValidator implements Validator {
             final Path generatedPomPath = this.pomFilePath.getParent().resolve("pk_generated_parent.pom");
             findings.addAll(validateParentTag(pom, version, artifactId, groupId, generatedPomPath));
             findings.addAll(validateGeneratedPomFile(groupId, artifactId, version, generatedPomPath));
-            findings.addAll(validateAssemblyPlugin(pom, this.projectDirectory.relativize(this.pomFilePath)));
+            if (this.enabledModules.contains(ProjectKeeperModule.JAR_ARTIFACT)) {
+                findings.addAll(validateAssemblyPlugin(pom, this.projectDirectory.relativize(this.pomFilePath)));
+            }
             return findings;
         } catch (final InvalidPomException exception) {
             return List.of(SimpleValidationFinding.withMessage(exception.getMessage()).build());

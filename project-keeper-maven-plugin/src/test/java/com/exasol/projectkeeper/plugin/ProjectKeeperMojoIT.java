@@ -35,10 +35,7 @@ class ProjectKeeperMojoIT {
     @BeforeEach
     void beforeEach() throws IOException, GitAPIException {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
-        final MvnProjectWithProjectKeeperPluginWriter pomWriter = new MvnProjectWithProjectKeeperPluginWriter(
-                CURRENT_VERSION);
-        pomWriter.configureAssemblyPluginFinalName();
-        pomWriter.writeAsPomToProject(this.projectDir);
+        new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION).writeAsPomToProject(this.projectDir);
     }
 
     @Test
