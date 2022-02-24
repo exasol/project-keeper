@@ -67,7 +67,10 @@ class PomFileIO {
     }
 
     /*
+     * Trim the whitespace from the given node and its children.
+     * <p>
      * Inspired by https://stackoverflow.com/a/33564346
+     * </p>
      */
     public static void trimWhitespace(final Node node) {
         final NodeList children = node.getChildNodes();
