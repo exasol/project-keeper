@@ -12,6 +12,7 @@ import org.w3c.dom.*;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
@@ -24,6 +25,7 @@ public class PomFileValidator implements Validator {
     private final Path projectDirectory;
     final Collection<ProjectKeeperModule> enabledModules;
     private final Path pomFilePath;
+    private final ProjectKeeperConfig.ParentPomRef parentPomRef;
 
     /**
      * Create a new instance of {@link PomFileValidator}.
@@ -31,29 +33,47 @@ public class PomFileValidator implements Validator {
      * @param projectDirectory project directory
      * @param enabledModules   collection of enables modules
      * @param pomFilePath      pom file to create the runner for
+     * @param parentPomRef     reference to a parent pom or {@code null}
      */
     public PomFileValidator(final Path projectDirectory, final Collection<ProjectKeeperModule> enabledModules,
-            final Path pomFilePath) {
+            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef) {
         this.projectDirectory = projectDirectory;
         this.enabledModules = enabledModules;
         this.pomFilePath = pomFilePath;
+        this.parentPomRef = parentPomRef;
     }
 
     @Override
     public List<ValidationFinding> validate() {
         try {
             final Document pom = new PomFileIO().parsePomFile(this.pomFilePath);
-            final String version = getRequiredTextValue(pom, "/project/version");
+            final String version = getProjectVersion(pom);
             final String artifactId = getRequiredTextValue(pom, "/project/artifactId") + "-generated-parent";
             final String groupId = getGroupId(pom);
             final List<ValidationFinding> findings = new ArrayList<>();
             final Path generatedPomPath = this.pomFilePath.getParent().resolve("pk_generated_parent.pom");
             findings.addAll(validateParentTag(pom, version, artifactId, groupId, generatedPomPath));
             findings.addAll(validateGeneratedPomFile(groupId, artifactId, version, generatedPomPath));
-            findings.addAll(validateAssemblyPlugin(pom, this.projectDirectory.relativize(this.pomFilePath)));
+            if (this.enabledModules.contains(ProjectKeeperModule.JAR_ARTIFACT)) {
+                findings.addAll(validateAssemblyPlugin(pom, this.projectDirectory.relativize(this.pomFilePath)));
+            }
             return findings;
         } catch (final InvalidPomException exception) {
             return List.of(SimpleValidationFinding.withMessage(exception.getMessage()).build());
+        }
+    }
+
+    private String getProjectVersion(final Document pom) throws InvalidPomException {
+        final Node versionNode = runXPath(pom, "/project/version");
+        if (versionNode != null) {
+            return versionNode.getTextContent();
+        } else if (this.parentPomRef != null && this.parentPomRef.getVersion() != null) {
+            return this.parentPomRef.getVersion();
+        } else {
+            throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
+                    .message("Invalid pom file {{file}}: Missing required property /project/version.",
+                            this.projectDirectory.relativize(this.pomFilePath))
+                    .mitigation("Please either set /project/version manually.").toString());
         }
     }
 
@@ -96,9 +116,27 @@ public class PomFileValidator implements Validator {
         checkParentProperty(generatedPomPath, parentTag, "artifactId", artifactId).ifPresent(findings::add);
         checkParentProperty(generatedPomPath, parentTag, "groupId", groupId).ifPresent(findings::add);
         checkParentProperty(generatedPomPath, parentTag, "version", version).ifPresent(findings::add);
-        checkParentProperty(generatedPomPath, parentTag, "relativePath",
-                this.pomFilePath.getParent().relativize(generatedPomPath).toString()).ifPresent(findings::add);
+        checkParentRelativePath(generatedPomPath, parentTag, this.pomFilePath.getParent().relativize(generatedPomPath))
+                .ifPresent(findings::add);
         return findings;
+    }
+
+    private Optional<ValidationFinding> checkParentRelativePath(final Path generatedPomPath, final Node parentTag,
+            final Path expectedValue) {
+        final Node node = runXPath(parentTag, "relativePath");
+        if (node == null || !comparePaths(expectedValue, Path.of(node.getTextContent()))) {
+            return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-112").message(
+                    "Invalid pom file {{file}}: Invalid '/project/parent/relativePath'. Expected value is {{expected}}. The pom must declare {{generated parent}} as parent pom.",
+                    this.projectDirectory.relativize(this.pomFilePath), expectedValue,
+                    this.projectDirectory.relativize(generatedPomPath))
+                    .mitigation("Check the project-keeper user guide if you need a parent pom.").toString()).build());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private boolean comparePaths(final Path expectedValue, final Path other) {
+        return other.normalize().equals(expectedValue.normalize());
     }
 
     private Optional<ValidationFinding> checkParentProperty(final Path generatedPomPath, final Node parentTag,
@@ -133,7 +171,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> validateGeneratedPomFile(final String groupId, final String artifactId,
             final String version, final Path generatedPomPath) {
         final String generatedContent = new PomFileGenerator().generatePomContent(this.enabledModules, groupId,
-                artifactId, version);
+                artifactId, version, this.parentPomRef);
         return new RequiredFileValidator().validateFile(this.projectDirectory, generatedPomPath,
                 withContentEqualTo(generatedContent));
     }

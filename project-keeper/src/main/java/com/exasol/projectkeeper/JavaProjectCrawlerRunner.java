@@ -11,10 +11,10 @@ import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.OsCheck.OSType;
-import com.exasol.projectkeeper.dependencies.ProjectDependencies;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
 import com.exasol.projectkeeper.stream.AsyncStreamReader;
 import com.exasol.projectkeeper.stream.CollectingConsumer;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
 /**
  * Runs the maven plugin goal on the current repository and returns the parsed result.
@@ -73,10 +73,11 @@ public class JavaProjectCrawlerRunner {
             LOGGER.fine(() -> "Executing command " + commandParts);
             final Process proc = new ProcessBuilder(commandParts).redirectErrorStream(true).start();
 
-            CollectingConsumer streamConsumer = new AsyncStreamReader().startCollectingConsumer(proc.getInputStream());
+            final CollectingConsumer streamConsumer = new AsyncStreamReader()
+                    .startCollectingConsumer(proc.getInputStream());
 
             if (!proc.waitFor(90, TimeUnit.SECONDS)) {
-                String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
+                final String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
                         .message("Timeout while executing command {{executed command|uq}}. Output was {{output}}",
                                 commandParts, output)
@@ -108,7 +109,7 @@ public class JavaProjectCrawlerRunner {
     }
 
     private String getMavenExecutable() {
-        OSType osType = new OsCheck().getOperatingSystemType();
+        final OSType osType = new OsCheck().getOperatingSystemType();
         if (osType == OSType.WINDOWS) {
             return "mvn.cmd";
         } else {

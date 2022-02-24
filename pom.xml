@@ -11,7 +11,6 @@
         <module>project-keeper</module>
         <module>maven-project-crawler</module>
         <module>project-keeper-maven-plugin</module>
-        <module>parent-pom</module>
     </modules>
     <name>Project Keeper Project</name>
     <build>

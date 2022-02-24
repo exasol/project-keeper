@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
-import static com.exasol.projectkeeper.dependencies.ProjectDependency.Type.*;
+import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -11,9 +11,9 @@ import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingException;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
 /**
  * This class reads all dependencies of a pom file (including the plugins) together with their license.
@@ -60,14 +60,14 @@ public class ProjectDependencyReader {
         try {
             final var dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
                     dependency.getGroupId(), dependency.getVersion(), project.getRemoteArtifactRepositories());
-            final List<com.exasol.projectkeeper.dependencies.License> licenses = dependenciesPom.getLicenses().stream()
-                    .map(license -> new com.exasol.projectkeeper.dependencies.License(license.getName(),
+            final List<com.exasol.projectkeeper.shared.dependencies.License> licenses = dependenciesPom.getLicenses()
+                    .stream().map(license -> new com.exasol.projectkeeper.shared.dependencies.License(license.getName(),
                             license.getUrl()))
                     .collect(Collectors.toList());
             return new ProjectDependency(getDependencyName(dependenciesPom), dependenciesPom.getUrl(), licenses,
                     mapScopeToDependencyType(dependency.getScope()));
         } catch (final ProjectBuildingException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-49")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-49")
                     .message("Failed to get license information for dependency {{groupId}}:{{artifactId}}.",
                             dependency.getGroupId(), dependency.getArtifactId())
                     .toString(), exception);
@@ -99,7 +99,7 @@ public class ProjectDependencyReader {
             case "plugin":
                 return PLUGIN;
             default:
-                throw new IllegalStateException(ExaError.messageBuilder("F-PK-54")
+                throw new IllegalStateException(ExaError.messageBuilder("F-PK-MPC-54")
                         .message("Unimplemented dependency scope {{scope}}.", scope).ticketMitigation().toString());
             }
         }

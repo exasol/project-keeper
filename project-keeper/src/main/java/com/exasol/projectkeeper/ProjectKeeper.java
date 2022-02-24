@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
-import com.exasol.projectkeeper.repository.GitRepository;
+import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;
 import com.exasol.projectkeeper.validators.*;
@@ -100,7 +100,8 @@ public class ProjectKeeper {
         final List<Validator> result = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : sources) {
             if (source.getType().equals(MAVEN)) {
-                result.add(new PomFileValidator(projectDir, source.getModules(), source.getPath()));
+                result.add(
+                        new PomFileValidator(projectDir, source.getModules(), source.getPath(), source.getParentPom()));
             }
         }
         return result;

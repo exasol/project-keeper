@@ -8,8 +8,8 @@ import org.apache.maven.model.Model;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportReader;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
 /**
  * Calculate the dependencies updated since the last release.
@@ -19,15 +19,15 @@ class DependencyUpdateReader {
     private final Path projectDirectory;
     private final Model currentMavenModel;
 
-    DependencyUpdateReader(MavenProjectFromFileReader mavenModelReader, Path projectDirectory,
-            Model currentMavenModel) {
+    DependencyUpdateReader(final MavenProjectFromFileReader mavenModelReader, final Path projectDirectory,
+            final Model currentMavenModel) {
         this.mavenModelReader = mavenModelReader;
         this.projectDirectory = projectDirectory;
         this.currentMavenModel = currentMavenModel;
     }
 
     DependencyChangeReport getDependencyUpdates() {
-        return new DependencyChangeReportReader().read(getOldModel(), currentMavenModel);
+        return new DependencyChangeReportReader().read(getOldModel(), this.currentMavenModel);
     }
 
     private Model getOldModel() {
@@ -47,7 +47,7 @@ class DependencyUpdateReader {
         try (final var temporaryPomFile = new TemporaryPomFile(pomFileContents)) {
             return this.mavenModelReader.readProject(temporaryPomFile.getPomFile().toFile()).getModel();
         } catch (final MavenProjectFromFileReader.ReadFailedException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-38")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-38")
                     .message("Failed to parse pom file of previous release.").toString(), exception);
         }
     }

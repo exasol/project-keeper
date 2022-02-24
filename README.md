@@ -1,19 +1,7 @@
 # Project Keeper Maven Plugin
 
 [![Build Status](https://github.com/exasol/project-keeper-maven-plugin/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/project-keeper-maven-plugin/actions/workflows/ci-build.yml)
-[![Maven Central](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
-
-[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-
-[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=security_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-[![Technical Debt](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=sqale_index)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-
-[![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=code_smells)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=coverage)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-[![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
-[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Aproject-keeper-maven-plugin&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.exasol%3Aproject-keeper-maven-plugin)
+Project keeper core: [![Maven Central – Project keeper core](https://img.shields.io/maven-central/v/com.exasol/project-keeper-core)](https://search.maven.org/artifact/com.exasol/project-keeper-core), Project keeper maven plugin: [![Maven Central – Project keeper maven plugin](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
 
 This maven plugin checks and unifies the project's structure according to the Exasol integration team's repository standards.
 
@@ -113,6 +101,29 @@ linkReplacements:
 The syntax for a replacement is `broken-url|replacement`.
 
 Project-keeper will then use the replacement in the `dependencies.md` file instead of the original url.
+
+## Pom File
+
+For maven projects, project-keeper generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
+
+### Using a Parent pom
+
+If you want to use a parent pom for your project, that's not possible directly since your `pom.xml` must use the `pk_generated_parent.pom` as parent.
+
+Instead, configure the parent in the PK config:
+
+```yaml
+sources:
+  - type: maven
+  path: pom.xml
+  parentPom:
+    groupId: "com.example"
+    artifactId: "my-parent"
+    version: "1.2.3"
+    relativePath: "../my-parent.pom" # optional
+```
+
+PK will then use this parent-pom as parent for the `pk_generated_parent.pom`.
 
 ## Usage
 

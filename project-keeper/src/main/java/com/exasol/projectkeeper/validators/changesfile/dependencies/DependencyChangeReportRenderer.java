@@ -5,10 +5,10 @@ import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.exasol.projectkeeper.shared.model.DependencyChange;
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.NamedDependencyChangeReport;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChange;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
 /**
  * String renderer for {@link DependencyChangeReport}.

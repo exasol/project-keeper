@@ -19,6 +19,7 @@ This release has **breaking changes**:
 * #233: Refactored DependenciesValidator to support maven multi-module projects
 * #235: Refactored ChangesFileValidator to support maven multi-module projects
 * #238: Refactored PomFileValidator
+* #238: Refactored PomFileValidator to support parent pom
 
 ## Bugfixes
 

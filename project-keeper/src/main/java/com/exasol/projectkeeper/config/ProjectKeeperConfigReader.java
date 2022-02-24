@@ -134,7 +134,18 @@ public class ProjectKeeperConfigReader {
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
         final List<String> excludes = convertExcludes(rawSource.getExcludes());
-        return new ProjectKeeperConfig.Source(path, convertType(rawType), modules, excludes, rawSource.advertise);
+        return new ProjectKeeperConfig.Source(path, convertType(rawType), modules, excludes, rawSource.advertise,
+                parseParentPomProperty(rawSource.parentPom));
+    }
+
+    private ProjectKeeperConfig.ParentPomRef parseParentPomProperty(
+            final ProjectKeeperRawConfig.ParentPomRef rawParentPomRef) {
+        if (rawParentPomRef == null) {
+            return null;
+        } else {
+            return new ProjectKeeperConfig.ParentPomRef(rawParentPomRef.getGroupId(), rawParentPomRef.getArtifactId(),
+                    rawParentPomRef.getVersion(), rawParentPomRef.getRelativePath());
+        }
     }
 
     private Set<ProjectKeeperModule> convertModules(final List<String> rawModules) {
@@ -214,6 +225,21 @@ public class ProjectKeeperConfigReader {
             /** String or map (regex: string) */
             private List<Object> excludes;
             private boolean advertise = true;
+            private ParentPomRef parentPom;
+        }
+
+        /**
+         * Reference to a parent pom of a maven source.
+         * <p>
+         * SnakeYML requires this class to be public.
+         * </p>
+         */
+        @Data
+        public static class ParentPomRef {
+            private String groupId;
+            private String artifactId;
+            private String version;
+            private String relativePath;
         }
     }
 }

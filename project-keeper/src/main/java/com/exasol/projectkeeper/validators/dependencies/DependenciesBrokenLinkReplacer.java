@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.BrokenLinkReplacer;
-import com.exasol.projectkeeper.dependencies.License;
-import com.exasol.projectkeeper.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.License;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
 /**
  * This class replaces broken links in {@link ProjectDependency}s.

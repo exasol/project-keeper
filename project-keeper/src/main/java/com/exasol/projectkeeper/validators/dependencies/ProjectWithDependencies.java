@@ -2,7 +2,7 @@ package com.exasol.projectkeeper.validators.dependencies;
 
 import java.util.List;
 
-import com.exasol.projectkeeper.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
 import lombok.Data;
 import lombok.With;

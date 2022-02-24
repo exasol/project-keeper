@@ -20,21 +20,15 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 
 class PomFileGeneratorTest {
 
-    @Test
-    void testGenerateWithDefaultModule() throws XmlPullParserException, IOException {
-        final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT));
-        final List<String> pluginNames = getPluginNames(pom);
-        assertAll(//
-                () -> assertThat(pom.getGroupId(), equalTo("com.example")),
-                () -> assertThat(pom.getArtifactId(), equalTo("my-parent-pom")),
-                () -> assertThat(pom.getVersion(), equalTo("1.0.0")),
-                () -> assertThat(pluginNames,
-                        containsInAnyOrder("maven-enforcer-plugin", "flatten-maven-plugin", "ossindex-maven-plugin",
-                                "reproducible-build-maven-plugin", "maven-surefire-plugin", "versions-maven-plugin",
-                                "jacoco-maven-plugin", "error-code-crawler-maven-plugin")));
+    static Stream<Arguments> testGenerationWithParentPomCases() {
+        return Stream.of(//
+                Arguments.of(null, "../pom.xml" /* that seems to be a default in the reader */),
+                Arguments.of("./myParentPom.xml", "./myParentPom.xml")//
+        );
     }
 
     private List<String> getPluginNames(final Model pom) {
@@ -45,13 +39,18 @@ class PomFileGeneratorTest {
         return pom.getDependencies().stream().map(Dependency::getArtifactId).collect(Collectors.toList());
     }
 
-    private Model runGeneration(final List<ProjectKeeperModule> modules) throws IOException, XmlPullParserException {
-        final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
-                "1.0.0");
-        try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(
-                result.getBytes(StandardCharsets.UTF_8))) {
-            return new MavenXpp3Reader().read(inputStream);
-        }
+    @Test
+    void testGenerateWithDefaultModule() throws XmlPullParserException, IOException {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
+        final List<String> pluginNames = getPluginNames(pom);
+        assertAll(//
+                () -> assertThat(pom.getGroupId(), equalTo("com.example")),
+                () -> assertThat(pom.getArtifactId(), equalTo("my-parent-pom")),
+                () -> assertThat(pom.getVersion(), equalTo("1.0.0")),
+                () -> assertThat(pluginNames,
+                        containsInAnyOrder("maven-enforcer-plugin", "flatten-maven-plugin", "ossindex-maven-plugin",
+                                "reproducible-build-maven-plugin", "maven-surefire-plugin", "versions-maven-plugin",
+                                "jacoco-maven-plugin", "error-code-crawler-maven-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
@@ -66,12 +65,14 @@ class PomFileGeneratorTest {
         );
     }
 
-    @ParameterizedTest
-    @MethodSource("testPluginsAddedByModuleCases")
-    void testPluginsAddedByModule(final ProjectKeeperModule module, final List<String> expectedPlugins)
-            throws XmlPullParserException, IOException {
-        final Model pom = runGeneration(List.of(module));
-        assertThat(getPluginNames(pom), hasItems(expectedPlugins.toArray(String[]::new)));
+    private Model runGeneration(final List<ProjectKeeperModule> modules,
+            final ProjectKeeperConfig.ParentPomRef parentPomRef) throws IOException, XmlPullParserException {
+        final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
+                "1.0.0", parentPomRef);
+        try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(
+                result.getBytes(StandardCharsets.UTF_8))) {
+            return new MavenXpp3Reader().read(inputStream);
+        }
     }
 
     static Stream<Arguments> testDependenciesAddedByModuleCases() {
@@ -82,10 +83,33 @@ class PomFileGeneratorTest {
     }
 
     @ParameterizedTest
+    @MethodSource("testPluginsAddedByModuleCases")
+    void testPluginsAddedByModule(final ProjectKeeperModule module, final List<String> expectedPlugins)
+            throws XmlPullParserException, IOException {
+        final Model pom = runGeneration(List.of(module), null);
+        assertThat(getPluginNames(pom), hasItems(expectedPlugins.toArray(String[]::new)));
+    }
+
+    @ParameterizedTest
     @MethodSource("testDependenciesAddedByModuleCases")
     void testDependenciesAddedByModule(final ProjectKeeperModule module, final List<String> expectedDependencies)
             throws XmlPullParserException, IOException {
-        final Model pom = runGeneration(List.of(module));
+        final Model pom = runGeneration(List.of(module), null);
         assertThat(getDependencyNames(pom), hasItems(expectedDependencies.toArray(String[]::new)));
+    }
+
+    @ParameterizedTest
+    @MethodSource("testGenerationWithParentPomCases")
+    void testGenerationWithParentPom(final String relativePath, final String expectedRelativePath)
+            throws XmlPullParserException, IOException {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT),
+                new ProjectKeeperConfig.ParentPomRef("com.example", "my-parent", "1.2.3", relativePath));
+        final Parent parent = pom.getParent();
+        assertAll(//
+                () -> assertThat(parent.getGroupId(), equalTo("com.example")),
+                () -> assertThat(parent.getArtifactId(), equalTo("my-parent")),
+                () -> assertThat(parent.getVersion(), equalTo("1.2.3")),
+                () -> assertThat(parent.getRelativePath(), equalTo(expectedRelativePath))//
+        );
     }
 }

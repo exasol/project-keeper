@@ -8,9 +8,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.model.NewDependency;
 import com.exasol.projectkeeper.validators.changesfile.NamedDependencyChangeReport;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.NewDependency;
 
 class DependencyChangeReportRendererTest {
     private static final DependencyChangeReport REPORT = new DependencyChangeReport(

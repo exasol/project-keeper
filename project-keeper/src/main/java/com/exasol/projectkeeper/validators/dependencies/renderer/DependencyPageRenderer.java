@@ -1,14 +1,14 @@
 package com.exasol.projectkeeper.validators.dependencies.renderer;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
-import static com.exasol.projectkeeper.dependencies.ProjectDependency.Type.*;
+import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.*;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import com.exasol.projectkeeper.dependencies.License;
-import com.exasol.projectkeeper.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.License;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
 
 import net.steppschuh.markdowngenerator.table.Table;

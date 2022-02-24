@@ -9,10 +9,10 @@ import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.JavaProjectCrawlerRunner;
+import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportRenderer;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.DependencyChangeReport;
 
 /**
  * This class fixes the dependency section of a {@link ChangesFile}.

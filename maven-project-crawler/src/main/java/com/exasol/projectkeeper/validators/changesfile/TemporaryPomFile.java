@@ -25,7 +25,7 @@ class TemporaryPomFile implements AutoCloseable {
             Files.writeString(this.pomFile, content, StandardOpenOption.TRUNCATE_EXISTING);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-58").message("Failed to temporarily store pom file on disk.")
+                    ExaError.messageBuilder("E-PK-MPC-58").message("Failed to temporarily store pom file on disk.")
                             .mitigation("Check the permissions for the temp directory of your OS.").toString(),
                     exception);
         }
@@ -37,7 +37,7 @@ class TemporaryPomFile implements AutoCloseable {
             Files.delete(this.pomFile);
         } catch (final IOException exception) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-59").message("Failed to remove temporary cache file.")
+                    ExaError.messageBuilder("E-PK-MPC-59").message("Failed to remove temporary cache file.")
                             .mitigation("Check the file permissions.").toString(),
                     exception);
         }

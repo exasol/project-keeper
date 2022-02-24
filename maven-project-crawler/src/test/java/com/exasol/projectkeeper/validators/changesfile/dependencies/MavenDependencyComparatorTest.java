@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.maven.model.Dependency;
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.validators.changesfile.dependencies.model.*;
+import com.exasol.projectkeeper.shared.model.*;
 
 class MavenDependencyComparatorTest {
 

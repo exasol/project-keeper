@@ -6,8 +6,8 @@ import java.util.Collections;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ExasolVersionMatcher;
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.shared.ExasolVersionMatcher;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.AbstractFileValidator;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;

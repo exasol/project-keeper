@@ -11,7 +11,7 @@ import javax.xml.transform.*;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.w3c.dom.Document;
+import org.w3c.dom.*;
 import org.xml.sax.SAXException;
 
 import com.exasol.errorreporting.ExaError;
@@ -66,18 +66,20 @@ class PomFileIO {
         }
     }
 
-    /**
-     * Read a pom file as XML document.
-     * 
-     * @param pomFile pom file
-     * @return xml document
+    /*
+     * Trim the whitespace from the given node and its children.
+     * <p>
+     * Inspired by https://stackoverflow.com/a/33564346
+     * </p>
      */
-    public Document parsePomFile(final Path pomFile) {
-        try (final InputStream pomFileStream = new FileInputStream(pomFile.toFile())) {
-            return parsePomFile(pomFileStream);
-        } catch (final IOException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-107")
-                    .message("Failed to read pom file {{path}}.", pomFile).toString(), exception);
+    public static void trimWhitespace(final Node node) {
+        final NodeList children = node.getChildNodes();
+        for (int index = 0; index < children.getLength(); ++index) {
+            final Node child = children.item(index);
+            if (child.getNodeType() == Node.TEXT_NODE) {
+                child.setTextContent(child.getTextContent().trim());
+            }
+            trimWhitespace(child);
         }
     }
 
@@ -108,6 +110,23 @@ class PomFileIO {
         } catch (final ParserConfigurationException | IOException | SAXException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-7").message("Failed to parse pom.xml.").toString(), exception);
+        }
+    }
+
+    /**
+     * Read a pom file as XML document.
+     *
+     * @param pomFile pom file
+     * @return xml document
+     */
+    public Document parsePomFile(final Path pomFile) {
+        try (final InputStream pomFileStream = new FileInputStream(pomFile.toFile())) {
+            final Document document = parsePomFile(pomFileStream);
+            trimWhitespace(document);// otherwise, the formatter in output adds new-lines
+            return document;
+        } catch (final IOException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-107")
+                    .message("Failed to read pom file {{path}}.", pomFile).toString(), exception);
         }
     }
 }
