@@ -116,9 +116,27 @@ public class PomFileValidator implements Validator {
         checkParentProperty(generatedPomPath, parentTag, "artifactId", artifactId).ifPresent(findings::add);
         checkParentProperty(generatedPomPath, parentTag, "groupId", groupId).ifPresent(findings::add);
         checkParentProperty(generatedPomPath, parentTag, "version", version).ifPresent(findings::add);
-        checkParentProperty(generatedPomPath, parentTag, "relativePath",
-                this.pomFilePath.getParent().relativize(generatedPomPath).toString()).ifPresent(findings::add);
+        checkParentRelativePath(generatedPomPath, parentTag, this.pomFilePath.getParent().relativize(generatedPomPath))
+                .ifPresent(findings::add);
         return findings;
+    }
+
+    private Optional<ValidationFinding> checkParentRelativePath(final Path generatedPomPath, final Node parentTag,
+            final Path expectedValue) {
+        final Node node = runXPath(parentTag, "relativePath");
+        if (node == null || !comparePaths(expectedValue, Path.of(node.getTextContent()))) {
+            return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-112").message(
+                    "Invalid pom file {{file}}: Invalid '/project/parent/relativePath'. Expected value is {{expected}}. The pom must declare {{generated parent}} as parent pom.",
+                    this.projectDirectory.relativize(this.pomFilePath), expectedValue,
+                    this.projectDirectory.relativize(generatedPomPath))
+                    .mitigation("Check the project-keeper user guide if you need a parent pom.").toString()).build());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private boolean comparePaths(final Path expectedValue, final Path other) {
+        return other.normalize().equals(expectedValue.normalize());
     }
 
     private Optional<ValidationFinding> checkParentProperty(final Path generatedPomPath, final Node parentTag,

@@ -136,4 +136,19 @@ class PomFileValidatorTest {
         assertThat(result, hasFindingWithMessage(
                 "E-PK-CORE-104: Invalid pom file pom.xml: Invalid '/project/parent/artifactId'. Expected value is 'my-test-project-generated-parent'. The pom must declare pk_generated_parent.pom as parent pom. Check the project-keeper user guide if you need a parent pom."));
     }
+
+    @Test
+    void testEquivalentParentPath() throws IOException {
+        final TestMavenModel model = new TestMavenModel();
+        model.configureAssemblyPluginFinalName();
+        model.writeAsPomToProject(this.tempDir);
+        runFix(null);
+        final Path pom = this.tempDir.resolve("pom.xml");
+        final String pomContent = Files.readString(pom);
+        final String invalidPomContent = pomContent.replace("<relativePath>pk_generated_parent.pom</relativePath>",
+                "<relativePath>./pk_generated_parent.pom</relativePath>");
+        Files.writeString(pom, invalidPomContent);
+        final List<ValidationFinding> result = runValidator(null);
+        assertThat(result, empty());
+    }
 }
