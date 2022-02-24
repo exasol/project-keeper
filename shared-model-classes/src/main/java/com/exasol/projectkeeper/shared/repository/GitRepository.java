@@ -133,8 +133,17 @@ public class GitRepository {
     private String readFileAtCommit(final Path relativeFilePath, final Git git, final RevCommit commit)
             throws IOException {
         final var repository = git.getRepository();
-        final ObjectId objectForVersionOfFile = findFile(commit, repository, relativeFilePath.toString());
+        final String relativePathWithSlashDelimiter = String.join("/", getPathParts(relativeFilePath));
+        final ObjectId objectForVersionOfFile = findFile(commit, repository, relativePathWithSlashDelimiter);
         return readVersionOfFile(repository, objectForVersionOfFile);
+    }
+
+    private List<String> getPathParts(final Path relativeFilePath) {
+        final List<String> parts = new ArrayList<>(relativeFilePath.getNameCount());
+        for (int index = 0; index < relativeFilePath.getNameCount(); index++) {
+            parts.add(relativeFilePath.getName(index).toString());
+        }
+        return parts;
     }
 
     private String readVersionOfFile(final Repository repository, final ObjectId objectForVersionOfFile)
