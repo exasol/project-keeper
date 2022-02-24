@@ -133,17 +133,8 @@ public class GitRepository {
     private String readFileAtCommit(final Path relativeFilePath, final Git git, final RevCommit commit)
             throws IOException {
         final var repository = git.getRepository();
-        final String relativePathWithSlashDelimiter = String.join("/", getPathParts(relativeFilePath));
-        final ObjectId objectForVersionOfFile = findFile(commit, repository, relativePathWithSlashDelimiter);
+        final ObjectId objectForVersionOfFile = findFile(commit, repository, relativeFilePath);
         return readVersionOfFile(repository, objectForVersionOfFile);
-    }
-
-    private List<String> getPathParts(final Path relativeFilePath) {
-        final List<String> parts = new ArrayList<>(relativeFilePath.getNameCount());
-        for (int index = 0; index < relativeFilePath.getNameCount(); index++) {
-            parts.add(relativeFilePath.getName(index).toString());
-        }
-        return parts;
     }
 
     private String readVersionOfFile(final Repository repository, final ObjectId objectForVersionOfFile)
@@ -156,18 +147,20 @@ public class GitRepository {
         }
     }
 
-    private ObjectId findFile(final RevCommit commit, final Repository repository, final String expectedPath)
+    private ObjectId findFile(final RevCommit commit, final Repository repository, final Path expectedPath)
             throws IOException {
+        final Path normalizedExpected = expectedPath.normalize();
         final TreeWalk treeWalk = new TreeWalk(repository);
         treeWalk.addTree(commit.getTree());
         treeWalk.setRecursive(true);
         while (treeWalk.next()) {
+            final Path currentPath = Path.of(treeWalk.getPathString()).normalize();
             if (treeWalk.isSubtree()) {
-                if (expectedPath.startsWith(treeWalk.getPathString())) {
+                if (normalizedExpected.startsWith(currentPath)) {
                     treeWalk.enterSubtree();
                 }
             } else {
-                if (treeWalk.getPathString().equals(expectedPath)) {
+                if (normalizedExpected.equals(currentPath)) {
                     return treeWalk.getObjectId(0);
                 }
             }
