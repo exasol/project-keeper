@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -104,7 +105,8 @@ class LastReleasePomFileReaderTest {
         final Path testFile = directory.resolve("pom.xml");
         Files.writeString(testFile, content);
         final String pattern = subDir.resolve("pom.xml").toString();
-        git.add().addFilepattern(pattern).call();
+        final String osIndependentPattern = pattern.replace(FileSystems.getDefault().getSeparator(), "/");
+        git.add().addFilepattern(osIndependentPattern).call();
         git.commit().setMessage("commit for release " + name).call();
         git.tag().setName(name).call();
     }
