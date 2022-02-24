@@ -1,7 +1,5 @@
 sources:
   - type: maven
-    path: pom.xml
-  - type: maven
     path: shared-model-classes/pom.xml
     modules:
       - maven_central
@@ -11,6 +9,7 @@ sources:
       artifactId: "project-keeper-parent-pom"
       version: "${revision}"
       relativePath: "../parent-pom/pom.xml"
+    advertise: false
   - type: maven
     path: project-keeper/pom.xml
     modules:
@@ -38,6 +37,7 @@ sources:
     path: maven-project-crawler/pom.xml
     modules:
       - maven_central
+    advertise: false
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
