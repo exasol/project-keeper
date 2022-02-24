@@ -228,6 +228,12 @@ public class ProjectKeeperConfigReader {
             private ParentPomRef parentPom;
         }
 
+        /**
+         * Reference to a parent pom of a maven source.
+         * <p>
+         * SnakeYML requires this class to be public.
+         * </p>
+         */
         @Data
         public static class ParentPomRef {
             private String groupId;

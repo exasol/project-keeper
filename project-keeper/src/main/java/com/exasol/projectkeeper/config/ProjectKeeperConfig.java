@@ -59,6 +59,9 @@ public class ProjectKeeperConfig {
         private final ParentPomRef parentPom;
     }
 
+    /**
+     * Reference to a parent pom of a maven source.
+     */
     @Data
     public static class ParentPomRef {
         private final String groupId;
