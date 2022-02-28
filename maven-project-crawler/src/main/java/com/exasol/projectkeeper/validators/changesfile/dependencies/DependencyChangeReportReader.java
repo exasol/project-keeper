@@ -5,8 +5,8 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.*;
 
-import com.exasol.projectkeeper.shared.model.DependencyChange;
-import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
 /**
  * Reader for {@link DependencyChangeReportReader}.

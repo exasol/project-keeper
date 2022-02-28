@@ -37,6 +37,8 @@ sources:
     path: maven-project-crawler/pom.xml
     modules:
       - maven_central
+      - udf_coverage
+      - integration_tests
     advertise: false
     parentPom:
       groupId: "com.exasol"

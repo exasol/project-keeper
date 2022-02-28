@@ -5,8 +5,8 @@ import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.exasol.projectkeeper.shared.model.DependencyChange;
-import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.NamedDependencyChangeReport;
 

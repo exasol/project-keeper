@@ -5,12 +5,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.BeforeAll;
@@ -42,6 +39,7 @@ public class ProjectKeeperAbstractIT {
         final TestMavenModel testMavenModel = new TestMavenModel();
         testMavenModel.setVersion(pomVersion);
         testMavenModel.addDependency("error-reporting-java", "com.exasol", "compile", dependencyVersion);
+        testMavenModel.configureAssemblyPluginFinalName();
         testMavenModel.writeAsPomToProject(this.projectDir);
     }
 
@@ -66,17 +64,8 @@ public class ProjectKeeperAbstractIT {
     }
 
     protected ProjectKeeper getProjectKeeper(final Logger logger) {
-        final String version = getTestProjectVersion();
         return ProjectKeeper.createProjectKeeper(logger, this.projectDir, TestMavenModel.PROJECT_ARTIFACT_ID,
-                TestMavenModel.PROJECT_ARTIFACT_ID, version, getMavenRepo(), CURRENT_VERSION);
-    }
-
-    private String getTestProjectVersion() {
-        try (final FileReader reader = new FileReader(this.projectDir.resolve("pom.xml").toFile())) {
-            return new MavenXpp3Reader().read(reader).getVersion();
-        } catch (final IOException | XmlPullParserException exception) {
-            throw new IllegalStateException("Failed to read test-pom.", exception);
-        }
+                TestMavenModel.PROJECT_ARTIFACT_ID, getMavenRepo(), CURRENT_VERSION);
     }
 
     public void assertVerifySucceeds() {

@@ -36,7 +36,7 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
      */
     private ProjectKeeper createProjectKeeper() {
         return ProjectKeeper.createProjectKeeper(new MvnLogger(getLog()), this.project.getBasedir().toPath(),
-                this.project.getName(), this.project.getArtifactId(), this.project.getVersion(),
+                this.project.getName(), this.project.getArtifactId(),
                 Path.of(this.session.getLocalRepository().getBasedir()));
     }
 

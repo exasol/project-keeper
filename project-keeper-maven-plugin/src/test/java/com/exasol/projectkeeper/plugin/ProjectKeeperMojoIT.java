@@ -39,6 +39,7 @@ class ProjectKeeperMojoIT {
     }
 
     @Test
+    // [itest->dsn~mvn-verify-goal~1]
     void testVerify() throws IOException {
         Files.writeString(this.projectDir.resolve(".project-keeper.yml"), //
                 "sources:\n" + //

@@ -2,6 +2,8 @@ package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -12,16 +14,18 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
-import com.exasol.projectkeeper.shared.dependencies.*;
-import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
-import com.exasol.projectkeeper.shared.model.NewDependency;
+import com.exasol.projectkeeper.shared.dependencies.License;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
+@Tag("integration")
 class JavaProjectCrawlerRunnerIT {
     private static final String DEPENDENCY_ID = "error-reporting-java";
     private static final String DEPENDENCY_GROUP = "com.exasol";
@@ -36,25 +40,21 @@ class JavaProjectCrawlerRunnerIT {
 
     @Test
     void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException, IOException {
-        final Path pomFile = tempDir.resolve("pom.xml");
         Git.init().setDirectory(tempDir.toFile()).call().close();
-        writePomFile(pomFile);
-        final DependencyChangeReport report = new JavaProjectCrawlerRunner(testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION).getDependencyChanges(pomFile);
-        assertThat(report.getCompileDependencyChanges(),
-                Matchers.contains(new NewDependency(DEPENDENCY_GROUP, DEPENDENCY_ID, DEPENDENCY_VERSION)));
-    }
-
-    @Test
-    void testGetDependencies(@TempDir final Path tempDir) throws IOException {
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
-        final ProjectDependencies dependencies = new JavaProjectCrawlerRunner(testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION).getDependencies(pomFile);
-        assertThat(dependencies.getDependencies(),
-                Matchers.hasItem(
-                        new ProjectDependency("error-reporting-java", "https://github.com/exasol/error-reporting-java",
-                                List.of(new License("MIT", "https://opensource.org/licenses/MIT")), COMPILE)));
+        final MavenProjectCrawlResult result = new JavaProjectCrawlerRunner(testMavenRepo,
+                TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFile);
+        final CrawledMavenProject mavenProject = result.getCrawledProjects().get(pomFile.toAbsolutePath().toString());
+        assertAll(//
+                () -> assertThat(mavenProject.getProjectDependencies().getDependencies(),
+                        Matchers.hasItem(new ProjectDependency("error-reporting-java",
+                                "https://github.com/exasol/error-reporting-java",
+                                List.of(new License("MIT", "https://opensource.org/licenses/MIT")), COMPILE))),
+                () -> assertThat(mavenProject.getDependencyChangeReport().getCompileDependencyChanges(),
+                        Matchers.contains(new NewDependency(DEPENDENCY_GROUP, DEPENDENCY_ID, DEPENDENCY_VERSION))),
+                () -> assertThat(mavenProject.getProjectVersion(), equalTo(TestMavenModel.PROJECT_VERSION))//
+        );
     }
 
     private void writePomFile(final Path pomFile) throws IOException {

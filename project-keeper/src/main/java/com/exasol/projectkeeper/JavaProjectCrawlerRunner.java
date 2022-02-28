@@ -4,15 +4,15 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.OsCheck.OSType;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.ResponseCoder;
 import com.exasol.projectkeeper.stream.AsyncStreamReader;
 import com.exasol.projectkeeper.stream.CollectingConsumer;
 
@@ -20,8 +20,6 @@ import com.exasol.projectkeeper.stream.CollectingConsumer;
  * Runs the maven plugin goal on the current repository and returns the parsed result.
  */
 public class JavaProjectCrawlerRunner {
-    private static final String RESPONSE_START_TOKEN = "###SerializedResponseStart###";
-    private static final String RESPONSE_END_TOKEN = "###SerializedResponseEnd###";
     private static final Logger LOGGER = Logger.getLogger(JavaProjectCrawlerRunner.class.getName());
     private static final Duration STREAM_READING_TIMEOUT = Duration.ofSeconds(1);
     private final Path mvnRepositoryOverride;
@@ -39,33 +37,24 @@ public class JavaProjectCrawlerRunner {
     }
 
     /**
-     * Get a {@link DependencyChangeReport} for the project.
+     * Crawl a maven project.
      * 
-     * @param pomFile path to the pom file to analyze.
-     * @return the {@link DependencyChangeReport}
+     * @param pomFiles paths to the pom files to analyze.
+     * @return the {@link MavenProjectCrawlResult}
      */
-    public DependencyChangeReport getDependencyChanges(final Path pomFile) {
-        final String json = runCrawlerPlugin(pomFile, "getDependencyUpdates");
-        return DependencyChangeReport.fromJson(json);
+    public MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
+        final String json = runCrawlerPlugin(pomFiles);
+        return MavenProjectCrawlResult.fromJson(json);
     }
 
-    /**
-     * Get the {@link ProjectDependencies} for the project.
-     * 
-     * @param pomFile path to the pom file to analyze.
-     * @return the {@link ProjectDependencies}
-     */
-    public ProjectDependencies getDependencies(final Path pomFile) {
-        final String json = runCrawlerPlugin(pomFile, "getProjectDependencies");
-        return ProjectDependencies.fromJson(json);
-    }
-
-    private String runCrawlerPlugin(final Path pomFile, final String goal) {
+    private String runCrawlerPlugin(final Path... pomFiles) {
+        final String projectList = Arrays.stream(pomFiles).map(pomFile -> pomFile.toAbsolutePath().toString())
+                .collect(Collectors.joining(";"));
         try {
             final List<String> commandParts = new ArrayList<>(List.of(getMavenExecutable(), "--batch-mode",
                     "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
-                    "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + goal, "--file",
-                    pomFile.toString()));
+                    "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + "crawl",
+                    "-DprojectsToCrawl=" + projectList));
             if (this.mvnRepositoryOverride != null) {
                 commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
             }
@@ -91,15 +80,7 @@ public class JavaProjectCrawlerRunner {
                                 commandParts, exitCode)
                         .toString());
             }
-            final int startIndex = output.indexOf(RESPONSE_START_TOKEN);
-            final int responseStartIndex = startIndex + RESPONSE_START_TOKEN.length() + 1;
-            final int endIndex = output.indexOf(RESPONSE_END_TOKEN);
-            if (startIndex == -1 || endIndex == -1 || responseStartIndex > endIndex) {
-                throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-79")
-                        .message("Invalid response from crawler plugin: {{output}}", output).ticketMitigation()
-                        .toString());
-            }
-            return output.substring(responseStartIndex, endIndex);
+            return new ResponseCoder().decodeResponse(output);
         } catch (final IOException exception) {
             throw new UncheckedIOException(getRunFailedMessage(), exception);
         } catch (final InterruptedException exception) {

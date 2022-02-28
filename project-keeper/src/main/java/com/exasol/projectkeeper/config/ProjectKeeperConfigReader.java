@@ -78,7 +78,27 @@ public class ProjectKeeperConfigReader {
         final List<String> excludes = convertExcludes(rawConfig.getExcludes());
         final List<String> linkReplacements = Objects.requireNonNullElseGet(rawConfig.getLinkReplacements(),
                 Collections::emptyList);
-        return new ProjectKeeperConfig(sources, linkReplacements, excludes);
+        final ProjectKeeperConfig.VersionProvider version = parseVersion(rawConfig.version);
+        return new ProjectKeeperConfig(sources, linkReplacements, excludes, version);
+    }
+
+    private ProjectKeeperConfig.VersionProvider parseVersion(final Object rawVersion) {
+        if (rawVersion == null) {
+            return null;
+        } else if (rawVersion instanceof String) {
+            return new ProjectKeeperConfig.FixedVersion((String) rawVersion);
+        }
+        if (rawVersion instanceof Map) {
+            final Object fromMvnSource = ((Map<?, ?>) rawVersion).get("fromSource");
+            if (fromMvnSource instanceof String) {
+                return new ProjectKeeperConfig.VersionFromSource(Path.of((String) fromMvnSource));
+            }
+        }
+        throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-113")
+                .message(INVALID_CONFIG_FILE + " Invalid value from property 'version'.")
+                .mitigation(
+                        "You can either set a version as string or tell PK from which maven source to read the version from with 'fromSource: \"path to project file to read version from\"'.")
+                .toString());
     }
 
     private List<String> convertExcludes(final List<Object> rawExcludes) {
@@ -210,6 +230,7 @@ public class ProjectKeeperConfigReader {
         private List<String> linkReplacements;
         /** String or map (regex: string) */
         private List<Object> excludes;
+        private Object version;
 
         /**
          * Intermediate class for reading the config sources.

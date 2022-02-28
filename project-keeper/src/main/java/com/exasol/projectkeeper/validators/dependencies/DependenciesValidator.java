@@ -23,22 +23,18 @@ public class DependenciesValidator implements Validator {
     private final Path dependenciesFile;
     private final List<AnalyzedSource> sources;
     private final BrokenLinkReplacer brokenLinkReplacer;
-    private final JavaProjectCrawlerRunner javaProjectCrawlerRunner;
 
     /**
      * Create a new instance of {@link DependenciesValidator}.
      * 
-     * @param sources               source projects
-     * @param projectDirectory      project root directory
-     * @param brokenLinkReplacer    dependency injection for broken link replacer
-     * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
-     * @param ownVersion            project-keeper version
+     * @param sources            source projects
+     * @param projectDirectory   project root directory
+     * @param brokenLinkReplacer dependency injection for broken link replacer
      */
     public DependenciesValidator(final List<AnalyzedSource> sources, final Path projectDirectory,
-            final BrokenLinkReplacer brokenLinkReplacer, final Path mvnRepositoryOverride, final String ownVersion) {
+            final BrokenLinkReplacer brokenLinkReplacer) {
         this.sources = sources;
         this.brokenLinkReplacer = brokenLinkReplacer;
-        this.javaProjectCrawlerRunner = new JavaProjectCrawlerRunner(mvnRepositoryOverride, ownVersion);
         this.dependenciesFile = projectDirectory.resolve("dependencies.md");
     }
 
@@ -67,9 +63,9 @@ public class DependenciesValidator implements Validator {
 
     private ProjectWithDependencies getDependencies(final AnalyzedSource source) {
         if (source instanceof AnalyzedMavenSource) {
-            final String projectName = ((AnalyzedMavenSource) source).getProjectName();
-            final List<ProjectDependency> dependencies = this.javaProjectCrawlerRunner.getDependencies(source.getPath())
-                    .getDependencies();
+            final AnalyzedMavenSource mvnSource = (AnalyzedMavenSource) source;
+            final String projectName = mvnSource.getProjectName();
+            final List<ProjectDependency> dependencies = mvnSource.getDependencies().getDependencies();
             return new ProjectWithDependencies(projectName, dependencies);
         } else {
             throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-95")

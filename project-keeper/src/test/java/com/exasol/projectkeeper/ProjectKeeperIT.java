@@ -14,7 +14,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.maven.it.VerificationException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.Tag;
@@ -35,21 +34,31 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
 
     @Test
     // [itest->dsn~pom-file-validator~1]
-    // [itest->dsn~mvn-verify-goal~1]
+    void testVerifyPhase1() throws IOException {
+        new TestMavenModel().writeAsPomToProject(this.projectDir);
+        writeConfig(createConfigWithAllModules());
+        final String output = assertInvalidAndGetOutput();
+        assertAll(//
+                () -> assertThat(output,
+                        containsString("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
+                () -> assertThat(output, containsString(
+                        "E-PK-CORE-105: Invalid pom file pom.xml: Missing required property finalName property in maven-assembly-plugin.")));
+    }
+
+    @Test
     // [itest->dsn~required-files-validator~1]
     // [itest->dsn~gitignore-validator~1]
-    void testVerify() throws IOException {
+    void testVerifyPhase2() throws IOException {
         writeDefaultPom();
         writeConfig(createConfigWithAllModules());
+        runFix();
+        Files.delete(this.projectDir.resolve(".settings/org.eclipse.jdt.core.prefs"));
+        Files.delete(this.projectDir.resolve(".gitignore"));
         final String output = assertInvalidAndGetOutput();
         assertAll(//
                 () -> assertThat(output,
                         containsString("E-PK-CORE-17: Missing required file: '.settings" + File.separator
                                 + "org.eclipse.jdt.core.prefs'")),
-                () -> assertThat(output,
-                        containsString("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
-                () -> assertThat(output, containsString(
-                        "E-PK-CORE-105: Invalid pom file pom.xml: Missing required property finalName property in maven-assembly-plugin.")),
                 () -> assertThat(output, containsString("E-PK-CORE-56: Could not find required file '.gitignore'.")) //
         );
     }
@@ -59,12 +68,15 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     private ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithAllModulesBuilder() {
-        return ProjectKeeperConfig.builder().sources(List.of(ProjectKeeperConfig.Source.builder()
-                .modules(Set.of(values())).type(MAVEN).path(Path.of("pom.xml")).build()));
+        return ProjectKeeperConfig.builder()
+                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Set.of(values())).type(MAVEN)
+                        .path(Path.of("pom.xml")).build()))
+                .versionProvider(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
     }
 
     private void writeDefaultPom() throws IOException {
         final var pom = new TestMavenModel();
+        pom.configureAssemblyPluginFinalName();
         pom.writeAsPomToProject(this.projectDir);
     }
 
@@ -85,6 +97,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     void testVerifyWithAFileThatMustNotExist() throws IOException {
         writeDefaultPom();
         writeConfig(createConfigWithAllModules());
+        runFix();
         final Path fileThatMustNotExist = this.projectDir.resolve(".github/workflows/maven.yml");
         Files.createDirectories(fileThatMustNotExist.getParent());
         Files.writeString(fileThatMustNotExist, "some content");
@@ -157,7 +170,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     }
 
     @Test
-    void testChangesFileGenerationWithNoPomInPrevVersion() throws IOException, GitAPIException, VerificationException {
+    void testChangesFileGenerationWithNoPomInPrevVersion() throws IOException, GitAPIException {
         setupDemoProjectWithPomAddedInThisVersion();
         writeConfig(createConfigWithAllModules());
         runFix();
@@ -194,6 +207,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     // [itest->dsn~readme-validator~1]
     void testVerifyReadme() throws IOException {
         writeDefaultPom();
+        writeConfig(createConfigWithAllModules());
+        runFix();
         Files.writeString(this.projectDir.resolve("README.md"), "");
         writeConfig(createConfigWithAllModules());
         final String output = assertInvalidAndGetOutput();

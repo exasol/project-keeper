@@ -29,7 +29,7 @@ class FileTemplatesFactoryTest {
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {
-        return List.of(new AnalyzedMavenSource(null, modules, true, null, null, true));
+        return List.of(AnalyzedMavenSource.builder().modules(modules).isRootProject(true).build());
     }
 
     /*
@@ -40,7 +40,7 @@ class FileTemplatesFactoryTest {
     void testGetCiBuildTemplatesForNonAggregatedMvnProject() {
         final Logger logger = mock(Logger.class);
         final List<AnalyzedSource> sources = List
-                .of(new AnalyzedMavenSource(null, Collections.emptySet(), true, null, null, false));
+                .of(AnalyzedMavenSource.builder().modules(Collections.emptySet()).isRootProject(false).build());
         final List<FileTemplate> templates = new FileTemplatesFactory(logger).getGlobalTemplates(sources);
         assertFalse(() -> templates.stream()
                 .anyMatch(template -> template.getPathInProject().equals(Path.of(".github/workflows/ci-build.yml"))));
@@ -62,7 +62,7 @@ class FileTemplatesFactoryTest {
             "LOMBOK, lombok.config"//
     })
     void testGetTemplatesPerSource(final ProjectKeeperModule module, final String expectedTemplate) {
-        final AnalyzedMavenSource source = new AnalyzedMavenSource(null, Set.of(module), true, null, null, true);
+        final AnalyzedMavenSource source = AnalyzedMavenSource.builder().modules(Set.of(module)).build();
         final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class)).getTemplatesForSource(source);
         assertContainsTemplate(templates, expectedTemplate);
     }

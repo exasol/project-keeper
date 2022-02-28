@@ -20,6 +20,7 @@ This release has **breaking changes**:
 * #235: Refactored ChangesFileValidator to support maven multi-module projects
 * #238: Refactored PomFileValidator
 * #238: Refactored PomFileValidator to support parent pom
+* #247: Detect project version from source
 
 ## Bugfixes
 
