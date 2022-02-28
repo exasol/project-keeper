@@ -4,6 +4,7 @@ import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAV
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -82,7 +83,9 @@ public class SourceAnalyzer {
 
     private CrawledMavenProject getCrawlResultForProject(final ProjectKeeperConfig.Source source,
             final Map<String, CrawledMavenProject> crawlResult) {
-        final String key = source.getPath().toString();
+        final String key = source.getPath().toString()
+                // we use / instead of \ here as a fix for https://github.com/eclipse-ee4j/yasson/issues/540
+                .replace(FileSystems.getDefault().getSeparator(), "/");
         if (!crawlResult.containsKey(key)) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-117")
                     .message("The crawl result did not contain the project {{project}}.", source.getPath())

@@ -2,6 +2,7 @@ package com.exasol.projectkeeper;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
@@ -48,8 +49,9 @@ public class JavaProjectCrawlerRunner {
     }
 
     private String runCrawlerPlugin(final Path... pomFiles) {
-        final String projectList = Arrays.stream(pomFiles).map(pomFile -> pomFile.toAbsolutePath().toString())
-                .collect(Collectors.joining(";"));
+        final String projectList = Arrays.stream(pomFiles).map(pomFile -> pomFile.toAbsolutePath().toString()
+                // we use / instead of \ here as a fix for https://github.com/eclipse-ee4j/yasson/issues/540
+                .replace(FileSystems.getDefault().getSeparator(), "/")).collect(Collectors.joining(";"));
         try {
             final List<String> commandParts = new ArrayList<>(List.of(getMavenExecutable(), "--batch-mode",
                     "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",

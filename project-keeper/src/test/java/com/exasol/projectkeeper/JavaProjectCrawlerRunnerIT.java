@@ -45,7 +45,8 @@ class JavaProjectCrawlerRunnerIT {
         writePomFile(pomFile);
         final MavenProjectCrawlResult result = new JavaProjectCrawlerRunner(testMavenRepo,
                 TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFile);
-        final CrawledMavenProject mavenProject = result.getCrawledProjects().get(pomFile.toAbsolutePath().toString());
+        final CrawledMavenProject mavenProject = result.getCrawledProjects()
+                .get(pomFile.toAbsolutePath().toString().replace("\\", "/"));
         assertAll(//
                 () -> assertThat(mavenProject.getProjectDependencies().getDependencies(),
                         Matchers.hasItem(new ProjectDependency("error-reporting-java",
