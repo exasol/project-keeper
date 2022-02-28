@@ -78,11 +78,11 @@ public class ProjectKeeperConfigReader {
         final List<String> excludes = convertExcludes(rawConfig.getExcludes());
         final List<String> linkReplacements = Objects.requireNonNullElseGet(rawConfig.getLinkReplacements(),
                 Collections::emptyList);
-        final ProjectKeeperConfig.VersionProvider version = parseVersion(rawConfig.version);
+        final ProjectKeeperConfig.VersionProvider version = parseVersion(rawConfig.version, projectDir);
         return new ProjectKeeperConfig(sources, linkReplacements, excludes, version);
     }
 
-    private ProjectKeeperConfig.VersionProvider parseVersion(final Object rawVersion) {
+    private ProjectKeeperConfig.VersionProvider parseVersion(final Object rawVersion, final Path projectDir) {
         if (rawVersion == null) {
             return null;
         } else if (rawVersion instanceof String) {
@@ -91,7 +91,7 @@ public class ProjectKeeperConfigReader {
         if (rawVersion instanceof Map) {
             final Object fromMvnSource = ((Map<?, ?>) rawVersion).get("fromSource");
             if (fromMvnSource instanceof String) {
-                return new ProjectKeeperConfig.VersionFromSource(Path.of((String) fromMvnSource));
+                return new ProjectKeeperConfig.VersionFromSource(projectDir.resolve(Path.of((String) fromMvnSource)));
             }
         }
         throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-113")

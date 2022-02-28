@@ -2,6 +2,7 @@ package com.exasol.projectkeeper;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
@@ -54,8 +55,8 @@ public class ProjectVersionDetector {
         public void visit(final ProjectKeeperConfig.VersionFromSource versionFromMavenSource) {
             final Path requestedPath = versionFromMavenSource.getPathToPom();
             this.version = this.analyzedSources.stream()//
-                    .filter(source -> source.getPath().equals(requestedPath))//
-                    .findAny().orElseThrow(() -> getNoSourceFoundException(requestedPath))//
+                    .filter(source -> source.getPath().normalize().equals(requestedPath.normalize()))//
+                    .findAny().orElseThrow(() -> getNoSourceFoundException(requestedPath, this.analyzedSources))//
                     .getVersion();
             if (this.version == null) {
                 throw getSourceHasNoVersionException(requestedPath);
@@ -72,11 +73,17 @@ public class ProjectVersionDetector {
                     .toString());
         }
 
-        private IllegalArgumentException getNoSourceFoundException(final Path requestedPath) {
+        private IllegalArgumentException getNoSourceFoundException(final Path requestedPath,
+                final List<AnalyzedSource> analyzedSources) {
+            final List<Path> knownSources = analyzedSources.stream().map(AnalyzedSource::getPath)
+                    .collect(Collectors.toList());
             return new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-114")
                     .message(FAILED_TO_DETECT_VERSION + " Could not find a source with specified path {{path}}.",
                             requestedPath.toString())
-                    .mitigation("Please make sure that you defined a source with exactly the same path.").toString());
+                    .mitigation(
+                            "Please make sure that you defined a source with exactly the same path. There following sources are defined in the config: {{sources}}.",
+                            knownSources)
+                    .toString());
         }
     }
 }

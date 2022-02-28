@@ -167,7 +167,7 @@ class ProjectKeeperConfigReaderTest {
                 "version: \n  fromSource: \"./pom.xml\"");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
         assertThat(config.getVersionProvider(),
-                equalTo(new ProjectKeeperConfig.VersionFromSource(Path.of("./pom.xml"))));
+                equalTo(new ProjectKeeperConfig.VersionFromSource(this.tempDir.resolve("./pom.xml"))));
     }
 
     @Test

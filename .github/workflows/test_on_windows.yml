@@ -28,6 +28,5 @@ jobs:
             ${{ runner.os }}-maven-
       - name: Build and install
         run: mvn --batch-mode clean install
-      # disabled. Waiting for https://github.com/exasol/project-keeper-maven-plugin/issues/214
-      #- name: Run project-keeper itself
-      #  run: mvn --batch-mode project-keeper:verify
+      - name: Run project-keeper itself
+        run: mvn --batch-mode project-keeper:verify
