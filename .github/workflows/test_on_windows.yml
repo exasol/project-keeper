@@ -29,4 +29,4 @@ jobs:
       - name: Build and install
         run: mvn --batch-mode clean install
       - name: Run project-keeper itself
-        run: mvn --batch-mode project-keeper:verify
+        run: mvn --batch-mode com.exasol:project-keeper:verify

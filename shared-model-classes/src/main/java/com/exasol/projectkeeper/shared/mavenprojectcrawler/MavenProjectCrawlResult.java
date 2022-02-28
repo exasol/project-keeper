@@ -8,6 +8,9 @@ import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import jakarta.json.bind.*;
 import lombok.*;
 
+/**
+ * Result of the maven-project-crawler.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor

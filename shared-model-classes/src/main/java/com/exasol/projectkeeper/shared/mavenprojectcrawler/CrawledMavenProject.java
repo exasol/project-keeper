@@ -5,6 +5,9 @@ import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
 import lombok.*;
 
+/**
+ * Wrapper for the crawl result of maven-project-crawler for a single project.
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
