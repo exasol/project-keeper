@@ -71,7 +71,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
         return ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Set.of(values())).type(MAVEN)
                         .path(Path.of("pom.xml")).build()))
-                .versionProvider(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
+                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
     }
 
     private void writeDefaultPom() throws IOException {

@@ -31,7 +31,7 @@ class ProjectVersionDetectorTest {
     void testGetExplicitVersion() {
         final AnalyzedSource source = mockSource("1.2.3");
         final String result = new ProjectVersionDetector().detectVersion(
-                ProjectKeeperConfig.builder().versionProvider(new ProjectKeeperConfig.FixedVersion("3.2.1")).build(),
+                ProjectKeeperConfig.builder().versionConfig(new ProjectKeeperConfig.FixedVersion("3.2.1")).build(),
                 List.of(source));
         assertThat(result, equalTo("3.2.1"));
     }
@@ -42,7 +42,7 @@ class ProjectVersionDetectorTest {
         final AnalyzedSource source1 = mockSource("1.0.0", Path.of("sub1/pom.xml"));
         final AnalyzedSource source2 = mockSource("2.0.0", Path.of("sub2/pom.xml"));
         final String result = new ProjectVersionDetector().detectVersion(
-                ProjectKeeperConfig.builder().versionProvider(new ProjectKeeperConfig.VersionFromSource(path)).build(),
+                ProjectKeeperConfig.builder().versionConfig(new ProjectKeeperConfig.VersionFromSource(path)).build(),
                 List.of(source1, source2));
         assertThat(result, equalTo(expectedVersion));
     }
@@ -62,19 +62,19 @@ class ProjectVersionDetectorTest {
     void testSpecifiedSourceHasNoVersion() {
         final List<AnalyzedSource> sources = List.of(mockSource(null, Path.of("pom.xml")));
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .versionProvider(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml"))).build();
+                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml"))).build();
         final ProjectVersionDetector versionDetector = new ProjectVersionDetector();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> versionDetector.detectVersion(config, sources));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-115: Failed to detect overall project version. The specified source with path pom.xml did not provide a version. Please specify a different source to read from or set an explicit version."));
+                "E-PK-CORE-115: Failed to detect overall project version. The specified source with path pom.xml did not provide a version. Please specify a different source to read from or set an explicit version in your project-keeper config.."));
     }
 
     @Test
     void testSpecifiedSourceNotFound() {
         final List<AnalyzedSource> sources = Collections.emptyList();
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .versionProvider(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml"))).build();
+                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml"))).build();
         final ProjectVersionDetector versionDetector = new ProjectVersionDetector();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> versionDetector.detectVersion(config, sources));

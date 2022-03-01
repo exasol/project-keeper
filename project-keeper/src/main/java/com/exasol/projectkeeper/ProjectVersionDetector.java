@@ -26,9 +26,9 @@ public class ProjectVersionDetector {
      * @throws IllegalArgumentException if it could not detect the version
      */
     public String detectVersion(final ProjectKeeperConfig config, final List<AnalyzedSource> analyzedSources) {
-        if (config.getVersionProvider() != null) {
+        if (config.getVersionConfig() != null) {
             final VersionProviderVisitor visitor = new VersionProviderVisitor(analyzedSources);
-            config.getVersionProvider().accept(visitor);
+            config.getVersionConfig().accept(visitor);
             return visitor.getVersion();
         } else if (analyzedSources.size() == 1 && analyzedSources.get(0).getVersion() != null) {
             return analyzedSources.get(0).getVersion();
@@ -41,7 +41,7 @@ public class ProjectVersionDetector {
     }
 
     @RequiredArgsConstructor
-    private static class VersionProviderVisitor implements ProjectKeeperConfig.VersionProvider.Visitor {
+    private static class VersionProviderVisitor implements ProjectKeeperConfig.VersionConfig.Visitor {
         private final List<AnalyzedSource> analyzedSources;
         @Getter
         private String version;
@@ -65,11 +65,10 @@ public class ProjectVersionDetector {
 
         private IllegalArgumentException getSourceHasNoVersionException(final Path requestedPath) {
             return new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-115")
-                    .message(
-                            FAILED_TO_DETECT_VERSION
-                                    + " The specified source with path {{path}} did not provide a version.",
-                            requestedPath)
-                    .mitigation("Please specify a different source to read from or set an explicit version.")
+                    .message(FAILED_TO_DETECT_VERSION
+                            + " The specified source with path {{path}} did not provide a version.", requestedPath)
+                    .mitigation(
+                            "Please specify a different source to read from or set an explicit version in your project-keeper config..")
                     .toString());
         }
 
@@ -81,7 +80,7 @@ public class ProjectVersionDetector {
                     .message(FAILED_TO_DETECT_VERSION + " Could not find a source with specified path {{path}}.",
                             requestedPath.toString())
                     .mitigation(
-                            "Please make sure that you defined a source with exactly the same path. There following sources are defined in the config: {{sources}}.",
+                            "Please make sure that you defined a source with exactly the same path. The following sources are defined in the config: {{sources}}.",
                             knownSources)
                     .toString());
         }

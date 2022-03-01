@@ -24,7 +24,7 @@ public class ProjectKeeperConfig {
     /** List of regular expressions that match validation messages to exclude */
     @Builder.Default
     private final List<String> excludes = Collections.emptyList();
-    private final VersionProvider versionProvider;
+    private final VersionConfig versionConfig;
 
     /**
      * Enum with types for projects
@@ -35,9 +35,9 @@ public class ProjectKeeperConfig {
     }
 
     /**
-     * interface for classes that tell PK how to find out the overall project version.
+     * Interface for classes that tell PK how to find out the overall project version.
      */
-    public interface VersionProvider {
+    public interface VersionConfig {
 
         /**
          * Accept a visitor.
@@ -47,7 +47,7 @@ public class ProjectKeeperConfig {
         public void accept(Visitor visitor);
 
         /**
-         * Visitor interface for {@link VersionProvider}.
+         * Visitor interface for {@link VersionConfig}.
          */
         public interface Visitor {
 
@@ -71,7 +71,7 @@ public class ProjectKeeperConfig {
      * Config for a provided version string.
      */
     @Data
-    public static class FixedVersion implements VersionProvider {
+    public static class FixedVersion implements VersionConfig {
         private final String version;
 
         @Override
@@ -84,7 +84,7 @@ public class ProjectKeeperConfig {
      * Config that introduces PK to read the version from a source.
      */
     @Data
-    public static class VersionFromSource implements VersionProvider {
+    public static class VersionFromSource implements VersionConfig {
         private final Path pathToPom;
 
         @Override

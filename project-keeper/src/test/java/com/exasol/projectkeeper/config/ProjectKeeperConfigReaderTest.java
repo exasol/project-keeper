@@ -158,7 +158,7 @@ class ProjectKeeperConfigReaderTest {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
                 "version: \"1.2.3\"");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
-        assertThat(config.getVersionProvider(), equalTo(new ProjectKeeperConfig.FixedVersion("1.2.3")));
+        assertThat(config.getVersionConfig(), equalTo(new ProjectKeeperConfig.FixedVersion("1.2.3")));
     }
 
     @Test
@@ -166,7 +166,7 @@ class ProjectKeeperConfigReaderTest {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
                 "version: \n  fromSource: \"./pom.xml\"");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
-        assertThat(config.getVersionProvider(),
+        assertThat(config.getVersionConfig(),
                 equalTo(new ProjectKeeperConfig.VersionFromSource(this.tempDir.resolve("./pom.xml"))));
     }
 
