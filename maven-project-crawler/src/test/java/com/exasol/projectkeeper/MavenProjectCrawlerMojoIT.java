@@ -15,7 +15,9 @@ import org.apache.maven.it.Verifier;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
@@ -23,7 +25,9 @@ import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
-import com.exasol.projectkeeper.shared.mavenprojectcrawler.*;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.ResponseCoder;
 
 @Tag("integration")
 class MavenProjectCrawlerMojoIT {
@@ -52,9 +56,7 @@ class MavenProjectCrawlerMojoIT {
         final TestMavenModel testProject = new TestMavenModel();
         testProject.addDependency("error-reporting-java", "com.exasol", "compile", "0.4.1");
         testProject.writeAsPomToProject(subfolder);
-        final MavenProjectCrawlResult result = runCrawler(subfolder);
-        final CrawledMavenProject crawledProject = result.getCrawledProjects()
-                .get(subfolder.resolve("pom.xml").toString());
+        final CrawledMavenProject crawledProject = runCrawler(subfolder);
         assertAll(//
                 () -> assertThat(crawledProject.getProjectVersion(), equalTo(TestMavenModel.PROJECT_VERSION)),
                 () -> assertThat(crawledProject.getProjectDependencies().getDependencies(),
@@ -66,7 +68,7 @@ class MavenProjectCrawlerMojoIT {
         );
     }
 
-    private MavenProjectCrawlResult runCrawler(final Path projectDir) throws VerificationException, IOException {
+    private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {
         final Verifier verifier = TEST_ENV.getVerifier(this.tempDir);
         verifier.setAutoclean(false);
         final String path = projectDir.resolve("pom.xml").toAbsolutePath().toString().replace("\\", "/");
@@ -74,6 +76,6 @@ class MavenProjectCrawlerMojoIT {
         verifier.executeGoal("com.exasol:project-keeper-java-project-crawler:" + CURRENT_VERSION + ":crawl");
         final String output = Files.readString(Path.of(verifier.getBasedir()).resolve(verifier.getLogFileName()));
         final String response = new ResponseCoder().decodeResponse(output);
-        return MavenProjectCrawlResult.fromJson(response);
+        return MavenProjectCrawlResult.fromJson(response).getCrawledProjects().get(path);
     }
 }
