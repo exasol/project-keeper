@@ -12,8 +12,8 @@ import org.apache.maven.project.ProjectBuildingException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.*;
+import com.exasol.projectkeeper.shared.dependencies.License;
 
 /**
  * This class reads all dependencies of a pom file (including the plugins) together with their license.
@@ -60,10 +60,8 @@ public class ProjectDependencyReader {
         try {
             final var dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
                     dependency.getGroupId(), dependency.getVersion(), project.getRemoteArtifactRepositories());
-            final List<com.exasol.projectkeeper.shared.dependencies.License> licenses = dependenciesPom.getLicenses()
-                    .stream().map(license -> new com.exasol.projectkeeper.shared.dependencies.License(license.getName(),
-                            license.getUrl()))
-                    .collect(Collectors.toList());
+            final List<License> licenses = dependenciesPom.getLicenses().stream()
+                    .map(license -> new License(license.getName(), license.getUrl())).collect(Collectors.toList());
             return new ProjectDependency(getDependencyName(dependenciesPom), dependenciesPom.getUrl(), licenses,
                     mapScopeToDependencyType(dependency.getScope()));
         } catch (final ProjectBuildingException exception) {

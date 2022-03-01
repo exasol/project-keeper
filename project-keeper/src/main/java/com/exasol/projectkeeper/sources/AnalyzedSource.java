@@ -24,6 +24,13 @@ public interface AnalyzedSource {
     Set<ProjectKeeperModule> getModules();
 
     /**
+     * Get the version of this source.
+     * 
+     * @return {@code null if version could not be detected}
+     */
+    String getVersion();
+
+    /**
      * Check if this source should be advertised.
      * 
      * @return {@code true} if this source should be advertised, e.g. in the README.md

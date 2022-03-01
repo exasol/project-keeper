@@ -160,6 +160,20 @@ This makes the project-keeper check that in all repositories exists the file `te
 
 Validations for the POM file are defined using code. For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
 
+### Project Version
+
+PK needs to know about the overall version of the project. For example for validating it in the changes file. For single source projects, PK simply takes the version from the project. For other projects you can:
+
+* Define the version explicitly in the config:
+  ```yaml
+  version: "1.2.3"
+  ```
+* Define a source. PK will then take the version of that source:
+  ```yaml
+  version:
+    fromSource: "subModule1/pom.xml"
+  ```
+
 ## Troubleshooting
 
 **Problem:** Validation on CI fails but locally succeeds. In the CI PK wants to list all dependencies as `Added`.

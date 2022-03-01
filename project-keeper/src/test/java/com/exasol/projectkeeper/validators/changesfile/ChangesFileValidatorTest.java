@@ -13,16 +13,16 @@ import static org.mockito.Mockito.verify;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.List;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.TestEnvBuilder;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.FindingFixHelper;
@@ -30,25 +30,12 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 
 @Tag("integration")
-class ChangesFileValidatorIT {
+class ChangesFileValidatorTest {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
 
     @TempDir
     Path tempDir;
-
-    private static Path testMavenRepo;
-
-    @BeforeAll
-    static void beforeAll() {
-        final MavenIntegrationTestEnvironment testEnv = TestEnvBuilder.getTestEnv();
-        testMavenRepo = testEnv.getLocalMavenRepository();
-    }
-
-    @BeforeEach
-    void beforeEach() throws GitAPIException {
-        Git.init().setDirectory(this.tempDir.toFile()).call().close();
-    }
 
     @Test
     void testValidation() throws IOException {
@@ -61,8 +48,8 @@ class ChangesFileValidatorIT {
     @Test
     void testValidationForSnapshotVersion() throws IOException {
         final AnalyzedMavenSource source = createTestSetup();
-        assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir, testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION, List.of(source)), hasNoValidationFindings());
+        assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir, List.of(source)),
+                hasNoValidationFindings());
     }
 
     @Test
@@ -83,7 +70,7 @@ class ChangesFileValidatorIT {
         final AnalyzedMavenSource source = createTestSetup(model);
         createValidator(source).validate().forEach(FindingFixHelper::fix);
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
-        assertThat(changesFile, hasContent(containsString(TestMavenModel.DEPENDENCY_ARTIFACT_ID)));
+        assertThat(changesFile, hasContent(containsString("my-lib")));
     }
 
     @Test
@@ -96,8 +83,7 @@ class ChangesFileValidatorIT {
     }
 
     private ChangesFileValidator createValidator(final AnalyzedSource source) {
-        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir, testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION, List.of(source));
+        return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir, List.of(source));
     }
 
     private AnalyzedMavenSource createTestSetup() throws IOException {
@@ -106,6 +92,10 @@ class ChangesFileValidatorIT {
 
     private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel) throws IOException {
         mavenModel.writeAsPomToProject(this.tempDir);
-        return new AnalyzedMavenSource(this.tempDir.resolve("pom.xml"), null, true, null, mavenModel.getName(), true);
+        return AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).projectName(mavenModel.getName())
+                .dependencyChanges(
+                        new DependencyChangeReport(List.of(new NewDependency("com.example", "my-lib", "1.2.3")),
+                                Collections.emptyList(), Collections.emptyList(), Collections.emptyList()))
+                .build();
     }
 }

@@ -37,9 +37,13 @@ sources:
     path: maven-project-crawler/pom.xml
     modules:
       - maven_central
+      - udf_coverage
+      - integration_tests
     advertise: false
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
       version: "${revision}"
       relativePath: "../parent-pom/pom.xml"
+version:
+  fromSource: project-keeper/pom.xml

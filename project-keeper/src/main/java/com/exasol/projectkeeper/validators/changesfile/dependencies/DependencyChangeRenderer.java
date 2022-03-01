@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.changesfile.dependencies;
 
-import com.exasol.projectkeeper.shared.model.*;
+import com.exasol.projectkeeper.shared.dependencychanges.*;
 
 /**
  * This class renders dependency changes in the format of the Exasol changes file.

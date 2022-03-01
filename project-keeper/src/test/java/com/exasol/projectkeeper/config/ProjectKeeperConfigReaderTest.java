@@ -154,6 +154,23 @@ class ProjectKeeperConfigReaderTest {
     }
 
     @Test
+    void testReadFixedVersion() throws IOException {
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
+                "version: \"1.2.3\"");
+        final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
+        assertThat(config.getVersionConfig(), equalTo(new ProjectKeeperConfig.FixedVersion("1.2.3")));
+    }
+
+    @Test
+    void testReadVersionFromSource() throws IOException {
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
+                "version: \n  fromSource: \"./pom.xml\"");
+        final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
+        assertThat(config.getVersionConfig(),
+                equalTo(new ProjectKeeperConfig.VersionFromSource(this.tempDir.resolve("./pom.xml"))));
+    }
+
+    @Test
     void testConfigFileMissing() {
         final ProjectKeeperConfigReader reader = new ProjectKeeperConfigReader();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,

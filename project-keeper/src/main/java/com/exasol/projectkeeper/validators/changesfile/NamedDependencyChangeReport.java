@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
-import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
 import lombok.Data;
 

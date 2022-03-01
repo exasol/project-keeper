@@ -18,28 +18,22 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 public class ChangesFileValidator extends AbstractFileValidator {
     private final String projectName;
-    private final Path mvnRepositoryOverride;
-    private final String ownVersion;
     private final List<AnalyzedSource> sources;
     private final String projectVersion;
 
     /**
      * Create a new instance of {@link ChangesFileValidator}
      * 
-     * @param projectVersion        version of the project to validate
-     * @param projectName           name of the maven project
-     * @param projectDirectory      root directory of the maven project
-     * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
-     * @param ownVersion            project-keeper version
-     * @param sources               source projects
+     * @param projectVersion   version of the project to validate
+     * @param projectName      name of the maven project
+     * @param projectDirectory root directory of the maven project
+     * @param sources          source projects
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
-            final Path mvnRepositoryOverride, final String ownVersion, final List<AnalyzedSource> sources) {
+            final List<AnalyzedSource> sources) {
         super(projectDirectory, Path.of("doc", "changes", "changes_" + projectVersion + ".md"));
         this.projectVersion = projectVersion;
         this.projectName = projectName;
-        this.mvnRepositoryOverride = mvnRepositoryOverride;
-        this.ownVersion = ownVersion;
         this.sources = sources;
     }
 
@@ -73,8 +67,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
     }
 
     private ChangesFile fixSections(final ChangesFile changesFile) {
-        final var dependencySectionFixer = new DependencySectionFixer(this.sources, this.mvnRepositoryOverride,
-                this.ownVersion);
+        final var dependencySectionFixer = new DependencySectionFixer(this.sources);
         return dependencySectionFixer.fix(changesFile);
     }
 

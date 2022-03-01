@@ -52,7 +52,7 @@ class ReadmeFileValidatorTest {
                 + "sub 1: [![Maven Central – sub 1](https://img.shields.io/maven-central/v/com.exasol/sub-1)](https://search.maven.org/artifact/com.exasol/sub-1), sub 2: [![Maven Central – sub 2](https://img.shields.io/maven-central/v/com.exasol/sub-2)](https://search.maven.org/artifact/com.exasol/sub-2)\n")));
     }
 
-    private String adaptLineSeparators(String string) {
+    private String adaptLineSeparators(final String string) {
         return string.replace("\n", System.lineSeparator());
     }
 
@@ -70,7 +70,8 @@ class ReadmeFileValidatorTest {
     }
 
     private AnalyzedMavenSource createSource(final String id, final boolean isRoot, final boolean advertise) {
-        return new AnalyzedMavenSource(null, Set.of(MAVEN_CENTRAL), advertise, id, id.replace("-", " "), isRoot);
+        return AnalyzedMavenSource.builder().modules(Set.of(MAVEN_CENTRAL)).advertise(advertise).artifactId(id)
+                .projectName(id.replace("-", " ")).isRootProject(isRoot).build();
     }
 
     @Test

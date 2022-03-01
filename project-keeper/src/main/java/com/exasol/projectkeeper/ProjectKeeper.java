@@ -26,48 +26,40 @@ import com.exasol.projectkeeper.validators.pom.PomFileValidator;
  */
 public class ProjectKeeper {
     private static final String INVALID_STRUCTURE_MESSAGE = "This projects structure does not conform with the template.";
-    private final List<Validator> validators;
     private final Logger logger;
-    private final List<String> excludes;
+    private final Path projectDir;
+    private final String projectName;
+    private final String artifactId;
+    private final Path mvnRepo;
+    private final ProjectKeeperConfig config;
+    private final String ownVersion;
 
     private ProjectKeeper(final Logger logger, final Path projectDir, final String projectName, final String artifactId,
-            final String projectVersion, final Path mvnRepo, final ProjectKeeperConfig config,
-            final String ownVersion) {
+            final Path mvnRepo, final ProjectKeeperConfig config, final String ownVersion) {
         this.logger = logger;
-        this.excludes = config.getExcludes();
-        final GitRepository gitRepository = new GitRepository(projectDir);
-        final var brokenLinkReplacer = new BrokenLinkReplacer(config.getLinkReplacements());
-        final List<ProjectKeeperConfig.Source> sources = config.getSources();
-        final List<AnalyzedSource> analyzedSources = new SourceAnalyzer().analyze(projectDir, sources);
-        this.validators = new ArrayList<>(List.of(new ProjectFilesValidator(projectDir, analyzedSources, logger),
-                new ReadmeFileValidator(projectDir, projectName,
-                        gitRepository.getRepoNameFromRemote().orElse(artifactId), analyzedSources)));
-        this.validators.addAll(getValidatorsPerSource(projectDir, sources));
-        this.validators
-                .addAll(List.of(new LicenseFileValidator(projectDir),
-                        new ChangesFileValidator(projectVersion, projectName, projectDir, mvnRepo, ownVersion,
-                                analyzedSources),
-                        new ChangelogFileValidator(projectDir),
-                        new DependenciesValidator(analyzedSources, projectDir, brokenLinkReplacer, mvnRepo, ownVersion),
-                        new DeletedFilesValidator(projectDir), new GitignoreFileValidator(projectDir)));
+        this.projectDir = projectDir;
+        this.projectName = projectName;
+        this.artifactId = artifactId;
+        this.mvnRepo = mvnRepo;
+        this.config = config;
+        this.ownVersion = ownVersion;
     }
 
     /**
      * Create a new instance of {@link ProjectKeeper}.
-     * 
-     * @param logger         logger
-     * @param projectDir     project directory
-     * @param projectName    name of the project
-     * @param artifactId     artifact-id
-     * @param projectVersion project version
-     * @param mvnRepo        maven repository (null if unknown)
+     *
+     * @param logger      logger
+     * @param projectDir  project directory
+     * @param projectName name of the project
+     * @param artifactId  artifact-id
+     * @param mvnRepo     maven repository (null if unknown)
      * @return built {@link ProjectKeeper}
      */
     public static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir,
-            final String projectName, final String artifactId, final String projectVersion, final Path mvnRepo) {
+            final String projectName, final String artifactId, final Path mvnRepo) {
         final String ownVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
-        return new ProjectKeeper(logger, projectDir, projectName, artifactId, projectVersion, mvnRepo,
-                readConfig(projectDir), ownVersion);
+        return new ProjectKeeper(logger, projectDir, projectName, artifactId, mvnRepo, readConfig(projectDir),
+                ownVersion);
     }
 
     /**
@@ -76,32 +68,55 @@ public class ProjectKeeper {
      * This factory method is for testing only!
      * </p>
      *
-     * @param logger         logger
-     * @param projectDir     project directory
-     * @param projectName    name of the project
-     * @param artifactId     artifact-id
-     * @param projectVersion project version
-     * @param mvnRepo        maven repository (null if unknown)
-     * @param ownVersion     version of project-keeper
+     * @param logger      logger
+     * @param projectDir  project directory
+     * @param projectName name of the project
+     * @param artifactId  artifact-id
+     * @param mvnRepo     maven repository (null if unknown)
+     * @param ownVersion  version of project-keeper
      * @return built {@link ProjectKeeper}
      */
     static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final String projectName,
-            final String artifactId, final String projectVersion, final Path mvnRepo, final String ownVersion) {
-        return new ProjectKeeper(logger, projectDir, projectName, artifactId, projectVersion, mvnRepo,
-                readConfig(projectDir), ownVersion);
+            final String artifactId, final Path mvnRepo, final String ownVersion) {
+        return new ProjectKeeper(logger, projectDir, projectName, artifactId, mvnRepo, readConfig(projectDir),
+                ownVersion);
+    }
+
+    private List<Validator> getPhase2Validators() {
+        final GitRepository gitRepository = new GitRepository(this.projectDir);
+        final List<AnalyzedSource> analyzedSources = new SourceAnalyzer(this.mvnRepo, this.ownVersion)
+                .analyze(this.projectDir, this.config.getSources());
+        final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
+        final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
+        return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger),
+                new ReadmeFileValidator(this.projectDir, this.projectName,
+                        gitRepository.getRepoNameFromRemote().orElse(this.artifactId), analyzedSources),
+                new LicenseFileValidator(this.projectDir),
+                new ChangesFileValidator(projectVersion, this.projectName, this.projectDir, analyzedSources),
+                new ChangelogFileValidator(this.projectDir),
+                new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
+                new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
     }
 
     private static ProjectKeeperConfig readConfig(final Path projectDir) {
         return new ProjectKeeperConfigReader().readConfig(projectDir);
     }
 
-    private List<Validator> getValidatorsPerSource(final Path projectDir,
-            final List<ProjectKeeperConfig.Source> sources) {
+    /**
+     * Get the validators for the 1. validation phase.
+     * <p>
+     * Validators in phase 1 validate the build files like for example the pom.xml. In that phase analyzedSources is not
+     * yet available.
+     * </p>
+     *
+     * @return validators.
+     */
+    private List<Validator> getPhase1Validators() {
         final List<Validator> result = new ArrayList<>();
-        for (final ProjectKeeperConfig.Source source : sources) {
+        for (final ProjectKeeperConfig.Source source : this.config.getSources()) {
             if (source.getType().equals(MAVEN)) {
-                result.add(
-                        new PomFileValidator(projectDir, source.getModules(), source.getPath(), source.getParentPom()));
+                result.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
+                        source.getParentPom()));
             }
         }
         return result;
@@ -113,7 +128,10 @@ public class ProjectKeeper {
      * @return {@code true} if project is valid
      */
     public boolean verify() {
-        final List<ValidationFinding> findings = runValidation();
+        return runValidationPhases(this::handleVerifyFindings);
+    }
+
+    private boolean handleVerifyFindings(final List<ValidationFinding> findings) {
         final List<SimpleValidationFinding> findingsFlat = new FindingsUngrouper().ungroupFindings(findings);
         findingsFlat.forEach(finding -> this.logger.error(finding.getMessage()));
         final boolean hasFindingsWithFix = findingsFlat.stream().anyMatch(SimpleValidationFinding::hasFix);
@@ -137,10 +155,10 @@ public class ProjectKeeper {
         }
     }
 
-    private List<ValidationFinding> runValidation() {
-        final List<ValidationFinding> findings = this.validators.stream()
-                .flatMap(validator -> validator.validate().stream()).collect(Collectors.toList());
-        return new FindingFilter(this.excludes).filterFindings(findings);
+    private List<ValidationFinding> runValidation(final List<Validator> validators) {
+        final List<ValidationFinding> findings = validators.stream().flatMap(validator -> validator.validate().stream())
+                .collect(Collectors.toList());
+        return new FindingFilter(this.config.getExcludes()).filterFindings(findings);
     }
 
     /**
@@ -149,13 +167,30 @@ public class ProjectKeeper {
      * @return {@code true} if all findings could be fixed
      */
     public boolean fix() {
-        final FindingFilter filter = new FindingFilter(this.excludes);
-        final List<SimpleValidationFinding> unfixedFindings = new ArrayList<>();
-        for (final Validator validator : this.validators) {
-            // it's important to run fixes after each validator since they can influence the next validator.
-            final List<ValidationFinding> findings = filter.filterFindings(validator.validate());
-            unfixedFindings.addAll(new FindingsFixer(this.logger).fixFindings(findings));
+        return runValidationPhases(this::fixFindings);
+    }
+
+    /**
+     * Run the validation phase handler.
+     *
+     * @param phaseResultHandler function List<ValidationFinding> -> boolean that is called after each phase. If the
+     *                           function returns {@code false} this method aborts the execution and returns
+     *                           {@code false}.
+     * @return {@code true} if all {@link PhaseResultHandler} returned {@code true}. {@code false otherwise}
+     */
+    private boolean runValidationPhases(final PhaseResultHandler phaseResultHandler) {
+        final List<ValidationFinding> phase1Findings = runValidation(getPhase1Validators());
+        if (!phaseResultHandler.handlePhaseResult(phase1Findings)) {
+            return false;
         }
+        final List<ValidationFinding> phase2Findings = runValidation(getPhase2Validators());
+        return phaseResultHandler.handlePhaseResult(phase2Findings);
+    }
+
+    private boolean fixFindings(final List<ValidationFinding> findings) {
+        final List<SimpleValidationFinding> unfixedFindings = new ArrayList<>(
+                new FindingsFixer(this.logger).fixFindings(findings));
+
         for (final SimpleValidationFinding unfixedFinding : unfixedFindings) {
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-67")
                     .message("Could not auto-fix: {{finding message|uq}}", unfixedFinding.getMessage()).toString());
@@ -168,5 +203,16 @@ public class ProjectKeeper {
         } else {
             return true;
         }
+    }
+
+    @FunctionalInterface
+    private interface PhaseResultHandler {
+        /**
+         * Handler for the result of a validation phase.
+         *
+         * @param findings list of findings
+         * @return {@code false} if the validation should stop after this phase.
+         */
+        boolean handlePhaseResult(final List<ValidationFinding> findings);
     }
 }

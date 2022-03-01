@@ -24,6 +24,7 @@ public class ProjectKeeperConfig {
     /** List of regular expressions that match validation messages to exclude */
     @Builder.Default
     private final List<String> excludes = Collections.emptyList();
+    private final VersionConfig versionConfig;
 
     /**
      * Enum with types for projects
@@ -31,6 +32,65 @@ public class ProjectKeeperConfig {
     public enum SourceType {
         /** Type for maven projects */
         MAVEN
+    }
+
+    /**
+     * Interface for classes that tell PK how to find out the overall project version.
+     */
+    public interface VersionConfig {
+
+        /**
+         * Accept a visitor.
+         *
+         * @param visitor the visitor
+         */
+        public void accept(Visitor visitor);
+
+        /**
+         * Visitor interface for {@link VersionConfig}.
+         */
+        public interface Visitor {
+
+            /**
+             * Visit.
+             *
+             * @param fixedVersion the fixed version
+             */
+            public void visit(FixedVersion fixedVersion);
+
+            /**
+             * Visit.
+             *
+             * @param versionFromMavenSource the version from maven source
+             */
+            public void visit(VersionFromSource versionFromMavenSource);
+        }
+    }
+
+    /**
+     * Config for a provided version string.
+     */
+    @Data
+    public static class FixedVersion implements VersionConfig {
+        private final String version;
+
+        @Override
+        public void accept(final Visitor visitor) {
+            visitor.visit(this);
+        }
+    }
+
+    /**
+     * Config that introduces PK to read the version from a source.
+     */
+    @Data
+    public static class VersionFromSource implements VersionConfig {
+        private final Path pathToPom;
+
+        @Override
+        public void accept(final Visitor visitor) {
+            visitor.visit(this);
+        }
     }
 
     /**

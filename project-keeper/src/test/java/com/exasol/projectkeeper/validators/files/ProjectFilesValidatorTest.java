@@ -45,8 +45,8 @@ class ProjectFilesValidatorTest {
     }
 
     private List<AnalyzedSource> getMvnSourceWithDefaultModule() {
-        return List
-                .of(new AnalyzedMavenSource(this.tempDir.resolve("pom.xml"), DEFAULT_MODULE, true, null, null, true));
+        return List.of(AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).modules(DEFAULT_MODULE)
+                .isRootProject(true).build());
     }
 
     @Test
@@ -80,9 +80,10 @@ class ProjectFilesValidatorTest {
     @Test
     void testMultiSourceProject() {
         final List<AnalyzedSource> sources = List.of(//
-                new AnalyzedMavenSource(this.tempDir.resolve("pom.xml"), DEFAULT_MODULE, true, null, null, true),
-                new AnalyzedMavenSource(this.tempDir.resolve("sub-project/pom.xml"), DEFAULT_MODULE, true, null, null,
-                        false));
+                AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).modules(DEFAULT_MODULE)
+                        .isRootProject(true).build(),
+                AnalyzedMavenSource.builder().path(this.tempDir.resolve("sub-project/pom.xml")).modules(DEFAULT_MODULE)
+                        .isRootProject(false).build());
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, sources, mock(Logger.class));
         fixAllFindings(validator);
         assertAll(//

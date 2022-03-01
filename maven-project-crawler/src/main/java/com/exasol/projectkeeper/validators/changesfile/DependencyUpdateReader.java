@@ -8,25 +8,37 @@ import org.apache.maven.model.Model;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
-import com.exasol.projectkeeper.shared.model.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportReader;
 
 /**
  * Calculate the dependencies updated since the last release.
  */
-class DependencyUpdateReader {
+public class DependencyUpdateReader {
     private final MavenProjectFromFileReader mavenModelReader;
     private final Path projectDirectory;
     private final Model currentMavenModel;
 
-    DependencyUpdateReader(final MavenProjectFromFileReader mavenModelReader, final Path projectDirectory,
+    /**
+     * Create a new instance of {@link DependencyUpdateReader}.
+     * 
+     * @param mavenModelReader  maven model reader
+     * @param projectDirectory  project directory
+     * @param currentMavenModel current project
+     */
+    public DependencyUpdateReader(final MavenProjectFromFileReader mavenModelReader, final Path projectDirectory,
             final Model currentMavenModel) {
         this.mavenModelReader = mavenModelReader;
         this.projectDirectory = projectDirectory;
         this.currentMavenModel = currentMavenModel;
     }
 
-    DependencyChangeReport getDependencyUpdates() {
+    /**
+     * Read the dependency changes.
+     * 
+     * @return dependency changes report
+     */
+    public DependencyChangeReport readDependencyChanges() {
         return new DependencyChangeReportReader().read(getOldModel(), this.currentMavenModel);
     }
 

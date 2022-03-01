@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.shared.model;
+package com.exasol.projectkeeper.shared.dependencychanges;
 
 /**
  * Visitor for the {@link DependencyChange} class structure.

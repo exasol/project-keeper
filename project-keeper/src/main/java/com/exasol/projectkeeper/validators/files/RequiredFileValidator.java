@@ -10,8 +10,6 @@ import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This class validates that a required file exists and checks its content.
  */
@@ -30,12 +28,20 @@ public class RequiredFileValidator {
     private static void fixFile(final Path file, final String templateContent) {
         try {
             Files.createDirectories(file.getParent());
-            Files.writeString(file, templateContent);
+            Files.writeString(file, templateContent.replace("\r", "").replace("\n", System.lineSeparator()));
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-16").message("Failed to create or replace {{required file}}.")
                             .parameter("required file", file).toString(),
                     exception);
+        }
+    }
+
+    private static String unifyNewlines(final String content) {
+        if (content == null) {
+            return null;
+        } else {
+            return content.replace("\r", "");
         }
     }
 
@@ -50,14 +56,15 @@ public class RequiredFileValidator {
     public List<ValidationFinding> validateFile(final Path projectDir, final Path file,
             final ContentValidator contentValidator) {
         final String content = getActualContent(projectDir, file);
-        final Optional<String> newContent = contentValidator.validateContent(content);
+        final String contentWithUnifiedNewline = unifyNewlines(content);
+        final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline);
         if (newContent.isPresent()) {
             final SimpleValidationFinding.Fix fix = (Logger log) -> fixFile(file, newContent.get());
-            if (content == null) {
+            if (contentWithUnifiedNewline == null) {
                 return List.of(SimpleValidationFinding
-                        .withMessage(
-                                ExaError.messageBuilder("E-PK-CORE-17").message("Missing required file: '{{required file}}'")
-                                        .parameter("required file", projectDir.relativize(file)).toString())
+                        .withMessage(ExaError.messageBuilder("E-PK-CORE-17")
+                                .message("Missing required file: '{{required file}}'")
+                                .parameter("required file", projectDir.relativize(file)).toString())
                         .andFix(fix).build());
             } else {
                 return List.of(SimpleValidationFinding
@@ -99,12 +106,16 @@ public class RequiredFileValidator {
         public Optional<String> validateContent(String content);
     }
 
-    @RequiredArgsConstructor
     private static class EqualsContentValidator implements ContentValidator {
         private final String expectedContent;
 
+        private EqualsContentValidator(final String expectedContent) {
+            this.expectedContent = unifyNewlines(expectedContent);
+        }
+
         @Override
         public Optional<String> validateContent(final String content) {
+
             if (!this.expectedContent.equals(content)) {
                 return Optional.of(this.expectedContent);
             } else {

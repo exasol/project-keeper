@@ -27,6 +27,8 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     void testVerify() throws IOException {
         createExamplePomFile();
         writeConfig(createConfigWithNoModules());
+        runFix();
+        Files.deleteIfExists(this.projectDir.resolve("dependencies.md"));
         final String output = assertInvalidAndGetOutput();
         assertThat(output, containsString("E-PK-CORE-50: This project does not have a dependencies.md file."));
     }
@@ -34,8 +36,9 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     @Test
     void testWrongContent() throws IOException {
         createExamplePomFile();
-        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
         writeConfig(createConfigWithNoModules());
+        runFix();
+        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
         final String output = assertInvalidAndGetOutput();
         assertThat(output, containsString("E-PK-CORE-53: The dependencies.md file has outdated content."));
     }
@@ -43,8 +46,9 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     @Test
     void testWrongContentWithNonDefaultRepository() throws IOException {
         createExamplePomFileWithNonDefaultRepo();
-        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
         writeConfig(createConfigWithNoModules());
+        runFix();
+        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
         final String output = assertInvalidAndGetOutput();
         assertThat(output, containsString("E-PK-CORE-53: The dependencies.md file has outdated content."));
     }
@@ -83,11 +87,13 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
     private void createExamplePomFile() throws IOException {
         final TestMavenModel pomModel = new TestMavenModel();
         pomModel.addDependency("error-reporting-java", "com.exasol", "compile", "0.1.0");
+        pomModel.configureAssemblyPluginFinalName();
         pomModel.writeAsPomToProject(this.projectDir);
     }
 
     private void createExamplePomFileWithNonDefaultRepo() throws IOException {
         final TestMavenModel pomModel = new TestMavenModel();
+        pomModel.configureAssemblyPluginFinalName();
         final Repository exasolRepo = new Repository();
         exasolRepo.setUrl("https://maven.exasol.com/artifactory/exasol-releases");
         exasolRepo.setId("maven.exasol.com");

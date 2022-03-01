@@ -5,7 +5,7 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.Dependency;
 
-import com.exasol.projectkeeper.shared.model.*;
+import com.exasol.projectkeeper.shared.dependencychanges.*;
 
 /**
  * This class compares two lists of maven dependencies.
