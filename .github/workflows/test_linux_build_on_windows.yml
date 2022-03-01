@@ -73,22 +73,20 @@ jobs:
           name: project-keeper-jar
       - name: List files
         run: ls
-      - name: List files
-        run: ls artifact
       - name: Install project-keeper
         shell: pwsh
         run: |
-          mvn --batch-mode install:install-file -Dfile="artifact/shared-model-classes.jar" `
-            -DpomFile="artifact/shared-model-classes.pom" `
+          mvn --batch-mode install:install-file -Dfile="shared-model-classes.jar" `
+            -DpomFile="shared-model-classes.pom" `
             "-Dorg.slf4j.simpleLogger.log.org.apache.aven.cli.transfer.Slf4jMavenTransferListener=warn"
-          mvn --batch-mode install:install-file -Dfile="artifact/maven-project-crawler.jar" `
-            -DpomFile="artifact/maven-project-crawler.pom" `
+          mvn --batch-mode install:install-file -Dfile="maven-project-crawler.jar" `
+            -DpomFile="maven-project-crawler.pom" `
             "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-          mvn --batch-mode install:install-file -Dfile="artifact/project-keeper-core.jar" `
-                      -DpomFile="artifact/project-keeper-core.pom" `
+          mvn --batch-mode install:install-file -Dfile="project-keeper-core.jar" `
+                      -DpomFile="project-keeper-core.pom" `
                       "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-          mvn --batch-mode install:install-file -Dfile="artifact/ project-keeper-maven-plugin.jar" `
-                      -DpomFile="artifact/ project-keeper-maven-plugin.pom" `
+          mvn --batch-mode install:install-file -Dfile="project-keeper-maven-plugin.jar" `
+                      -DpomFile="project-keeper-maven-plugin.pom" `
                       "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
       - name: run project-keeper
         shell: pwsh

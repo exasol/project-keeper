@@ -79,7 +79,7 @@ class ProjectVersionDetectorTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> versionDetector.detectVersion(config, sources));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-114: Failed to detect overall project version. Could not find a source with specified path 'pom.xml'. Please make sure that you defined a source with exactly the same path. There following sources are defined in the config: []."));
+                "E-PK-CORE-114: Failed to detect overall project version. Could not find a source with specified path 'pom.xml'. Please make sure that you defined a source with exactly the same path. The following sources are defined in the config: []."));
     }
 
     private AnalyzedSource mockSource(final String version) {
