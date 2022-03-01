@@ -1,12 +1,14 @@
-# Project keeper maven plugin 2.0.0, released 2021-XX-XX
+# Project keeper maven plugin 2.0.0, released 2021-03-01
 
-Code name:
+Code name: Modularized architecture
 
 ## Summary:
 
 This release has **breaking changes**:
 
 * The configuration moved from the maven plugin to a dedicated `.project-keeper.yml` file. See [README](../../README.md).
+* Exclude mechanism changed
+* PK now generates a `pk_generated_parent.pom`. This pom contains all required plugins and dependencies. PK sets this file as parent of the actual pom file. So you can remove the default plugin definitions (that were added by PK in the past) from the pom.xml. They are now inherited from the generated parent.
 
 ## Refactoring
 
