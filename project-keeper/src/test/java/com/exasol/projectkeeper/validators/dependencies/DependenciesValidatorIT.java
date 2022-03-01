@@ -1,0 +1,104 @@
+package com.exasol.projectkeeper.validators.dependencies;
+
+import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.junit.jupiter.api.Assertions.assertAll;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
+
+import org.apache.maven.model.Repository;
+import org.junit.jupiter.api.Tag;
+import org.junit.jupiter.api.Test;
+
+import com.exasol.projectkeeper.ProjectKeeperAbstractIT;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.validators.TestMavenModel;
+
+@Tag("integration")
+//[itest->dsn~depnedency.md-file-validator~1]
+// [itest->dsn~reading-project-dependencies~1]
+class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
+    @Test
+    void testVerify() throws IOException {
+        createExamplePomFile();
+        writeConfig(createConfigWithNoModules());
+        runFix();
+        Files.deleteIfExists(this.projectDir.resolve("dependencies.md"));
+        final String output = assertInvalidAndGetOutput();
+        assertThat(output, containsString("E-PK-CORE-50: This project does not have a dependencies.md file."));
+    }
+
+    @Test
+    void testWrongContent() throws IOException {
+        createExamplePomFile();
+        writeConfig(createConfigWithNoModules());
+        runFix();
+        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
+        final String output = assertInvalidAndGetOutput();
+        assertThat(output, containsString("E-PK-CORE-53: The dependencies.md file has outdated content."));
+    }
+
+    @Test
+    void testWrongContentWithNonDefaultRepository() throws IOException {
+        createExamplePomFileWithNonDefaultRepo();
+        writeConfig(createConfigWithNoModules());
+        runFix();
+        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
+        final String output = assertInvalidAndGetOutput();
+        assertThat(output, containsString("E-PK-CORE-53: The dependencies.md file has outdated content."));
+    }
+
+    @Test
+    void testFix() throws IOException {
+        createExamplePomFile();
+        writeConfig(createConfigWithNoModules());
+        runFix();
+        final String dependenciesFileContent = Files.readString(this.projectDir.resolve("dependencies.md"));
+        assertAll(//
+                () -> assertThat(dependenciesFileContent, containsString("error-reporting-java")),
+                () -> assertThat(dependenciesFileContent, containsString("Maven Clean Plugin"))//
+        );
+    }
+
+    private ProjectKeeperConfig createConfigWithNoModules() {
+        return ProjectKeeperConfig.builder().sources(List.of(ProjectKeeperConfig.Source.builder()
+                .modules(Collections.emptySet()).type(MAVEN).path(Path.of("pom.xml")).build())).build();
+    }
+
+    @Test
+    void testBrokenLinkReplacing() throws IOException {
+        createExamplePomFile();
+        final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
+                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Collections.emptySet()).type(MAVEN)
+                        .path(Path.of("pom.xml")).build()))
+                .linkReplacements(List.of("https://www.apache.org/licenses/LICENSE-2.0.txt|https://my-replacement.de"))
+                .build();
+        writeConfig(config);
+        runFix();
+        final String dependenciesFileContent = Files.readString(this.projectDir.resolve("dependencies.md"));
+        assertThat(dependenciesFileContent, containsString("https://my-replacement.de"));
+    }
+
+    private void createExamplePomFile() throws IOException {
+        final TestMavenModel pomModel = new TestMavenModel();
+        pomModel.addDependency("error-reporting-java", "com.exasol", "compile", "0.1.0");
+        pomModel.configureAssemblyPluginFinalName();
+        pomModel.writeAsPomToProject(this.projectDir);
+    }
+
+    private void createExamplePomFileWithNonDefaultRepo() throws IOException {
+        final TestMavenModel pomModel = new TestMavenModel();
+        pomModel.configureAssemblyPluginFinalName();
+        final Repository exasolRepo = new Repository();
+        exasolRepo.setUrl("https://maven.exasol.com/artifactory/exasol-releases");
+        exasolRepo.setId("maven.exasol.com");
+        pomModel.addRepository(exasolRepo);
+        pomModel.addDependency("exasol-jdbc", "com.exasol", "compile", "7.0.4");
+        pomModel.writeAsPomToProject(this.projectDir);
+    }
+}

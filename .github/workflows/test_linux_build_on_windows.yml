@@ -32,13 +32,21 @@ jobs:
             --batch-mode \
             -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - name: Strip version number
-        run: cp $(find target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") target/project-keeper.jar
+        run: |
+          mkdir artifact
+          cp $(find project-keeper/target/ -regextype sed -regex ".*/project-keeper-core-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") artifact/project-keeper-core.jar
+          cp project-keeper/.flattened-pom.xml artifact/project-keeper-core.pom
+          cp $(find maven-project-crawler/target/ -regextype sed -regex ".*/project-keeper-java-project-crawler-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") artifact/maven-project-crawler.jar
+          cp maven-project-crawler/.flattened-pom.xml artifact/maven-project-crawler.pom
+          cp $(find shared-model-classes/target/ -regextype sed -regex ".*/project-keeper-shared-model-classes-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") artifact/shared-model-classes.jar
+          cp shared-model-classes/.flattened-pom.xml artifact/shared-model-classes.pom
+          cp $(find project-keeper-maven-plugin/target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") artifact/project-keeper-maven-plugin.jar
+          cp project-keeper-maven-plugin/.flattened-pom.xml artifact/project-keeper-maven-plugin.pom
       - name: Upload jar artifact
         uses: actions/upload-artifact@master
         with:
           name: project-keeper-jar
-          path: target/project-keeper.jar
-
+          path: artifact
   run-on-windows:
     runs-on: windows-latest
     needs: build-on-linux
@@ -68,11 +76,18 @@ jobs:
       - name: Install project-keeper
         shell: pwsh
         run: |
-          New-Item -Path "." -Name "target/unpacked-jar" -ItemType "directory"
-          Expand-Archive -Path project-keeper.jar -DestinationPath "target/unpacked-jar"
-          mvn --batch-mode install:install-file -Dfile="project-keeper.jar" `
-            -DpomFile="target/unpacked-jar/META-INF/maven/com.exasol/project-keeper-maven-plugin/pom.xml" `
+          mvn --batch-mode install:install-file -Dfile="shared-model-classes.jar" `
+            -DpomFile="shared-model-classes.pom" `
+            "-Dorg.slf4j.simpleLogger.log.org.apache.aven.cli.transfer.Slf4jMavenTransferListener=warn"
+          mvn --batch-mode install:install-file -Dfile="maven-project-crawler.jar" `
+            -DpomFile="maven-project-crawler.pom" `
             "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+          mvn --batch-mode install:install-file -Dfile="project-keeper-core.jar" `
+                      -DpomFile="project-keeper-core.pom" `
+                      "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+          mvn --batch-mode install:install-file -Dfile="project-keeper-maven-plugin.jar" `
+                      -DpomFile="project-keeper-maven-plugin.pom" `
+                      "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
       - name: run project-keeper
         shell: pwsh
-        run: mvn project-keeper:verify
+        run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify -pl .

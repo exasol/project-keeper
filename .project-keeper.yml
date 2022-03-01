@@ -1,0 +1,49 @@
+sources:
+  - type: maven
+    path: shared-model-classes/pom.xml
+    modules:
+      - maven_central
+      - lombok
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
+    advertise: false
+  - type: maven
+    path: project-keeper/pom.xml
+    modules:
+      - maven_central
+      - integration_tests
+      - lombok
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
+  - type: maven
+    path: project-keeper-maven-plugin/pom.xml
+    modules:
+      - maven_central
+      - integration_tests
+      - udf_coverage
+      - lombok
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
+  - type: maven
+    path: maven-project-crawler/pom.xml
+    modules:
+      - maven_central
+      - udf_coverage
+      - integration_tests
+    advertise: false
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
+version:
+  fromSource: project-keeper/pom.xml

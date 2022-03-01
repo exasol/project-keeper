@@ -1,0 +1,4 @@
+error-tags:
+  PK-CORE:
+    packages:
+      - com.exasol.projectkeeper
