@@ -1,7 +1,7 @@
 <!-- @formatter:off -->
 # Dependencies
 
-## Project-keeper-shared-model-classes
+## Project-keeper Shared Model Classes
 
 ### Compile Dependencies
 
@@ -61,7 +61,7 @@
 
 | Dependency                                | License                                        |
 | ----------------------------------------- | ---------------------------------------------- |
-| [project-keeper-shared-model-classes][67] | [MIT][12]                                      |
+| [Project-Keeper shared model classes][67] | [MIT][12]                                      |
 | [jaxb-api][69]                            | [CDDL 1.1][70]; [GPL2 w/ CPE][70]              |
 | [JAXB Runtime][72]                        | [Eclipse Distribution License - v 1.0][10]     |
 | [org.xmlunit:xmlunit-core][74]            | [The Apache Software License, Version 2.0][36] |
@@ -178,7 +178,7 @@
 
 | Dependency                                 | License                                        |
 | ------------------------------------------ | ---------------------------------------------- |
-| [project-keeper-shared-model-classes][67]  | [MIT][12]                                      |
+| [Project-Keeper shared model classes][67]  | [MIT][12]                                      |
 | [Maven Plugin Tools Java Annotations][148] | [Apache License, Version 2.0][26]              |
 | [Maven Plugin API][150]                    | [Apache License, Version 2.0][26]              |
 | [Maven Project Builder][152]               | [The Apache Software License, Version 2.0][36] |
