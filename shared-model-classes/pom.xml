@@ -10,6 +10,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>project-keeper-shared-model-classes</artifactId>
+    <name>Project-Keeper shared model classes</name>
     <dependencies>
         <dependency>
             <artifactId>lombok</artifactId>

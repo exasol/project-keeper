@@ -30,7 +30,7 @@ This release has **breaking changes**:
 
 ## Dependency Updates
 
-### Project-keeper-shared-model-classes
+### Project-Keeper Shared Model Classes
 
 #### Compile Dependency Updates
 
