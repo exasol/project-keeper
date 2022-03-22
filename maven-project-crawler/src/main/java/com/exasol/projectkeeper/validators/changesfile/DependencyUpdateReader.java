@@ -74,7 +74,7 @@ public class DependencyUpdateReader {
             Files.delete(tempDirectory);
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-63").message(
-                    "Failed to create delete the temp directory we created for buffering the pom file of the previous release.")
+                    "Failed to delete the temp directory we created for buffering the pom file of the previous release.")
                     .toString(), exception);
         }
     }

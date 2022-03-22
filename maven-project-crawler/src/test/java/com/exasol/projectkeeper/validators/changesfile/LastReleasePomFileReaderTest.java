@@ -36,7 +36,7 @@ class LastReleasePomFileReaderTest {
 
     @Test
     void testSimpleReading() throws IOException, GitAPIException {
-        try (final TestRepo gitRepo = new TestRepo(this.tempRepo);) {
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
             final String myContent = makeRelease(gitRepo, "0.1.0", this.tempRepo);
             final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
             assertAll(//
