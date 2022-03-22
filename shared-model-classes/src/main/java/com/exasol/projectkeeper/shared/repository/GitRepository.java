@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper.shared.repository;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 
@@ -114,12 +114,13 @@ public class GitRepository {
      * 
      * @param relativeFilePath file path
      * @param commit           commit
-     * @return file contents
+     * @param targetFile       path where this method writes the contet to
      * @throws FileNotFoundException if the file does not exist in the repo
      */
-    public String readFileAtCommit(final Path relativeFilePath, final GitCommit commit) throws FileNotFoundException {
+    public void extractFileFromCommit(final Path relativeFilePath, final GitCommit commit, final Path targetFile)
+            throws FileNotFoundException {
         try (final var git = openLocalGithubRepository()) {
-            return readFileAtCommit(relativeFilePath, git, commit.getCommit());
+            extractFileFromCommit(relativeFilePath, git, commit.getCommit(), targetFile);
         } catch (final FileNotFoundException exception) {
             throw exception;
         } catch (final IOException exception) {
@@ -130,20 +131,24 @@ public class GitRepository {
         }
     }
 
-    private String readFileAtCommit(final Path relativeFilePath, final Git git, final RevCommit commit)
-            throws IOException {
+    private void extractFileFromCommit(final Path relativeFilePath, final Git git, final RevCommit commit,
+            final Path targetFile) throws IOException {
         final var repository = git.getRepository();
         final ObjectId objectForVersionOfFile = findFile(commit, repository, relativeFilePath);
-        return readVersionOfFile(repository, objectForVersionOfFile);
+        copyVersionOfFile(repository, objectForVersionOfFile, targetFile);
     }
 
-    private String readVersionOfFile(final Repository repository, final ObjectId objectForVersionOfFile)
-            throws IOException {
-        try (final var reader = repository.newObjectReader()) {
+    private void copyVersionOfFile(final Repository repository, final ObjectId objectForVersionOfFile,
+            final Path targetFile) throws IOException {
+        final Path targetDir = targetFile.getParent();
+        if (!Files.exists(targetDir)) {
+            Files.createDirectories(targetDir);
+        }
+        try (final var reader = repository.newObjectReader();
+                final FileOutputStream outputStream = new FileOutputStream(targetFile.toFile());
+                final BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(outputStream)) {
             final var objectLoader = reader.open(objectForVersionOfFile);
-            final var contentBuffer = new ByteArrayOutputStream();
-            objectLoader.copyTo(contentBuffer);
-            return contentBuffer.toString(StandardCharsets.UTF_8);
+            objectLoader.copyTo(bufferedOutputStream);
         }
     }
 

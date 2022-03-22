@@ -21,6 +21,7 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
  */
 public class PomFileGenerator {
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
+            new SimplePluginTemplateGenerator("maven_templates/maven-compiler-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-enforcer-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/flatten-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/ossindex-maven-plugin.xml", DEFAULT),

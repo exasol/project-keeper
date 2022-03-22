@@ -1,7 +1,10 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.apache.maven.model.Build;
 import org.apache.maven.model.Model;
@@ -43,21 +46,52 @@ public class DependencyUpdateReader {
     }
 
     private Model getOldModel() {
-        final Optional<String> lastReleasesPomFile = new LastReleasePomFileReader()
-                .readLatestReleasesPomFile(this.projectDirectory, this.currentMavenModel.getVersion());
-        if (lastReleasesPomFile.isPresent()) {
-            return parseOldPomFile(lastReleasesPomFile.get());
-        } else {
-            final var emptyModel = new Model();
-            final var build = new Build();
-            emptyModel.setBuild(build);
-            return emptyModel;
+        final Path relativePathToPom = this.projectDirectory.relativize(this.currentMavenModel.getPomFile().toPath());
+        final Path tempDirectory = createTempDirectory();
+        try {
+            final Optional<Path> lastReleasesPomFile = new LastReleasePomFileReader().extractLatestReleasesPomFile(
+                    this.projectDirectory, relativePathToPom, this.currentMavenModel.getVersion(), tempDirectory);
+            if (lastReleasesPomFile.isPresent()) {
+                return parseOldPomFile(lastReleasesPomFile.get());
+            } else {
+                final var emptyModel = new Model();
+                final var build = new Build();
+                emptyModel.setBuild(build);
+                return emptyModel;
+            }
+        } finally {
+            deleteTempDir(tempDirectory);
         }
     }
 
-    private Model parseOldPomFile(final String pomFileContents) {
-        try (final var temporaryPomFile = new TemporaryPomFile(pomFileContents)) {
-            return this.mavenModelReader.readProject(temporaryPomFile.getPomFile().toFile()).getModel();
+    private void deleteTempDir(final Path tempDirectory) {
+        try {
+            if (Files.isDirectory(tempDirectory)) {
+                try (final Stream<Path> contentStream = Files.list(tempDirectory)) {
+                    contentStream.forEach(this::deleteTempDir);
+                }
+            }
+            Files.delete(tempDirectory);
+        } catch (final IOException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-63").message(
+                    "Failed to create delete the temp directory we created for buffering the pom file of the previous release.")
+                    .toString(), exception);
+        }
+    }
+
+    private Path createTempDirectory() {
+        try {
+            return Files.createTempDirectory("pk-pom-buffer");
+        } catch (final IOException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-62")
+                    .message("Failed to create a temp directory for buffering the pom file of the previous release.")
+                    .toString(), exception);
+        }
+    }
+
+    private Model parseOldPomFile(final Path pomFile) {
+        try {
+            return this.mavenModelReader.readProject(pomFile.toFile()).getModel();
         } catch (final MavenProjectFromFileReader.ReadFailedException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-38")
                     .message("Failed to parse pom file of previous release.").toString(), exception);

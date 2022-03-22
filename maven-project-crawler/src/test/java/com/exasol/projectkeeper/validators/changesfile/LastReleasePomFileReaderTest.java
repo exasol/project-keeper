@@ -2,31 +2,47 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
-import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import org.eclipse.jgit.api.Git;
+import org.apache.maven.model.Parent;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import com.exasol.projectkeeper.TestMavenModel;
+import com.exasol.projectkeeper.TestRepo;
 
 class LastReleasePomFileReaderTest {
     private static final String CURRENT_VERSION = "1.0.0";
     @TempDir
     Path tempDir;
+    private Path tempRepo;
+    private Path resultDir;
+
+    @BeforeEach
+    void setUp() throws IOException {
+        this.tempRepo = this.tempDir.resolve("repo");
+        Files.createDirectory(this.tempRepo);
+        this.resultDir = this.tempDir.resolve("result");
+        Files.createDirectory(this.resultDir);
+    }
 
     @Test
     void testSimpleReading() throws IOException, GitAPIException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            final String myContent = "myContent";
-            makeRelease(git, "0.1.0", myContent, this.tempDir);
-            final Optional<String> result = runLatestReleasePomFileReader(this.tempDir);
-            assertThat(result.orElseThrow(), equalTo(myContent));
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo);) {
+            final String myContent = makeRelease(gitRepo, "0.1.0", this.tempRepo);
+            final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
+            assertAll(//
+                    () -> assertThat(Files.readString(result.orElseThrow()), equalTo(myContent)),
+                    () -> assertTrue(Files.exists(this.resultDir.resolve("parent/pom.xml")))//
+            );
         }
     }
 
@@ -35,79 +51,82 @@ class LastReleasePomFileReaderTest {
      */
     @Test
     void testWithNestedProject() throws IOException, GitAPIException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            final Path subDir = this.tempDir.resolve("sub-dir");
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            final Path subDir = this.tempRepo.resolve("sub-dir");
             Files.createDirectory(subDir);
-            final String myContent = "myContent";
-            makeRelease(git, "0.1.0", myContent, subDir);
-            final Optional<String> result = runLatestReleasePomFileReader(subDir);
-            assertThat(result.orElseThrow(), equalTo(myContent));
+            final String myContent = makeRelease(gitRepo, "0.1.0", subDir);
+            final Optional<Path> result = runLatestReleasePomFileReader(subDir);
+            assertThat(Files.readString(result.orElseThrow()), equalTo(myContent));
         }
     }
 
     @Test
     void testReadingWithNonReleaseTag() throws IOException, GitAPIException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            final String myContent = "myContent";
-            makeRelease(git, "0.1.0", myContent, this.tempDir);
-            makeRelease(git, "jutATag", "otherContent", this.tempDir);
-            final Optional<String> result = runLatestReleasePomFileReader(this.tempDir);
-            assertThat(result.orElseThrow(), equalTo(myContent));
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            final String myContent = makeRelease(gitRepo, "0.1.0", this.tempRepo);
+            makeRelease(gitRepo, "jutATag", this.tempRepo);
+            final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
+            assertThat(Files.readString(result.orElseThrow()), equalTo(myContent));
         }
     }
 
     @Test
     void testReadingWithTwoRelease() throws IOException, GitAPIException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            final String myContent = "myContent";
-            makeRelease(git, "0.1.0", "original content", this.tempDir);
-            makeRelease(git, "0.2.0", myContent, this.tempDir);
-            final Optional<String> result = runLatestReleasePomFileReader(this.tempDir);
-            assertThat(result.orElseThrow(), equalTo(myContent));
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            makeRelease(gitRepo, "0.1.0", this.tempRepo);
+            final String myContent = makeRelease(gitRepo, "0.2.0", this.tempRepo);
+            final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
+            assertThat(Files.readString(result.orElseThrow()), equalTo(myContent));
         }
     }
 
     @Test
     void testReadingWithNoCommits() throws GitAPIException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            final Optional<String> result = runLatestReleasePomFileReader(this.tempDir);
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
             assertTrue(result.isEmpty());
         }
     }
 
     @Test
     void testReadingNoRelease() throws GitAPIException, IOException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            makeRelease(git, "jutATag", "otherContent", this.tempDir);
-            final Optional<String> result = runLatestReleasePomFileReader(this.tempDir);
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            makeRelease(gitRepo, "jutATag", this.tempRepo);
+            final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
             assertTrue(result.isEmpty());
         }
     }
 
     @Test
     void testCurrentReleaseIsSkipped() throws IOException, GitAPIException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
-            final String originalContent = "original content";
-            makeRelease(git, "0.1.0", originalContent, this.tempDir);
-            makeRelease(git, CURRENT_VERSION, "other content", this.tempDir);
-            final Optional<String> result = runLatestReleasePomFileReader(this.tempDir);
-            assertThat(result.orElseThrow(), equalTo(originalContent));
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            final String originalContent = makeRelease(gitRepo, "0.1.0", this.tempRepo);
+            makeRelease(gitRepo, CURRENT_VERSION, this.tempRepo);
+            final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
+            assertThat(Files.readString(result.orElseThrow()), equalTo(originalContent));
         }
     }
 
-    private Optional<String> runLatestReleasePomFileReader(final Path projectDirectory) {
-        return new LastReleasePomFileReader().readLatestReleasesPomFile(projectDirectory, CURRENT_VERSION);
+    private Optional<Path> runLatestReleasePomFileReader(final Path projectDirectory) {
+        return new LastReleasePomFileReader().extractLatestReleasesPomFile(projectDirectory, Path.of("pom.xml"),
+                CURRENT_VERSION, this.resultDir);
     }
 
-    private void makeRelease(final Git git, final String name, final String content, final Path directory)
+    private String makeRelease(final TestRepo git, final String name, final Path directory)
             throws IOException, GitAPIException {
-        final Path subDir = this.tempDir.relativize(directory);
-        final Path testFile = directory.resolve("pom.xml");
-        Files.writeString(testFile, content);
-        final String pattern = subDir.resolve("pom.xml").toString();
-        final String osIndependentPattern = pattern.replace(FileSystems.getDefault().getSeparator(), "/");
-        git.add().addFilepattern(osIndependentPattern).call();
-        git.commit().setMessage("commit for release " + name).call();
-        git.tag().setName(name).call();
+        final Path dirForParent = directory.resolve("parent/");
+        final TestMavenModel parentPom = new TestMavenModel();
+        if (!Files.exists(dirForParent)) {
+            Files.createDirectory(dirForParent);
+        }
+        parentPom.writeAsPomToProject(dirForParent);
+        final TestMavenModel testMavenModel = new TestMavenModel();
+        testMavenModel.setVersion(name);
+        final Parent parentRef = new Parent();
+        parentRef.setRelativePath("./parent/pom.xml");
+        testMavenModel.setParent(parentRef);
+        testMavenModel.writeAsPomToProject(directory);
+        git.addAll().commit().createTag(name);
+        return Files.readString(directory.resolve("pom.xml"));
     }
 }

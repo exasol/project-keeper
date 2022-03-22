@@ -7,6 +7,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,13 @@ public class JavaProjectCrawlerRunner {
             final List<String> commandParts = new ArrayList<>(List.of(getMavenExecutable(), "--batch-mode",
                     "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
                     "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + "crawl",
-                    "-DprojectsToCrawl=" + projectList));
+                    "-DprojectsToCrawl=" + projectList,
+                    /*
+                     * We need to disable the model cache here since it caches the parent poms with {revision} as
+                     * version and then runs into trouble since the cache is different when reading the old pom (for
+                     * comparing dependencies).
+                     */
+                    "-Dmaven.defaultProjectBuilder.disableGlobalModelCache=true"));
             if (this.mvnRepositoryOverride != null) {
                 commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
             }
@@ -77,6 +84,7 @@ public class JavaProjectCrawlerRunner {
             final int exitCode = proc.exitValue();
             final String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
             if (exitCode != 0) {
+                LOGGER.log(Level.SEVERE, output);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78")
                         .message("Failed to run command {{executed command|uq}}, exit code was {{exit code}}.",
                                 commandParts, exitCode)
