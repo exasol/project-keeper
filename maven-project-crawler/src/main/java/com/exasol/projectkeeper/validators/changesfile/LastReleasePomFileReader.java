@@ -4,7 +4,6 @@ import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.apache.maven.model.Model;
@@ -63,7 +62,6 @@ public class LastReleasePomFileReader {
         Parent parentRef = readPomFile(extractedPomFile).getParent();
         while (parentRef != null && parentRef.getRelativePath() != null && !parentRef.getRelativePath().isBlank()) {
             currentPomPath = currentPomPath.getParent().resolve(parentRef.getRelativePath()).normalize();
-            LOGGER.log(Level.INFO, "Next parent: {0}", currentPomPath);
             final Path pathRelativeToGitRepo = pathToGitRepo.relativize(currentPomPath);
             final Optional<Path> parentPom = extractPomFile(gitRepository, latestCommitWithExasolVersionTag,
                     pathRelativeToGitRepo, targetDirectory);

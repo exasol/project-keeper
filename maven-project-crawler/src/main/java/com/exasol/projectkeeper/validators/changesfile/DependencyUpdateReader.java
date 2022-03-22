@@ -79,6 +79,8 @@ public class DependencyUpdateReader {
         }
     }
 
+    @SuppressWarnings("java:S5443") // using temp is ok here, since the data that is stored there is not confidential,
+                                    // and we don't expect attackers on the developer's PCs.
     private Path createTempDirectory() {
         try {
             return Files.createTempDirectory("pk-pom-buffer");

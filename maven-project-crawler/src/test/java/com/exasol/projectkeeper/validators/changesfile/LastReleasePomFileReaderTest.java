@@ -2,8 +2,8 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.hamcrest.Matchers.startsWith;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -104,6 +104,33 @@ class LastReleasePomFileReaderTest {
             makeRelease(gitRepo, CURRENT_VERSION, this.tempRepo);
             final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
             assertThat(Files.readString(result.orElseThrow()), equalTo(originalContent));
+        }
+    }
+
+    @Test
+    void testInvalidPom() throws IOException, GitAPIException {
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            Files.writeString(this.tempRepo.resolve("pom.xml"), "<invalid xml");
+            gitRepo.addAll().commit().createTag("0.1.0");
+            final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                    () -> runLatestReleasePomFileReader(this.tempRepo));
+            assertThat(exception.getMessage(),
+                    equalTo("E-PK-MPC-60: Failed to read pom file of previous version for extracting it's parent."));
+        }
+    }
+
+    @Test
+    void testMissingParent() throws IOException, GitAPIException {
+        try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            final TestMavenModel model = new TestMavenModel();
+            final Parent parent = new Parent();
+            parent.setRelativePath("./missing-parent.pom");
+            model.setParent(parent);
+            model.writeAsPomToProject(this.tempRepo);
+            gitRepo.addAll().commit().createTag("0.1.0");
+            final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                    () -> runLatestReleasePomFileReader(this.tempRepo));
+            assertThat(exception.getMessage(), startsWith("E-PK-MPC-61: Failed to extract the parent pom"));
         }
     }
 

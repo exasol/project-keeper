@@ -1,7 +1,12 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasItem;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.mock;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -31,15 +36,35 @@ class DependencyUpdateReaderTest {
     @Test
     void testReadUpdates() throws GitAPIException, IOException {
         try (final TestRepo gitRepo = new TestRepo(this.tempDir)) {
-            makeRelease(gitRepo, "1.0.0", "1.2.3");
-            makeRelease(gitRepo, null, "1.2.4");
-            final MavenProject currentProject = new MavenProjectFromFileReaderStub()
-                    .readProject(this.tempDir.resolve("pom.xml").toFile());
+            final MavenProject currentProject = createProjectWithDependencyUpdate(gitRepo);
             final DependencyChangeReport result = new DependencyUpdateReader(new MavenProjectFromFileReaderStub(),
                     this.tempDir, currentProject.getModel()).readDependencyChanges();
             assertThat(result.getCompileDependencyChanges(),
                     hasItem(new UpdatedDependency(EXAMPLE_GROUP_ID, EXAMPLE_ARTIFACT_ID, "1.2.3", "1.2.4")));
         }
+    }
+
+    @Test
+    void testReadingOldPomFails() throws GitAPIException, IOException, MavenProjectFromFileReader.ReadFailedException {
+        try (final TestRepo gitRepo = new TestRepo(this.tempDir)) {
+            final MavenProject currentProject = createProjectWithDependencyUpdate(gitRepo);
+            final MavenProjectFromFileReader projectReader = mock(MavenProjectFromFileReader.class);
+            doThrow(new MavenProjectFromFileReader.ReadFailedException("", null)).when(projectReader)
+                    .readProject(any());
+            final DependencyUpdateReader dependencyUpdateReader = new DependencyUpdateReader(projectReader,
+                    this.tempDir, currentProject.getModel());
+            final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                    dependencyUpdateReader::readDependencyChanges);
+            assertThat(exception.getMessage(), equalTo("E-PK-MPC-38: Failed to parse pom file of previous release."));
+        }
+    }
+
+    private MavenProject createProjectWithDependencyUpdate(final TestRepo gitRepo) throws IOException, GitAPIException {
+        makeRelease(gitRepo, "1.0.0", "1.2.3");
+        makeRelease(gitRepo, null, "1.2.4");
+        final MavenProject currentProject = new MavenProjectFromFileReaderStub()
+                .readProject(this.tempDir.resolve("pom.xml").toFile());
+        return currentProject;
     }
 
     private String makeRelease(final TestRepo git, final String name, final String dependencyVersion)
