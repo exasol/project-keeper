@@ -86,8 +86,10 @@ class GitRepositoryTest {
 
     @Test
     void testReadFileAtCommit() throws GitAPIException, IOException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call()) {
-            final Path testFile = this.tempDir.resolve("myFile.txt");
+        final Path gitDir = this.tempDir.resolve("repo");
+        Files.createDirectory(gitDir);
+        try (final Git git = Git.init().setDirectory(gitDir.toFile()).call()) {
+            final Path testFile = gitDir.resolve("myFile.txt");
             final String fileContent = "some string";
             Files.writeString(testFile, fileContent);
             git.add().addFilepattern("myFile.txt").call();
@@ -95,17 +97,20 @@ class GitRepositoryTest {
             Files.delete(testFile);
             git.add().addFilepattern("myFile.txt").call();
             git.commit().setMessage("removed file").call();
-
-            final GitRepository repository = new GitRepository(this.tempDir);
-            final String result = repository.readFileAtCommit(Path.of("myFile.txt"), new GitCommit(initialCommit));
+            final GitRepository repository = new GitRepository(gitDir);
+            final Path destinationFile = this.tempDir.resolve("result");
+            repository.extractFileFromCommit(Path.of("myFile.txt"), new GitCommit(initialCommit), destinationFile);
+            final String result = Files.readString(destinationFile);
             assertThat(result, equalTo(fileContent));
         }
     }
 
     @Test
     void testReadFileAtCommitInSubDir() throws GitAPIException, IOException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call()) {
-            final Path subdir = this.tempDir.resolve("subdir");
+        final Path gitRepo = this.tempDir.resolve("repo");
+        Files.createDirectory(gitRepo);
+        try (final Git git = Git.init().setDirectory(gitRepo.toFile()).call()) {
+            final Path subdir = gitRepo.resolve("subdir");
             Files.createDirectory(subdir);
             final Path testFile = subdir.resolve("myFile.txt");
             final String fileContent = "some string";
@@ -115,9 +120,11 @@ class GitRepositoryTest {
             Files.delete(testFile);
             git.add().addFilepattern("subdir/myFile.txt").call();
             git.commit().setMessage("removed file").call();
-            final GitRepository repository = new GitRepository(this.tempDir);
-            final String result = repository.readFileAtCommit(Path.of("subdir/myFile.txt"),
-                    new GitCommit(initialCommit));
+            final GitRepository repository = new GitRepository(gitRepo);
+            final Path destinationFile = this.tempDir.resolve("result");
+            repository.extractFileFromCommit(Path.of("subdir/myFile.txt"), new GitCommit(initialCommit),
+                    destinationFile);
+            final String result = Files.readString(destinationFile);
             assertThat(result, equalTo(fileContent));
         }
     }
@@ -126,8 +133,9 @@ class GitRepositoryTest {
     void testReadFileAtCommitInNoGitDirectory() {
         final GitRepository repository = new GitRepository(this.tempDir);
         final Path testPath = Path.of("test.md");
+        final Path targetFile = this.tempDir.resolve("targetFile");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> repository.readFileAtCommit(testPath, null));
+                () -> repository.extractFileFromCommit(testPath, null, targetFile));
         assertThat(exception.getMessage(), startsWith("E-PK-SMC-32"));
     }
 
@@ -137,8 +145,9 @@ class GitRepositoryTest {
             final GitCommit commit = new GitCommit(makeCommitAndTag(git, 1, false));
             final GitRepository repository = new GitRepository(this.tempDir);
             final Path nonExistingPath = Path.of("nonExistingFile.md");
+            final Path targetFile = this.tempDir.resolve("targetFile");
             final FileNotFoundException exception = assertThrows(FileNotFoundException.class,
-                    () -> repository.readFileAtCommit(nonExistingPath, commit));
+                    () -> repository.extractFileFromCommit(nonExistingPath, commit, targetFile));
             assertThat(exception.getMessage(), startsWith("E-PK-SMC-35"));
         }
     }

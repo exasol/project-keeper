@@ -30,8 +30,8 @@ public class DefaultMavenProjectFromFileReader implements MavenProjectFromFileRe
     @Override
     public MavenProject readProject(final File pomFile) throws ReadFailedException {
         try {
-            final ProjectBuildingResult build = this.mavenProjectBuilder.build(pomFile,
-                    this.session.getProjectBuildingRequest());
+            final ProjectBuildingRequest projectBuildingRequest = this.session.getProjectBuildingRequest();
+            final ProjectBuildingResult build = this.mavenProjectBuilder.build(pomFile, projectBuildingRequest);
             return build.getProject();
         } catch (final ProjectBuildingException exception) {
             throw new ReadFailedException(
