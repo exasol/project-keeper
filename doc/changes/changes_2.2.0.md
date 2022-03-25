@@ -6,6 +6,10 @@ Code name:
 
 * #259: Added ids to maven plugin executions
 
+## Bug Fixes:
+
+* #256: Fixed that changelog file was only updated on second run
+
 ## Dependency Updates
 
 ### Project Keeper Core
