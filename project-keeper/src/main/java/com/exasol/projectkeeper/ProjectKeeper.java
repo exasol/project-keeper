@@ -5,6 +5,7 @@ import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAV
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
@@ -82,24 +83,8 @@ public class ProjectKeeper {
                 ownVersion);
     }
 
-    private List<Validator> getPhase2Validators() {
-        final GitRepository gitRepository = new GitRepository(this.projectDir);
-        final List<AnalyzedSource> analyzedSources = new SourceAnalyzer(this.mvnRepo, this.ownVersion)
-                .analyze(this.projectDir, this.config.getSources());
-        final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
-        final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
-        return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger),
-                new ReadmeFileValidator(this.projectDir, this.projectName,
-                        gitRepository.getRepoNameFromRemote().orElse(this.artifactId), analyzedSources),
-                new LicenseFileValidator(this.projectDir),
-                new ChangesFileValidator(projectVersion, this.projectName, this.projectDir, analyzedSources),
-                new ChangelogFileValidator(this.projectDir),
-                new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
-                new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
-    }
-
-    private static ProjectKeeperConfig readConfig(final Path projectDir) {
-        return new ProjectKeeperConfigReader().readConfig(projectDir);
+    private List<Supplier<List<Validator>>> getValidatorChain() {
+        return List.of(this::getPhase1Validators, this::getPhase2Validators, this::getPhase3Validators);
     }
 
     /**
@@ -120,6 +105,33 @@ public class ProjectKeeper {
             }
         }
         return result;
+    }
+
+    private List<Validator> getPhase2Validators() {
+        final GitRepository gitRepository = new GitRepository(this.projectDir);
+        final List<AnalyzedSource> analyzedSources = new SourceAnalyzer(this.mvnRepo, this.ownVersion)
+                .analyze(this.projectDir, this.config.getSources());
+        final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
+        final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
+        return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger),
+                new ReadmeFileValidator(this.projectDir, this.projectName,
+                        gitRepository.getRepoNameFromRemote().orElse(this.artifactId), analyzedSources),
+                new LicenseFileValidator(this.projectDir),
+                new ChangesFileValidator(projectVersion, this.projectName, this.projectDir, analyzedSources),
+                new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
+                new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
+    }
+
+    private List<Validator> getPhase3Validators() {
+        /*
+         * The {@link ChangelogFileValidator} needs to be in phase 3 since it's dependant of the result of the {@link
+         * ChangesFileValidator}.
+         */
+        return List.of(new ChangelogFileValidator(this.projectDir));
+    }
+
+    private static ProjectKeeperConfig readConfig(final Path projectDir) {
+        return new ProjectKeeperConfigReader().readConfig(projectDir);
     }
 
     /**
@@ -179,12 +191,14 @@ public class ProjectKeeper {
      * @return {@code true} if all {@link PhaseResultHandler} returned {@code true}. {@code false otherwise}
      */
     private boolean runValidationPhases(final PhaseResultHandler phaseResultHandler) {
-        final List<ValidationFinding> phase1Findings = runValidation(getPhase1Validators());
-        if (!phaseResultHandler.handlePhaseResult(phase1Findings)) {
-            return false;
+        for (final Supplier<List<Validator>> phaseSupplier : getValidatorChain()) {
+            final List<Validator> validators = phaseSupplier.get();
+            final List<ValidationFinding> findings = runValidation(validators);
+            if (!phaseResultHandler.handlePhaseResult(findings)) {
+                return false;
+            }
         }
-        final List<ValidationFinding> phase2Findings = runValidation(getPhase2Validators());
-        return phaseResultHandler.handlePhaseResult(phase2Findings);
+        return true;
     }
 
     private boolean fixFindings(final List<ValidationFinding> findings) {

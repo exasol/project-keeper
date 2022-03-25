@@ -6,7 +6,21 @@ Code name:
 
 * #259: Added ids to maven plugin executions
 
+## Bug Fixes:
+
+* #256: Fixed that changelog file was only updated on second run
+
+## Refactoring
+
+* #258: Cleaned up non generated poms
+
 ## Dependency Updates
+
+### Project-Keeper Shared Model Classes
+
+#### Plugin Dependency Updates
+
+* Removed `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M3`
 
 ### Project Keeper Core
 
@@ -29,3 +43,7 @@ Code name:
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.1.0` to `2.2.0`
+
+#### Test Dependency Updates
+
+* Updated `org.jacoco:org.jacoco.agent:0.8.7` to `0.8.5`
