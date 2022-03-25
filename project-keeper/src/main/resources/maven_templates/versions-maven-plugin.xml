@@ -4,6 +4,7 @@
     <version>2.8.1</version>
     <executions>
         <execution>
+            <id>display-updates</id>
             <phase>package</phase>
             <goals>
                 <goal>display-plugin-updates</goal>

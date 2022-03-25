@@ -15,6 +15,7 @@
     </configuration>
     <executions>
         <execution>
+            <id>verify</id>
             <goals>
                 <goal>integration-test</goal>
                 <goal>verify</goal>
