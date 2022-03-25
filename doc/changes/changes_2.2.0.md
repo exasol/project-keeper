@@ -10,6 +10,10 @@ Code name:
 
 * #256: Fixed that changelog file was only updated on second run
 
+## Refactoring
+
+* #258: Cleaned up non generated poms
+
 ## Dependency Updates
 
 ### Project Keeper Core
