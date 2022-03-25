@@ -87,6 +87,7 @@
                 <version>3.1.0</version>
                 <executions>
                     <execution>
+                        <id>audit</id>
                         <phase>package</phase>
                         <goals>
                             <goal>audit</goal>
@@ -127,6 +128,7 @@
                 <version>2.8.1</version>
                 <executions>
                     <execution>
+                        <id>display-updates</id>
                         <phase>package</phase>
                         <goals>
                             <goal>display-plugin-updates</goal>
@@ -296,6 +298,7 @@
                 <version>0.7.1</version>
                 <executions>
                     <execution>
+                        <id>verify</id>
                         <goals>
                             <goal>verify</goal>
                         </goals>

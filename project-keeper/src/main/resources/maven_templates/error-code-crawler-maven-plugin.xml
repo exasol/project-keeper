@@ -4,6 +4,7 @@
     <version>0.7.1</version>
     <executions>
         <execution>
+            <id>verify</id>
             <goals>
                 <goal>verify</goal>
             </goals>

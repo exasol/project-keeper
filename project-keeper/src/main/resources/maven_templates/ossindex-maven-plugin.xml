@@ -4,6 +4,7 @@
     <version>3.1.0</version>
     <executions>
         <execution>
+            <id>audit</id>
             <phase>package</phase>
             <goals>
                 <goal>audit</goal>
