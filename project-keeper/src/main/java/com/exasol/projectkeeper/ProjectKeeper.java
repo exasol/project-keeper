@@ -193,8 +193,8 @@ public class ProjectKeeper {
     private boolean runValidationPhases(final PhaseResultHandler phaseResultHandler) {
         for (final Supplier<List<Validator>> phaseSupplier : getValidatorChain()) {
             final List<Validator> validators = phaseSupplier.get();
-            final List<ValidationFinding> phase1Findings = runValidation(validators);
-            if (!phaseResultHandler.handlePhaseResult(phase1Findings)) {
+            final List<ValidationFinding> findings = runValidation(validators);
+            if (!phaseResultHandler.handlePhaseResult(findings)) {
                 return false;
             }
         }
