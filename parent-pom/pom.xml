@@ -10,7 +10,7 @@
     <description>This tool checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
     </description>
-    <url>https://github.com/exasol/project-keeper-maven-plugin</url>
+    <url>https://github.com/exasol/project-keeper</url>
     <licenses>
         <license>
             <name>MIT</name>
