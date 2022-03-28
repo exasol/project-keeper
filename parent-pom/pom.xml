@@ -37,13 +37,13 @@
         </repository>
     </distributionManagement>
     <scm>
-        <connection>scm:git:https://github.com/exasol/project-keeper-maven-plugin.git</connection>
-        <developerConnection>scm:git:https://github.com/exasol/project-keeper-maven-plugin.git
+        <connection>scm:git:https://github.com/exasol/project-keeper.git</connection>
+        <developerConnection>scm:git:https://github.com/exasol/project-keeper.git
         </developerConnection>
-        <url>https://github.com/exasol/project-keeper-maven-plugin/tree/master</url>
+        <url>https://github.com/exasol/project-keeper/tree/main</url>
     </scm>
     <properties>
-        <revision>2.2.0</revision>
+        <revision>2.3.0</revision>
         <maven.version>3.8.4</maven.version>
         <junit.version>5.8.2</junit.version>
         <junit.platform.version>1.6.2</junit.platform.version>
