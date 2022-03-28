@@ -1,4 +1,4 @@
-# Project Keeper Project 2.3.0, released 2022-??-??
+# Project Keeper Project 2.3.0, released 2022-03-28
 
 Code name:
 
