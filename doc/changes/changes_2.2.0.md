@@ -5,6 +5,7 @@ Code name: Added IDs to executions
 ## Features
 
 * #259: Added ids to maven plugin executions
+* #242: Added cancelling of GitHub action in-progress
 
 ## Bug Fixes:
 
