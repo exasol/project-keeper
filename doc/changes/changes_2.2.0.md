@@ -1,6 +1,6 @@
-# Project Keeper Project 2.2.0, released 2022-??-??
+# Project Keeper Project 2.2.0, released 2022-03-28
 
-Code name:
+Code name: Added IDs to executions
 
 ## Features
 
@@ -13,6 +13,7 @@ Code name:
 ## Refactoring
 
 * #258: Cleaned up non generated poms
+* #246: Renamed repository to project-keeper
 
 ## Dependency Updates
 

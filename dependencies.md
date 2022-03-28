@@ -121,7 +121,7 @@
 
 | Dependency                                 | License                                        |
 | ------------------------------------------ | ---------------------------------------------- |
-| [Project keeper core][144]                 | [MIT][12]                                      |
+| [Project keeper core][100]                 | [MIT][12]                                      |
 | [Maven Plugin Tools Java Annotations][146] | [Apache License, Version 2.0][26]              |
 | [Maven Plugin API][148]                    | [Apache License, Version 2.0][26]              |
 | [Maven Project Builder][150]               | [The Apache Software License, Version 2.0][30] |
@@ -234,7 +234,6 @@
 [11]: https://github.com/exasol/error-reporting-java
 [84]: https://maven.apache.org/ref/3.8.4/maven-model/
 [30]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[100]: https://github.com/exasol/project-keeper-maven-plugin/project-keeper-java-project-crawler-generated-parent/project-keeper-java-project-crawler
 [0]: https://projectlombok.org
 [35]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [70]: https://eclipse-ee4j.github.io/jaxb-ri/
@@ -272,12 +271,14 @@
 [146]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [134]: https://maven.apache.org/plugins/maven-jar-plugin/
 [148]: https://maven.apache.org/ref/3.8.4/maven-plugin-api/
+[100]: https://github.com/exasol/project-keeper
 [152]: https://maven.apache.org/ref/3.8.4/maven-core/
 [78]: https://github.com/vdurmont/semver4j
 [47]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [8]: https://projects.eclipse.org/projects/ee4j.yasson
 [128]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [48]: http://www.eclipse.org/legal/epl-v10.html
+[65]: https://github.com/exasol/project-keeper/project-keeper-shared-model-classes-generated-parent/project-keeper-shared-model-classes
 [200]: https://maven.apache.org/plugins/maven-dependency-plugin/
 [59]: http://maven.apache.org/plugins/maven-jar-plugin/
 [3]: https://projects.eclipse.org/license/epl-2.0
@@ -286,7 +287,6 @@
 [27]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
 [49]: https://awhitford.github.com/lombok.maven/lombok-maven-plugin/
 [15]: https://www.eclipse.org/legal/epl-v20.html
-[65]: https://github.com/exasol/project-keeper-maven-plugin/project-keeper-shared-model-classes-generated-parent/project-keeper-shared-model-classes
 [61]: http://maven.apache.org/plugins/maven-install-plugin/
 [31]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [13]: https://www.eclipse.org/jgit/
@@ -296,4 +296,3 @@
 [63]: http://maven.apache.org/plugins/maven-site-plugin/
 [45]: https://maven.apache.org/plugins/maven-javadoc-plugin/
 [53]: https://github.com/exasol/error-code-crawler-maven-plugin
-[144]: https://github.com/exasol/project-keeper-maven-plugin/project-keeper-core-generated-parent/project-keeper-core
