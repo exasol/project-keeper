@@ -14,6 +14,7 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Parent;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.hamcrest.Matchers;
@@ -85,6 +86,12 @@ class PomFileValidatorTest {
         }
     }
 
+    private Model readModel(final Path projectDir) throws XmlPullParserException, IOException {
+        try (final FileReader fileReader = new FileReader(projectDir.toFile())) {
+            return new MavenXpp3Reader().read(fileReader);
+        }
+    }
+
     @Test
     void testMissingGroupId() throws IOException {
         final TestMavenModel testMavenModel = new TestMavenModel();
@@ -100,6 +107,21 @@ class PomFileValidatorTest {
                 List.of(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.JAR_ARTIFACT), this.tempDir.resolve("pom.xml"),
                 parentPomRef);
         return validator.validate();
+    }
+
+    @Test
+    void testFixParentVersion() throws IOException, XmlPullParserException {
+        final Parent parentWithWrongVersion = new Parent();
+        parentWithWrongVersion.setArtifactId("my-test-project-generated-parent");
+        parentWithWrongVersion.setGroupId(TestMavenModel.PROJECT_GROUP_ID);
+        parentWithWrongVersion.setVersion("3.2.0");
+        parentWithWrongVersion.setRelativePath("./pk_generated_parent.pom");
+        final TestMavenModel model = new TestMavenModel();
+        model.setParent(parentWithWrongVersion);
+        model.writeAsPomToProject(this.tempDir);
+        runFix(null);
+        assertThat(readModel(this.tempDir.resolve("pom.xml")).getParent().getVersion(),
+                Matchers.equalTo(TestMavenModel.PROJECT_VERSION));
     }
 
     @Test
