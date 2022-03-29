@@ -1,7 +1,5 @@
 package com.exasol.projectkeeper.validators.files;
 
-import static java.util.Collections.emptyList;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -18,13 +16,24 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 public class RequiredFileValidator {
 
     /**
-     * Create a {@link ContentValidator} for an expected content.
-     * 
+     * Create a {@link ContentValidator} that expects exactly the given content.
+     *
      * @param content expected content
      * @return {@link ContentValidator}
      */
     public static ContentValidator withContentEqualTo(final String content) {
         return new EqualsContentValidator(content);
+    }
+
+    /**
+     * Create a {@link ContentValidator} that expects a file to be present. If the file is missing, the given default
+     * content will be used when fixing the findings.
+     *
+     * @param defaultContent default content in case the file is missing
+     * @return {@link ContentValidator}
+     */
+    public static ContentValidator fileExists(final String defaultContent) {
+        return new FileExistsValidator(defaultContent);
     }
 
     private static void fixFile(final Path file, final String templateContent) {
@@ -48,7 +57,7 @@ public class RequiredFileValidator {
     }
 
     /**
-     * Validate that a file exists and has exactly the expected content.
+     * Validate that a file exists and has the content specified by the content validator.
      *
      * @param projectDir       project directory
      * @param file             absolute path of the file to validate
@@ -61,10 +70,14 @@ public class RequiredFileValidator {
         final String contentWithUnifiedNewline = unifyNewlines(content);
         final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline);
         if (newContent.isPresent()) {
+            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get());
             if (contentWithUnifiedNewline == null) {
-                return missingFileValidationFinding(projectDir, file, newContent.get());
+                return List.of(SimpleValidationFinding
+                        .withMessage(ExaError.messageBuilder("E-PK-CORE-17")
+                                .message("Missing required file: '{{required file}}'")
+                                .parameter("required file", projectDir.relativize(file)).toString())
+                        .andFix(fix).build());
             } else {
-                final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get());
                 return List.of(SimpleValidationFinding
                         .withMessage(ExaError.messageBuilder("E-PK-CORE-18")
                                 .message("Outdated content: '{{file name}}'", projectDir.relativize(file)).toString())
@@ -72,33 +85,6 @@ public class RequiredFileValidator {
             }
         } else {
             return Collections.emptyList();
-        }
-    }
-
-    private List<ValidationFinding> missingFileValidationFinding(final Path projectDir, final Path file,
-            final String defaultContent) {
-        final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, defaultContent);
-        return List.of(SimpleValidationFinding
-                .withMessage(
-                        ExaError.messageBuilder("E-PK-CORE-17").message("Missing required file: '{{required file}}'")
-                                .parameter("required file", projectDir.relativize(file)).toString())
-                .andFix(fix).build());
-    }
-
-    /**
-     * Validate that a file exists, ignoring it's content.
-     *
-     * @param projectDir     project directory
-     * @param file           absolute path of the file to validate
-     * @param defaultContent the default content in case the file does not exist
-     * @return validation findings
-     */
-    public List<ValidationFinding> validateFileExists(final Path projectDir, final Path file,
-            final String defaultContent) {
-        if (!Files.exists(file)) {
-            return missingFileValidationFinding(projectDir, file, defaultContent);
-        } else {
-            return emptyList();
         }
     }
 
@@ -143,6 +129,23 @@ public class RequiredFileValidator {
 
             if (!this.expectedContent.equals(content)) {
                 return Optional.of(this.expectedContent);
+            } else {
+                return Optional.empty();
+            }
+        }
+    }
+
+    private static class FileExistsValidator implements ContentValidator {
+        private final String defaultContent;
+
+        private FileExistsValidator(final String defaultContent) {
+            this.defaultContent = defaultContent;
+        }
+
+        @Override
+        public Optional<String> validateContent(final String content) {
+            if (content == null) {
+                return Optional.of(this.defaultContent);
             } else {
                 return Optional.empty();
             }

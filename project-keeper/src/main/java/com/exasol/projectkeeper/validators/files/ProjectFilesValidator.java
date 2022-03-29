@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
+import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.fileExists;
 import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.withContentEqualTo;
 
 import java.nio.file.Files;
@@ -11,6 +12,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.validators.files.RequiredFileValidator.ContentValidator;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
@@ -77,27 +79,20 @@ public class ProjectFilesValidator implements Validator {
 
     private List<ValidationFinding> validate(final Path projectDirectory, final FileTemplate template) {
         final Path projectFile = projectDirectory.resolve(template.getPathInProject());
+        final ContentValidator contentValidator = getContentValidator(template);
+        return new RequiredFileValidator().validateFile(projectDirectory, projectFile, contentValidator);
+    }
+
+    private ContentValidator getContentValidator(final FileTemplate template) {
         switch (template.getTemplateType()) {
         case REQUIRE_EXACT:
-            return validateExactFileContent(projectDirectory, template, projectFile);
+            return withContentEqualTo(template.getContent());
         case REQUIRE_EXIST:
-            return validateFileExists(projectDirectory, template, projectFile);
+            return fileExists(template.getContent());
         default:
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-119")
                     .message("Unknown template type {{template type}}", template.getTemplateType()).ticketMitigation()
                     .toString());
         }
-    }
-
-    private List<ValidationFinding> validateFileExists(final Path projectDirectory, final FileTemplate template,
-            final Path projectFile) {
-        return new RequiredFileValidator().validateFileExists(projectDirectory, projectFile, template.getContent());
-    }
-
-    private List<ValidationFinding> validateExactFileContent(final Path projectDirectory, final FileTemplate template,
-            final Path projectFile) {
-        final String templateContent = template.getContent();
-        return new RequiredFileValidator().validateFile(projectDirectory, projectFile,
-                withContentEqualTo(templateContent));
     }
 }
