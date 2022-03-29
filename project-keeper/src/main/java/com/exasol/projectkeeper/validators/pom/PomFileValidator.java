@@ -245,6 +245,8 @@ public class PomFileValidator implements Validator {
     }
 
     private static class InvalidPomException extends Exception {
+        private static final long serialVersionUID = 6050603678193596784L;
+
         public InvalidPomException(final String message) {
             super(message);
         }
