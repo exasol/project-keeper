@@ -42,7 +42,7 @@ jobs:
       - name: Sonar analysis
         if: ${{ env.SONAR_TOKEN != null }}
         run: |
-          mvn --batch-mode sonar:sonar \
+          mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false \
               -Dsonar.organization=exasol \

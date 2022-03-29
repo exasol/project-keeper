@@ -10,6 +10,10 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 * #130: Added validation for Release-Droid configuration `release_config.yml`.
 * #213: Replaced `actions/cache@v3` action in workflows with `actions/setup-java@v2` / `cache: 'maven'`
 
+## Refactoring:
+
+* #216: Added sonar-plugin to pk_generated_parent.pom to make maven in the CI pick the one from the correct org
+
 ## Bug Fixes
 
 * #251: Added error-code-report again
@@ -25,6 +29,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 
 ### Project Keeper Core
 
@@ -44,6 +49,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 
 ### Project Keeper Maven Plugin
 
@@ -59,6 +65,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 
 ### Project Keeper Java Project Crawler
 
@@ -76,3 +83,4 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
