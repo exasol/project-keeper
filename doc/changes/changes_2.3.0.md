@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #262: Added automatic fix for the version of parent pom reference in the pom.xml
+* #213: Replaced `actions/cache@v3` action in workflows with `actions/setup-java@v2` / `cache: 'maven'`
 
 ## Refactoring:
 
