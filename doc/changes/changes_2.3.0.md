@@ -22,6 +22,7 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 
 ### Project Keeper Core
 
@@ -36,6 +37,7 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 
 ### Project Keeper Maven Plugin
 
@@ -46,6 +48,7 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 
 ### Project Keeper Java Project Crawler
 
@@ -56,3 +59,4 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
