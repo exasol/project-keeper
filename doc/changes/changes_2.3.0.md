@@ -6,6 +6,10 @@ Code name:
 
 * #262: Added automatic fix for the version of parent pom reference in the pom.xml
 
+## Refactoring:
+
+* #216: Added sonar-plugin to pk_generated_parent.pom to make maven in the CI pick the one from the correct org
+
 ## Bug Fixes
 
 * #251: Added error-code-report again

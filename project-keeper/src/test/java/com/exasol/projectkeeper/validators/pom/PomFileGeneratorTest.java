@@ -48,9 +48,10 @@ class PomFileGeneratorTest {
                 () -> assertThat(pom.getArtifactId(), equalTo("my-parent-pom")),
                 () -> assertThat(pom.getVersion(), equalTo("1.0.0")),
                 () -> assertThat(pluginNames,
-                        containsInAnyOrder("maven-compiler-plugin", "maven-enforcer-plugin", "flatten-maven-plugin",
-                                "ossindex-maven-plugin", "reproducible-build-maven-plugin", "maven-surefire-plugin",
-                                "versions-maven-plugin", "jacoco-maven-plugin", "error-code-crawler-maven-plugin")));
+                        containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
+                                "flatten-maven-plugin", "ossindex-maven-plugin", "reproducible-build-maven-plugin",
+                                "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
+                                "error-code-crawler-maven-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
