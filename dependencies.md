@@ -270,15 +270,15 @@
 [57]: http://maven.apache.org/plugins/maven-resources-plugin/
 [146]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [134]: https://maven.apache.org/plugins/maven-jar-plugin/
-[148]: https://maven.apache.org/ref/3.8.4/maven-plugin-api/
 [100]: https://github.com/exasol/project-keeper
-[152]: https://maven.apache.org/ref/3.8.4/maven-core/
 [78]: https://github.com/vdurmont/semver4j
 [47]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [8]: https://projects.eclipse.org/projects/ee4j.yasson
 [128]: https://maven.apache.org/surefire/maven-failsafe-plugin/
+[148]: https://maven.apache.org/ref/3.8.5/maven-plugin-api/
 [48]: http://www.eclipse.org/legal/epl-v10.html
 [65]: https://github.com/exasol/project-keeper/project-keeper-shared-model-classes-generated-parent/project-keeper-shared-model-classes
+[152]: https://maven.apache.org/ref/3.8.5/maven-core/
 [200]: https://maven.apache.org/plugins/maven-dependency-plugin/
 [59]: http://maven.apache.org/plugins/maven-jar-plugin/
 [3]: https://projects.eclipse.org/license/epl-2.0
