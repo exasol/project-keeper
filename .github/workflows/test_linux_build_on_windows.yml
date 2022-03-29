@@ -22,13 +22,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 11
-      - name: Cache local Maven repository
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: 'maven'
       - name: Build project-keeper
         run: |
           mvn clean package -DskipTests \
@@ -63,13 +57,7 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: 11
-      - name: Cache local Maven repository
-        uses: actions/cache@v3
-        with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
+          cache: 'maven'
       - name: Download jar
         uses: actions/download-artifact@v2
         with:
