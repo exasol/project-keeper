@@ -5,6 +5,7 @@ Code name:
 ## Features
 
 * #262: Added automatic fix for the version of parent pom reference in the pom.xml
+* #130: Added validation for Release-Droid configuration `release_config.yml`.
 
 ## Bug Fixes
 
