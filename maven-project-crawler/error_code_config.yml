@@ -2,3 +2,4 @@ error-tags:
   PK-MPC:
     packages:
       - com.exasol.projectkeeper
+    highest-index: 63
