@@ -7,6 +7,7 @@ import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
@@ -78,6 +79,29 @@ class ProjectFilesValidatorTest {
     }
 
     @Test
+    void testMissingFileWithAnyContent() throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
+                mock(Logger.class));
+        fixAllFindings(validator);
+        final Path testFile = this.tempDir.resolve("release_config.yml");
+        deleteFile(testFile);
+        assertThat(validator, validationErrorMessages(
+                contains("E-PK-CORE-119: Missing required file: '" + testFile.getFileName() + "'")));
+    }
+
+    @Test
+    void testFixMissingFileWithAnyContent() throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
+                mock(Logger.class));
+        fixAllFindings(validator);
+        final Path testFile = this.tempDir.resolve("release_config.yml");
+        deleteFile(testFile);
+        assertAll(() -> assertThat(validator, hasNoMoreFindingsAfterApplyingFixes()),
+                () -> assertTrue(Files.exists(testFile),
+                        "File " + testFile + " does not exist after fixing the findings"));
+    }
+
+    @Test
     void testMultiSourceProject() {
         final List<AnalyzedSource> sources = List.of(//
                 AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).modules(DEFAULT_MODULE)
@@ -101,5 +125,9 @@ class ProjectFilesValidatorTest {
 
     private void changeFile(final Path testFile) throws IOException {
         Files.writeString(testFile, "something");
+    }
+
+    private void deleteFile(final Path testFile) throws IOException {
+        Files.delete(testFile);
     }
 }

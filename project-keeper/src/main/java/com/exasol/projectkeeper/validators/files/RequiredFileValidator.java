@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
+import static java.util.Collections.emptyList;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -46,7 +48,7 @@ public class RequiredFileValidator {
     }
 
     /**
-     * Validate a file.
+     * Validate that a file exists and has exactly the expected content.
      *
      * @param projectDir       project directory
      * @param file             absolute path of the file to validate
@@ -59,7 +61,7 @@ public class RequiredFileValidator {
         final String contentWithUnifiedNewline = unifyNewlines(content);
         final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline);
         if (newContent.isPresent()) {
-            final SimpleValidationFinding.Fix fix = (Logger log) -> fixFile(file, newContent.get());
+            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get());
             if (contentWithUnifiedNewline == null) {
                 return List.of(SimpleValidationFinding
                         .withMessage(ExaError.messageBuilder("E-PK-CORE-17")
@@ -74,6 +76,29 @@ public class RequiredFileValidator {
             }
         } else {
             return Collections.emptyList();
+        }
+    }
+
+    /**
+     * Validate that a file exists, ignoring it's content.
+     *
+     * @param projectDir     project directory
+     * @param file           absolute path of the file to validate
+     * @param defaultContent the default content in case the file does not exist
+     * @return validation findings
+     */
+    public List<ValidationFinding> validateFileExists(final Path projectDir, final Path file,
+            final String defaultContent) {
+        if (!Files.exists(file)) {
+            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, defaultContent);
+            return List
+                    .of(SimpleValidationFinding
+                            .withMessage(ExaError.messageBuilder("E-PK-CORE-119")
+                                    .message("Missing required file: '{{required file}}'")
+                                    .parameter("required file", projectDir.relativize(file)).toString())
+                            .andFix(fix).build());
+        } else {
+            return emptyList();
         }
     }
 
