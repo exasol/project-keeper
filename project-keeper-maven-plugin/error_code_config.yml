@@ -2,3 +2,4 @@ error-tags:
   PK-MVNP:
     packages:
       - com.exasol.projectkeeper
+    highest-index: 75

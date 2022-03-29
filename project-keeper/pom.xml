@@ -5,8 +5,7 @@
     <artifactId>project-keeper-core</artifactId>
     <packaging>jar</packaging>
     <name>Project keeper core</name>
-    <description>Project keeper is a tool that verifies and fixes project setups.
-    </description>
+    <description>Project keeper is a tool that verifies and fixes project setups.</description>
     <parent>
         <relativePath>./pk_generated_parent.pom</relativePath>
         <groupId>com.exasol</groupId>
