@@ -86,7 +86,7 @@ class ProjectFilesValidatorTest {
         final Path testFile = this.tempDir.resolve("release_config.yml");
         deleteFile(testFile);
         assertThat(validator, validationErrorMessages(
-                contains("E-PK-CORE-119: Missing required file: '" + testFile.getFileName() + "'")));
+                contains("E-PK-CORE-17: Missing required file: '" + testFile.getFileName() + "'")));
     }
 
     @Test

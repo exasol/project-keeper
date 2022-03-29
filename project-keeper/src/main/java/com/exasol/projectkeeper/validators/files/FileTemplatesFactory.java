@@ -42,7 +42,7 @@ class FileTemplatesFactory {
 
     private List<FileTemplate> getGenericMavenTemplates() {
         final List<FileTemplate> templates = new ArrayList<>();
-        templates.add(new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXIST));
+        templates.add(new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",

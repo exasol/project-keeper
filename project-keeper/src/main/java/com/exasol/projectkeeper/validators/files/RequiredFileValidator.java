@@ -61,14 +61,10 @@ public class RequiredFileValidator {
         final String contentWithUnifiedNewline = unifyNewlines(content);
         final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline);
         if (newContent.isPresent()) {
-            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get());
             if (contentWithUnifiedNewline == null) {
-                return List.of(SimpleValidationFinding
-                        .withMessage(ExaError.messageBuilder("E-PK-CORE-17")
-                                .message("Missing required file: '{{required file}}'")
-                                .parameter("required file", projectDir.relativize(file)).toString())
-                        .andFix(fix).build());
+                return missingFileValidationFinding(projectDir, file, newContent.get());
             } else {
+                final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get());
                 return List.of(SimpleValidationFinding
                         .withMessage(ExaError.messageBuilder("E-PK-CORE-18")
                                 .message("Outdated content: '{{file name}}'", projectDir.relativize(file)).toString())
@@ -77,6 +73,16 @@ public class RequiredFileValidator {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    private List<ValidationFinding> missingFileValidationFinding(final Path projectDir, final Path file,
+            final String defaultContent) {
+        final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, defaultContent);
+        return List.of(SimpleValidationFinding
+                .withMessage(
+                        ExaError.messageBuilder("E-PK-CORE-17").message("Missing required file: '{{required file}}'")
+                                .parameter("required file", projectDir.relativize(file)).toString())
+                .andFix(fix).build());
     }
 
     /**
@@ -90,13 +96,7 @@ public class RequiredFileValidator {
     public List<ValidationFinding> validateFileExists(final Path projectDir, final Path file,
             final String defaultContent) {
         if (!Files.exists(file)) {
-            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, defaultContent);
-            return List
-                    .of(SimpleValidationFinding
-                            .withMessage(ExaError.messageBuilder("E-PK-CORE-119")
-                                    .message("Missing required file: '{{required file}}'")
-                                    .parameter("required file", projectDir.relativize(file)).toString())
-                            .andFix(fix).build());
+            return missingFileValidationFinding(projectDir, file, defaultContent);
         } else {
             return emptyList();
         }

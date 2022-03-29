@@ -2,6 +2,8 @@
 
 Code name:
 
+Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXIST` to `REQUIRE_EXACT`. If you have customized this file you will need to add an exclusion for this.
+
 ## Features
 
 * #262: Added automatic fix for the version of parent pom reference in the pom.xml

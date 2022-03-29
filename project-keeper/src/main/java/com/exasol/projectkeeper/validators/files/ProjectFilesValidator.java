@@ -83,7 +83,7 @@ public class ProjectFilesValidator implements Validator {
         case REQUIRE_EXIST:
             return validateFileExists(projectDirectory, template, projectFile);
         default:
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-120")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-119")
                     .message("Unknown template type {{template type}}", template.getTemplateType()).ticketMitigation()
                     .toString());
         }
