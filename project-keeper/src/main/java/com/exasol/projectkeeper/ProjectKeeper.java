@@ -70,13 +70,12 @@ public class ProjectKeeper {
      * @param logger      logger
      * @param projectDir  project directory
      * @param projectName name of the project
-     * @param artifactId  artifact-id
      * @param mvnRepo     maven repository (null if unknown)
      * @param ownVersion  version of project-keeper
      * @return built {@link ProjectKeeper}
      */
     static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final String projectName,
-            final String artifactId, final Path mvnRepo, final String ownVersion) {
+            final Path mvnRepo, final String ownVersion) {
         return new ProjectKeeper(logger, projectDir, projectName, mvnRepo, readConfig(projectDir), ownVersion);
     }
 

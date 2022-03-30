@@ -47,3 +47,4 @@ sources:
       relativePath: "../parent-pom/pom.xml"
 version:
   fromSource: project-keeper/pom.xml
+pk_version:

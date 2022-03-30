@@ -65,7 +65,7 @@ public class ProjectKeeperAbstractIT {
 
     protected ProjectKeeper getProjectKeeper(final Logger logger) {
         return ProjectKeeper.createProjectKeeper(logger, this.projectDir, TestMavenModel.PROJECT_ARTIFACT_ID,
-                TestMavenModel.PROJECT_ARTIFACT_ID, getMavenRepo(), CURRENT_VERSION);
+                getMavenRepo(), CURRENT_VERSION);
     }
 
     public void assertVerifySucceeds() {

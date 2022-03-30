@@ -11,6 +11,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 * #213: Replaced `actions/cache@v3` action in workflows with `actions/setup-java@v2` / `cache: 'maven'`
 * #198: Enabled testcontainer reuse to speedup builds
 * #73: Validate pom project info
+* #101: Validate groupId
 
 ## Refactoring:
 
