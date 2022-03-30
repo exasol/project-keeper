@@ -1,16 +1,18 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.HasNoMoreFindingsAfterApplyingFixesMatcher.hasNoMoreFindingsAfterApplyingFixes;
+import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasNoValidationFindings;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.validationErrorMessages;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.hasItems;
+import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -78,6 +80,51 @@ class ProjectFilesValidatorTest {
     }
 
     @Test
+    void testMissingFileWithAnyContent() throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
+                mock(Logger.class));
+        fixAllFindings(validator);
+        final Path testFile = this.tempDir.resolve("release_config.yml");
+        deleteFile(testFile);
+        assertThat(validator, validationErrorMessages(
+                contains("E-PK-CORE-17: Missing required file: '" + testFile.getFileName() + "'")));
+    }
+
+    @Test
+    void testRequireExistsIgnoresContent() throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
+                mock(Logger.class));
+        fixAllFindings(validator);
+        final Path testFile = this.tempDir.resolve("release_config.yml");
+        changeFile(testFile);
+        assertThat(validator, hasNoValidationFindings());
+    }
+
+    @Test
+    void testRequireExistsDoesNotModifyContent() throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
+                mock(Logger.class));
+        fixAllFindings(validator);
+        final Path testFile = this.tempDir.resolve("release_config.yml");
+        changeFile(testFile);
+        assertAll(() -> assertThat(validator, hasNoMoreFindingsAfterApplyingFixes()),
+                () -> assertThat(new String(Files.readAllBytes(testFile), StandardCharsets.UTF_8),
+                        equalTo("something")));
+    }
+
+    @Test
+    void testFixMissingFileWithAnyContent() throws IOException {
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
+                mock(Logger.class));
+        fixAllFindings(validator);
+        final Path testFile = this.tempDir.resolve("release_config.yml");
+        deleteFile(testFile);
+        assertAll(() -> assertThat(validator, hasNoMoreFindingsAfterApplyingFixes()),
+                () -> assertTrue(Files.exists(testFile),
+                        "File " + testFile + " does not exist after fixing the findings"));
+    }
+
+    @Test
     void testMultiSourceProject() {
         final List<AnalyzedSource> sources = List.of(//
                 AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).modules(DEFAULT_MODULE)
@@ -101,5 +148,9 @@ class ProjectFilesValidatorTest {
 
     private void changeFile(final Path testFile) throws IOException {
         Files.writeString(testFile, "something");
+    }
+
+    private void deleteFile(final Path testFile) throws IOException {
+        Files.delete(testFile);
     }
 }

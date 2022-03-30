@@ -16,13 +16,24 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 public class RequiredFileValidator {
 
     /**
-     * Create a {@link ContentValidator} for an expected content.
-     * 
+     * Create a {@link ContentValidator} that expects exactly the given content.
+     *
      * @param content expected content
      * @return {@link ContentValidator}
      */
     public static ContentValidator withContentEqualTo(final String content) {
         return new EqualsContentValidator(content);
+    }
+
+    /**
+     * Create a {@link ContentValidator} that expects a file to be present. If the file is missing, the given default
+     * content will be used when fixing the findings.
+     *
+     * @param defaultContent default content in case the file is missing
+     * @return {@link ContentValidator}
+     */
+    public static ContentValidator fileExists(final String defaultContent) {
+        return new FileExistsValidator(defaultContent);
     }
 
     private static void fixFile(final Path file, final String templateContent) {
@@ -46,7 +57,7 @@ public class RequiredFileValidator {
     }
 
     /**
-     * Validate a file.
+     * Validate that a file exists and has the content specified by the content validator.
      *
      * @param projectDir       project directory
      * @param file             absolute path of the file to validate
@@ -59,7 +70,7 @@ public class RequiredFileValidator {
         final String contentWithUnifiedNewline = unifyNewlines(content);
         final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline);
         if (newContent.isPresent()) {
-            final SimpleValidationFinding.Fix fix = (Logger log) -> fixFile(file, newContent.get());
+            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get());
             if (contentWithUnifiedNewline == null) {
                 return List.of(SimpleValidationFinding
                         .withMessage(ExaError.messageBuilder("E-PK-CORE-17")
@@ -118,6 +129,23 @@ public class RequiredFileValidator {
 
             if (!this.expectedContent.equals(content)) {
                 return Optional.of(this.expectedContent);
+            } else {
+                return Optional.empty();
+            }
+        }
+    }
+
+    private static class FileExistsValidator implements ContentValidator {
+        private final String defaultContent;
+
+        private FileExistsValidator(final String defaultContent) {
+            this.defaultContent = defaultContent;
+        }
+
+        @Override
+        public Optional<String> validateContent(final String content) {
+            if (content == null) {
+                return Optional.of(this.defaultContent);
             } else {
                 return Optional.empty();
             }

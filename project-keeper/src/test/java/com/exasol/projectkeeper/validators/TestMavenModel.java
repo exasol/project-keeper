@@ -9,6 +9,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class TestMavenModel extends Model {
+    private static final long serialVersionUID = -4204751250626409157L;
     public static final String DEPENDENCY_GROUP_ID = "com.example";
     public static final String DEPENDENCY_ARTIFACT_ID = "my-lib";
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
