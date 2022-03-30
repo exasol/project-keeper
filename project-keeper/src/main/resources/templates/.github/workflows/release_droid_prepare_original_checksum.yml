@@ -17,6 +17,8 @@ jobs:
           distribution: 'temurin'
           java-version: 11
           cache: 'maven'
+      - name: Enable testcontainer reuse
+        run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       - name: Run tests and build with Maven
         run: mvn --batch-mode clean verify --file pom.xml
       - name: Prepare checksum
