@@ -26,6 +26,7 @@ public class PomFileValidator implements Validator {
     final Collection<ProjectKeeperModule> enabledModules;
     private final Path pomFilePath;
     private final ProjectKeeperConfig.ParentPomRef parentPomRef;
+    private final String repoName;
 
     /**
      * Create a new instance of {@link PomFileValidator}.
@@ -34,13 +35,15 @@ public class PomFileValidator implements Validator {
      * @param enabledModules   collection of enables modules
      * @param pomFilePath      pom file to create the runner for
      * @param parentPomRef     reference to a parent pom or {@code null}
+     * @param repoName         name of the git repository
      */
     public PomFileValidator(final Path projectDirectory, final Collection<ProjectKeeperModule> enabledModules,
-            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef) {
+            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef, final String repoName) {
         this.projectDirectory = projectDirectory;
         this.enabledModules = enabledModules;
         this.pomFilePath = pomFilePath;
         this.parentPomRef = parentPomRef;
+        this.repoName = repoName;
     }
 
     @Override
@@ -211,7 +214,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> validateGeneratedPomFile(final String groupId, final String artifactId,
             final String version, final Path generatedPomPath) {
         final String generatedContent = new PomFileGenerator().generatePomContent(this.enabledModules, groupId,
-                artifactId, version, this.parentPomRef);
+                artifactId, version, this.parentPomRef, this.repoName);
         return new RequiredFileValidator().validateFile(this.projectDirectory, generatedPomPath,
                 withContentEqualTo(generatedContent));
     }
