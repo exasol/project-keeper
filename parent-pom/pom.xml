@@ -44,7 +44,7 @@
     </scm>
     <properties>
         <revision>2.3.0</revision>
-        <maven.version>3.8.4</maven.version>
+        <maven.version>3.8.5</maven.version>
         <junit.version>5.8.2</junit.version>
         <junit.platform.version>1.6.2</junit.platform.version>
         <jacoco.version>0.8.7</jacoco.version>
@@ -142,7 +142,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <version>6.0.0.202111291000-r</version>
+                <version>6.1.0.202203080745-r</version>
             </dependency>
             <dependency>
                 <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -212,13 +212,13 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>1.7.35</version>
+                <version>1.7.36</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-core</artifactId>
-                <version>4.3.1</version>
+                <version>4.4.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -230,7 +230,7 @@
             <dependency>
                 <groupId>com.exasol</groupId>
                 <artifactId>maven-plugin-integration-testing</artifactId>
-                <version>1.1.0</version>
+                <version>1.1.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

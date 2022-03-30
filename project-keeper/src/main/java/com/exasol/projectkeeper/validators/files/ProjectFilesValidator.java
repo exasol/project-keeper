@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
+import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.fileExists;
 import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.withContentEqualTo;
 
 import java.nio.file.Files;
@@ -7,9 +8,11 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.validators.files.RequiredFileValidator.ContentValidator;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
@@ -74,10 +77,22 @@ public class ProjectFilesValidator implements Validator {
         }
     }
 
-    private List<ValidationFinding> validate(final Path relativeDirectory, final FileTemplate template) {
-        final Path projectFile = relativeDirectory.resolve(template.getPathInProject());
-        final String templateContent = template.getContent();
-        return new RequiredFileValidator().validateFile(relativeDirectory, projectFile,
-                withContentEqualTo(templateContent));
+    private List<ValidationFinding> validate(final Path projectDirectory, final FileTemplate template) {
+        final Path projectFile = projectDirectory.resolve(template.getPathInProject());
+        final ContentValidator contentValidator = getContentValidator(template);
+        return new RequiredFileValidator().validateFile(projectDirectory, projectFile, contentValidator);
+    }
+
+    private ContentValidator getContentValidator(final FileTemplate template) {
+        switch (template.getTemplateType()) {
+        case REQUIRE_EXACT:
+            return withContentEqualTo(template.getContent());
+        case REQUIRE_EXIST:
+            return fileExists(template.getContent());
+        default:
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-119")
+                    .message("Unknown template type {{template type}}", template.getTemplateType()).ticketMitigation()
+                    .toString());
+        }
     }
 }

@@ -24,6 +24,7 @@ class FileTemplatesFactory {
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(new FileTemplateFromResource(".github/workflows/broken_links_checker.yml", REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource("release_config.yml", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates());
@@ -41,7 +42,7 @@ class FileTemplatesFactory {
 
     private List<FileTemplate> getGenericMavenTemplates() {
         final List<FileTemplate> templates = new ArrayList<>();
-        templates.add(new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXIST));
+        templates.add(new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",

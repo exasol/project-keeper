@@ -8,6 +8,7 @@ import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 
 public class TestMavenModel extends Model {
+    private static final long serialVersionUID = -554596503224484792L;
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
     public static final String PROJECT_NAME = "my test project";
     public static final String PROJECT_VERSION = "0.1.0";
