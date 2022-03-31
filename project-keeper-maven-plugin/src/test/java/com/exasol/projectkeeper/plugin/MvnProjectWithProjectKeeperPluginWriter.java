@@ -16,8 +16,9 @@ public class MvnProjectWithProjectKeeperPluginWriter extends Model {
         this.setBuild(new Build());
         this.setVersion(PROJECT_VERSION);
         this.setArtifactId(PROJECT_ARTIFACT_ID);
-        this.setGroupId("com.example");
+        this.setGroupId("com.exasol");
         this.setModelVersion("4.0.0");
+        this.setDescription("my project description");
         addProjectKeeperPlugin(projectKeeperVersion);
     }
 

@@ -24,6 +24,8 @@ import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 
 class PomFileGeneratorTest {
 
+    private static final String TEST_REPO_NAME = "my-repo";
+
     static Stream<Arguments> testGenerationWithParentPomCases() {
         return Stream.of(//
                 Arguments.of(null, "../pom.xml" /* that seems to be a default in the reader */),
@@ -46,6 +48,15 @@ class PomFileGeneratorTest {
         assertAll(//
                 () -> assertThat(pom.getGroupId(), equalTo("com.example")),
                 () -> assertThat(pom.getArtifactId(), equalTo("my-parent-pom")),
+                () -> assertThat(pom.getScm().getConnection(),
+                        equalTo("scm:git:https://github.com/exasol/my-repo.git")),
+                () -> assertThat(pom.getScm().getDeveloperConnection(),
+                        equalTo("scm:git:https://github.com/exasol/my-repo.git")),
+                () -> assertThat(pom.getScm().getUrl(), equalTo("https://github.com/exasol/my-repo/")),
+                () -> assertThat(pom.getDevelopers().get(0).getName(), equalTo("Exasol")),
+                () -> assertThat(pom.getDevelopers().get(0).getOrganization(), equalTo("Exasol AG")),
+                () -> assertThat(pom.getDevelopers().get(0).getOrganizationUrl(), equalTo("https://www.exasol.com/")),
+                () -> assertThat(pom.getDevelopers().get(0).getEmail(), equalTo("opensource@exasol.com")),
                 () -> assertThat(pom.getVersion(), equalTo("1.0.0")),
                 () -> assertThat(pluginNames,
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
@@ -69,7 +80,7 @@ class PomFileGeneratorTest {
     private Model runGeneration(final List<ProjectKeeperModule> modules,
             final ProjectKeeperConfig.ParentPomRef parentPomRef) throws IOException, XmlPullParserException {
         final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
-                "1.0.0", parentPomRef);
+                "1.0.0", parentPomRef, TEST_REPO_NAME);
         try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 result.getBytes(StandardCharsets.UTF_8))) {
             return new MavenXpp3Reader().read(inputStream);

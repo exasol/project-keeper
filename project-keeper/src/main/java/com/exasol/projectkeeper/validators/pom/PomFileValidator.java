@@ -22,10 +22,13 @@ import com.exasol.projectkeeper.validators.finding.*;
 //[impl->dsn~pom-file-validator~1]
 public class PomFileValidator implements Validator {
     private static final String PARENT_POM_MITIGATION = "Check the project-keeper user guide if you need a parent pom.";
+    @SuppressWarnings("java:S1075") // not customizable
+    private static final String XPATH_DESCRIPTION = "/project/description";
     private final Path projectDirectory;
     final Collection<ProjectKeeperModule> enabledModules;
     private final Path pomFilePath;
     private final ProjectKeeperConfig.ParentPomRef parentPomRef;
+    private final String repoName;
 
     /**
      * Create a new instance of {@link PomFileValidator}.
@@ -34,13 +37,15 @@ public class PomFileValidator implements Validator {
      * @param enabledModules   collection of enables modules
      * @param pomFilePath      pom file to create the runner for
      * @param parentPomRef     reference to a parent pom or {@code null}
+     * @param repoName         name of the git repository
      */
     public PomFileValidator(final Path projectDirectory, final Collection<ProjectKeeperModule> enabledModules,
-            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef) {
+            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef, final String repoName) {
         this.projectDirectory = projectDirectory;
         this.enabledModules = enabledModules;
         this.pomFilePath = pomFilePath;
         this.parentPomRef = parentPomRef;
+        this.repoName = repoName;
     }
 
     @Override
@@ -51,15 +56,70 @@ public class PomFileValidator implements Validator {
             final String artifactId = getRequiredTextValue(pom, "/project/artifactId") + "-generated-parent";
             final String groupId = getGroupId(pom);
             final List<ValidationFinding> findings = new ArrayList<>();
+            validateGroupId(groupId).ifPresent(findings::add);
+            validateUrlTag(pom).ifPresent(findings::add);
             final Path generatedPomPath = this.pomFilePath.getParent().resolve("pk_generated_parent.pom");
             findings.addAll(validateParentTag(pom, version, artifactId, groupId, generatedPomPath));
             findings.addAll(validateGeneratedPomFile(groupId, artifactId, version, generatedPomPath));
+            validationDescriptionExists(pom).ifPresent(findings::add);
             if (this.enabledModules.contains(ProjectKeeperModule.JAR_ARTIFACT)) {
                 findings.addAll(validateAssemblyPlugin(pom, this.projectDirectory.relativize(this.pomFilePath)));
             }
             return wrapFindingsWithGroupThatWritesPom(pom, findings);
         } catch (final InvalidPomException exception) {
             return List.of(SimpleValidationFinding.withMessage(exception.getMessage()).build());
+        }
+    }
+
+    private Optional<SimpleValidationFinding> validateUrlTag(final Document document) {
+        final String expectedUrl = "https://github.com/exasol/" + this.repoName + "/";
+        return validateTagContent(document, "/project", "url", expectedUrl);
+    }
+
+    private Optional<SimpleValidationFinding> validateTagContent(final Document document, final String parentXPath,
+            final String tagName, final String expectedValue) {
+        final Node parent = runXPath(document, parentXPath);
+        final Node node = runXPath(parent, tagName);
+        if (node == null) {
+            return Optional.of(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-123")
+                            .message("Invalid pom file {{file}}: Missing required property {{xpath}}.",
+                                    this.projectDirectory.relativize(this.pomFilePath), parentXPath + "/" + tagName)
+                            .mitigation("The expected value is {{expected value}}.", expectedValue).toString())
+                    .andFix(log -> addTextElement(parent, tagName, expectedValue)).build());
+        } else if (!node.getTextContent().equals(expectedValue)) {
+            return Optional.of(SimpleValidationFinding
+                    .withMessage(ExaError.messageBuilder("E-PK-CORE-122")
+                            .message(
+                                    "Invalid pom file {{file}}: Invalid value {{actual value}} for property {{xpath}}.",
+                                    this.projectDirectory.relativize(this.pomFilePath), node.getTextContent(),
+                                    parentXPath + "/" + tagName)
+                            .mitigation("The expected value is {{expected value}}.", expectedValue).toString())
+                    .andFix(log -> node.setTextContent(expectedValue)).build());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<SimpleValidationFinding> validateGroupId(final String groupId) {
+        if (!groupId.equals("com.exasol")) {
+            return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-121")
+                    .message("Invalid pom file {{file}}: Invalid groupId {{groupId}}.",
+                            this.projectDirectory.relativize(this.pomFilePath), groupId)
+                    .mitigation("Manually set the groupId to 'com.exasol'.").toString()).build());
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private Optional<ValidationFinding> validationDescriptionExists(final Document document) {
+        if (runXPath(document, XPATH_DESCRIPTION) == null) {
+            return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-120")
+                    .message("Invalid pom file {{file}}: Missing required property " + XPATH_DESCRIPTION + ".",
+                            this.projectDirectory.relativize(this.pomFilePath))
+                    .mitigation("Please manually add a description.").toString()).build());
+        } else {
+            return Optional.empty();
         }
     }
 
@@ -211,7 +271,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> validateGeneratedPomFile(final String groupId, final String artifactId,
             final String version, final Path generatedPomPath) {
         final String generatedContent = new PomFileGenerator().generatePomContent(this.enabledModules, groupId,
-                artifactId, version, this.parentPomRef);
+                artifactId, version, this.parentPomRef, this.repoName);
         return new RequiredFileValidator().validateFile(this.projectDirectory, generatedPomPath,
                 withContentEqualTo(generatedContent));
     }

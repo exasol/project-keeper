@@ -18,14 +18,6 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <developers>
-        <developer>
-            <name>Exasol</name>
-            <email>opensource@exasol.com</email>
-            <organization>Exasol AG</organization>
-            <organizationUrl>https://www.exasol.com/</organizationUrl>
-        </developer>
-    </developers>
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
@@ -36,12 +28,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-    <scm>
-        <connection>scm:git:https://github.com/exasol/project-keeper.git</connection>
-        <developerConnection>scm:git:https://github.com/exasol/project-keeper.git
-        </developerConnection>
-        <url>https://github.com/exasol/project-keeper/tree/main</url>
-    </scm>
     <properties>
         <revision>2.3.0</revision>
         <maven.version>3.8.5</maven.version>

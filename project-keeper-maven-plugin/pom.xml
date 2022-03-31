@@ -6,7 +6,7 @@
     <packaging>maven-plugin</packaging>
     <name>Project keeper maven plugin</name>
     <description>This maven plugin runs project-keeper.</description>
-    <url>https://github.com/exasol/project-keeper</url>
+    <url>https://github.com/exasol/project-keeper/</url>
     <parent>
         <relativePath>./pk_generated_parent.pom</relativePath>
         <groupId>com.exasol</groupId>

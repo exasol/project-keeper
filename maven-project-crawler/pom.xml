@@ -12,7 +12,7 @@
         <artifactId>project-keeper-java-project-crawler-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
-    <url>https://github.com/exasol/project-keeper</url>
+    <url>https://github.com/exasol/project-keeper/</url>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>

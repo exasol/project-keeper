@@ -30,20 +30,20 @@ public class ProjectKeeper {
     private final Logger logger;
     private final Path projectDir;
     private final String projectName;
-    private final String artifactId;
     private final Path mvnRepo;
     private final ProjectKeeperConfig config;
     private final String ownVersion;
+    private final String repoName;
 
-    private ProjectKeeper(final Logger logger, final Path projectDir, final String projectName, final String artifactId,
-            final Path mvnRepo, final ProjectKeeperConfig config, final String ownVersion) {
+    private ProjectKeeper(final Logger logger, final Path projectDir, final String projectName, final Path mvnRepo,
+            final ProjectKeeperConfig config, final String ownVersion) {
         this.logger = logger;
         this.projectDir = projectDir;
         this.projectName = projectName;
-        this.artifactId = artifactId;
         this.mvnRepo = mvnRepo;
         this.config = config;
         this.ownVersion = ownVersion;
+        this.repoName = getRepoName(projectDir);
     }
 
     /**
@@ -52,15 +52,13 @@ public class ProjectKeeper {
      * @param logger      logger
      * @param projectDir  project directory
      * @param projectName name of the project
-     * @param artifactId  artifact-id
      * @param mvnRepo     maven repository (null if unknown)
      * @return built {@link ProjectKeeper}
      */
     public static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir,
-            final String projectName, final String artifactId, final Path mvnRepo) {
+            final String projectName, final Path mvnRepo) {
         final String ownVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
-        return new ProjectKeeper(logger, projectDir, projectName, artifactId, mvnRepo, readConfig(projectDir),
-                ownVersion);
+        return new ProjectKeeper(logger, projectDir, projectName, mvnRepo, readConfig(projectDir), ownVersion);
     }
 
     /**
@@ -72,15 +70,22 @@ public class ProjectKeeper {
      * @param logger      logger
      * @param projectDir  project directory
      * @param projectName name of the project
-     * @param artifactId  artifact-id
      * @param mvnRepo     maven repository (null if unknown)
      * @param ownVersion  version of project-keeper
      * @return built {@link ProjectKeeper}
      */
     static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final String projectName,
-            final String artifactId, final Path mvnRepo, final String ownVersion) {
-        return new ProjectKeeper(logger, projectDir, projectName, artifactId, mvnRepo, readConfig(projectDir),
-                ownVersion);
+            final Path mvnRepo, final String ownVersion) {
+        return new ProjectKeeper(logger, projectDir, projectName, mvnRepo, readConfig(projectDir), ownVersion);
+    }
+
+    private String getRepoName(final Path projectDir) {
+        final GitRepository gitRepository = new GitRepository(projectDir);
+        return gitRepository.getRepoNameFromRemote().orElseGet(() -> getProjectDirName(projectDir));
+    }
+
+    private String getProjectDirName(final Path projectDir) {
+        return projectDir.getFileName().toString();
     }
 
     private List<Supplier<List<Validator>>> getValidatorChain() {
@@ -101,21 +106,19 @@ public class ProjectKeeper {
         for (final ProjectKeeperConfig.Source source : this.config.getSources()) {
             if (source.getType().equals(MAVEN)) {
                 result.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
-                        source.getParentPom()));
+                        source.getParentPom(), this.repoName));
             }
         }
         return result;
     }
 
     private List<Validator> getPhase2Validators() {
-        final GitRepository gitRepository = new GitRepository(this.projectDir);
         final List<AnalyzedSource> analyzedSources = new SourceAnalyzer(this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, this.config.getSources());
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
         return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger),
-                new ReadmeFileValidator(this.projectDir, this.projectName,
-                        gitRepository.getRepoNameFromRemote().orElse(this.artifactId), analyzedSources),
+                new ReadmeFileValidator(this.projectDir, this.projectName, this.repoName, analyzedSources),
                 new LicenseFileValidator(this.projectDir),
                 new ChangesFileValidator(projectVersion, this.projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
