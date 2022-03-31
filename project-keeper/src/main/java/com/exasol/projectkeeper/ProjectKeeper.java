@@ -81,12 +81,11 @@ public class ProjectKeeper {
 
     private String getRepoName(final Path projectDir) {
         final GitRepository gitRepository = new GitRepository(projectDir);
-        getProjectDirName(projectDir);
         return gitRepository.getRepoNameFromRemote().orElseGet(() -> getProjectDirName(projectDir));
     }
 
     private String getProjectDirName(final Path projectDir) {
-        return projectDir.getName(projectDir.getNameCount() - 1).toString();
+        return projectDir.getFileName().toString();
     }
 
     private List<Supplier<List<Validator>>> getValidatorChain() {
