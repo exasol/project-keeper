@@ -24,6 +24,16 @@ public interface AnalyzedSource {
     Set<ProjectKeeperModule> getModules();
 
     /**
+     * Get a human-readable project name.
+     * <p>
+     * Usually that's a version of the package name or artifactId without dashes and underscores.
+     * </p>
+     * 
+     * @return project name
+     */
+    String getProjectName();
+
+    /**
      * Get the version of this source.
      * 
      * @return {@code null if version could not be detected}

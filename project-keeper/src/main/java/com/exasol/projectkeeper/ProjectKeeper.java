@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper;
 
+import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
 
 import java.nio.file.Path;
@@ -29,17 +30,15 @@ public class ProjectKeeper {
     private static final String INVALID_STRUCTURE_MESSAGE = "This projects structure does not conform with the template.";
     private final Logger logger;
     private final Path projectDir;
-    private final String projectName;
     private final Path mvnRepo;
     private final ProjectKeeperConfig config;
     private final String ownVersion;
     private final String repoName;
 
-    private ProjectKeeper(final Logger logger, final Path projectDir, final String projectName, final Path mvnRepo,
+    private ProjectKeeper(final Logger logger, final Path projectDir, final Path mvnRepo,
             final ProjectKeeperConfig config, final String ownVersion) {
         this.logger = logger;
         this.projectDir = projectDir;
-        this.projectName = projectName;
         this.mvnRepo = mvnRepo;
         this.config = config;
         this.ownVersion = ownVersion;
@@ -49,16 +48,14 @@ public class ProjectKeeper {
     /**
      * Create a new instance of {@link ProjectKeeper}.
      *
-     * @param logger      logger
-     * @param projectDir  project directory
-     * @param projectName name of the project
-     * @param mvnRepo     maven repository (null if unknown)
+     * @param logger     logger
+     * @param projectDir project directory
+     * @param mvnRepo    maven repository (null if unknown)
      * @return built {@link ProjectKeeper}
      */
-    public static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir,
-            final String projectName, final Path mvnRepo) {
+    public static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final Path mvnRepo) {
         final String ownVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
-        return new ProjectKeeper(logger, projectDir, projectName, mvnRepo, readConfig(projectDir), ownVersion);
+        return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), ownVersion);
     }
 
     /**
@@ -67,16 +64,15 @@ public class ProjectKeeper {
      * This factory method is for testing only!
      * </p>
      *
-     * @param logger      logger
-     * @param projectDir  project directory
-     * @param projectName name of the project
-     * @param mvnRepo     maven repository (null if unknown)
-     * @param ownVersion  version of project-keeper
+     * @param logger     logger
+     * @param projectDir project directory
+     * @param mvnRepo    maven repository (null if unknown)
+     * @param ownVersion version of project-keeper
      * @return built {@link ProjectKeeper}
      */
-    static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final String projectName,
-            final Path mvnRepo, final String ownVersion) {
-        return new ProjectKeeper(logger, projectDir, projectName, mvnRepo, readConfig(projectDir), ownVersion);
+    static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final Path mvnRepo,
+            final String ownVersion) {
+        return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), ownVersion);
     }
 
     private String getRepoName(final Path projectDir) {
@@ -115,14 +111,25 @@ public class ProjectKeeper {
     private List<Validator> getPhase2Validators() {
         final List<AnalyzedSource> analyzedSources = new SourceAnalyzer(this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, this.config.getSources());
+        final String projectName = getProjectName(analyzedSources);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
         return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger),
-                new ReadmeFileValidator(this.projectDir, this.projectName, this.repoName, analyzedSources),
+                new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new LicenseFileValidator(this.projectDir),
-                new ChangesFileValidator(projectVersion, this.projectName, this.projectDir, analyzedSources),
+                new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
                 new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
+    }
+
+    private String getProjectName(final List<AnalyzedSource> analyzedSources) {
+        final String projectName;
+        if (analyzedSources.size() == 1) {
+            projectName = analyzedSources.get(0).getProjectName();
+        } else {
+            projectName = capitalizeApStyle(this.repoName.replace("-", " ").replace("_", " "));
+        }
+        return projectName;
     }
 
     private List<Validator> getPhase3Validators() {
