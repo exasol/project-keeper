@@ -13,6 +13,7 @@ import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.analyze.golang.GolangServices;
+import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo;
 
 public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
@@ -40,13 +41,15 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         }
         final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("go.mod"));
 
-        final String artifactId = this.golangServices.getModuleName(projectDir);
+        final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(projectDir);
         final String projectName = source.getPath().getParent().getFileName().toString();
         final ProjectDependencies dependencies = new ProjectDependencies(
-                this.golangServices.getDependencies(projectDir));
-        final DependencyChangeReport dependencyChanges = null;
+                this.golangServices.getDependencies(moduleInfo, projectDir));
+        final DependencyChangeReport dependencyChanges = new DependencyChangeReport();
+        dependencyChanges.setCompileDependencyChanges(this.golangServices.getDependencyChanges(projectDir));
         return AnalyzedGolangSource.builder().version(null).isRootProject(isRoot).advertise(source.isAdvertise())
-                .modules(source.getModules()).path(source.getPath()).projectName(projectName).artifactId(artifactId)
-                .dependencies(dependencies).dependencyChanges(dependencyChanges).build();
+                .modules(source.getModules()).path(source.getPath()).projectName(projectName)
+                .artifactId(moduleInfo.getModuleName()).dependencies(dependencies).dependencyChanges(dependencyChanges)
+                .build();
     }
 }

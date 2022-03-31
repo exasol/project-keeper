@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
+import com.exasol.projectkeeper.shared.dependencies.License;
+
 public class GolangDependencyLicense {
     private final String licenseUrl;
     private final String moduleName;
@@ -21,5 +23,9 @@ public class GolangDependencyLicense {
 
     public String getLicenseName() {
         return this.licenseName;
+    }
+
+    public License toLicense() {
+        return new License(this.getLicenseName(), this.getLicenseUrl());
     }
 }

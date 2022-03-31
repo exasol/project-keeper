@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.List;
@@ -30,6 +31,7 @@ public class SimpleProcess {
     }
 
     public static SimpleProcess start(final Path workingDirectory, final List<String> command) {
+        System.out.println("Executing " + command + "...");
         try {
             final Process process = new ProcessBuilder(command)
                     .directory(workingDirectory == null ? null : workingDirectory.toFile()) //
@@ -53,10 +55,22 @@ public class SimpleProcess {
         if (exitCode != 0) {
             LOGGER.log(Level.SEVERE, output);
             throw new IllegalStateException(ExaError.messageBuilder("").message(
-                    "Failed to run command {{executed command|uq}}, exit code was {{exit code}}. Output:\n{{output}}",
-                    getCommand(), exitCode, output).toString());
+                    "Failed to run command {{executed command}}, exit code was {{exit code}}. Output:\n{{std out}}\nError output:\n{{std error}}",
+                    getCommand(), exitCode, output, getStdError()).toString());
         }
+        System.out.println("-> " + output.trim());
         return output;
+    }
+
+    private String getStdError() {
+        try (InputStream errorStream = this.process.getErrorStream()) {
+            return new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(
+                    ExaError.messageBuilder("")
+                            .message("Failed to read error stream from command {{command}}", getCommand()).toString(),
+                    exception);
+        }
     }
 
     private String getStreamOutput(final Duration executionTimeout) {
