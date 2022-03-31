@@ -4,16 +4,22 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
+import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.ProjectVersionDetector;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
+import com.exasol.projectkeeper.shared.repository.GitRepository;
+import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
 
 public class GolangServices {
@@ -23,6 +29,16 @@ public class GolangServices {
     private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
 
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(5);
+
+    private final Supplier<String> projectVersionSupplier;
+
+    public GolangServices(final ProjectKeeperConfig config) {
+        this.projectVersionSupplier = extractVersion(config);
+    }
+
+    private static Supplier<String> extractVersion(final ProjectKeeperConfig config) {
+        return () -> new ProjectVersionDetector().detectVersion(config, emptyList());
+    }
 
     public List<ProjectDependency> getDependencies(final ModuleInfo moduleInfo, final Path projectPath) {
         final List<ProjectDependency> dependencies = new ArrayList<>(moduleInfo.getDependencies().size());
@@ -80,9 +96,28 @@ public class GolangServices {
         return Dependency.builder().moduleName(parts[0]).version(parts[1]).build();
     }
 
-    public List<DependencyChange> getDependencyChanges(final Path projectDir) {
-        // TODO Auto-generated method stub
-        return null;
+    public List<DependencyChange> getDependencyChanges(final Path projectDir, final Path modFile) {
+        final GoModFile lastReleaseModFile = GoModFile.parse(getLastReleaseModFileContent(projectDir, modFile));
+        return emptyList();
+    }
+
+    private String getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
+        try (GitRepository repo = GitRepository.open(projectDir)) {
+            final Optional<TaggedCommit> tag = repo.findLatestReleaseCommit(this.projectVersionSupplier.get());
+            if (tag.isEmpty()) {
+                throw new IllegalStateException(
+                        ExaError.messageBuilder("E-PK-CORE-133").message("Latest release commit not found").toString());
+            }
+            final Path relativeModFilePath = projectDir.relativize(modFile);
+            try {
+                return repo.getFileFromCommit(relativeModFilePath, tag.get().getCommit());
+            } catch (final FileNotFoundException exception) {
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-134")
+                        .message("Go module file {{module file}} does not exist at tag {{tag}}", relativeModFilePath,
+                                tag.get().getTag())
+                        .toString(), exception);
+            }
+        }
     }
 
 }

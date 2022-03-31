@@ -37,7 +37,7 @@ class SourceAnalyzerIT {
         new TestMavenModel().writeAsPomToProject(this.tempDir);
         final Path path = this.tempDir.resolve("pom.xml");
         final List<AnalyzedSource> result = SourceAnalyzer
-                .create(TEST_ENV.getLocalMavenRepository(), TestEnvBuilder.CURRENT_VERSION)
+                .create(null, TEST_ENV.getLocalMavenRepository(), TestEnvBuilder.CURRENT_VERSION)
                 .analyze(this.tempDir, List.of(ProjectKeeperConfig.Source.builder().modules(MODULES).path(path)
                         .advertise(true).type(MAVEN).build()));
         final AnalyzedMavenSource first = (AnalyzedMavenSource) result.get(0);

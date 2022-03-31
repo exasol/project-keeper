@@ -22,15 +22,15 @@ public class SourceAnalyzer {
         this.sourceAnalyzers = sourceAnalyzers;
     }
 
-    public static SourceAnalyzer create(final Path mvnRepo, final String ownVersion) {
-        return new SourceAnalyzer(getLanguageSpecificSourceAnalyzers(mvnRepo, ownVersion));
+    public static SourceAnalyzer create(final ProjectKeeperConfig config, final Path mvnRepo, final String ownVersion) {
+        return new SourceAnalyzer(getLanguageSpecificSourceAnalyzers(config, mvnRepo, ownVersion));
     }
 
     private static Map<SourceType, LanguageSpecificSourceAnalyzer> getLanguageSpecificSourceAnalyzers(
-            final Path mvnRepo, final String ownVersion) {
+            final ProjectKeeperConfig config, final Path mvnRepo, final String ownVersion) {
         return Map.of( //
                 SourceType.MAVEN, new MavenSourceAnalyzer(mvnRepo, ownVersion), //
-                SourceType.GOLANG, new GolangSourceAnalyzer());
+                SourceType.GOLANG, new GolangSourceAnalyzer(config));
     }
 
     /**

@@ -110,7 +110,7 @@ public class ProjectKeeper {
     }
 
     private List<Validator> getPhase2Validators() {
-        final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.mvnRepo, this.ownVersion)
+        final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.config, this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, this.config.getSources());
         final String projectName = getProjectName(analyzedSources);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
