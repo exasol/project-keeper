@@ -28,9 +28,11 @@ public class GitRepository implements AutoCloseable {
     }
 
     /**
-     * Open the given git repository and create a new instance of {@link GitRepository}.
+     * Open the given git repository and create a new instance of {@link GitRepository}. Close the repository after use
+     * with {@link #close()}.
      *
      * @param projectDirectory the projects directory.
+     * @return an open git repository.
      */
     public static GitRepository open(final Path projectDirectory) {
         return new GitRepository(openLocalGitRepository(projectDirectory), projectDirectory);
@@ -47,6 +49,14 @@ public class GitRepository implements AutoCloseable {
         }
     }
 
+    /**
+     * Find the latest release commit matching an Exasol version (see
+     * {@link ExasolVersionMatcher#isExasolStyleVersion(String)}). If {@code currentVersion} is not {@code null}, this
+     * version will be ignored if a tag exists.
+     *
+     * @param currentVersion a version number to ignore or {@code null}
+     * @return the latest release commit
+     */
     public Optional<TaggedCommit> findLatestReleaseCommit(final String currentVersion) {
         final var exasolVersionMatcher = new ExasolVersionMatcher();
         return this.getTagsInCurrentBranch().stream()
@@ -164,6 +174,7 @@ public class GitRepository implements AutoCloseable {
      *
      * @param relativeFilePath file path
      * @param commit           commit
+     * @return the file content
      * @throws FileNotFoundException if the file does not exist in the repo
      */
     public String getFileFromCommit(final Path relativeFilePath, final GitCommit commit) throws FileNotFoundException {
