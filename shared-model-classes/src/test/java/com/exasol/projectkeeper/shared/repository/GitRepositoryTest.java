@@ -2,20 +2,21 @@ package com.exasol.projectkeeper.shared.repository;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.*;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.URIish;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -23,17 +24,25 @@ class GitRepositoryTest {
 
     @TempDir
     Path tempDir;
+    private GitRepository repository;
+
+    @AfterEach
+    void cleanup() {
+        if (this.repository != null) {
+            this.repository.close();
+        }
+    }
 
     @Test
     void testGetTags() throws GitAPIException, IOException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+        try (final Git git = gitInit();) {
             makeCommitAndTag(git, 1, false);
             git.branchCreate().setName("other").call();
             makeCommitAndTag(git, 2, false);
             git.checkout().setName("other").call();
             makeCommitAndTag(git, 3, false);
-            final GitRepository repository = new GitRepository(this.tempDir);
-            final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
+            this.repository = openRepo(this.tempDir);
+            final List<TaggedCommit> result = this.repository.getTagsInCurrentBranch();
             final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
             assertThat(tagNames, contains("tag3", "tag1"));
         }
@@ -45,10 +54,10 @@ class GitRepositoryTest {
      */
     @Test
     void testGetLightweightTag() throws GitAPIException, IOException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+        try (final Git git = gitInit();) {
             makeCommitAndTag(git, 1, true);
-            final GitRepository repository = new GitRepository(this.tempDir);
-            final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
+            this.repository = openRepo(this.tempDir);
+            final List<TaggedCommit> result = this.repository.getTagsInCurrentBranch();
             final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
             assertThat(tagNames, contains("tag1"));
         }
@@ -56,12 +65,12 @@ class GitRepositoryTest {
 
     @Test
     void testGetTagsFromDetachedHead() throws GitAPIException, IOException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+        try (final Git git = gitInit();) {
             makeCommitAndTag(git, 1, true);
             final RevCommit secondCommit = makeCommitAndTag(git, 2, true);
             git.checkout().setName(secondCommit.getName()).call();
-            final GitRepository repository = new GitRepository(this.tempDir);
-            final List<TaggedCommit> result = repository.getTagsInCurrentBranch();
+            this.repository = openRepo(this.tempDir);
+            final List<TaggedCommit> result = this.repository.getTagsInCurrentBranch();
             final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
             assertThat(tagNames, contains("tag2", "tag1"));
         }
@@ -69,19 +78,33 @@ class GitRepositoryTest {
 
     @Test
     void testGetTagsInNoGitDirectory() {
-        final GitRepository repository = new GitRepository(this.tempDir);
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                repository::getTagsInCurrentBranch);
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> openRepo(this.tempDir));
         assertThat(exception.getMessage(), startsWith("E-PK-SMC-32"));
     }
 
     private RevCommit makeCommitAndTag(final Git git, final int counter, final boolean lightweight)
             throws IOException, GitAPIException {
+        return makeCommitAndTag(git, counter, lightweight, "tag" + counter);
+    }
+
+    private RevCommit makeCommitAndTag(final Git git, final int counter, final boolean lightweight,
+            final String tagName) throws IOException, GitAPIException {
+        final RevCommit commit = makeCommit(git, counter);
+        makeTag(git, tagName, lightweight);
+        return commit;
+    }
+
+    private RevCommit makeCommit(final Git git, final int counter) throws IOException, GitAPIException,
+            NoFilepatternException, AbortedByHookException, ConcurrentRefUpdateException, NoHeadException,
+            NoMessageException, ServiceUnavailableException, UnmergedPathsException, WrongRepositoryStateException {
         Files.writeString(this.tempDir.resolve("myFile.txt"), counter + "");
         git.add().addFilepattern("myFile.txt").call();
-        final RevCommit commit = git.commit().setMessage(counter + ". commit").call();
-        git.tag().setName("tag" + counter).setAnnotated(!lightweight).call();
-        return commit;
+        return git.commit().setMessage(counter + ". commit").call();
+    }
+
+    private void makeTag(final Git git, final String tagName, final boolean lightweight)
+            throws GitAPIException, ConcurrentRefUpdateException, InvalidTagNameException, NoHeadException {
+        git.tag().setName(tagName).setAnnotated(!lightweight).call();
     }
 
     @Test
@@ -97,9 +120,9 @@ class GitRepositoryTest {
             Files.delete(testFile);
             git.add().addFilepattern("myFile.txt").call();
             git.commit().setMessage("removed file").call();
-            final GitRepository repository = new GitRepository(gitDir);
+            this.repository = openRepo(gitDir);
             final Path destinationFile = this.tempDir.resolve("result");
-            repository.extractFileFromCommit(Path.of("myFile.txt"), new GitCommit(initialCommit), destinationFile);
+            this.repository.extractFileFromCommit(Path.of("myFile.txt"), new GitCommit(initialCommit), destinationFile);
             final String result = Files.readString(destinationFile);
             assertThat(result, equalTo(fileContent));
         }
@@ -120,9 +143,9 @@ class GitRepositoryTest {
             Files.delete(testFile);
             git.add().addFilepattern("subdir/myFile.txt").call();
             git.commit().setMessage("removed file").call();
-            final GitRepository repository = new GitRepository(gitRepo);
+            this.repository = openRepo(gitRepo);
             final Path destinationFile = this.tempDir.resolve("result");
-            repository.extractFileFromCommit(Path.of("subdir/myFile.txt"), new GitCommit(initialCommit),
+            this.repository.extractFileFromCommit(Path.of("subdir/myFile.txt"), new GitCommit(initialCommit),
                     destinationFile);
             final String result = Files.readString(destinationFile);
             assertThat(result, equalTo(fileContent));
@@ -130,35 +153,118 @@ class GitRepositoryTest {
     }
 
     @Test
-    void testReadFileAtCommitInNoGitDirectory() {
-        final GitRepository repository = new GitRepository(this.tempDir);
-        final Path testPath = Path.of("test.md");
-        final Path targetFile = this.tempDir.resolve("targetFile");
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> repository.extractFileFromCommit(testPath, null, targetFile));
-        assertThat(exception.getMessage(), startsWith("E-PK-SMC-32"));
-    }
-
-    @Test
     void testReadFileAtCommitWithMissingFile() throws GitAPIException, IOException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+        try (final Git git = gitInit()) {
             final GitCommit commit = new GitCommit(makeCommitAndTag(git, 1, false));
-            final GitRepository repository = new GitRepository(this.tempDir);
+            this.repository = openRepo(this.tempDir);
             final Path nonExistingPath = Path.of("nonExistingFile.md");
             final Path targetFile = this.tempDir.resolve("targetFile");
             final FileNotFoundException exception = assertThrows(FileNotFoundException.class,
-                    () -> repository.extractFileFromCommit(nonExistingPath, commit, targetFile));
+                    () -> this.repository.extractFileFromCommit(nonExistingPath, commit, targetFile));
             assertThat(exception.getMessage(), startsWith("E-PK-SMC-35"));
         }
     }
 
     @Test
     void testGetRepoName() throws GitAPIException, IOException, URISyntaxException {
-        try (final Git git = Git.init().setDirectory(this.tempDir.toFile()).call();) {
+        try (final Git git = gitInit()) {
             git.remoteAdd().setName("origin")
                     .setUri(new URIish("git@github.com:exasol/project-keeper-maven-plugin.git")).call();
-            final GitRepository repository = new GitRepository(this.tempDir);
-            assertThat(repository.getRepoNameFromRemote().orElseThrow(), equalTo("project-keeper-maven-plugin"));
+            this.repository = openRepo(this.tempDir);
+            assertThat(this.repository.getRepoNameFromRemote().orElseThrow(), equalTo("project-keeper-maven-plugin"));
         }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitNoCommit() throws IllegalStateException, GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            assertTrue(this.repository.findLatestReleaseCommit(null).isEmpty());
+        }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitNoTag() throws IllegalStateException, GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommit(git, 1);
+            assertTrue(this.repository.findLatestReleaseCommit(null).isEmpty());
+        }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitNotMatchingTag() throws IllegalStateException, GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommitAndTag(git, 1, false, "my-tag");
+            assertTrue(this.repository.findLatestReleaseCommit(null).isEmpty());
+        }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitMatchingTag() throws IllegalStateException, GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommitAndTag(git, 1, false, "1.2.3");
+            final Optional<TaggedCommit> commit = this.repository.findLatestReleaseCommit(null);
+            assertAll(() -> assertTrue(commit.isPresent()), //
+                    () -> assertThat(commit.get().getTag(), equalTo("1.2.3")));
+        }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitMatchingAnnotatedTag() throws IllegalStateException, GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommitAndTag(git, 1, true, "1.2.3");
+            final Optional<TaggedCommit> commit = this.repository.findLatestReleaseCommit(null);
+            assertAll(() -> assertTrue(commit.isPresent()), //
+                    () -> assertThat(commit.get().getTag(), equalTo("1.2.3")));
+        }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitMatchingTagIsCurrentTag()
+            throws IllegalStateException, GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommitAndTag(git, 1, false, "1.2.3");
+            assertTrue(this.repository.findLatestReleaseCommit("1.2.3").isEmpty());
+        }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitIgnoresCurrentVersion() throws IllegalStateException, GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommitAndTag(git, 1, false, "1.2.2");
+            makeCommitAndTag(git, 2, false, "1.2.3");
+            final Optional<TaggedCommit> commit = this.repository.findLatestReleaseCommit("1.2.3");
+            assertAll(() -> assertTrue(commit.isPresent()), //
+                    () -> assertThat(commit.get().getTag(), equalTo("1.2.2")));
+        }
+    }
+
+    @Test
+    void testGetFileFromCommit() throws GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommitAndTag(git, 1, false, "1.2.2");
+            makeCommitAndTag(git, 2, false, "1.2.3");
+            final String fileContent1 = this.repository.getFileFromCommit(Paths.get("myFile.txt"),
+                    this.repository.findLatestReleaseCommit("1.2.3").get().getCommit());
+            final String fileContent2 = this.repository.getFileFromCommit(Paths.get("myFile.txt"),
+                    this.repository.findLatestReleaseCommit(null).get().getCommit());
+            assertAll(() -> assertThat("file content tag 1", fileContent1, equalTo("1")), //
+                    () -> assertThat("file content tag 1", fileContent2, equalTo("2")));
+        }
+    }
+
+    private GitRepository openRepo(final Path path) {
+        return GitRepository.open(path);
+    }
+
+    private Git gitInit() throws GitAPIException {
+        return Git.init().setDirectory(this.tempDir.toFile()).call();
     }
 }

@@ -12,7 +12,6 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.ExasolVersionMatcher;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 
@@ -23,9 +22,9 @@ public class LastReleasePomFileReader {
     private static final Logger LOGGER = Logger.getLogger(LastReleasePomFileReader.class.getName());
 
     /**
-     * Copy pom.xml file from a give git tag to another directory. If the pom file specifies a parent with relative
-     * path, this method extracts it too.
-     * 
+     * Copy pom.xml file from a given git release tag to another directory. If the pom file specifies a parent with
+     * relative path, this method extracts it too.
+     *
      * @param projectDirectory  projects root directory
      * @param relativePathToPom path to the pom file to extract (relative to the {@code projectDirectory})
      * @param currentVersion    version (git tag) to read the file at
@@ -36,22 +35,18 @@ public class LastReleasePomFileReader {
             final String currentVersion, final Path targetDirectory) {
         final Path gitRepo = findGitRepo(projectDirectory);
         final Path relativeProjectDirPath = gitRepo.relativize(projectDirectory);
-        final var gitRepository = new GitRepository(gitRepo);
-        final var exasolVersionMatcher = new ExasolVersionMatcher();
-        final Optional<TaggedCommit> latestCommitWithExasolVersionTag = gitRepository.getTagsInCurrentBranch().stream()
-                .filter(taggedCommit -> exasolVersionMatcher.isExasolStyleVersion(taggedCommit.getTag()))//
-                .filter(taggedCommit -> !taggedCommit.getTag().equals(currentVersion))//
-                .findFirst();
-        final Path pathToPomRelativeToGit = relativeProjectDirPath.resolve(relativePathToPom);
-        if (latestCommitWithExasolVersionTag.isEmpty()) {
-            return Optional.empty();
-        } else {
-            final Optional<Path> pomFile = extractPomFile(gitRepository, latestCommitWithExasolVersionTag.get(),
-                    pathToPomRelativeToGit, targetDirectory);
-            pomFile.ifPresent(
-                    path -> extractParentStack(targetDirectory, gitRepository, latestCommitWithExasolVersionTag.get(),
-                            projectDirectory.resolve(relativePathToPom), path, gitRepo));
-            return pomFile;
+        try (final var gitRepository = GitRepository.open(gitRepo)) {
+            final Optional<TaggedCommit> latestReleaseCommit = gitRepository.findLatestReleaseCommit(currentVersion);
+            if (latestReleaseCommit.isEmpty()) {
+                return Optional.empty();
+            } else {
+                final Path pathToPomRelativeToGit = relativeProjectDirPath.resolve(relativePathToPom);
+                final Optional<Path> pomFile = extractPomFile(gitRepository, latestReleaseCommit.get(),
+                        pathToPomRelativeToGit, targetDirectory);
+                pomFile.ifPresent(path -> extractParentStack(targetDirectory, gitRepository, latestReleaseCommit.get(),
+                        projectDirectory.resolve(relativePathToPom), path, gitRepo));
+                return pomFile;
+            }
         }
     }
 
@@ -60,7 +55,7 @@ public class LastReleasePomFileReader {
             final Path pathToGitRepo) {
         Path currentPomPath = pathToPom;
         Parent parentRef = readPomFile(extractedPomFile).getParent();
-        while (parentRef != null && parentRef.getRelativePath() != null && !parentRef.getRelativePath().isBlank()) {
+        while ((parentRef != null) && (parentRef.getRelativePath() != null) && !parentRef.getRelativePath().isBlank()) {
             currentPomPath = currentPomPath.getParent().resolve(parentRef.getRelativePath()).normalize();
             final Path pathRelativeToGitRepo = pathToGitRepo.relativize(currentPomPath);
             final Optional<Path> parentPom = extractPomFile(gitRepository, latestCommitWithExasolVersionTag,
