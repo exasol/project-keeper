@@ -71,7 +71,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .version(crawledMavenProject.getProjectVersion()).isRootProject(isRoot).build();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-93")
-                    .message("Analyzing of {{type}} is not supported by " + MavenSourceAnalyzer.class.getName() + ".",
+                    .message("Analyzing of {{type}} is not supported by MavenSourceAnalyzer",
                             source.getType())
                     .ticketMitigation().toString());
         }

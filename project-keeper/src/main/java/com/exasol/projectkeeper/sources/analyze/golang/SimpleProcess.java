@@ -41,7 +41,7 @@ public class SimpleProcess {
                     .startCollectingConsumer(process.getInputStream());
             return new SimpleProcess(process, streamConsumer, command);
         } catch (final IOException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-125")
                     .message("Error executing command {{command}}.", String.join(" ", command))
                     .mitigation("Verify that the {{executable name}} executable is on the PATH.", command.get(0))
                     .toString(), exception);
@@ -54,7 +54,7 @@ public class SimpleProcess {
         final String output = getStreamOutput(executionTimeout);
         if (exitCode != 0) {
             LOGGER.log(Level.SEVERE, output);
-            throw new IllegalStateException(ExaError.messageBuilder("").message(
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-126").message(
                     "Failed to run command {{executed command}}, exit code was {{exit code}}. Output:\n{{std out}}\nError output:\n{{std error}}",
                     getCommand(), exitCode, output, getStdError()).toString());
         }
@@ -67,7 +67,7 @@ public class SimpleProcess {
             return new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (final IOException exception) {
             throw new UncheckedIOException(
-                    ExaError.messageBuilder("")
+                    ExaError.messageBuilder("E-PK-CORE-127")
                             .message("Failed to read error stream from command {{command}}", getCommand()).toString(),
                     exception);
         }
@@ -85,7 +85,7 @@ public class SimpleProcess {
         try {
             if (!this.process.waitFor(executionTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
                 final String output = getOutput(executionTimeout);
-                throw new IllegalStateException(ExaError.messageBuilder("").message(
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128").message(
                         "Timeout while waiting {{timeout|uq}}ms for command {{executed command}}. Output was {{output}}.",
                         executionTimeout.toMillis(), getCommand(), output).toString());
             }
@@ -96,7 +96,7 @@ public class SimpleProcess {
 
     private RuntimeException handleInterruptedException(final InterruptedException exception) {
         Thread.currentThread().interrupt();
-        return new IllegalStateException(ExaError.messageBuilder("")
+        return new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-129")
                 .message("Interrupted while waiting for command {{executed command|uq}}", getCommand()).toString(),
                 exception);
     }
@@ -104,5 +104,4 @@ public class SimpleProcess {
     private String getCommand() {
         return String.join(" ", this.command);
     }
-
 }

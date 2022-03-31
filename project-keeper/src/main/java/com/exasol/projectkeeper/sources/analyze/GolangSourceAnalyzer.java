@@ -34,8 +34,8 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
         if (source.getType() != SourceType.GOLANG) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-")
-                    .message("Analyzing of {{type}} is not supported by " + GolangSourceAnalyzer.class.getName() + ".",
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-130")
+                    .message("Analyzing of {{type}} is not supported by GolangSourceAnalyzer",
                             source.getType())
                     .ticketMitigation().toString());
         }

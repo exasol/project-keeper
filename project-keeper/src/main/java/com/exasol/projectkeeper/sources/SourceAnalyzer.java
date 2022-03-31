@@ -55,7 +55,7 @@ public class SourceAnalyzer {
     private LanguageSpecificSourceAnalyzer getAnalyzer(final SourceType type) {
         final LanguageSpecificSourceAnalyzer analyzer = this.sourceAnalyzers.get(type);
         if (analyzer == null) {
-            throw new IllegalStateException(ExaError.messageBuilder("")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-131")
                     .message("No source analyzer found for source type {{source type}}.", type).ticketMitigation()
                     .toString());
         }

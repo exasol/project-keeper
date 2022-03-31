@@ -52,7 +52,7 @@ public class GolangServices {
     private GolangDependencyLicense convertDependencyLicense(final String line) {
         final String[] parts = line.split(",");
         if (parts.length != 3) {
-            throw new IllegalStateException(ExaError.messageBuilder("").message(
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-132").message(
                     "Invalid output line of command go-licenses: {{invalid line}}, expected 3 fields but got {{actual field count}}",
                     line, parts.length).toString());
         }
@@ -72,9 +72,10 @@ public class GolangServices {
     private Dependency convertDependency(final String line) {
         final String[] parts = line.split(" ");
         if (parts.length != 2) {
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("").message("Invalid output line of command {{command}}: {{invalid line}}",
-                            String.join(" ", COMMAND_LIST_DIRECT_DEPDENDENCIES), line).toString());
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-124")
+                    .message("Invalid output line of command {{command}}: {{invalid line}}",
+                            String.join(" ", COMMAND_LIST_DIRECT_DEPDENDENCIES), line)
+                    .toString());
         }
         return Dependency.builder().moduleName(parts[0]).version(parts[1]).build();
     }
