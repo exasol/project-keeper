@@ -2,4 +2,4 @@ error-tags:
   PK-SMC:
     packages:
       - com.exasol.projectkeeper
-    highest-index: 79
+    highest-index: 80

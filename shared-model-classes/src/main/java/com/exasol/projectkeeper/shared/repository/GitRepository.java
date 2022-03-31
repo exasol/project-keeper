@@ -164,7 +164,8 @@ public class GitRepository implements AutoCloseable {
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-SMC-43")
-                            .message("Failed to retrieve latest tag from the local git repository.").toString(),
+                            .message("Failed to copy file {{path}} from git repo {{git repo}} at commit {{commit}} to {{target file}}.",
+                            relativeFilePath, projectDirectory, commit.getCommit(), targetFile).toString(),
                     exception);
         }
     }
@@ -188,10 +189,10 @@ public class GitRepository implements AutoCloseable {
         } catch (final FileNotFoundException exception) {
             throw exception;
         } catch (final IOException exception) {
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-SMC-43")
-                            .message("Failed to retrieve latest tag from the local git repository.").toString(),
-                    exception);
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-SMC-80")
+                    .message("Failed to retrieve file {{path}} from git repo {{git repo}} at commit {{commit}}.",
+                            relativeFilePath, projectDirectory, commit.getCommit())
+                    .toString(), exception);
         }
     }
 
