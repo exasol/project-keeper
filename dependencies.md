@@ -86,9 +86,9 @@
 
 ### Runtime Dependencies
 
-| Dependency                                 | License   |
-| ------------------------------------------ | --------- |
-| [Project keeper Java project crawler][102] | [MIT][12] |
+| Dependency                                | License   |
+| ----------------------------------------- | --------- |
+| [Project keeper Java project crawler][67] | [MIT][12] |
 
 ### Plugin Dependencies
 
@@ -123,7 +123,7 @@
 
 | Dependency                                 | License                                        |
 | ------------------------------------------ | ---------------------------------------------- |
-| [Project keeper core][102]                 | [MIT][12]                                      |
+| [Project keeper core][67]                  | [MIT][12]                                      |
 | [Maven Plugin Tools Java Annotations][150] | [Apache License, Version 2.0][28]              |
 | [Maven Plugin API][152]                    | [Apache License, Version 2.0][28]              |
 | [Maven Project Builder][154]               | [The Apache Software License, Version 2.0][32] |
@@ -248,6 +248,7 @@
 [154]: http://maven.apache.org/
 [88]: https://github.com/exasol/maven-project-version-getter
 [39]: http://www.mojohaus.org/versions-maven-plugin/
+[67]: https://github.com/exasol/project-keeper/
 [19]: http://opensource.org/licenses/BSD-3-Clause
 [27]: https://maven.apache.org/plugins/maven-compiler-plugin/
 [70]: https://oss.oracle.com/licenses/CDDL+GPL-1.1
@@ -276,14 +277,12 @@
 [59]: http://maven.apache.org/plugins/maven-resources-plugin/
 [150]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [138]: https://maven.apache.org/plugins/maven-jar-plugin/
-[102]: https://github.com/exasol/project-keeper
 [80]: https://github.com/vdurmont/semver4j
 [49]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [8]: https://projects.eclipse.org/projects/ee4j.yasson
 [132]: https://maven.apache.org/surefire/maven-failsafe-plugin/
 [152]: https://maven.apache.org/ref/3.8.5/maven-plugin-api/
 [50]: http://www.eclipse.org/legal/epl-v10.html
-[67]: https://github.com/exasol/project-keeper/project-keeper-shared-model-classes-generated-parent/project-keeper-shared-model-classes
 [156]: https://maven.apache.org/ref/3.8.5/maven-core/
 [206]: https://maven.apache.org/plugins/maven-dependency-plugin/
 [61]: http://maven.apache.org/plugins/maven-jar-plugin/

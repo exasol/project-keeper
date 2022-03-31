@@ -63,9 +63,7 @@ class PomFileValidatorTest {
     }
 
     private TestMavenModel getTestModel() {
-        final TestMavenModel model = new TestMavenModel();
-        model.setDescription("My project description");
-        return model;
+        return new TestMavenModel();
     }
 
     @Test
@@ -186,7 +184,7 @@ class PomFileValidatorTest {
         getTestModel().writeAsPomToProject(this.tempDir);
         runFix(null);
         final String expected = ("<parent>\n" + "        <artifactId>my-test-project-generated-parent</artifactId>\n"
-                + "        <groupId>com.example</groupId>\n" + "        <version>0.1.0</version>\n"
+                + "        <groupId>com.exasol</groupId>\n" + "        <version>0.1.0</version>\n"
                 + "        <relativePath>pk_generated_parent.pom</relativePath>\n" + "    </parent>").replace("\n",
                         System.lineSeparator());
         assertThat(Files.readString(this.tempDir.resolve("pom.xml")), Matchers.containsString(expected));

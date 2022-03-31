@@ -7,6 +7,7 @@
         <artifactId>project-keeper-shared-model-classes-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
+    <description>Classes that need to be shared between different modules of project-keeper.</description>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>project-keeper-shared-model-classes</artifactId>
     <name>Project-Keeper shared model classes</name>
@@ -63,4 +64,5 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+    <url>https://github.com/exasol/project-keeper/</url>
 </project>
