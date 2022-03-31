@@ -21,6 +21,8 @@ public interface MavenProjectFromFileReader {
      * Exception that is thrown if the reading failed.
      */
     class ReadFailedException extends Exception {
+        private static final long serialVersionUID = 394058627645835163L;
+
         /**
          * Create a new instance of {@link ReadFailedException}.
          * 
