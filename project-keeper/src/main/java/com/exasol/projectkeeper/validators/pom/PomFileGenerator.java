@@ -110,10 +110,6 @@ public class PomFileGenerator {
         return developers;
     }
 
-    private static class GitRepoInfo {
-
-    }
-
     private Element buildParent(final Document document, final ProjectKeeperConfig.ParentPomRef parentPomRef) {
         final Element parent = document.createElement("parent");
         addTextElement(parent, GROUP_ID, parentPomRef.getGroupId());
