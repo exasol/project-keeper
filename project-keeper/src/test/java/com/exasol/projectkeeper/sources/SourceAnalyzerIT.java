@@ -36,10 +36,10 @@ class SourceAnalyzerIT {
         Git.init().setDirectory(this.tempDir.toFile()).call().close();
         new TestMavenModel().writeAsPomToProject(this.tempDir);
         final Path path = this.tempDir.resolve("pom.xml");
-        final List<AnalyzedSource> result = new SourceAnalyzer(TEST_ENV.getLocalMavenRepository(),
-                TestEnvBuilder.CURRENT_VERSION).analyze(this.tempDir,
-                        List.of(ProjectKeeperConfig.Source.builder().modules(MODULES).path(path).advertise(true)
-                                .type(MAVEN).build()));
+        final List<AnalyzedSource> result = SourceAnalyzer
+                .create(TEST_ENV.getLocalMavenRepository(), TestEnvBuilder.CURRENT_VERSION)
+                .analyze(this.tempDir, List.of(ProjectKeeperConfig.Source.builder().modules(MODULES).path(path)
+                        .advertise(true).type(MAVEN).build()));
         final AnalyzedMavenSource first = (AnalyzedMavenSource) result.get(0);
         assertAll(//
                 () -> assertThat(result, Matchers.hasSize(1)), () -> assertThat(first.getPath(), equalTo(path)),

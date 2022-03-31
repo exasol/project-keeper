@@ -109,7 +109,7 @@ public class ProjectKeeper {
     }
 
     private List<Validator> getPhase2Validators() {
-        final List<AnalyzedSource> analyzedSources = new SourceAnalyzer(this.mvnRepo, this.ownVersion)
+        final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, this.config.getSources());
         final String projectName = getProjectName(analyzedSources);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
@@ -185,7 +185,7 @@ public class ProjectKeeper {
 
     /**
      * Fix all project findings.
-     * 
+     *
      * @return {@code true} if all findings could be fixed
      */
     public boolean fix() {
