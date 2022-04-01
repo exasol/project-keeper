@@ -41,6 +41,7 @@ class ProjectKeeperMojoIT {
     @Test
     // [itest->dsn~mvn-verify-goal~1]
     void testVerify() throws IOException {
+        Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
         Files.writeString(this.projectDir.resolve(".project-keeper.yml"), //
                 "sources:\n" + //
                         "  - type: maven\n" + //

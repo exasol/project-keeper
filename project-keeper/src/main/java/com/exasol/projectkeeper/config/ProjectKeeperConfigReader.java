@@ -153,8 +153,7 @@ public class ProjectKeeperConfigReader {
         final String rawType = rawSource.getType();
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
-        final List<String> excludes = convertExcludes(rawSource.getExcludes());
-        return new ProjectKeeperConfig.Source(path, convertType(rawType), modules, excludes, rawSource.advertise,
+        return new ProjectKeeperConfig.Source(path, convertType(rawType), modules, rawSource.advertise,
                 parseParentPomProperty(rawSource.parentPom));
     }
 
@@ -243,8 +242,6 @@ public class ProjectKeeperConfigReader {
             private String path;
             private String type;
             private List<String> modules;
-            /** String or map (regex: string) */
-            private List<Object> excludes;
             private boolean advertise = true;
             private ParentPomRef parentPom;
         }

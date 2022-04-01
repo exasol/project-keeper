@@ -109,10 +109,6 @@ public class ProjectKeeperConfig {
         // [impl->dsn~modules~1]
         @Builder.Default
         private final Set<ProjectKeeperModule> modules = Collections.emptySet();
-        /** List of regular expressions that match validation messages to exclude specifically for this source */
-        // [impl->dsn~excluding~1]
-        @Builder.Default
-        private final List<String> excludes = Collections.emptyList();
         @Builder.Default
         private final boolean advertise = true;
         /**

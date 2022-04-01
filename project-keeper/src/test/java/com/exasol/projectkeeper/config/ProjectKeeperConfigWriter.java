@@ -30,8 +30,8 @@ public class ProjectKeeperConfigWriter {
         final List<ConfigForWriting.Source> sourcesForWriting = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : config.getSources()) {
             final List<String> modules = source.getModules().stream().map(Enum::name).collect(Collectors.toList());
-            sourcesForWriting.add(new ConfigForWriting.Source(source.getPath().toString(), source.getType().name(),
-                    modules, source.getExcludes()));
+            sourcesForWriting
+                    .add(new ConfigForWriting.Source(source.getPath().toString(), source.getType().name(), modules));
         }
         String version = null;
         if (config.getVersionConfig() instanceof FixedVersion) {
@@ -52,7 +52,6 @@ public class ProjectKeeperConfigWriter {
             private final String path;
             private final String type;
             private final List<String> modules;
-            private final List<String> excludes;
         }
     }
 }

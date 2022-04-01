@@ -20,11 +20,13 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.RepoInfo;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 
 class PomFileGeneratorTest {
 
     private static final String TEST_REPO_NAME = "my-repo";
+    private static final String TEST_REPO_LICENSE = "My License";
 
     static Stream<Arguments> testGenerationWithParentPomCases() {
         return Stream.of(//
@@ -45,6 +47,7 @@ class PomFileGeneratorTest {
     void testGenerateWithDefaultModule() throws XmlPullParserException, IOException {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
         final List<String> pluginNames = getPluginNames(pom);
+        final License license = pom.getLicenses().get(0);
         assertAll(//
                 () -> assertThat(pom.getGroupId(), equalTo("com.example")),
                 () -> assertThat(pom.getArtifactId(), equalTo("my-parent-pom")),
@@ -58,6 +61,10 @@ class PomFileGeneratorTest {
                 () -> assertThat(pom.getDevelopers().get(0).getOrganizationUrl(), equalTo("https://www.exasol.com/")),
                 () -> assertThat(pom.getDevelopers().get(0).getEmail(), equalTo("opensource@exasol.com")),
                 () -> assertThat(pom.getVersion(), equalTo("1.0.0")),
+                () -> assertThat(license.getUrl(),
+                        equalTo("https://github.com/exasol/" + TEST_REPO_NAME + "/blob/main/LICENSE")),
+                () -> assertThat(license.getName(), equalTo("My License")),
+                () -> assertThat(license.getDistribution(), equalTo("repo")),
                 () -> assertThat(pluginNames,
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
                                 "flatten-maven-plugin", "ossindex-maven-plugin", "reproducible-build-maven-plugin",
@@ -80,7 +87,7 @@ class PomFileGeneratorTest {
     private Model runGeneration(final List<ProjectKeeperModule> modules,
             final ProjectKeeperConfig.ParentPomRef parentPomRef) throws IOException, XmlPullParserException {
         final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
-                "1.0.0", parentPomRef, TEST_REPO_NAME);
+                "1.0.0", parentPomRef, new RepoInfo(TEST_REPO_NAME, TEST_REPO_LICENSE));
         try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 result.getBytes(StandardCharsets.UTF_8))) {
             return new MavenXpp3Reader().read(inputStream);

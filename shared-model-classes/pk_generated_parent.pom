@@ -17,6 +17,13 @@
         <java.version>11</java.version>
         <gpg.skip>true</gpg.skip>
     </properties>
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://github.com/exasol/project-keeper/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
     <developers>
         <developer>
             <name>Exasol</name>

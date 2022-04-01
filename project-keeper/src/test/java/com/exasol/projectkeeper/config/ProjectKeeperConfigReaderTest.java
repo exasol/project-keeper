@@ -45,8 +45,6 @@ class ProjectKeeperConfigReaderTest {
                         "    path: my-sub-project/pom.xml\n" + //
                         "    modules:\n" + //
                         "      - maven_central\n" + //
-                        "    excludes:\n" + //
-                        "      - \"E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.\"\n" + //
                         "    advertise: false\n" + //
                         "    parentPom: \n" + //
                         "      groupId: \"com.example\"\n" + //
@@ -54,7 +52,7 @@ class ProjectKeeperConfigReaderTest {
                         "      version: \"1.2.3\"\n" + //
                         "      relativePath: \"./my-parent.xml\"\n" + //
                         "linkReplacements:\n" + //
-                        "  - \"http://wrong-url.com|my-dependency.de\"");
+                        "  - \"http://wrong-url.com|my-dependency.de\"\n");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
         final ProjectKeeperConfig.Source source = config.getSources().get(0);
         assertAll(//
@@ -65,8 +63,6 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(source.getParentPom(),
                         equalTo(new ProjectKeeperConfig.ParentPomRef("com.example", "my-parent", "1.2.3",
                                 "./my-parent.xml"))),
-                () -> assertThat(source.getExcludes(),
-                        contains("\\QE-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin.\\E")),
                 () -> assertThat(config.getExcludes(), containsInAnyOrder(
                         "\\QE-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\\E",
                         "E-PK-CORE-18: .*")),
@@ -90,7 +86,6 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(source.isAdvertise(), equalTo(true)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(DEFAULT)),
-                () -> assertThat(source.getExcludes(), equalTo(Collections.emptyList())),
                 () -> assertThat(source.getParentPom(), nullValue()),
                 () -> assertThat(config.getExcludes(), equalTo(Collections.emptyList())),
                 () -> assertThat(config.getLinkReplacements(), equalTo(Collections.emptyList()))//
