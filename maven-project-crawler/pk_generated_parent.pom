@@ -17,6 +17,26 @@
         <java.version>11</java.version>
         <gpg.skip>true</gpg.skip>
     </properties>
+    <licenses>
+        <license>
+            <name>The MIT License</name>
+            <url>https://github.com/exasol/project-keeper/blob/main/LICENSE</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <developers>
+        <developer>
+            <name>Exasol</name>
+            <email>opensource@exasol.com</email>
+            <organization>Exasol AG</organization>
+            <organizationUrl>https://www.exasol.com/</organizationUrl>
+        </developer>
+    </developers>
+    <scm>
+        <connection>scm:git:https://github.com/exasol/project-keeper.git</connection>
+        <developerConnection>scm:git:https://github.com/exasol/project-keeper.git</developerConnection>
+        <url>https://github.com/exasol/project-keeper/</url>
+    </scm>
     <dependencies>
         <dependency>
             <groupId>org.jacoco</groupId>
