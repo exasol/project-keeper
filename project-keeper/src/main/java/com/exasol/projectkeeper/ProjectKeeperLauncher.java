@@ -20,19 +20,16 @@ public class ProjectKeeperLauncher {
 
         @Override
         public void info(final String message) {
-            System.out.println(message);
             LOGGER.info(message);
         }
 
         @Override
         public void warn(final String message) {
-            System.out.println(message);
             LOGGER.warning(message);
         }
 
         @Override
         public void error(final String message) {
-            System.out.println(message);
             LOGGER.severe(message);
         }
     }
