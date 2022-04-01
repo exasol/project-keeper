@@ -35,6 +35,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractIT {
     @Test
     // [itest->dsn~pom-file-validator~1]
     void testVerifyPhase1() throws IOException {
+        Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
         new TestMavenModel().writeAsPomToProject(this.projectDir);
         writeConfig(createConfigWithAllModules());
         final String output = assertInvalidAndGetOutput();

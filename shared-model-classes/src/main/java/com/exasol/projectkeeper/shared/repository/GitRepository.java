@@ -162,11 +162,9 @@ public class GitRepository implements AutoCloseable {
         } catch (final FileNotFoundException exception) {
             throw exception;
         } catch (final IOException exception) {
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-SMC-43")
-                            .message("Failed to copy file {{path}} from git repo {{git repo}} at commit {{commit}} to {{target file}}.",
-                            relativeFilePath, projectDirectory, commit.getCommit(), targetFile).toString(),
-                    exception);
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-SMC-43").message(
+                    "Failed to copy file {{path}} from git repo {{git repo}} at commit {{commit}} to {{target file}}.",
+                    relativeFilePath, this.projectDirectory, commit.getCommit(), targetFile).toString(), exception);
         }
     }
 
@@ -191,7 +189,7 @@ public class GitRepository implements AutoCloseable {
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-SMC-80")
                     .message("Failed to retrieve file {{path}} from git repo {{git repo}} at commit {{commit}}.",
-                            relativeFilePath, projectDirectory, commit.getCommit())
+                            relativeFilePath, this.projectDirectory, commit.getCommit())
                     .toString(), exception);
         }
     }

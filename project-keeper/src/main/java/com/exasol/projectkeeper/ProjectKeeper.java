@@ -86,7 +86,21 @@ public class ProjectKeeper {
     }
 
     private List<Supplier<List<Validator>>> getValidatorChain() {
-        return List.of(this::getPhase1Validators, this::getPhase2Validators, this::getPhase3Validators);
+        return List.of(this::getPhase0Validators, this::getPhase1Validators, this::getPhase2Validators,
+                this::getPhase3Validators);
+    }
+
+    /**
+     * Get the validators for the 0. validation phase.
+     * <p>
+     * These validators must run before the project file validation, because the project file validation depends on
+     * them.
+     * </p>
+     *
+     * @return validators.
+     */
+    private List<Validator> getPhase0Validators() {
+        return List.of(new LicenseFileValidator(this.projectDir));
     }
 
     /**
@@ -99,11 +113,12 @@ public class ProjectKeeper {
      * @return validators.
      */
     private List<Validator> getPhase1Validators() {
+        final String licenseName = new LicenseNameReader().readLicenseName(this.projectDir);
         final List<Validator> result = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : this.config.getSources()) {
             if (source.getType().equals(MAVEN)) {
                 result.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
-                        source.getParentPom(), this.repoName));
+                        source.getParentPom(), new RepoInfo(this.repoName, licenseName)));
             }
         }
         return result;
@@ -117,7 +132,6 @@ public class ProjectKeeper {
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
         return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger),
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
-                new LicenseFileValidator(this.projectDir),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
                 new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
