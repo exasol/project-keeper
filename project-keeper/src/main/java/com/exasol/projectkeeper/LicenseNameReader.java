@@ -23,7 +23,7 @@ public class LicenseNameReader {
     }
 
     private String getFirstLine(final String licenseFile) {
-        return licenseFile.split("\n")[0];
+        return licenseFile.split("\n")[0].trim();
     }
 
     private String readLicenseFile(final Path projectDir) {
