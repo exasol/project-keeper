@@ -1,17 +1,25 @@
 package com.exasol.projectkeeper.shared.dependencychanges;
 
-import lombok.*;
+import jakarta.json.bind.annotation.JsonbCreator;
+import jakarta.json.bind.annotation.JsonbProperty;
+import lombok.Data;
 
 /**
  * This class represents a removed dependency.
  */
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
-public class RemovedDependency implements DependencyChange {
+public final class RemovedDependency implements DependencyChange {
     private String groupId;
     private String artifactId;
     private String version;
+
+    @JsonbCreator
+    public RemovedDependency(@JsonbProperty("groupId") final String groupId,
+            @JsonbProperty("artifactId") final String artifactId, @JsonbProperty("version") final String version) {
+        this.groupId = groupId;
+        this.artifactId = artifactId;
+        this.version = version;
+    }
 
     @Override
     public void accept(final DependencyChangeVisitor visitor) {

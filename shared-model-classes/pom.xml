@@ -63,6 +63,11 @@
             <artifactId>junit5-system-extensions</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>nl.jqno.equalsverifier</groupId>
+            <artifactId>equalsverifier</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <url>https://github.com/exasol/project-keeper/</url>
 </project>
