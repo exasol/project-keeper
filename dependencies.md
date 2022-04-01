@@ -61,7 +61,7 @@
 
 | Dependency                                | License                                        |
 | ----------------------------------------- | ---------------------------------------------- |
-| [Project-Keeper shared model classes][67] | [MIT][12]                                      |
+| [Project-Keeper shared model classes][67] | [The MIT License][68]                          |
 | [jaxb-api][69]                            | [CDDL 1.1][70]; [GPL2 w/ CPE][70]              |
 | [JAXB Runtime][72]                        | [Eclipse Distribution License - v 1.0][10]     |
 | [org.xmlunit:xmlunit-core][74]            | [The Apache Software License, Version 2.0][32] |
@@ -86,9 +86,9 @@
 
 ### Runtime Dependencies
 
-| Dependency                                | License   |
-| ----------------------------------------- | --------- |
-| [Project keeper Java project crawler][67] | [MIT][12] |
+| Dependency                                | License               |
+| ----------------------------------------- | --------------------- |
+| [Project keeper Java project crawler][67] | [The MIT License][68] |
 
 ### Plugin Dependencies
 
@@ -123,7 +123,7 @@
 
 | Dependency                                 | License                                        |
 | ------------------------------------------ | ---------------------------------------------- |
-| [Project keeper core][67]                  | [MIT][12]                                      |
+| [Project keeper core][67]                  | [The MIT License][68]                          |
 | [Maven Plugin Tools Java Annotations][150] | [Apache License, Version 2.0][28]              |
 | [Maven Plugin API][152]                    | [Apache License, Version 2.0][28]              |
 | [Maven Project Builder][154]               | [The Apache Software License, Version 2.0][32] |
@@ -180,7 +180,7 @@
 
 | Dependency                                 | License                                        |
 | ------------------------------------------ | ---------------------------------------------- |
-| [Project-Keeper shared model classes][67]  | [MIT][12]                                      |
+| [Project-Keeper shared model classes][67]  | [The MIT License][68]                          |
 | [Maven Plugin Tools Java Annotations][150] | [Apache License, Version 2.0][28]              |
 | [Maven Plugin API][152]                    | [Apache License, Version 2.0][28]              |
 | [Maven Project Builder][154]               | [The Apache Software License, Version 2.0][32] |
@@ -284,6 +284,7 @@
 [152]: https://maven.apache.org/ref/3.8.5/maven-plugin-api/
 [50]: http://www.eclipse.org/legal/epl-v10.html
 [156]: https://maven.apache.org/ref/3.8.5/maven-core/
+[68]: https://github.com/exasol/project-keeper/blob/main/LICENSE
 [206]: https://maven.apache.org/plugins/maven-dependency-plugin/
 [61]: http://maven.apache.org/plugins/maven-jar-plugin/
 [3]: https://projects.eclipse.org/license/epl-2.0

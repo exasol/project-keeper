@@ -29,23 +29,27 @@ public class PomFileValidator implements Validator {
     private final Path pomFilePath;
     private final ProjectKeeperConfig.ParentPomRef parentPomRef;
     private final String repoName;
+    private final String licenseName;
 
     /**
      * Create a new instance of {@link PomFileValidator}.
-     *
+     * 
      * @param projectDirectory project directory
      * @param enabledModules   collection of enables modules
      * @param pomFilePath      pom file to create the runner for
      * @param parentPomRef     reference to a parent pom or {@code null}
      * @param repoName         name of the git repository
+     * @param licenseName      name of the project's license
      */
     public PomFileValidator(final Path projectDirectory, final Collection<ProjectKeeperModule> enabledModules,
-            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef, final String repoName) {
+            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef, final String repoName,
+            final String licenseName) {
         this.projectDirectory = projectDirectory;
         this.enabledModules = enabledModules;
         this.pomFilePath = pomFilePath;
         this.parentPomRef = parentPomRef;
         this.repoName = repoName;
+        this.licenseName = licenseName;
     }
 
     @Override
@@ -271,7 +275,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> validateGeneratedPomFile(final String groupId, final String artifactId,
             final String version, final Path generatedPomPath) {
         final String generatedContent = new PomFileGenerator().generatePomContent(this.enabledModules, groupId,
-                artifactId, version, this.parentPomRef, this.repoName);
+                artifactId, version, this.parentPomRef, this.repoName, this.licenseName);
         return new RequiredFileValidator().validateFile(this.projectDirectory, generatedPomPath,
                 withContentEqualTo(generatedContent));
     }

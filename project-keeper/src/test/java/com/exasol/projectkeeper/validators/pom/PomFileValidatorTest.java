@@ -160,7 +160,7 @@ class PomFileValidatorTest {
     private List<ValidationFinding> runValidator(final ProjectKeeperConfig.ParentPomRef parentPomRef) {
         final PomFileValidator validator = new PomFileValidator(this.tempDir,
                 List.of(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.JAR_ARTIFACT), this.tempDir.resolve("pom.xml"),
-                parentPomRef, "my-repo");
+                parentPomRef, "my-repo", "My License");
         return validator.validate();
     }
 
