@@ -201,3 +201,4 @@ Typically, this happens if you did not fetch all tags. Simply run `git pull`.
 * [Changelog](doc/changes/changelog.md)
 * [Features & Requirements](doc/system_requirements.md)
 * [Design](doc/design.md)
+* [Developers Guide](doc/developers_guide/developers_guide.md)
