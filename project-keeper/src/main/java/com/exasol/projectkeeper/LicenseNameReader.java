@@ -7,7 +7,7 @@ import java.nio.file.Path;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * This class reads name of the license from the LICENSE file of a project.
+ * This class reads the name of the license from the LICENSE file of a project.
  */
 public class LicenseNameReader {
 

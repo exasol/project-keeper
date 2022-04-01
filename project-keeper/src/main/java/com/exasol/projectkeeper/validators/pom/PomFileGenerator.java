@@ -57,7 +57,7 @@ public class PomFileGenerator {
      * @param artifactId     artifact id for the generated pom file
      * @param version        version for the generated pom file
      * @param parentPomRef   reference to a parent pom or {@code null}
-     * @param repoInfo       information about the version
+     * @param repoInfo       information about the repository
      * @return pom file content
      */
     public String generatePomContent(final Collection<ProjectKeeperModule> enabledModules, final String groupId,
