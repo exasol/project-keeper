@@ -14,6 +14,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
@@ -34,13 +35,13 @@ public class GolangServices {
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(5);
 
-    private final String projectVersion;
+    private final Supplier<String> projectVersion;
 
     public GolangServices(final ProjectKeeperConfig config) {
-        this(extractVersion(config));
+        this(() -> extractVersion(config));
     }
 
-    GolangServices(final String projectVersion) {
+    GolangServices(final Supplier<String> projectVersion) {
         this.projectVersion = projectVersion;
     }
 
@@ -142,7 +143,7 @@ public class GolangServices {
     private Optional<String> getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
         try (GitRepository repo = GitRepository.open(projectDir)) {
             final Path relativeModFilePath = projectDir.relativize(modFile);
-            return repo.findLatestReleaseCommit(this.projectVersion)
+            return repo.findLatestReleaseCommit(this.projectVersion.get())
                     .map(tag -> getContent(repo, relativeModFilePath, tag));
         }
     }

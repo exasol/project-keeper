@@ -150,7 +150,7 @@ class ProjectKeeperConfigReaderTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> this.reader.readConfig(this.tempDir));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-84: Invalid .project-keeper.yml. Unsupported source type 'unknown'. Please use one of the supported types: maven."));
+                "E-PK-CORE-84: Invalid .project-keeper.yml. Unsupported source type 'unknown'. Please use one of the supported types: maven, golang."));
     }
 
     @Test

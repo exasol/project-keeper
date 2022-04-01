@@ -82,7 +82,7 @@ class GolangServicesTest {
 
     private void assertChanges(final GoModFile oldMod, final GoModFile newMod,
             final DependencyChange... expectedChanges) {
-        final GolangServices golangServices = new GolangServices(PROJECT_VERSION);
+        final GolangServices golangServices = new GolangServices(() -> PROJECT_VERSION);
         final List<DependencyChange> changes = golangServices.calculateChanges(oldMod, newMod);
         assertAll(() -> assertThat(changes, hasSize(expectedChanges.length)),
                 () -> assertThat(changes, containsInAnyOrder(expectedChanges)));
