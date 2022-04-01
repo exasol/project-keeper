@@ -40,9 +40,7 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .message("Analyzing of {{type}} is not supported by GolangSourceAnalyzer", source.getType())
                     .ticketMitigation().toString());
         }
-
         final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("go.mod"));
-
         final Path moduleDir = source.getPath().getParent();
         final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(moduleDir);
         final String projectName = source.getPath().normalize().getParent().getFileName().toString();
