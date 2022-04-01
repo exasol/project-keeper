@@ -237,7 +237,6 @@
 [176]: https://www.eclemma.org/jacoco/index.html
 [9]: http://www.eclipse.org/legal/epl-v20.html
 [11]: https://github.com/exasol/error-reporting-java
-[88]: https://maven.apache.org/ref/3.8.4/maven-model/
 [34]: http://www.apache.org/licenses/LICENSE-2.0.txt
 [0]: https://projectlombok.org
 [39]: https://maven.apache.org/surefire/maven-surefire-plugin/
@@ -278,6 +277,7 @@
 [61]: http://maven.apache.org/plugins/maven-resources-plugin/
 [152]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
 [140]: https://maven.apache.org/plugins/maven-jar-plugin/
+[88]: https://maven.apache.org/ref/3.8.5/maven-model/
 [82]: https://github.com/vdurmont/semver4j
 [51]: http://www.sonatype.com/public-parent/nexus-maven-plugins/nexus-staging/nexus-staging-maven-plugin/
 [8]: https://projects.eclipse.org/projects/ee4j.yasson

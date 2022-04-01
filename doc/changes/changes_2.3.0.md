@@ -32,7 +32,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 
 #### Test Dependency Updates
 
-* Added `nl.jqno.equalsverifier:equalsverifier:3.9`
+* Added `nl.jqno.equalsverifier:equalsverifier:3.10`
 
 #### Plugin Dependency Updates
 
