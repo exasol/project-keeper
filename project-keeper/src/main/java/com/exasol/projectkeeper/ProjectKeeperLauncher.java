@@ -10,7 +10,7 @@ public class ProjectKeeperLauncher {
     public static void main(final String[] args) {
         final Path projectDir = Paths.get(".").toAbsolutePath();
         final ProjectKeeper projectKeeper = ProjectKeeper.createProjectKeeper(new JULLogger(), projectDir, null);
-        final boolean success = projectKeeper.verify();
+        final boolean success = projectKeeper.fix();
         if (!success) {
             throw new IllegalStateException("invalid");
         }
@@ -20,16 +20,19 @@ public class ProjectKeeperLauncher {
 
         @Override
         public void info(final String message) {
+            System.out.println(message);
             LOGGER.info(message);
         }
 
         @Override
         public void warn(final String message) {
+            System.out.println(message);
             LOGGER.warning(message);
         }
 
         @Override
         public void error(final String message) {
+            System.out.println(message);
             LOGGER.severe(message);
         }
     }

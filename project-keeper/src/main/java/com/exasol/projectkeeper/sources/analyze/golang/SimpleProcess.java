@@ -63,7 +63,8 @@ public class SimpleProcess {
                     "Failed to run command {{executed command}}, exit code was {{exit code}} after {{duration}}. Output:\n{{std out}}\nError output:\n{{std error}}",
                     formatCommand(), exitCode, duration, output, getStdError()).toString());
         }
-        LOGGER.fine(() -> "Command '" + formatCommand() + "' finished successfully after " + duration);
+        LOGGER.fine(() -> "Command '" + formatCommand() + "' finished successfully after " + duration + ", output: '"
+                + output + "'");
         return output;
     }
 

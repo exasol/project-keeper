@@ -63,6 +63,11 @@ class GolangServicesTest {
     }
 
     @Test
+    void calculateChangesNoOldModFile() {
+        assertChanges(null, modFile(dep("mod1", "v2")), added("mod1", "v2"), added("golang", "1.17"));
+    }
+
+    @Test
     void calculateChangesMultipleChanges() {
         assertChanges(modFile(dep("updated", "v1"), dep("removed", "v3")),
                 modFile(dep("updated", "v2"), dep("added", "v4")), updated("updated", "v1", "v2"),
@@ -77,7 +82,7 @@ class GolangServicesTest {
 
     private void assertChanges(final GoModFile oldMod, final GoModFile newMod,
             final DependencyChange... expectedChanges) {
-        final GolangServices golangServices = new GolangServices(() -> PROJECT_VERSION);
+        final GolangServices golangServices = new GolangServices(PROJECT_VERSION);
         final List<DependencyChange> changes = golangServices.calculateChanges(oldMod, newMod);
         assertAll(() -> assertThat(changes, hasSize(expectedChanges.length)),
                 () -> assertThat(changes, containsInAnyOrder(expectedChanges)));

@@ -1,6 +1,8 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
@@ -12,12 +14,12 @@ import java.time.Duration;
 import java.util.*;
 import java.util.Map.Entry;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ProjectVersionDetector;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig.FixedVersion;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig.VersionConfig;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
@@ -27,40 +29,43 @@ import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency
 import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
 
 public class GolangServices {
+    private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
     private static final List<String> COMMAND_LIST_DIRECT_DEPDENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
-
-    private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
-
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(5);
 
-    private final Supplier<String> projectVersionSupplier;
+    private final String projectVersion;
 
     public GolangServices(final ProjectKeeperConfig config) {
         this(extractVersion(config));
     }
 
-    GolangServices(final Supplier<String> projectVersionSupplier) {
-        this.projectVersionSupplier = projectVersionSupplier;
+    GolangServices(final String projectVersion) {
+        this.projectVersion = projectVersion;
     }
 
-    private static Supplier<String> extractVersion(final ProjectKeeperConfig config) {
-        return () -> new ProjectVersionDetector().detectVersion(config, emptyList());
+    private static String extractVersion(final ProjectKeeperConfig config) {
+        final VersionConfig versionConfig = config.getVersionConfig();
+        if (versionConfig instanceof FixedVersion) {
+            return ((FixedVersion) versionConfig).getVersion();
+        } else {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-136")
+                    .message("Version config has unexpected type {{type}}, expected a fixed version",
+                            versionConfig.getClass().getName())
+                    .mitigation("Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3").toString());
+        }
     }
 
     public List<ProjectDependency> getDependencies(final ModuleInfo moduleInfo, final Path projectPath) {
         final List<ProjectDependency> dependencies = new ArrayList<>(moduleInfo.getDependencies().size());
         final Map<String, GolangDependencyLicense> golangLicenses = getLicenses(projectPath, "./...");
         for (final Dependency dependency : moduleInfo.getDependencies()) {
-            final String websiteUrl = null;
             final String moduleName = dependency.getModuleName();
-            final Type dependencyType = golangLicenses.containsKey(moduleName) ? Type.COMPILE : Type.TEST;
-            final GolangDependencyLicense license = golangLicenses.containsKey(moduleName)
-                    ? golangLicenses.get(moduleName)
-                    : null;
-
+            final GolangDependencyLicense license = golangLicenses.get(moduleName);
+            final String websiteUrl = null;
+            final Type dependencyType = license != null ? Type.COMPILE : Type.TEST;
             dependencies.add(ProjectDependency.builder().name(moduleName).type(dependencyType).websiteUrl(websiteUrl)
-                    .licenses(license == null ? emptyList() : List.of(license.toLicense())) //
+                    .licenses(license != null ? List.of(license.toLicense()) : emptyList()) //
                     .build());
         }
         return dependencies;
@@ -69,6 +74,7 @@ public class GolangServices {
     private Map<String, GolangDependencyLicense> getLicenses(final Path projectPath, final String module) {
         final SimpleProcess process = SimpleProcess.start(projectPath, List.of("go-licenses", "csv", module));
         return Arrays.stream(process.getOutput(EXECUTION_TIMEOUT).split("\n")) //
+                .filter(not(String::isBlank)) //
                 .map(this::convertDependencyLicense)
                 .collect(toMap(GolangDependencyLicense::getModuleName, Function.identity()));
     }
@@ -80,7 +86,12 @@ public class GolangServices {
                     "Invalid output line of command go-licenses: {{invalid line}}, expected 3 fields but got {{actual field count}}",
                     line, parts.length).toString());
         }
-        return new GolangDependencyLicense(parts[0], parts[1], parts[2]);
+        final String moduleName = parts[0];
+        final String licenseUrl = parts[1];
+        final String licenseName = parts[2];
+        LOGGER.fine(() -> "Found dependency '" + moduleName + "' with license '" + licenseName + "' and url '"
+                + licenseUrl + "'");
+        return new GolangDependencyLicense(moduleName, licenseUrl, licenseName);
     }
 
     public ModuleInfo getModuleInfo(final Path projectPath) {
@@ -101,13 +112,17 @@ public class GolangServices {
                             String.join(" ", COMMAND_LIST_DIRECT_DEPDENDENCIES), line)
                     .toString());
         }
-        return Dependency.builder().moduleName(parts[0]).version(parts[1]).build();
+        final String moduleName = parts[0];
+        final String version = parts[1];
+        LOGGER.fine(() -> "Found dependency in go.mod: '" + moduleName + "' with version '" + version + "'");
+        return Dependency.builder().moduleName(moduleName).version(version).build();
     }
 
     public List<DependencyChange> getDependencyChanges(final Path projectDir, final Path modFile) {
-        final GoModFile lastReleaseModFile = GoModFile.parse(getLastReleaseModFileContent(projectDir, modFile));
+        final Optional<GoModFile> lastReleaseModFile = getLastReleaseModFileContent(projectDir, modFile)
+                .map(GoModFile::parse);
         final GoModFile currentModFile = GoModFile.parse(readFile(modFile));
-        return calculateChanges(lastReleaseModFile, currentModFile);
+        return calculateChanges(lastReleaseModFile.orElse(null), currentModFile);
     }
 
     private String readFile(final Path file) {
@@ -124,22 +139,22 @@ public class GolangServices {
         return new DependencyChangeCalculator(oldModFile, newModFile).calculateChanges();
     }
 
-    private String getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
+    private Optional<String> getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
         try (GitRepository repo = GitRepository.open(projectDir)) {
-            final Optional<TaggedCommit> tag = repo.findLatestReleaseCommit(this.projectVersionSupplier.get());
-            if (tag.isEmpty()) {
-                throw new IllegalStateException(
-                        ExaError.messageBuilder("E-PK-CORE-133").message("Latest release commit not found").toString());
-            }
             final Path relativeModFilePath = projectDir.relativize(modFile);
-            try {
-                return repo.getFileFromCommit(relativeModFilePath, tag.get().getCommit());
-            } catch (final FileNotFoundException exception) {
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-134")
-                        .message("Go module file {{module file}} does not exist at tag {{tag}}", relativeModFilePath,
-                                tag.get().getTag())
-                        .toString(), exception);
-            }
+            return repo.findLatestReleaseCommit(this.projectVersion)
+                    .map(tag -> getContent(repo, relativeModFilePath, tag));
+        }
+    }
+
+    private String getContent(final GitRepository repo, final Path relativeModFilePath, final TaggedCommit tag) {
+        try {
+            return repo.getFileFromCommit(relativeModFilePath, tag.getCommit());
+        } catch (final FileNotFoundException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-134")
+                    .message("Go module file {{module file}} does not exist at tag {{tag}}", relativeModFilePath,
+                            tag.getTag())
+                    .toString(), exception);
         }
     }
 
@@ -154,8 +169,9 @@ public class GolangServices {
         private DependencyChangeCalculator(final GoModFile oldModFile, final GoModFile newModFile) {
             this.oldModFile = oldModFile;
             this.newModFile = newModFile;
-            this.oldDependencies = oldModFile.getDirectDependencies().stream()
-                    .collect(toMap(GoModDependency::getName, Function.identity()));
+            this.oldDependencies = oldModFile == null ? emptyMap()
+                    : oldModFile.getDirectDependencies().stream()
+                            .collect(toMap(GoModDependency::getName, Function.identity()));
             this.newDependencies = newModFile.getDirectDependencies().stream()
                     .collect(toMap(GoModDependency::getName, Function.identity()));
         }
@@ -167,7 +183,7 @@ public class GolangServices {
         }
 
         private void calculateGoVersionChanges() {
-            final String oldVersion = this.oldModFile.getGoVersion();
+            final String oldVersion = this.oldModFile == null ? null : this.oldModFile.getGoVersion();
             final String newVersion = this.newModFile.getGoVersion();
             if ((oldVersion == null) && (newVersion != null)) {
                 dependencyAdded(GOLANG_DEPENDENCY_NAME, newVersion);

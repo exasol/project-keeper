@@ -5,24 +5,28 @@ import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
 
 class GoModFileParser {
-
-    List<Regex> regexps;
+    private final List<Regex> regexps;
     String moduleName = null;
     String goVersion;
     boolean insideRequireBlock = false;
-    List<GoModDependency> dependencies = new ArrayList<>();
+    final List<GoModDependency> dependencies = new ArrayList<>();
 
     GoModFileParser() {
         this.regexps = List.of( //
-                Regex.create("^module\\s+(.+)$", groups -> this.moduleName = groups.get(0)),
-                Regex.create("^go\\s+(.+)$", groups -> this.goVersion = groups.get(0)),
-                Regex.create("^require \\($", groups -> this.insideRequireBlock = true),
-                Regex.create("^\\)$", groups -> this.insideRequireBlock = false),
-                Regex.create("^([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$",
-                        groups -> this.dependencies.add(createDependency(groups))));
+                Regex.create("^module\\s+(.+)$", match -> this.moduleName = match.group(1)),
+                Regex.create("^go\\s+(.+)$", match -> this.goVersion = match.group(1)),
+                Regex.create("^require \\($", match -> this.insideRequireBlock = true),
+                Regex.create("^\\)$", match -> this.insideRequireBlock = false),
+                Regex.create("^(?:require\\s+)?([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$",
+                        match -> this.dependencies.add(createDependency(match.getGroups()))),
+                Regex.create(".*", match -> {
+                    throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-138")
+                            .message("Found unexpected line {{line}} in go.mod file", match.getLine()).toString());
+                }));
     }
 
     private GoModDependency createDependency(final List<String> groups) {
@@ -51,21 +55,21 @@ class GoModFileParser {
 
     private static class Regex {
         Pattern pattern;
-        private final Consumer<List<String>> action;
+        private final Consumer<RegexMatch> action;
 
-        public Regex(final Pattern pattern, final Consumer<List<String>> action) {
+        public Regex(final Pattern pattern, final Consumer<RegexMatch> action) {
             this.pattern = pattern;
             this.action = action;
         }
 
-        static Regex create(final String pattern, final Consumer<List<String>> action) {
+        static Regex create(final String pattern, final Consumer<RegexMatch> action) {
             return new Regex(Pattern.compile(pattern), action);
         }
 
         Optional<RegexMatch> matches(final String string) {
             final Matcher matcher = this.pattern.matcher(string);
             if (matcher.matches()) {
-                return Optional.of(new RegexMatch(matcher, this.action));
+                return Optional.of(new RegexMatch(matcher, string, this.action));
             } else {
                 return Optional.empty();
             }
@@ -75,18 +79,28 @@ class GoModFileParser {
     private static class RegexMatch {
 
         private final Matcher matcher;
-        private final Consumer<List<String>> action;
+        private final Consumer<RegexMatch> action;
+        private final String line;
 
-        RegexMatch(final Matcher matcher, final Consumer<List<String>> action) {
+        RegexMatch(final Matcher matcher, final String line, final Consumer<RegexMatch> action) {
             this.matcher = matcher;
+            this.line = line;
             this.action = action;
         }
 
         void runAction() {
-            this.action.accept(getMatchedGroups());
+            this.action.accept(this);
         }
 
-        private List<String> getMatchedGroups() {
+        String group(final int group) {
+            return this.matcher.group(group);
+        }
+
+        String getLine() {
+            return this.line;
+        }
+
+        List<String> getGroups() {
             final List<String> groups = new ArrayList<>(this.matcher.groupCount());
             for (int i = 1; i <= this.matcher.groupCount(); i++) {
                 groups.add(this.matcher.group(i));

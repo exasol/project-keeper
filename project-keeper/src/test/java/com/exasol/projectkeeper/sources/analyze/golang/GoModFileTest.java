@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -62,9 +63,28 @@ class GoModFileTest {
     }
 
     @Test
+    void parseSingleRequireLine() {
+        final GoModFile file = GoModFile.parse("require github.com/exasol/exasol-driver-go v0.3.1");
+        assertDependency(file, true, "github.com/exasol/exasol-driver-go", "v0.3.1");
+    }
+
+    @Test
+    void parseSingleRequireLineIndirect() {
+        final GoModFile file = GoModFile.parse("require github.com/exasol/exasol-driver-go v0.3.1 // indirect");
+        assertDependency(file, false, "github.com/exasol/exasol-driver-go", "v0.3.1");
+    }
+
+    @Test
     void parseCompleteFile() throws IOException {
         final GoModFile file = GoModFile.parse(Files.readString(Paths.get("src/test/resources/go.mod")));
         assertModFile(file, "github.com/exasol/exasol-driver-go", "1.17", 37, 4);
+    }
+
+    @Test
+    void failsForUnexpectedLines() throws IOException {
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> GoModFile.parse("unexpected"));
+        assertThat(exception.getMessage(), equalTo("E-PK-CORE-138: Found unexpected line 'unexpected' in go.mod file"));
     }
 
     private void assertDependency(final GoModFile file, final boolean direct, final String expectedName,

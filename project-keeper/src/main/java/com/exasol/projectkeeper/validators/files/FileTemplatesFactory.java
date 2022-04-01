@@ -3,14 +3,14 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.ProjectKeeperModule.*;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXACT;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXIST;
+import static java.util.Collections.emptyList;
 
 import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
-import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.sources.*;
 
 import lombok.RequiredArgsConstructor;
 
@@ -55,10 +55,22 @@ class FileTemplatesFactory {
     }
 
     private boolean isMvnRootProject(final AnalyzedSource source) {
-        return source instanceof AnalyzedMavenSource && (((AnalyzedMavenSource) source).isRootProject());
+        return (source instanceof AnalyzedMavenSource) && (((AnalyzedMavenSource) source).isRootProject());
     }
 
     List<FileTemplate> getTemplatesForSource(final AnalyzedSource source) {
+        if (source instanceof AnalyzedMavenSource) {
+            return getMavenTemplates((AnalyzedMavenSource) source);
+        } else if (source instanceof AnalyzedGolangSource) {
+            return getGolangTemplates((AnalyzedGolangSource) source);
+        } else {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-137")
+                    .message("Cannot get templates for unknown source type {{type}}", source.getClass().getSimpleName())
+                    .toString());
+        }
+    }
+
+    private List<FileTemplate> getMavenTemplates(final AnalyzedMavenSource source) {
         final List<FileTemplate> templates = new ArrayList<>();
         final Set<ProjectKeeperModule> enabledModules = source.getModules();
         if (enabledModules.contains(DEFAULT)) {
@@ -74,5 +86,9 @@ class FileTemplatesFactory {
             templates.add(new FileTemplateFromResource("lombok.config", REQUIRE_EXACT));
         }
         return templates;
+    }
+
+    private List<FileTemplate> getGolangTemplates(final AnalyzedGolangSource source) {
+        return emptyList();
     }
 }

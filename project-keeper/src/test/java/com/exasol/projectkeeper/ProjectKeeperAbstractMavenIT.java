@@ -30,5 +30,4 @@ public class ProjectKeeperAbstractMavenIT extends ProjectKeeperAbstractIT {
         testMavenModel.configureAssemblyPluginFinalName();
         testMavenModel.writeAsPomToProject(this.projectDir);
     }
-
 }

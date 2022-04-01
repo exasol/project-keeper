@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze;
 
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Path;
@@ -44,15 +45,18 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
         final Path moduleDir = source.getPath().getParent();
         final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(moduleDir);
-        final String projectName = source.getPath().getParent().getFileName().toString();
+        final String projectName = source.getPath().normalize().getParent().getFileName().toString();
         final ProjectDependencies dependencies = new ProjectDependencies(
                 this.golangServices.getDependencies(moduleInfo, moduleDir));
         final DependencyChangeReport dependencyChanges = new DependencyChangeReport();
         dependencyChanges
                 .setCompileDependencyChanges(this.golangServices.getDependencyChanges(projectDir, source.getPath()));
+        dependencyChanges.setPluginDependencyChanges(emptyList());
+        dependencyChanges.setRuntimeDependencyChanges(emptyList());
+        dependencyChanges.setTestDependencyChanges(emptyList());
         return AnalyzedGolangSource.builder().version(null).isRootProject(isRoot).advertise(source.isAdvertise())
                 .modules(source.getModules()).path(source.getPath()).projectName(projectName)
-                .artifactId(moduleInfo.getModuleName()).dependencies(dependencies).dependencyChanges(dependencyChanges)
+                .moduleName(moduleInfo.getModuleName()).dependencies(dependencies).dependencyChanges(dependencyChanges)
                 .build();
     }
 }

@@ -23,7 +23,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
 
     /**
      * Create a new instance of {@link ChangesFileValidator}
-     * 
+     *
      * @param projectVersion   version of the project to validate
      * @param projectName      name of the maven project
      * @param projectDirectory root directory of the maven project
@@ -63,7 +63,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
                 .withMessage(ExaError.messageBuilder("E-PK-CORE-40")
                         .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
                         .parameter("expected content", fixedSections.toString()).toString())
-                .andFix(((Logger log) -> new ChangesFileIO().write(fixedSections, file))).build();
+                .andFix(((final Logger log) -> new ChangesFileIO().write(fixedSections, file))).build();
     }
 
     private ChangesFile fixSections(final ChangesFile changesFile) {
@@ -74,8 +74,8 @@ public class ChangesFileValidator extends AbstractFileValidator {
     private ChangesFile getTemplate() {
         final var changesFile = ChangesFile.builder()
                 .setHeader(List.of("# " + this.projectName + " " + this.projectVersion + ", released "
-                        + LocalDateTime.now().getYear() + "-??-??", "", "Code name:", ""))//
-                .addSection(List.of("## Features", "", "* ISSUE_NUMBER: description"))//
+                        + LocalDateTime.now().getYear() + "-??-??", "", "Code name:", "")) //
+                .addSection(List.of("## Summary", "", "## Features", "", "* ISSUE_NUMBER: description", "")) //
                 .build();
         return fixSections(changesFile);
     }

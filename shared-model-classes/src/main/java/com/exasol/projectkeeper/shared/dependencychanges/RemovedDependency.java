@@ -9,9 +9,9 @@ import lombok.Data;
  */
 @Data
 public final class RemovedDependency implements DependencyChange {
-    private String groupId;
-    private String artifactId;
-    private String version;
+    private final String groupId;
+    private final String artifactId;
+    private final String version;
 
     @JsonbCreator
     public RemovedDependency(@JsonbProperty("groupId") final String groupId,

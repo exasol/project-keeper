@@ -10,6 +10,8 @@ import java.util.stream.Collectors;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
+import com.exasol.projectkeeper.config.ProjectKeeperConfig.FixedVersion;
+
 import lombok.Data;
 
 public class ProjectKeeperConfigWriter {
@@ -31,7 +33,11 @@ public class ProjectKeeperConfigWriter {
             sourcesForWriting.add(new ConfigForWriting.Source(source.getPath().toString(), source.getType().name(),
                     modules, source.getExcludes()));
         }
-        return new ConfigForWriting(sourcesForWriting, config.getLinkReplacements(), config.getExcludes());
+        String version = null;
+        if (config.getVersionConfig() instanceof FixedVersion) {
+            version = ((FixedVersion) config.getVersionConfig()).getVersion();
+        }
+        return new ConfigForWriting(sourcesForWriting, config.getLinkReplacements(), config.getExcludes(), version);
     }
 
     @Data
@@ -39,6 +45,7 @@ public class ProjectKeeperConfigWriter {
         private final List<Source> sources;
         private final List<String> linkReplacements;
         private final List<String> excludes;
+        private final String version;
 
         @Data
         public static class Source {
