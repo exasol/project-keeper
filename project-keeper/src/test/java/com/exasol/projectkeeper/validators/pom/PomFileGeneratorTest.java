@@ -20,6 +20,7 @@ import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.RepoInfo;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 
 class PomFileGeneratorTest {
@@ -86,7 +87,7 @@ class PomFileGeneratorTest {
     private Model runGeneration(final List<ProjectKeeperModule> modules,
             final ProjectKeeperConfig.ParentPomRef parentPomRef) throws IOException, XmlPullParserException {
         final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
-                "1.0.0", parentPomRef, TEST_REPO_NAME, TEST_REPO_LICENSE);
+                "1.0.0", parentPomRef, new RepoInfo(TEST_REPO_NAME, TEST_REPO_LICENSE));
         try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 result.getBytes(StandardCharsets.UTF_8))) {
             return new MavenXpp3Reader().read(inputStream);

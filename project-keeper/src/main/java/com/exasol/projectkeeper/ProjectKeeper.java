@@ -118,7 +118,7 @@ public class ProjectKeeper {
         for (final ProjectKeeperConfig.Source source : this.config.getSources()) {
             if (source.getType().equals(MAVEN)) {
                 result.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
-                        source.getParentPom(), this.repoName, licenseName));
+                        source.getParentPom(), new RepoInfo(this.repoName, licenseName)));
             }
         }
         return result;

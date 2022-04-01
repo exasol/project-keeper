@@ -21,8 +21,7 @@ import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
@@ -160,7 +159,7 @@ class PomFileValidatorTest {
     private List<ValidationFinding> runValidator(final ProjectKeeperConfig.ParentPomRef parentPomRef) {
         final PomFileValidator validator = new PomFileValidator(this.tempDir,
                 List.of(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.JAR_ARTIFACT), this.tempDir.resolve("pom.xml"),
-                parentPomRef, "my-repo", "My License");
+                parentPomRef, new RepoInfo("my-repo", "My License"));
         return validator.validate();
     }
 
