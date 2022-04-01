@@ -30,6 +30,10 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 
 * Updated `org.eclipse.jgit:org.eclipse.jgit:6.0.0.202111291000-r` to `6.1.0.202203080745-r`
 
+#### Test Dependency Updates
+
+* Added `nl.jqno.equalsverifier:equalsverifier:3.9`
+
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:0.7.1` to `1.1.0`
