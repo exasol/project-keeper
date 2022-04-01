@@ -9,6 +9,7 @@ import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 
 public class MvnProjectWithProjectKeeperPluginWriter extends Model {
+    private static final long serialVersionUID = -8757020322006895512L;
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
     public static final String PROJECT_VERSION = "0.1.0";
 

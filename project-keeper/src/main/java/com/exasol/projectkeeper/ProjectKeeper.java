@@ -76,8 +76,9 @@ public class ProjectKeeper {
     }
 
     private String getRepoName(final Path projectDir) {
-        final GitRepository gitRepository = new GitRepository(projectDir);
-        return gitRepository.getRepoNameFromRemote().orElseGet(() -> getProjectDirName(projectDir));
+        try (final GitRepository gitRepository = GitRepository.open(projectDir)) {
+            return gitRepository.getRepoNameFromRemote().orElseGet(() -> getProjectDirName(projectDir));
+        }
     }
 
     private String getProjectDirName(final Path projectDir) {
