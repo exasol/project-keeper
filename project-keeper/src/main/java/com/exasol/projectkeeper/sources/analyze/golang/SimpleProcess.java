@@ -4,9 +4,9 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.time.Instant;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
@@ -24,22 +24,27 @@ public class SimpleProcess {
     private final CollectingConsumer streamConsumer;
     private final List<String> command;
 
-    private SimpleProcess(final Process process, final CollectingConsumer streamConsumer, final List<String> command) {
+    private final Instant startTime;
+
+    private SimpleProcess(final Process process, final CollectingConsumer streamConsumer, final List<String> command,
+            final Instant startTime) {
         this.process = process;
         this.streamConsumer = streamConsumer;
         this.command = command;
+        this.startTime = startTime;
     }
 
     public static SimpleProcess start(final Path workingDirectory, final List<String> command) {
-        System.out.println("Executing " + command + "...");
+        LOGGER.fine(() -> "Executing command '" + formatCommand(command) + "' in working dir " + workingDirectory);
         try {
             final Process process = new ProcessBuilder(command)
                     .directory(workingDirectory == null ? null : workingDirectory.toFile()) //
                     .redirectErrorStream(false) //
                     .start();
+            final Instant startTime = Instant.now();
             final CollectingConsumer streamConsumer = new AsyncStreamReader()
                     .startCollectingConsumer(process.getInputStream());
-            return new SimpleProcess(process, streamConsumer, command);
+            return new SimpleProcess(process, streamConsumer, command, startTime);
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-125")
                     .message("Error executing command {{command}}.", String.join(" ", command))
@@ -50,15 +55,15 @@ public class SimpleProcess {
 
     public String getOutput(final Duration executionTimeout) {
         waitForExecutionFinished(executionTimeout);
+        final Duration duration = Duration.between(this.startTime, Instant.now());
         final int exitCode = this.process.exitValue();
         final String output = getStreamOutput(executionTimeout);
         if (exitCode != 0) {
-            LOGGER.log(Level.SEVERE, output);
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-126").message(
-                    "Failed to run command {{executed command}}, exit code was {{exit code}}. Output:\n{{std out}}\nError output:\n{{std error}}",
-                    getCommand(), exitCode, output, getStdError()).toString());
+                    "Failed to run command {{executed command}}, exit code was {{exit code}} after {{duration}}. Output:\n{{std out}}\nError output:\n{{std error}}",
+                    formatCommand(), exitCode, duration, output, getStdError()).toString());
         }
-        System.out.println("-> " + output.trim());
+        LOGGER.fine(() -> "Command '" + formatCommand() + "' finished successfully after " + duration);
         return output;
     }
 
@@ -66,9 +71,8 @@ public class SimpleProcess {
         try (InputStream errorStream = this.process.getErrorStream()) {
             return new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
         } catch (final IOException exception) {
-            throw new UncheckedIOException(
-                    ExaError.messageBuilder("E-PK-CORE-127")
-                            .message("Failed to read error stream from command {{command}}", getCommand()).toString(),
+            throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-127")
+                    .message("Failed to read error stream from command {{command}}", formatCommand()).toString(),
                     exception);
         }
     }
@@ -87,7 +91,7 @@ public class SimpleProcess {
                 final String output = getOutput(executionTimeout);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128").message(
                         "Timeout while waiting {{timeout|uq}}ms for command {{executed command}}. Output was {{output}}.",
-                        executionTimeout.toMillis(), getCommand(), output).toString());
+                        executionTimeout.toMillis(), formatCommand(), output).toString());
             }
         } catch (final InterruptedException exception) {
             throw handleInterruptedException(exception);
@@ -97,11 +101,15 @@ public class SimpleProcess {
     private RuntimeException handleInterruptedException(final InterruptedException exception) {
         Thread.currentThread().interrupt();
         return new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-129")
-                .message("Interrupted while waiting for command {{executed command|uq}}", getCommand()).toString(),
+                .message("Interrupted while waiting for command {{executed command|uq}}", formatCommand()).toString(),
                 exception);
     }
 
-    private String getCommand() {
-        return String.join(" ", this.command);
+    private static String formatCommand(final List<String> command) {
+        return String.join(" ", command);
+    }
+
+    private String formatCommand() {
+        return formatCommand(this.command);
     }
 }

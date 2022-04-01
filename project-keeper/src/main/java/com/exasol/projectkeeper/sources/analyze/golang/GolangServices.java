@@ -4,10 +4,13 @@ import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import java.io.FileNotFoundException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -17,9 +20,10 @@ import com.exasol.projectkeeper.ProjectVersionDetector;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
-import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
+import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
+import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
 import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
 
 public class GolangServices {
@@ -33,7 +37,11 @@ public class GolangServices {
     private final Supplier<String> projectVersionSupplier;
 
     public GolangServices(final ProjectKeeperConfig config) {
-        this.projectVersionSupplier = extractVersion(config);
+        this(extractVersion(config));
+    }
+
+    GolangServices(final Supplier<String> projectVersionSupplier) {
+        this.projectVersionSupplier = projectVersionSupplier;
     }
 
     private static Supplier<String> extractVersion(final ProjectKeeperConfig config) {
@@ -98,7 +106,22 @@ public class GolangServices {
 
     public List<DependencyChange> getDependencyChanges(final Path projectDir, final Path modFile) {
         final GoModFile lastReleaseModFile = GoModFile.parse(getLastReleaseModFileContent(projectDir, modFile));
-        return emptyList();
+        final GoModFile currentModFile = GoModFile.parse(readFile(modFile));
+        return calculateChanges(lastReleaseModFile, currentModFile);
+    }
+
+    private String readFile(final Path file) {
+        try {
+            return Files.readString(file, StandardCharsets.UTF_8);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(
+                    ExaError.messageBuilder("E-PK-CORE-135").message("Error loading file {{file}}", file).toString(),
+                    exception);
+        }
+    }
+
+    List<DependencyChange> calculateChanges(final GoModFile oldModFile, final GoModFile newModFile) {
+        return new DependencyChangeCalculator(oldModFile, newModFile).calculateChanges();
     }
 
     private String getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
@@ -120,4 +143,72 @@ public class GolangServices {
         }
     }
 
+    private static class DependencyChangeCalculator {
+        private static final String GOLANG_DEPENDENCY_NAME = "golang";
+        private final Map<String, GoModDependency> oldDependencies;
+        private final Map<String, GoModDependency> newDependencies;
+        private final GoModFile oldModFile;
+        private final GoModFile newModFile;
+        private final List<DependencyChange> changes = new ArrayList<>();
+
+        private DependencyChangeCalculator(final GoModFile oldModFile, final GoModFile newModFile) {
+            this.oldModFile = oldModFile;
+            this.newModFile = newModFile;
+            this.oldDependencies = oldModFile.getDirectDependencies().stream()
+                    .collect(toMap(GoModDependency::getName, Function.identity()));
+            this.newDependencies = newModFile.getDirectDependencies().stream()
+                    .collect(toMap(GoModDependency::getName, Function.identity()));
+        }
+
+        public List<DependencyChange> calculateChanges() {
+            calculateGoVersionChanges();
+            calculateDependencyChanges();
+            return this.changes;
+        }
+
+        private void calculateGoVersionChanges() {
+            final String oldVersion = this.oldModFile.getGoVersion();
+            final String newVersion = this.newModFile.getGoVersion();
+            if ((oldVersion == null) && (newVersion != null)) {
+                dependencyAdded(GOLANG_DEPENDENCY_NAME, newVersion);
+            } else if ((oldVersion != null) && (newVersion == null)) {
+                dependencyRemoved(GOLANG_DEPENDENCY_NAME, oldVersion);
+            } else if ((oldVersion != null) && !oldVersion.equals(newVersion)) {
+                dependencyUpdated(GOLANG_DEPENDENCY_NAME, oldVersion, newVersion);
+            }
+        }
+
+        private void calculateDependencyChanges() {
+            for (final Entry<String, GoModDependency> entry : this.newDependencies.entrySet()) {
+                final String depName = entry.getKey();
+                final String newVersion = entry.getValue().getVersion();
+                if (this.oldDependencies.containsKey(depName)) {
+                    final String oldVersion = this.oldDependencies.get(depName).getVersion();
+                    if (!oldVersion.equals(newVersion)) {
+                        dependencyUpdated(depName, oldVersion, newVersion);
+                    }
+                } else {
+                    dependencyAdded(depName, newVersion);
+                }
+            }
+            for (final Entry<String, GoModDependency> entry : this.oldDependencies.entrySet()) {
+                final String depName = entry.getKey();
+                if (!this.newDependencies.containsKey(depName)) {
+                    dependencyRemoved(depName, entry.getValue().getVersion());
+                }
+            }
+        }
+
+        private void dependencyAdded(final String module, final String version) {
+            this.changes.add(new NewDependency(null, module, version));
+        }
+
+        private void dependencyRemoved(final String module, final String version) {
+            this.changes.add(new RemovedDependency(null, module, version));
+        }
+
+        private void dependencyUpdated(final String module, final String oldVersion, final String newVersion) {
+            this.changes.add(new UpdatedDependency(null, module, oldVersion, newVersion));
+        }
+    }
 }

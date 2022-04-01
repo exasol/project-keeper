@@ -7,10 +7,18 @@ import java.util.List;
 
 class GoModFile {
 
-    private final GoModFileParser parser;
+    private final String moduleName;
+    private final String goVersion;
+    private final List<GoModDependency> dependencies;
 
-    public GoModFile(final GoModFileParser parser) {
-        this.parser = parser;
+    GoModFile(final String moduleName, final String goVersion, final List<GoModDependency> dependencies) {
+        this.moduleName = moduleName;
+        this.goVersion = goVersion;
+        this.dependencies = dependencies;
+    }
+
+    private GoModFile(final GoModFileParser parser) {
+        this(parser.moduleName, parser.goVersion, parser.dependencies);
     }
 
     static GoModFile parse(final String content) {
@@ -20,15 +28,15 @@ class GoModFile {
     }
 
     public String getModuleName() {
-        return this.parser.moduleName;
+        return this.moduleName;
     }
 
     public String getGoVersion() {
-        return this.parser.goVersion;
+        return this.goVersion;
     }
 
     public List<GoModDependency> getDependencies() {
-        return this.parser.dependencies;
+        return this.dependencies;
     }
 
     public List<GoModDependency> getDirectDependencies() {
