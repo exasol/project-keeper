@@ -31,7 +31,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
     void testVerifyPhase1() throws IOException {
         prepareProjectFiles(createConfig());
         final String output = assertInvalidAndGetOutput();
-        assertThat(output, containsString("E-PK-CORE-17: Missing required file: 'release_config.yml'"));
+        assertThat(output, containsString("E-PK-CORE-56: Could not find required file 'LICENSE'."));
     }
 
     @Test
