@@ -30,7 +30,7 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
  * temporary project, runs the plugin on that project and checks the output.
  */
 @Tag("integration")
-class ProjectKeeperIT extends ProjectKeeperAbstractIT {
+class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
 
     @Test
     // [itest->dsn~pom-file-validator~1]
