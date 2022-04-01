@@ -91,8 +91,8 @@ public class SimpleProcess {
             if (!this.process.waitFor(executionTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
                 final String output = getOutput(executionTimeout);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128").message(
-                        "Timeout while waiting {{timeout|uq}}ms for command {{executed command}}. Output was {{output}}.",
-                        executionTimeout.toMillis(), formatCommand(), output).toString());
+                        "Timeout while waiting {{timeout|uq}}ms for command {{executed command}}. Output was {{output}}\nError output: {{std error}}",
+                        executionTimeout.toMillis(), formatCommand(), output, getStdError()).toString());
             }
         } catch (final InterruptedException exception) {
             throw handleInterruptedException(exception);

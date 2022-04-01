@@ -96,6 +96,6 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
     }
 
     private void execute(final String... command) {
-        SimpleProcess.start(this.projectDir, asList(command)).getOutput(Duration.ofSeconds(10));
+        SimpleProcess.start(this.projectDir, asList(command)).getOutput(Duration.ofSeconds(60));
     }
 }
