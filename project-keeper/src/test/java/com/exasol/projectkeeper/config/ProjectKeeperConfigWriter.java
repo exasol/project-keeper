@@ -3,14 +3,13 @@ package com.exasol.projectkeeper.config;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.FixedVersion;
+import com.exasol.projectkeeper.config.ProjectKeeperConfig.*;
 
 import lombok.Data;
 
@@ -33,14 +32,20 @@ public class ProjectKeeperConfigWriter {
             sourcesForWriting
                     .add(new ConfigForWriting.Source(source.getPath().toString(), source.getType().name(), modules));
         }
-        String version = null;
-        if (config.getVersionConfig() instanceof FixedVersion) {
-            version = ((FixedVersion) config.getVersionConfig()).getVersion();
-        } else {
-            throw new UnsupportedOperationException("Writing version config of type "
-                    + config.getVersionConfig().getClass().getName() + " is not supported");
-        }
+        final VersionConfig versionConfig = config.getVersionConfig();
+        final Object version = convertVersionConfig(versionConfig);
         return new ConfigForWriting(sourcesForWriting, config.getLinkReplacements(), config.getExcludes(), version);
+    }
+
+    private Object convertVersionConfig(final VersionConfig versionConfig) {
+        if (versionConfig instanceof FixedVersion) {
+            return ((FixedVersion) versionConfig).getVersion();
+        } else if (versionConfig instanceof VersionFromSource) {
+            return Map.of("fromSource", ((VersionFromSource) versionConfig).getPathToPom().toString());
+        } else {
+            throw new UnsupportedOperationException(
+                    "Writing version config of type " + versionConfig.getClass().getName() + " is not supported");
+        }
     }
 
     @Data
@@ -48,7 +53,7 @@ public class ProjectKeeperConfigWriter {
         private final List<Source> sources;
         private final List<String> linkReplacements;
         private final List<String> excludes;
-        private final String version;
+        private final Object version;
 
         @Data
         public static class Source {
