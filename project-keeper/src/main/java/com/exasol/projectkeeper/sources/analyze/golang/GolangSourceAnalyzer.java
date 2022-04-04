@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.sources.analyze;
+package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -14,8 +14,7 @@ import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
-import com.exasol.projectkeeper.sources.analyze.golang.GolangServices;
-import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo;
+import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 
 /**
  * This class analyzes Golang source projects.

@@ -8,8 +8,11 @@ import java.util.regex.Pattern;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
 
+/**
+ * This class implements a parser for {@code go.mod} files.
+ */
 class GoModFileParser {
-    private final List<Regex> regexps;
+    private final List<RegexAction> regexps;
     String moduleName = null;
     String goVersion;
     boolean insideRequireBlock = false;
@@ -17,13 +20,13 @@ class GoModFileParser {
 
     GoModFileParser() {
         this.regexps = List.of( //
-                Regex.create("^module\\s+(.+)$", match -> this.moduleName = match.group(1)),
-                Regex.create("^go\\s+(.+)$", match -> this.goVersion = match.group(1)),
-                Regex.create("^require \\($", match -> this.insideRequireBlock = true),
-                Regex.create("^\\)$", match -> this.insideRequireBlock = false),
-                Regex.create("^(?:require\\s+)?([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$",
+                RegexAction.create("^module\\s+(.+)$", match -> this.moduleName = match.group(1)),
+                RegexAction.create("^go\\s+(.+)$", match -> this.goVersion = match.group(1)),
+                RegexAction.create("^require \\($", match -> this.insideRequireBlock = true),
+                RegexAction.create("^\\)$", match -> this.insideRequireBlock = false),
+                RegexAction.create("^(?:require\\s+)?([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$",
                         match -> this.dependencies.add(createDependency(match.getGroups()))),
-                Regex.create(".*", match -> {
+                RegexAction.create(".*", match -> {
                     throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-138")
                             .message("Found unexpected line {{line}} in go.mod file", match.getLine()).toString());
                 }));
@@ -44,7 +47,7 @@ class GoModFileParser {
         if (line.isBlank()) {
             return;
         }
-        for (final Regex regex : this.regexps) {
+        for (final RegexAction regex : this.regexps) {
             final Optional<RegexMatch> match = regex.matches(line);
             if (match.isPresent()) {
                 match.get().runAction();
@@ -53,17 +56,21 @@ class GoModFileParser {
         }
     }
 
-    private static class Regex {
-        Pattern pattern;
+    /**
+     * This class represents an action that should be executed when a given regular expression matches a line from the
+     * input.
+     */
+    private static class RegexAction {
+        private final Pattern pattern;
         private final Consumer<RegexMatch> action;
 
-        public Regex(final Pattern pattern, final Consumer<RegexMatch> action) {
+        private RegexAction(final Pattern pattern, final Consumer<RegexMatch> action) {
             this.pattern = pattern;
             this.action = action;
         }
 
-        static Regex create(final String pattern, final Consumer<RegexMatch> action) {
-            return new Regex(Pattern.compile(pattern), action);
+        static RegexAction create(final String pattern, final Consumer<RegexMatch> action) {
+            return new RegexAction(Pattern.compile(pattern), action);
         }
 
         Optional<RegexMatch> matches(final String string) {
@@ -76,6 +83,10 @@ class GoModFileParser {
         }
     }
 
+    /**
+     * This class represents a regular expression that has matched a line from the input. It allows accessing the
+     * matched regex groups and the complete line.
+     */
     private static class RegexMatch {
 
         private final Matcher matcher;

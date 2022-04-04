@@ -10,7 +10,9 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig.Source;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType;
-import com.exasol.projectkeeper.sources.analyze.*;
+import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
+import com.exasol.projectkeeper.sources.analyze.MavenSourceAnalyzer;
+import com.exasol.projectkeeper.sources.analyze.golang.GolangSourceAnalyzer;
 
 /**
  * This class analyzes source projects of any type by calling the relevant {@link LanguageSpecificSourceAnalyzer}.
@@ -22,6 +24,15 @@ public class SourceAnalyzer {
         this.sourceAnalyzers = sourceAnalyzers;
     }
 
+    /**
+     * Creates a new instance of {@link SourceAnalyzer}, configuring the available
+     * {@link LanguageSpecificSourceAnalyzer}s.
+     * 
+     * @param config     project keeper configuration passed to the {@link LanguageSpecificSourceAnalyzer}s if necessary
+     * @param mvnRepo    the path to the maven repository, may be {@code null} if the default should be used
+     * @param ownVersion the version of this running project keeper instance
+     * @return a new configured {@link SourceAnalyzer}
+     */
     public static SourceAnalyzer create(final ProjectKeeperConfig config, final Path mvnRepo, final String ownVersion) {
         return new SourceAnalyzer(getLanguageSpecificSourceAnalyzers(config, mvnRepo, ownVersion));
     }

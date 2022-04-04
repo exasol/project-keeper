@@ -29,7 +29,11 @@ import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
 import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
 
-public class GolangServices {
+/**
+ * This class provides methods for retrieving information about a Golang project, e.g. its module name, dependencies and
+ * dependency changes.
+ */
+class GolangServices {
     private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
     private static final List<String> COMMAND_LIST_DIRECT_DEPDENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
@@ -37,7 +41,7 @@ public class GolangServices {
 
     private final Supplier<String> projectVersion;
 
-    public GolangServices(final ProjectKeeperConfig config) {
+    GolangServices(final ProjectKeeperConfig config) {
         this(() -> extractVersion(config));
     }
 
@@ -57,7 +61,14 @@ public class GolangServices {
         }
     }
 
-    public List<ProjectDependency> getDependencies(final ModuleInfo moduleInfo, final Path projectPath) {
+    /**
+     * Get the dependencies of a Golang project including their licenses.
+     * 
+     * @param moduleInfo  the module info of the project
+     * @param projectPath the project path
+     * @return dependencies incl. licenses
+     */
+    List<ProjectDependency> getDependencies(final ModuleInfo moduleInfo, final Path projectPath) {
         final List<ProjectDependency> dependencies = new ArrayList<>(moduleInfo.getDependencies().size());
         final Map<String, GolangDependencyLicense> golangLicenses = getLicenses(projectPath, "./...");
         for (final Dependency dependency : moduleInfo.getDependencies()) {
@@ -95,7 +106,13 @@ public class GolangServices {
         return new GolangDependencyLicense(moduleName, licenseUrl, licenseName);
     }
 
-    public ModuleInfo getModuleInfo(final Path projectPath) {
+    /**
+     * Get information about the Golang module with it's dependencies.
+     * 
+     * @param projectPath the project path containing the {@code go.mod} file
+     * @return module information
+     */
+    ModuleInfo getModuleInfo(final Path projectPath) {
         final SimpleProcess process = SimpleProcess.start(projectPath, COMMAND_LIST_DIRECT_DEPDENDENCIES);
         final String[] output = process.getOutput(EXECUTION_TIMEOUT).split("\n");
         final List<Dependency> dependencies = Arrays.stream(output) //
@@ -119,7 +136,14 @@ public class GolangServices {
         return Dependency.builder().moduleName(moduleName).version(version).build();
     }
 
-    public List<DependencyChange> getDependencyChanges(final Path projectDir, final Path modFile) {
+    /**
+     * Get a list of {@link DependencyChange}s in the given {@code go.mod} file since the latest release.
+     * 
+     * @param projectDir the project root dir containing the {@code .git} directory
+     * @param modFile    the absolute path to the {@code go.mod} file
+     * @return the list of {@link DependencyChange}s
+     */
+    List<DependencyChange> getDependencyChanges(final Path projectDir, final Path modFile) {
         final Optional<GoModFile> lastReleaseModFile = getLastReleaseModFileContent(projectDir, modFile)
                 .map(GoModFile::parse);
         final GoModFile currentModFile = GoModFile.parse(readFile(modFile));
@@ -136,6 +160,13 @@ public class GolangServices {
         }
     }
 
+    /**
+     * Calculate the list of {@link DependencyChange}s between the given {@link GoModFile}s.
+     * 
+     * @param oldModFile the content of the 'old' {@code go.mod} file from the previous release
+     * @param newModFile the content of the current {@code go.mod} file
+     * @return the list of {@link DependencyChange}s between both versions of the {@code go.mod} file
+     */
     List<DependencyChange> calculateChanges(final GoModFile oldModFile, final GoModFile newModFile) {
         return new DependencyChangeCalculator(oldModFile, newModFile).calculateChanges();
     }
@@ -177,7 +208,7 @@ public class GolangServices {
                     .collect(toMap(GoModDependency::getName, Function.identity()));
         }
 
-        public List<DependencyChange> calculateChanges() {
+        List<DependencyChange> calculateChanges() {
             calculateGoVersionChanges();
             calculateDependencyChanges();
             return this.changes;

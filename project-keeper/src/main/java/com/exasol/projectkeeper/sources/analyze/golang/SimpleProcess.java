@@ -14,8 +14,8 @@ import com.exasol.projectkeeper.stream.AsyncStreamReader;
 import com.exasol.projectkeeper.stream.CollectingConsumer;
 
 /**
- * This is a convenient wrapper for {@link ProcessBuilder} and {@link Process} that simplifies waiting for a process and
- * getting its stdout.
+ * This is a convenient wrapper for {@link ProcessBuilder} and {@link Process} that simplifies starting a process,
+ * waiting for it to finish and getting its stdout.
  */
 public class SimpleProcess {
     private static final Logger LOGGER = Logger.getLogger(SimpleProcess.class.getName());
@@ -23,7 +23,6 @@ public class SimpleProcess {
     private final Process process;
     private final CollectingConsumer streamConsumer;
     private final List<String> command;
-
     private final Instant startTime;
 
     private SimpleProcess(final Process process, final CollectingConsumer streamConsumer, final List<String> command,
@@ -34,6 +33,13 @@ public class SimpleProcess {
         this.startTime = startTime;
     }
 
+    /**
+     * Starts a new process.
+     * 
+     * @param workingDirectory the directory in which to start the process
+     * @param command          the command to execute
+     * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retriev its output
+     */
     public static SimpleProcess start(final Path workingDirectory, final List<String> command) {
         LOGGER.fine(() -> "Executing command '" + formatCommand(command) + "' in working dir " + workingDirectory);
         try {
@@ -53,6 +59,12 @@ public class SimpleProcess {
         }
     }
 
+    /**
+     * Wait for the process to finish and get its standard output.
+     * 
+     * @param executionTimeout the maximum time to wait until the process finishes
+     * @return the standard output of the process
+     */
     public String getOutput(final Duration executionTimeout) {
         waitForExecutionFinished(executionTimeout);
         final Duration duration = Duration.between(this.startTime, Instant.now());

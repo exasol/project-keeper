@@ -5,6 +5,9 @@ import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 
+/**
+ * This class represents a parsed {@code go.mod} file.
+ */
 class GoModFile {
 
     private final String moduleName;
@@ -27,45 +30,45 @@ class GoModFile {
         return new GoModFile(parser);
     }
 
-    public String getModuleName() {
+    String getModuleName() {
         return this.moduleName;
     }
 
-    public String getGoVersion() {
+    String getGoVersion() {
         return this.goVersion;
     }
 
-    public List<GoModDependency> getDependencies() {
+    List<GoModDependency> getDependencies() {
         return this.dependencies;
     }
 
-    public List<GoModDependency> getDirectDependencies() {
+    List<GoModDependency> getDirectDependencies() {
         return getDependencies().stream() //
                 .filter(not(GoModDependency::isIndirect)) //
                 .collect(toList());
     }
 
-    public static class GoModDependency {
+    static class GoModDependency {
 
         private final String name;
         private final String version;
         private final boolean indirect;
 
-        public GoModDependency(final String name, final String version, final boolean indirect) {
+        GoModDependency(final String name, final String version, final boolean indirect) {
             this.name = name;
             this.version = version;
             this.indirect = indirect;
         }
 
-        public String getName() {
+        String getName() {
             return this.name;
         }
 
-        public String getVersion() {
+        String getVersion() {
             return this.version;
         }
 
-        public boolean isIndirect() {
+        boolean isIndirect() {
             return this.indirect;
         }
     }
