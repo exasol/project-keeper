@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.sources.*;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageRenderer;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
@@ -61,20 +61,9 @@ public class DependenciesValidator implements Validator {
     }
 
     private ProjectWithDependencies getDependencies(final AnalyzedSource source) {
-        if (source instanceof AnalyzedMavenSource) {
-            final AnalyzedMavenSource mvnSource = (AnalyzedMavenSource) source;
-            final String projectName = mvnSource.getProjectName();
-            final List<ProjectDependency> dependencies = mvnSource.getDependencies().getDependencies();
-            return new ProjectWithDependencies(projectName, dependencies);
-        } else if (source instanceof AnalyzedGolangSource) {
-            final AnalyzedGolangSource goSource = (AnalyzedGolangSource) source;
-            return new ProjectWithDependencies(goSource.getProjectName(), goSource.getDependencies().getDependencies());
-        } else {
-            throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-95")
-                    .message("Creating a dependencies report is not yet implemented for {{source type}}.",
-                            source.getClass().getSimpleName())
-                    .toString());
-        }
+        final String projectName = source.getProjectName();
+        final List<ProjectDependency> dependencies = source.getDependencies().getDependencies();
+        return new ProjectWithDependencies(projectName, dependencies);
     }
 
     private List<ValidationFinding> validateFileContent(final String expectedDependenciesPage) {

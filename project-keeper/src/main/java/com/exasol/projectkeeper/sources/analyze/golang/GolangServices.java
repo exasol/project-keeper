@@ -63,7 +63,7 @@ class GolangServices {
 
     /**
      * Get the dependencies of a Golang project including their licenses.
-     * 
+     *
      * @param moduleInfo  the module info of the project
      * @param projectPath the project path
      * @return dependencies incl. licenses
@@ -75,7 +75,7 @@ class GolangServices {
             final String moduleName = dependency.getModuleName();
             final GolangDependencyLicense license = golangLicenses.get(moduleName);
             final String websiteUrl = null;
-            final Type dependencyType = license != null ? Type.COMPILE : Type.TEST;
+            final Type dependencyType = Type.COMPILE;
             dependencies.add(ProjectDependency.builder().name(moduleName).type(dependencyType).websiteUrl(websiteUrl)
                     .licenses(license != null ? List.of(license.toLicense()) : emptyList()) //
                     .build());
@@ -84,7 +84,16 @@ class GolangServices {
     }
 
     private Map<String, GolangDependencyLicense> getLicenses(final Path projectPath, final String module) {
-        final SimpleProcess process = SimpleProcess.start(projectPath, List.of("go-licenses", "csv", module));
+        final SimpleProcess process;
+        try {
+            process = SimpleProcess.start(projectPath, List.of("go-licenses", "csv", module));
+        } catch (final IllegalStateException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
+                    .message("Error starting the 'go-licenses' binary.")
+                    .mitigation("Verify that 'go-licenses' is installed.")
+                    .mitigation("Install it by running 'go install github.com/google/go-licenses@latest'.").toString(),
+                    exception);
+        }
         return Arrays.stream(process.getOutput(EXECUTION_TIMEOUT).split("\n")) //
                 .filter(not(String::isBlank)) //
                 .map(this::convertDependencyLicense)
@@ -108,7 +117,7 @@ class GolangServices {
 
     /**
      * Get information about the Golang module with it's dependencies.
-     * 
+     *
      * @param projectPath the project path containing the {@code go.mod} file
      * @return module information
      */
@@ -125,7 +134,7 @@ class GolangServices {
     private Dependency convertDependency(final String line) {
         final String[] parts = line.split(" ");
         if (parts.length != 2) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-124")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-139")
                     .message("Invalid output line of command {{command}}: {{invalid line}}",
                             String.join(" ", COMMAND_LIST_DIRECT_DEPDENDENCIES), line)
                     .toString());
@@ -138,7 +147,7 @@ class GolangServices {
 
     /**
      * Get a list of {@link DependencyChange}s in the given {@code go.mod} file since the latest release.
-     * 
+     *
      * @param projectDir the project root dir containing the {@code .git} directory
      * @param modFile    the absolute path to the {@code go.mod} file
      * @return the list of {@link DependencyChange}s
@@ -162,7 +171,7 @@ class GolangServices {
 
     /**
      * Calculate the list of {@link DependencyChange}s between the given {@link GoModFile}s.
-     * 
+     *
      * @param oldModFile the content of the 'old' {@code go.mod} file from the previous release
      * @param newModFile the content of the current {@code go.mod} file
      * @return the list of {@link DependencyChange}s between both versions of the {@code go.mod} file

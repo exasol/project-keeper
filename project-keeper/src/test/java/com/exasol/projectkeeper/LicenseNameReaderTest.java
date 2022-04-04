@@ -29,6 +29,6 @@ class LicenseNameReaderTest {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> reader.readLicenseName(this.tempDir));
         assertThat(exception.getMessage(), equalTo(
-                "F-PK-CORE-139: Failed to read LICENSE file. That's strange because it should have been created by the LicenseValidator. This is an internal error that should not happen. Please report it by opening a GitHub issue."));
+                "F-PK-CORE-124: Failed to read LICENSE file. That's strange because it should have been created by the LicenseValidator. This is an internal error that should not happen. Please report it by opening a GitHub issue."));
     }
 }

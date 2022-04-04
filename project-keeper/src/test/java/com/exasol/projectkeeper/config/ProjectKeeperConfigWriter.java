@@ -36,6 +36,9 @@ public class ProjectKeeperConfigWriter {
         String version = null;
         if (config.getVersionConfig() instanceof FixedVersion) {
             version = ((FixedVersion) config.getVersionConfig()).getVersion();
+        } else {
+            throw new UnsupportedOperationException("Writing version config of type "
+                    + config.getVersionConfig().getClass().getName() + " is not supported");
         }
         return new ConfigForWriting(sourcesForWriting, config.getLinkReplacements(), config.getExcludes(), version);
     }

@@ -38,7 +38,7 @@ class GolangProjectFixture {
     void prepareProjectFiles() throws IOException {
         writeGoModFile();
         writeMainGoFile();
-        executeSplit("go mod tidy");
+        splitAndExecute("go mod tidy");
     }
 
     String getProjectVersion() {
@@ -70,7 +70,7 @@ class GolangProjectFixture {
         Files.writeString(this.projectDir.resolve("main.go"), content);
     }
 
-    private void executeSplit(final String command) {
+    private void splitAndExecute(final String command) {
         execute(command.split(" "));
     }
 
