@@ -17,10 +17,17 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.analyze.golang.GolangServices;
 import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo;
 
+/**
+ * This class analyzes Golang source projects.
+ */
 public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private final GolangServices golangServices;
 
+    /**
+     * Create a new Golang analyzer using the given project keeper configuration.
+     * @param config the project keeper configuration
+     */
     public GolangSourceAnalyzer(final ProjectKeeperConfig config) {
         this(new GolangServices(config));
     }

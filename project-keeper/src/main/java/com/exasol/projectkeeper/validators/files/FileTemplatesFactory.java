@@ -62,7 +62,7 @@ class FileTemplatesFactory {
         if (source instanceof AnalyzedMavenSource) {
             return getMavenTemplates((AnalyzedMavenSource) source);
         } else if (source instanceof AnalyzedGolangSource) {
-            return getGolangTemplates((AnalyzedGolangSource) source);
+            return getGolangTemplates();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-137")
                     .message("Cannot get templates for unknown source type {{type}}", source.getClass().getSimpleName())
@@ -88,7 +88,7 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private List<FileTemplate> getGolangTemplates(final AnalyzedGolangSource source) {
+    private List<FileTemplate> getGolangTemplates() {
         return emptyList();
     }
 }

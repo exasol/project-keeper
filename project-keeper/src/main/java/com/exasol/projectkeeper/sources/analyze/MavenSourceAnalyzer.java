@@ -23,6 +23,9 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * This class analyzes Java Maven projects.
+ */
 @RequiredArgsConstructor
 public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 

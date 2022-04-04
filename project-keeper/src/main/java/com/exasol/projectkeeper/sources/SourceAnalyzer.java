@@ -13,7 +13,7 @@ import com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.sources.analyze.*;
 
 /**
- * This class analyzes source projects.
+ * This class analyzes source projects of any type by calling the relevant {@link LanguageSpecificSourceAnalyzer}.
  */
 public class SourceAnalyzer {
     private final Map<SourceType, LanguageSpecificSourceAnalyzer> sourceAnalyzers;
@@ -34,7 +34,7 @@ public class SourceAnalyzer {
     }
 
     /**
-     * Analyze a source project.
+     * Analyze a list of source projects, potentially of mixed type (e.g. Maven and Golang).
      *
      * @param projectDir project directory
      * @param sources    configured sources
