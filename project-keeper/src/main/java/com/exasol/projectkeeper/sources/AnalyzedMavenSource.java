@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.util.Set;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
@@ -27,9 +26,4 @@ public class AnalyzedMavenSource implements AnalyzedSource {
     private final ProjectDependencies dependencies;
     /** {@code true} if this is the main maven project in the repo (if pom lies directly in repo) */
     private final boolean isRootProject;
-
-    @Override
-    public SourceType getType() {
-        return SourceType.MAVEN;
-    }
 }

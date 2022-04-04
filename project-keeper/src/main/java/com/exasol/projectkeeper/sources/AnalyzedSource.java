@@ -4,7 +4,6 @@ import java.nio.file.Path;
 import java.util.Set;
 
 import com.exasol.projectkeeper.ProjectKeeperModule;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType;
 
 /**
  * This is an interface for classes that collects information about a source project, e.g. about a pom source.
@@ -47,11 +46,4 @@ public interface AnalyzedSource {
      * @return {@code true} if this source should be advertised, e.g. in the README.md
      */
     boolean isAdvertise();
-
-    /**
-     * Get the type of this source.
-     *
-     * @return source type.
-     */
-    SourceType getType();
 }

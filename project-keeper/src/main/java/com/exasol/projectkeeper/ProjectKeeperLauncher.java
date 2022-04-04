@@ -9,27 +9,35 @@ import com.exasol.errorreporting.ExaError;
 
 /**
  * This is the main entry point for launching Project Keeper on the command line.
- * <p>
- * Currently this can only be used for starting PK from an IDE. See https://github.com/exasol/project-keeper/issues/277
- * for a complete command line interface.
  */
 public class ProjectKeeperLauncher {
+    private static final java.util.logging.Logger LOGGER = Logger.getLogger(ProjectKeeperLauncher.class.getName());
     private static final String GOAL_VERIFY = "verify";
     private static final String GOAL_FIX = "fix";
-    private static final java.util.logging.Logger LOGGER = Logger.getLogger(ProjectKeeperLauncher.class.getName());
+
+    private final Path currentWorkingDir;
+
+    ProjectKeeperLauncher(final Path currentWorkingDir) {
+        this.currentWorkingDir = currentWorkingDir.toAbsolutePath();
+    }
 
     /**
      * The main entry point for launching Project Keeper.
-     * 
+     *
      * @param args command line arguments
      */
     public static void main(final String[] args) {
+        final ProjectKeeperLauncher launcher = new ProjectKeeperLauncher(Paths.get("."));
+        launcher.start(args);
+    }
+
+    void start(final String[] args) {
         verifyCommandLineArguments(args);
         final String goal = args[0];
         runProjectKeeper(goal);
     }
 
-    private static void runProjectKeeper(final String goal) {
+    private void runProjectKeeper(final String goal) {
         final ProjectKeeper projectKeeper = createProjectKeeper();
         final boolean success = goal.equals(GOAL_FIX) ? projectKeeper.fix() : projectKeeper.verify();
         if (!success) {
@@ -39,14 +47,13 @@ public class ProjectKeeperLauncher {
         }
     }
 
-    private static ProjectKeeper createProjectKeeper() {
-        final Path projectDir = Paths.get(".").toAbsolutePath();
-        return ProjectKeeper.createProjectKeeper(new JULLogger(), projectDir, null);
+    private ProjectKeeper createProjectKeeper() {
+        return ProjectKeeper.createProjectKeeper(new JULLogger(), this.currentWorkingDir, null);
     }
 
-    private static void verifyCommandLineArguments(final String[] args) {
-        if (args.length != 1 || !(args[0].equals(GOAL_FIX) || args[0].equals(GOAL_VERIFY))) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-140")
+    private void verifyCommandLineArguments(final String[] args) {
+        if ((args == null) || (args.length != 1) || !(GOAL_FIX.equals(args[0]) || GOAL_VERIFY.equals(args[0]))) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-140")
                     .message("Got no or invalid command line argument {{arguments}}.", Arrays.toString(args))
                     .mitigation("Please only specify arguments '" + GOAL_VERIFY + "' or '" + GOAL_FIX + "'.")
                     .toString());
