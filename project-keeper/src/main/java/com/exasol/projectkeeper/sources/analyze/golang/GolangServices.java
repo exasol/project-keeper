@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptyMap;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
@@ -74,10 +73,15 @@ class GolangServices {
         for (final Dependency dependency : moduleInfo.getDependencies()) {
             final String moduleName = dependency.getModuleName();
             final GolangDependencyLicense license = golangLicenses.get(moduleName);
+            if (license == null) {
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-143").message(
+                        "No license found for dependency module {{module name}}, all licenses: {{all licenses}}",
+                        moduleName, golangLicenses).toString());
+            }
             final String websiteUrl = null;
             final Type dependencyType = Type.COMPILE;
             dependencies.add(ProjectDependency.builder().name(moduleName).type(dependencyType).websiteUrl(websiteUrl)
-                    .licenses(license != null ? List.of(license.toLicense()) : emptyList()) //
+                    .licenses(List.of(license.toLicense())) //
                     .build());
         }
         return dependencies;
@@ -112,7 +116,7 @@ class GolangServices {
         final String licenseName = parts[2];
         LOGGER.finest(() -> "Found dependency '" + moduleName + "' with license '" + licenseName + "' and url '"
                 + licenseUrl + "'");
-        return new GolangDependencyLicense(moduleName, licenseUrl, licenseName);
+        return new GolangDependencyLicense(moduleName, licenseName, licenseUrl);
     }
 
     /**

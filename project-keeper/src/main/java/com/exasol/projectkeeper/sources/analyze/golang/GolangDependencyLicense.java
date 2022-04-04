@@ -8,9 +8,9 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 class GolangDependencyLicense {
-    private final String licenseUrl;
     private final String moduleName;
     private final String licenseName;
+    private final String licenseUrl;
 
     License toLicense() {
         return new License(this.getLicenseName(), this.getLicenseUrl());

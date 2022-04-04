@@ -38,7 +38,9 @@ public class ProjectKeeperConfigWriter {
     }
 
     private Object convertVersionConfig(final VersionConfig versionConfig) {
-        if (versionConfig instanceof FixedVersion) {
+        if (versionConfig == null) {
+            return null;
+        } else if (versionConfig instanceof FixedVersion) {
             return ((FixedVersion) versionConfig).getVersion();
         } else if (versionConfig instanceof VersionFromSource) {
             return Map.of("fromSource", ((VersionFromSource) versionConfig).getPathToPom().toString());
