@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportRenderer;
 
@@ -20,7 +18,7 @@ class DependencySectionFixer {
 
     /**
      * Create a new instance of {@link DependencySectionFixer}.
-     * 
+     *
      * @param sources source projects
      *
      */
@@ -30,7 +28,7 @@ class DependencySectionFixer {
 
     /**
      * Fix the dependency section of a changes file.
-     * 
+     *
      * @param changesFile changes file to fix
      * @return fixed changes file.
      */
@@ -45,15 +43,7 @@ class DependencySectionFixer {
     }
 
     private NamedDependencyChangeReport getDependencyChangesOfSource(final AnalyzedSource source) {
-        if (source instanceof AnalyzedMavenSource) {
-            final AnalyzedMavenSource mvnSource = (AnalyzedMavenSource) source;
-            return new NamedDependencyChangeReport(mvnSource.getProjectName(), mvnSource.getDependencyChanges());
-        } else {
-            throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-96")
-                    .message("Analyzing dependency changes is not yet implemented for {{source type}}.",
-                            source.getClass().getSimpleName())
-                    .toString());
-        }
+        return new NamedDependencyChangeReport(source.getProjectName(), source.getDependencyChanges());
     }
 
     private void removeDependencySection(final List<ChangesFileSection> sections) {

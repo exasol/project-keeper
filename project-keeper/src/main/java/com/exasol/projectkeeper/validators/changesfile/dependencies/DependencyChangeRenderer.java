@@ -9,7 +9,7 @@ class DependencyChangeRenderer {
 
     /**
      * Render a dependency change in the format of the Exasol changes file.
-     * 
+     *
      * @param dependencyChange dependency change to render
      * @return rendered string
      */
@@ -39,7 +39,8 @@ class DependencyChangeRenderer {
         }
 
         private String renderDependencyChange(final DependencyChange addedDependency) {
-            return "`" + addedDependency.getGroupId() + ":" + addedDependency.getArtifactId() + ":"
+            final String groupId = addedDependency.getGroupId();
+            return "`" + (groupId != null ? groupId + ":" : "") + addedDependency.getArtifactId() + ":"
                     + addedDependency.getVersion() + "`";
         }
 

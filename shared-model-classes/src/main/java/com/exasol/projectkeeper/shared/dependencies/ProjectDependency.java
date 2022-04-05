@@ -10,6 +10,7 @@ import lombok.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProjectDependency {
     /** Dependency name */
     private String name;

@@ -27,7 +27,7 @@ public class ProjectKeeperConfigReader {
 
     /**
      * Read a {@link ProjectKeeperConfig} from file.
-     * 
+     *
      * @param projectDirectory project directory
      * @return read {@link ProjectKeeperConfig}
      */
@@ -47,7 +47,8 @@ public class ProjectKeeperConfigReader {
     private void verifyWeReInProjectRoot(final Path projectDirectory) {
         if (!Files.exists(projectDirectory.resolve(".git"))) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-90")
-                    .message("Could not find .git directory in project-root.").mitigation("Run 'git init'.")
+                    .message("Could not find .git directory in project-root {{root path}}.", projectDirectory)
+                    .mitigation("Run 'git init'.")
                     .mitigation(
                             "Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'.")
                     .toString());

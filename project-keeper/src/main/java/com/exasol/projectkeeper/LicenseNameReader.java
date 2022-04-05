@@ -13,7 +13,7 @@ public class LicenseNameReader {
 
     /**
      * Read the name of the license (first line of LICENSE file).
-     * 
+     *
      * @param projectDir project directory
      * @return name of the license
      */

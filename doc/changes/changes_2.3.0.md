@@ -1,6 +1,6 @@
 # Project Keeper Project 2.3.0, released 2022-??-??
 
-Code name:
+Code name: Support for Go projects
 
 Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXIST` to `REQUIRE_EXACT`. If you have customized this file you will need to add an exclusion for this.
 
@@ -12,6 +12,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 * #198: Enabled testcontainer reuse to speedup builds
 * #73: Validate pom project info
 * #101: Validate groupId
+* #271: Added basic support for Go projects
 
 ## Refactoring:
 
@@ -28,6 +29,10 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 #### Compile Dependency Updates
 
 * Updated `org.eclipse.jgit:org.eclipse.jgit:6.0.0.202111291000-r` to `6.1.0.202203080745-r`
+
+#### Test Dependency Updates
+
+* Added `nl.jqno.equalsverifier:equalsverifier:3.10`
 
 #### Plugin Dependency Updates
 

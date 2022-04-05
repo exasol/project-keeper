@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.dependencies.renderer.DependencyPageRenderer;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
@@ -26,7 +25,7 @@ public class DependenciesValidator implements Validator {
 
     /**
      * Create a new instance of {@link DependenciesValidator}.
-     * 
+     *
      * @param sources            source projects
      * @param projectDirectory   project root directory
      * @param brokenLinkReplacer dependency injection for broken link replacer
@@ -62,17 +61,9 @@ public class DependenciesValidator implements Validator {
     }
 
     private ProjectWithDependencies getDependencies(final AnalyzedSource source) {
-        if (source instanceof AnalyzedMavenSource) {
-            final AnalyzedMavenSource mvnSource = (AnalyzedMavenSource) source;
-            final String projectName = mvnSource.getProjectName();
-            final List<ProjectDependency> dependencies = mvnSource.getDependencies().getDependencies();
-            return new ProjectWithDependencies(projectName, dependencies);
-        } else {
-            throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-95")
-                    .message("Creating a dependencies report is not yet implemented for {{source type}}.",
-                            source.getClass().getSimpleName())
-                    .toString());
-        }
+        final String projectName = source.getProjectName();
+        final List<ProjectDependency> dependencies = source.getDependencies().getDependencies();
+        return new ProjectWithDependencies(projectName, dependencies);
     }
 
     private List<ValidationFinding> validateFileContent(final String expectedDependenciesPage) {
@@ -92,7 +83,7 @@ public class DependenciesValidator implements Validator {
     }
 
     private SimpleValidationFinding.Fix getFix(final String expectedDependenciesPage) {
-        return (Logger log) -> {
+        return (final Logger log) -> {
             try {
                 Files.writeString(this.dependenciesFile, expectedDependenciesPage, StandardOpenOption.CREATE,
                         StandardOpenOption.TRUNCATE_EXISTING);

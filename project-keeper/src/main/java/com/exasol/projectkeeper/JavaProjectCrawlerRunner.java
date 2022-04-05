@@ -40,7 +40,7 @@ public class JavaProjectCrawlerRunner {
 
     /**
      * Crawl a maven project.
-     * 
+     *
      * @param pomFiles paths to the pom files to analyze.
      * @return the {@link MavenProjectCrawlResult}
      */
@@ -85,10 +85,9 @@ public class JavaProjectCrawlerRunner {
             final String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
             if (exitCode != 0) {
                 LOGGER.log(Level.SEVERE, output);
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78")
-                        .message("Failed to run command {{executed command|uq}}, exit code was {{exit code}}.",
-                                commandParts, exitCode)
-                        .toString());
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78").message(
+                        "Failed to run command {{executed command|uq}}, exit code was {{exit code}}. Output:\n{{output}}",
+                        commandParts, exitCode, output).toString());
             }
             return new ResponseCoder().decodeResponse(output);
         } catch (final IOException exception) {

@@ -15,14 +15,14 @@ import org.apache.maven.model.Repository;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.ProjectKeeperAbstractIT;
+import com.exasol.projectkeeper.ProjectKeeperAbstractMavenIT;
 import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.validators.TestMavenModel;
 
 @Tag("integration")
 //[itest->dsn~depnedency.md-file-validator~1]
 // [itest->dsn~reading-project-dependencies~1]
-class DependenciesValidatorIT extends ProjectKeeperAbstractIT {
+class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
     @Test
     void testVerify() throws IOException {
         createExamplePomFile();
