@@ -6,9 +6,6 @@
         <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches
           <property>	                      in the logging lambdas too. -->
         <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
-        <includes>
-            <include>**IT.java</include>
-        </includes>
         <systemPropertyVariables>
             <test.coverage>true</test.coverage>
         </systemPropertyVariables>
