@@ -90,7 +90,7 @@ class GolangServices {
     private Map<String, GolangDependencyLicense> getLicenses(final Path projectPath, final String module) {
         final SimpleProcess process;
         try {
-            process = SimpleProcess.start(projectPath, List.of("go-licenses", "csv", module));
+            process = GoProcess.start(projectPath, List.of("go-licenses", "csv", module));
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
                     .message("Error starting the 'go-licenses' binary.")
