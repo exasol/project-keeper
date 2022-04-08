@@ -22,6 +22,11 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 
 * #251: Added error-code-report again
 * #281: Removed broken surefire excludes from pk_generated_parent.pom
+* #282: Fixed launching `go-licenses` when it is not on the `PATH`
+
+## Documentaiton
+
+* #284: Described how to use PK with Golang projects
 
 ## Dependency Updates
 
