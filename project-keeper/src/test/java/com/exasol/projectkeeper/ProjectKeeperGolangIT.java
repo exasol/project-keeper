@@ -34,6 +34,9 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
         assertGeneratedFiles();
     }
 
+    // [itest -> dsn~golang-project-version~1]
+    // [itest -> dsn~golang-dependency-licenses~1]
+    // [itest -> dsn~golang-changed-dependency~1]
     private void assertGeneratedFiles() throws IOException {
         final String dependencies = Files.readString(this.projectDir.resolve("dependencies.md"));
         final String changelog = Files

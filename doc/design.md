@@ -237,3 +237,56 @@ Covers:
 * `feat~configuration~1`
 
 Needs: impl, utest, itest
+
+## Golang Support
+
+### Get Project Version
+
+`dsn~golang-project-version~1`
+
+PK reads the project version directly from the configuration file. Only a fixed version is supported.
+
+Rationale:
+
+Golang does not store the version number in project files, e.g. `go.mod`. The version is only defined by a tag of the Git repository.
+
+Covers:
+
+* `req~golang-project-version~1`
+
+Needs: impl, itest
+
+### Get Licenses of Dependencies
+
+`dsn~golang-dependency-licenses~1`
+
+PK uses the [go-licenses](https://github.com/google/go-licenses/) project for retrieving the licenses of the dependencies.
+
+Rationale:
+
+go-licenses is a simple command line tool that outputs the license name and license URL as CSV. Installing it is easy and creating our own tool is a lot of effort.
+
+Covers:
+
+* `req~golang-dependency-licenses~1`
+
+Needs: impl, itest
+
+### Get Changed Dependency
+
+`dsn~golang-changed-dependency~1`
+
+PK parses the `go.mod` file to get the changed dependencies since the last release. PK ignores dependencies marked with an `// indirect` comment.
+
+Rationale:
+
+* The `go.mod` format is simple and easy to parse.
+* Using a command like `go list -m -f '{{if not (or .Indirect .Main)}}{{.Path}}{{end}}' all` would require checking out the complete sources of the last release tag. The `go.mod` file is not enough to run this command.
+* Adding indirect depndencies to the changes list would make it hard to read, because this list can become very long.
+* It is a convention in Go projects to mark indirect dependencies with an `// indirect` comment. The `go mod tidy` enforces this automatically.
+
+Covers:
+
+* `req~golang-changed-dependency~1`
+
+Needs: impl, utest, itest

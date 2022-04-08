@@ -34,9 +34,20 @@ public class SimpleProcess {
     }
 
     /**
+     * Starts a new process using the working directory of the current Java process.
+     * 
+     * @param command the command to execute
+     * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retriev its output
+     */
+    public static SimpleProcess start(final List<String> command) {
+        return start(null, command);
+    }
+
+    /**
      * Starts a new process.
      * 
-     * @param workingDirectory the directory in which to start the process
+     * @param workingDirectory the directory in which to start the process. Use the working directory of the current
+     *                         Java process if {@code null}.
      * @param command          the command to execute
      * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retriev its output
      */
