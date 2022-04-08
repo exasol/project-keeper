@@ -48,6 +48,7 @@ class GolangServices {
         this.projectVersion = projectVersion;
     }
 
+    // [impl -> dsn~golang-project-version~1]
     private static String extractVersion(final ProjectKeeperConfig config) {
         final VersionConfig versionConfig = config.getVersionConfig();
         if (versionConfig instanceof FixedVersion) {
@@ -67,6 +68,7 @@ class GolangServices {
      * @param projectPath the project path
      * @return dependencies incl. licenses
      */
+    // [impl -> dsn~golang-dependency-licenses~1]
     List<ProjectDependency> getDependencies(final ModuleInfo moduleInfo, final Path projectPath) {
         final List<ProjectDependency> dependencies = new ArrayList<>(moduleInfo.getDependencies().size());
         final Map<String, GolangDependencyLicense> golangLicenses = getLicenses(projectPath, "./...");
@@ -156,6 +158,7 @@ class GolangServices {
      * @param modFile    the absolute path to the {@code go.mod} file
      * @return the list of {@link DependencyChange}s
      */
+    // [impl -> dsn~golang-changed-dependency~1]
     List<DependencyChange> getDependencyChanges(final Path projectDir, final Path modFile) {
         final Optional<GoModFile> lastReleaseModFile = getLastReleaseModFileContent(projectDir, modFile)
                 .map(GoModFile::parse);

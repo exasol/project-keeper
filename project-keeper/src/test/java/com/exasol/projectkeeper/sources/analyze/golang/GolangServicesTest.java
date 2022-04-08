@@ -42,6 +42,7 @@ class GolangServicesTest {
         assertChanges(modFile(MODULE_NAME, "1.16"), modFile(MODULE_NAME, null), removed("golang", "1.16"));
     }
 
+    // [utest -> dsn~golang-changed-dependency~1]
     @Test
     void calculateChangesUnchangedDependency() {
         assertChanges(modFile(dep("mod1", "v1")), modFile(dep("mod1", "v1")));

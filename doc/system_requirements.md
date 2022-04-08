@@ -205,3 +205,39 @@ Needs: dsn
 PK can be integrated into the maven lifecycle. By that, it can break the Continuous Integration (CI) build if the project structure is invalid.
 
 Needs: dsn
+
+### Support for Golang Project
+
+`feat~golang-project-support~1`
+
+PK supports Golang projects.
+
+Needs: req
+
+#### Get Project Version
+
+`req~golang-project-version~1`
+
+PK can get the project version for Golang projects.
+
+Needs: dsn
+
+#### Get Licenses of Dependencies
+
+`req~golang-dependency-licenses~1`
+
+PK can retrieve the licenses of Golang dependencies.
+
+Needs: dsn
+
+#### Get Changed Dependency
+
+`req~golang-changed-dependency~1`
+
+PK can retrieve changed Golang dependencies that where added, updated or removed since the last release.
+
+Covers:
+
+* `feat~golang-project-support~1`
+
+Needs: dsn

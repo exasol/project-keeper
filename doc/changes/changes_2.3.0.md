@@ -29,6 +29,8 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 
 #### Compile Dependency Updates
 
+* Updated `jakarta.json.bind:jakarta.json.bind-api:2.0.0` to `3.0.0`
+* Updated `jakarta.json:jakarta.json-api:2.0.1` to `2.1.0`
 * Updated `org.eclipse.jgit:org.eclipse.jgit:6.0.0.202111291000-r` to `6.1.0.202203080745-r`
 
 #### Test Dependency Updates
@@ -69,6 +71,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.0` to `1.1.1`
+* Updated `org.jacoco:org.jacoco.core:0.8.7` to `0.8.8`
 * Updated `org.mockito:mockito-core:4.3.1` to `4.4.0`
 
 #### Plugin Dependency Updates
@@ -86,6 +89,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.0` to `1.1.1`
+* Updated `org.jacoco:org.jacoco.core:0.8.7` to `0.8.8`
 * Updated `org.mockito:mockito-core:4.3.1` to `4.4.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.35` to `1.7.36`
 
