@@ -1,4 +1,4 @@
-# Project Keeper Project 2.3.0, released 2022-??-??
+# Project Keeper Project 2.3.0, released 2022-04-08
 
 Code name: Support for Go projects
 
@@ -21,6 +21,7 @@ Note: in #130 we changed file `.github/workflows/ci-build.yml` from `REQUIRE_EXI
 ## Bug Fixes
 
 * #251: Added error-code-report again
+* #281: Removed broken surefire excludes from pk_generated_parent.pom
 
 ## Dependency Updates
 
