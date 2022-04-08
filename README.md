@@ -125,6 +125,19 @@ sources:
 
 PK will then use this parent-pom as parent for the `pk_generated_parent.pom`.
 
+## Golang Projects
+
+To use Project Keeper for Golang projects, create a `.project-keeper.yml` like this:
+
+```yaml
+sources:
+  - type: golang
+    path: go.mod
+version: 1.2.3
+```
+
+You must specify the project version explicitly, `version > fromSource` is not supported for Golang projects.
+
 ## Usage
 
 The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.
