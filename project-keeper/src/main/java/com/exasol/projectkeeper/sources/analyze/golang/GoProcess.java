@@ -15,9 +15,9 @@ class GoProcess {
     }
 
     static SimpleProcess start(final Path workingDirectory, final List<String> command) {
-        List<String> commandToExecute = new ArrayList<>(command);
-        Path goBinPath = getGoBinPath();
-        Path binaryPath = goBinPath.resolve("bin").resolve(command.get(0));
+        final List<String> commandToExecute = new ArrayList<>(command);
+        final Path goBinPath = getGoBinPath();
+        final Path binaryPath = goBinPath.resolve("bin").resolve(command.get(0));
         if (Files.exists(binaryPath)) {
             LOGGER.finest(() -> "Using go binary path " + binaryPath);
             commandToExecute.set(0, binaryPath.toString());
