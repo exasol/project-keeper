@@ -9,6 +9,7 @@
         <systemPropertyVariables>
             <test.coverage>true</test.coverage>
         </systemPropertyVariables>
+        <excludedGroups>${test.excludeTags}</excludedGroups>
     </configuration>
     <executions>
         <execution>

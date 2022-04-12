@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators;
 
 import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
+import static com.exasol.projectkeeper.ProjectKeeperModule.NATIVE_IMAGE;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -20,9 +21,11 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 // [impl->dsn~readme-validator~1]
 public class ReadmeFileValidator extends AbstractFileContentValidator {
     private static final String NL = System.lineSeparator();
+    private static final String NATIVE_IMAGE_DEV_GUIDE = "https://github.com/exasol/project-keeper/blob/main/doc/developers_guide/preparing_a_project_for_native_image_builds.md";
     private final String projectName;
     private final String repoName;
     private final List<AnalyzedSource> sources;
+    private final boolean hasNativeImageSource;
 
     /**
      * Create a new instance of {@link ReadmeFileValidator}.
@@ -38,6 +41,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
         this.projectName = projectName;
         this.repoName = repoName;
         this.sources = sources;
+        this.hasNativeImageSource = sources.stream().anyMatch(source -> source.getModules().contains(NATIVE_IMAGE));
     }
 
     @Override
@@ -55,6 +59,13 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
                     .mitigation("Please add a link like '[Changelog](doc/changes/changelog.md)' to the changelog.md.")
                     .toString()).build());
         }
+        if (this.hasNativeImageSource && !content.contains(NATIVE_IMAGE_DEV_GUIDE)) {
+            findings.add(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-144")
+                    .message("The project's README.md does not reference the developers guide for native images.'")
+                    .mitigation("Please add the link: '[Developers guide for native-image projects]("
+                            + NATIVE_IMAGE_DEV_GUIDE + ")'.")
+                    .toString()).build());
+        }
         if (!content.contains(getBadges())) {
             findings.add(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-62")
                     .message("The project's README.md does not contain a valid badges block.")
@@ -66,11 +77,15 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
 
     @Override
     protected String getTemplate() {
-        return "# " + this.projectName + NL + NL + //
+        String template = "# " + this.projectName + NL + NL + //
                 getBadges() + NL + NL + //
                 "## Additional Information" + NL + NL + //
                 "* [Changelog](doc/changes/changelog.md)" + NL + //
                 "* [Dependencies](dependencies.md)";
+        if (this.hasNativeImageSource) {
+            template += NL + "* [Developers guide for native-image projects](" + NATIVE_IMAGE_DEV_GUIDE + ")";
+        }
+        return template;
     }
 
     /**
@@ -127,7 +142,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
         final List<AnalyzedSource> mavenCentralSources = this.sources.stream()
                 .filter(source -> source.getModules().contains(MAVEN_CENTRAL) && source.isAdvertise())
                 .collect(Collectors.toList());
-        boolean hasMultipleModules = mavenCentralSources.size() > 1;
+        final boolean hasMultipleModules = mavenCentralSources.size() > 1;
         return mavenCentralSources.stream().map(source -> getDeploymentBadge(source, hasMultipleModules))
                 .collect(Collectors.joining(", "));
     }
@@ -149,8 +164,9 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
             return getMavenCentralBadge(withProjectName, mavenSource);
         } else {
             throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-92")
-                    .message("Project keeper does not know how to build a badge for source of type {{source type}}.", source.getClass().getName()).ticketMitigation()
-                    .toString());
+                    .message("Project keeper does not know how to build a badge for source of type {{source type}}.",
+                            source.getClass().getName())
+                    .ticketMitigation().toString());
         }
     }
 

@@ -6,6 +6,8 @@ Code name:
 
 ## Features
 
+* #290: Added module for native_image
+
 ## Bugfixes
 
 * #282: Fixed launching `go-licenses` when it is not on the `PATH`

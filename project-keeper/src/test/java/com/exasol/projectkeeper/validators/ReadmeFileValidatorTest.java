@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.validators;
 
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.validationErrorMessages;
 import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
+import static com.exasol.projectkeeper.ProjectKeeperModule.NATIVE_IMAGE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
@@ -44,6 +45,14 @@ class ReadmeFileValidatorTest {
     }
 
     @Test
+    void testCreateFileForNativeImageProject(@TempDir final Path tempDir) throws IOException {
+        getValidator(tempDir, getNativeImageMavenProject()).validate().forEach(FindingFixHelper::fix);
+        final String readme = Files.readString(tempDir.resolve("README.md"));
+        assertThat(readme, containsString(adaptLineSeparators(
+                "\n* [Developers guide for native-image projects](https://github.com/exasol/project-keeper/blob/main/doc/developers_guide/preparing_a_project_for_native_image_builds.md)")));
+    }
+
+    @Test
     void testCreateFileForMavenMultiModuleProject(@TempDir final Path tempDir) throws IOException {
         getValidator(tempDir, getMavenMultiModuleProject()).validate().forEach(FindingFixHelper::fix);
         final String readme = Files.readString(tempDir.resolve("README.md"));
@@ -61,17 +70,22 @@ class ReadmeFileValidatorTest {
     }
 
     private List<AnalyzedSource> getSimpleMavenProject() {
-        return List.of(createSource("my-project", true, true));
+        return List.of(createSourceBuilder("my-project", true, true).build());
+    }
+
+    private List<AnalyzedSource> getNativeImageMavenProject() {
+        return List.of(createSourceBuilder("my-project", true, true).modules(Set.of(NATIVE_IMAGE)).build());
     }
 
     private List<AnalyzedSource> getMavenMultiModuleProject() {
-        return List.of(createSource("aggregator", true, false), createSource("sub-1", false, true),
-                createSource("sub-2", false, true));
+        return List.of(createSourceBuilder("aggregator", true, false).build(),
+                createSourceBuilder("sub-1", false, true).build(), createSourceBuilder("sub-2", false, true).build());
     }
 
-    private AnalyzedMavenSource createSource(final String id, final boolean isRoot, final boolean advertise) {
+    private AnalyzedMavenSource.AnalyzedMavenSourceBuilder createSourceBuilder(final String id, final boolean isRoot,
+            final boolean advertise) {
         return AnalyzedMavenSource.builder().modules(Set.of(MAVEN_CENTRAL)).advertise(advertise).artifactId(id)
-                .projectName(id.replace("-", " ")).isRootProject(isRoot).build();
+                .projectName(id.replace("-", " ")).isRootProject(isRoot);
     }
 
     @Test
@@ -82,5 +96,13 @@ class ReadmeFileValidatorTest {
                 containsString("The project's README.md does not reference the dependencies.md file."), //
                 startsWith(
                         "E-PK-CORE-62: The project's README.md does not contain a valid badges block. Please add or replace the following badges: \n'[![Build Status]"))));
+    }
+
+    @Test
+    void testNativeImageDevGuideValidation(@TempDir final Path tempDir) throws IOException {
+        Files.writeString(tempDir.resolve("README.md"), "");
+        final ReadmeFileValidator validator = getValidator(tempDir, getNativeImageMavenProject());
+        assertThat(validator, validationErrorMessages(hasItems(containsString(
+                "E-PK-CORE-144: The project's README.md does not reference the developers guide for native images.' Please add the link: '[Developers guide for native-image projects](https://github.com/exasol/project-keeper/blob/main/doc/developers_guide/preparing_a_project_for_native_image_builds.md)'."))));
     }
 }

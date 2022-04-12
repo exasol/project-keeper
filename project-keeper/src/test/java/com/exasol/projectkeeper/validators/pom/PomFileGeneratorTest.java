@@ -80,7 +80,21 @@ class PomFileGeneratorTest {
                                 "nexus-staging-maven-plugin")),
                 Arguments.of("UDF_COVERAGE", List.of("maven-dependency-plugin")),
                 Arguments.of("INTEGRATION_TESTS", List.of("maven-failsafe-plugin")),
+                Arguments.of("NATIVE_IMAGE", List.of("native-image-maven-plugin")),
                 Arguments.of("LOMBOK", List.of("lombok-maven-plugin"))//
+        );
+    }
+
+    @Test
+    void testProfilesForNativeImages() throws XmlPullParserException, IOException {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.NATIVE_IMAGE), null);
+        final List<Profile> profiles = pom.getProfiles();
+        final Profile profile1 = profiles.get(0);
+        final Profile profile2 = profiles.get(1);
+        assertAll(//
+                () -> assertThat(profile1.getId(), equalTo("default")),
+                () -> assertThat(profile1.getActivation().isActiveByDefault(), equalTo(true)),
+                () -> assertThat(profile2.getId(), equalTo("skipNativeImage"))//
         );
     }
 
