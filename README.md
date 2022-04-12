@@ -55,14 +55,14 @@ If you have multiple sources in a project, project-keeper will list all of them 
 
 This plugin provides different template modules for different kinds of projects.
 
-| Module              | Description                                                                                                                                                                         |
-|---------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `jar_artifact`      | This module creates a "fat" JAR, containing not only the project binary, but also the runtime dependencies.                                                                         |
-| `integration_tests` | Module for sources with integration tests.                                                                                                                                          |
-| `maven_central`     | This module checks the required configuration for releasing on maven central.                                                                                                       |
-| `udf_coverage`      | This module configures the pom for extracting the code coverage from UDF executions.                                                                                                |
-| `lombok`            | This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).                                                                                     |
-| `native_image`      | This module configures the project for building Java native-images (executables) for windows, linux and mac. For details see our [native-image guide](doc/buildingNativeImages.md). |
+| Module              | Description                                                                                                                                                                                                                 |
+|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `jar_artifact`      | This module creates a "fat" JAR, containing not only the project binary, but also the runtime dependencies.                                                                                                                 |
+| `integration_tests` | Module for sources with integration tests.                                                                                                                                                                                  |
+| `maven_central`     | This module checks the required configuration for releasing on maven central.                                                                                                                                               |
+| `udf_coverage`      | This module configures the pom for extracting the code coverage from UDF executions.                                                                                                                                        |
+| `lombok`            | This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).                                                                                                                             |
+| `native_image`      | This module configures the project for building Java native-images (executables) for windows, linux and mac. For details see our [native-image guide](doc/developers_guide/preparing_a_project_for_native_image_builds.md). |
 
 ### Excluding Findings
 
