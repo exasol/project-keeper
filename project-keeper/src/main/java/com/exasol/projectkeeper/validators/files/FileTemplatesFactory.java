@@ -95,7 +95,7 @@ class FileTemplatesFactory {
             templates.add(new FileTemplateFromResource("lombok.config", REQUIRE_EXACT));
         }
         if (enabledModules.contains(NATIVE_IMAGE)) {
-            templates.add(new EmptyFileTemplate("src/main/reflect-config.json", REQUIRE_EXIST));
+            templates.add(new FileTemplateFromResource("src/main/reflect-config.json", REQUIRE_EXIST));
         }
         return templates;
     }
