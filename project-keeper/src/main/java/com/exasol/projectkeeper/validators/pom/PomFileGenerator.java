@@ -42,6 +42,7 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/maven-javadoc-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/nexus-staging-maven-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/maven-dependency-plugin.xml", UDF_COVERAGE),
+            new SimplePluginTemplateGenerator("maven_templates/native-image-maven-plugin.xml", NATIVE_IMAGE),
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
             new FailsafePluginTemplateGenerator(), new JacocoPluginTemplateGenerator(),
             new ErrorCodeCrawlerPluginTemplateGenerator());
@@ -93,12 +94,42 @@ public class PomFileGenerator {
             project.appendChild(buildParent(document, config.getParentPomRef()));
         }
         project.appendChild(buildProperties(config.getEnabledModules(), document));
+        buildProfilesTag(document, config.getEnabledModules()).ifPresent(project::appendChild);
         project.appendChild(buildLicensesTag(config, document));
         project.appendChild(buildDevelopersTag(document));
         project.appendChild(buildScmTag(document, config.getRepoInfo().getRepoName()));
         project.appendChild(buildDependencies(config.getEnabledModules(), document));
         project.appendChild(buildBuild(config.getEnabledModules(), document));
         return project;
+    }
+
+    private Optional<Element> buildProfilesTag(final Document document,
+            final Collection<ProjectKeeperModule> enabledModules) {
+        if (enabledModules.contains(NATIVE_IMAGE)) {
+            final Element profiles = document.createElement("profiles");
+            profiles.appendChild(buildProfile(document, "default", true, Map.of("native-image.skip", "false")));
+            profiles.appendChild(buildProfile(document, "skipNativeImage", false,
+                    Map.of("native-image.skip", "true", "test.excludeTags", "native-image")));
+            return Optional.of(profiles);
+        } else {
+            return Optional.empty();
+        }
+    }
+
+    private Element buildProfile(final Document document, final String id, final boolean isDefault,
+            final Map<String, String> properties) {
+        final Element defaultProfile = document.createElement("profile");
+        addTextElement(defaultProfile, "id", id);
+        if (isDefault) {
+            final Element activation = document.createElement("activation");
+            addTextElement(activation, "activeByDefault", "true");
+            defaultProfile.appendChild(activation);
+        }
+        final Element propertiesXml = document.createElement("properties");
+        properties.entrySet().stream().sorted(Map.Entry.comparingByKey())
+                .forEach(entry -> addTextElement(propertiesXml, entry.getKey(), entry.getValue()));
+        defaultProfile.appendChild(propertiesXml);
+        return defaultProfile;
     }
 
     private Element buildLicensesTag(final Config config, final Document document) {
@@ -201,6 +232,7 @@ public class PomFileGenerator {
         addTextElement(properties, "project.build.sourceEncoding", "UTF-8");
         addTextElement(properties, "project.reporting.outputEncoding", "UTF-8");
         addTextElement(properties, "java.version", "11");
+        addTextElement(properties, "test.excludeTags", "");
         if (enabledModules.contains(MAVEN_CENTRAL)) {
             addTextElement(properties, "gpg.skip", "true");
         }

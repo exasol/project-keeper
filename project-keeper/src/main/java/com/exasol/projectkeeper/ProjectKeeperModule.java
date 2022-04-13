@@ -32,7 +32,10 @@ public enum ProjectKeeperModule {
     /**
      * Module for projects that use Project Lombok.
      */
-    LOMBOK;
+    LOMBOK,
+
+    /** Module for java projects that build a native-image (executable). */
+    NATIVE_IMAGE;
 
     /**
      * Get {@link ProjectKeeperModule} by its name.

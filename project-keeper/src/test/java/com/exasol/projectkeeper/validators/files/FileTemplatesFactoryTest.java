@@ -59,7 +59,8 @@ class FileTemplatesFactoryTest {
     @CsvSource({ //
             "DEFAULT, .settings/org.eclipse.jdt.ui.prefs", //
             "JAR_ARTIFACT, src/assembly/all-dependencies.xml", //
-            "LOMBOK, lombok.config"//
+            "LOMBOK, lombok.config", //
+            "NATIVE_IMAGE, src/main/reflect-config.json"//
     })
     void testGetTemplatesPerSource(final ProjectKeeperModule module, final String expectedTemplate) {
         final AnalyzedMavenSource source = AnalyzedMavenSource.builder().modules(Set.of(module)).build();

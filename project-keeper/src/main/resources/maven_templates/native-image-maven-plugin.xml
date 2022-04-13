@@ -1,0 +1,20 @@
+<plugin>
+    <groupId>org.graalvm.nativeimage</groupId>
+    <artifactId>native-image-maven-plugin</artifactId>
+    <version>21.2.0</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>native-image</goal>
+            </goals>
+            <phase>package</phase>
+        </execution>
+    </executions>
+    <configuration>
+        <skip>${native-image.skip}</skip>
+        <imageName>${project.artifactId}</imageName>
+        <buildArgs>
+            --no-fallback -H:ReflectionConfigurationFiles=${project.basedir}/src/main/reflect-config.json
+        </buildArgs>
+    </configuration>
+</plugin>

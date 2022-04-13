@@ -27,7 +27,7 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource("release_config.yml", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         if (mvnRoot.isPresent()) {
-            templates.addAll(getGenericMavenTemplates());
+            templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
             if (mvnRoot.get().getModules().contains(MAVEN_CENTRAL)) {
                 templates.add(new FileTemplateFromResource(
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
@@ -40,9 +40,9 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private List<FileTemplate> getGenericMavenTemplates() {
+    private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {
         final List<FileTemplate> templates = new ArrayList<>();
-        templates.add(new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT));
+        templates.add(getCiBuildTemplate(modules));
         templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
@@ -52,6 +52,15 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_upload_github_release_assets.yml",
                 REQUIRE_EXACT));
         return templates;
+    }
+
+    private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
+        if (modules.contains(NATIVE_IMAGE)) {
+            return new FileTemplateFromResource(".github/workflows/ci-build.yml",
+                    ".github/workflows/ci-build-native-image.yml", REQUIRE_EXACT);
+        } else {
+            return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT);
+        }
     }
 
     private boolean isMvnRootProject(final AnalyzedSource source) {
@@ -84,6 +93,9 @@ class FileTemplatesFactory {
         }
         if (enabledModules.contains(LOMBOK)) {
             templates.add(new FileTemplateFromResource("lombok.config", REQUIRE_EXACT));
+        }
+        if (enabledModules.contains(NATIVE_IMAGE)) {
+            templates.add(new FileTemplateFromResource("src/main/reflect-config.json", REQUIRE_EXIST));
         }
         return templates;
     }
