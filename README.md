@@ -107,7 +107,9 @@ Project-keeper will then use the replacement in the `dependencies.md` file inste
 
 For maven projects, project-keeper generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
 
-### Using a Parent pom
+The `pk_generated_parent.pom` file is required during the build and must be checked into version control. Run `mvn project-keeper:fix` to update the file instead of editing it manually.
+
+### Using a Parent Pom
 
 If you want to use a parent pom for your project, that's not possible directly since your `pom.xml` must use the `pk_generated_parent.pom` as parent.
 
