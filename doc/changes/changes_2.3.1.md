@@ -1,4 +1,4 @@
-# Project Keeper 2.3.1, released 2022-??-??
+# Project Keeper 2.3.1, released 2022-04-20
 
 Code name:
 
@@ -11,6 +11,7 @@ Code name:
 ## Bugfixes
 
 * #282: Fixed launching `go-licenses` when it is not on the `PATH`
+* #295: Pinned version of `gaurav-nelson/github-action-markdown-link-check` to fix issues with `v1`
 
 ## Documentation
 
@@ -35,6 +36,10 @@ Code name:
 
 * Updated `com.exasol:project-keeper-java-project-crawler:2.3.0` to `2.3.1`
 
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:4.4.0` to `4.5.0`
+
 ### Project Keeper Maven Plugin
 
 #### Compile Dependency Updates
@@ -44,6 +49,7 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `org.jacoco:org.jacoco.core:0.8.7` to `0.8.8`
+* Updated `org.mockito:mockito-core:4.4.0` to `4.5.0`
 
 ### Project Keeper Java Project Crawler
 
@@ -54,3 +60,4 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `org.jacoco:org.jacoco.core:0.8.7` to `0.8.8`
+* Updated `org.mockito:mockito-core:4.4.0` to `4.5.0`
