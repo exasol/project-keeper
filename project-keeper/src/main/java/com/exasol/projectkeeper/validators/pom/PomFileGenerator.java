@@ -190,7 +190,7 @@ public class PomFileGenerator {
             addDependency(dependencies, "org.projectlombok", "lombok", "1.18.20", "provided");
         }
         if (enabledModules.contains(UDF_COVERAGE)) {
-            addDependency(dependencies, "org.jacoco", "org.jacoco.agent", "0.8.5", "test", "runtime");
+            addDependency(dependencies, "org.jacoco", "org.jacoco.agent", "0.8.8", "test", "runtime");
         }
         return dependencies;
     }
