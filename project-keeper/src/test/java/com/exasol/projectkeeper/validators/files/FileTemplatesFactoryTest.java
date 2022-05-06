@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -14,7 +14,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 

@@ -20,6 +20,10 @@ Code name:
 
 * Updated `com.exasol:project-keeper-java-project-crawler:2.3.2` to `2.4.2`
 
+#### Test Dependency Updates
+
+* Added `com.exasol:project-keeper-shared-test-setup:2.4.2`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
@@ -74,6 +78,12 @@ Code name:
 
 ### Project Keeper Shared Test Setup
 
+#### Compile Dependency Updates
+
+* Added `com.exasol:project-keeper-shared-model-classes:2.4.2`
+* Added `org.hamcrest:hamcrest:2.2`
+* Added `org.yaml:snakeyaml:1.30`
+
 #### Plugin Dependency Updates
 
 * Added `com.exasol:error-code-crawler-maven-plugin:1.1.0`
@@ -90,5 +100,6 @@ Code name:
 * Added `org.codehaus.mojo:flatten-maven-plugin:1.2.7`
 * Added `org.codehaus.mojo:versions-maven-plugin:2.8.1`
 * Added `org.jacoco:jacoco-maven-plugin:0.8.7`
+* Added `org.projectlombok:lombok-maven-plugin:1.18.20.0`
 * Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 * Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0`

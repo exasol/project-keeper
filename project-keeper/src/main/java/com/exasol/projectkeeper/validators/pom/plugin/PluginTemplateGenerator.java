@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.w3c.dom.Node;
 
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 /**
  * Interfaces for classes that generate pom file configuration for maven plugins.

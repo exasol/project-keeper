@@ -14,7 +14,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
-import com.exasol.projectkeeper.validators.TestMavenModel;
+import com.exasol.projectkeeper.test.TestMavenModel;
 
 class PomFileIOTest {
     private static final String TEST_ELEMENT = "my-test-element";

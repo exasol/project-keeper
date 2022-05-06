@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.*;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.*;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXACT;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXIST;
 import static java.util.Collections.emptyList;
@@ -9,7 +9,7 @@ import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.*;
 
 import lombok.RequiredArgsConstructor;

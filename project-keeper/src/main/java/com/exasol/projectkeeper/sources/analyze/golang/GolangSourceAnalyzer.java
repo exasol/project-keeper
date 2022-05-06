@@ -7,9 +7,9 @@ import java.nio.file.Path;
 import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.sources.AnalyzedGolangSource;

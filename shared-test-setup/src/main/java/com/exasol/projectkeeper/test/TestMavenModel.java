@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators;
+package com.exasol.projectkeeper.test;
 
 import java.io.FileWriter;
 import java.io.IOException;

@@ -12,7 +12,8 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 import lombok.Data;
 
@@ -80,7 +81,9 @@ public class ProjectKeeperConfigReader {
         final List<String> linkReplacements = Objects.requireNonNullElseGet(rawConfig.getLinkReplacements(),
                 Collections::emptyList);
         final ProjectKeeperConfig.VersionConfig version = parseVersion(rawConfig.version, projectDir);
-        return new ProjectKeeperConfig(sources, linkReplacements, excludes, version);
+
+        return ProjectKeeperConfig.builder().sources(sources).linkReplacements(linkReplacements).excludes(excludes)
+                .versionConfig(version).build();
     }
 
     private ProjectKeeperConfig.VersionConfig parseVersion(final Object rawVersion, final Path projectDir) {
@@ -154,8 +157,8 @@ public class ProjectKeeperConfigReader {
         final String rawType = rawSource.getType();
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
-        return new ProjectKeeperConfig.Source(path, convertType(rawType), modules, rawSource.advertise,
-                parseParentPomProperty(rawSource.parentPom));
+        return ProjectKeeperConfig.Source.builder().path(path).type(convertType(rawType)).modules(modules)
+                .advertise(rawSource.advertise).parentPom(parseParentPomProperty(rawSource.parentPom)).build();
     }
 
     private ProjectKeeperConfig.ParentPomRef parseParentPomProperty(

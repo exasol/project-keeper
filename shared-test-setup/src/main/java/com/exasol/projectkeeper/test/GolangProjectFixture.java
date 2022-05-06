@@ -1,51 +1,65 @@
-package com.exasol.projectkeeper;
+package com.exasol.projectkeeper.test;
 
-import static java.util.Arrays.asList;
 import static java.util.Collections.emptySet;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType;
-import com.exasol.projectkeeper.config.ProjectKeeperConfigWriter;
-import com.exasol.projectkeeper.sources.analyze.golang.SimpleProcess;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 
-class GolangProjectFixture {
+public class GolangProjectFixture {
     private static final String GO_MODULE_NAME = "github.com/exasol/my-module";
     private static final String GO_VERSION = "1.17";
     private static final String PROJECT_VERSION = "1.2.3";
 
     private final Path projectDir;
 
-    GolangProjectFixture(final Path projectDir) {
+    public GolangProjectFixture(final Path projectDir) {
         this.projectDir = projectDir;
     }
 
-    ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfig() {
+    public void gitInit() {
+        try {
+            Git.init().setDirectory(this.projectDir.toFile()).call().close();
+        } catch (IllegalStateException | GitAPIException exception) {
+            throw new AssertionError("Error running git init", exception);
+        }
+    }
+
+    public ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfig() {
         return ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
                         .path(Path.of("go.mod")).build()))
                 .versionConfig(new ProjectKeeperConfig.FixedVersion(PROJECT_VERSION));
     }
 
-    void prepareProjectFiles() throws IOException {
+    public void prepareProjectFiles(final ProjectKeeperConfigBuilder configBuilder) throws IOException {
+        this.writeConfig(configBuilder);
+        this.prepareProjectFiles();
+    }
+
+    private void prepareProjectFiles() throws IOException {
         writeGoModFile();
         writeMainGoFile();
         splitAndExecute("go mod tidy");
     }
 
-    String getProjectVersion() {
+    public String getProjectVersion() {
         return PROJECT_VERSION;
     }
 
-    void writeConfig(final ProjectKeeperConfig.ProjectKeeperConfigBuilder config) {
+    private void writeConfig(final ProjectKeeperConfig.ProjectKeeperConfigBuilder config) {
         new ProjectKeeperConfigWriter().writeConfig(config.build(), this.projectDir);
     }
 
@@ -75,6 +89,18 @@ class GolangProjectFixture {
     }
 
     private void execute(final String... command) {
-        SimpleProcess.start(this.projectDir, asList(command)).getOutput(Duration.ofSeconds(60));
+        try {
+            final Process process = new ProcessBuilder(command) //
+                    .directory(this.projectDir.toFile()) //
+                    .redirectErrorStream(false) //
+                    .start();
+            final boolean success = process.waitFor(60, TimeUnit.SECONDS);
+            assertThat(success, is(true));
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(exception);
+        } catch (final InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw new AssertionError(exception);
+        }
     }
 }

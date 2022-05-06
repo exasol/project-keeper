@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.config;
+package com.exasol.projectkeeper.test;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -9,7 +9,8 @@ import java.util.stream.Collectors;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.*;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
 
 import lombok.Data;
 

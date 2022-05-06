@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze;
 
-import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -16,7 +16,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.JavaProjectCrawlerRunner;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;

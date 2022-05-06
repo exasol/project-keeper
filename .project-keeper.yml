@@ -59,6 +59,8 @@ sources:
   - type: maven
     path: shared-test-setup/pom.xml
     advertise: false
+    modules:
+      - lombok
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"

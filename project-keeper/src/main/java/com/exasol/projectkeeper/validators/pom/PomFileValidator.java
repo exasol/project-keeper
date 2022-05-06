@@ -11,7 +11,8 @@ import org.w3c.dom.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 

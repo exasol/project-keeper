@@ -5,7 +5,7 @@ import java.util.Optional;
 
 import org.w3c.dom.*;
 
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 /**
  * Validator for error-code-crawler-maven-plugin.

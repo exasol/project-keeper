@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.*;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.*;
 import static com.exasol.projectkeeper.validators.pom.PomFileIO.trimWhitespace;
 import static com.exasol.projectkeeper.validators.pom.XmlHelper.addTextElement;
 
@@ -12,9 +12,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.RepoInfo;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
 
 import lombok.Data;

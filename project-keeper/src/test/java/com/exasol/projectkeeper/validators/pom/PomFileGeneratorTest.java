@@ -19,9 +19,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.RepoInfo;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 class PomFileGeneratorTest {
 

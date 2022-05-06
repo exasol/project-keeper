@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.UDF_COVERAGE;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.UDF_COVERAGE;
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.util.Collection;
@@ -8,7 +8,7 @@ import java.util.Optional;
 
 import org.w3c.dom.Node;
 
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 /**
  * Validator for the jacoco-maven-plugin's configuration.
