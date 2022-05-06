@@ -10,6 +10,7 @@
         <module>shared-model-classes</module>
         <module>project-keeper</module>
         <module>project-keeper-cli</module>
+        <module>shared-test-setup</module>
         <module>maven-project-crawler</module>
         <module>project-keeper-maven-plugin</module>
     </modules>

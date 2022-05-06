@@ -56,5 +56,13 @@ sources:
       artifactId: "project-keeper-parent-pom"
       version: "${revision}"
       relativePath: "../parent-pom/pom.xml"
+  - type: maven
+    path: shared-test-setup/pom.xml
+    advertise: false
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
 version:
   fromSource: project-keeper/pom.xml

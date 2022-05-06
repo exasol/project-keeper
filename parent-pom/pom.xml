@@ -51,6 +51,12 @@
             </dependency>
             <dependency>
                 <groupId>com.exasol</groupId>
+                <artifactId>project-keeper-shared-test-setup</artifactId>
+                <version>${revision}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-core</artifactId>
                 <version>${revision}</version>
             </dependency>
