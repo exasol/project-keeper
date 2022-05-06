@@ -26,6 +26,7 @@ sources:
     modules:
       - maven_central
       - integration_tests
+      - jar_artifact
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"

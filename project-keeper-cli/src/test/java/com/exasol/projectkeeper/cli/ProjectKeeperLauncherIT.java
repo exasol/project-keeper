@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper;
+package com.exasol.projectkeeper.cli;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -22,11 +22,8 @@ class ProjectKeeperLauncherIT {
     @TempDir
     Path projectDir;
 
-    GolangProjectFixture fixture;
-
     @BeforeEach
     void setup() {
-        this.fixture = new GolangProjectFixture(this.projectDir);
     }
 
     private static Arguments args(final String... args) {
@@ -52,7 +49,6 @@ class ProjectKeeperLauncherIT {
 
     @Test
     void verifyFailsForEmptyProject() throws IOException, GitAPIException {
-        prepareGolangProject();
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> runWithCurrentWorkingDir("verify"));
         assertThat(exception.getMessage(),
@@ -61,21 +57,13 @@ class ProjectKeeperLauncherIT {
 
     @Test
     void fixingSucceedsForEmptyProject() throws IOException, GitAPIException {
-        prepareGolangProject();
         assertDoesNotThrow(() -> runWithCurrentWorkingDir("fix"));
     }
 
     @Test
     void verifySucceedsAfterFixing() throws IOException, GitAPIException {
-        prepareGolangProject();
         runWithCurrentWorkingDir("fix");
         assertDoesNotThrow(() -> runWithCurrentWorkingDir("verify"));
-    }
-
-    private void prepareGolangProject() throws IOException, GitAPIException {
-        this.fixture.writeConfig(this.fixture.createDefaultConfig());
-        this.fixture.prepareProjectFiles();
-        this.fixture.initializeGitRepo();
     }
 
     private void runWithCurrentWorkingDir(final String... args) {

@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper;
+package com.exasol.projectkeeper.cli;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.ProjectKeeper;
 
 /**
  * This is the main entry point for launching Project Keeper on the command line.

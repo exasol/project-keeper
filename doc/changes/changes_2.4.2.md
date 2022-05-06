@@ -22,10 +22,23 @@ Code name:
 
 ### Project Keeper Command Line Interface
 
+#### Compile Dependency Updates
+
+* Added `com.exasol:error-reporting-java:0.4.1`
+* Added `com.exasol:project-keeper-core:2.4.2`
+
+#### Test Dependency Updates
+
+* Added `org.hamcrest:hamcrest:2.2`
+* Added `org.junit.jupiter:junit-jupiter-engine:5.8.2`
+* Added `org.junit.jupiter:junit-jupiter-params:5.8.2`
+
 #### Plugin Dependency Updates
 
+* Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.0`
 * Added `com.exasol:error-code-crawler-maven-plugin:1.1.0`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
+* Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.9.0`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:3.0.0-M1`
@@ -33,7 +46,7 @@ Code name:
 * Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M5`
 * Added `org.apache.maven.plugins:maven-gpg-plugin:3.0.1`
 * Added `org.apache.maven.plugins:maven-install-plugin:2.4`
-* Added `org.apache.maven.plugins:maven-jar-plugin:2.4`
+* Added `org.apache.maven.plugins:maven-jar-plugin:3.2.0`
 * Added `org.apache.maven.plugins:maven-javadoc-plugin:3.3.1`
 * Added `org.apache.maven.plugins:maven-resources-plugin:2.6`
 * Added `org.apache.maven.plugins:maven-site-plugin:3.3`
