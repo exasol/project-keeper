@@ -187,7 +187,7 @@ public class PomFileGenerator {
     private Element buildDependencies(final Collection<ProjectKeeperModule> enabledModules, final Document document) {
         final Element dependencies = document.createElement("dependencies");
         if (enabledModules.contains(LOMBOK)) {
-            addDependency(dependencies, "org.projectlombok", "lombok", "1.18.20", "provided");
+            addDependency(dependencies, "org.projectlombok", "lombok", "1.18.24", "provided");
         }
         if (enabledModules.contains(UDF_COVERAGE)) {
             addDependency(dependencies, "org.jacoco", "org.jacoco.agent", "0.8.8", "test", "runtime");
