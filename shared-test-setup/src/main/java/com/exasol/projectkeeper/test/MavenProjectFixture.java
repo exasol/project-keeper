@@ -37,11 +37,11 @@ public class MavenProjectFixture {
         writePom(testMavenModel);
     }
 
-    public void writeDefaultPom() throws IOException {
+    public void writeDefaultPom() {
         writePom(new TestMavenModel());
     }
 
-    public void writePom(final TestMavenModel model) throws IOException {
+    public void writePom(final TestMavenModel model) {
         model.writeAsPomToProject(this.projectDir);
     }
 
@@ -49,6 +49,12 @@ public class MavenProjectFixture {
         return ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Set.of(values())).type(MAVEN)
                         .path(Path.of("pom.xml")).build()))
+                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
+    }
+
+    public ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithoutModulesBuilder() {
+        return ProjectKeeperConfig.builder()
+                .sources(List.of(ProjectKeeperConfig.Source.builder().type(MAVEN).path(Path.of("pom.xml")).build()))
                 .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
     }
 

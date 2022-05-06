@@ -1,9 +1,9 @@
 package com.exasol.projectkeeper.sources.analyze;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static java.util.Collections.emptyMap;
 
 import java.io.FileInputStream;
-import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.JavaProjectCrawlerRunner;
@@ -53,8 +52,16 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     private Map<String, CrawledMavenProject> runCrawlerForMvnSources(final List<ProjectKeeperConfig.Source> sources) {
         final List<Path> mvnSourcePaths = sources.stream().filter(source -> MAVEN.equals(source.getType()))
                 .map(ProjectKeeperConfig.Source::getPath).collect(Collectors.toList());
-        return new JavaProjectCrawlerRunner(this.mvnRepositoryOverride, this.ownVersion)
-                .crawlProject(mvnSourcePaths.toArray(Path[]::new)).getCrawledProjects();
+        if (mvnSourcePaths.isEmpty()) {
+            return emptyMap();
+        } else if (this.ownVersion == null) {
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-145")
+                    .message("Analyzing Maven projects in standalone mode is not supported.")
+                    .mitigation("Use project-keeper-maven-plugin for analyzing Maven projects.").toString());
+        } else {
+            return new JavaProjectCrawlerRunner(this.mvnRepositoryOverride, this.ownVersion)
+                    .crawlProject(mvnSourcePaths.toArray(Path[]::new)).getCrawledProjects();
+        }
     }
 
     private AnalyzedSource analyzeSource(final Path projectDir, final ProjectKeeperConfig.Source source,
@@ -74,8 +81,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .version(crawledMavenProject.getProjectVersion()).isRootProject(isRoot).build();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-93")
-                    .message("Analyzing of {{type}} is not supported by MavenSourceAnalyzer",
-                            source.getType())
+                    .message("Analyzing of {{type}} is not supported by MavenSourceAnalyzer", source.getType())
                     .ticketMitigation().toString());
         }
     }
@@ -96,7 +102,9 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     private Model readMavenModel(final ProjectKeeperConfig.Source source) {
         try (final FileInputStream fileInputStream = new FileInputStream(source.getPath().toFile())) {
             return new MavenXpp3Reader().read(fileInputStream);
-        } catch (final XmlPullParserException | IOException exception) {
+        } catch (final Exception exception) {
+            // Catch Exception instead of org.codehaus.plexus.util.xml.pull.XmlPullParserException helps avoid adding
+            // runtime dependency org.codehaus.plexus:plexus-utils
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-94").message("Failed to analyze maven source.").toString(),
                     exception);

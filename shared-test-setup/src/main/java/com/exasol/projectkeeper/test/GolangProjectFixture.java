@@ -44,12 +44,12 @@ public class GolangProjectFixture {
                 .versionConfig(new ProjectKeeperConfig.FixedVersion(PROJECT_VERSION));
     }
 
-    public void prepareProjectFiles(final ProjectKeeperConfigBuilder configBuilder) throws IOException {
+    public void prepareProjectFiles(final ProjectKeeperConfigBuilder configBuilder) {
         this.writeConfig(configBuilder);
         this.prepareProjectFiles();
     }
 
-    private void prepareProjectFiles() throws IOException {
+    private void prepareProjectFiles() {
         writeGoModFile();
         writeMainGoFile();
         splitAndExecute("go mod tidy");
@@ -67,7 +67,7 @@ public class GolangProjectFixture {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
-    private void writeGoModFile() throws IOException {
+    private void writeGoModFile() {
         final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.3.1",
                 "github.com/exasol/error-reporting-go v0.1.1 // indirect");
         final String content = "module " + GO_MODULE_NAME + "\n" //
@@ -75,13 +75,21 @@ public class GolangProjectFixture {
                 + "require (\n" //
                 + "\t" + String.join("\n\t", dependencies) + "\n" //
                 + ")\n";
-        Files.writeString(this.projectDir.resolve("go.mod"), content);
+        writeFile(this.projectDir.resolve("go.mod"), content);
     }
 
-    private void writeMainGoFile() throws IOException {
+    private void writeFile(final Path path, final String content) {
+        try {
+            Files.writeString(path, content);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException("Error writing content to file " + path, exception);
+        }
+    }
+
+    private void writeMainGoFile() {
         final String content = "package main\n" + "import (\n" + "    \"github.com/exasol/exasol-driver-go\"\n" + ")\n"
                 + "func main() {\n" + "    exasol.NewConfig(\"sys\", \"exasol\")\n" + "}\n";
-        Files.writeString(this.projectDir.resolve("main.go"), content);
+        writeFile(this.projectDir.resolve("main.go"), content);
     }
 
     private void splitAndExecute(final String command) {
