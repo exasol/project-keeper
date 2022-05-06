@@ -143,6 +143,10 @@ You must specify the project version explicitly, `version > fromSource` is not s
 
 ## Usage
 
+### Maven Plugin
+
+Use the `project-keeper-maven-plugin` for analyzing Maven projects.
+
 The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.
 
 You can also run the checks manually using:
@@ -158,6 +162,24 @@ mvn project-keeper:fix
 ```
 
 You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=true` to your maven command.
+
+### Standalone Command Line Interface
+
+Use the `project-keeper-cli` for analyzing non-Maven projects like Golang.
+
+Run the following commands to verify a project:
+
+```shell
+cd path/to/project
+java -jar path/to/project-keeper-cli-2.4.2.jar verify
+```
+
+Run the following commands to fix the project structure:
+
+```shell
+cd path/to/project
+java -jar path/to/project-keeper-cli-2.4.2.jar fix
+```
 
 ## Development
 

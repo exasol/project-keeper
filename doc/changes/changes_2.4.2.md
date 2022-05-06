@@ -1,8 +1,12 @@
 # Project Keeper 2.4.2, released 2022-??-??
 
-Code name:
+Code name: Command line interface
 
 ## Summary
+
+This release adds a standalone mode with a command line interface that allows analyzing non-Maven projects on the command line without using the Maven-plugin.
+
+**Note:** Analyzing Maven projects in standalone mode is not supported. Use `project-keeper-maven-plugin` as usual for Maven projects.
 
 ## Features
 
