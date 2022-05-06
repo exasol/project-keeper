@@ -22,14 +22,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 
 class ProjectKeeperLauncherIT {
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(ProjectKeeperLauncherIT.class.getName());
-    private static final Path PARENT_POM = Path.of("../parent-pom/pom.xml");
-    public static final String CURRENT_VERSION = MavenProjectVersionGetter.getProjectRevision(PARENT_POM);
 
     @TempDir
     Path projectDir;
@@ -101,7 +98,7 @@ class ProjectKeeperLauncherIT {
     }
 
     private Process run(final Path workingDir, final String... args) throws IOException {
-        final Path jar = Paths.get("target/project-keeper-" + "cli-" + CURRENT_VERSION + ".jar").toAbsolutePath();
+        final Path jar = Paths.get("target/project-keeper-cli-2.4.2.jar").toAbsolutePath();
         if (!Files.exists(jar)) {
             fail("Jar " + jar + " not found. Run 'mvn package' to build it.");
         }
