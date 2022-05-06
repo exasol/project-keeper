@@ -22,6 +22,16 @@ sources:
       version: "${revision}"
       relativePath: "../parent-pom/pom.xml"
   - type: maven
+    path: project-keeper-cli/pom.xml
+    modules:
+      - maven_central
+      - integration_tests
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
+  - type: maven
     path: project-keeper-maven-plugin/pom.xml
     modules:
       - maven_central
