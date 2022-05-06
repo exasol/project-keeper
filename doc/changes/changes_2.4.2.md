@@ -70,6 +70,7 @@ Code name:
 * Added `org.codehaus.mojo:flatten-maven-plugin:1.2.7`
 * Added `org.codehaus.mojo:versions-maven-plugin:2.8.1`
 * Added `org.jacoco:jacoco-maven-plugin:0.8.7`
+* Added `org.projectlombok:lombok-maven-plugin:1.18.20.0`
 * Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 * Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0`
 * Added `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8`

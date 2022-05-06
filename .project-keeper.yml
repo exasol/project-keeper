@@ -27,6 +27,7 @@ sources:
       - maven_central
       - integration_tests
       - jar_artifact
+      - lombok
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
