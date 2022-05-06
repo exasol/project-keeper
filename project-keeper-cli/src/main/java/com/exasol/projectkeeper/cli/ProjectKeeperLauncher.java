@@ -1,9 +1,11 @@
 package com.exasol.projectkeeper.cli;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.logging.Logger;
+import java.util.logging.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ProjectKeeper;
@@ -12,6 +14,9 @@ import com.exasol.projectkeeper.ProjectKeeper;
  * This is the main entry point for launching Project Keeper on the command line.
  */
 public class ProjectKeeperLauncher {
+    static {
+        configureLogging();
+    }
     private static final java.util.logging.Logger LOGGER = Logger.getLogger(ProjectKeeperLauncher.class.getName());
     private static final String GOAL_VERIFY = "verify";
     private static final String GOAL_FIX = "fix";
@@ -20,6 +25,15 @@ public class ProjectKeeperLauncher {
 
     ProjectKeeperLauncher(final Path currentWorkingDir) {
         this.currentWorkingDir = currentWorkingDir.toAbsolutePath();
+    }
+
+    private static void configureLogging() {
+        try (InputStream is = ProjectKeeperLauncher.class.getClassLoader().getResourceAsStream("logging.properties")) {
+            LogManager.getLogManager().readConfiguration(is);
+        } catch (final IOException exception) {
+            LOGGER.log(Level.WARNING, ExaError.messageBuilder("W-PK-CL-3")
+                    .message("Failed to load logging configuration.").ticketMitigation().toString(), exception);
+        }
     }
 
     /**
@@ -31,6 +45,8 @@ public class ProjectKeeperLauncher {
         final ProjectKeeperLauncher launcher = new ProjectKeeperLauncher(Paths.get("."));
         launcher.start(args);
     }
+
+   
 
     void start(final String[] args) {
         verifyCommandLineArguments(args);
