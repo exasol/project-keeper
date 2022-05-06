@@ -43,7 +43,7 @@ public class ProjectKeeperLauncher {
         final boolean success = goal.equals(GOAL_FIX) ? projectKeeper.fix() : projectKeeper.verify();
         if (!success) {
             throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-CORE-141").message("Failed to run project keeper {{goal}}", goal)
+                    ExaError.messageBuilder("E-PK-CLI-1").message("Failed to run project keeper {{goal}}", goal)
                             .mitigation("See log messages above for details.").toString());
         }
     }
@@ -54,7 +54,7 @@ public class ProjectKeeperLauncher {
 
     private void verifyCommandLineArguments(final String[] args) {
         if ((args == null) || (args.length != 1) || !(GOAL_FIX.equals(args[0]) || GOAL_VERIFY.equals(args[0]))) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-140")
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CLI-2")
                     .message("Got no or invalid command line argument {{arguments}}.", Arrays.toString(args))
                     .mitigation("Please only specify arguments '" + GOAL_VERIFY + "' or '" + GOAL_FIX + "'.")
                     .toString());
