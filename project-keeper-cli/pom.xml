@@ -76,6 +76,15 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <configuration>
+                    <!-- Required to avoid error running integration tests:
+                        java.lang.reflect.InaccessibleObjectException: Unable to make com.exasol.projectkeeper.cli.ProjectKeeperLauncherIT() accessible: module jakarta.json does not "opens com.exasol.projectkeeper.cli" to unnamed module @31a5c39e -->
+                    <forkCount>0</forkCount>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
                     <!-- Javadoc causes error "package java.util.logging is not visible". Skipping because not published to Maven Central. -->
