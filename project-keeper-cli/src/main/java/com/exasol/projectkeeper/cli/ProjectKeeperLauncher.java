@@ -47,8 +47,6 @@ public class ProjectKeeperLauncher {
         launcher.start(args);
     }
 
-   
-
     void start(final String[] args) {
         verifyCommandLineArguments(args);
         final String goal = args[0];
