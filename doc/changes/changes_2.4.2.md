@@ -45,9 +45,14 @@ This release adds a standalone mode with a command line interface that allows an
 * Added `com.exasol:error-reporting-java:0.4.1`
 * Added `com.exasol:project-keeper-core:2.4.2`
 
+#### Runtime Dependency Updates
+
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
+
 #### Test Dependency Updates
 
-* Added `com.exasol:maven-project-version-getter:1.1.0`
+* Added `com.exasol:project-keeper-shared-test-setup:2.4.2`
+* Added `org.apache.maven:maven-model:3.8.5`
 * Added `org.hamcrest:hamcrest:2.2`
 * Added `org.junit.jupiter:junit-jupiter-engine:5.8.2`
 * Added `org.junit.jupiter:junit-jupiter-params:5.8.2`
@@ -74,7 +79,6 @@ This release adds a standalone mode with a command line interface that allows an
 * Added `org.codehaus.mojo:flatten-maven-plugin:1.2.7`
 * Added `org.codehaus.mojo:versions-maven-plugin:2.8.1`
 * Added `org.jacoco:jacoco-maven-plugin:0.8.7`
-* Added `org.projectlombok:lombok-maven-plugin:1.18.20.0`
 * Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
 * Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0`
 * Added `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8`

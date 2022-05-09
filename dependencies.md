@@ -127,16 +127,22 @@
 | -------------------------- | --------------------- |
 | [Project keeper core][69]  | [The MIT License][70] |
 | [error-reporting-java][11] | [MIT][12]             |
-| [Project Lombok][0]        | [The MIT License][1]  |
 
 ### Test Dependencies
 
-| Dependency                         | License                           |
-| ---------------------------------- | --------------------------------- |
-| [JUnit Jupiter Engine][14]         | [Eclipse Public License v2.0][15] |
-| [JUnit Jupiter Params][14]         | [Eclipse Public License v2.0][15] |
-| [Hamcrest][18]                     | [BSD License 3][19]               |
-| [Maven Project Version Getter][92] | [MIT][12]                         |
+| Dependency                             | License                           |
+| -------------------------------------- | --------------------------------- |
+| [Project Keeper shared test setup][69] | [The MIT License][70]             |
+| [JUnit Jupiter Engine][14]             | [Eclipse Public License v2.0][15] |
+| [JUnit Jupiter Params][14]             | [Eclipse Public License v2.0][15] |
+| [Hamcrest][18]                         | [BSD License 3][19]               |
+| [Maven Model][88]                      | [Apache License, Version 2.0][23] |
+
+### Runtime Dependencies
+
+| Dependency                 | License           |
+| -------------------------- | ----------------- |
+| [SLF4J JDK14 Binding][166] | [MIT License][83] |
 
 ### Plugin Dependencies
 
@@ -150,15 +156,14 @@
 | [Reproducible Build Maven Plugin][37]                   | [Apache 2.0][34]                               |
 | [Maven Surefire Plugin][39]                             | [Apache License, Version 2.0][23]              |
 | [Versions Maven Plugin][41]                             | [Apache License, Version 2.0][23]              |
-| [Apache Maven Assembly Plugin][182]                     | [Apache License, Version 2.0][23]              |
+| [Apache Maven Assembly Plugin][184]                     | [Apache License, Version 2.0][23]              |
 | [Apache Maven JAR Plugin][142]                          | [Apache License, Version 2.0][23]              |
-| [Artifact reference checker and unifier][186]           | [MIT][12]                                      |
+| [Artifact reference checker and unifier][188]           | [MIT][12]                                      |
 | [Apache Maven Deploy Plugin][43]                        | [Apache License, Version 2.0][23]              |
 | [Apache Maven GPG Plugin][45]                           | [Apache License, Version 2.0][23]              |
 | [Apache Maven Source Plugin][47]                        | [Apache License, Version 2.0][23]              |
 | [Apache Maven Javadoc Plugin][49]                       | [Apache License, Version 2.0][23]              |
 | [Nexus Staging Maven Plugin][51]                        | [Eclipse Public License][52]                   |
-| [Lombok Maven Plugin][53]                               | [The MIT License][12]                          |
 | [Maven Failsafe Plugin][136]                            | [Apache License, Version 2.0][23]              |
 | [JaCoCo :: Maven Plugin][55]                            | [Eclipse Public License 2.0][56]               |
 | [error-code-crawler-maven-plugin][57]                   | [MIT][12]                                      |
@@ -249,7 +254,7 @@
 | [JUnit Jupiter Params][14]              | [Eclipse Public License v2.0][15]              |
 | [Hamcrest][18]                          | [BSD License 3][19]                            |
 | [org.xmlunit:xmlunit-matchers][76]      | [The Apache Software License, Version 2.0][34] |
-| [SLF4J JDK14 Binding][321]              | [MIT License][83]                              |
+| [SLF4J JDK14 Binding][166]              | [MIT License][83]                              |
 | [mockito-core][102]                     | [The MIT License][103]                         |
 | [JaCoCo :: Core][240]                   | [Eclipse Public License 2.0][56]               |
 | [Maven Plugin Integration Testing][104] | [MIT][12]                                      |
@@ -356,10 +361,10 @@
 [47]: https://maven.apache.org/plugins/maven-source-plugin/
 [4]: https://projects.eclipse.org/license/secondary-gpl-2.0-cp
 [18]: http://hamcrest.org/JavaHamcrest/
-[321]: http://www.slf4j.org
+[166]: http://www.slf4j.org
 [61]: http://maven.apache.org/plugins/maven-resources-plugin/
 [216]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[186]: https://github.com/exasol/artifact-reference-checker-maven-plugin
+[188]: https://github.com/exasol/artifact-reference-checker-maven-plugin
 [142]: https://maven.apache.org/plugins/maven-jar-plugin/
 [88]: https://maven.apache.org/ref/3.8.5/maven-model/
 [82]: https://github.com/vdurmont/semver4j
@@ -389,4 +394,4 @@
 [417]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [49]: https://maven.apache.org/plugins/maven-javadoc-plugin/
 [57]: https://github.com/exasol/error-code-crawler-maven-plugin
-[182]: https://maven.apache.org/plugins/maven-assembly-plugin/
+[184]: https://maven.apache.org/plugins/maven-assembly-plugin/
