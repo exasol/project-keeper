@@ -2,4 +2,4 @@ error-tags:
   PK-CLI:
     packages:
       - com.exasol.projectkeeper.cli
-    highest-index: 2
+    highest-index: 3

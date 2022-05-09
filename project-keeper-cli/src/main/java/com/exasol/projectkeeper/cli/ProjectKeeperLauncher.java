@@ -17,7 +17,7 @@ public class ProjectKeeperLauncher {
     static {
         configureLogging();
     }
-    private static final java.util.logging.Logger LOGGER = Logger.getLogger(ProjectKeeperLauncher.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProjectKeeperLauncher.class.getName());
     private static final String GOAL_VERIFY = "verify";
     private static final String GOAL_FIX = "fix";
 
@@ -31,7 +31,7 @@ public class ProjectKeeperLauncher {
         try (InputStream is = ProjectKeeperLauncher.class.getClassLoader().getResourceAsStream("logging.properties")) {
             LogManager.getLogManager().readConfiguration(is);
         } catch (final IOException exception) {
-            LOGGER.log(Level.WARNING, ExaError.messageBuilder("W-PK-CL-3")
+            LOGGER.log(Level.WARNING, ExaError.messageBuilder("W-PK-CLI-3")
                     .message("Failed to load logging configuration.").ticketMitigation().toString(), exception);
         }
     }

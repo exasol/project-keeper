@@ -26,7 +26,7 @@ import com.exasol.projectkeeper.test.GolangProjectFixture;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 
 class ProjectKeeperLauncherIT {
-    private static final java.util.logging.Logger LOGGER = Logger.getLogger(ProjectKeeperLauncherIT.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(ProjectKeeperLauncherIT.class.getName());
 
     @TempDir
     Path projectDir;
@@ -104,6 +104,7 @@ class ProjectKeeperLauncherIT {
         }
         final List<String> commandLine = new ArrayList<>(List.of("java", "-jar", jar.toString()));
         commandLine.addAll(asList(args));
+        LOGGER.info("Launching command " + commandLine + " in working dir '" + workingDir + "'...");
         return new ProcessBuilder(commandLine).directory(workingDir.toFile()).redirectErrorStream(false).start();
     }
 
