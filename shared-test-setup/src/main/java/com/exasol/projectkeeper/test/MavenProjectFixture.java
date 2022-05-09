@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.test;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.values;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -15,6 +14,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
 
 public class MavenProjectFixture {
+    private static final String POM_XML = "pom.xml";
     private final Path projectDir;
 
     public MavenProjectFixture(final Path projectDir) {
@@ -29,7 +29,7 @@ public class MavenProjectFixture {
         }
     }
 
-    public void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) throws IOException {
+    public void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) {
         final TestMavenModel testMavenModel = new TestMavenModel();
         testMavenModel.setVersion(pomVersion);
         testMavenModel.addDependency("error-reporting-java", "com.exasol", "compile", dependencyVersion);
@@ -48,14 +48,14 @@ public class MavenProjectFixture {
     public ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithAllModulesBuilder() {
         return ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Set.of(values())).type(MAVEN)
-                        .path(Path.of("pom.xml")).build()))
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
+                        .path(Path.of(POM_XML)).build()))
+                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of(POM_XML)));
     }
 
     public ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithoutModulesBuilder() {
         return ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().type(MAVEN).path(Path.of("pom.xml")).build()))
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
+                .sources(List.of(ProjectKeeperConfig.Source.builder().type(MAVEN).path(Path.of(POM_XML)).build()))
+                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of(POM_XML)));
     }
 
     public void writeConfig(final ProjectKeeperConfigBuilder configBuilder) {

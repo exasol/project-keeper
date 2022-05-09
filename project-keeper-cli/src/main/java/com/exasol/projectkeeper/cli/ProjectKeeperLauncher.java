@@ -27,6 +27,7 @@ public class ProjectKeeperLauncher {
         this.currentWorkingDir = currentWorkingDir.toAbsolutePath();
     }
 
+    @SuppressWarnings("java:S4792") // Logger configuration is safe, we don't log sensitive information.
     private static void configureLogging() {
         try (InputStream is = ProjectKeeperLauncher.class.getClassLoader().getResourceAsStream("logging.properties")) {
             LogManager.getLogManager().readConfiguration(is);
