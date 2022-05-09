@@ -97,4 +97,4 @@ jobs:
                       "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
       - name: run project-keeper
         shell: pwsh
-        run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify -pl .
+        run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
