@@ -1,13 +1,13 @@
 package com.exasol.projectkeeper.test;
 
 import static java.util.Collections.emptySet;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.Duration;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -19,6 +19,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperC
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 
 public class GolangProjectFixture {
+    private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
     private static final String GO_MODULE_NAME = "github.com/exasol/my-module";
     private static final String GO_VERSION = "1.17";
     private static final String PROJECT_VERSION = "1.2.3";
@@ -102,13 +103,22 @@ public class GolangProjectFixture {
                     .directory(this.projectDir.toFile()) //
                     .redirectErrorStream(false) //
                     .start();
-            final boolean success = process.waitFor(60, TimeUnit.SECONDS);
-            assertThat(success, is(true));
+            final boolean success = process.waitFor(PROCESS_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS);
+            if (!success) {
+                final String stdOut = readStream(process.getInputStream());
+                final String errorOut = readStream(process.getErrorStream());
+                throw new AssertionError("Command " + Arrays.toString(command) + " did not finish after "
+                        + PROCESS_TIMEOUT + ", std output: '" + stdOut + "', error output: '" + errorOut + "'.");
+            }
         } catch (final IOException exception) {
             throw new UncheckedIOException(exception);
         } catch (final InterruptedException exception) {
             Thread.currentThread().interrupt();
             throw new AssertionError(exception);
         }
+    }
+
+    private String readStream(final InputStream stream) throws IOException {
+        return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
     }
 }
