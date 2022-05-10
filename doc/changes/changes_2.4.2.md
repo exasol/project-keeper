@@ -16,6 +16,10 @@ This release adds a standalone mode with a command line interface that allows an
 
 ### Project-Keeper Shared Model Classes
 
+#### Test Dependency Updates
+
+* Added `org.mockito:mockito-core:4.5.1`
+
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
