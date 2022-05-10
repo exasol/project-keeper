@@ -52,7 +52,7 @@ public enum ProjectKeeperModule {
                     .map(String::toLowerCase).collect(Collectors.joining(", "));
             throw new IllegalArgumentException(
                     ExaError.messageBuilder("E-PK-SMC-81").message("Unknown module: {{module name}}. "
-                            + "Please update your <modules> configuration in the pom.file to use one of the supported modules: {{supported modules}}")
+                            + "Please update your modules configuration in the .project-keeper.yml to use one of the supported modules: {{supported modules}}")
                             .parameter("module name", moduleName).parameter("supported modules", supportedModules)
                             .toString(),
                     exception);
