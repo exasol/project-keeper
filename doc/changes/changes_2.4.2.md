@@ -12,6 +12,10 @@ This release adds a standalone mode with a command line interface that allows an
 
 * #277: Added command line interface
 
+## Bug Fixes
+
+* #286: Fixed unified excludes for files on Windows
+
 ## Dependency Updates
 
 ### Project-Keeper Shared Model Classes
