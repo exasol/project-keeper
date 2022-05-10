@@ -1,8 +1,8 @@
 package com.exasol.projectkeeper.config;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.DEFAULT;
-import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
-import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.DEFAULT;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -19,6 +19,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 
 // [utest->dsn~modules~1]
 class ProjectKeeperConfigReaderTest {

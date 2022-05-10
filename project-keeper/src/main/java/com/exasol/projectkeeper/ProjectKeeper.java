@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
-import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;

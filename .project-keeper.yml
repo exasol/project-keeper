@@ -22,6 +22,17 @@ sources:
       version: "${revision}"
       relativePath: "../parent-pom/pom.xml"
   - type: maven
+    path: project-keeper-cli/pom.xml
+    modules:
+      - maven_central
+      - integration_tests
+      - jar_artifact
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
+  - type: maven
     path: project-keeper-maven-plugin/pom.xml
     modules:
       - maven_central
@@ -40,6 +51,16 @@ sources:
       - udf_coverage
       - integration_tests
     advertise: false
+    parentPom:
+      groupId: "com.exasol"
+      artifactId: "project-keeper-parent-pom"
+      version: "${revision}"
+      relativePath: "../parent-pom/pom.xml"
+  - type: maven
+    path: shared-test-setup/pom.xml
+    advertise: false
+    modules:
+      - lombok
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"

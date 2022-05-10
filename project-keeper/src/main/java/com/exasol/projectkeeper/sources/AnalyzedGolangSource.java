@@ -3,7 +3,7 @@ package com.exasol.projectkeeper.sources;
 import java.nio.file.Path;
 import java.util.Set;
 
-import com.exasol.projectkeeper.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 

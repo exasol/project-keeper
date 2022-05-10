@@ -1,7 +1,7 @@
 # Project Keeper Maven Plugin
 
 [![Build Status](https://github.com/exasol/project-keeper/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/project-keeper/actions/workflows/ci-build.yml)
-Project keeper core: [![Maven Central – Project keeper core](https://img.shields.io/maven-central/v/com.exasol/project-keeper-core)](https://search.maven.org/artifact/com.exasol/project-keeper-core), Project keeper maven plugin: [![Maven Central – Project keeper maven plugin](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
+Project keeper core: [![Maven Central – Project keeper core](https://img.shields.io/maven-central/v/com.exasol/project-keeper-core)](https://search.maven.org/artifact/com.exasol/project-keeper-core), Project Keeper Command Line Interface: [![Maven Central – Project Keeper Command Line Interface](https://img.shields.io/maven-central/v/com.exasol/project-keeper-cli)](https://search.maven.org/artifact/com.exasol/project-keeper-cli), Project keeper maven plugin: [![Maven Central – Project keeper maven plugin](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
 
 This maven plugin checks and unifies the project's structure according to the Exasol integration team's repository standards.
 
@@ -143,6 +143,10 @@ You must specify the project version explicitly, `version > fromSource` is not s
 
 ## Usage
 
+### Maven Plugin
+
+Use the `project-keeper-maven-plugin` for analyzing Maven projects.
+
 The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.
 
 You can also run the checks manually using:
@@ -158,6 +162,24 @@ mvn project-keeper:fix
 ```
 
 You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=true` to your maven command.
+
+### Standalone Command Line Interface
+
+Use the `project-keeper-cli` for analyzing non-Maven projects like Golang.
+
+Run the following commands to verify a project:
+
+```shell
+cd path/to/project
+java -jar path/to/project-keeper-cli-2.4.2.jar verify
+```
+
+Run the following commands to fix the project structure:
+
+```shell
+cd path/to/project
+java -jar path/to/project-keeper-cli-2.4.2.jar fix
+```
 
 ## Development
 

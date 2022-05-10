@@ -23,7 +23,7 @@ import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
-import com.exasol.projectkeeper.validators.TestMavenModel;
+import com.exasol.projectkeeper.test.TestMavenModel;
 
 @Tag("integration")
 class JavaProjectCrawlerRunnerIT {

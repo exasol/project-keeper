@@ -1,9 +1,7 @@
-package com.exasol.projectkeeper.config;
+package com.exasol.projectkeeper.shared.config;
 
 import java.nio.file.Path;
 import java.util.*;
-
-import com.exasol.projectkeeper.ProjectKeeperModule;
 
 import lombok.Builder;
 import lombok.Data;

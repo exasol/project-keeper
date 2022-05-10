@@ -1,7 +1,5 @@
 package com.exasol.projectkeeper;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.values;
-import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
@@ -12,17 +10,15 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Set;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.validators.TestMavenModel;
+import com.exasol.projectkeeper.test.MavenProjectFixture;
+import com.exasol.projectkeeper.test.TestMavenModel;
 
 /**
  * This integration test tests the maven plugin in a safe environment. Since we don't want to install the plugin to the
@@ -32,12 +28,20 @@ import com.exasol.projectkeeper.validators.TestMavenModel;
 @Tag("integration")
 class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
 
+    private MavenProjectFixture fixture;
+
+    @BeforeEach
+    void setup() {
+        this.fixture = new MavenProjectFixture(this.projectDir);
+        this.fixture.gitInit();
+    }
+
     @Test
     // [itest->dsn~pom-file-validator~1]
     void testVerifyPhase1() throws IOException {
         Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
-        new TestMavenModel().writeAsPomToProject(this.projectDir);
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeDefaultPom();
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         final String output = assertInvalidAndGetOutput();
         assertAll(//
                 () -> assertThat(output,
@@ -51,7 +55,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~gitignore-validator~1]
     void testVerifyPhase2() throws IOException {
         writeDefaultPom();
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         Files.delete(this.projectDir.resolve(".settings/org.eclipse.jdt.core.prefs"));
         Files.delete(this.projectDir.resolve(".gitignore"));
@@ -64,17 +68,6 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         );
     }
 
-    private ProjectKeeperConfig createConfigWithAllModules() {
-        return getConfigWithAllModulesBuilder().build();
-    }
-
-    private ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithAllModulesBuilder() {
-        return ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Set.of(values())).type(MAVEN)
-                        .path(Path.of("pom.xml")).build()))
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml")));
-    }
-
     private void writeDefaultPom() throws IOException {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();
@@ -85,10 +78,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~excluding~1]
     void testVerifyWithExcludedFile() throws IOException {
         writeDefaultPom();
-        writeConfig(getConfigWithAllModulesBuilder()
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder()
                 .excludes(List.of("E-PK-CORE-17: Missing required file: 'src/test/resources/logging.properties'"
-                        .replace('/', File.separatorChar)))
-                .build());
+                        .replace('/', File.separatorChar))));
         final String output = assertInvalidAndGetOutput();
         assertThat(output, not(containsString("logging.properties")));
     }
@@ -97,7 +89,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~deleted-files-validator~1]
     void testVerifyWithAFileThatMustNotExist() throws IOException {
         writeDefaultPom();
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final Path fileThatMustNotExist = this.projectDir.resolve(".github/workflows/maven.yml");
         Files.createDirectories(fileThatMustNotExist.getParent());
@@ -111,10 +103,8 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~excluding~1]
     void testExcludedPlugin() throws IOException {
         writeDefaultPom();
-        writeConfig(getConfigWithAllModulesBuilder()
-                .excludes(List.of(
-                        "E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin. (in pom.xml)"))
-                .build());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder().excludes(List
+                .of("E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin. (in pom.xml)")));
         final String output = assertInvalidAndGetOutput();
         assertThat(output,
                 not(containsString("E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin.")));
@@ -127,7 +117,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();
         pom.writeAsPomToProject(this.projectDir);
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         final ToStringLogger logger = new ToStringLogger();
         final boolean success = getProjectKeeper(logger).fix();
         assertThat(success, equalTo(true));
@@ -139,7 +129,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();
         pom.writeAsPomToProject(this.projectDir);
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         assertVerifySucceeds();
     }
@@ -149,7 +139,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
     void testChangesFileGeneration(final boolean released) throws IOException, GitAPIException {
         setupDemoProjectWithDependencyChange(released);
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
         assertAll(//
@@ -164,7 +154,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~verify-changelog-file~1]
     void testChangelogFileGeneration() throws IOException, GitAPIException {
         setupDemoProjectWithDependencyChange(true);
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangelog = Files.readString(this.projectDir.resolve("doc/changes/changelog.md"));
         assertThat(generatedChangelog, containsString("[0.2.0](changes_0.2.0.md)"));
@@ -173,7 +163,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     @Test
     void testChangesFileGenerationWithNoPomInPrevVersion() throws IOException, GitAPIException {
         setupDemoProjectWithPomAddedInThisVersion();
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
         assertThat(generatedChangesFile, containsString("* Added `com.exasol:error-reporting-java:0.2.0`"));
@@ -181,9 +171,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
 
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
         try (final Git git = Git.open(this.projectDir.toFile())) {
-            writePomWithOneDependency("0.1.0", "0.1.0");
+            this.fixture.writePomWithOneDependency("0.1.0", "0.1.0");
             commitAndMakeTag(git, "0.1.0");
-            writePomWithOneDependency("0.2.0", "0.2.0");
+            this.fixture.writePomWithOneDependency("0.2.0", "0.2.0");
             if (released) {
                 commitAndMakeTag(git, "0.2.0");
             }
@@ -194,7 +184,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         try (final Git git = Git.open(this.projectDir.toFile())) {
             Files.writeString(this.projectDir.resolve("a-file.txt"), "some content");
             commitAndMakeTag(git, "0.1.0");
-            writePomWithOneDependency("0.2.0", "0.2.0");
+            this.fixture.writePomWithOneDependency("0.2.0", "0.2.0");
         }
     }
 
@@ -208,10 +198,10 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~readme-validator~1]
     void testVerifyReadme() throws IOException {
         writeDefaultPom();
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         Files.writeString(this.projectDir.resolve("README.md"), "");
-        writeConfig(createConfigWithAllModules());
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         final String output = assertInvalidAndGetOutput();
         assertAll(//
                 () -> assertThat(output, containsString("E-PK-CORE-61")), //

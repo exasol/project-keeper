@@ -25,8 +25,8 @@ import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.FindingFixHelper;
-import com.exasol.projectkeeper.validators.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 
 @Tag("integration")

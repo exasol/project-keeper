@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper.sources;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.JAR_ARTIFACT;
-import static com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.JAR_ARTIFACT;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -19,10 +19,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
-import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.TestEnvBuilder;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.validators.TestMavenModel;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
+import com.exasol.projectkeeper.test.TestMavenModel;
 
 @Tag("integration")
 class SourceAnalyzerIT {

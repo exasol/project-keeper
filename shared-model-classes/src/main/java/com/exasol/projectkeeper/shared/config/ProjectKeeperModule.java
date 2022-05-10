@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper;
+package com.exasol.projectkeeper.shared.config;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;
@@ -51,8 +51,8 @@ public enum ProjectKeeperModule {
             final String supportedModules = Arrays.stream(ProjectKeeperModule.values()).map(ProjectKeeperModule::name)
                     .map(String::toLowerCase).collect(Collectors.joining(", "));
             throw new IllegalArgumentException(
-                    ExaError.messageBuilder("E-PK-CORE-4").message("Unknown module: {{module name}}. "
-                            + "Please update your <modules> configuration in the pom.file to use one of the supported modules: {{supported modules}}")
+                    ExaError.messageBuilder("E-PK-SMC-81").message("Unknown module: {{module name}}. "
+                            + "Please update your modules configuration in the .project-keeper.yml to use one of the supported modules: {{supported modules}}")
                             .parameter("module name", moduleName).parameter("supported modules", supportedModules)
                             .toString(),
                     exception);

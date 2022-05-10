@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.pom;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.*;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.*;
 import static com.exasol.projectkeeper.validators.pom.PomFileIO.trimWhitespace;
 import static com.exasol.projectkeeper.validators.pom.XmlHelper.addTextElement;
 
@@ -12,9 +12,9 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.*;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.ProjectKeeperModule;
 import com.exasol.projectkeeper.RepoInfo;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
 
 import lombok.Data;
@@ -187,7 +187,7 @@ public class PomFileGenerator {
     private Element buildDependencies(final Collection<ProjectKeeperModule> enabledModules, final Document document) {
         final Element dependencies = document.createElement("dependencies");
         if (enabledModules.contains(LOMBOK)) {
-            addDependency(dependencies, "org.projectlombok", "lombok", "1.18.20", "provided");
+            addDependency(dependencies, "org.projectlombok", "lombok", "1.18.24", "provided");
         }
         if (enabledModules.contains(UDF_COVERAGE)) {
             addDependency(dependencies, "org.jacoco", "org.jacoco.agent", "0.8.8", "test", "runtime");

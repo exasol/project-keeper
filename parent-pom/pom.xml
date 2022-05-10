@@ -29,7 +29,7 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>2.3.2</revision>
+        <revision>2.4.2</revision>
         <maven.version>3.8.5</maven.version>
         <junit.version>5.8.2</junit.version>
         <junit.platform.version>1.6.2</junit.platform.version>
@@ -48,6 +48,12 @@
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-shared-model-classes</artifactId>
                 <version>${revision}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.exasol</groupId>
+                <artifactId>project-keeper-shared-test-setup</artifactId>
+                <version>${revision}</version>
+                <scope>test</scope>
             </dependency>
             <dependency>
                 <groupId>com.exasol</groupId>

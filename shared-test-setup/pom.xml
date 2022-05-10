@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>project-keeper-shared-test-setup</artifactId>
+    <packaging>jar</packaging>
+    <name>Project Keeper shared test setup</name>
+    <description>Project keeper is a tool that verifies and fixes project setups.</description>
+    <parent>
+        <relativePath>./pk_generated_parent.pom</relativePath>
+        <groupId>com.exasol</groupId>
+        <artifactId>project-keeper-shared-test-setup-generated-parent</artifactId>
+        <version>${revision}</version>
+    </parent>
+    <url>https://github.com/exasol/project-keeper/</url>
+    <properties>
+        <sonar.coverage.exclusions>**/*.*</sonar.coverage.exclusions>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>project-keeper-shared-model-classes</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.hamcrest</groupId>
+            <artifactId>hamcrest</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+        </dependency>
+    </dependencies>
+</project>

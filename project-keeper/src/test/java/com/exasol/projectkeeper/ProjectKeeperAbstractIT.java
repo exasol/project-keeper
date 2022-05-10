@@ -8,22 +8,11 @@ import static org.mockito.Mockito.mock;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.io.TempDir;
-
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.config.ProjectKeeperConfigWriter;
 
 public class ProjectKeeperAbstractIT {
     @TempDir
     protected Path projectDir;
-
-    @BeforeEach
-    void beforeEach() throws GitAPIException {
-        Git.init().setDirectory(this.projectDir.toFile()).call().close();
-    }
 
     protected Optional<Path> getMavenRepo() {
         return Optional.empty();
@@ -39,10 +28,6 @@ public class ProjectKeeperAbstractIT {
         final boolean isValid = projectKeeper.verify();
         assertThat(isValid, equalTo(false));
         return logger.toString();
-    }
-
-    protected void writeConfig(final ProjectKeeperConfig config) {
-        new ProjectKeeperConfigWriter().writeConfig(config, this.projectDir);
     }
 
     protected ProjectKeeper getProjectKeeper(final Logger logger) {

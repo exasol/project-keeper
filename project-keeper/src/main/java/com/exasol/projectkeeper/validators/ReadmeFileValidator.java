@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper.validators;
 
-import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
-import static com.exasol.projectkeeper.ProjectKeeperModule.NATIVE_IMAGE;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.NATIVE_IMAGE;
 
 import java.nio.file.Path;
 import java.util.ArrayList;

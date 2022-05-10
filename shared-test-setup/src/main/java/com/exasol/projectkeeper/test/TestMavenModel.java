@@ -1,7 +1,6 @@
-package com.exasol.projectkeeper.validators;
+package com.exasol.projectkeeper.test;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 
 import org.apache.maven.model.*;
@@ -46,9 +45,11 @@ public class TestMavenModel extends Model {
         this.addDependency(dependency);
     }
 
-    public void writeAsPomToProject(final Path projectDir) throws IOException {
+    public void writeAsPomToProject(final Path projectDir) {
         try (final FileWriter fileWriter = new FileWriter(projectDir.resolve("pom.xml").toFile())) {
             new MavenXpp3Writer().write(fileWriter, this);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(exception);
         }
     }
 

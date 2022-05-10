@@ -22,8 +22,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.*;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.validators.TestMavenModel;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
+import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 

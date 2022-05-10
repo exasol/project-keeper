@@ -1,0 +1,5 @@
+error-tags:
+  PK-STS:
+    packages:
+      - com.exasol.projectkeeper.test
+    highest-index: 81

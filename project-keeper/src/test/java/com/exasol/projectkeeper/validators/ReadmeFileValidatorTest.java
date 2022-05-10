@@ -1,8 +1,8 @@
 package com.exasol.projectkeeper.validators;
 
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.validationErrorMessages;
-import static com.exasol.projectkeeper.ProjectKeeperModule.MAVEN_CENTRAL;
-import static com.exasol.projectkeeper.ProjectKeeperModule.NATIVE_IMAGE;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
+import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.NATIVE_IMAGE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 

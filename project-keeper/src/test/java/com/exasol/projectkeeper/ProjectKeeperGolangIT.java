@@ -9,6 +9,8 @@ import java.nio.file.Files;
 
 import org.junit.jupiter.api.*;
 
+import com.exasol.projectkeeper.test.GolangProjectFixture;
+
 @Tag("integration")
 class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
 
@@ -17,6 +19,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
     @BeforeEach
     void setup() {
         this.fixture = new GolangProjectFixture(this.projectDir);
+        this.fixture.gitInit();
     }
 
     @Test
@@ -56,7 +59,6 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
     }
 
     private void prepareProjectFiles() throws IOException {
-        this.fixture.writeConfig(this.fixture.createDefaultConfig());
-        this.fixture.prepareProjectFiles();
+        this.fixture.prepareProjectFiles(this.fixture.createDefaultConfig());
     }
 }

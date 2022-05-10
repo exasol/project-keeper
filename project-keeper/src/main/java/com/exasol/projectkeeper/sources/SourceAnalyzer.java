@@ -7,9 +7,9 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.config.ProjectKeeperConfig.SourceType;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.MavenSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.golang.GolangSourceAnalyzer;
