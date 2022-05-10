@@ -16,6 +16,10 @@ This release adds a standalone mode with a command line interface that allows an
 
 * #286: Fixed unified excludes for files on Windows
 
+## Refactorings
+
+* #301: Updated maven plugin template versions
+
 ## Dependency Updates
 
 ### Project-Keeper Shared Model Classes
