@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
@@ -74,18 +73,21 @@ public class RequiredFileValidator {
             if (contentWithUnifiedNewline == null) {
                 return List.of(SimpleValidationFinding
                         .withMessage(ExaError.messageBuilder("E-PK-CORE-17")
-                                .message("Missing required file: '{{required file}}'")
-                                .parameter("required file", projectDir.relativize(file)).toString())
+                                .message("Missing required file: {{required file}}")
+                                .parameter("required file", osIndependentPath(projectDir, file)).toString())
                         .andFix(fix).build());
             } else {
-                return List.of(SimpleValidationFinding
-                        .withMessage(ExaError.messageBuilder("E-PK-CORE-18")
-                                .message("Outdated content: '{{file name}}'", projectDir.relativize(file)).toString())
+                return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-18")
+                        .message("Outdated content: {{file name}}", osIndependentPath(projectDir, file)).toString())
                         .andFix(fix).build());
             }
         } else {
             return Collections.emptyList();
         }
+    }
+
+    private String osIndependentPath(final Path projectDir, final Path file) {
+        return projectDir.relativize(file).toString().replace(FileSystems.getDefault().getSeparator(), "/");
     }
 
     private String getActualContent(final Path projectDir, final Path file) {
@@ -97,7 +99,7 @@ public class RequiredFileValidator {
             } catch (final IOException exception) {
                 throw new IllegalStateException(
                         ExaError.messageBuilder("E-PK-CORE-19").message("Failed to validate {{file name}}'s content.")
-                                .parameter("file name", projectDir.relativize(file)).toString(),
+                                .parameter("file name", osIndependentPath(projectDir, file)).toString(),
                         exception);
             }
         }

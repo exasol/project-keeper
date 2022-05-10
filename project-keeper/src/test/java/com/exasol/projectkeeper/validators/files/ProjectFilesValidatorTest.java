@@ -10,7 +10,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -40,10 +39,9 @@ class ProjectFilesValidatorTest {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
                 mock(Logger.class));
         assertThat(validator,
-                validationErrorMessages(hasItems(
-                        "E-PK-CORE-17: Missing required file: '.settings" + File.separator
-                                + "org.eclipse.jdt.core.prefs'",
-                        "E-PK-CORE-18: Outdated content: '.settings" + File.separator + "org.eclipse.jdt.ui.prefs'")));
+                validationErrorMessages(
+                        hasItems("E-PK-CORE-17: Missing required file: '.settings/org.eclipse.jdt.core.prefs'",
+                                "E-PK-CORE-18: Outdated content: '.settings/org.eclipse.jdt.ui.prefs'")));
     }
 
     private List<AnalyzedSource> getMvnSourceWithDefaultModule() {
@@ -63,10 +61,10 @@ class ProjectFilesValidatorTest {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
                 mock(Logger.class));
         fixAllFindings(validator);
-        final Path testFile = this.tempDir.resolve(".settings" + File.separator + "org.eclipse.jdt.core.prefs");
+        final Path testFile = this.tempDir.resolve(".settings/org.eclipse.jdt.core.prefs");
         changeFile(testFile);
-        assertThat(validator, validationErrorMessages(contains(
-                "E-PK-CORE-18: Outdated content: '.settings" + File.separator + "org.eclipse.jdt.core.prefs'")));
+        assertThat(validator, validationErrorMessages(
+                contains("E-PK-CORE-18: Outdated content: '.settings/org.eclipse.jdt.core.prefs'")));
     }
 
     @Test

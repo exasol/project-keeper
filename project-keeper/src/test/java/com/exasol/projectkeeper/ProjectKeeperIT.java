@@ -62,8 +62,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         final String output = assertInvalidAndGetOutput();
         assertAll(//
                 () -> assertThat(output,
-                        containsString("E-PK-CORE-17: Missing required file: '.settings" + File.separator
-                                + "org.eclipse.jdt.core.prefs'")),
+                        containsString("E-PK-CORE-17: Missing required file: '.settings/org.eclipse.jdt.core.prefs'")),
                 () -> assertThat(output, containsString("E-PK-CORE-56: Could not find required file '.gitignore'.")) //
         );
     }
