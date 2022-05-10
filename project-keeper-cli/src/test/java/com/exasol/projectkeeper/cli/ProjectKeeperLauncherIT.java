@@ -48,7 +48,7 @@ class ProjectKeeperLauncherIT {
     @Test
     void runMainMethodWithNullArgumentFails() throws IOException, InterruptedException {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()-> ProjectKeeperLauncher.main(null));
-        assertThat(exception.getMessage(), equalTo("E-PK-CLI-2: Got no or invalid command line argument '[]'. Please only specify arguments 'verify' or 'fix'."));
+        assertThat(exception.getMessage(), equalTo("E-PK-CLI-2: Got no or invalid command line argument 'null'. Please only specify arguments 'verify' or 'fix'."));
     }
 
     @Test
