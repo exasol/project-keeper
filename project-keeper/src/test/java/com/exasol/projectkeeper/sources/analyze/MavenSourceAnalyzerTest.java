@@ -43,6 +43,15 @@ class MavenSourceAnalyzerTest {
                 "[ERROR] Plugin com.exasol:project-keeper-java-project-crawler:own-version or one of its dependencies could not be resolved")));
     }
 
+    @Test
+    void analyzingNonMavenSourceFails() {
+        final List<Source> goSources = List.of(ProjectKeeperConfig.Source.builder().type(SourceType.GOLANG).build());
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> analyze("own-version", goSources));
+        assertThat(exception.getMessage(), equalTo(
+                "F-PK-CORE-93: Analyzing of GOLANG is not supported by MavenSourceAnalyzer This is an internal error that should not happen. Please report it by opening a GitHub issue."));
+    }
+
     private List<Source> createMavenSources() {
         return List.of(ProjectKeeperConfig.Source.builder().type(SourceType.MAVEN).path(PROJECT_DIR.resolve("pom.xml"))
                 .build());
