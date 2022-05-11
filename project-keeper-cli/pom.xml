@@ -82,8 +82,15 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <!-- Javadoc causes error "package java.util.logging is not visible". Skipping because not published to Maven Central. -->
-                    <skip>true</skip>
+                    <!-- Javadoc causes error "error: package java.util.logging is not visible
+                        import java.util.logging.*;
+                        (package java.util.logging is declared in module java.logging, but module jakarta.json does not read it)". -->
+                    <additionalOptions>
+                        <option>--add-modules</option>
+                        <option>java.logging</option>
+                        <option>--add-reads</option>
+                        <option>jakarta.json=java.logging</option>
+                    </additionalOptions>
                 </configuration>
             </plugin>
         </plugins>
