@@ -19,3 +19,6 @@ cp project-keeper-maven-plugin/target/project-keeper-maven-plugin-$version-sourc
 cp shared-model-classes/target/project-keeper-shared-model-classes-$version.jar "$target_dir"
 cp shared-model-classes/target/project-keeper-shared-model-classes-$version-javadoc.jar "$target_dir"
 cp shared-model-classes/target/project-keeper-shared-model-classes-$version-sources.jar "$target_dir"
+cp project-keeper-cli/target/project-keeper-cli-$version.jar "$target_dir"
+cp project-keeper-cli/target/project-keeper-cli-$version-javadoc.jar "$target_dir"
+cp project-keeper-cli/target/project-keeper-cli-$version-sources.jar "$target_dir"
