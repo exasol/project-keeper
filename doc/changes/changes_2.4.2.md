@@ -16,6 +16,10 @@ This release adds a standalone mode with a command line interface that allows an
 
 * #286: Fixed unified excludes for files on Windows
 
+## Refactorings
+
+* #301: Updated maven plugin template versions
+
 ## Dependency Updates
 
 ### Project-Keeper Shared Model Classes
@@ -27,6 +31,12 @@ This release adds a standalone mode with a command line interface that allows an
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.9.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.3.1` to `3.4.0`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.8.1` to `2.10.0`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.7` to `0.8.8`
+* Updated `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0` to `3.2.0`
+* Updated `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8` to `1.6.13`
 
 ### Project Keeper Core
 
@@ -45,6 +55,12 @@ This release adds a standalone mode with a command line interface that allows an
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.9.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.3.1` to `3.4.0`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.8.1` to `2.10.0`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.7` to `0.8.8`
+* Updated `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0` to `3.2.0`
+* Updated `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8` to `1.6.13`
 
 ### Project Keeper Command Line Interface
 
@@ -72,24 +88,24 @@ This release adds a standalone mode with a command line interface that allows an
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
-* Added `org.apache.maven.plugins:maven-compiler-plugin:3.9.0`
+* Added `org.apache.maven.plugins:maven-compiler-plugin:3.10.1`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:3.0.0-M1`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0`
 * Added `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M5`
 * Added `org.apache.maven.plugins:maven-gpg-plugin:3.0.1`
 * Added `org.apache.maven.plugins:maven-install-plugin:2.4`
-* Added `org.apache.maven.plugins:maven-jar-plugin:3.2.0`
-* Added `org.apache.maven.plugins:maven-javadoc-plugin:3.3.1`
+* Added `org.apache.maven.plugins:maven-jar-plugin:3.2.2`
+* Added `org.apache.maven.plugins:maven-javadoc-plugin:3.4.0`
 * Added `org.apache.maven.plugins:maven-resources-plugin:2.6`
 * Added `org.apache.maven.plugins:maven-site-plugin:3.3`
 * Added `org.apache.maven.plugins:maven-source-plugin:3.2.1`
 * Added `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M5`
 * Added `org.codehaus.mojo:flatten-maven-plugin:1.2.7`
-* Added `org.codehaus.mojo:versions-maven-plugin:2.8.1`
-* Added `org.jacoco:jacoco-maven-plugin:0.8.7`
+* Added `org.codehaus.mojo:versions-maven-plugin:2.10.0`
+* Added `org.jacoco:jacoco-maven-plugin:0.8.8`
 * Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
-* Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0`
-* Added `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8`
+* Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.2.0`
+* Added `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.13`
 
 ### Project Keeper Maven Plugin
 
@@ -100,6 +116,13 @@ This release adds a standalone mode with a command line interface that allows an
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.9.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.2.0` to `3.3.0`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.3.1` to `3.4.0`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.8.1` to `2.10.0`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.7` to `0.8.8`
+* Updated `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0` to `3.2.0`
+* Updated `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8` to `1.6.13`
 
 ### Project Keeper Java Project Crawler
 
@@ -110,6 +133,13 @@ This release adds a standalone mode with a command line interface that allows an
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.9.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.2.0` to `3.3.0`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.3.1` to `3.4.0`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.8.1` to `2.10.0`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.7` to `0.8.8`
+* Updated `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0` to `3.2.0`
+* Updated `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.8` to `1.6.13`
 
 ### Project Keeper Shared Test Setup
 
@@ -124,7 +154,7 @@ This release adds a standalone mode with a command line interface that allows an
 * Added `com.exasol:error-code-crawler-maven-plugin:1.1.1`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
-* Added `org.apache.maven.plugins:maven-compiler-plugin:3.9.0`
+* Added `org.apache.maven.plugins:maven-compiler-plugin:3.10.1`
 * Added `org.apache.maven.plugins:maven-deploy-plugin:2.7`
 * Added `org.apache.maven.plugins:maven-enforcer-plugin:3.0.0`
 * Added `org.apache.maven.plugins:maven-install-plugin:2.4`
@@ -133,8 +163,8 @@ This release adds a standalone mode with a command line interface that allows an
 * Added `org.apache.maven.plugins:maven-site-plugin:3.3`
 * Added `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M5`
 * Added `org.codehaus.mojo:flatten-maven-plugin:1.2.7`
-* Added `org.codehaus.mojo:versions-maven-plugin:2.8.1`
-* Added `org.jacoco:jacoco-maven-plugin:0.8.7`
+* Added `org.codehaus.mojo:versions-maven-plugin:2.10.0`
+* Added `org.jacoco:jacoco-maven-plugin:0.8.8`
 * Added `org.projectlombok:lombok-maven-plugin:1.18.20.0`
 * Added `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184`
-* Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.1.0`
+* Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.2.0`
