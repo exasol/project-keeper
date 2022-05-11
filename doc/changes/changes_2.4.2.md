@@ -28,10 +28,6 @@ This release adds a standalone mode with a command line interface that allows an
 
 * Added `org.mockito:mockito-core:4.5.1`
 
-#### Plugin Dependency Updates
-
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
-
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -45,10 +41,6 @@ This release adds a standalone mode with a command line interface that allows an
 #### Test Dependency Updates
 
 * Added `com.exasol:project-keeper-shared-test-setup:2.4.2`
-
-#### Plugin Dependency Updates
-
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
 
 ### Project Keeper Command Line Interface
 
@@ -72,7 +64,7 @@ This release adds a standalone mode with a command line interface that allows an
 #### Plugin Dependency Updates
 
 * Added `com.exasol:artifact-reference-checker-maven-plugin:0.4.0`
-* Added `com.exasol:error-code-crawler-maven-plugin:1.1.1`
+* Added `com.exasol:error-code-crawler-maven-plugin:1.1.0`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-assembly-plugin:3.3.0`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
@@ -101,19 +93,11 @@ This release adds a standalone mode with a command line interface that allows an
 
 * Updated `com.exasol:project-keeper-core:2.3.2` to `2.4.2`
 
-#### Plugin Dependency Updates
-
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
-
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.3.2` to `2.4.2`
-
-#### Plugin Dependency Updates
-
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.1.0` to `1.1.1`
 
 ### Project Keeper Shared Test Setup
 
@@ -125,7 +109,7 @@ This release adds a standalone mode with a command line interface that allows an
 
 #### Plugin Dependency Updates
 
-* Added `com.exasol:error-code-crawler-maven-plugin:1.1.1`
+* Added `com.exasol:error-code-crawler-maven-plugin:1.1.0`
 * Added `io.github.zlika:reproducible-build-maven-plugin:0.15`
 * Added `org.apache.maven.plugins:maven-clean-plugin:2.5`
 * Added `org.apache.maven.plugins:maven-compiler-plugin:3.9.0`
