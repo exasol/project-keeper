@@ -1,4 +1,4 @@
-# Project Keeper 2.4.2, released 2022-??-??
+# Project Keeper 2.4.2, released 2022-05-11
 
 Code name: Command line interface
 
