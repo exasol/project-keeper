@@ -25,7 +25,7 @@ public class ProjectKeeperLauncher {
 
     ProjectKeeperLauncher(final Path currentWorkingDir) {
         try {
-            this.currentWorkingDir = currentWorkingDir.toAbsolutePath().toRealPath();
+            this.currentWorkingDir = currentWorkingDir.toRealPath();
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CLI-4")
                     .message("Failed to get absolute path of current directory.").toString(), exception);

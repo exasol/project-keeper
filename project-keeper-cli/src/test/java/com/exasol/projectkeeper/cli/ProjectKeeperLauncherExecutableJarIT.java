@@ -17,11 +17,15 @@ import java.util.logging.Logger;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 
 class ProjectKeeperLauncherExecutableJarIT {
     private static final Logger LOGGER = Logger.getLogger(ProjectKeeperLauncherExecutableJarIT.class.getName());
+    private static final String PROJECT_ROOT_OFFSET = "../";
+    private static final File PARENT_POM = Path.of(PROJECT_ROOT_OFFSET, "parent-pom/pom.xml").toFile();
+    private static final String CURRENT_VERSION = MavenProjectVersionGetter.getProjectRevision(PARENT_POM.toPath());
 
     @TempDir
     Path projectDir;
@@ -29,8 +33,8 @@ class ProjectKeeperLauncherExecutableJarIT {
     @Test
     void fixingMavenProjectSucceeds() throws InterruptedException, IOException {
         prepareMavenProject();
-        assertProcessSucceeds(run(this.projectDir, "fix"), "");
-        assertProcessSucceeds(run(this.projectDir, "verify"), "");
+        assertProcessSucceeds(run(this.projectDir, "fix"));
+        assertProcessSucceeds(run(this.projectDir, "verify"));
     }
 
     @Test
@@ -58,7 +62,9 @@ class ProjectKeeperLauncherExecutableJarIT {
     }
 
     private Process run(final Path workingDir, final String... args) throws IOException {
-        final Path jar = Paths.get("target/project-keeper-cli-2.4.3.jar").toAbsolutePath();
+        final String artifactPrefix = "project-keeper-cli";// we need to split this in two lines so that it's not
+                                                           // replaced by the artifact-reference-checker
+        final Path jar = Paths.get("target/" + artifactPrefix + "-" + CURRENT_VERSION + ".jar").toAbsolutePath();
         if (!Files.exists(jar)) {
             fail("Jar " + jar + " not found. Run 'mvn package' to build it.");
         }
@@ -66,6 +72,10 @@ class ProjectKeeperLauncherExecutableJarIT {
         commandLine.addAll(asList(args));
         LOGGER.info("Launching command " + commandLine + " in working dir '" + workingDir + "'...");
         return new ProcessBuilder(commandLine).directory(workingDir.toFile()).redirectErrorStream(false).start();
+    }
+
+    private void assertProcessSucceeds(final Process process) throws InterruptedException {
+        assertProcessSucceeds(process, "");// no assertion on message
     }
 
     private void assertProcessSucceeds(final Process process, final String expectedMessage)

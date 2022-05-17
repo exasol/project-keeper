@@ -4,9 +4,11 @@ Code name: Fixed standalone mode for maven projects
 
 ## Summary
 
+This version fixes the validation and fixing of maven projects using the project-keeper-cli.
+
 ## Bug Fixes
 
-* #305: Fixed standalone mode for maven projects
+* #305: Fixed project-keeper-cli for maven projects
 
 ## Dependency Updates
 
@@ -33,6 +35,7 @@ Code name: Fixed standalone mode for maven projects
 
 #### Test Dependency Updates
 
+* Added `com.exasol:maven-project-version-getter:1.1.0`
 * Updated `com.exasol:project-keeper-shared-test-setup:2.4.2` to `2.4.3`
 * Removed `org.apache.maven:maven-model:3.8.5`
 
