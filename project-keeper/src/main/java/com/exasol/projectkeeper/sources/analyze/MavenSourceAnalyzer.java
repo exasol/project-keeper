@@ -54,10 +54,6 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                 .map(ProjectKeeperConfig.Source::getPath).collect(Collectors.toList());
         if (mvnSourcePaths.isEmpty()) {
             return emptyMap();
-        } else if (this.ownVersion == null) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-145")
-                    .message("Analyzing Maven projects in standalone mode is not supported.")
-                    .mitigation("Use project-keeper-maven-plugin for analyzing Maven projects.").toString());
         } else {
             return new JavaProjectCrawlerRunner(this.mvnRepositoryOverride, this.ownVersion)
                     .crawlProject(mvnSourcePaths.toArray(Path[]::new)).getCrawledProjects();
