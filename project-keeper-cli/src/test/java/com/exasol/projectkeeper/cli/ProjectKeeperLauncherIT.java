@@ -47,20 +47,23 @@ class ProjectKeeperLauncherIT {
 
     @Test
     void runMainMethodWithNullArgumentFails() throws IOException, InterruptedException {
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, ()-> ProjectKeeperLauncher.main(null));
-        assertThat(exception.getMessage(), equalTo("E-PK-CLI-2: Got no or invalid command line argument 'null'. Please only specify arguments 'verify' or 'fix'."));
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> ProjectKeeperLauncher.main(null));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CLI-2: Got no or invalid command line argument 'null'. Please only specify arguments 'verify' or 'fix'."));
     }
 
     @Test
     void verifyFailsForProjectWithoutGit() throws IOException, InterruptedException {
-        assertProcessFails("verify", "E-PK-CORE-90: Could not find .git directory in project-root " + projectDir
+        assertProcessFails("verify", "E-PK-CORE-90: Could not find .git directory in project-root " + this.projectDir
                 + ". Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'.");
     }
 
     @Test
-    void cliDoesNotSupportMavenProjects() throws InterruptedException, IOException {
+    void fixingJavaProjectSucceeds() throws InterruptedException, IOException {
         prepareMavenProject();
-        assertProcessFails("fix", "F-PK-CORE-145: Analyzing Maven projects in standalone mode is not supported. Use project-keeper-maven-plugin for analyzing Maven projects.");
+        assertProcessSucceeds("fix");
+        assertProcessSucceeds("verify");
     }
 
     @Test

@@ -124,10 +124,11 @@
 
 ### Compile Dependencies
 
-| Dependency                 | License               |
-| -------------------------- | --------------------- |
-| [Project keeper core][71]  | [The MIT License][72] |
-| [error-reporting-java][11] | [MIT][12]             |
+| Dependency                 | License                           |
+| -------------------------- | --------------------------------- |
+| [Project keeper core][71]  | [The MIT License][72]             |
+| [error-reporting-java][11] | [MIT][12]                         |
+| [Maven Model][90]          | [Apache License, Version 2.0][23] |
 
 ### Test Dependencies
 
@@ -137,7 +138,6 @@
 | [JUnit Jupiter Engine][14]             | [Eclipse Public License v2.0][15] |
 | [JUnit Jupiter Params][14]             | [Eclipse Public License v2.0][15] |
 | [Hamcrest][18]                         | [BSD License 3][19]               |
-| [Maven Model][90]                      | [Apache License, Version 2.0][23] |
 
 ### Runtime Dependencies
 

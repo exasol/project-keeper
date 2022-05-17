@@ -24,12 +24,18 @@ public class ProjectKeeperLauncher {
     private final Path currentWorkingDir;
 
     ProjectKeeperLauncher(final Path currentWorkingDir) {
-        this.currentWorkingDir = currentWorkingDir.toAbsolutePath();
+        try {
+            this.currentWorkingDir = currentWorkingDir.toAbsolutePath().toRealPath();
+        } catch (final IOException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CLI-4")
+                    .message("Failed to get absolute path of current directory.").toString(), exception);
+        }
     }
 
     @SuppressWarnings("java:S4792") // Logger configuration is safe, we don't log sensitive information.
     private static void configureLogging() {
-        try (InputStream is = ProjectKeeperLauncher.class.getClassLoader().getResourceAsStream("logging.properties")) {
+        try (final InputStream is = ProjectKeeperLauncher.class.getClassLoader()
+                .getResourceAsStream("logging.properties")) {
             LogManager.getLogManager().readConfiguration(is);
         } catch (final IOException exception) {
             LOGGER.log(Level.WARNING, ExaError.messageBuilder("W-PK-CLI-3")

@@ -26,15 +26,6 @@ class MavenSourceAnalyzerTest {
     }
 
     @Test
-    void analyzingSourcesWithoutOwnVersionFails() {
-        final List<Source> mavenSources = createMavenSources();
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> analyze(null, mavenSources));
-        assertThat(exception.getMessage(), equalTo(
-                "F-PK-CORE-145: Analyzing Maven projects in standalone mode is not supported. Use project-keeper-maven-plugin for analyzing Maven projects."));
-    }
-
-    @Test
     void analyzingSourcesWithInvalidOwnVersionFails() {
         final List<Source> mavenSources = createMavenSources();
         final IllegalStateException exception = assertThrows(IllegalStateException.class,

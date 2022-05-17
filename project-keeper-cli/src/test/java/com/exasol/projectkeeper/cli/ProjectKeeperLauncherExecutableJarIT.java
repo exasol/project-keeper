@@ -27,10 +27,10 @@ class ProjectKeeperLauncherExecutableJarIT {
     Path projectDir;
 
     @Test
-    void cliDoesNotSupportMavenProjects() throws InterruptedException, IOException {
+    void fixingMavenProjectSucceeds() throws InterruptedException, IOException {
         prepareMavenProject();
-        assertProcessFails(run(this.projectDir, "fix"), 1,
-                "F-PK-CORE-145: Analyzing Maven projects in standalone mode is not supported");
+        assertProcessSucceeds(run(this.projectDir, "fix"), "");
+        assertProcessSucceeds(run(this.projectDir, "verify"), "");
     }
 
     @Test
@@ -58,7 +58,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     }
 
     private Process run(final Path workingDir, final String... args) throws IOException {
-        final Path jar = Paths.get("target/project-keeper-cli-2.4.2.jar").toAbsolutePath();
+        final Path jar = Paths.get("target/project-keeper-cli-2.4.3.jar").toAbsolutePath();
         if (!Files.exists(jar)) {
             fail("Jar " + jar + " not found. Run 'mvn package' to build it.");
         }
