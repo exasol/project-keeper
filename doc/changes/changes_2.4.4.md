@@ -1,12 +1,11 @@
-# Project Keeper 2.4.4, released 2022-05-??
+# Project Keeper 2.4.4, released 2022-05-24
 
-Code name:
-
-## Summary
+Code name: Fixed link checker and improved error message
 
 ## Bugfixes
 
 * #308: Fixed broken link checker by ignoring links to `opensource.org`
+* #307: Fixed unreadable error when specifying go dir instead of go.mod
 
 ## Dependency Updates
 
