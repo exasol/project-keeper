@@ -2,7 +2,7 @@ name: Broken Links Checker
 
 on:
   schedule:
-    - cron: "0 5 * * *"
+    - cron: "0 5 * * 0"
   push:
     branches:
       - main
