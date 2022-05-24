@@ -29,7 +29,7 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>2.4.3</revision>
+        <revision>2.4.4</revision>
         <maven.version>3.8.5</maven.version>
         <junit.version>5.8.2</junit.version>
         <junit.platform.version>1.6.2</junit.platform.version>
