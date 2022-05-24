@@ -50,7 +50,7 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         if (!source.getPath().getFileName().equals(Path.of("go.mod"))) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-133")
                     .message("Invalid path {{path}} for go source.", source.getPath())
-                    .mitigation("The path must point to a  \"go.mod\" file.").toString());
+                    .mitigation("The path must point to a \"go.mod\" file.").toString());
         }
         final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("go.mod"));
         final Path moduleDir = source.getPath().getParent();

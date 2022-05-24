@@ -27,6 +27,6 @@ class GolangSourceAnalyzerTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> analyzer.analyze(this.tempDir, sources));
         assertThat(exception.getMessage(), matchesPattern(
-                "\\QE-PK-CORE-133: Invalid path \\E.*\\Q for go source. The path must point to a  \"go.mod\" file.\\E"));
+                "\\QE-PK-CORE-133: Invalid path \\E.*\\Q for go source. The path must point to a \"go.mod\" file.\\E"));
     }
 }
