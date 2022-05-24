@@ -336,6 +336,7 @@
 [12]: https://opensource.org/licenses/MIT
 [24]: https://github.com/mockito/mockito
 [224]: http://maven.apache.org/
+[35]: https://www.mojohaus.org/flatten-maven-plugin/
 [94]: https://github.com/exasol/maven-project-version-getter
 [43]: http://www.mojohaus.org/versions-maven-plugin/
 [71]: https://github.com/exasol/project-keeper/
@@ -358,7 +359,6 @@
 [14]: https://junit.org/junit5/
 [88]: https://bitbucket.org/snakeyaml/snakeyaml
 [286]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
-[35]: https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin
 [2]: https://github.com/eclipse-ee4j/jsonp
 [49]: https://maven.apache.org/plugins/maven-source-plugin/
 [4]: https://projects.eclipse.org/license/secondary-gpl-2.0-cp
@@ -384,7 +384,6 @@
 [23]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [22]: https://www.jqno.nl/equalsverifier
 [33]: https://maven.apache.org/enforcer/maven-enforcer-plugin/
-[55]: https://awhitford.github.com/lombok.maven/lombok-maven-plugin/
 [15]: https://www.eclipse.org/legal/epl-v20.html
 [67]: http://maven.apache.org/plugins/maven-install-plugin/
 [37]: https://sonatype.github.io/ossindex-maven/maven-plugin/
@@ -392,6 +391,7 @@
 [47]: https://maven.apache.org/plugins/maven-gpg-plugin/
 [20]: https://github.com/itsallcode/junit5-system-extensions
 [106]: https://github.com/exasol/maven-plugin-integration-testing
+[55]: https://anthonywhitford.com/lombok.maven/lombok-maven-plugin/
 [69]: http://maven.apache.org/plugins/maven-site-plugin/
 [421]: http://maven.apache.org/plugins/maven-deploy-plugin/
 [51]: https://maven.apache.org/plugins/maven-javadoc-plugin/
