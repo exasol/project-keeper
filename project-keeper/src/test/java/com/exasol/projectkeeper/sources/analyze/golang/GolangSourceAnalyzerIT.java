@@ -21,7 +21,7 @@ import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 
-class GolangSourceAnalyzerTest {
+class GolangSourceAnalyzerIT {
 
     @TempDir
     Path projectDir;
