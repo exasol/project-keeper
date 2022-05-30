@@ -45,14 +45,23 @@ public class GolangProjectFixture {
                 .versionConfig(new ProjectKeeperConfig.FixedVersion(PROJECT_VERSION));
     }
 
+    public ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfigWithAbsolutePath() {
+        return ProjectKeeperConfig.builder()
+                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
+                        .path(this.projectDir.resolve("go.mod")).build()))
+                .versionConfig(new ProjectKeeperConfig.FixedVersion(PROJECT_VERSION));
+    }
+
     public void prepareProjectFiles(final ProjectKeeperConfigBuilder configBuilder) {
         this.writeConfig(configBuilder);
         this.prepareProjectFiles();
     }
 
-    private void prepareProjectFiles() {
+    public void prepareProjectFiles() {
         writeGoModFile();
         writeMainGoFile();
+        writeTestGoFile();
+        splitAndExecute("go get");
         splitAndExecute("go mod tidy");
     }
 
@@ -70,6 +79,7 @@ public class GolangProjectFixture {
 
     private void writeGoModFile() {
         final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.3.1",
+                "github.com/exasol/exasol-test-setup-abstraction-server/go-client v0.0.0-20220520062645-0dd00179907c",
                 "github.com/exasol/error-reporting-go v0.1.1 // indirect");
         final String content = "module " + GO_MODULE_NAME + "\n" //
                 + "go " + GO_VERSION + "\n" //
@@ -88,9 +98,24 @@ public class GolangProjectFixture {
     }
 
     private void writeMainGoFile() {
-        final String content = "package main\n" + "import (\n" + "    \"github.com/exasol/exasol-driver-go\"\n" + ")\n"
-                + "func main() {\n" + "    exasol.NewConfig(\"sys\", \"exasol\")\n" + "}\n";
+        final String content = "package main\n" //
+                + "import (\n" //
+                + "    \"github.com/exasol/exasol-driver-go\"\n" //
+                + ")\n" //
+                + "func main() {\n" //
+                + "    exasol.NewConfig(\"sys\", \"exasol\")\n" //
+                + "}\n";
         writeFile(this.projectDir.resolve("main.go"), content);
+    }
+
+    private void writeTestGoFile() {
+        final String content = "package main\n" //
+                + "import (\n" //
+                + "    testSetupAbstraction \"github.com/exasol/exasol-test-setup-abstraction-server/go-client\"\n" //
+                + ")\n" //
+                + "func myTest() {\n" + "    exasol := testSetupAbstraction.Create(\"myConfig.json\")\n"
+                + "    connection := exasol.CreateConnection()\n" + "}\n";
+        writeFile(this.projectDir.resolve("main_test.go"), content);
     }
 
     private void splitAndExecute(final String command) {

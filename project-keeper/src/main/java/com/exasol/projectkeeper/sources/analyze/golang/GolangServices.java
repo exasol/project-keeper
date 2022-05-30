@@ -51,13 +51,17 @@ class GolangServices {
     // [impl -> dsn~golang-project-version~1]
     private static String extractVersion(final ProjectKeeperConfig config) {
         final VersionConfig versionConfig = config.getVersionConfig();
-        if (versionConfig instanceof FixedVersion) {
+        if (versionConfig == null) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-146")
+                    .message("Version config is missing.")
+                    .mitigation("Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3.").toString());
+        } else if (versionConfig instanceof FixedVersion) {
             return ((FixedVersion) versionConfig).getVersion();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-136")
-                    .message("Version config has unexpected type {{type}}, expected a fixed version",
+                    .message("Version config has unexpected type {{type}}, expected a fixed version.",
                             versionConfig.getClass().getName())
-                    .mitigation("Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3").toString());
+                    .mitigation("Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3.").toString());
         }
     }
 
@@ -74,19 +78,29 @@ class GolangServices {
         final Map<String, GolangDependencyLicense> golangLicenses = getLicenses(projectPath, "./...");
         for (final Dependency dependency : moduleInfo.getDependencies()) {
             final String moduleName = dependency.getModuleName();
-            final GolangDependencyLicense license = golangLicenses.get(moduleName);
+            GolangDependencyLicense license = golangLicenses.get(moduleName);
+            Type dependencyType = Type.COMPILE;
             if (license == null) {
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-143").message(
-                        "No license found for dependency module {{module name}}, all licenses: {{all licenses}}",
-                        moduleName, golangLicenses).toString());
+                dependencyType = Type.TEST;
+                license = getLicenseForTestDependency(projectPath, moduleName);
             }
             final String websiteUrl = null;
-            final Type dependencyType = Type.COMPILE;
             dependencies.add(ProjectDependency.builder().name(moduleName).type(dependencyType).websiteUrl(websiteUrl)
                     .licenses(List.of(license.toLicense())) //
                     .build());
         }
         return dependencies;
+    }
+
+    private GolangDependencyLicense getLicenseForTestDependency(final Path projectPath, final String moduleName) {
+        final Map<String, GolangDependencyLicense> licenses = getLicenses(projectPath, moduleName);
+        final GolangDependencyLicense license = licenses.get(moduleName);
+        if (license == null) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-147").message(
+                    "No license found for test dependency module {{module name}}, all licenses: {{all licenses}}",
+                    moduleName, licenses).toString());
+        }
+        return license;
     }
 
     private Map<String, GolangDependencyLicense> getLicenses(final Path projectPath, final String module) {
