@@ -10,6 +10,12 @@ Code name:
 
 ## Dependency Updates
 
+### Project-Keeper Shared Model Classes
+
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:4.5.1` to `4.6.0`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -23,6 +29,7 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.4.4` to `2.4.5`
+* Updated `org.mockito:mockito-core:4.5.1` to `4.6.0`
 
 ### Project Keeper Command Line Interface
 
@@ -40,11 +47,19 @@ Code name:
 
 * Updated `com.exasol:project-keeper-core:2.4.4` to `2.4.5`
 
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:4.5.1` to `4.6.0`
+
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.4.4` to `2.4.5`
+
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:4.5.1` to `4.6.0`
 
 ### Project Keeper Shared Test Setup
 

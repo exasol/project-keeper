@@ -61,7 +61,7 @@
             <plugin>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
                 <groupId>com.exasol</groupId>
-                <version>1.1.0</version>
+                <version>1.1.1</version>
                 <executions>
                     <execution>
                         <phase>verify</phase>
