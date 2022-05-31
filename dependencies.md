@@ -84,7 +84,7 @@
 | [JUnit Jupiter Params][14]              | [Eclipse Public License v2.0][15]              |
 | [Hamcrest][18]                          | [BSD License 3][19]                            |
 | [org.xmlunit:xmlunit-matchers][78]      | [The Apache Software License, Version 2.0][36] |
-| [mockito-core][24]                      | [The MIT License][25]                          |
+| [mockito-junit-jupiter][24]             | [The MIT License][25]                          |
 | [Maven Plugin Integration Testing][106] | [MIT][12]                                      |
 
 ### Runtime Dependencies

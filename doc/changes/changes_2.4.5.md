@@ -29,7 +29,8 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.4.4` to `2.4.5`
-* Updated `org.mockito:mockito-core:4.5.1` to `4.6.0`
+* Removed `org.mockito:mockito-core:4.5.1`
+* Added `org.mockito:mockito-junit-jupiter:4.6.0`
 
 ### Project Keeper Command Line Interface
 
