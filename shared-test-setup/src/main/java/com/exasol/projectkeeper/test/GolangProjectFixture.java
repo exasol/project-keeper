@@ -20,6 +20,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 
 public class GolangProjectFixture {
     private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
+    private static final String GO_MOD_FILE_NAME = "go.mod";
     private static final String GO_MODULE_NAME = "github.com/exasol/my-module";
     private static final String GO_VERSION = "1.17";
     private static final String PROJECT_VERSION = "1.2.3";
@@ -41,14 +42,7 @@ public class GolangProjectFixture {
     public ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfig() {
         return ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
-                        .path(Path.of("go.mod")).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion(PROJECT_VERSION));
-    }
-
-    public ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfigWithAbsolutePath() {
-        return ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
-                        .path(this.projectDir.resolve("go.mod")).build()))
+                        .path(Path.of(GO_MOD_FILE_NAME)).build()))
                 .versionConfig(new ProjectKeeperConfig.FixedVersion(PROJECT_VERSION));
     }
 
@@ -86,7 +80,7 @@ public class GolangProjectFixture {
                 + "require (\n" //
                 + "\t" + String.join("\n\t", dependencies) + "\n" //
                 + ")\n";
-        writeFile(this.projectDir.resolve("go.mod"), content);
+        writeFile(this.projectDir.resolve(GO_MOD_FILE_NAME), content);
     }
 
     private void writeFile(final Path path, final String content) {

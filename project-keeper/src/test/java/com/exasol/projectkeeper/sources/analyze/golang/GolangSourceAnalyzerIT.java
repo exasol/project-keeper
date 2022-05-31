@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.GOLANG;
+import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -13,8 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.VersionFromSource;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
@@ -38,7 +38,8 @@ class GolangSourceAnalyzerIT {
     void testInvalidPath() {
         final List<Source> sources = List.of(Source.builder().type(GOLANG).path(this.projectDir).build());
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder().sources(sources).build();
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> analyze(config));
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> analyzeSingleProject(config));
         assertThat(exception.getMessage(), matchesPattern(
                 "\\QE-PK-CORE-133: Invalid path \\E.*\\Q for go source. The path must point to a \"go.mod\" file.\\E"));
     }
@@ -46,9 +47,9 @@ class GolangSourceAnalyzerIT {
     @Test
     void testMissingVersionConfig() {
         this.fixture.prepareProjectFiles();
-        final ProjectKeeperConfig config = this.fixture.createDefaultConfigWithAbsolutePath().versionConfig(null)
-                .build();
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> analyze(config));
+        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().versionConfig(null).build();
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> analyzeSingleProject(config));
         assertThat(exception.getMessage(), equalTo(
                 "E-PK-CORE-146: Version config is missing. Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3."));
     }
@@ -56,9 +57,10 @@ class GolangSourceAnalyzerIT {
     @Test
     void testWrongVersionConfigType() {
         this.fixture.prepareProjectFiles();
-        final ProjectKeeperConfig config = this.fixture.createDefaultConfigWithAbsolutePath()
+        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath()
                 .versionConfig(new VersionFromSource(this.projectDir.resolve("file"))).build();
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> analyze(config));
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> analyzeSingleProject(config));
         assertThat(exception.getMessage(), equalTo(
                 "E-PK-CORE-136: Version config has unexpected type 'com.exasol.projectkeeper.shared.config.ProjectKeeperConfig$VersionFromSource', expected a fixed version. Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3."));
     }
@@ -66,10 +68,8 @@ class GolangSourceAnalyzerIT {
     @Test
     void testGetDependencyLicenses() {
         this.fixture.prepareProjectFiles();
-        final ProjectKeeperConfig config = this.fixture.createDefaultConfigWithAbsolutePath().build();
-        final List<AnalyzedSource> analyzedSources = analyze(config);
-        assertThat(analyzedSources, hasSize(1));
-        final List<ProjectDependency> dependencies = analyzedSources.get(0).getDependencies().getDependencies();
+        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().build();
+        final List<ProjectDependency> dependencies = analyzeSingleProject(config).getDependencies().getDependencies();
         assertThat(dependencies, hasSize(2));
         final ProjectDependency dependency1 = ProjectDependency.builder().name("github.com/exasol/exasol-driver-go")
                 .licenses(List.of(new License("MIT", "https://github.com/exasol/exasol-driver-go/blob/v0.4.0/LICENSE")))
@@ -82,8 +82,24 @@ class GolangSourceAnalyzerIT {
         assertThat(dependencies, contains(dependency1, dependency2));
     }
 
-    private List<AnalyzedSource> analyze(final ProjectKeeperConfig config) {
+    @Test
+    void testGetProjectVersion() {
+        this.fixture.prepareProjectFiles();
+        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().build();
+        assertThat(analyzeSingleProject(config).getVersion(), equalTo("1.2.3"));
+    }
+
+    private AnalyzedSource analyzeSingleProject(final ProjectKeeperConfig config) {
         final GolangSourceAnalyzer analyzer = new GolangSourceAnalyzer(config);
-        return analyzer.analyze(this.projectDir, config.getSources());
+        final List<AnalyzedSource> analyzedSources = analyzer.analyze(this.projectDir, config.getSources());
+        assertThat(analyzedSources, hasSize(1));
+        return analyzedSources.get(0);
+    }
+
+    private ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfigWithAbsolutePath() {
+        return ProjectKeeperConfig.builder()
+                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
+                        .path(this.projectDir.resolve("go.mod")).build()))
+                .versionConfig(new ProjectKeeperConfig.FixedVersion("1.2.3"));
     }
 }

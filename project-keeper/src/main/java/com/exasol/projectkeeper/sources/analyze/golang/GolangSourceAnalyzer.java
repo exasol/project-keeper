@@ -10,7 +10,6 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -25,7 +24,7 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     /**
      * Create a new Golang analyzer using the given project keeper configuration.
-     * 
+     *
      * @param config the project keeper configuration
      */
     public GolangSourceAnalyzer(final ProjectKeeperConfig config) {
@@ -42,6 +41,25 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     }
 
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
+        validateGolangSource(source);
+        final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("go.mod"));
+        final Path moduleDir = source.getPath().getParent();
+        final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(moduleDir);
+        final String projectName = source.getPath().normalize().getParent().getFileName().toString();
+        return AnalyzedGolangSource.builder() //
+                .version(this.golangServices.getProjectVersion()) //
+                .isRootProject(isRoot) //
+                .advertise(source.isAdvertise()) //
+                .modules(source.getModules()) //
+                .path(source.getPath()) //
+                .projectName(projectName).moduleName(moduleInfo.getModuleName()) //
+                .dependencies(
+                        GolangDependencyCalculator.calculateDependencies(this.golangServices, projectDir, moduleInfo)) //
+                .dependencyChanges(calculateDependencyChanges(projectDir, source)) //
+                .build();
+    }
+
+    private void validateGolangSource(final Source source) {
         if (source.getType() != SourceType.GOLANG) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-130")
                     .message("Analyzing of {{type}} is not supported by GolangSourceAnalyzer", source.getType())
@@ -52,21 +70,15 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .message("Invalid path {{path}} for go source.", source.getPath())
                     .mitigation("The path must point to a \"go.mod\" file.").toString());
         }
-        final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("go.mod"));
-        final Path moduleDir = source.getPath().getParent();
-        final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(moduleDir);
-        final String projectName = source.getPath().normalize().getParent().getFileName().toString();
-        final ProjectDependencies dependencies = new ProjectDependencies(
-                this.golangServices.getDependencies(moduleInfo, moduleDir));
+    }
+
+    private DependencyChangeReport calculateDependencyChanges(final Path projectDir, final Source source) {
         final DependencyChangeReport dependencyChanges = new DependencyChangeReport();
         dependencyChanges
                 .setCompileDependencyChanges(this.golangServices.getDependencyChanges(projectDir, source.getPath()));
         dependencyChanges.setPluginDependencyChanges(emptyList());
         dependencyChanges.setRuntimeDependencyChanges(emptyList());
         dependencyChanges.setTestDependencyChanges(emptyList());
-        return AnalyzedGolangSource.builder().version(null).isRootProject(isRoot).advertise(source.isAdvertise())
-                .modules(source.getModules()).path(source.getPath()).projectName(projectName)
-                .moduleName(moduleInfo.getModuleName()).dependencies(dependencies).dependencyChanges(dependencyChanges)
-                .build();
+        return dependencyChanges;
     }
 }

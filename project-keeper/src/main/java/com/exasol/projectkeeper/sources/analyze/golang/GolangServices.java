@@ -20,8 +20,6 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.FixedVersion;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.VersionConfig;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
@@ -65,45 +63,7 @@ class GolangServices {
         }
     }
 
-    /**
-     * Get the dependencies of a Golang project including their licenses.
-     *
-     * @param moduleInfo  the module info of the project
-     * @param projectPath the project path
-     * @return dependencies incl. licenses
-     */
-    // [impl -> dsn~golang-dependency-licenses~1]
-    List<ProjectDependency> getDependencies(final ModuleInfo moduleInfo, final Path projectPath) {
-        final List<ProjectDependency> dependencies = new ArrayList<>(moduleInfo.getDependencies().size());
-        final Map<String, GolangDependencyLicense> golangLicenses = getLicenses(projectPath, "./...");
-        for (final Dependency dependency : moduleInfo.getDependencies()) {
-            final String moduleName = dependency.getModuleName();
-            GolangDependencyLicense license = golangLicenses.get(moduleName);
-            Type dependencyType = Type.COMPILE;
-            if (license == null) {
-                dependencyType = Type.TEST;
-                license = getLicenseForTestDependency(projectPath, moduleName);
-            }
-            final String websiteUrl = null;
-            dependencies.add(ProjectDependency.builder().name(moduleName).type(dependencyType).websiteUrl(websiteUrl)
-                    .licenses(List.of(license.toLicense())) //
-                    .build());
-        }
-        return dependencies;
-    }
-
-    private GolangDependencyLicense getLicenseForTestDependency(final Path projectPath, final String moduleName) {
-        final Map<String, GolangDependencyLicense> licenses = getLicenses(projectPath, moduleName);
-        final GolangDependencyLicense license = licenses.get(moduleName);
-        if (license == null) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-147").message(
-                    "No license found for test dependency module {{module name}}, all licenses: {{all licenses}}",
-                    moduleName, licenses).toString());
-        }
-        return license;
-    }
-
-    private Map<String, GolangDependencyLicense> getLicenses(final Path projectPath, final String module) {
+    Map<String, GolangDependencyLicense> getLicenses(final Path projectPath, final String module) {
         final SimpleProcess process;
         try {
             process = GoProcess.start(projectPath, List.of("go-licenses", "csv", module));
@@ -204,9 +164,13 @@ class GolangServices {
     private Optional<String> getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
         try (GitRepository repo = GitRepository.open(projectDir)) {
             final Path relativeModFilePath = projectDir.relativize(modFile);
-            return repo.findLatestReleaseCommit(this.projectVersion.get())
+            return repo.findLatestReleaseCommit(getProjectVersion())
                     .map(tag -> getContent(repo, relativeModFilePath, tag));
         }
+    }
+
+    String getProjectVersion() {
+        return this.projectVersion.get();
     }
 
     private String getContent(final GitRepository repo, final Path relativeModFilePath, final TaggedCommit tag) {
