@@ -57,6 +57,11 @@
             <artifactId>maven-project-version-getter</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>project-keeper-core</artifactId>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
         <plugins>

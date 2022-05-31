@@ -1,15 +1,12 @@
 package com.exasol.projectkeeper.cli;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.IOException;
 import java.nio.file.*;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -18,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
+import com.exasol.projectkeeper.sources.analyze.golang.SimpleProcess;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 
@@ -40,10 +38,8 @@ class ProjectKeeperLauncherExecutableJarIT {
     @Test
     void fixingGolangProjectSucceeds() throws InterruptedException, IOException {
         prepareGolangProject();
-        assertProcessSucceeds(run(this.projectDir, "fix"),
-                "[WARNING] Created '.gitignore'. Don't forget to update it's content!");
-        assertProcessSucceeds(run(this.projectDir, "verify"),
-                "[WARNING] W-PK-CORE-91: For this project structure project keeper does not know how to configure ci-build. Please create the required actions on your own.");
+        assertProcessSucceeds(run(this.projectDir, "fix"));
+        assertProcessSucceeds(run(this.projectDir, "verify"));
     }
 
     private void prepareMavenProject() {
@@ -61,7 +57,7 @@ class ProjectKeeperLauncherExecutableJarIT {
         fixture.prepareProjectFiles(fixture.createDefaultConfig());
     }
 
-    private Process run(final Path workingDir, final String... args) throws IOException {
+    private SimpleProcess run(final Path workingDir, final String... args) throws IOException {
         final String artifactPrefix = "project-keeper-cli";// we need to split this in two lines so that it's not
                                                            // replaced by the artifact-reference-checker
         final Path jar = Paths.get("target/" + artifactPrefix + "-" + CURRENT_VERSION + ".jar").toAbsolutePath();
@@ -71,41 +67,10 @@ class ProjectKeeperLauncherExecutableJarIT {
         final List<String> commandLine = new ArrayList<>(List.of("java", "-jar", jar.toString()));
         commandLine.addAll(asList(args));
         LOGGER.info("Launching command " + commandLine + " in working dir '" + workingDir + "'...");
-        return new ProcessBuilder(commandLine).directory(workingDir.toFile()).redirectErrorStream(false).start();
+        return SimpleProcess.start(workingDir, commandLine);
     }
 
-    private void assertProcessSucceeds(final Process process) throws InterruptedException {
-        assertProcessSucceeds(process, "");// no assertion on message
-    }
-
-    private void assertProcessSucceeds(final Process process, final String expectedMessage)
-            throws InterruptedException {
-        final int exitCode = process.waitFor();
-        final String stdOut = readString(process.getInputStream());
-        final String stdErr = readString(process.getErrorStream());
-        if (exitCode != 0) {
-            LOGGER.warning("Process failed with message\n---\n" + stdErr + "\n---");
-        }
-        assertAll(() -> assertThat("exit code", exitCode, equalTo(0)), //
-                () -> assertThat("std error", stdErr, containsString(expectedMessage)), //
-                () -> assertThat("std output", stdOut, equalTo("")));
-    }
-
-    private void assertProcessFails(final Process process, final int expectedExitCode,
-            final String expectedErrorMessage) throws InterruptedException, IOException {
-        final int exitCode = process.waitFor();
-        final String stdOut = readString(process.getInputStream());
-        final String stdErr = readString(process.getErrorStream());
-        assertAll(() -> assertThat(exitCode, equalTo(expectedExitCode)), //
-                () -> assertThat(stdOut, equalTo("")), //
-                () -> assertThat(stdErr, containsString(expectedErrorMessage)));
-    }
-
-    private String readString(final InputStream stream) {
-        try {
-            return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (final IOException exception) {
-            throw new UncheckedIOException(exception);
-        }
+    private void assertProcessSucceeds(final SimpleProcess process) {
+        process.getOutput(Duration.ofSeconds(60));
     }
 }
