@@ -86,7 +86,7 @@ class ProjectKeeperLauncherExecutableJarIT {
         if (exitCode != 0) {
             LOGGER.warning("Process failed with message\n---\n" + stdErr + "\n---");
         }
-        assertAll(() -> assertThat(exitCode, equalTo(0)), //
+        assertAll(() -> assertThat("exit code", exitCode, equalTo(0)), //
                 () -> assertThat("std error", stdErr, containsString(expectedMessage)), //
                 () -> assertThat("std output", stdOut, equalTo("")));
     }
