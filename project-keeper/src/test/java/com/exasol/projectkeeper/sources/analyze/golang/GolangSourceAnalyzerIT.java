@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -74,8 +73,9 @@ class GolangSourceAnalyzerIT {
         this.fixture.prepareProjectFiles();
         final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
-        assertDependencyLicenses(analyzedProject.getDependencies().getDependencies());
-        assertDependencyChanges(analyzedProject.getDependencyChanges());
+        assertAll( //
+                () -> assertDependencyLicenses(analyzedProject.getDependencies().getDependencies()),
+                () -> assertDependencyChanges(analyzedProject.getDependencyChanges()));
     }
 
     private void assertDependencyChanges(final DependencyChangeReport dependencyChanges) {
@@ -93,7 +93,6 @@ class GolangSourceAnalyzerIT {
     }
 
     private void assertDependencyLicenses(final List<ProjectDependency> dependencies) {
-        assertThat(dependencies, hasSize(2));
         final ProjectDependency dependency1 = ProjectDependency.builder().name("github.com/exasol/exasol-driver-go")
                 .licenses(List.of(new License("MIT", "https://github.com/exasol/exasol-driver-go/blob/v0.4.0/LICENSE")))
                 .type(Type.COMPILE).build();
@@ -102,7 +101,8 @@ class GolangSourceAnalyzerIT {
                 .licenses(List.of(new License("MIT",
                         "https://github.com/exasol/exasol-test-setup-abstraction-server/blob/0dd00179907c/go-client/LICENSE")))
                 .type(Type.TEST).build();
-        assertThat(dependencies, contains(dependency1, dependency2));
+        assertAll(() -> assertThat(dependencies, hasSize(2)),
+                () -> assertThat(dependencies, contains(dependency1, dependency2)));
     }
 
     @Test

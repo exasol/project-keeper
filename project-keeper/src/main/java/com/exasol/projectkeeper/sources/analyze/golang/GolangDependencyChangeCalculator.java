@@ -21,8 +21,8 @@ class GolangDependencyChangeCalculator {
     private final ProjectDependencies dependencies;
     private List<DependencyChange> changes;
 
-    public GolangDependencyChangeCalculator(final GolangServices golangServices, final Path projectDir,
-            final Source source, final ProjectDependencies dependencies) {
+    GolangDependencyChangeCalculator(final GolangServices golangServices, final Path projectDir, final Source source,
+            final ProjectDependencies dependencies) {
         this.golangServices = golangServices;
         this.projectDir = projectDir;
         this.source = source;
@@ -58,7 +58,7 @@ class GolangDependencyChangeCalculator {
                 .map(ProjectDependency::getType) //
                 .findFirst() //
                 .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-148").message(
-                        "Error finding type of dependency {{artifactId}}, all available dependencies: {{all dependencies}}",
+                        "Error finding type of dependency {{artifactId}}, all available dependencies: {{all dependencies}}.",
                         name, this.dependencies.getDependencies()).ticketMitigation().toString()));
     }
 }
