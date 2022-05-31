@@ -50,7 +50,7 @@ class GolangDependencyChangeCalculator {
 
     private Type getType(final DependencyChange change) {
         final String name = change.getArtifactId();
-        if (name.equals(GolangServices.GOLANG_DEPENDENCY_NAME)) {
+        if (isGolangRuntime(name)) {
             return Type.COMPILE;
         }
         return this.dependencies.getDependencies().stream() //
@@ -60,5 +60,9 @@ class GolangDependencyChangeCalculator {
                 .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-148").message(
                         "Error finding type of dependency {{artifactId}}, all available dependencies: {{all dependencies}}.",
                         name, this.dependencies.getDependencies()).ticketMitigation().toString()));
+    }
+
+    private boolean isGolangRuntime(final String name) {
+        return name.equals(GolangServices.GOLANG_DEPENDENCY_NAME);
     }
 }

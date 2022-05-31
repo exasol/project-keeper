@@ -32,7 +32,7 @@ class GolangDependencyChangeCalculatorTest {
     private GolangServices golangServicesMock;
 
     @Test
-    void testNoChanges() {
+    void noChanges() {
         simulateChanges();
         assertReport(calculate(), emptyList(), emptyList());
     }
