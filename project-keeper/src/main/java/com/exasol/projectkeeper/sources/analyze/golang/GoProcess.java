@@ -26,7 +26,8 @@ class GoProcess {
     }
 
     private static Path getGoBinPath() {
-        SimpleProcess process = SimpleProcess.start(List.of("go", "env", "GOPATH"));
-        return Path.of(process.getOutput(Duration.ofSeconds(1)).trim());
+        final SimpleProcess process = SimpleProcess.start(List.of("go", "env", "GOPATH"));
+        process.waitUntilFinished(Duration.ofSeconds(1));
+        return Path.of(process.getOutputStreamContent().trim());
     }
 }

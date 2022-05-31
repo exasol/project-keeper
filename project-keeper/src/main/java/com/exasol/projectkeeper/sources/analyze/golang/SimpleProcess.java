@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.Instant;
@@ -21,23 +20,28 @@ public class SimpleProcess {
     private static final Logger LOGGER = Logger.getLogger(SimpleProcess.class.getName());
 
     private final Process process;
-    private final CollectingConsumer streamConsumer;
+    private final CollectingConsumer outputStreamConsumer;
+    private final CollectingConsumer errorStreamConsumer;
+    private final Path workingDirectory;
     private final List<String> command;
     private final Instant startTime;
 
-    private SimpleProcess(final Process process, final CollectingConsumer streamConsumer, final List<String> command,
+    private SimpleProcess(final Process process, final CollectingConsumer outputStreamConsumer,
+            final CollectingConsumer errorStreamConsumer, final Path workingDirectory, final List<String> command,
             final Instant startTime) {
         this.process = process;
-        this.streamConsumer = streamConsumer;
+        this.outputStreamConsumer = outputStreamConsumer;
+        this.errorStreamConsumer = errorStreamConsumer;
+        this.workingDirectory = workingDirectory;
         this.command = command;
         this.startTime = startTime;
     }
 
     /**
      * Starts a new process using the working directory of the current Java process.
-     * 
+     *
      * @param command the command to execute
-     * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retriev its output
+     * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retrieve its output
      */
     public static SimpleProcess start(final List<String> command) {
         return start(null, command);
@@ -45,11 +49,11 @@ public class SimpleProcess {
 
     /**
      * Starts a new process.
-     * 
+     *
      * @param workingDirectory the directory in which to start the process. Use the working directory of the current
      *                         Java process if {@code null}.
      * @param command          the command to execute
-     * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retriev its output
+     * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retrieve its output
      */
     public static SimpleProcess start(final Path workingDirectory, final List<String> command) {
         LOGGER.fine(() -> "Executing command '" + formatCommand(command) + "' in working dir " + workingDirectory);
@@ -59,9 +63,12 @@ public class SimpleProcess {
                     .redirectErrorStream(false) //
                     .start();
             final Instant startTime = Instant.now();
-            final CollectingConsumer streamConsumer = new AsyncStreamReader()
+            final CollectingConsumer outputStreamConsumer = new AsyncStreamReader()
                     .startCollectingConsumer(process.getInputStream());
-            return new SimpleProcess(process, streamConsumer, command, startTime);
+            final CollectingConsumer errorStreamConsumer = new AsyncStreamReader()
+                    .startCollectingConsumer(process.getErrorStream());
+            return new SimpleProcess(process, outputStreamConsumer, errorStreamConsumer, workingDirectory, command,
+                    startTime);
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-125")
                     .message("Error executing command {{command}}.", String.join(" ", command))
@@ -71,39 +78,45 @@ public class SimpleProcess {
     }
 
     /**
-     * Wait for the process to finish and get its standard output.
-     * 
+     * Wait for the process to finish.
+     *
      * @param executionTimeout the maximum time to wait until the process finishes
-     * @return the standard output of the process
+     * @throws IllegalStateException if the process did not finish within the given timeout
      */
-    public String getOutput(final Duration executionTimeout) {
+    public void waitUntilFinished(final Duration executionTimeout) {
         waitForExecutionFinished(executionTimeout);
         final Duration duration = Duration.between(this.startTime, Instant.now());
         final int exitCode = this.process.exitValue();
-        final String output = getStreamOutput(executionTimeout);
         if (exitCode != 0) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-126").message(
-                    "Failed to run command {{executed command}}, exit code was {{exit code}} after {{duration}}. Output:\n{{std out}}\nError output:\n{{std error}}",
-                    formatCommand(), exitCode, duration, output, getStdError()).toString());
+                    "Failed to run command {{executed command}} in {{working directory}}, exit code was {{exit code}} after {{duration}}. Output:\n{{std out}}\nError output:\n{{std error}}",
+                    formatCommand(), this.workingDirectory, exitCode, duration, getOutputStreamContent(),
+                    getErrorStreamContent()).toString());
         }
         LOGGER.fine(() -> "Command '" + formatCommand() + "' finished successfully after " + duration);
-        LOGGER.finest(() -> "Command output: '" + output + "'");
-        return output;
     }
 
-    private String getStdError() {
-        try (InputStream errorStream = this.process.getErrorStream()) {
-            return new String(errorStream.readAllBytes(), StandardCharsets.UTF_8);
-        } catch (final IOException exception) {
-            throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-127")
-                    .message("Failed to read error stream from command {{command}}", formatCommand()).toString(),
-                    exception);
+    /**
+     * Get the standard output of the process.
+     *
+     * @return the standard output of the process
+     */
+    public String getOutputStreamContent() {
+        try {
+            return this.outputStreamConsumer.getContent(Duration.ofMillis(100));
+        } catch (final InterruptedException exception) {
+            throw handleInterruptedException(exception);
         }
     }
 
-    private String getStreamOutput(final Duration executionTimeout) {
+    /**
+     * Get the error output of the process.
+     *
+     * @return the error output of the process
+     */
+    public String getErrorStreamContent() {
         try {
-            return this.streamConsumer.getContent(executionTimeout);
+            return this.errorStreamConsumer.getContent(Duration.ofMillis(100));
         } catch (final InterruptedException exception) {
             throw handleInterruptedException(exception);
         }
@@ -112,10 +125,10 @@ public class SimpleProcess {
     private void waitForExecutionFinished(final Duration executionTimeout) {
         try {
             if (!this.process.waitFor(executionTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
-                final String output = getOutput(executionTimeout);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128").message(
                         "Timeout while waiting {{timeout|uq}}ms for command {{executed command}}. Output was {{output}}\nError output: {{std error}}",
-                        executionTimeout.toMillis(), formatCommand(), output, getStdError()).toString());
+                        executionTimeout.toMillis(), formatCommand(), getOutputStreamContent(), getErrorStreamContent())
+                        .toString());
             }
         } catch (final InterruptedException exception) {
             throw handleInterruptedException(exception);
