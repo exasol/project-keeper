@@ -1,6 +1,10 @@
 package com.exasol.projectkeeper.cli;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
@@ -11,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -31,15 +36,19 @@ class ProjectKeeperLauncherExecutableJarIT {
     @Test
     void fixingMavenProjectSucceeds() throws InterruptedException, IOException {
         prepareMavenProject();
-        assertProcessSucceeds(run(this.projectDir, "fix"));
-        assertProcessSucceeds(run(this.projectDir, "verify"));
+        assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
+                containsString("[WARNING] Created 'LICENSE'. Don't forget to update it's content!"));
+        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""),
+                containsString("[FINE   ] Executing command"));
     }
 
     @Test
     void fixingGolangProjectSucceeds() throws InterruptedException, IOException {
         prepareGolangProject();
-        assertProcessSucceeds(run(this.projectDir, "fix"));
-        assertProcessSucceeds(run(this.projectDir, "verify"));
+        assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
+                containsString("[WARNING] Created 'LICENSE'. Don't forget to update it's content!"));
+        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""),
+                containsString("[FINE   ] Executing command"));
     }
 
     private void prepareMavenProject() {
@@ -70,7 +79,10 @@ class ProjectKeeperLauncherExecutableJarIT {
         return SimpleProcess.start(workingDir, commandLine);
     }
 
-    private void assertProcessSucceeds(final SimpleProcess process) {
-        process.getOutput(Duration.ofSeconds(60));
+    private void assertProcessSucceeds(final SimpleProcess process, final Matcher<String> expectedOutput,
+            final Matcher<String> expectedError) {
+        process.waitUntilFinished(Duration.ofSeconds(60));
+        assertAll(() -> assertThat("std output", process.getOutputStreamContent(), expectedOutput),
+                () -> assertThat("std error", process.getErrorStreamContent(), expectedError));
     }
 }
