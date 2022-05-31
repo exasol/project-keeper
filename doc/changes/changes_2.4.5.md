@@ -7,6 +7,7 @@ Code name:
 ## Features
 
 * #279: Fixed getting license for Golang test dependencies
+* #316: Added new builtin replacements to BrokenLinkReplacer
 
 ## Dependency Updates
 
