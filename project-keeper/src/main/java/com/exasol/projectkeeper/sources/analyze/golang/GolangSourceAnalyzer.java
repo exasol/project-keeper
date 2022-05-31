@@ -73,5 +73,4 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .mitigation("The path must point to a \"go.mod\" file.").toString());
         }
     }
-
 }

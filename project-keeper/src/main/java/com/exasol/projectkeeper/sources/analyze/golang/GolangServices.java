@@ -75,7 +75,8 @@ class GolangServices {
                     .mitigation("Install it by running 'go install github.com/google/go-licenses@latest'.").toString(),
                     exception);
         }
-        return Arrays.stream(process.getOutput(EXECUTION_TIMEOUT).split("\n")) //
+        process.waitUntilFinished(EXECUTION_TIMEOUT);
+        return Arrays.stream(process.getOutputStreamContent().split("\n")) //
                 .filter(not(String::isBlank)) //
                 .map(this::convertDependencyLicense)
                 .collect(toMap(GolangDependencyLicense::getModuleName, Function.identity()));
@@ -104,7 +105,8 @@ class GolangServices {
      */
     ModuleInfo getModuleInfo(final Path projectPath) {
         final SimpleProcess process = SimpleProcess.start(projectPath, COMMAND_LIST_DIRECT_DEPDENDENCIES);
-        final String[] output = process.getOutput(EXECUTION_TIMEOUT).split("\n");
+        process.waitUntilFinished(EXECUTION_TIMEOUT);
+        final String[] output = process.getOutputStreamContent().split("\n");
         final List<Dependency> dependencies = Arrays.stream(output) //
                 .skip(1) // ignore first line, it is the project itself
                 .map(this::convertDependency) //
