@@ -11,7 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class ProjectDependency {
+public final class ProjectDependency {
     /** Dependency name */
     private String name;
     /** Website url */
