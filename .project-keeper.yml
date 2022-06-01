@@ -68,6 +68,3 @@ sources:
       relativePath: "../parent-pom/pom.xml"
 version:
   fromSource: project-keeper/pom.xml
-linkReplacements:
-  - "https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin|https://www.mojohaus.org/flatten-maven-plugin/"
-  - "https://awhitford.github.com/lombok.maven/lombok-maven-plugin/|https://anthonywhitford.com/lombok.maven/lombok-maven-plugin/"
