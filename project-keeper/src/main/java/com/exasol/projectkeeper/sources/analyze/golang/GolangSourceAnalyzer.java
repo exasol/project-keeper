@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Path;
@@ -10,7 +9,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
-import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
@@ -42,10 +41,13 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
         validateGolangSource(source);
+        final Path sourceDir = projectDir.resolve(source.getPath().getParent());
         final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("go.mod"));
         final Path moduleDir = source.getPath().getParent();
         final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(moduleDir);
         final String projectName = source.getPath().normalize().getParent().getFileName().toString();
+        final ProjectDependencies dependencies = GolangDependencyCalculator.calculateDependencies(this.golangServices,
+                sourceDir, moduleInfo);
         return AnalyzedGolangSource.builder() //
                 .version(this.golangServices.getProjectVersion()) //
                 .isRootProject(isRoot) //
@@ -53,9 +55,9 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                 .modules(source.getModules()) //
                 .path(source.getPath()) //
                 .projectName(projectName).moduleName(moduleInfo.getModuleName()) //
-                .dependencies(
-                        GolangDependencyCalculator.calculateDependencies(this.golangServices, projectDir, moduleInfo)) //
-                .dependencyChanges(calculateDependencyChanges(projectDir, source)) //
+                .dependencies(dependencies) //
+                .dependencyChanges(GolangDependencyChangeCalculator.calculateDepencencyChanges(this.golangServices,
+                        projectDir, source, dependencies)) //
                 .build();
     }
 
@@ -70,15 +72,5 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .message("Invalid path {{path}} for go source.", source.getPath())
                     .mitigation("The path must point to a \"go.mod\" file.").toString());
         }
-    }
-
-    private DependencyChangeReport calculateDependencyChanges(final Path projectDir, final Source source) {
-        final DependencyChangeReport dependencyChanges = new DependencyChangeReport();
-        dependencyChanges
-                .setCompileDependencyChanges(this.golangServices.getDependencyChanges(projectDir, source.getPath()));
-        dependencyChanges.setPluginDependencyChanges(emptyList());
-        dependencyChanges.setRuntimeDependencyChanges(emptyList());
-        dependencyChanges.setTestDependencyChanges(emptyList());
-        return dependencyChanges;
     }
 }
