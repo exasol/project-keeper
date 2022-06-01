@@ -6,12 +6,12 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ReflogEntry;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
@@ -34,7 +34,6 @@ public class GolangProjectFixture implements AutoCloseable {
     public void gitInit() {
         try {
             this.gitRepo = Git.init().setDirectory(this.projectDir.toFile()).setInitialBranch("main").call();
-            final Collection<ReflogEntry> call = this.gitRepo.reflog().call();
         } catch (IllegalStateException | GitAPIException exception) {
             throw new AssertionError("Error running git init: " + exception.getMessage(), exception);
         }
