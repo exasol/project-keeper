@@ -105,6 +105,24 @@ class GolangSourceAnalyzerIT {
                 () -> assertThat("project name", analyzedProject.getProjectName(), equalTo("subdir")));
     }
 
+    @Test
+    void testWithAbsoluteSourcePath() {
+        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.15");
+        this.fixture.gitAddCommitTag("1.2.2");
+        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.16");
+        final Path modPath = this.projectDir.resolve("subdir/go.mod");
+        final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
+                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
+                        .path(modPath).build()))
+                .versionConfig(new ProjectKeeperConfig.FixedVersion(this.fixture.getProjectVersion())).build();
+        final AnalyzedSource analyzedProject = analyzeSingleProject(config);
+        assertAll( //
+                () -> assertCommonProperties(analyzedProject), //
+                () -> assertIsrootProject(analyzedProject, false),
+                () -> assertThat("project path", analyzedProject.getPath(), equalTo(modPath)),
+                () -> assertThat("project name", analyzedProject.getProjectName(), equalTo("subdir")));
+    }
+
     private void assertCommonProperties(final AnalyzedSource analyzedProject) {
         assertAll( //
                 () -> assertDependencyLicenses(analyzedProject.getDependencies().getDependencies()),
