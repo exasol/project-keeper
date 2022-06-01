@@ -1,6 +1,6 @@
 #!/bin/bash
 
-version=2.4.2
+version=2.4.6
 
 target_dir=$HOME/Downloads/pk-release/
 
