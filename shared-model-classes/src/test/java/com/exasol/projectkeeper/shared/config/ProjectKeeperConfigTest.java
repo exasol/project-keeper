@@ -17,6 +17,8 @@ import org.junit.jupiter.api.Test;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.VersionConfig.Visitor;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 class ProjectKeeperConfigTest {
 
     @Test
@@ -58,5 +60,13 @@ class ProjectKeeperConfigTest {
         final FixedVersion version = new ProjectKeeperConfig.FixedVersion("fixed");
         version.accept(visitor);
         verify(visitor).visit(same(version));
+    }
+
+    @Test
+    void equalsContract() {
+        EqualsVerifier
+                .forClasses(Source.class, ParentPomRef.class, VersionFromSource.class, FixedVersion.class,
+                        ProjectKeeperConfig.class) //
+                .verify();
     }
 }
