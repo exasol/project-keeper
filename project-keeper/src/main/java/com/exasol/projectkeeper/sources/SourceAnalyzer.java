@@ -52,7 +52,7 @@ public class SourceAnalyzer {
      *
      * @param projectDir project directory
      * @param sources    configured sources
-     * @return analyzed sources in the same order in the input
+     * @return analyzed sources in the same order as the input
      */
     public List<AnalyzedSource> analyze(final Path projectDir, final List<ProjectKeeperConfig.Source> sources) {
         validateUniqueSourcePaths(sources);

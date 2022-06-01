@@ -3,10 +3,10 @@ package com.exasol.projectkeeper.sources;
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.startsWith;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyList;
@@ -32,7 +32,7 @@ import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 @ExtendWith(MockitoExtension.class)
 class SourceAnalyzerTest {
 
-    private static final Path PROJECT_DIR = null;
+    private static final Path PROJECT_DIR = Paths.get("project-dir");
     @Mock
     private LanguageSpecificSourceAnalyzer golangAnalyzerMock;
     @Mock
@@ -87,11 +87,9 @@ class SourceAnalyzerTest {
                         source("go1", SourceType.GOLANG), //
                         source("maven2", SourceType.MAVEN), //
                         source("go2", SourceType.GOLANG)));
-        assertAll(() -> assertThat(analyzedSources, hasSize(4)),
-                () -> assertThat(analyzedSources.get(0).getPath().toString(), equalTo("maven1")),
-                () -> assertThat(analyzedSources.get(1).getPath().toString(), equalTo("go1")),
-                () -> assertThat(analyzedSources.get(2).getPath().toString(), equalTo("maven2")),
-                () -> assertThat(analyzedSources.get(3).getPath().toString(), equalTo("go2")));
+        final List<String> analzedPaths = analyzedSources.stream().map(source -> source.getPath().toString())
+                .collect(toList());
+        assertThat(analzedPaths, contains("maven1", "go1", "maven2", "go2"));
     }
 
     private AnalyzedSource analyzedSource(final Source originalSource) {
