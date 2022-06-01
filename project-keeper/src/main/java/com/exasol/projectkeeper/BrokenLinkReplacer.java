@@ -15,7 +15,7 @@ import com.exasol.errorreporting.ExaError;
  */
 public class BrokenLinkReplacer {
     private static final String JACOCO_HOMEPAGE = "https://www.eclemma.org/jacoco/index.html";
-    private static final Map<String, String> BUILTIN_REPLACEMENTS = Map.of(//
+    private static final Map<String, String> BUILTIN_REPLACEMENTS_1 = Map.of(//
             "http://org.jacoco.agent", JACOCO_HOMEPAGE, //
             "http://org.jacoco.core", JACOCO_HOMEPAGE, //
             "http://jacoco-maven-plugin", JACOCO_HOMEPAGE, //
@@ -24,10 +24,26 @@ public class BrokenLinkReplacer {
             "https://www.eclipse.org/jgit//org.eclipse.jgit", "https://www.eclipse.org/jgit/", //
             "http://maven.apache.org/maven-project", "http://maven.apache.org/",
             "https://sonatype.github.io/ossindex-maven/ossindex-maven-plugin/",
-            "https://sonatype.github.io/ossindex-maven/maven-plugin/", "https://github.com/javaee/jaxb-spec/jaxb-api",
-            "https://github.com/eclipse-ee4j/jaxb-api", "https://github.com/exasol/error-code-crawler-maven-plugint",
+            "https://sonatype.github.io/ossindex-maven/maven-plugin/", //
+            "https://github.com/javaee/jaxb-spec/jaxb-api", "https://github.com/eclipse-ee4j/jaxb-api",
+            "https://github.com/exasol/error-code-crawler-maven-plugint",
             "https://github.com/exasol/error-code-crawler-maven-plugin");
-    private final Map<String, String> replacements = new HashMap<>(BUILTIN_REPLACEMENTS);
+
+    private static final Map<String, String> BUILTIN_REPLACEMENTS_2 = Map.of(
+            "https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin",
+            "https://www.mojohaus.org/flatten-maven-plugin/", //
+            "https://awhitford.github.com/lombok.maven/lombok-maven-plugin/",
+            "https://anthonywhitford.com/lombok.maven/lombok-maven-plugin/" //
+    );
+    private final Map<String, String> replacements = new HashMap<>(getBuiltinReplacements());
+
+    private static Map<String, String> getBuiltinReplacements() {
+        // The Map.of() function only supports 5 key-value pairs, so we have to split the definition.
+        final Map<String, String> builtinReplacements = new HashMap<>();
+        builtinReplacements.putAll(BUILTIN_REPLACEMENTS_1);
+        builtinReplacements.putAll(BUILTIN_REPLACEMENTS_2);
+        return builtinReplacements;
+    }
 
     /**
      * Create a new instance of {@link BrokenLinkReplacer}.
