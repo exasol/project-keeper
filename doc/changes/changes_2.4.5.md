@@ -10,6 +10,7 @@ Code name: Bugfixes for Golang projects
 
 * #279: Fixed getting license for Golang test dependencies
 * #313: Fixed labelling of of dependency change type
+* #314: Fixed issues with Golang modules in sub-directories
 
 ## Dependency Updates
 
