@@ -1,10 +1,6 @@
-# Project Keeper 2.4.5, released 2022-??-??
+# Project Keeper 2.4.5, released 2022-05-01
 
 Code name: Bugfixes for Golang projects
-
-## Summary
-
-## Features
 
 ## Bugfixes
 
