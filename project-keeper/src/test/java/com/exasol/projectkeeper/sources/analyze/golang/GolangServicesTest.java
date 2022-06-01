@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
@@ -79,6 +78,12 @@ class GolangServicesTest {
     void calculateChangesIgnoresIndirectDependencies() {
         assertChanges(modFile(indirectDep("updated", "v1"), indirectDep("removed", "v3")),
                 modFile(indirectDep("updated", "v2"), indirectDep("added", "v4")));
+    }
+
+    @Test
+    void getVersion() {
+        final GolangServices golangServices = new GolangServices(() -> PROJECT_VERSION);
+        assertThat(golangServices.getProjectVersion(), equalTo(PROJECT_VERSION));
     }
 
     private void assertChanges(final GoModFile oldMod, final GoModFile newMod,

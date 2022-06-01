@@ -35,13 +35,21 @@ class GolangDependencyChangeCalculator {
     }
 
     private DependencyChangeReport calculate() {
-        this.changes = this.golangServices.getDependencyChanges(this.projectDir, this.source.getPath());
+        this.changes = this.golangServices.getDependencyChanges(this.projectDir, getRelativeModPath());
         final DependencyChangeReport dependencyChanges = new DependencyChangeReport();
         dependencyChanges.setCompileDependencyChanges(getDependencyChanges(Type.COMPILE));
         dependencyChanges.setPluginDependencyChanges(getDependencyChanges(Type.PLUGIN));
         dependencyChanges.setRuntimeDependencyChanges(getDependencyChanges(Type.RUNTIME));
         dependencyChanges.setTestDependencyChanges(getDependencyChanges(Type.TEST));
         return dependencyChanges;
+    }
+
+    private Path getRelativeModPath() {
+        if (this.source.getPath().isAbsolute()) {
+            return this.projectDir.relativize(this.source.getPath());
+        } else {
+            return this.source.getPath();
+        }
     }
 
     private List<DependencyChange> getDependencyChanges(final Type type) {

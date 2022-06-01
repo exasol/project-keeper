@@ -41,24 +41,43 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
         validateGolangSource(source);
-        final Path sourceDir = projectDir.resolve(source.getPath().getParent());
-        final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("go.mod"));
-        final Path moduleDir = source.getPath().getParent();
-        final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(moduleDir);
-        final String projectName = source.getPath().normalize().getParent().getFileName().toString();
+        final Path absoluteSourceDir = getAbsoluteSourceDir(projectDir, source);
+        final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(absoluteSourceDir);
         final ProjectDependencies dependencies = GolangDependencyCalculator.calculateDependencies(this.golangServices,
-                sourceDir, moduleInfo);
+                absoluteSourceDir, moduleInfo);
         return AnalyzedGolangSource.builder() //
                 .version(this.golangServices.getProjectVersion()) //
-                .isRootProject(isRoot) //
+                .isRootProject(isRootSource(source)) //
                 .advertise(source.isAdvertise()) //
                 .modules(source.getModules()) //
                 .path(source.getPath()) //
-                .projectName(projectName).moduleName(moduleInfo.getModuleName()) //
+                .projectName(getProjectName(projectDir, source)) //
+                .moduleName(moduleInfo.getModuleName()) //
                 .dependencies(dependencies) //
                 .dependencyChanges(GolangDependencyChangeCalculator.calculateDepencencyChanges(this.golangServices,
                         projectDir, source, dependencies)) //
                 .build();
+    }
+
+    private String getProjectName(final Path projectDir, final Source source) {
+        if (isRootSource(source)) {
+            return projectDir.getFileName().toString();
+        } else {
+            return source.getPath().getParent().getFileName().toString();
+        }
+    }
+
+    private boolean isRootSource(final Source source) {
+        return source.getPath().getParent() == null;
+    }
+
+    private Path getAbsoluteSourceDir(final Path projectDir, final Source source) {
+        final Path sourceDir = source.getPath().getParent();
+        if (sourceDir != null) {
+            return projectDir.resolve(sourceDir);
+        } else {
+            return projectDir;
+        }
     }
 
     private void validateGolangSource(final Source source) {

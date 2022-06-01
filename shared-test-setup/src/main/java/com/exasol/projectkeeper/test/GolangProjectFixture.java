@@ -4,8 +4,7 @@ import static java.util.Collections.emptySet;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -18,7 +17,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 
-public class GolangProjectFixture {
+public class GolangProjectFixture implements AutoCloseable {
     private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
     private static final String GO_MOD_FILE_NAME = "go.mod";
     private static final String GO_MODULE_NAME = "github.com/exasol/my-module";
@@ -26,6 +25,7 @@ public class GolangProjectFixture {
     private static final String PROJECT_VERSION = "1.2.3";
 
     private final Path projectDir;
+    private Git gitRepo;
 
     public GolangProjectFixture(final Path projectDir) {
         this.projectDir = projectDir;
@@ -33,9 +33,19 @@ public class GolangProjectFixture {
 
     public void gitInit() {
         try {
-            Git.init().setDirectory(this.projectDir.toFile()).call().close();
+            this.gitRepo = Git.init().setDirectory(this.projectDir.toFile()).setInitialBranch("main").call();
         } catch (IllegalStateException | GitAPIException exception) {
-            throw new AssertionError("Error running git init", exception);
+            throw new AssertionError("Error running git init: " + exception.getMessage(), exception);
+        }
+    }
+
+    public void gitAddCommitTag(final String tagName) {
+        try {
+            this.gitRepo.add().addFilepattern(".").call();
+            this.gitRepo.commit().setMessage("Prepare release " + tagName).call();
+            this.gitRepo.tag().setName(tagName).call();
+        } catch (final GitAPIException exception) {
+            throw new AssertionError("Error running git add/commit/tag: " + exception.getMessage(), exception);
         }
     }
 
@@ -52,18 +62,22 @@ public class GolangProjectFixture {
     }
 
     public void prepareProjectFiles() {
-        writeGoModFile();
-        writeMainGoFile();
-        writeTestGoFile();
-        splitAndExecute("go get");
-        splitAndExecute("go mod tidy");
+        prepareProjectFiles(Paths.get("."), GO_VERSION);
+    }
+
+    public void prepareProjectFiles(final Path moduleDir, final String goVersion) {
+        writeGoModFile(moduleDir, goVersion);
+        writeMainGoFile(moduleDir);
+        writeTestGoFile(moduleDir);
+        splitAndExecute(moduleDir, "go get");
+        splitAndExecute(moduleDir, "go mod tidy");
     }
 
     public String getProjectVersion() {
         return PROJECT_VERSION;
     }
 
-    private void writeConfig(final ProjectKeeperConfig.ProjectKeeperConfigBuilder config) {
+    public void writeConfig(final ProjectKeeperConfig.ProjectKeeperConfigBuilder config) {
         new ProjectKeeperConfigWriter().writeConfig(config.build(), this.projectDir);
     }
 
@@ -71,27 +85,30 @@ public class GolangProjectFixture {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
-    private void writeGoModFile() {
+    private void writeGoModFile(final Path moduleDir, final String goVersion) {
         final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.3.1",
                 "github.com/exasol/exasol-test-setup-abstraction-server/go-client v0.0.0-20220520062645-0dd00179907c",
                 "github.com/exasol/error-reporting-go v0.1.1 // indirect");
         final String content = "module " + GO_MODULE_NAME + "\n" //
-                + "go " + GO_VERSION + "\n" //
+                + "go " + goVersion + "\n" //
                 + "require (\n" //
                 + "\t" + String.join("\n\t", dependencies) + "\n" //
                 + ")\n";
-        writeFile(this.projectDir.resolve(GO_MOD_FILE_NAME), content);
+        writeFile(this.projectDir.resolve(moduleDir).resolve(GO_MOD_FILE_NAME), content);
     }
 
     private void writeFile(final Path path, final String content) {
         try {
+            if (!Files.exists(path.getParent())) {
+                Files.createDirectories(path.getParent());
+            }
             Files.writeString(path, content);
         } catch (final IOException exception) {
             throw new UncheckedIOException("Error writing content to file " + path, exception);
         }
     }
 
-    private void writeMainGoFile() {
+    private void writeMainGoFile(final Path moduleDir) {
         final String content = "package main\n" //
                 + "import (\n" //
                 + "    \"github.com/exasol/exasol-driver-go\"\n" //
@@ -99,27 +116,27 @@ public class GolangProjectFixture {
                 + "func main() {\n" //
                 + "    exasol.NewConfig(\"sys\", \"exasol\")\n" //
                 + "}\n";
-        writeFile(this.projectDir.resolve("main.go"), content);
+        writeFile(this.projectDir.resolve(moduleDir).resolve("main.go"), content);
     }
 
-    private void writeTestGoFile() {
+    private void writeTestGoFile(final Path moduleDir) {
         final String content = "package main\n" //
                 + "import (\n" //
                 + "    testSetupAbstraction \"github.com/exasol/exasol-test-setup-abstraction-server/go-client\"\n" //
                 + ")\n" //
                 + "func myTest() {\n" + "    exasol := testSetupAbstraction.Create(\"myConfig.json\")\n"
                 + "    connection := exasol.CreateConnection()\n" + "}\n";
-        writeFile(this.projectDir.resolve("main_test.go"), content);
+        writeFile(this.projectDir.resolve(moduleDir).resolve("main_test.go"), content);
     }
 
-    private void splitAndExecute(final String command) {
-        execute(command.split(" "));
+    private void splitAndExecute(final Path workingDir, final String command) {
+        execute(workingDir, command.split(" "));
     }
 
-    private void execute(final String... command) {
+    private void execute(final Path workingDir, final String... command) {
         try {
             final Process process = new ProcessBuilder(command) //
-                    .directory(this.projectDir.toFile()) //
+                    .directory(this.projectDir.resolve(workingDir).toFile()) //
                     .redirectErrorStream(false) //
                     .start();
             final boolean success = process.waitFor(PROCESS_TIMEOUT.toMillis(), TimeUnit.MILLISECONDS);
@@ -139,5 +156,12 @@ public class GolangProjectFixture {
 
     private String readStream(final InputStream stream) throws IOException {
         return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public void close() {
+        if (this.gitRepo != null) {
+            this.gitRepo.close();
+        }
     }
 }

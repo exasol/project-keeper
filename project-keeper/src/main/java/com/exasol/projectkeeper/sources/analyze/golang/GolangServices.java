@@ -35,7 +35,7 @@ class GolangServices {
     private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
     private static final List<String> COMMAND_LIST_DIRECT_DEPDENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
-    private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
 
     private final Supplier<String> projectVersion;
 
@@ -64,10 +64,10 @@ class GolangServices {
         }
     }
 
-    Map<String, GolangDependencyLicense> getLicenses(final Path projectPath, final String module) {
+    Map<String, GolangDependencyLicense> getLicenses(final Path absoluteSourcePath, final String module) {
         final SimpleProcess process;
         try {
-            process = GoProcess.start(projectPath, List.of("go-licenses", "csv", module));
+            process = GoProcess.start(absoluteSourcePath, List.of("go-licenses", "csv", module));
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
                     .message("Error starting the 'go-licenses' binary.")
@@ -100,11 +100,11 @@ class GolangServices {
     /**
      * Get information about the Golang module with it's dependencies.
      *
-     * @param projectPath the project path containing the {@code go.mod} file
+     * @param absoluteSourcePath the project path containing the {@code go.mod} file
      * @return module information
      */
-    ModuleInfo getModuleInfo(final Path projectPath) {
-        final SimpleProcess process = SimpleProcess.start(projectPath, COMMAND_LIST_DIRECT_DEPDENDENCIES);
+    ModuleInfo getModuleInfo(final Path absoluteSourcePath) {
+        final SimpleProcess process = SimpleProcess.start(absoluteSourcePath, COMMAND_LIST_DIRECT_DEPDENDENCIES);
         process.waitUntilFinished(EXECUTION_TIMEOUT);
         final String[] output = process.getOutputStreamContent().split("\n");
         final List<Dependency> dependencies = Arrays.stream(output) //
@@ -131,15 +131,15 @@ class GolangServices {
     /**
      * Get a list of {@link DependencyChange}s in the given {@code go.mod} file since the latest release.
      *
-     * @param projectDir the project root dir containing the {@code .git} directory
-     * @param modFile    the absolute path to the {@code go.mod} file
+     * @param projectDir      the project root dir containing the {@code .git} directory
+     * @param relativeModFile the absolute path to the {@code go.mod} file
      * @return the list of {@link DependencyChange}s
      */
     // [impl -> dsn~golang-changed-dependency~1]
-    List<DependencyChange> getDependencyChanges(final Path projectDir, final Path modFile) {
-        final Optional<GoModFile> lastReleaseModFile = getLastReleaseModFileContent(projectDir, modFile)
+    List<DependencyChange> getDependencyChanges(final Path projectDir, final Path relativeModFile) {
+        final Optional<GoModFile> lastReleaseModFile = getLastReleaseModFileContent(projectDir, relativeModFile)
                 .map(GoModFile::parse);
-        final GoModFile currentModFile = GoModFile.parse(readFile(modFile));
+        final GoModFile currentModFile = GoModFile.parse(readFile(projectDir.resolve(relativeModFile)));
         return calculateChanges(lastReleaseModFile.orElse(null), currentModFile);
     }
 
@@ -166,9 +166,7 @@ class GolangServices {
 
     private Optional<String> getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
         try (GitRepository repo = GitRepository.open(projectDir)) {
-            final Path relativeModFilePath = projectDir.relativize(modFile);
-            return repo.findLatestReleaseCommit(getProjectVersion())
-                    .map(tag -> getContent(repo, relativeModFilePath, tag));
+            return repo.findLatestReleaseCommit(getProjectVersion()).map(tag -> getContent(repo, modFile, tag));
         }
     }
 

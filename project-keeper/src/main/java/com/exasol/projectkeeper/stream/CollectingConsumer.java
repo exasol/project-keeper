@@ -16,34 +16,34 @@ public class CollectingConsumer implements StreamConsumer {
     private final StringBuilder stringBuilder = new StringBuilder();
 
     @Override
-    public void accept(String line) {
-        stringBuilder.append(line).append("\n");
+    public void accept(final String line) {
+        this.stringBuilder.append(line).append("\n");
     }
 
     @Override
     public void readFinished() {
-        countDownLatch.countDown();
+        this.countDownLatch.countDown();
     }
 
     @Override
-    public void readFailed(IOException exception) {
-        countDownLatch.countDown();
+    public void readFailed(final IOException exception) {
+        this.countDownLatch.countDown();
     }
 
     /**
      * Waits until the stream was read completely and returns the read content from the stream.
-     * 
+     *
      * @param timeout the maximum time to wait
      * @return the content collected from the stream
      * @throws InterruptedException if the current thread is interrupted while waiting
      */
-    public String getContent(Duration timeout) throws InterruptedException {
-        boolean result = countDownLatch.await(timeout.toMillis(), TimeUnit.MILLISECONDS);
+    public String getContent(final Duration timeout) throws InterruptedException {
+        final boolean result = this.countDownLatch.await(timeout.toMillis(), TimeUnit.MILLISECONDS);
         if (!result) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-99")
-                    .message("Stream reading did not finish after timeout of {{timeout}}", timeout).ticketMitigation()
-                    .toString());
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-99").message(
+                    "Stream reading did not finish after timeout of {{timeout}}. Content collected until now: {{content}}.",
+                    timeout, this.stringBuilder.toString()).ticketMitigation().toString());
         }
-        return stringBuilder.toString();
+        return this.stringBuilder.toString();
     }
 }
