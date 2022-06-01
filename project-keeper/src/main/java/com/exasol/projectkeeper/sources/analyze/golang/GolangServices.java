@@ -35,7 +35,7 @@ class GolangServices {
     private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
     private static final List<String> COMMAND_LIST_DIRECT_DEPDENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
-    private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(5);
+    private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
 
     private final Supplier<String> projectVersion;
 
