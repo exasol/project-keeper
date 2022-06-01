@@ -75,9 +75,7 @@ class GolangSourceAnalyzerIT {
 
     @Test
     void testGoModuleInProjectDirectory() {
-        this.fixture.prepareProjectFiles(Paths.get("."), "1.15");
-        this.fixture.gitAddCommitTag("1.2.2");
-        this.fixture.prepareProjectFiles(Paths.get("."), "1.16");
+        prepareProjectFiles(Paths.get("."));
         final ProjectKeeperConfig config = this.fixture.createDefaultConfig().build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
@@ -90,9 +88,7 @@ class GolangSourceAnalyzerIT {
 
     @Test
     void testGoModuleInSubdirectory() {
-        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.15");
-        this.fixture.gitAddCommitTag("1.2.2");
-        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.16");
+        prepareProjectFiles(Paths.get("subdir"));
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
                         .path(Paths.get("subdir").resolve("go.mod")).build()))
@@ -107,9 +103,7 @@ class GolangSourceAnalyzerIT {
 
     @Test
     void testWithAbsoluteSourcePath() {
-        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.15");
-        this.fixture.gitAddCommitTag("1.2.2");
-        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.16");
+        prepareProjectFiles(Paths.get("subdir"));
         final Path modPath = this.projectDir.resolve("subdir/go.mod");
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
@@ -121,6 +115,12 @@ class GolangSourceAnalyzerIT {
                 () -> assertIsrootProject(analyzedProject, false),
                 () -> assertThat("project path", analyzedProject.getPath(), equalTo(modPath)),
                 () -> assertThat("project name", analyzedProject.getProjectName(), equalTo("subdir")));
+    }
+
+    private void prepareProjectFiles(final Path moduleDir) {
+        this.fixture.prepareProjectFiles(moduleDir, "1.15");
+        this.fixture.gitAddCommitTag("1.2.2");
+        this.fixture.prepareProjectFiles(moduleDir, "1.16");
     }
 
     private void assertCommonProperties(final AnalyzedSource analyzedProject) {
