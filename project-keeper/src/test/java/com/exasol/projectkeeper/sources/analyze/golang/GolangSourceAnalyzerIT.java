@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -21,6 +22,7 @@ import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
+import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 
@@ -50,7 +52,7 @@ class GolangSourceAnalyzerIT {
     @Test
     void testMissingVersionConfig() {
         this.fixture.prepareProjectFiles();
-        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().versionConfig(null).build();
+        final ProjectKeeperConfig config = this.fixture.createDefaultConfig().versionConfig(null).build();
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyzeSingleProject(config));
         assertThat(exception.getMessage(), equalTo(
@@ -60,7 +62,7 @@ class GolangSourceAnalyzerIT {
     @Test
     void testWrongVersionConfigType() {
         this.fixture.prepareProjectFiles();
-        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath()
+        final ProjectKeeperConfig config = this.fixture.createDefaultConfig()
                 .versionConfig(new VersionFromSource(this.projectDir.resolve("file"))).build();
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyzeSingleProject(config));
@@ -69,13 +71,45 @@ class GolangSourceAnalyzerIT {
     }
 
     @Test
-    void testGetDependencyLicenses() {
+    void testGoModuleInProjectDirectory() {
         this.fixture.prepareProjectFiles();
-        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().build();
+        final ProjectKeeperConfig config = this.fixture.createDefaultConfig().build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
+                () -> assertCommonProperties(analyzedProject), //
+                () -> assertIsrootProject(analyzedProject, true), //
+                () -> assertThat("project path", analyzedProject.getPath(), equalTo(Paths.get("go.mod"))),
+                () -> assertThat("project name", analyzedProject.getProjectName(),
+                        equalTo(this.projectDir.getFileName().toString())));
+    }
+
+    @Test
+    void testGoModuleInSubdirectory() {
+        this.fixture.prepareProjectFiles(Paths.get("subdir"));
+        final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
+                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
+                        .path(Paths.get("subdir").resolve("go.mod")).build()))
+                .versionConfig(new ProjectKeeperConfig.FixedVersion("1.2.3")).build();
+        final AnalyzedSource analyzedProject = analyzeSingleProject(config);
+        assertAll( //
+                () -> assertCommonProperties(analyzedProject), //
+                () -> assertIsrootProject(analyzedProject, false),
+                () -> assertThat("project path", analyzedProject.getPath(), equalTo(Paths.get("subdir/go.mod"))),
+                () -> assertThat("project name", analyzedProject.getProjectName(), equalTo("subdir")));
+    }
+
+    private void assertCommonProperties(final AnalyzedSource analyzedProject) {
+        assertAll( //
                 () -> assertDependencyLicenses(analyzedProject.getDependencies().getDependencies()),
-                () -> assertDependencyChanges(analyzedProject.getDependencyChanges()));
+                () -> assertDependencyChanges(analyzedProject.getDependencyChanges()),
+                () -> assertThat("module name", ((AnalyzedGolangSource) analyzedProject).getModuleName(),
+                        equalTo("github.com/exasol/my-module")),
+                () -> assertThat("advertise", analyzedProject.isAdvertise(), is(true)),
+                () -> assertThat("version", analyzedProject.getVersion(), equalTo("1.2.3")));
+    }
+
+    private void assertIsrootProject(final AnalyzedSource analyzedProject, final boolean expectedValue) {
+        assertThat("is root project", ((AnalyzedGolangSource) analyzedProject).isRootProject(), is(expectedValue));
     }
 
     private void assertDependencyChanges(final DependencyChangeReport dependencyChanges) {
@@ -105,24 +139,10 @@ class GolangSourceAnalyzerIT {
                 () -> assertThat(dependencies, contains(dependency1, dependency2)));
     }
 
-    @Test
-    void testGetProjectVersion() {
-        this.fixture.prepareProjectFiles();
-        final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().build();
-        assertThat(analyzeSingleProject(config).getVersion(), equalTo("1.2.3"));
-    }
-
     private AnalyzedSource analyzeSingleProject(final ProjectKeeperConfig config) {
         final GolangSourceAnalyzer analyzer = new GolangSourceAnalyzer(config);
         final List<AnalyzedSource> analyzedSources = analyzer.analyze(this.projectDir, config.getSources());
         assertThat(analyzedSources, hasSize(1));
         return analyzedSources.get(0);
-    }
-
-    private ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfigWithAbsolutePath() {
-        return ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
-                        .path(this.projectDir.resolve("go.mod")).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion("1.2.3"));
     }
 }
