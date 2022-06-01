@@ -11,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class ProjectKeeperConfig {
+public final class ProjectKeeperConfig {
     /** Lists with source-projects to crawl. */
     @Builder.Default
     private final List<Source> sources = Collections.emptyList();
@@ -71,7 +71,7 @@ public class ProjectKeeperConfig {
      * Config for a provided version string.
      */
     @Data
-    public static class FixedVersion implements VersionConfig {
+    public final static class FixedVersion implements VersionConfig {
         private final String version;
 
         @Override
@@ -84,7 +84,7 @@ public class ProjectKeeperConfig {
      * Config that introduces PK to read the version from a source.
      */
     @Data
-    public static class VersionFromSource implements VersionConfig {
+    public final static class VersionFromSource implements VersionConfig {
         private final Path pathToPom;
 
         @Override
@@ -98,7 +98,7 @@ public class ProjectKeeperConfig {
      */
     @Data
     @Builder
-    public static class Source {
+    public final static class Source {
         /** Path to the source-project root or build file. Example: {@code my-project/pom.xml}. */
         private final Path path;
         /** Type if the source-project Example: {@code MAVEN}. */
@@ -119,7 +119,7 @@ public class ProjectKeeperConfig {
      * Reference to a parent pom of a maven source.
      */
     @Data
-    public static class ParentPomRef {
+    public final static class ParentPomRef {
         private final String groupId;
         private final String artifactId;
         private final String version;
