@@ -4,6 +4,7 @@ import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceT
 import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
@@ -18,6 +19,8 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 
@@ -69,8 +72,27 @@ class GolangSourceAnalyzerIT {
     void testGetDependencyLicenses() {
         this.fixture.prepareProjectFiles();
         final ProjectKeeperConfig config = createDefaultConfigWithAbsolutePath().build();
-        final List<ProjectDependency> dependencies = analyzeSingleProject(config).getDependencies().getDependencies();
-        assertThat(dependencies, hasSize(2));
+        final AnalyzedSource analyzedProject = analyzeSingleProject(config);
+        assertAll( //
+                () -> assertDependencyLicenses(analyzedProject.getDependencies().getDependencies()),
+                () -> assertDependencyChanges(analyzedProject.getDependencyChanges()));
+    }
+
+    private void assertDependencyChanges(final DependencyChangeReport dependencyChanges) {
+        assertAll(() -> assertThat("plugin dependencies", dependencyChanges.getPluginDependencyChanges(), hasSize(0)),
+                () -> assertThat("runtime dependencies", dependencyChanges.getRuntimeDependencyChanges(), hasSize(0)),
+                () -> assertThat("compile dependencies", dependencyChanges.getCompileDependencyChanges(),
+                        contains(newDep("golang", "1.17"), newDep("github.com/exasol/exasol-driver-go", "v0.4.0"))),
+                () -> assertThat("test dependencies", dependencyChanges.getTestDependencyChanges(),
+                        contains(newDep("github.com/exasol/exasol-test-setup-abstraction-server/go-client",
+                                "v0.0.0-20220520062645-0dd00179907c"))));
+    }
+
+    private NewDependency newDep(final String name, final String version) {
+        return new NewDependency(null, name, version);
+    }
+
+    private void assertDependencyLicenses(final List<ProjectDependency> dependencies) {
         final ProjectDependency dependency1 = ProjectDependency.builder().name("github.com/exasol/exasol-driver-go")
                 .licenses(List.of(new License("MIT", "https://github.com/exasol/exasol-driver-go/blob/v0.4.0/LICENSE")))
                 .type(Type.COMPILE).build();
@@ -79,7 +101,8 @@ class GolangSourceAnalyzerIT {
                 .licenses(List.of(new License("MIT",
                         "https://github.com/exasol/exasol-test-setup-abstraction-server/blob/0dd00179907c/go-client/LICENSE")))
                 .type(Type.TEST).build();
-        assertThat(dependencies, contains(dependency1, dependency2));
+        assertAll(() -> assertThat(dependencies, hasSize(2)),
+                () -> assertThat(dependencies, contains(dependency1, dependency2)));
     }
 
     @Test

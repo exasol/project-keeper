@@ -31,6 +31,7 @@ import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
  * dependency changes.
  */
 class GolangServices {
+    public static final String GOLANG_DEPENDENCY_NAME = "golang";
     private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
     private static final List<String> COMMAND_LIST_DIRECT_DEPDENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
@@ -187,7 +188,6 @@ class GolangServices {
     }
 
     private static class DependencyChangeCalculator {
-        private static final String GOLANG_DEPENDENCY_NAME = "golang";
         private final Map<String, GoModDependency> oldDependencies;
         private final Map<String, GoModDependency> newDependencies;
         private final GoModFile oldModFile;
