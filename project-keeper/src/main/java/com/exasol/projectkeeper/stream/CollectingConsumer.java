@@ -16,7 +16,7 @@ public class CollectingConsumer implements StreamConsumer {
     private final StringBuilder stringBuilder = new StringBuilder();
 
     @Override
-    public void accept(String line) {
+    public void accept(final String line) {
         stringBuilder.append(line).append("\n");
     }
 
@@ -26,7 +26,7 @@ public class CollectingConsumer implements StreamConsumer {
     }
 
     @Override
-    public void readFailed(IOException exception) {
+    public void readFailed(final IOException exception) {
         countDownLatch.countDown();
     }
 
@@ -37,8 +37,8 @@ public class CollectingConsumer implements StreamConsumer {
      * @return the content collected from the stream
      * @throws InterruptedException if the current thread is interrupted while waiting
      */
-    public String getContent(Duration timeout) throws InterruptedException {
-        boolean result = countDownLatch.await(timeout.toMillis(), TimeUnit.MILLISECONDS);
+    public String getContent(final Duration timeout) throws InterruptedException {
+        final boolean result = countDownLatch.await(timeout.toMillis(), TimeUnit.MILLISECONDS);
         if (!result) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-99")
                     .message("Stream reading did not finish after timeout of {{timeout}}", timeout).ticketMitigation()

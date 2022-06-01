@@ -103,7 +103,7 @@ public class SimpleProcess {
      */
     public String getOutputStreamContent() {
         try {
-            return this.outputStreamConsumer.getContent(Duration.ofMillis(100));
+            return this.outputStreamConsumer.getContent(Duration.ofMillis(500));
         } catch (final InterruptedException exception) {
             throw handleInterruptedException(exception);
         }
@@ -116,7 +116,7 @@ public class SimpleProcess {
      */
     public String getErrorStreamContent() {
         try {
-            return this.errorStreamConsumer.getContent(Duration.ofMillis(100));
+            return this.errorStreamConsumer.getContent(Duration.ofMillis(500));
         } catch (final InterruptedException exception) {
             throw handleInterruptedException(exception);
         }
