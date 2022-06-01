@@ -41,8 +41,8 @@ public class CollectingConsumer implements StreamConsumer {
         final boolean result = this.countDownLatch.await(timeout.toMillis(), TimeUnit.MILLISECONDS);
         if (!result) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-99").message(
-                    "Stream reading did not finish after timeout of {{timeout}}. Content collected until now: {{content}}",
-                    timeout, this.stringBuilder).ticketMitigation().toString());
+                    "Stream reading did not finish after timeout of {{timeout}}. Content collected until now: {{content}}.",
+                    timeout, this.stringBuilder.toString()).ticketMitigation().toString());
         }
         return this.stringBuilder.toString();
     }

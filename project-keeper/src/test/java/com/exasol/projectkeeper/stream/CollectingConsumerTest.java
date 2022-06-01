@@ -16,47 +16,56 @@ class CollectingConsumerTest {
 
     @BeforeEach
     void setup() {
-        collectingConsumer = new CollectingConsumer();
+        this.collectingConsumer = new CollectingConsumer();
     }
 
     @Test
     void getEmptyContentReturnsEmptyString() throws InterruptedException {
-        collectingConsumer.readFinished();
+        this.collectingConsumer.readFinished();
         assertThat(getcontent(), equalTo(""));
     }
 
     @Test
     void getSingleLineContent() throws InterruptedException {
-        collectingConsumer.accept("line1");
-        collectingConsumer.readFinished();
+        this.collectingConsumer.accept("line1");
+        this.collectingConsumer.readFinished();
         assertThat(getcontent(), equalTo("line1\n"));
     }
 
     @Test
     void getMultiLineContent() throws InterruptedException {
-        collectingConsumer.accept("line1");
-        collectingConsumer.accept("line2");
-        collectingConsumer.accept("line3");
-        collectingConsumer.readFinished();
+        this.collectingConsumer.accept("line1");
+        this.collectingConsumer.accept("line2");
+        this.collectingConsumer.accept("line3");
+        this.collectingConsumer.readFinished();
         assertThat(getcontent(), equalTo("line1\nline2\nline3\n"));
     }
 
     @Test
     void getContentAfterFailure() throws InterruptedException {
-        collectingConsumer.accept("line1");
-        collectingConsumer.readFailed(null);
+        this.collectingConsumer.accept("line1");
+        this.collectingConsumer.readFailed(null);
         assertThat(getcontent(), equalTo("line1\n"));
     }
 
     @Test
     void getContentWithoutFinishFails() throws InterruptedException {
-        IllegalStateException exception = assertThrows(IllegalStateException.class, () -> getcontent());
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> getcontent());
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-99: Stream reading did not finish after timeout of "
                 + TIMEOUT
-                + " This is an internal error that should not happen. Please report it by opening a GitHub issue."));
+                + ". Content collected until now: ''. This is an internal error that should not happen. Please report it by opening a GitHub issue."));
+    }
+
+    @Test
+    void getContentWithoutFinishAddsCollectedContentToExceptionMessage() throws InterruptedException {
+        this.collectingConsumer.accept("line1");
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> getcontent());
+        assertThat(exception.getMessage(), equalTo("E-PK-CORE-99: Stream reading did not finish after timeout of "
+                + TIMEOUT
+                + ". Content collected until now: 'line1\n'. This is an internal error that should not happen. Please report it by opening a GitHub issue."));
     }
 
     private String getcontent() throws InterruptedException {
-        return collectingConsumer.getContent(TIMEOUT);
+        return this.collectingConsumer.getContent(TIMEOUT);
     }
 }
