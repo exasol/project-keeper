@@ -71,7 +71,7 @@ public final class ProjectKeeperConfig {
      * Config for a provided version string.
      */
     @Data
-    public final static class FixedVersion implements VersionConfig {
+    public static final class FixedVersion implements VersionConfig {
         private final String version;
 
         @Override
@@ -84,7 +84,7 @@ public final class ProjectKeeperConfig {
      * Config that introduces PK to read the version from a source.
      */
     @Data
-    public final static class VersionFromSource implements VersionConfig {
+    public static final class VersionFromSource implements VersionConfig {
         private final Path pathToPom;
 
         @Override
@@ -98,7 +98,7 @@ public final class ProjectKeeperConfig {
      */
     @Data
     @Builder
-    public final static class Source {
+    public static final class Source {
         /** Path to the source-project root or build file. Example: {@code my-project/pom.xml}. */
         private final Path path;
         /** Type if the source-project Example: {@code MAVEN}. */
@@ -119,7 +119,7 @@ public final class ProjectKeeperConfig {
      * Reference to a parent pom of a maven source.
      */
     @Data
-    public final static class ParentPomRef {
+    public static final class ParentPomRef {
         private final String groupId;
         private final String artifactId;
         private final String version;
