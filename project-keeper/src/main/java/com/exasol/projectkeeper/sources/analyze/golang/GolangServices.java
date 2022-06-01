@@ -131,8 +131,8 @@ class GolangServices {
     /**
      * Get a list of {@link DependencyChange}s in the given {@code go.mod} file since the latest release.
      *
-     * @param projectDir the project root dir containing the {@code .git} directory
-     * @param relativeModFile    the absolute path to the {@code go.mod} file
+     * @param projectDir      the project root dir containing the {@code .git} directory
+     * @param relativeModFile the absolute path to the {@code go.mod} file
      * @return the list of {@link DependencyChange}s
      */
     // [impl -> dsn~golang-changed-dependency~1]

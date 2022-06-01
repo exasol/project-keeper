@@ -6,18 +6,18 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.ReflogEntry;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 
-public class GolangProjectFixture {
+public class GolangProjectFixture implements AutoCloseable {
     private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
     private static final String GO_MOD_FILE_NAME = "go.mod";
     private static final String GO_MODULE_NAME = "github.com/exasol/my-module";
@@ -25,6 +25,7 @@ public class GolangProjectFixture {
     private static final String PROJECT_VERSION = "1.2.3";
 
     private final Path projectDir;
+    private Git gitRepo;
 
     public GolangProjectFixture(final Path projectDir) {
         this.projectDir = projectDir;
@@ -32,9 +33,20 @@ public class GolangProjectFixture {
 
     public void gitInit() {
         try {
-            Git.init().setDirectory(this.projectDir.toFile()).call().close();
+            this.gitRepo = Git.init().setDirectory(this.projectDir.toFile()).setInitialBranch("main").call();
+            final Collection<ReflogEntry> call = this.gitRepo.reflog().call();
         } catch (IllegalStateException | GitAPIException exception) {
-            throw new AssertionError("Error running git init", exception);
+            throw new AssertionError("Error running git init: " + exception.getMessage(), exception);
+        }
+    }
+
+    public void gitAddCommitTag(final String tagName) {
+        try {
+            this.gitRepo.add().addFilepattern(".").call();
+            this.gitRepo.commit().setMessage("Prepare release " + tagName).call();
+            this.gitRepo.tag().setName(tagName).call();
+        } catch (final GitAPIException exception) {
+            throw new AssertionError("Error running git add/commit/tag: " + exception.getMessage(), exception);
         }
     }
 
@@ -51,11 +63,11 @@ public class GolangProjectFixture {
     }
 
     public void prepareProjectFiles() {
-        prepareProjectFiles(Paths.get("."));
+        prepareProjectFiles(Paths.get("."), GO_VERSION);
     }
 
-    public void prepareProjectFiles(final Path moduleDir) {
-        writeGoModFile(moduleDir);
+    public void prepareProjectFiles(final Path moduleDir, final String goVersion) {
+        writeGoModFile(moduleDir, goVersion);
         writeMainGoFile(moduleDir);
         writeTestGoFile(moduleDir);
         splitAndExecute(moduleDir, "go get");
@@ -74,12 +86,12 @@ public class GolangProjectFixture {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
-    private void writeGoModFile(final Path moduleDir) {
+    private void writeGoModFile(final Path moduleDir, final String goVersion) {
         final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.3.1",
                 "github.com/exasol/exasol-test-setup-abstraction-server/go-client v0.0.0-20220520062645-0dd00179907c",
                 "github.com/exasol/error-reporting-go v0.1.1 // indirect");
         final String content = "module " + GO_MODULE_NAME + "\n" //
-                + "go " + GO_VERSION + "\n" //
+                + "go " + goVersion + "\n" //
                 + "require (\n" //
                 + "\t" + String.join("\n\t", dependencies) + "\n" //
                 + ")\n";
@@ -145,5 +157,12 @@ public class GolangProjectFixture {
 
     private String readStream(final InputStream stream) throws IOException {
         return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public void close() {
+        if (this.gitRepo != null) {
+            this.gitRepo.close();
+        }
     }
 }

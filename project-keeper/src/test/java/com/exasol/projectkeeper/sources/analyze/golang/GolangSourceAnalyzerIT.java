@@ -11,8 +11,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
@@ -20,8 +19,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
-import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
-import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
+import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
@@ -37,6 +35,11 @@ class GolangSourceAnalyzerIT {
     void setup() {
         this.fixture = new GolangProjectFixture(this.projectDir);
         this.fixture.gitInit();
+    }
+
+    @AfterEach
+    void teardown() {
+        this.fixture.close();
     }
 
     @Test
@@ -72,7 +75,9 @@ class GolangSourceAnalyzerIT {
 
     @Test
     void testGoModuleInProjectDirectory() {
-        this.fixture.prepareProjectFiles();
+        this.fixture.prepareProjectFiles(Paths.get("."), "1.15");
+        this.fixture.gitAddCommitTag("1.2.2");
+        this.fixture.prepareProjectFiles(Paths.get("."), "1.16");
         final ProjectKeeperConfig config = this.fixture.createDefaultConfig().build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
@@ -85,11 +90,13 @@ class GolangSourceAnalyzerIT {
 
     @Test
     void testGoModuleInSubdirectory() {
-        this.fixture.prepareProjectFiles(Paths.get("subdir"));
+        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.15");
+        this.fixture.gitAddCommitTag("1.2.2");
+        this.fixture.prepareProjectFiles(Paths.get("subdir"), "1.16");
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
                         .path(Paths.get("subdir").resolve("go.mod")).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion("1.2.3")).build();
+                .versionConfig(new ProjectKeeperConfig.FixedVersion(this.fixture.getProjectVersion())).build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
                 () -> assertCommonProperties(analyzedProject), //
@@ -105,7 +112,7 @@ class GolangSourceAnalyzerIT {
                 () -> assertThat("module name", ((AnalyzedGolangSource) analyzedProject).getModuleName(),
                         equalTo("github.com/exasol/my-module")),
                 () -> assertThat("advertise", analyzedProject.isAdvertise(), is(true)),
-                () -> assertThat("version", analyzedProject.getVersion(), equalTo("1.2.3")));
+                () -> assertThat("version", analyzedProject.getVersion(), equalTo(this.fixture.getProjectVersion())));
     }
 
     private void assertIsrootProject(final AnalyzedSource analyzedProject, final boolean expectedValue) {
@@ -116,14 +123,12 @@ class GolangSourceAnalyzerIT {
         assertAll(() -> assertThat("plugin dependencies", dependencyChanges.getPluginDependencyChanges(), hasSize(0)),
                 () -> assertThat("runtime dependencies", dependencyChanges.getRuntimeDependencyChanges(), hasSize(0)),
                 () -> assertThat("compile dependencies", dependencyChanges.getCompileDependencyChanges(),
-                        contains(newDep("golang", "1.17"), newDep("github.com/exasol/exasol-driver-go", "v0.4.0"))),
-                () -> assertThat("test dependencies", dependencyChanges.getTestDependencyChanges(),
-                        contains(newDep("github.com/exasol/exasol-test-setup-abstraction-server/go-client",
-                                "v0.0.0-20220520062645-0dd00179907c"))));
+                        contains(updatedDep("golang", "1.15", "1.16"))),
+                () -> assertThat("test dependencies", dependencyChanges.getTestDependencyChanges(), hasSize(0)));
     }
 
-    private NewDependency newDep(final String name, final String version) {
-        return new NewDependency(null, name, version);
+    private DependencyChange updatedDep(final String name, final String oldVersion, final String newVersion) {
+        return new UpdatedDependency(null, name, oldVersion, newVersion);
     }
 
     private void assertDependencyLicenses(final List<ProjectDependency> dependencies) {
