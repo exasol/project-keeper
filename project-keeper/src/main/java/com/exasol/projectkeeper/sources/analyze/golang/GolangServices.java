@@ -72,7 +72,7 @@ class GolangServices {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
                     .message("Error starting the 'go-licenses' binary.")
                     .mitigation("Verify that 'go-licenses' is installed.")
-                    .mitigation("Install it by running 'go install github.com/google/go-licenses@latest'.").toString(),
+                    .mitigation("Install it by running 'go install github.com/google/go-licenses@v1.2.1'.").toString(),
                     exception);
         }
         process.waitUntilFinished(EXECUTION_TIMEOUT);
@@ -165,7 +165,7 @@ class GolangServices {
     }
 
     private Optional<String> getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
-        try (GitRepository repo = GitRepository.open(projectDir)) {
+        try (final GitRepository repo = GitRepository.open(projectDir)) {
             return repo.findLatestReleaseCommit(getProjectVersion()).map(tag -> getContent(repo, modFile, tag));
         }
     }
