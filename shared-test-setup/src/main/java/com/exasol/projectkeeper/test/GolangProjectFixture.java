@@ -34,7 +34,7 @@ public class GolangProjectFixture implements AutoCloseable {
     public void gitInit() {
         try {
             this.gitRepo = Git.init().setDirectory(this.projectDir.toFile()).setInitialBranch("main").call();
-        } catch (IllegalStateException | GitAPIException exception) {
+        } catch (final IllegalStateException | GitAPIException exception) {
             throw new AssertionError("Error running git init: " + exception.getMessage(), exception);
         }
     }

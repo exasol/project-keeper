@@ -38,7 +38,7 @@ jobs:
             ${{ runner.os }}-go-${{ matrix.go }}
             ${{ runner.os }}-go-
       - name: Install Go tools
-        run: go install github.com/google/go-licenses@latest
+        run: go install github.com/google/go-licenses@v1.2.1
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:

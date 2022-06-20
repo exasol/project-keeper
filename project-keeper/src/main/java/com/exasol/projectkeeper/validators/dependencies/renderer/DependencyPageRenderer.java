@@ -100,7 +100,7 @@ public class DependencyPageRenderer {
         if (url == null || url.isBlank()) {
             return name;
         } else {
-            return "[" + name + "][" + markdownReferenceBuilder.getReferenceForUrl(name, url) + "]";
+            return "[" + name + "][" + markdownReferenceBuilder.getReferenceForUrl(url) + "]";
         }
     }
 }

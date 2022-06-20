@@ -12,10 +12,8 @@ You need the following dependencies for running the tests:
 
 [go-licenses](https://github.com/google/go-licenses/) is required for extracting Go module license information.
 
-Version 1.0.0 of go-licenses has issues finding all dependencies, that's why we need the current development version (`latest`):
-
 ```sh
-go install github.com/google/go-licenses@latest
+go install github.com/google/go-licenses@v1.2.1
 ```
 
 This will install the binary to `$(go env GOPATH)/bin/go-licenses` (by default `$HOME/go/bin/go-licenses`). Project Keeper tries to find the `go-licenses` binary in `$(go env GOPATH)/bin`. If this fails, you will need to add `$(go env GOPATH)/bin` to your `PATH`.
