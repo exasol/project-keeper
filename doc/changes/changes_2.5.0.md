@@ -6,6 +6,8 @@ Code name:
 
 ## Features
 
+* #140: Self update
+
 ## Bug Fixes
 
 * #322: Fixed unstable link order in dependencies.md

@@ -2,6 +2,7 @@ package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.blockers;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -119,6 +120,8 @@ public class ProjectKeeper {
             if (source.getType().equals(MAVEN)) {
                 result.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
                         source.getParentPom(), new RepoInfo(this.repoName, licenseName)));
+            } else {
+                result.add(OwnVersionValidator.forCli(this.ownVersion));
             }
         }
         return result;
@@ -162,6 +165,11 @@ public class ProjectKeeper {
     /**
      * Verify the project structure.
      *
+     * <p>
+     * PK interprets the a validation as "successful" if there are no mandatory findings. Optional findings are ignored
+     * in this place.
+     * </p>
+     *
      * @return {@code true} if project is valid
      */
     public boolean verify() {
@@ -174,7 +182,7 @@ public class ProjectKeeper {
         final boolean hasFindingsWithFix = findingsFlat.stream().anyMatch(SimpleValidationFinding::hasFix);
         final boolean hasFindingsWithoutFix = findingsFlat.stream().anyMatch(finding -> !finding.hasFix());
         logValidationFailure(hasFindingsWithFix, hasFindingsWithoutFix);
-        return findings.isEmpty();
+        return blockers(findingsFlat).isEmpty();
     }
 
     private void logValidationFailure(final boolean hasFindingsWithFix, final boolean hasFindingsWithoutFix) {
@@ -201,7 +209,7 @@ public class ProjectKeeper {
     /**
      * Fix all project findings.
      *
-     * @return {@code true} if all findings could be fixed
+     * @return {@code true} if all mandatory findings could be fixed
      */
     public boolean fix() {
         return runValidationPhases(this::fixFindings);
@@ -234,13 +242,14 @@ public class ProjectKeeper {
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-67")
                     .message("Could not auto-fix: {{finding message|uq}}", unfixedFinding.getMessage()).toString());
         }
-        if (!unfixedFindings.isEmpty()) {
+
+        if (blockers(unfixedFindings).isEmpty()) {
+            return true;
+        } else {
             this.logger.error(ExaError.messageBuilder("E-PK-CORE-65").message(
                     "PK could not fix all of the findings automatically. There are findings that you need to fix by hand.")
                     .toString());
             return false;
-        } else {
-            return true;
         }
     }
 

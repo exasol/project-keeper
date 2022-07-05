@@ -1,64 +1,71 @@
 package com.exasol.projectkeeper.mavenrepo;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 
+import com.exasol.projectkeeper.ProjectKeeper;
+
+import jakarta.json.Json;
+import jakarta.json.JsonObject;
+import lombok.Getter;
+
+/**
+ * See {@link ProjectKeeper}, field ownVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
+ */
+//[impl->dsn~verify-own-version~1]
 public class MavenRepository {
 
-    public enum Artifact {
-        CLI("-cli"),
-        MAVEN_PLUGIN("-maven-plugin");
+    public static MavenRepository cli() {
+        return new MavenRepository(url("-cli"));
+    }
 
-        private final String label;
+    public static MavenRepository mavenPlugin() {
+        return new MavenRepository(url("-maven-plugin"));
+    }
 
-        Artifact(String suffix) {
-            this.label = ARTIFACT_PREFIX + suffix;
+    public static String getLatestVersion(final JsonObject json) throws JsonContentException {
+        try {
+            return json.getJsonObject("response") //
+                    .getJsonArray("docs") //
+                    .getJsonObject(0) //
+                    .getString("latestVersion");
+        } catch (final NullPointerException e) {
+            throw new JsonContentException("Could not find /response/docs[0]/latestVersion in json document.");
         }
     }
 
-    private static final String ARTIFACT_PREFIX = "project-keeper";
-    private static final String DEFAULT_REPOSITORY_URL = "https://search.maven.org";
-    private static final String GROUP_ID = "com.exasol";
-    private final String repositoryUrl;
-
-    public MavenRepository() {
-        this(DEFAULT_REPOSITORY_URL);
+    private static String url(final String root, final String artifact) {
+        return root + "/solrsearch/select?q=g:" + GROUP_ID + "+AND+a:" + artifact + "&wt=json";
     }
 
-    public MavenRepository(String url) {
-        this.repositoryUrl = url;
+    private static String url(final String artifactSuffix) {
+        return url(DEFAULT_REPOSITORY_URL, ARTIFACT_PREFIX + artifactSuffix);
     }
 
-    public String getLatestVersion(Artifact artifact) throws IOException {
-        URL url = new URL(DEFAULT_REPOSITORY_URL + "/solrsearch/select?q=g:"
-                + GROUP_ID + "+AND+a:"
-                + artifact.label + "&wt=json");
-        JSONObject json = readJsonFromUrl(url);
-        return json
-                .getJSONObject("response")
-                .getJSONArray("docs")
-                .getJSONObject(0)
-                .getString("latestVersion");
+    static final String DEFAULT_REPOSITORY_URL = "https://search.maven.org";
+    static final String GROUP_ID = "com.exasol";
+    static final String ARTIFACT_PREFIX = "project-keeper";
+
+    @Getter
+    private final String url;
+
+    public MavenRepository(final String url) {
+        this.url = url;
     }
 
-    private static JSONObject readJsonFromUrl(URL url) throws IOException, JSONException {
-        try (InputStream stream = url.openStream()) {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(stream, StandardCharsets.UTF_8));
-            String jsonText = readAll(reader);
-            return new JSONObject(jsonText);
+    public String getLatestVersion() throws IOException, JsonContentException {
+        try (InputStream stream = new URL(this.url).openStream()) {
+            return getLatestVersion(Json.createReader(stream).readObject());
         }
     }
 
-    private static String readAll(Reader rd) throws IOException {
-        StringBuilder sb = new StringBuilder();
-        int cp;
-        while ((cp = rd.read()) != -1) {
-            sb.append((char) cp);
+    public static class JsonContentException extends Exception {
+        private static final long serialVersionUID = 1L;
+
+        public JsonContentException(final String message) {
+            super(message);
         }
-        return sb.toString();
     }
+
 }
