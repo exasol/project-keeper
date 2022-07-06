@@ -46,8 +46,8 @@ public class Version implements Comparable<Version> {
         return EQUAL;
     }
 
-    public boolean isLessThan(final Version other) {
-        return compareTo(other) == LESS;
+    public boolean isGreaterOrEqualThan(final Version other) {
+        return compareTo(other) != LESS;
     }
 
     public int compareTo(final String other) throws UnsupportedVersionFormatException {

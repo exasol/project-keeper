@@ -12,7 +12,8 @@ import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.mavenrepo.MavenRepository;
 import com.exasol.projectkeeper.validators.OwnVersionValidator.Updater;
-import com.exasol.projectkeeper.validators.finding.*;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 //[utest->dsn~verify-own-version~1]
 //[itest->dsn~verify-own-version~1]
@@ -20,25 +21,29 @@ import com.exasol.projectkeeper.validators.finding.*;
 //[itest->dsn~self-update~1]
 public class OwnVersionValidatorTest {
 
-    private static final String PREFIX = "W-PK-CORE-152: Could not detect latest "
-            + "available version of project-keeper due to ";
-    private static final String OUTDATED = "W-PK-CORE-151: Project-keeper version 0.0.1 is outdated."
+    private static String expectedMessage(final int number, final String suffix) {
+        return "W-PK-CORE-" + number + ": Could not detect latest .* " + suffix;
+    }
+
+    private static final String OUTDATED = "W-PK-CORE-153: Project-keeper version 0.0.1 is outdated."
             + " Please update project-keeper to latest version.*";
 
     @Test
     void retrieveLatestVersion_IoError() {
-        verifyOptionalFinding(testee("0.1.0"), PREFIX + "Connection refused.*");
+        verifyOptionalFinding(testee("0.1.0"), expectedMessage(155, "Connection refused.*"));
     }
 
     @Test
     void ownVersionUnsupportedFormat() {
-        verifyOptionalFinding(testee("a.b.c"), PREFIX + "Unsupported format of own version.*");
+        verifyOptionalFinding(testee("a.b.c"), //
+                "W-PK-CORE-152: Could not validate version of project-keeper."
+                        + " Unsupported format of own version.*");
     }
 
     @Test
     void latestVersionUnsupportedFormat() throws Exception {
         verifyOptionalFinding(testee("0.0.1", "x.y.z"),
-                PREFIX + "Unsupported format of latest version from Maven repository.*");
+                expectedMessage(154, "Unsupported format of latest version from Maven repository.*"));
     }
 
     @Test
@@ -91,18 +96,13 @@ public class OwnVersionValidatorTest {
 
     private SimpleValidationFinding verifyOptionalFinding(final OwnVersionValidator testee,
             final String expectedMessagePattern) {
-        final SimpleValidationFinding finding = matchFinding(testee.validate(), expectedMessagePattern);
-        assertThat(finding, notNullValue());
+        final List<ValidationFinding> list = testee.validate();
+        assertThat(list, hasSize(1));
+        assertThat(list.get(0), isA(SimpleValidationFinding.class));
+        final SimpleValidationFinding finding = (SimpleValidationFinding) list.get(0);
+        assertThat(finding.getMessage(), matchesRegex(expectedMessagePattern));
         assertThat(finding.isOptional(), is(true));
         return finding;
     }
 
-    private SimpleValidationFinding matchFinding(final List<ValidationFinding> findings, final String regex) {
-        for (final SimpleValidationFinding finding : new FindingsUngrouper().ungroupFindings(findings)) {
-            if (finding.getMessage().matches(regex)) {
-                return finding;
-            }
-        }
-        return null;
-    }
 }

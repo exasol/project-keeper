@@ -27,7 +27,7 @@ Features are the highest level requirements in this document that describe the m
 `feat~self-update~1`
 
 PK can check if its own version equals the latest available version of PK.
-If a newqer version is available then PK performs a self-update.
+If a newer version is available then PK performs a self-update.
 
 Needs: dsn
 

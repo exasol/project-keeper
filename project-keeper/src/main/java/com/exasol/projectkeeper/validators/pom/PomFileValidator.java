@@ -81,7 +81,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> validateOwnVersion(final Document pom) throws InvalidPomException {
         final Node node = runXPath(pom, PROJECT_KEEPER_VERSION_XPATH);
         if (node == null) {
-            return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-153") //
+            return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-151") //
                     .message("Pom file contains no reference to project-keeper-maven-plugin.") //
                     .toString()) //
                     .optional(true) //

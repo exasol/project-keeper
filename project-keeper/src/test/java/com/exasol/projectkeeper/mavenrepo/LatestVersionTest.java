@@ -40,6 +40,8 @@ public class LatestVersionTest {
     @ParameterizedTest(name = "Version(\"{0}\") < Version(\"{1}\") ")
     @CsvSource(delimiter = '<', value = { "0 < 1", "0 < 0.1", "1.2.0 < 1.2.2", "0.1 < 0.2" })
     void versionLessThan(final String a, final String b) throws UnsupportedVersionFormatException {
+        assertThat(Version.of(a).isGreaterOrEqualThan(Version.of(b)), is(false));
+        assertThat(Version.of(b).isGreaterOrEqualThan(Version.of(a)), is(true));
         assertThat(new Version(a), lessThan(new Version(b)));
         assertThat(new Version(b), greaterThan(new Version(a)));
     }

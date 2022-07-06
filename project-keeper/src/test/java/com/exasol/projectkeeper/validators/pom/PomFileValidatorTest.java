@@ -210,7 +210,7 @@ class PomFileValidatorTest {
         getTestModel().writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result,
-                hasFindingWithMessage("W-PK-CORE-153: Pom file contains no reference to project-keeper-maven-plugin."));
+                hasFindingWithMessage("W-PK-CORE-151: Pom file contains no reference to project-keeper-maven-plugin."));
     }
 
     // [utest->dsn~verify-own-version~1]
@@ -218,7 +218,7 @@ class PomFileValidatorTest {
     void outdatedReferenceToProjectKeeperPlugin() {
         getTestModel().withProjectKeeperPlugin("0.0.1").writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessageMatchingRegex("W-PK-CORE-151: Project-keeper version 0.0.1 is outdated."
+        assertThat(result, hasFindingWithMessageMatchingRegex("W-PK-CORE-153: Project-keeper version 0.0.1 is outdated."
                 + " Please update project-keeper to latest version.*"));
     }
 

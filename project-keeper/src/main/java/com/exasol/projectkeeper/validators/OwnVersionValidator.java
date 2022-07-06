@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.validators;
 
 import java.io.IOException;
-import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -31,6 +30,16 @@ public class OwnVersionValidator implements Validator {
         return new OwnVersionValidator(currentVersion, MavenRepository.cli(), null);
     }
 
+    private static List<ValidationFinding> findings(final Fix fix, final String message) {
+        final Builder builder = SimpleValidationFinding.withMessage(message).optional(true);
+        if (fix != null) {
+            builder.andFix(fix);
+        }
+        return List.of(builder.build());
+    }
+
+    // instance fields and methods
+
     private final String currentVersion;
     @Getter
     private final MavenRepository mavenRepository;
@@ -46,44 +55,45 @@ public class OwnVersionValidator implements Validator {
     @Override
     public List<ValidationFinding> validate() {
         try {
-            final Version current = parseVersion("own version", this.currentVersion);
-            final Version latest = parseVersion("latest version from Maven repository",
-                    getLatestVersion(this.mavenRepository));
-            if (current.isLessThan(latest)) {
-                final Builder builder = SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-151") //
-                        .message("Project-keeper version {{current}} is outdated.", current) //
-                        .mitigation("Please update project-keeper to latest version {{latest}}.", latest) //
-                        .toString()) //
-                        .optional(true);
-                if (this.updater != null) {
-                    builder.andFix(this.updater.accept(latest.toString()));
-                }
-                return List.of(builder.build());
+            final Version current = parseVersion(this.currentVersion,
+                    new ValidationException(ExaError.messageBuilder("W-PK-CORE-152")
+                            .message("Could not validate version of project-keeper.") //
+                            .message(" Unsupported format of own version {{version}}.", this.currentVersion) //
+                            .toString()));
+            final Version latest = getLatestVersion(this.mavenRepository);
+            if (current.isGreaterOrEqualThan(latest)) {
+                return Collections.emptyList();
             }
-            return Collections.emptyList();
+
+            final Fix fix = (this.updater == null ? null : this.updater.accept(latest.toString()));
+            return findings(fix, ExaError.messageBuilder("W-PK-CORE-153") //
+                    .message("Project-keeper version {{current}} is outdated.", current) //
+                    .mitigation("Please update project-keeper to latest version {{latest}}.", latest) //
+                    .toString());
         } catch (final ValidationException e) {
-            return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-152") //
-                    .message("Could not detect latest available version of project-keeper due to {{message|uq}}.",
-                            e.getMessage())
-                    .toString()) //
-                    .optional(true) //
-                    .build());
+            return e.getFindings();
         }
     }
 
-    private Version parseVersion(final String context, final String version) throws ValidationException {
+    private Version parseVersion(final String version, final ValidationException exception) throws ValidationException {
         try {
             return Version.of(version);
         } catch (final UnsupportedVersionFormatException e) {
-            throw new ValidationException(MessageFormat.format("Unsupported format of {0}: ''{1}''", context, version));
+            throw exception;
         }
     }
 
-    private String getLatestVersion(final MavenRepository repo) throws ValidationException {
+    private Version getLatestVersion(final MavenRepository repo) throws ValidationException {
         try {
-            return repo.getLatestVersion();
+            final String versionString = repo.getLatestVersion();
+            return parseVersion(versionString, new ValidationException(ExaError.messageBuilder("W-PK-CORE-154") //
+                    .message("Could not detect latest available version of project-keeper.") //
+                    .message(" Unsupported format of latest version from Maven repository: {{version}}.", versionString) //
+                    .toString()));
         } catch (final IOException | JsonContentException e) {
-            throw new ValidationException(ExaError.messageBuilder(e.getMessage() + ".") //
+            throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155") //
+                    .message("Could not detect latest available version of project-keeper.") //
+                    .message(" {{message|uq}}.", e.getMessage()) //
                     .mitigation("Please check network connection and response from {{url}}", repo.getUrl()) //
                     .toString());
         }
@@ -91,9 +101,11 @@ public class OwnVersionValidator implements Validator {
 
     private static class ValidationException extends Exception {
         private static final long serialVersionUID = 1L;
+        @Getter
+        private final List<ValidationFinding> findings;
 
         public ValidationException(final String message) {
-            super(message);
+            this.findings = OwnVersionValidator.findings(null, message);
         }
     }
 
