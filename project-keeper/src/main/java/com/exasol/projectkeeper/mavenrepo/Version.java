@@ -3,6 +3,8 @@ package com.exasol.projectkeeper.mavenrepo;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+import lombok.EqualsAndHashCode;
+
 /**
  * Parse a version number and implement Comparable for that.
  *
@@ -11,6 +13,7 @@ import java.util.regex.Pattern;
  * supports less features, e.g. only numeric version components but avoids an additional dependency.
  */
 //[impl->dsn~verify-own-version~1]
+@EqualsAndHashCode
 public class Version implements Comparable<Version> {
 
     /**
@@ -21,6 +24,7 @@ public class Version implements Comparable<Version> {
      * </p>
      */
     public static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*+");
+
     private static final int LESS = -1;
     private static final int EQUAL = 0;
     private static final int GREATER = 1;
@@ -97,4 +101,5 @@ public class Version implements Comparable<Version> {
     public String toString() {
         return this.raw;
     }
+
 }

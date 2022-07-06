@@ -19,7 +19,7 @@ import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatExcept
 import jakarta.json.*;
 
 //[utest->dsn~verify-own-version~1]
-public class LatestVersionTest {
+class LatestVersionTest {
 
     // test Version
 

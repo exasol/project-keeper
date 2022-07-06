@@ -93,7 +93,7 @@ public class TestMavenModel extends Model {
 
     public TestMavenModel withProjectKeeperPlugin(final String version) {
         final Plugin plugin = new Plugin();
-        plugin.setGroupId("com.exasol");
+        plugin.setGroupId(PROJECT_GROUP_ID);
         plugin.setArtifactId("project-keeper-maven-plugin");
         plugin.setVersion(version);
         return withPlugin(plugin);

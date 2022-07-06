@@ -86,7 +86,7 @@ public class PomFileValidator implements Validator {
         }
     }
 
-    private List<ValidationFinding> validateOwnVersion(final Document pom) throws InvalidPomException {
+    private List<ValidationFinding> validateOwnVersion(final Document pom) {
         final Node node = runXPath(pom, PROJECT_KEEPER_VERSION_XPATH);
         if (node == null) {
             return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-151") //

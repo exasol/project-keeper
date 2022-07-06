@@ -84,7 +84,7 @@ public class OwnVersionValidator implements Validator {
                     .mitigation("Please update project-keeper to latest version {{latest}}.", latest) //
                     .toString());
         } catch (final ValidationException e) {
-            return e.getFindings();
+            return findings(null, e.getMessage());
         }
     }
 
@@ -114,11 +114,9 @@ public class OwnVersionValidator implements Validator {
 
     private static class ValidationException extends Exception {
         private static final long serialVersionUID = 1L;
-        @Getter
-        private final List<ValidationFinding> findings;
 
         public ValidationException(final String message) {
-            this.findings = OwnVersionValidator.findings(null, message);
+            super(message);
         }
     }
 

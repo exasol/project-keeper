@@ -19,7 +19,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 //[itest->dsn~verify-own-version~1]
 //[utest->dsn~self-update~1]
 //[itest->dsn~self-update~1]
-public class OwnVersionValidatorTest {
+class OwnVersionValidatorTest {
 
     private static String expectedMessage(final int number, final String suffix) {
         return "W-PK-CORE-" + number + ": Could not detect latest .* " + suffix;
