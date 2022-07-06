@@ -1,13 +1,11 @@
 package com.exasol.projectkeeper.mavenrepo;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 import com.exasol.projectkeeper.ProjectKeeper;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
+import jakarta.json.*;
 import lombok.Getter;
 
 /**
@@ -84,8 +82,8 @@ public class MavenRepository {
      * @throws JsonContentException if json does not contain the expected keys.
      */
     public String getLatestVersion() throws IOException, JsonContentException {
-        try (InputStream stream = new URL(this.url).openStream()) {
-            return getLatestVersion(Json.createReader(stream).readObject());
+        try (JsonReader reader = Json.createReader(new URL(this.url).openStream())) {
+            return getLatestVersion(reader.readObject());
         }
     }
 

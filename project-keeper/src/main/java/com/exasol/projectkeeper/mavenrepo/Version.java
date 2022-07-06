@@ -20,7 +20,7 @@ public class Version implements Comparable<Version> {
      * Only used internally and in tests.
      * </p>
      */
-    public static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*");
+    public static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*+");
     private static final int LESS = -1;
     private static final int EQUAL = 0;
     private static final int GREATER = 1;
@@ -65,7 +65,7 @@ public class Version implements Comparable<Version> {
      * @return true if this version is greater or equal than the other one
      */
     public boolean isGreaterOrEqualThan(final Version other) {
-        return compareTo(other) != LESS;
+        return compareTo(other) > LESS;
     }
 
     private int compare(final int i, final Version other) {
