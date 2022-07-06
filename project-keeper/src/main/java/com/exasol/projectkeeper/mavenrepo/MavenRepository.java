@@ -16,14 +16,27 @@ import lombok.Getter;
 //[impl->dsn~verify-own-version~1]
 public class MavenRepository {
 
+    /**
+     * @return Maven repository using URL for cli artifacts of project-keeper.
+     */
     public static MavenRepository cli() {
         return new MavenRepository(url("-cli"));
     }
 
+    /**
+     * @return Maven repository using URL for project-keeper maven-plugin.
+     */
     public static MavenRepository mavenPlugin() {
         return new MavenRepository(url("-maven-plugin"));
     }
 
+    /**
+     * Accessor for Json object, called internally and in unit tests.
+     *
+     * @param json json object to retrieve latest version from.
+     * @return latest version.
+     * @throws JsonContentException if json does not contain the expected keys.
+     */
     public static String getLatestVersion(final JsonObject json) throws JsonContentException {
         try {
             return json.getJsonObject("response") //
@@ -50,19 +63,41 @@ public class MavenRepository {
     @Getter
     private final String url;
 
+    /**
+     * Productive code is expected to use the static methods {@link MavenRepository#cli} and
+     * {@link MavenRepository#mavenPlugin}.
+     *
+     * <p>
+     * This constructor is designated for tests, but as tests are in a different package the visibility needs to be
+     * public.
+     * </p>
+     *
+     * @param url URL of maven repository.
+     */
     public MavenRepository(final String url) {
         this.url = url;
     }
 
+    /**
+     * @return latest version of project-keeper in the flavor addressed by the URL of this repository.
+     * @throws IOException          if URL cannot be connected
+     * @throws JsonContentException if json does not contain the expected keys.
+     */
     public String getLatestVersion() throws IOException, JsonContentException {
         try (InputStream stream = new URL(this.url).openStream()) {
             return getLatestVersion(Json.createReader(stream).readObject());
         }
     }
 
+    /**
+     * This exception is thrown if response of maven repository in json format does not contain the expected keys.
+     */
     public static class JsonContentException extends Exception {
         private static final long serialVersionUID = 1L;
 
+        /**
+         * @param message the detail message.
+         */
         public JsonContentException(final String message) {
             super(message);
         }

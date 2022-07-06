@@ -3,13 +3,23 @@ package com.exasol.projectkeeper.mavenrepo;
 import java.util.Arrays;
 import java.util.regex.Pattern;
 
+/**
+ * Parse a version number and implement Comparable for that.
+ *
+ * <p>
+ * Compared to maven-artifact-3.8.5.jar, package org.apache.maven.artifact.versioning.ComparableVersion this class
+ * supports less features, e.g. only numeric version components but avoids an additional dependency.
+ */
 //[impl->dsn~verify-own-version~1]
 public class Version implements Comparable<Version> {
 
-    public static Version of(final String string) throws UnsupportedVersionFormatException {
-        return new Version(string);
-    }
-
+    /**
+     * Regular expression pattern in order to verify version number format.
+     *
+     * <p>
+     * Only used internally and in tests.
+     * </p>
+     */
     public static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*");
     private static final int LESS = -1;
     private static final int EQUAL = 0;
@@ -18,6 +28,10 @@ public class Version implements Comparable<Version> {
     private final String raw;
     private final int[] items;
 
+    /**
+     * @param version string representation of version number.
+     * @throws UnsupportedVersionFormatException if string does not match {@link #PATTERN}.
+     */
     public Version(final String version) throws UnsupportedVersionFormatException {
         this.raw = version;
         this.items = parseVersion(version);
@@ -46,12 +60,12 @@ public class Version implements Comparable<Version> {
         return EQUAL;
     }
 
+    /**
+     * @param other other version to compare this version to
+     * @return true if this version is greater or equal than the other one
+     */
     public boolean isGreaterOrEqualThan(final Version other) {
         return compareTo(other) != LESS;
-    }
-
-    public int compareTo(final String other) throws UnsupportedVersionFormatException {
-        return compareTo(new Version(other));
     }
 
     private int compare(final int i, final Version other) {
@@ -65,9 +79,15 @@ public class Version implements Comparable<Version> {
         return result != EQUAL;
     }
 
+    /**
+     * Thrown if version uses an unsupported format and cannot be parsed and compared to another version.
+     */
     public static class UnsupportedVersionFormatException extends Exception {
         private static final long serialVersionUID = 1L;
 
+        /**
+         * @param message detailed message of the exception
+         */
         public UnsupportedVersionFormatException(final String message) {
             super(message);
         }

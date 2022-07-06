@@ -23,7 +23,15 @@ import com.exasol.projectkeeper.validators.finding.*;
  */
 //[impl->dsn~pom-file-validator~1]
 public class PomFileValidator implements Validator {
-    public static final String PROJECT_KEEPER_VERSION_XPATH = "/project/build/plugins/plugin" //
+
+    /**
+     * Xpath to find version of PK maven plugin in POM file.
+     *
+     * <p>
+     * Used only internally and in tests.
+     * </p>
+     */
+    static final String PROJECT_KEEPER_VERSION_XPATH = "/project/build/plugins/plugin" //
             + "[groupId = 'com.exasol' and artifactId = 'project-keeper-maven-plugin'" //
             + "]/version";
 
