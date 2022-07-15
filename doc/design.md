@@ -33,7 +33,7 @@ Covers:
 Needs: impl
 
 
-### Project keeper self update
+### Project Keeper Self Update
 
 `dsn~verify-own-version~1`
 
@@ -54,8 +54,8 @@ Needs: impl, utest, itest
 PK performs self-update only for Maven projects.
 
 Rationale: CLI users can use PK by executing a jar file with arbitrary location in the file system.
-* This location might be unknown to PK and could be read-only. 
-* Replacing the jar file should be up to the human user. 
+* This location might be unknown to PK and could be read-only.
+* Replacing the jar file should be up to the human user.
 * Update of PK CLI variant is simple as it just requires to download the latest jar.
 * Scope and effort for update is probably small, as most users will probably use a common jar file for all of their projects instead of having a versioned maven plugin reference for each individual maven project.
 

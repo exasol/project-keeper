@@ -9,8 +9,8 @@ import lombok.EqualsAndHashCode;
  * Parse a version number and implement Comparable for that.
  *
  * <p>
- * Compared to class {@code org.apache.maven.artifact.versioning.ComparableVersion} from Maven this class
- * supports less features, e.g. only numeric version components but avoids an additional dependency.
+ * Compared to class {@code org.apache.maven.artifact.versioning.ComparableVersion} from Maven this class supports less
+ * features, e.g. only numeric version components but avoids an additional dependency.
  */
 //[impl->dsn~verify-own-version~1]
 @EqualsAndHashCode

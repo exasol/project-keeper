@@ -3,8 +3,6 @@ package com.exasol.projectkeeper.mavenrepo;
 import java.io.IOException;
 import java.net.URL;
 
-import com.exasol.projectkeeper.ProjectKeeper;
-
 import jakarta.json.*;
 import lombok.Getter;
 
@@ -35,13 +33,13 @@ public class MavenRepository {
      * @return latest version.
      * @throws JsonContentException if json does not contain the expected keys.
      */
-    public static String getLatestVersion(final JsonObject json) throws JsonContentException {
+    static String getLatestVersion(final JsonObject json) throws JsonContentException {
         try {
             return json.getJsonObject("response") //
                     .getJsonArray("docs") //
                     .getJsonObject(0) //
                     .getString("latestVersion");
-        } catch (final NullPointerException e) {
+        } catch (final NullPointerException exception) {
             throw new JsonContentException("Could not find /response/docs[0]/latestVersion in json document.");
         }
     }
@@ -66,7 +64,7 @@ public class MavenRepository {
      * {@link MavenRepository#mavenPlugin}.
      *
      * <p>
-     * This constructor is designated for tests, but as tests are in a different package the visibility needs to be
+     * This constructor is designated for tests, but as some tests are in a different package the visibility needs to be
      * public.
      * </p>
      *

@@ -21,8 +21,8 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 //[itest->dsn~self-update~1]
 class OwnVersionValidatorTest {
 
-    private static String expectedMessage(final int number, final String suffix) {
-        return "W-PK-CORE-" + number + ": Could not detect latest .* " + suffix;
+    private static String expectedMessage(final String errorCode, final String suffix) {
+        return errorCode + ": Could not detect latest .* " + suffix;
     }
 
     private static final String OUTDATED = "W-PK-CORE-153: Project-keeper version 0.0.1 is outdated."
@@ -30,12 +30,13 @@ class OwnVersionValidatorTest {
 
     @Test
     void retrieveLatestVersion_IoError() {
-        verifyOptionalFinding(testee("0.1.0"), expectedMessage(155, "Connection refused.*"));
+        verifyOptionalFinding(testee("0.1.0", new MavenRepository("https://localhost/unknown/end/point")),
+                expectedMessage("W-PK-CORE-155", "Connection refused.*"));
     }
 
     @Test
     void ownVersionUnsupportedFormat() {
-        verifyOptionalFinding(testee("a.b.c"), //
+        verifyOptionalFinding(testee("a.b.c", (MavenRepository) null), //
                 "W-PK-CORE-152: Could not validate version of project-keeper."
                         + " Unsupported format of own version.*");
     }
@@ -43,7 +44,7 @@ class OwnVersionValidatorTest {
     @Test
     void latestVersionUnsupportedFormat() throws Exception {
         verifyOptionalFinding(testee("0.0.1", "x.y.z"),
-                expectedMessage(154, "Unsupported format of latest version from Maven repository.*"));
+                expectedMessage("W-PK-CORE-154", "Unsupported format of latest version from Maven repository.*"));
     }
 
     @Test
@@ -79,19 +80,15 @@ class OwnVersionValidatorTest {
 
     // private helpers
 
-    private OwnVersionValidator testee(final String currentVersion) {
-        return testee(currentVersion, new MavenRepository("https://localhost/unknown/end/point"));
+    private OwnVersionValidator testee(final String currentVersion, final MavenRepository repo) {
+        final Updater updater = mock(Updater.class);
+        return new OwnVersionValidator(currentVersion, repo, updater);
     }
 
     private OwnVersionValidator testee(final String currentVersion, final String latestVersion) throws Exception {
         final MavenRepository repo = mock(MavenRepository.class);
         when(repo.getLatestVersion()).thenReturn(latestVersion);
         return testee(currentVersion, repo);
-    }
-
-    private OwnVersionValidator testee(final String currentVersion, final MavenRepository repo) {
-        final Updater updater = mock(Updater.class);
-        return new OwnVersionValidator(currentVersion, repo, updater);
     }
 
     private SimpleValidationFinding verifyOptionalFinding(final OwnVersionValidator testee,

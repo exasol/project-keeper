@@ -4,22 +4,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.MalformedURLException;
-
-import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import com.exasol.projectkeeper.mavenrepo.MavenRepository.JsonContentException;
 import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatException;
 
-import jakarta.json.*;
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
 //[utest->dsn~verify-own-version~1]
-class LatestVersionTest {
+class VersionTest {
 
     // test Version
 
@@ -52,40 +47,9 @@ class LatestVersionTest {
         assertThat(new Version(a).compareTo(new Version(b)), is(0));
     }
 
-    // test MavenRepository
-
     @Test
-    void url() throws MalformedURLException {
-        final String url = MavenRepository.cli().getUrl();
-        assertThat(url, startsWith(MavenRepository.DEFAULT_REPOSITORY_URL));
-        assertThat(url, containsString(MavenRepository.GROUP_ID));
-        assertThat(url, containsString(MavenRepository.ARTIFACT_PREFIX + "-cli"));
+    void equalsContract() {
+        EqualsVerifier.forClass(Version.class).suppress(Warning.STRICT_INHERITANCE).verify();
     }
 
-    @Test
-    void emptyJson_ThrowsException() throws IOException {
-        final JsonObject json = json("{}");
-        assertThrows(JsonContentException.class, () -> MavenRepository.getLatestVersion(json));
-    }
-    
-    @Test
-    void jsonWithoutVersionInformation_ThrowsException() throws IOException {
-        final JsonObject json = json("{\"response\": {\"docs\": [{\"other\": \"2.4.6\"}]}}");
-        assertThrows(JsonContentException.class, () -> MavenRepository.getLatestVersion(json));
-    }
-
-    @Test
-    void localResource_Success() throws IOException, JsonContentException {
-        final String url = LatestVersionTest.class.getResource("json.json").toExternalForm();
-        final MavenRepository testee = new MavenRepository(url);
-        assertThat(testee.getLatestVersion(), equalTo("2.4.6"));
-    }
-
-    @Tag("integration")
-    @Test
-    // [itest->dsn~verify-own-version~1]
-    void integrationTest() throws IOException, JsonContentException {
-        assertThat(MavenRepository.cli().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
-        assertThat(MavenRepository.mavenPlugin().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
-    }
 }

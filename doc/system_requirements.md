@@ -22,7 +22,7 @@ Goals of this plugin:
 
 Features are the highest level requirements in this document that describe the main functionality of PK.
 
-### Self update
+### Self Update
 
 `feat~self-update~1`
 
