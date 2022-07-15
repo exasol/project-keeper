@@ -27,6 +27,7 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.4.6` to `2.5.0`
+* Added `nl.jqno.equalsverifier:equalsverifier:3.10`
 
 ### Project Keeper Command Line Interface
 
