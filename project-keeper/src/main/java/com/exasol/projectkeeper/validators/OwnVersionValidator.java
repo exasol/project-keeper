@@ -51,8 +51,6 @@ public class OwnVersionValidator implements Validator {
         return List.of(builder.build());
     }
 
-    // instance fields and methods
-
     private final String currentVersion;
     @Getter
     private final MavenRepository mavenRepository;
@@ -92,6 +90,7 @@ public class OwnVersionValidator implements Validator {
         try {
             return new Version(version);
         } catch (final UnsupportedVersionFormatException e) {
+            exception.setCause(e);
             throw exception;
         }
     }
@@ -103,12 +102,12 @@ public class OwnVersionValidator implements Validator {
                     .message("Could not detect latest available version of project-keeper.") //
                     .message(" Unsupported format of latest version from Maven repository: {{version}}.", versionString) //
                     .toString()));
-        } catch (final IOException | JsonContentException e) {
+        } catch (final IOException | JsonContentException exception) {
             throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155") //
                     .message("Could not detect latest available version of project-keeper.") //
                     .message(" {{message|uq}}.", e.getMessage()) //
                     .mitigation("Please check network connection and response from {{url}}", repo.getUrl()) //
-                    .toString());
+                    .toString(), exception);
         }
     }
 
@@ -132,9 +131,9 @@ public class OwnVersionValidator implements Validator {
          * a Fix in order to perform a self-update of PK. Note that this currently is only supported if PK is used as a
          * maven plugin.
          *
-         * @param value latest version
+         * @param latestVersion latest version
          * @return Fix performing a self-update of PK.
          */
-        Fix accept(String value);
+        Fix accept(String latestVersion);
     }
 }

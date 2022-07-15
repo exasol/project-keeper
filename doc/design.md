@@ -40,6 +40,7 @@ Needs: impl
 PK is able to detect its own current installed version, retrieve the latest version available for download, and to validate if the current version is not older than the latest available.
 
 All findings related to detecting and verifying its own version are optional.
+
 Rationale: Releasing a new version of PK should not break automated builds of existing projects using PK.
 
 Covers:
@@ -50,12 +51,13 @@ Needs: impl, utest, itest
 
 `dsn~self-update~1`
 
-PK performs self-update only for maven projects.
+PK performs self-update only for Maven projects.
+
 Rationale: CLI users can use PK by executing a jar file with arbitrary location in the file system.
 * This location might be unknown to PK and could be read-only. 
 * Replacing the jar file should be up to the human user. 
 * Update of PK CLI variant is simple as it just requires to download the latest jar.
-* Scope and effort for update is probably small, as most users will probably use a common jar file for all of their projects   instead of having a versioned maven plugin reference for each individual maven project.
+* Scope and effort for update is probably small, as most users will probably use a common jar file for all of their projects instead of having a versioned maven plugin reference for each individual maven project.
 
 Covers:
 

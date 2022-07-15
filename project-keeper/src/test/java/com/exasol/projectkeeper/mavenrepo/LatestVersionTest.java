@@ -32,7 +32,7 @@ class LatestVersionTest {
     }
 
     @ParameterizedTest(name = "Version(\"{0}\")")
-    @CsvSource(value = { "''", "aa", "1 2", ".1", "000.111.222." })
+    @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
     void invalidVersionStrings(final String version) throws UnsupportedVersionFormatException {
         assertThrows(UnsupportedVersionFormatException.class, () -> new Version(version));
     }
@@ -52,24 +52,6 @@ class LatestVersionTest {
         assertThat(new Version(a).compareTo(new Version(b)), is(0));
     }
 
-    // test Json
-
-    @Test
-    void emptyJson_ThrowsException() throws IOException {
-        assertThrows(JsonException.class, () -> json(""));
-    }
-
-    @Test
-    void invalidJson_ThrowsException() throws IOException {
-        assertThrows(JsonException.class, () -> json("{"));
-    }
-
-    private JsonObject json(final String content) {
-        try (JsonReader jr = Json.createReader(new StringReader(content))) {
-            return jr.readObject();
-        }
-    }
-
     // test MavenRepository
 
     @Test
@@ -80,6 +62,12 @@ class LatestVersionTest {
         assertThat(url, containsString(MavenRepository.ARTIFACT_PREFIX + "-cli"));
     }
 
+    @Test
+    void emptyJson_ThrowsException() throws IOException {
+        final JsonObject json = json("{}");
+        assertThrows(JsonContentException.class, () -> MavenRepository.getLatestVersion(json));
+    }
+    
     @Test
     void jsonWithoutVersionInformation_ThrowsException() throws IOException {
         final JsonObject json = json("{\"response\": {\"docs\": [{\"other\": \"2.4.6\"}]}}");

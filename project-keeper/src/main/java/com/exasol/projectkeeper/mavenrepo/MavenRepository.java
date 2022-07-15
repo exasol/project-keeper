@@ -9,7 +9,7 @@ import jakarta.json.*;
 import lombok.Getter;
 
 /**
- * See {@link ProjectKeeper}, field ownVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
+ * This class allows getting the latest version of project-keeper from Maven Central.
  */
 //[impl->dsn~verify-own-version~1]
 public class MavenRepository {

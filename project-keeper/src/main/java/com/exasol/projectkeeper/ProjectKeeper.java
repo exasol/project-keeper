@@ -166,7 +166,7 @@ public class ProjectKeeper {
      * Verify the project structure.
      *
      * <p>
-     * PK interprets the a validation as "successful" if there are no mandatory findings. Optional findings are ignored
+     * PK interprets the validation as "successful" if there are no mandatory findings. Optional findings are ignored
      * in this place.
      * </p>
      *

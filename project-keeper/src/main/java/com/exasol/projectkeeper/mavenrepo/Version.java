@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
  * Parse a version number and implement Comparable for that.
  *
  * <p>
- * Compared to maven-artifact-3.8.5.jar, package org.apache.maven.artifact.versioning.ComparableVersion this class
+ * Compared to class {@code org.apache.maven.artifact.versioning.ComparableVersion} from Maven this class
  * supports less features, e.g. only numeric version components but avoids an additional dependency.
  */
 //[impl->dsn~verify-own-version~1]
@@ -66,7 +66,7 @@ public class Version implements Comparable<Version> {
 
     /**
      * @param other other version to compare this version to
-     * @return true if this version is greater or equal than the other one
+     * @return {@code true} if this version is greater or equal than the other one
      */
     public boolean isGreaterOrEqualThan(final Version other) {
         return compareTo(other) > LESS;
