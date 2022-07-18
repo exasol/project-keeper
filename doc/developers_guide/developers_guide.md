@@ -31,7 +31,7 @@ https://repo.maven.apache.org/maven2 during a previous attempt.
 
 In order to fix this, just install project-keeper:
 
-```
+```sh
 mvn install --projects . -DskipTests
 ```
 
