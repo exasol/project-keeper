@@ -166,8 +166,8 @@ public class ProjectKeeper {
      * Verify the project structure.
      *
      * <p>
-     * PK interprets the validation as "successful" if there are no mandatory findings. Optional findings are ignored
-     * in this place.
+     * PK interprets the validation as "successful" if there are no mandatory findings. Optional findings are ignored in
+     * this place.
      * </p>
      *
      * @return {@code true} if project is valid
@@ -178,11 +178,19 @@ public class ProjectKeeper {
 
     private boolean handleVerifyFindings(final List<ValidationFinding> findings) {
         final List<SimpleValidationFinding> findingsFlat = new FindingsUngrouper().ungroupFindings(findings);
-        findingsFlat.forEach(finding -> this.logger.error(finding.getMessage()));
+        findingsFlat.forEach(this::reportFinding);
         final boolean hasFindingsWithFix = findingsFlat.stream().anyMatch(SimpleValidationFinding::hasFix);
         final boolean hasFindingsWithoutFix = findingsFlat.stream().anyMatch(finding -> !finding.hasFix());
         logValidationFailure(hasFindingsWithFix, hasFindingsWithoutFix);
         return blockers(findingsFlat).isEmpty();
+    }
+
+    private void reportFinding(final SimpleValidationFinding finding) {
+        if (finding.isOptional()) {
+            this.logger.warn(finding.getMessage());
+        } else {
+            this.logger.error(finding.getMessage());
+        }
     }
 
     private void logValidationFailure(final boolean hasFindingsWithFix, final boolean hasFindingsWithoutFix) {
