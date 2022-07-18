@@ -16,8 +16,6 @@ import nl.jqno.equalsverifier.Warning;
 //[utest->dsn~verify-own-version~1]
 class VersionTest {
 
-    // test Version
-
     @ParameterizedTest(name = "Version(\"{0}\")")
     @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
     void validVersionStrings(final String version) throws UnsupportedVersionFormatException {
