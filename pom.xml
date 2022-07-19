@@ -6,6 +6,8 @@
     <artifactId>project-keeper-root</artifactId>
     <packaging>pom</packaging>
     <version>0.0.0</version>
+  	<description>Project keeper is a tool that verifies and fixes project setups.</description>
+    <url>https://github.com/exasol/project-keeper/</url>
     <modules>
         <module>shared-model-classes</module>
         <module>project-keeper</module>

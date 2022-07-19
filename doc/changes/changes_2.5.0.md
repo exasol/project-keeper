@@ -1,8 +1,10 @@
 # Project Keeper 2.5.0, released 2022-07-19
 
-Code name:
+Code name: Self update
 
 ## Summary
+
+PK now is able to update itself if used as a maven plugin.
 
 ## Features
 
