@@ -10,9 +10,11 @@ import java.util.*;
 import org.w3c.dom.*;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.RepoInfo;
+import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
+import com.exasol.projectkeeper.validators.OwnVersionValidator;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 
@@ -21,6 +23,18 @@ import com.exasol.projectkeeper.validators.finding.*;
  */
 //[impl->dsn~pom-file-validator~1]
 public class PomFileValidator implements Validator {
+
+    /**
+     * Xpath to find version of PK maven plugin in POM file.
+     *
+     * <p>
+     * Used only internally and in tests.
+     * </p>
+     */
+    static final String PROJECT_KEEPER_VERSION_XPATH = "/project/build/plugins/plugin" //
+            + "[groupId = 'com.exasol' and artifactId = 'project-keeper-maven-plugin'" //
+            + "]/version";
+
     private static final String PARENT_POM_MITIGATION = "Check the project-keeper user guide if you need a parent pom.";
     @SuppressWarnings("java:S1075") // not customizable
     private static final String XPATH_DESCRIPTION = "/project/description";
@@ -32,7 +46,7 @@ public class PomFileValidator implements Validator {
 
     /**
      * Create a new instance of {@link PomFileValidator}.
-     * 
+     *
      * @param projectDirectory project directory
      * @param enabledModules   collection of enables modules
      * @param pomFilePath      pom file to create the runner for
@@ -58,6 +72,7 @@ public class PomFileValidator implements Validator {
             final List<ValidationFinding> findings = new ArrayList<>();
             validateGroupId(groupId).ifPresent(findings::add);
             validateUrlTag(pom).ifPresent(findings::add);
+            findings.addAll(validateOwnVersion(pom));
             final Path generatedPomPath = this.pomFilePath.getParent().resolve("pk_generated_parent.pom");
             findings.addAll(validateParentTag(pom, version, artifactId, groupId, generatedPomPath));
             findings.addAll(validateGeneratedPomFile(groupId, artifactId, version, generatedPomPath));
@@ -69,6 +84,20 @@ public class PomFileValidator implements Validator {
         } catch (final InvalidPomException exception) {
             return List.of(SimpleValidationFinding.withMessage(exception.getMessage()).build());
         }
+    }
+
+    private List<ValidationFinding> validateOwnVersion(final Document pom) {
+        final Node node = runXPath(pom, PROJECT_KEEPER_VERSION_XPATH);
+        if (node == null) {
+            return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-151") //
+                    .message("Pom file contains no reference to project-keeper-maven-plugin.") //
+                    .toString()) //
+                    .optional(true) //
+                    .build());
+        }
+
+        final OwnVersionValidator.Updater updater = version -> (log -> node.setTextContent(version));
+        return OwnVersionValidator.forMavenPlugin(node.getTextContent(), updater).validate();
     }
 
     private Optional<SimpleValidationFinding> validateUrlTag(final Document document) {
@@ -136,14 +165,14 @@ public class PomFileValidator implements Validator {
     private boolean hasFindingWithFix(final List<ValidationFinding> findings) {
         return findings.stream().anyMatch(finding -> //
         (finding instanceof ValidationFindingGroup) || //
-                (finding instanceof SimpleValidationFinding && ((SimpleValidationFinding) finding).hasFix()));
+                ((finding instanceof SimpleValidationFinding) && ((SimpleValidationFinding) finding).hasFix()));
     }
 
     private String getProjectVersion(final Document pom) throws InvalidPomException {
         final Node versionNode = runXPath(pom, "/project/version");
         if (versionNode != null) {
             return versionNode.getTextContent();
-        } else if (this.parentPomRef != null && this.parentPomRef.getVersion() != null) {
+        } else if ((this.parentPomRef != null) && (this.parentPomRef.getVersion() != null)) {
             return this.parentPomRef.getVersion();
         } else {
             throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
@@ -156,7 +185,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> validateAssemblyPlugin(final Node pom, final Path relativePomPath) {
         final Node finalNameProperty = runXPath(pom,
                 "/project/build/plugins/plugin[artifactId/text()='maven-assembly-plugin']/configuration/finalName");
-        if (finalNameProperty == null || finalNameProperty.getTextContent().isBlank()) {
+        if ((finalNameProperty == null) || finalNameProperty.getTextContent().isBlank()) {
             return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-105").message(
                     "Invalid pom file {{file}}: Missing required property finalName property in maven-assembly-plugin.",
                     relativePomPath)
@@ -200,7 +229,7 @@ public class PomFileValidator implements Validator {
     private Optional<SimpleValidationFinding> checkParentVersion(final String version, final Path generatedPomPath,
             final Node parentTag, final boolean hasOtherFindings) {
         final Node node = runXPath(parentTag, "version");
-        if (node == null || !version.equals(node.getTextContent())) {
+        if ((node == null) || !version.equals(node.getTextContent())) {
             final SimpleValidationFinding.Builder findingBuilder = SimpleValidationFinding.withMessage(ExaError
                     .messageBuilder("E-PK-CORE-118")
                     .message(
@@ -208,7 +237,7 @@ public class PomFileValidator implements Validator {
                             this.projectDirectory.relativize(this.pomFilePath), version,
                             this.projectDirectory.relativize(generatedPomPath))
                     .mitigation(PARENT_POM_MITIGATION).toString());
-            if (!hasOtherFindings && node != null) {
+            if (!hasOtherFindings && (node != null)) {
                 /*
                  * If there are no other findings we can automatically fix the version. Otherwise, better not since it
                  * could be the reference to a non generated parent pom.
@@ -225,7 +254,7 @@ public class PomFileValidator implements Validator {
     private Optional<ValidationFinding> checkParentRelativePath(final Path generatedPomPath, final Node parentTag,
             final Path expectedValue) {
         final Node node = runXPath(parentTag, "relativePath");
-        if (node == null || !comparePaths(expectedValue, Path.of(node.getTextContent()))) {
+        if ((node == null) || !comparePaths(expectedValue, Path.of(node.getTextContent()))) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-112").message(
                     "Invalid pom file {{file}}: Invalid '/project/parent/relativePath'. Expected value is {{expected}}. The pom must declare {{generated parent}} as parent pom.",
                     this.projectDirectory.relativize(this.pomFilePath), expectedValue,
@@ -243,7 +272,7 @@ public class PomFileValidator implements Validator {
     private Optional<ValidationFinding> checkParentProperty(final Path generatedPomPath, final Node parentTag,
             final String property, final String expectedValue) {
         final Node node = runXPath(parentTag, property);
-        if (node == null || !node.getTextContent().equals(expectedValue)) {
+        if ((node == null) || !node.getTextContent().equals(expectedValue)) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-104").message(
                     "Invalid pom file {{file}}: Invalid '/project/parent/{{property|uq}}'. Expected value is {{expected}}. The pom must declare {{generated parent}} as parent pom.",
                     this.projectDirectory.relativize(this.pomFilePath), property, expectedValue,

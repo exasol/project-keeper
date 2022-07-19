@@ -28,39 +28,79 @@ public class TestMavenModel extends Model {
         this.setModelVersion("4.0.0");
     }
 
-    public void addDependency() {
-        addDependency(DEFAULT_DEPENDENCY_VERSION);
+    public TestMavenModel withUrl(final String value) {
+        setUrl(value);
+        return this;
     }
 
-    public void addDependency(final String version) {
-        addDependency(DEPENDENCY_ARTIFACT_ID, DEPENDENCY_GROUP_ID, "", version);
+    public TestMavenModel withGroupId(final String value) {
+        setGroupId(value);
+        return this;
     }
 
-    public void addDependency(final String artifactId, final String groupId, final String scope, final String version) {
+    public TestMavenModel withVersion(final String value) {
+        setVersion(value);
+        return this;
+    }
+
+    public TestMavenModel withDescription(final String value) {
+        setDescription(value);
+        return this;
+    }
+
+    public TestMavenModel addDependency() {
+        return withDependency(DEFAULT_DEPENDENCY_VERSION);
+    }
+
+    public TestMavenModel withDependency(final String version) {
+        return addDependency(DEPENDENCY_ARTIFACT_ID, DEPENDENCY_GROUP_ID, "", version);
+    }
+
+    public TestMavenModel addDependency(final String artifactId, final String groupId, final String scope,
+            final String version) {
         final Dependency dependency = new Dependency();
         dependency.setGroupId(groupId);
         dependency.setArtifactId(artifactId);
         dependency.setVersion(version);
         dependency.setScope(scope);
-        this.addDependency(dependency);
+        return withDependency(dependency);
     }
 
-    public void writeAsPomToProject(final Path projectDir) {
+    public TestMavenModel withDependency(final Dependency dependency) {
+        this.addDependency(dependency);
+        return this;
+    }
+
+    public TestMavenModel writeAsPomToProject(final Path projectDir) {
         try (final FileWriter fileWriter = new FileWriter(projectDir.resolve("pom.xml").toFile())) {
             new MavenXpp3Writer().write(fileWriter, this);
+            return this;
         } catch (final IOException exception) {
             throw new UncheckedIOException(exception);
         }
     }
 
-    public void configureAssemblyPluginFinalName() {
-        final Plugin assemblyPlugin = new Plugin();
-        assemblyPlugin.setArtifactId("maven-assembly-plugin");
+    public TestMavenModel configureAssemblyPluginFinalName() {
+        final Plugin plugin = new Plugin();
+        plugin.setArtifactId("maven-assembly-plugin");
         final Xpp3Dom configuration = new Xpp3Dom("configuration");
         final Xpp3Dom finalName = new Xpp3Dom("finalName");
         finalName.setValue("my-jar");
         configuration.addChild(finalName);
-        assemblyPlugin.setConfiguration(configuration);
-        this.getBuild().addPlugin(assemblyPlugin);
+        plugin.setConfiguration(configuration);
+        return withPlugin(plugin);
+    }
+
+    public TestMavenModel withProjectKeeperPlugin(final String version) {
+        final Plugin plugin = new Plugin();
+        plugin.setGroupId(PROJECT_GROUP_ID);
+        plugin.setArtifactId("project-keeper-maven-plugin");
+        plugin.setVersion(version);
+        return withPlugin(plugin);
+    }
+
+    public TestMavenModel withPlugin(final Plugin plugin) {
+        this.getBuild().addPlugin(plugin);
+        return this;
     }
 }

@@ -18,8 +18,27 @@ go install github.com/google/go-licenses@v1.2.1
 
 This will install the binary to `$(go env GOPATH)/bin/go-licenses` (by default `$HOME/go/bin/go-licenses`). Project Keeper tries to find the `go-licenses` binary in `$(go env GOPATH)/bin`. If this fails, you will need to add `$(go env GOPATH)/bin` to your `PATH`.
 
+## Building
+
+When building a new release of PK then Maven might display the following error:
+
+```
+[ERROR] Failed to execute goal on project project-keeper-java-project-crawler:
+Could not resolve dependencies for project com.exasol:project-keeper-java-project-crawler:maven-plugin:2.5.0:
+com.exasol:project-keeper-shared-model-classes:jar:2.5.0 was not found in
+https://repo.maven.apache.org/maven2 during a previous attempt.
+```
+
+In order to fix this, just install project-keeper:
+
+```sh
+mvn install --projects . -DskipTests
+```
+
+After that the dependencies of PK are available in your local maven repository in the version of the current release and hence references to these versions in the pom of the current release are valid.
+
 ## Requirement Tracing
 
 ```sh
-mvn openfasttrace:trace -projects .
+mvn openfasttrace:trace --projects .
 ```

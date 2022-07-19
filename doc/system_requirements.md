@@ -10,7 +10,7 @@ Project Keeper (PK) is a tool that unifies the structure of repositories of the 
 
 Goals of this plugin:
 
-* Fasten repository creation
+* Speed up repository creation
 * Keep repository structure and common files up to date
 * Unify repository structure
 
@@ -21,6 +21,14 @@ Goals of this plugin:
 ## Features
 
 Features are the highest level requirements in this document that describe the main functionality of PK.
+
+### Self Update
+
+`feat~self-update~1`
+
+PK can check if its own version equals the latest available version of PK. If a newer version is available then PK performs a self-update.
+
+Needs: dsn
 
 ### Verify Repository
 

@@ -76,16 +76,17 @@
 
 ### Test Dependencies
 
-| Dependency                             | License                                        |
-| -------------------------------------- | ---------------------------------------------- |
-| [Project Keeper shared test setup][46] | [The MIT License][47]                          |
-| [Maven Project Version Getter][57]     | [MIT][10]                                      |
-| [JUnit Jupiter Engine][12]             | [Eclipse Public License v2.0][13]              |
-| [JUnit Jupiter Params][12]             | [Eclipse Public License v2.0][13]              |
-| [Hamcrest][14]                         | [BSD License 3][15]                            |
-| [org.xmlunit:xmlunit-matchers][51]     | [The Apache Software License, Version 2.0][26] |
-| [mockito-junit-jupiter][19]            | [The MIT License][20]                          |
-| [Maven Plugin Integration Testing][58] | [MIT][10]                                      |
+| Dependency                                | License                                        |
+| ----------------------------------------- | ---------------------------------------------- |
+| [Project Keeper shared test setup][46]    | [The MIT License][47]                          |
+| [Maven Project Version Getter][57]        | [MIT][10]                                      |
+| [JUnit Jupiter Engine][12]                | [Eclipse Public License v2.0][13]              |
+| [JUnit Jupiter Params][12]                | [Eclipse Public License v2.0][13]              |
+| [Hamcrest][14]                            | [BSD License 3][15]                            |
+| [org.xmlunit:xmlunit-matchers][51]        | [The Apache Software License, Version 2.0][26] |
+| [mockito-junit-jupiter][19]               | [The MIT License][20]                          |
+| [Maven Plugin Integration Testing][58]    | [MIT][10]                                      |
+| [EqualsVerifier | release normal jar][17] | [Apache License, Version 2.0][18]              |
 
 ### Runtime Dependencies
 

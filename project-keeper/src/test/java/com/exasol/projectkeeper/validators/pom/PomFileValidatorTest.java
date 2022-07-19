@@ -1,9 +1,9 @@
 package com.exasol.projectkeeper.validators.pom;
 
 import static com.exasol.projectkeeper.validators.FindingMatcher.hasFindingWithMessage;
+import static com.exasol.projectkeeper.validators.FindingMatcher.hasFindingWithMessageMatchingRegex;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
 
@@ -20,13 +20,17 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.w3c.dom.Document;
 
-import com.exasol.projectkeeper.*;
+import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.RepoInfo;
+import com.exasol.projectkeeper.mavenrepo.Version;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
+import com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper;
 
 //[utest->dsn~pom-file-validator~1]
 class PomFileValidatorTest {
@@ -60,20 +64,6 @@ class PomFileValidatorTest {
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result, hasFindingWithMessage(
                 "E-PK-CORE-120: Invalid pom file pom.xml: Missing required property /project/description. Please manually add a description."));
-    }
-
-    private TestMavenModel getTestModel() {
-        return new TestMavenModel();
-    }
-
-    @Test
-    void testValidAfterFix() throws IOException {
-        final TestMavenModel pom = getTestModel();
-        pom.configureAssemblyPluginFinalName();
-        pom.writeAsPomToProject(this.tempDir);
-        runFix(null);
-        final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, empty());
     }
 
     @Test
@@ -214,11 +204,43 @@ class PomFileValidatorTest {
                 "E-PK-CORE-104: Invalid pom file pom.xml: Invalid '/project/parent/artifactId'. Expected value is 'my-test-project-generated-parent'. The pom must declare pk_generated_parent.pom as parent pom. Check the project-keeper user guide if you need a parent pom."));
     }
 
+    // [utest->dsn~verify-own-version~1]
+    @Test
+    void noReferenceToProjectKeeperPlugin() {
+        getTestModel().writeAsPomToProject(this.tempDir);
+        final List<ValidationFinding> result = runValidator(null);
+        assertThat(result,
+                hasFindingWithMessage("W-PK-CORE-151: Pom file contains no reference to project-keeper-maven-plugin."));
+    }
+
+    // [utest->dsn~verify-own-version~1]
+    @Test
+    void outdatedReferenceToProjectKeeperPlugin() {
+        getTestModel().withProjectKeeperPlugin("0.0.1").writeAsPomToProject(this.tempDir);
+        final List<ValidationFinding> result = runValidator(null);
+        assertThat(result, hasFindingWithMessageMatchingRegex("W-PK-CORE-153: Project-keeper version 0.0.1 is outdated."
+                + " Please update project-keeper to latest version.*"));
+    }
+
+    // [utest->dsn~self-update~1]
+    @Test
+    void updateReferenceToProjectKeeperMavenPlugin() {
+        getTestModel().withProjectKeeperPlugin("0.0.1").writeAsPomToProject(this.tempDir);
+        runFix(null);
+        final Document pom = new PomFileIO().parsePomFile(this.tempDir.resolve("pom.xml"));
+        final String version = XPathErrorHandlingWrapper //
+                .runXPath(pom, PomFileValidator.PROJECT_KEEPER_VERSION_XPATH) //
+                .getTextContent();
+        assertThat(version, not("0.0.1"));
+        assertThat(version, matchesRegex(Version.PATTERN));
+    }
+
     @Test
     void testEquivalentParentPath() throws IOException {
-        final TestMavenModel model = getTestModel();
-        model.configureAssemblyPluginFinalName();
-        model.writeAsPomToProject(this.tempDir);
+        getTestModel() //
+                .withProjectKeeperPlugin("0.0.1") //
+                .configureAssemblyPluginFinalName() //
+                .writeAsPomToProject(this.tempDir);
         runFix(null);
         final Path pom = this.tempDir.resolve("pom.xml");
         final String pomContent = Files.readString(pom);
@@ -228,4 +250,20 @@ class PomFileValidatorTest {
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result, empty());
     }
+
+    private TestMavenModel getTestModel() {
+        return new TestMavenModel();
+    }
+
+    @Test
+    void testValidAfterFix() throws IOException {
+        getTestModel() //
+                .withProjectKeeperPlugin("0.0.1") //
+                .configureAssemblyPluginFinalName() //
+                .writeAsPomToProject(this.tempDir);
+        runFix(null);
+        final List<ValidationFinding> result = runValidator(null);
+        assertThat(result, empty());
+    }
+
 }

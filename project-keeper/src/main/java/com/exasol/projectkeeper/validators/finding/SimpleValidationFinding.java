@@ -1,11 +1,16 @@
 package com.exasol.projectkeeper.validators.finding;
 
+import static java.util.function.Predicate.not;
+
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.ProjectKeeper;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import lombok.*;
+import lombok.experimental.Accessors;
 
 /**
  * This class represents an error that was found during validation.
@@ -13,17 +18,35 @@ import lombok.ToString;
 @EqualsAndHashCode
 @ToString
 public class SimpleValidationFinding implements ValidationFinding {
+
+    /**
+     * Returns mandatory findings.
+     *
+     * @param findings list of finding to be filtered
+     * @return mandatory findings
+     */
+    public static List<SimpleValidationFinding> blockers(final List<SimpleValidationFinding> findings) {
+        return findings.stream() //
+                .filter(not(SimpleValidationFinding::isOptional)) //
+                .collect(Collectors.toList());
+    }
+
     private final String message;
+    @Getter
+    @Accessors(fluent = true)
+    private final boolean isOptional;
     private final Fix fix;
 
     /**
      * Create a new instance of {@link SimpleValidationFinding}.
      *
-     * @param message error message
-     * @param fix     function that fixes the error.
+     * @param message    error message
+     * @param isOptional whether fixing this finding is mandatory or finding can be accepted (for a while)
+     * @param fix        function that fixes the error.
      */
-    private SimpleValidationFinding(final String message, final Fix fix) {
+    public SimpleValidationFinding(final String message, final boolean isOptional, final Fix fix) {
         this.message = message;
+        this.isOptional = isOptional;
         this.fix = fix;
     }
 
@@ -52,7 +75,7 @@ public class SimpleValidationFinding implements ValidationFinding {
      * @return function that fixes the error
      */
     public Fix getFix() {
-        return Objects.requireNonNullElseGet(this.fix, () -> (Logger log) -> {
+        return Objects.requireNonNullElseGet(this.fix, () -> (final Logger log) -> {
         });
     }
 
@@ -88,6 +111,7 @@ public class SimpleValidationFinding implements ValidationFinding {
      */
     public static class Builder {
         private final String message;
+        private boolean isOptional = false;
         private Fix fix;
 
         private Builder(final String message) {
@@ -109,12 +133,31 @@ public class SimpleValidationFinding implements ValidationFinding {
         }
 
         /**
+         * Mark the finding as optional or mandatory. By default each finding is mandatory.
+         *
+         * <p>
+         * About the semantics when PK interprets wheter a validation was successful see
+         * <ul>
+         * <li>{@link ProjectKeeper#verify}</li>
+         * <li>{@link ProjectKeeper#fix}</li>
+         * <li>{@link SimpleValidationFinding#blockers}</li>
+         * </ul>
+         *
+         * @param value whether this finding is optional or mandatory.
+         * @return self for fluent programming
+         */
+        public Builder optional(final boolean value) {
+            this.isOptional = value;
+            return this;
+        }
+
+        /**
          * Build the {@link SimpleValidationFinding}.
          *
          * @return built {@link SimpleValidationFinding}
          */
         public SimpleValidationFinding build() {
-            return new SimpleValidationFinding(this.message, this.fix);
+            return new SimpleValidationFinding(this.message, this.isOptional, this.fix);
         }
     }
 }
