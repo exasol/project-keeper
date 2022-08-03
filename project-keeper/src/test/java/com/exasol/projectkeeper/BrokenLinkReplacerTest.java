@@ -19,6 +19,12 @@ class BrokenLinkReplacerTest {
     }
 
     @Test
+    void testReplaceIgnoresCase() {
+        final BrokenLinkReplacer replacer = new BrokenLinkReplacer(List.of("http://exxxample.com|http://example.com"));
+        assertThat(replacer.replaceIfBroken("http://EXXXAMPLE.com"), equalTo("http://example.com"));
+    }
+
+    @Test
     void testReplaceParametersWithWhitespace() {
         final BrokenLinkReplacer replacer = new BrokenLinkReplacer(
                 List.of("\n         http://exxxample.com|http://example.com\n       "));
@@ -38,5 +44,17 @@ class BrokenLinkReplacerTest {
     void testWithNullLink() {
         final BrokenLinkReplacer replacer = new BrokenLinkReplacer(Collections.emptyList());
         assertThat(replacer.replaceIfBroken(null), equalTo(null));
+    }
+
+    @Test
+    void testWithBuiltinReplacement() {
+        final BrokenLinkReplacer replacer = new BrokenLinkReplacer(Collections.emptyList());
+        assertThat(replacer.replaceIfBroken("LICENSE-exasol-jdbc.txt"), equalTo("https://docs.exasol.com/connect_exasol/drivers/jdbc.htm"));
+    }
+
+    @Test
+    void testBuiltinReplacementIgnoresCase() {
+        final BrokenLinkReplacer replacer = new BrokenLinkReplacer(Collections.emptyList());
+        assertThat(replacer.replaceIfBroken("license-EXASOL-jdbc.txt"), equalTo("https://docs.exasol.com/connect_exasol/drivers/jdbc.htm"));
     }
 }
