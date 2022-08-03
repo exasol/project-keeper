@@ -16,5 +16,7 @@ jobs:
           distribution: 'temurin'
           java-version: 11
           cache: 'maven'
+      - name: Install Projects
+        run: mvn --batch-mode install -DskipTests # This fixes https://github.com/exasol/project-keeper/issues/330
       - name: Checking dependencies for vulnerabilities
         run: mvn --batch-mode org.sonatype.ossindex.maven:ossindex-maven-plugin:audit -f pom.xml
