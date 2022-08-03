@@ -6,6 +6,8 @@ Code name:
 
 ## Features
 
+* #321: Added default link replacement for Exasol JDBC driver
+
 ## Bugfixes
 
 * #330: Fixed dependency check

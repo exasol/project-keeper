@@ -1,6 +1,9 @@
 package com.exasol.projectkeeper;
 
+import static java.util.stream.Collectors.toMap;
+
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.exasol.errorreporting.ExaError;
 
@@ -33,7 +36,8 @@ public class BrokenLinkReplacer {
             "https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin",
             "https://www.mojohaus.org/flatten-maven-plugin/", //
             "https://awhitford.github.com/lombok.maven/lombok-maven-plugin/",
-            "https://anthonywhitford.com/lombok.maven/lombok-maven-plugin/" //
+            "https://anthonywhitford.com/lombok.maven/lombok-maven-plugin/", //
+            "LICENSE-exasol-jdbc.txt", "https://docs.exasol.com/connect_exasol/drivers/jdbc.htm" //
     );
     private final Map<String, String> replacements = new HashMap<>(getBuiltinReplacements());
 
@@ -42,7 +46,12 @@ public class BrokenLinkReplacer {
         final Map<String, String> builtinReplacements = new HashMap<>();
         builtinReplacements.putAll(BUILTIN_REPLACEMENTS_1);
         builtinReplacements.putAll(BUILTIN_REPLACEMENTS_2);
-        return builtinReplacements;
+        return convertKeysToLowerCase(builtinReplacements);
+    }
+
+    private static Map<String, String> convertKeysToLowerCase(final Map<String, String> map) {
+        return map.entrySet().stream() //
+                .collect(toMap(entry -> entry.getKey().toLowerCase(), Entry::getValue));
     }
 
     /**
