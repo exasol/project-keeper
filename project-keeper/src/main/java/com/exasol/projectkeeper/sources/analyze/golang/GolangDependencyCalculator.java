@@ -44,7 +44,7 @@ class GolangDependencyCalculator {
     }
 
     private ProjectDependencies getDependencies() {
-        this.compileDependencyLicenses = fetchLicenses("./...");
+        this.compileDependencyLicenses = fetchLicensesForMainModule();
         this.allLicenses = new HashMap<>(this.compileDependencyLicenses);
         final List<ProjectDependency> projectDependencies = this.moduleInfo.getDependencies().stream()
                 .map(this::convertDependency).collect(toList());
@@ -84,8 +84,13 @@ class GolangDependencyCalculator {
         return license;
     }
 
+    private Map<String, GolangDependencyLicense> fetchLicensesForMainModule() {
+        return this.golangServices.getLicenses(this.projectPath, "./...");
+    }
+
     private Map<String, GolangDependencyLicense> fetchLicenses(final String moduleName) {
-        return this.golangServices.getLicenses(this.projectPath, moduleName);
+        final Path moduleDir = this.golangServices.getModuleDir(this.projectPath, moduleName);
+        return this.golangServices.getLicenses(moduleDir, moduleName);
     }
 
     /**
