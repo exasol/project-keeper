@@ -64,6 +64,11 @@ class GolangDependencyCalculator {
         if (this.allLicenses.containsKey(moduleName)) {
             return this.allLicenses.get(moduleName);
         }
+        final Optional<String> prefixMatch = this.allLicenses.keySet().stream()
+                .filter(key -> key.startsWith(moduleName)).findAny();
+        if (prefixMatch.isPresent()) {
+            return this.allLicenses.get(prefixMatch.get());
+        }
         return fetchLicense(moduleName);
     }
 
