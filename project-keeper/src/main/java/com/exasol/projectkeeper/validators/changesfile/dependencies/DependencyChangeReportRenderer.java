@@ -23,10 +23,12 @@ public class DependencyChangeReportRenderer {
      */
     public List<String> render(final List<NamedDependencyChangeReport> reports) {
         final List<String> lines = new ArrayList<>();
-        lines.add(ChangesFile.DEPENDENCY_UPDATES_HEADING);
         final boolean isMultiReports = reports.size() > 1;
         for (final NamedDependencyChangeReport report : reports) {
             lines.addAll(renderProject(report, isMultiReports));
+        }
+        if (!lines.isEmpty()) {
+            lines.add(0, ChangesFile.DEPENDENCY_UPDATES_HEADING);
         }
         return lines;
     }
