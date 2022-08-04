@@ -7,6 +7,7 @@ Code name:
 ## Features
 
 * #321: Added default link replacement for Exasol JDBC driver
+* #132: Ensured that the reproducible-build-maven-plugin is the last one in the plugins list
 
 ## Bugfixes
 
