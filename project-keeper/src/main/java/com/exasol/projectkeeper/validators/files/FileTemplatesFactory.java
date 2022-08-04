@@ -61,7 +61,7 @@ class FileTemplatesFactory {
     private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
         if (modules.contains(NATIVE_IMAGE)) {
             return new FileTemplateFromResource(".github/workflows/ci-build.yml",
-                    "templates/.github/workflows/ci-build-native-image.yml", REQUIRE_EXACT);
+                    "templates/.github/workflows/ci-build-native-build.yml", REQUIRE_EXACT);
         } else {
             return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT);
         }
