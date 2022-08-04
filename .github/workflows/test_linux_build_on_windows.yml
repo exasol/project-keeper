@@ -41,7 +41,7 @@ jobs:
         run: go install github.com/google/go-licenses@v1.2.1
       - name: Build project-keeper
         run: |
-          mvn clean package -DskipTests \
+          mvn clean package -DskipTests -DtrimStackTrace=false \
             --batch-mode \
             -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - name: Strip version number
@@ -97,4 +97,4 @@ jobs:
                       "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
       - name: run project-keeper
         shell: pwsh
-        run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
+        run: mvn --batch-mode -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
