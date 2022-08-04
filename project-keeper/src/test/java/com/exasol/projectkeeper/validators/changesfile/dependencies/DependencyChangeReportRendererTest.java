@@ -44,4 +44,11 @@ class DependencyChangeReportRendererTest {
         assertThat(result, equalTo(
                 "## Dependency Updates\n\n### Project A\n\n#### Compile Dependency Updates\n\n* Added `com.example:my-lib:1.2.3`"));
     }
+
+    @Test
+    void testRenderSourceReportWithoutChanges() {
+        final NamedDependencyChangeReport sourceA = new NamedDependencyChangeReport("project A", EMPTY_REPORT);
+        final String result = String.join("\n", new DependencyChangeReportRenderer().render(List.of(sourceA)));
+        assertThat(result, equalTo(""));
+    }
 }
