@@ -55,8 +55,15 @@ public class ProjectKeeper {
      * @return built {@link ProjectKeeper}
      */
     public static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final Path mvnRepo) {
-        final String ownVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
-        return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), ownVersion);
+        return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), getOwnVersion());
+    }
+
+    private static String getOwnVersion() {
+        final String packageVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
+        if (packageVersion != null) {
+            return packageVersion;
+        }
+        return "(unknownVersion)";
     }
 
     /**
