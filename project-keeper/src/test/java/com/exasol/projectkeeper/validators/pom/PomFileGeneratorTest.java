@@ -145,4 +145,13 @@ class PomFileGeneratorTest {
                 () -> assertThat(parent.getRelativePath(), equalTo(expectedRelativePath))//
         );
     }
+
+    @Test
+    void testReproducibleBuildPluginIsLast() throws XmlPullParserException, IOException {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
+        final List<Plugin> plugins = pom.getBuild().getPlugins();
+        final Plugin lastPlugin = plugins.get(plugins.size() - 1);
+        assertAll(() -> assertThat(lastPlugin.getGroupId(), equalTo("io.github.zlika")),
+                () -> assertThat(lastPlugin.getArtifactId(), equalTo("reproducible-build-maven-plugin")));
+    }
 }
