@@ -9,6 +9,7 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 ## Features
 
 * #321: Added default link replacement for Exasol JDBC driver
+* #132: Ensured that the reproducible-build-maven-plugin is the last one in the plugins list
 
 ## Bugfixes
 

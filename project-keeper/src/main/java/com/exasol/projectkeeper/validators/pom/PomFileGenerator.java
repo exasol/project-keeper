@@ -29,7 +29,6 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/maven-enforcer-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/flatten-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/ossindex-maven-plugin.xml", DEFAULT),
-            new SimplePluginTemplateGenerator("maven_templates/reproducible-build-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-surefire-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/versions-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-assembly-plugin.xml", JAR_ARTIFACT),
@@ -45,7 +44,8 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/native-image-maven-plugin.xml", NATIVE_IMAGE),
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
             new FailsafePluginTemplateGenerator(), new JacocoPluginTemplateGenerator(),
-            new ErrorCodeCrawlerPluginTemplateGenerator());
+            new ErrorCodeCrawlerPluginTemplateGenerator(),
+            new SimplePluginTemplateGenerator("maven_templates/reproducible-build-maven-plugin.xml", DEFAULT));
     private static final String VERSION = "version";
     private static final String ARTIFACT_ID = "artifactId";
     private static final String GROUP_ID = "groupId";
