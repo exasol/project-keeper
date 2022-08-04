@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.Map.Entry;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
@@ -44,7 +45,7 @@ class GolangDependencyCalculator {
     }
 
     private ProjectDependencies getDependencies() {
-        this.compileDependencyLicenses = fetchLicenses("./...");
+        this.compileDependencyLicenses = fetchLicensesForMainModule();
         this.allLicenses = new HashMap<>(this.compileDependencyLicenses);
         final List<ProjectDependency> projectDependencies = this.moduleInfo.getDependencies().stream()
                 .map(this::convertDependency).collect(toList());
@@ -64,11 +65,17 @@ class GolangDependencyCalculator {
         if (this.allLicenses.containsKey(moduleName)) {
             return this.allLicenses.get(moduleName);
         }
+        final Optional<GolangDependencyLicense> prefixMatch = this.allLicenses.entrySet().stream() //
+                .filter(e -> e.getKey().startsWith(moduleName)) //
+                .map(Entry::getValue).findAny();
+        if (prefixMatch.isPresent()) {
+            return prefixMatch.get();
+        }
         return fetchLicense(moduleName);
     }
 
     private GolangDependencyLicense fetchLicense(final String moduleName) {
-        final Map<String, GolangDependencyLicense> licenses = fetchLicenses(moduleName);
+        final Map<String, GolangDependencyLicense> licenses = fetchAllLicenses(moduleName);
         this.allLicenses.putAll(licenses);
         final GolangDependencyLicense license = licenses.get(moduleName);
         if (license == null) {
@@ -79,8 +86,13 @@ class GolangDependencyCalculator {
         return license;
     }
 
-    private Map<String, GolangDependencyLicense> fetchLicenses(final String moduleName) {
-        return this.golangServices.getLicenses(this.projectPath, moduleName);
+    private Map<String, GolangDependencyLicense> fetchLicensesForMainModule() {
+        return this.golangServices.getLicenses(this.projectPath, "./...");
+    }
+
+    private Map<String, GolangDependencyLicense> fetchAllLicenses(final String moduleName) {
+        final Path moduleDir = this.golangServices.getModuleDir(this.projectPath, moduleName);
+        return this.golangServices.getLicenses(moduleDir, moduleName);
     }
 
     /**

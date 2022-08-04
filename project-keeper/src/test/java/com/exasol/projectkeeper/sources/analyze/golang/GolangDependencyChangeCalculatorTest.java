@@ -68,22 +68,28 @@ class GolangDependencyChangeCalculatorTest {
     }
 
     @Test
-    void missingDependencyType() {
+    void missingDependencyTypeUnkownSuffix() {
         final DependencyChange change1 = change("dep1", "v1");
         simulateChanges(change1);
         final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculate());
-        assertThat(exception.getMessage(),
-                startsWith("E-PK-CORE-148: Error finding type of dependency 'dep1', all available dependencies: []."));
+        assertThat(exception.getMessage(), startsWith("E-PK-CORE-158: Unknown suffix for module 'dep1'."));
     }
 
     @Test
-    void wrongDependency() {
-        final DependencyChange change1 = change("dep1", "v1");
+    void missingDependencyTypeValidSuffix() {
+        final DependencyChange change1 = change("dep1/v1", "v1");
         simulateChanges(change1);
-        final ProjectDependency dep = dep("unknown", Type.COMPILE);
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculate(dep));
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculate());
         assertThat(exception.getMessage(), startsWith(
-                "E-PK-CORE-148: Error finding type of dependency 'dep1', all available dependencies: [ProjectDependency(name=unknown, websiteUrl=null, licenses=[], type=COMPILE)]."));
+                "E-PK-CORE-159: Error finding type of module prefix 'dep1', all available dependencies: []."));
+    }
+
+    @Test
+    void dependencySuffixChanged() {
+        final DependencyChange change1 = change("example.com/mod/v3", "v3.1.0");
+        simulateChanges(change1);
+        assertReport(calculate(dep(change("example.com/mod/v2", "v2.0.0"), Type.TEST)), emptyList(),
+                List.of(change("example.com/mod/v3", "v3.1.0")));
     }
 
     private ProjectDependency dep(final DependencyChange change, final Type type) {

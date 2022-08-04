@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.validators;
 
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
@@ -60,7 +59,7 @@ public class OwnVersionValidator implements Validator {
     private final Updater updater;
 
     OwnVersionValidator(final String currentVersion, final MavenRepository repo, final Updater updater) {
-        this.currentVersion = currentVersion;
+        this.currentVersion = Objects.requireNonNull(currentVersion, "currentVersion");
         this.mavenRepository = repo;
         this.updater = updater;
     }

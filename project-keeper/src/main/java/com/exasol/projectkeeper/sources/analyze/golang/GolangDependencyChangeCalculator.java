@@ -4,6 +4,8 @@ import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
+import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
@@ -14,7 +16,7 @@ import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
 class GolangDependencyChangeCalculator {
-
+    private static final Logger LOGGER = Logger.getLogger(GolangDependencyChangeCalculator.class.getName());
     private final GolangServices golangServices;
     private final Path projectDir;
     private final Source source;
@@ -57,17 +59,37 @@ class GolangDependencyChangeCalculator {
     }
 
     private Type getType(final DependencyChange change) {
-        final String name = change.getArtifactId();
-        if (isGolangRuntime(name)) {
+        final String moduleName = change.getArtifactId();
+        if (isGolangRuntime(moduleName)) {
             return Type.COMPILE;
         }
         return this.dependencies.getDependencies().stream() //
-                .filter(dep -> dep.getName().equals(name)) //
+                .filter(dep -> dep.getName().equals(moduleName)) //
                 .map(ProjectDependency::getType) //
                 .findFirst() //
-                .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-148").message(
-                        "Error finding type of dependency {{artifactId}}, all available dependencies: {{all dependencies}}.",
-                        name, this.dependencies.getDependencies()).ticketMitigation().toString()));
+                .orElseGet(() -> getTypeByPrefix(moduleName));
+    }
+
+    private Type getTypeByPrefix(final String moduleName) {
+        if (moduleName.matches(".*/v\\d+")) {
+            final String moduleNamePrefix = moduleName.substring(0, moduleName.lastIndexOf("/"));
+            LOGGER.finest(() -> "Found prefix '" + moduleNamePrefix + "' for module '" + moduleName + "'.");
+            final Optional<Type> type = this.dependencies.getDependencies().stream() //
+                    .filter(dep -> dep.getName().startsWith(moduleNamePrefix)) //
+                    .map(ProjectDependency::getType) //
+                    .findFirst();
+            if (type.isPresent()) {
+                return type.get();
+            } else {
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-159").message(
+                        "Error finding type of module prefix {{module name prefix}}, all available dependencies: {{all dependencies}}.",
+                        moduleNamePrefix, this.dependencies.getDependencies()).ticketMitigation().toString());
+            }
+        } else {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-158")
+                    .message("Unknown suffix for module {{module name}}.", moduleName).ticketMitigation().toString());
+        }
+
     }
 
     private boolean isGolangRuntime(final String name) {
