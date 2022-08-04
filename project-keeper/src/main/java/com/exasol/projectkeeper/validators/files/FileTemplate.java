@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
+import java.nio.file.Path;
+
 /** Interface for templates for project files. */
 public interface FileTemplate {
     /**
@@ -14,7 +16,7 @@ public interface FileTemplate {
      * 
      * @return path
      */
-    java.nio.file.Path getPathInProject();
+    Path getPathInProject();
 
     /**
      * Get the template type

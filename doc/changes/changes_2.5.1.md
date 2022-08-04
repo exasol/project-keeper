@@ -4,13 +4,14 @@ Code name: Fix Golang dependencies
 
 ## Summary
 
-This release fixes retrieving of Golang dependencies, it should now work for most Golang projects.
+This release fixes retrieving of Golang dependencies, it should now work for most Golang projects. It also generates a script for non-Maven projects that allows running PK in CI and locally.
 
 ## Features
 
 * #321: Added default link replacement for Exasol JDBC driver
 * #162: Omit heading for empty dependency updates section in changelog
 * #132: Ensured that the reproducible-build-maven-plugin is the last one in the plugins list
+* #338: Generate a script for verifying non-Maven projects
 
 ## Bugfixes
 

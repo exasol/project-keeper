@@ -23,24 +23,28 @@ public class ProjectFilesValidator implements Validator {
     private final Path projectDirectory;
     private final List<AnalyzedSource> sources;
     private final Logger logger;
+    private final String ownVersion;
 
     /**
      * Crate a new instance of {@link ProjectFilesValidator}.
-     * 
+     *
      * @param projectDirectory project's root directory
      * @param sources          list of sources
      * @param logger           logger
+     * @param ownVersion       the version of the currently running project keeper
      */
-    public ProjectFilesValidator(final Path projectDirectory, final List<AnalyzedSource> sources, final Logger logger) {
+    public ProjectFilesValidator(final Path projectDirectory, final List<AnalyzedSource> sources, final Logger logger,
+            final String ownVersion) {
         this.projectDirectory = projectDirectory;
         this.sources = sources;
         this.logger = logger;
+        this.ownVersion = ownVersion;
     }
 
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
-        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger);
+        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.ownVersion);
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;

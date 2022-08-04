@@ -140,7 +140,7 @@ public class ProjectKeeper {
         final String projectName = getProjectName(analyzedSources);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
-        return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger),
+        return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger, this.ownVersion),
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
