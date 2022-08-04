@@ -88,7 +88,7 @@ class GolangServices {
         final Path path = Paths.get(process.getOutputStreamContent().trim());
         if (!Files.exists(path)) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-156")
-                    .message("Error directory {{directory}} for module {{module name}} does not exist", path,
+                    .message("Directory {{directory}} for module {{module name}} does not exist", path,
                             moduleName)
                     .ticketMitigation().toString());
         }
