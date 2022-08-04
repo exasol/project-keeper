@@ -7,8 +7,7 @@ import static java.util.stream.Collectors.toMap;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.nio.file.*;
 import java.time.Duration;
 import java.util.*;
 import java.util.Map.Entry;
@@ -33,7 +32,7 @@ import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
 class GolangServices {
     public static final String GOLANG_DEPENDENCY_NAME = "golang";
     private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
-    private static final List<String> COMMAND_LIST_DIRECT_DEPDENDENCIES = List.of("go", "list", "-f",
+    private static final List<String> COMMAND_LIST_DIRECT_DEPENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
 
@@ -82,6 +81,20 @@ class GolangServices {
                 .collect(toMap(GolangDependencyLicense::getModuleName, Function.identity()));
     }
 
+    Path getModuleDir(final Path absoluteSourcePath, final String moduleName) {
+        final SimpleProcess process = GoProcess.start(absoluteSourcePath,
+                List.of("go", "list", "-m", "-f", "{{.Dir}}", moduleName));
+        process.waitUntilFinished(Duration.ofSeconds(3));
+        final Path path = Paths.get(process.getOutputStreamContent().trim());
+        if (!Files.exists(path)) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-156")
+                    .message("Directory {{directory}} for module {{module name}} does not exist", path,
+                            moduleName)
+                    .ticketMitigation().toString());
+        }
+        return path;
+    }
+
     private GolangDependencyLicense convertDependencyLicense(final String line) {
         final String[] parts = line.split(",");
         if (parts.length != 3) {
@@ -104,8 +117,15 @@ class GolangServices {
      * @return module information
      */
     ModuleInfo getModuleInfo(final Path absoluteSourcePath) {
-        final SimpleProcess process = SimpleProcess.start(absoluteSourcePath, COMMAND_LIST_DIRECT_DEPDENDENCIES);
-        process.waitUntilFinished(EXECUTION_TIMEOUT);
+        final SimpleProcess process = SimpleProcess.start(absoluteSourcePath, COMMAND_LIST_DIRECT_DEPENDENCIES);
+        try {
+            process.waitUntilFinished(EXECUTION_TIMEOUT);
+        } catch (final IllegalStateException exception) {
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("E-PK-CORE-157").message("Failed to list direct dependencies.")
+                            .mitigation("Run 'go mod tidy' and try again.").toString(),
+                    exception);
+        }
         final String[] output = process.getOutputStreamContent().split("\n");
         final List<Dependency> dependencies = Arrays.stream(output) //
                 .skip(1) // ignore first line, it is the project itself
@@ -119,7 +139,7 @@ class GolangServices {
         if (parts.length != 2) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-139")
                     .message("Invalid output line of command {{command}}: {{invalid line}}",
-                            String.join(" ", COMMAND_LIST_DIRECT_DEPDENDENCIES), line)
+                            String.join(" ", COMMAND_LIST_DIRECT_DEPENDENCIES), line)
                     .toString());
         }
         final String moduleName = parts[0];

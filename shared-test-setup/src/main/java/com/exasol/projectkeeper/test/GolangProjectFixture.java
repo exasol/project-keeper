@@ -86,8 +86,8 @@ public class GolangProjectFixture implements AutoCloseable {
     }
 
     private void writeGoModFile(final Path moduleDir, final String goVersion) {
-        final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.3.1",
-                "github.com/exasol/exasol-test-setup-abstraction-server/go-client v0.0.0-20220520062645-0dd00179907c",
+        final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.4.3",
+                "github.com/exasol/exasol-test-setup-abstraction-server/go-client v0.2.2",
                 "github.com/exasol/error-reporting-go v0.1.1 // indirect");
         final String content = "module " + GO_MODULE_NAME + "\n" //
                 + "go " + goVersion + "\n" //

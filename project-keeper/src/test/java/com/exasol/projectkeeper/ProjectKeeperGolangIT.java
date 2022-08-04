@@ -45,9 +45,8 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
         final String changelog = Files
                 .readString(this.projectDir.resolve("doc/changes/changes_" + this.fixture.getProjectVersion() + ".md"));
         assertThat(changelog, allOf(containsString("* Added `golang:1.17`"),
-                containsString("* Added `github.com/exasol/exasol-driver-go:v0.4.0`"), //
-                containsString(
-                        "* Added `github.com/exasol/exasol-test-setup-abstraction-server/go-client:v0.0.0-20220520062645-0dd00179907c`")));
+                containsString("* Added `github.com/exasol/exasol-driver-go:v0.4.3`"), //
+                containsString("* Added `github.com/exasol/exasol-test-setup-abstraction-server/go-client:v0.2.2`")));
         assertThat(dependencies, allOf(containsString("github.com/exasol/exasol-driver-go | [MIT][0]"), //
                 containsString("| github.com/exasol/exasol-test-setup-abstraction-server/go-client | [MIT][1]")));
     }

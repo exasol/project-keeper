@@ -70,6 +70,14 @@ class GolangDependencyCalculatorTest {
     }
 
     @Test
+    void dependencyWithPrefixFound() {
+        simulateMainModuleLicenses(Map.of("dep1/suffix", license("dep1", "lic1", "url1")));
+        final List<ProjectDependency> dependencies = calculate(dep("dep1", "ver1"));
+        assertThat(dependencies, hasSize(1));
+        assertThat(dependencies, contains(expectedDep("dep1", "lic1", "url1", Type.TEST)));
+    }
+
+    @Test
     void licenseNotFound() {
         simulateMainModuleLicenses(Map.of());
         simulateLicenses("test1", Map.of());
@@ -94,11 +102,13 @@ class GolangDependencyCalculatorTest {
     }
 
     private void simulateMainModuleLicenses(final Map<String, GolangDependencyLicense> licenses) {
-        simulateLicenses("./...", licenses);
+        when(this.golangServicesMock.getLicenses(PROJECT_PATH, "./...")).thenReturn(licenses);
     }
 
     private void simulateLicenses(final String moduleName, final Map<String, GolangDependencyLicense> licenses) {
-        when(this.golangServicesMock.getLicenses(PROJECT_PATH, moduleName)).thenReturn(licenses);
+        final Path modulePath = Paths.get("modulePath");
+        when(this.golangServicesMock.getModuleDir(PROJECT_PATH, moduleName)).thenReturn(modulePath);
+        when(this.golangServicesMock.getLicenses(modulePath, moduleName)).thenReturn(licenses);
     }
 
     private List<ProjectDependency> calculate(final Dependency... goModDependencies) {

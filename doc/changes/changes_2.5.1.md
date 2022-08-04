@@ -1,8 +1,10 @@
 # Project Keeper 2.5.1, released 2022-??-??
 
-Code name:
+Code name: Fix Golang dependencies
 
 ## Summary
+
+This release fixes retrieving of Golang dependencies, it should now work for most Golang projects.
 
 ## Features
 
@@ -12,6 +14,7 @@ Code name:
 ## Bugfixes
 
 * #330: Fixed dependency check
+* #331: Fixed retrieving Golang dependencies
 
 ## Dependency Updates
 
