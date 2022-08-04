@@ -70,6 +70,14 @@ class GolangDependencyCalculatorTest {
     }
 
     @Test
+    void dependencyWithPrefixFound() {
+        simulateMainModuleLicenses(Map.of("dep1/suffix", license("dep1", "lic1", "url1")));
+        final List<ProjectDependency> dependencies = calculate(dep("dep1", "ver1"));
+        assertThat(dependencies, hasSize(1));
+        assertThat(dependencies, contains(expectedDep("dep1", "lic1", "url1", Type.TEST)));
+    }
+
+    @Test
     void licenseNotFound() {
         simulateMainModuleLicenses(Map.of());
         simulateLicenses("test1", Map.of());
