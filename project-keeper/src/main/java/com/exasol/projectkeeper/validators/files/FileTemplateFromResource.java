@@ -23,7 +23,7 @@ public class FileTemplateFromResource implements FileTemplate {
      */
     public FileTemplateFromResource(final String pathInProject, final TemplateType templateType) {
         this.pathInProject = pathInProject;
-        this.pathToTemplate = pathInProject;
+        this.pathToTemplate = "templates/" + pathInProject;
         this.templateType = templateType;
     }
 
@@ -48,6 +48,6 @@ public class FileTemplateFromResource implements FileTemplate {
 
     @Override
     public String getContent() {
-        return new ResourceReader().readFromResource("templates/" + this.pathInProject);
+        return new ResourceReader().readFromResource(this.pathToTemplate);
     }
 }

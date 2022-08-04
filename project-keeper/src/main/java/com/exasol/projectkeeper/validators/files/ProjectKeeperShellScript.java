@@ -14,8 +14,8 @@ class ProjectKeeperShellScript implements FileTemplate {
 
     @Override
     public String getContent() {
-        String template = new ResourceReader().readFromResource("templates/" + TEMPLATE_PATH);
-        template = template.replace("##VERSION##", ownVersion);
+        String template = new ResourceReader().readFromResource("non_maven_templates/" + TEMPLATE_PATH);
+        template = template.replace("##VERSION##", this.ownVersion);
         return template;
     }
 

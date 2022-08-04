@@ -61,7 +61,7 @@ class FileTemplatesFactory {
     private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
         if (modules.contains(NATIVE_IMAGE)) {
             return new FileTemplateFromResource(".github/workflows/ci-build.yml",
-                    ".github/workflows/ci-build-native-image.yml", REQUIRE_EXACT);
+                    "templates/.github/workflows/ci-build-native-image.yml", REQUIRE_EXACT);
         } else {
             return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT);
         }
@@ -110,8 +110,9 @@ class FileTemplatesFactory {
 
     private Collection<FileTemplate> getGenericNonMavenTemplates() {
         final ArrayList<FileTemplate> templates = new ArrayList<>();
-        templates.add(new FileTemplateFromResource(".github/workflows/project-keeper-verify.yml", REQUIRE_EXACT));
-        templates.add(new ProjectKeeperShellScript(ownVersion));
+        final String pathInProject = ".github/workflows/project-keeper-verify.yml";
+        templates.add(new FileTemplateFromResource(pathInProject, "golang_templates/" + pathInProject, REQUIRE_EXACT));
+        templates.add(new ProjectKeeperShellScript(this.ownVersion));
         return templates;
     }
 }
