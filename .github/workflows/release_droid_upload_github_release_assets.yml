@@ -35,8 +35,10 @@ jobs:
         with:
           upload_url: ${{ github.event.inputs.upload_url }}
           asset_path: "**/target/*.sha256"
+      - name: Zip error-code-reports
+        run: zip -v error_code_report.zip */target/error_code_report.json
       - name: Upload error-code-report
         uses: shogo82148/actions-upload-release-asset@v1
         with:
           upload_url: ${{ github.event.inputs.upload_url }}
-          asset_path: "**/target/error_code_report.json"
+          asset_path: error_code_report.zip
