@@ -10,34 +10,35 @@ import lombok.Getter;
  */
 @EqualsAndHashCode
 public class FileTemplateFromResource implements FileTemplate {
+
+    private final String templateResource;
     private final String pathInProject;
-    private final String pathToTemplate;
     @Getter
     private final TemplateType templateType;
 
     /**
      * Create a new instance of {@link FileTemplateFromResource}.
-     * 
+     *
      * @param pathInProject path of the file in the project
      * @param templateType  type of the template
      */
     public FileTemplateFromResource(final String pathInProject, final TemplateType templateType) {
+        this.templateResource = "templates/" + pathInProject;
         this.pathInProject = pathInProject;
-        this.pathToTemplate = "templates/" + pathInProject;
         this.templateType = templateType;
     }
 
     /**
      * Create a new instance of {@link FileTemplateFromResource}.
      *
-     * @param pathInProject  path of the file in the project
-     * @param pathToTemplate path to the template
-     * @param templateType   type of the template
+     * @param templateResource path to the template
+     * @param pathInProject    path of the file in the project
+     * @param templateType     type of the template
      */
-    public FileTemplateFromResource(final String pathInProject, final String pathToTemplate,
+    public FileTemplateFromResource(final String templateResource, final String pathInProject,
             final TemplateType templateType) {
+        this.templateResource = templateResource;
         this.pathInProject = pathInProject;
-        this.pathToTemplate = pathToTemplate;
         this.templateType = templateType;
     }
 
@@ -48,6 +49,6 @@ public class FileTemplateFromResource implements FileTemplate {
 
     @Override
     public String getContent() {
-        return new ResourceReader().readFromResource(this.pathToTemplate);
+        return new ResourceReader().readFromResource(this.templateResource);
     }
 }
