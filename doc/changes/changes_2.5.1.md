@@ -4,7 +4,7 @@ Code name: Fix Golang dependencies
 
 ## Summary
 
-This release fixes retrieving of Golang dependencies, it should now work for most Golang projects. It also generates a script for non-Maven projects that allows running PK in CI and locally.
+This release fixes retrieving of Golang dependencies, it should now work for most Golang projects. It also generates a script for non-Maven projects that allows to run PK in continuous integration (CI) as well as local builds.
 
 ## Features
 
