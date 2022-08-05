@@ -15,9 +15,11 @@ import com.exasol.projectkeeper.validators.changesfile.NamedDependencyChangeRepo
  */
 public class DependencyChangeReportRenderer {
 
+    private static final String NO_DEPENDENCY_CHANGES = "\n(none)\n";
+
     /**
      * Render a {@link DependencyChangeReport} to string.
-     * 
+     *
      * @param reports reports to render
      * @return rendered report as a list of lines
      */
@@ -27,9 +29,10 @@ public class DependencyChangeReportRenderer {
         for (final NamedDependencyChangeReport report : reports) {
             lines.addAll(renderProject(report, isMultiReports));
         }
-        if (!lines.isEmpty()) {
-            lines.add(0, ChangesFile.DEPENDENCY_UPDATES_HEADING);
+        if (lines.size() < 2) {
+            lines.add(NO_DEPENDENCY_CHANGES);
         }
+        lines.add(0, ChangesFile.DEPENDENCY_UPDATES_HEADING);
         return lines;
     }
 
