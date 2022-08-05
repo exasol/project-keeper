@@ -87,7 +87,13 @@ class GolangServices {
         final SimpleProcess process = this.goProcess.start(absoluteSourcePath,
                 List.of("go", "list", "-m", "-f", "{{.Dir}}", moduleName));
         process.waitUntilFinished(Duration.ofSeconds(3));
-        final Path path = Paths.get(process.getOutputStreamContent().trim()).toAbsolutePath();
+        final String output = process.getOutputStreamContent().trim();
+        if (output.isEmpty()) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-160")
+                    .message("Did not get directory for module {{module name}}.", moduleName).ticketMitigation()
+                    .toString());
+        }
+        final Path path = Paths.get(output).toAbsolutePath();
         LOGGER.finest(() -> "Found module dir '" + path + "' for module '" + moduleName + "'");
         if (!Files.exists(path)) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-156")
