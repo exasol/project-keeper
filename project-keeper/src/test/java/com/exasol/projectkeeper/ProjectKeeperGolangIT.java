@@ -6,9 +6,11 @@ import static org.hamcrest.Matchers.allOf;
 
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import org.junit.jupiter.api.*;
 
+import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 
 @Tag("integration")
@@ -34,13 +36,14 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
         prepareProjectFiles();
         runFix();
         assertVerifySucceeds();
-        assertGeneratedFiles();
+        assertGeneratedDependencyFiles();
+        assertGeneratedVerifyWorkflow();
     }
 
     // [itest -> dsn~golang-project-version~1]
     // [itest -> dsn~golang-dependency-licenses~1]
     // [itest -> dsn~golang-changed-dependency~1]
-    private void assertGeneratedFiles() throws IOException {
+    private void assertGeneratedDependencyFiles() throws IOException {
         final String dependencies = Files.readString(this.projectDir.resolve("dependencies.md"));
         final String changelog = Files
                 .readString(this.projectDir.resolve("doc/changes/changes_" + this.fixture.getProjectVersion() + ".md"));
@@ -49,6 +52,16 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
                 containsString("* Added `github.com/exasol/exasol-test-setup-abstraction-server/go-client:v0.2.2`")));
         assertThat(dependencies, allOf(containsString("github.com/exasol/exasol-driver-go | [MIT][0]"), //
                 containsString("| github.com/exasol/exasol-test-setup-abstraction-server/go-client | [MIT][1]")));
+    }
+
+    private void assertGeneratedVerifyWorkflow() throws IOException {
+        final String currentVersion = MavenProjectVersionGetter.getProjectRevision(Paths.get("../parent-pom/pom.xml"));
+        final String workflowFile = Files
+                .readString(this.projectDir.resolve(".github/workflows/project-keeper-verify.yml"));
+        final String shellScript = Files.readString(this.projectDir.resolve(".github/workflows/project-keeper.sh"));
+        assertThat(workflowFile, allOf(containsString("run: go install github.com/google/go-licenses@"),
+                containsString("run: ./.github/workflows/project-keeper.sh")));
+        assertThat(shellScript, containsString("readonly version=\"" + currentVersion + "\""));
     }
 
     @Test

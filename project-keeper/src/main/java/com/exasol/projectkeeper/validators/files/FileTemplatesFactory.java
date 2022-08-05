@@ -1,9 +1,8 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.*;
-import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXACT;
-import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXIST;
-import static java.util.Collections.emptyList;
+import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXACT;
+import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXIST;
 
 import java.util.*;
 
@@ -12,14 +11,17 @@ import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.*;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Factory for file templates.
  */
-@RequiredArgsConstructor
 class FileTemplatesFactory {
     private final Logger logger;
+    private final String ownVersion;
+
+    public FileTemplatesFactory(final Logger logger, final String ownVersion) {
+        this.logger = logger;
+        this.ownVersion = ownVersion;
+    }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
         final List<FileTemplate> templates = new ArrayList<>();
@@ -32,6 +34,8 @@ class FileTemplatesFactory {
                 templates.add(new FileTemplateFromResource(
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
             }
+        } else if (onlyGolangProjects(sources)) {
+            templates.addAll(getGolangTemplates());
         } else {
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
                     .message("For this project structure project keeper does not know how to configure ci-build.")
@@ -56,8 +60,8 @@ class FileTemplatesFactory {
 
     private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
         if (modules.contains(NATIVE_IMAGE)) {
-            return new FileTemplateFromResource(".github/workflows/ci-build.yml",
-                    ".github/workflows/ci-build-native-image.yml", REQUIRE_EXACT);
+            return new FileTemplateFromResource("templates/.github/workflows/ci-build-native-build.yml",
+                    ".github/workflows/ci-build.yml", REQUIRE_EXACT);
         } else {
             return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT);
         }
@@ -65,6 +69,10 @@ class FileTemplatesFactory {
 
     private boolean isMvnRootProject(final AnalyzedSource source) {
         return (source instanceof AnalyzedMavenSource) && (((AnalyzedMavenSource) source).isRootProject());
+    }
+
+    private boolean onlyGolangProjects(final List<AnalyzedSource> sources) {
+        return sources.stream().allMatch(AnalyzedGolangSource.class::isInstance);
     }
 
     List<FileTemplate> getTemplatesForSource(final AnalyzedSource source) {
@@ -101,6 +109,10 @@ class FileTemplatesFactory {
     }
 
     private List<FileTemplate> getGolangTemplates() {
-        return emptyList();
+        final ArrayList<FileTemplate> templates = new ArrayList<>();
+        final String pathInProject = ".github/workflows/project-keeper-verify.yml";
+        templates.add(new FileTemplateFromResource("golang_templates/" + pathInProject, pathInProject, REQUIRE_EXACT));
+        templates.add(new ProjectKeeperShellScript(this.ownVersion));
+        return templates;
     }
 }
