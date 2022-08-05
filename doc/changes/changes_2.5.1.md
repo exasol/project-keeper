@@ -33,6 +33,7 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.8.2` to `5.9.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.8.2` to `5.9.0`
 * Updated `org.mockito:mockito-core:4.6.0` to `4.6.1`
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
 
 #### Plugin Dependency Updates
 
@@ -58,6 +59,7 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.8.2` to `5.9.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.8.2` to `5.9.0`
 * Updated `org.mockito:mockito-junit-jupiter:4.6.0` to `4.6.1`
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
 
 #### Plugin Dependency Updates
 
@@ -94,6 +96,7 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.8.2` to `5.9.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.8.2` to `5.9.0`
 * Updated `org.mockito:mockito-core:4.6.0` to `4.6.1`
+* Added `org.slf4j:slf4j-jdk14:1.7.36`
 
 #### Plugin Dependency Updates
 
