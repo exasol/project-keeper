@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.*;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXACT;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXIST;
-import static java.util.Collections.emptyList;
 
 import java.util.*;
 
@@ -35,8 +34,9 @@ class FileTemplatesFactory {
                 templates.add(new FileTemplateFromResource(
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
             }
+        } else if (onlyGolangProjects(sources)) {
+            templates.addAll(getGolangTemplates());
         } else {
-            templates.addAll(getGenericNonMavenTemplates());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
@@ -69,6 +69,10 @@ class FileTemplatesFactory {
 
     private boolean isMvnRootProject(final AnalyzedSource source) {
         return (source instanceof AnalyzedMavenSource) && (((AnalyzedMavenSource) source).isRootProject());
+    }
+
+    private boolean onlyGolangProjects(final List<AnalyzedSource> sources) {
+        return sources.stream().allMatch(AnalyzedGolangSource.class::isInstance);
     }
 
     List<FileTemplate> getTemplatesForSource(final AnalyzedSource source) {
@@ -105,10 +109,6 @@ class FileTemplatesFactory {
     }
 
     private List<FileTemplate> getGolangTemplates() {
-        return emptyList();
-    }
-
-    private Collection<FileTemplate> getGenericNonMavenTemplates() {
         final ArrayList<FileTemplate> templates = new ArrayList<>();
         final String pathInProject = ".github/workflows/project-keeper-verify.yml";
         templates.add(new FileTemplateFromResource(pathInProject, "golang_templates/" + pathInProject, REQUIRE_EXACT));
