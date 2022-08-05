@@ -9,15 +9,11 @@ import java.util.logging.Logger;
 
 class GoProcess {
     private static final Logger LOGGER = Logger.getLogger(GoProcess.class.getName());
+    private Path goPath;
 
-    private GoProcess() {
-        // not instantiable
-    }
-
-    static SimpleProcess start(final Path workingDirectory, final List<String> command) {
+    SimpleProcess start(final Path workingDirectory, final List<String> command) {
         final List<String> commandToExecute = new ArrayList<>(command);
-        final Path goBinPath = getGoBinPath();
-        final Path binaryPath = goBinPath.resolve("bin").resolve(command.get(0));
+        final Path binaryPath = getGoBinPath().resolve("bin").resolve(command.get(0));
         if (Files.exists(binaryPath)) {
             LOGGER.finest(() -> "Using go binary path " + binaryPath);
             commandToExecute.set(0, binaryPath.toString());
@@ -25,9 +21,18 @@ class GoProcess {
         return SimpleProcess.start(workingDirectory, commandToExecute);
     }
 
-    private static Path getGoBinPath() {
+    private Path getGoBinPath() {
+        if (this.goPath == null) {
+            this.goPath = readGoPath();
+        }
+        return this.goPath;
+    }
+
+    private static Path readGoPath() {
         final SimpleProcess process = SimpleProcess.start(List.of("go", "env", "GOPATH"));
         process.waitUntilFinished(Duration.ofSeconds(1));
-        return Path.of(process.getOutputStreamContent().trim());
+        final Path goPath = Path.of(process.getOutputStreamContent().trim());
+        LOGGER.fine(() -> "Found GOPATH '" + goPath + "'");
+        return goPath;
     }
 }

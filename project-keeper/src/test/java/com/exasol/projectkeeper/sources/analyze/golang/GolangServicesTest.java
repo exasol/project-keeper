@@ -8,13 +8,20 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
 
+@ExtendWith(MockitoExtension.class)
 class GolangServicesTest {
     private static final String PROJECT_VERSION = "1.2.3";
     private static final String MODULE_NAME = "module/name";
+
+    @Mock
+    GoProcess goProcessMock;
 
     @Test
     void calculateChangesIgnoresModuleNameChange() {
@@ -82,16 +89,18 @@ class GolangServicesTest {
 
     @Test
     void getVersion() {
-        final GolangServices golangServices = new GolangServices(() -> PROJECT_VERSION);
-        assertThat(golangServices.getProjectVersion(), equalTo(PROJECT_VERSION));
+        assertThat(service().getProjectVersion(), equalTo(PROJECT_VERSION));
     }
 
     private void assertChanges(final GoModFile oldMod, final GoModFile newMod,
             final DependencyChange... expectedChanges) {
-        final GolangServices golangServices = new GolangServices(() -> PROJECT_VERSION);
-        final List<DependencyChange> changes = golangServices.calculateChanges(oldMod, newMod);
+        final List<DependencyChange> changes = service().calculateChanges(oldMod, newMod);
         assertAll(() -> assertThat(changes, hasSize(expectedChanges.length)),
                 () -> assertThat(changes, containsInAnyOrder(expectedChanges)));
+    }
+
+    private GolangServices service() {
+        return new GolangServices(() -> PROJECT_VERSION, this.goProcessMock);
     }
 
     private UpdatedDependency updated(final String moduleName, final String oldVersion, final String newVersion) {

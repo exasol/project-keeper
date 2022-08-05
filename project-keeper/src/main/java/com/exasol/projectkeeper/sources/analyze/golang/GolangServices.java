@@ -37,13 +37,15 @@ class GolangServices {
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
 
     private final Supplier<String> projectVersion;
+    private final GoProcess goProcess;
 
     GolangServices(final ProjectKeeperConfig config) {
-        this(() -> extractVersion(config));
+        this(() -> extractVersion(config), new GoProcess());
     }
 
-    GolangServices(final Supplier<String> projectVersion) {
+    GolangServices(final Supplier<String> projectVersion, final GoProcess goProcess) {
         this.projectVersion = projectVersion;
+        this.goProcess = goProcess;
     }
 
     // [impl -> dsn~golang-project-version~1]
@@ -66,7 +68,7 @@ class GolangServices {
     Map<String, GolangDependencyLicense> getLicenses(final Path absoluteSourcePath, final String module) {
         final SimpleProcess process;
         try {
-            process = GoProcess.start(absoluteSourcePath, List.of("go-licenses", "csv", module));
+            process = this.goProcess.start(absoluteSourcePath, List.of("go-licenses", "csv", module));
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
                     .message("Error starting the 'go-licenses' binary.")
@@ -82,14 +84,14 @@ class GolangServices {
     }
 
     Path getModuleDir(final Path absoluteSourcePath, final String moduleName) {
-        final SimpleProcess process = GoProcess.start(absoluteSourcePath,
+        final SimpleProcess process = this.goProcess.start(absoluteSourcePath,
                 List.of("go", "list", "-m", "-f", "{{.Dir}}", moduleName));
         process.waitUntilFinished(Duration.ofSeconds(3));
-        final Path path = Paths.get(process.getOutputStreamContent().trim());
+        final Path path = Paths.get(process.getOutputStreamContent().trim()).toAbsolutePath();
+        LOGGER.finest(() -> "Found module dir '" + path + "' for module '" + moduleName + "'");
         if (!Files.exists(path)) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-156")
-                    .message("Directory {{directory}} for module {{module name}} does not exist", path,
-                            moduleName)
+                    .message("Directory {{directory}} for module {{module name}} does not exist", path, moduleName)
                     .ticketMitigation().toString());
         }
         return path;
@@ -272,5 +274,10 @@ class GolangServices {
         private void dependencyUpdated(final String module, final String oldVersion, final String newVersion) {
             this.changes.add(new UpdatedDependency(null, module, oldVersion, newVersion));
         }
+    }
+
+    void installDependencies(final Path projectPath) {
+        final SimpleProcess process = this.goProcess.start(projectPath, List.of("go", "get", "-t", "./..."));
+        process.waitUntilFinished(Duration.ofMinutes(2));
     }
 }
