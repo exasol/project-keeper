@@ -2,7 +2,6 @@
 
 * [2.6.1](changes_2.6.1.md)
 * [2.6.0](changes_2.6.0.md)
-* [2.5.2](changes_2.5.2.md)
 * [2.5.0](changes_2.5.0.md)
 * [2.4.6](changes_2.4.6.md)
 * [2.4.5](changes_2.4.5.md)

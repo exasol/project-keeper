@@ -29,7 +29,7 @@ public class DependencyChangeReportRenderer {
         for (final NamedDependencyChangeReport report : reports) {
             lines.addAll(renderProject(report, isMultiReports));
         }
-        if (lines.size() < 2) {
+        if (lines.isEmpty()) {
             lines.add(NO_DEPENDENCY_CHANGES);
         }
         lines.add(0, ChangesFile.DEPENDENCY_UPDATES_HEADING);
