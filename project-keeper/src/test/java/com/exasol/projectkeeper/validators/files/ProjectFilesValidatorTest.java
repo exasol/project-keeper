@@ -28,7 +28,9 @@ import com.exasol.projectkeeper.validators.FindingFixHelper;
 
 //[utest->dsn~required-files-validator~1]
 class ProjectFilesValidatorTest {
+    private static final String OWN_VERSION = "version";
     private static final Set<ProjectKeeperModule> DEFAULT_MODULE = Set.of(ProjectKeeperModule.DEFAULT);
+
     @TempDir
     Path tempDir;
 
@@ -37,7 +39,7 @@ class ProjectFilesValidatorTest {
         Files.createDirectories(this.tempDir.resolve(".settings"));
         Files.createFile(this.tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.ui.prefs")));
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         assertThat(validator,
                 validationErrorMessages(
                         hasItems("E-PK-CORE-17: Missing required file: '.settings/org.eclipse.jdt.core.prefs'",
@@ -52,14 +54,14 @@ class ProjectFilesValidatorTest {
     @Test
     void testFix() {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
     }
 
     @Test
     void testDifferentContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve(".settings/org.eclipse.jdt.core.prefs");
         changeFile(testFile);
@@ -70,7 +72,7 @@ class ProjectFilesValidatorTest {
     @Test
     void testFixDifferentContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.core.prefs"));
         changeFile(testFile);
@@ -80,7 +82,7 @@ class ProjectFilesValidatorTest {
     @Test
     void testMissingFileWithAnyContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve("release_config.yml");
         deleteFile(testFile);
@@ -91,7 +93,7 @@ class ProjectFilesValidatorTest {
     @Test
     void testRequireExistsIgnoresContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve("release_config.yml");
         changeFile(testFile);
@@ -101,7 +103,7 @@ class ProjectFilesValidatorTest {
     @Test
     void testRequireExistsDoesNotModifyContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve("release_config.yml");
         changeFile(testFile);
@@ -113,7 +115,7 @@ class ProjectFilesValidatorTest {
     @Test
     void testFixMissingFileWithAnyContent() throws IOException {
         final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, getMvnSourceWithDefaultModule(),
-                mock(Logger.class));
+                mock(Logger.class), OWN_VERSION);
         fixAllFindings(validator);
         final Path testFile = this.tempDir.resolve("release_config.yml");
         deleteFile(testFile);
@@ -129,7 +131,8 @@ class ProjectFilesValidatorTest {
                         .isRootProject(true).build(),
                 AnalyzedMavenSource.builder().path(this.tempDir.resolve("sub-project/pom.xml")).modules(DEFAULT_MODULE)
                         .isRootProject(false).build());
-        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, sources, mock(Logger.class));
+        final ProjectFilesValidator validator = new ProjectFilesValidator(this.tempDir, sources, mock(Logger.class),
+                OWN_VERSION);
         fixAllFindings(validator);
         assertAll(//
                 () -> assertThat(this.tempDir.resolve(".github/workflows/ci-build.yml").toFile(), anExistingFile()),

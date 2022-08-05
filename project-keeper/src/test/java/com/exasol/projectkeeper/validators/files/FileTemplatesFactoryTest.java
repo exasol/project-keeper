@@ -19,12 +19,14 @@ import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class FileTemplatesFactoryTest {
+    private static final String OWN_VERSION = "version";
 
     @Test
     void testGetCiBuildTemplatesForMavenProject() {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
-        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class)).getGlobalTemplates(sources);
+        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION)
+                .getGlobalTemplates(sources);
         assertContainsTemplate(templates, ".github/workflows/ci-build.yml");
     }
 
@@ -41,7 +43,7 @@ class FileTemplatesFactoryTest {
         final Logger logger = mock(Logger.class);
         final List<AnalyzedSource> sources = List
                 .of(AnalyzedMavenSource.builder().modules(Collections.emptySet()).isRootProject(false).build());
-        final List<FileTemplate> templates = new FileTemplatesFactory(logger).getGlobalTemplates(sources);
+        final List<FileTemplate> templates = new FileTemplatesFactory(logger, OWN_VERSION).getGlobalTemplates(sources);
         assertFalse(() -> templates.stream()
                 .anyMatch(template -> template.getPathInProject().equals(Path.of(".github/workflows/ci-build.yml"))));
         verify(logger).warn(
@@ -51,7 +53,8 @@ class FileTemplatesFactoryTest {
     @Test
     void testGetMavenCentralCiBuildTemplatesForMavenProject() {
         final List<AnalyzedSource> sources = getMavenSourceWithModules(Set.of(MAVEN_CENTRAL));
-        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class)).getGlobalTemplates(sources);
+        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION)
+                .getGlobalTemplates(sources);
         assertContainsTemplate(templates, ".github/workflows/release_droid_release_on_maven_central.yml");
     }
 
@@ -64,7 +67,8 @@ class FileTemplatesFactoryTest {
     })
     void testGetTemplatesPerSource(final ProjectKeeperModule module, final String expectedTemplate) {
         final AnalyzedMavenSource source = AnalyzedMavenSource.builder().modules(Set.of(module)).build();
-        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class)).getTemplatesForSource(source);
+        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION)
+                .getTemplatesForSource(source);
         assertContainsTemplate(templates, expectedTemplate);
     }
 
