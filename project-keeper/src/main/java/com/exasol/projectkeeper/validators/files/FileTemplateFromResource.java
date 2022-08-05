@@ -14,18 +14,18 @@ public class FileTemplateFromResource implements FileTemplate {
     private final String templateResource;
     private final String pathInProject;
     @Getter
-    private final TemplateType templateType;
+    private final Validation validation;
 
     /**
      * Create a new instance of {@link FileTemplateFromResource}.
      *
      * @param pathInProject path of the file in the project
-     * @param templateType  type of the template
+     * @param validation    validation criteria for the template
      */
-    public FileTemplateFromResource(final String pathInProject, final TemplateType templateType) {
+    public FileTemplateFromResource(final String pathInProject, final Validation validation) {
         this.templateResource = "templates/" + pathInProject;
         this.pathInProject = pathInProject;
-        this.templateType = templateType;
+        this.validation = validation;
     }
 
     /**
@@ -33,13 +33,13 @@ public class FileTemplateFromResource implements FileTemplate {
      *
      * @param templateResource path to the template
      * @param pathInProject    path of the file in the project
-     * @param templateType     type of the template
+     * @param validation       validation criteria for the template
      */
     public FileTemplateFromResource(final String templateResource, final String pathInProject,
-            final TemplateType templateType) {
+            final Validation validation) {
         this.templateResource = templateResource;
         this.pathInProject = pathInProject;
-        this.templateType = templateType;
+        this.validation = validation;
     }
 
     @Override

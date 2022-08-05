@@ -1,8 +1,8 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.*;
-import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXACT;
-import static com.exasol.projectkeeper.validators.files.FileTemplate.TemplateType.REQUIRE_EXIST;
+import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXACT;
+import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXIST;
 
 import java.util.*;
 

@@ -88,14 +88,14 @@ public class ProjectFilesValidator implements Validator {
     }
 
     private ContentValidator getContentValidator(final FileTemplate template) {
-        switch (template.getTemplateType()) {
+        switch (template.getValidation()) {
         case REQUIRE_EXACT:
             return withContentEqualTo(template.getContent());
         case REQUIRE_EXIST:
             return fileExists(template.getContent());
         default:
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-119")
-                    .message("Unknown template type {{template type}}", template.getTemplateType()).ticketMitigation()
+                    .message("Unknown template type {{template type}}", template.getValidation()).ticketMitigation()
                     .toString());
         }
     }

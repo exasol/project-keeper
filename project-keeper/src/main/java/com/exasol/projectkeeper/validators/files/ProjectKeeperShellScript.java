@@ -25,7 +25,7 @@ class ProjectKeeperShellScript implements FileTemplate {
     }
 
     @Override
-    public TemplateType getTemplateType() {
-        return TemplateType.REQUIRE_EXACT;
+    public Validation getValidation() {
+        return Validation.REQUIRE_EXACT;
     }
 }
