@@ -9,6 +9,7 @@ Enhanced support for golang projects including a fix for generating the section 
 ## Bug Fixes
 
 * #343: Fixed generation of section "dependency updates" in case of no dependency updates.
+* #345: Install Go dependencies before getting licenses.
 
 ## Dependency Updates
 
