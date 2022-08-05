@@ -38,8 +38,7 @@ class ProjectKeeperLauncherExecutableJarIT {
         prepareMavenProject();
         assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
                 containsString("[WARNING] Created 'LICENSE'. Don't forget to update it's content!"));
-        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""),
-                containsString("[FINE   ] Executing command"));
+        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
     }
 
     @Test
@@ -47,8 +46,7 @@ class ProjectKeeperLauncherExecutableJarIT {
         prepareGolangProject();
         assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
                 containsString("[WARNING] Created 'LICENSE'. Don't forget to update it's content!"));
-        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""),
-                containsString("[FINE   ] Executing command"));
+        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
     }
 
     private void prepareMavenProject() {
