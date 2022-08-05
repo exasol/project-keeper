@@ -1,4 +1,4 @@
-# Project Keeper 2.5.1, released 2022-??-??
+# Project Keeper 2.6.0, released 2022-08-05
 
 Code name: Fix Golang dependencies
 
@@ -44,17 +44,17 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.5.0` to `2.6.0`
 * Updated `org.glassfish.jaxb:jaxb-runtime:3.0.2` to `4.0.0`
 
 #### Runtime Dependency Updates
 
-* Updated `com.exasol:project-keeper-java-project-crawler:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-java-project-crawler:2.5.0` to `2.6.0`
 
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.1` to `1.1.2`
-* Updated `com.exasol:project-keeper-shared-test-setup:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-shared-test-setup:2.5.0` to `2.6.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.10` to `3.10.1`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.8.2` to `5.9.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.8.2` to `5.9.0`
@@ -70,12 +70,12 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-core:2.5.0` to `2.6.0`
 * Updated `org.apache.maven:maven-model:3.8.5` to `3.8.6`
 
 #### Test Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-test-setup:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-shared-test-setup:2.5.0` to `2.6.0`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.8.2` to `5.9.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.8.2` to `5.9.0`
 
@@ -88,7 +88,7 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-core:2.5.0` to `2.6.0`
 
 #### Test Dependency Updates
 
@@ -107,7 +107,7 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.5.0` to `2.6.0`
 * Updated `org.eclipse.jgit:org.eclipse.jgit:6.1.0.202203080745-r` to `6.2.0.202206071550-r`
 
 #### Test Dependency Updates
@@ -126,7 +126,7 @@ This release fixes retrieving of Golang dependencies, it should now work for mos
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.5.0` to `2.5.1`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.5.0` to `2.6.0`
 
 #### Plugin Dependency Updates
 
