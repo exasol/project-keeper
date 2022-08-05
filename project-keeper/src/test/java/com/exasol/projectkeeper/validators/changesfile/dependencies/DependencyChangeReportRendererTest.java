@@ -49,6 +49,6 @@ class DependencyChangeReportRendererTest {
     void testRenderSourceReportWithoutChanges() {
         final NamedDependencyChangeReport sourceA = new NamedDependencyChangeReport("project A", EMPTY_REPORT);
         final String result = String.join("\n", new DependencyChangeReportRenderer().render(List.of(sourceA)));
-        assertThat(result, equalTo(""));
+        assertThat(result, equalTo("## Dependency Updates\n\n(none)\n"));
     }
 }
