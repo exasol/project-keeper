@@ -1,4 +1,4 @@
-# Project Keeper 2.6.1, released 2022-08-05
+# Project Keeper 2.6.1, released 2022-08-08
 
 Code name: Enhance Support For Golang Projects
 
