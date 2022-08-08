@@ -39,6 +39,7 @@ class GolangDependencyCalculator {
     // [impl -> dsn~golang-dependency-licenses~1]
     static ProjectDependencies calculateDependencies(final GolangServices golangServices, final Path projectPath,
             final ModuleInfo moduleInfo) {
+        golangServices.installDependencies(projectPath);
         final GolangDependencyCalculator calculator = new GolangDependencyCalculator(golangServices, projectPath,
                 moduleInfo);
         return calculator.getDependencies();

@@ -1,4 +1,4 @@
-# Project Keeper 2.6.1, released 2022-08-05
+# Project Keeper 2.6.1, released 2022-08-08
 
 Code name: Enhance Support For Golang Projects
 
@@ -9,6 +9,7 @@ Enhanced support for golang projects including a fix for generating the section 
 ## Bug Fixes
 
 * #343: Fixed generation of section "dependency updates" in case of no dependency updates.
+* #345: Install Go dependencies before getting licenses.
 
 ## Dependency Updates
 
