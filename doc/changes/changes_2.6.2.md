@@ -4,11 +4,11 @@ Code name: Empty dependency updates on windows platform
 
 ## Summary
 
-Fixed linfeeds in empty dependency updates on windows platform.  PK now suppresses the section "Dependency Updates" in case there are no dependency updates as initially requested in issue #343.
+Fixed linefeeds in empty dependency updates on windows platform.  PK now suppresses the section "Dependency Updates" in case there are no dependency updates as initially requested in issue #343.
 
 ## Bug Fixes
 
-* #347: Fixed linfeeds in empty dependency updates on windows platform
+* #347: Fixed linefeeds in empty dependency updates section on windows platform
 
 ## Dependency Updates
 
