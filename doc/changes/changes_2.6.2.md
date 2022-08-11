@@ -1,4 +1,4 @@
-# Project Keeper 2.6.2, released 2022-??-??
+# Project Keeper 2.6.2, released 2022-08-11
 
 Code name: Empty dependency updates on windows platform
 
