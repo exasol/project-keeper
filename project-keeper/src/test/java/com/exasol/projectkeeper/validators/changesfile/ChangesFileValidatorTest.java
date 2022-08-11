@@ -7,6 +7,7 @@ import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.ha
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -21,13 +22,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
-import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
+import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.FindingFixHelper;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
+import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 @Tag("integration")
 class ChangesFileValidatorTest {
@@ -50,6 +51,19 @@ class ChangesFileValidatorTest {
         final AnalyzedMavenSource source = createTestSetup();
         assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir, List.of(source)),
                 hasNoValidationFindings());
+    }
+
+    @Test
+    void noDepdendencyUpdates() throws IOException {
+        final AnalyzedMavenSource source = createTestSetup(new TestMavenModel(), Collections.emptyList());
+        final Logger log = mock(Logger.class);
+        createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
+        final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
+        assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
+        verify(log).warn("Created 'doc" + File.separator + "changes" + File.separator
+                + "changes_1.2.3.md'. Don't forget to update it's content!");
+        final List<ValidationFinding> findings = createValidator(source).validate();
+        assertThat(findings, empty());
     }
 
     @Test
@@ -91,11 +105,16 @@ class ChangesFileValidatorTest {
     }
 
     private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel) throws IOException {
+        final List<DependencyChange> list = List.of(new NewDependency("com.example", "my-lib", "1.2.3"));
+        return createTestSetup(mavenModel, list);
+    }
+
+    private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel,
+            final List<DependencyChange> dependencyChanges) throws IOException {
         mavenModel.writeAsPomToProject(this.tempDir);
         return AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).projectName(mavenModel.getName())
-                .dependencyChanges(
-                        new DependencyChangeReport(List.of(new NewDependency("com.example", "my-lib", "1.2.3")),
-                                Collections.emptyList(), Collections.emptyList(), Collections.emptyList()))
+                .dependencyChanges(new DependencyChangeReport(dependencyChanges, //
+                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList()))
                 .build();
     }
 }
