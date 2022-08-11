@@ -25,7 +25,7 @@ When building a new release of PK then Maven might display the following error:
 ```
 [ERROR] Failed to execute goal on project project-keeper-java-project-crawler:
 Could not resolve dependencies for project com.exasol:project-keeper-java-project-crawler:maven-plugin:2.5.0:
-com.exasol:project-keeper-shared-model-classes:jar:2.5.0 was not found in
+com.exasol:project-keeper-shared-model-classes:jar:2.6.2 was not found in
 https://repo.maven.apache.org/maven2 during a previous attempt.
 ```
 
