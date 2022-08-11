@@ -38,7 +38,9 @@ class DependencySectionFixer {
         final List<String> renderedReport = new DependencyChangeReportRenderer().render(reports);
         final List<ChangesFileSection> sections = new ArrayList<>(changesFile.getSections());
         removeDependencySection(sections);
-        sections.add(new ChangesFileSection(renderedReport));
+        if (!renderedReport.isEmpty()) {
+            sections.add(new ChangesFileSection(renderedReport));
+        }
         return new ChangesFile(List.copyOf(changesFile.getHeaderSectionLines()), sections);
     }
 

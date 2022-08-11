@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators.changesfile.dependencies;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.equalTo;
 
 import java.util.Collections;
@@ -49,6 +50,6 @@ class DependencyChangeReportRendererTest {
     void testRenderSourceReportWithoutChanges() {
         final NamedDependencyChangeReport sourceA = new NamedDependencyChangeReport("project A", EMPTY_REPORT);
         final String result = String.join("\n", new DependencyChangeReportRenderer().render(List.of(sourceA)));
-        assertThat(result, equalTo("## Dependency Updates\n\n(none)\n"));
+        assertThat(result, emptyString());
     }
 }
