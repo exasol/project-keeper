@@ -19,7 +19,8 @@ public class FindingFilter {
      * @param denyList regular expressions for finding messages to exclude
      */
     public FindingFilter(final List<String> denyList) {
-        this.denyListPatterns = denyList.stream().map(Pattern::compile).collect(Collectors.toList());
+        this.denyListPatterns = denyList.stream().map(pattern -> Pattern.compile(pattern, Pattern.DOTALL))
+                .collect(Collectors.toList());
     }
 
     /**
@@ -27,7 +28,7 @@ public class FindingFilter {
      * <p>
      * This filter recursively filters {@link ValidationFindingGroup}s.
      * </p>
-     * 
+     *
      * @param findings findings to filter
      * @return filtered list of findings
      */

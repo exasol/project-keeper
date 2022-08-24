@@ -12,11 +12,13 @@ class FindingFilterTest {
     private static final SimpleValidationFinding FINDING_1 = SimpleValidationFinding.withMessage("message 1").build();
     private static final SimpleValidationFinding FINDING_2 = SimpleValidationFinding.withMessage("message 2").build();
     private static final SimpleValidationFinding FINDING_3 = SimpleValidationFinding.withMessage("message 3").build();
+    private static final SimpleValidationFinding FINDING_3A = SimpleValidationFinding
+            .withMessage("message 3\nnext line").build();
     private static final SimpleValidationFinding FINDING_4 = SimpleValidationFinding.withMessage("other").build();
     private static final Runnable POST_FIX = () -> {
     };
     private static final ValidationFindingGroup FINDING_GROUP = new ValidationFindingGroup(
-            List.of(FINDING_3, FINDING_4), POST_FIX);
+            List.of(FINDING_3, FINDING_3A, FINDING_4), POST_FIX);
 
     @Test
     void testFilterSimpleFinding() {
@@ -28,7 +30,7 @@ class FindingFilterTest {
     @Test
     void testFilterByRegex() {
         final List<ValidationFinding> result = new FindingFilter(List.of("message .*"))
-                .filterFindings(List.of(FINDING_1, FINDING_2, FINDING_4));
+                .filterFindings(List.of(FINDING_1, FINDING_2, FINDING_3A, FINDING_4));
         assertThat(result, contains(FINDING_4));
     }
 
@@ -36,7 +38,7 @@ class FindingFilterTest {
     void testFilterFindingGroup() {
         final List<ValidationFinding> result = new FindingFilter(List.of("\\Qmessage 3\\E"))
                 .filterFindings(List.of(FINDING_GROUP));
-        assertThat(result, contains(new ValidationFindingGroup(List.of(FINDING_4), POST_FIX)));
+        assertThat(result, contains(new ValidationFindingGroup(List.of(FINDING_3A, FINDING_4), POST_FIX)));
     }
 
     @Test
