@@ -4,11 +4,13 @@ Code name: Enhanced
 
 ## Summary
 
-Interpret regular expressions for excludes in file `.project-keeper.yml` as multiline by default. 
+Interpret regular expressions for excludes in file `.project-keeper.yml` as multiline by default.
 ## Features
 
 * #354: Interpret regular expressions for excludes as multiline by default. <br />
-Some findings of PK have rather long output and contain multiple lines. In order to exclude such findings by regular expressions users needed to use the prefix "(?s)" up to now. PK now provides additional convenience by assuming by default the dot `.` in regular expressions to match any character, including a line terminator.
+Some findings of PK have rather long output and contain multiple lines. In order to exclude such findings by regular expressions users needed to use the prefix `(?s)` up to now. PK now provides additional convenience by assuming by default the dot `.` in regular expressions to match any character, including a line terminator.
+* #340: Compute sha256sum inside the target directory <br />
+The checksum now does not include the folder name anymore which removes the need for users to replicate the folder structure on their machine by creating a folder `target` themselves.
 
 ## Dependency Updates
 
