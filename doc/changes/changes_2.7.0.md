@@ -15,6 +15,12 @@ The checksum now does not include the folder name anymore which removes the need
 
 ## Dependency Updates
 
+### Project-Keeper Shared Model Classes
+
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:4.6.1` to `4.7.0`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -28,6 +34,7 @@ The checksum now does not include the folder name anymore which removes the need
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.6.2` to `2.7.0`
+* Updated `org.mockito:mockito-junit-jupiter:4.6.1` to `4.7.0`
 
 ### Project Keeper Command Line Interface
 
@@ -45,11 +52,19 @@ The checksum now does not include the folder name anymore which removes the need
 
 * Updated `com.exasol:project-keeper-core:2.6.2` to `2.7.0`
 
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:4.6.1` to `4.7.0`
+
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.6.2` to `2.7.0`
+
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:4.6.1` to `4.7.0`
 
 ### Project Keeper Shared Test Setup
 
