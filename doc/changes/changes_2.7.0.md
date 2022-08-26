@@ -5,6 +5,7 @@ Code name: Enhanced
 ## Summary
 
 Interpret regular expressions for excludes in file `.project-keeper.yml` as multiline by default.
+
 ## Features
 
 * #354: Interpret regular expressions for excludes as multiline by default. <br />
