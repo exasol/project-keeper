@@ -13,6 +13,9 @@ import com.exasol.errorreporting.ExaError;
  */
 public class GoBinary {
 
+    /**
+     * {@link GoBinary} for {@link go} itself.
+     */
     public static final GoBinary GO = new GoBinary(null, "go", null) {
         @Override
         boolean isInstalled() {
@@ -20,6 +23,9 @@ public class GoBinary {
         }
     };
 
+    /**
+     * {@link GoBinary} for go-licenses tool.
+     */
     public static final GoBinary GO_LICENSES = new GoBinary("github.com/google", "go-licenses", "latest");
 
     private static final Duration INSTALLATION_TIMEOUT = Duration.ofMinutes(2);
