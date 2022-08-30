@@ -84,6 +84,7 @@ class ProjectKeeperLauncherIT {
 
     private void prepareGolangProject() {
         LOGGER.info("Preparing Golang project in " + this.projectDir);
+        @SuppressWarnings("resource")
         final GolangProjectFixture fixture = new GolangProjectFixture(this.projectDir);
         fixture.gitInit();
         fixture.prepareProjectFiles(fixture.createDefaultConfig());
