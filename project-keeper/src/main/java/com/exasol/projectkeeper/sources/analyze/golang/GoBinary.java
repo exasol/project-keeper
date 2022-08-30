@@ -48,8 +48,6 @@ public class GoBinary {
     /**
      * Check if current {@link GoBinary} is already installed and install it if required.
      *
-     * @param workingDirectory working directory to execute potential installation
-     * @param goProcess        go process to launch potential installation
      * @return this for fluent programming
      */
     public GoBinary install() {
