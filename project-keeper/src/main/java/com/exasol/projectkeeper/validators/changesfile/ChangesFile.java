@@ -1,7 +1,13 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
+import java.nio.file.Path;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import com.exasol.projectkeeper.mavenrepo.Version;
+import com.vdurmont.semver4j.Semver;
 
 /**
  * This class represents a doc/changes/changes_x.x.x.md file.
@@ -14,7 +20,7 @@ public class ChangesFile {
 
     /**
      * Create a new instance of {@link ChangesFile}.
-     * 
+     *
      * @param headerLines lines of the changes file until the first level section
      * @param sections    sections of the changes file
      */
@@ -23,9 +29,41 @@ public class ChangesFile {
         this.sections = sections;
     }
 
+    public static class Filename implements Comparable<Filename> {
+        public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
+
+        public static Filename from(final Path path) {
+            final String filename = path.getFileName().toString();
+            final Matcher matcher = PATTERN.matcher(filename);
+            if (!matcher.matches()) {
+                return null;
+            }
+            return new Filename(matcher.replaceFirst("$1"));
+        }
+
+        private final Semver version;
+
+        public Filename(final String version) {
+            this.version = new Semver(version);
+        }
+
+        public String filename() {
+            return "changes_" + this.version + ".md";
+        }
+
+        @Override
+        public int compareTo(final Filename o) {
+            return this.version.compareTo(o.version);
+        }
+
+        public String version() {
+            return this.version.getValue();
+        }
+    }
+
     /**
      * Get a {@link ChangesFile} builder.
-     * 
+     *
      * @return builder for {@link ChangesFile}
      */
     public static Builder builder() {
@@ -64,10 +102,12 @@ public class ChangesFile {
 
     @Override
     public boolean equals(final Object other) {
-        if (this == other)
+        if (this == other) {
             return true;
-        if (other == null || getClass() != other.getClass())
+        }
+        if ((other == null) || (getClass() != other.getClass())) {
             return false;
+        }
         final ChangesFile that = (ChangesFile) other;
         return Objects.equals(this.headerSectionLines, that.headerSectionLines)
                 && Objects.equals(this.sections, that.sections);

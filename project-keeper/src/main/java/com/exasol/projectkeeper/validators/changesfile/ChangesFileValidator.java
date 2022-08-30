@@ -31,7 +31,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
             final List<AnalyzedSource> sources) {
-        super(projectDirectory, Path.of("doc", "changes", "changes_" + projectVersion + ".md"));
+        super(projectDirectory, Path.of("doc", "changes", new ChangesFile.Filename(projectVersion).filename()));
         this.projectVersion = projectVersion;
         this.projectName = projectName;
         this.sources = sources;

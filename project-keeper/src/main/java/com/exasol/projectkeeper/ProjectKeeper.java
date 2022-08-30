@@ -20,6 +20,7 @@ import com.exasol.projectkeeper.validators.*;
 import com.exasol.projectkeeper.validators.changelog.ChangelogFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
+import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
@@ -141,6 +142,7 @@ public class ProjectKeeper {
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
         return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger, this.ownVersion),
+                new LatestChangesFileValidator(this.projectDir, projectVersion),
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
