@@ -66,7 +66,7 @@ class GolangServices {
     }
 
     Map<String, GolangDependencyLicense> getLicenses(final Path absoluteSourcePath, final String module) {
-        final GoBinary goLicenses = GoBinary.GO_LICENSES.install(absoluteSourcePath, this.goProcess);
+        final GoBinary goLicenses = GoBinary.GO_LICENSES.install();
         final SimpleProcess process;
         try {
             process = this.goProcess.start(absoluteSourcePath, goLicenses, "csv", module);

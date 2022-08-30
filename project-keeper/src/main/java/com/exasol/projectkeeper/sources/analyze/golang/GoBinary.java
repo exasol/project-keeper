@@ -26,19 +26,23 @@ public class GoBinary {
     /**
      * {@link GoBinary} for tool {@code go-licenses}
      */
-    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google", "go-licenses", "latest");
+    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google/go-licenses@latest", "go-licenses");
 
     private static final Duration INSTALLATION_TIMEOUT = Duration.ofMinutes(2);
     private static final Logger LOGGER = Logger.getLogger(GoBinary.class.getName());
-    private final String sourceUrl;
-    private final String name;
-    private final String version;
+    private final GoProcess goProcess;
+    private final String moduleName;
+    private final String binaryName;
     private Path goPath;
 
-    GoBinary(final String sourceUrl, final String name, final String version) {
-        this.sourceUrl = sourceUrl;
-        this.name = name;
-        this.version = version;
+    GoBinary(final String sourceUrl, final String name) {
+        this(new GoProcess(), sourceUrl, name);
+    }
+
+    GoBinary(final GoProcess goProcess, final String moduleName, final String binaryName) {
+        this.goProcess = goProcess;
+        this.moduleName = moduleName;
+        this.binaryName = binaryName;
     }
 
     /**
@@ -48,24 +52,20 @@ public class GoBinary {
      * @param goProcess        go process to launch potential installation
      * @return this for fluent programming
      */
-    public GoBinary install(final Path workingDirectory, final GoProcess goProcess) {
+    public GoBinary install() {
         if (isInstalled()) {
             return this;
         }
         LOGGER.info(() -> "Installing missing go binary " + nameWithSuffix());
         final SimpleProcess process;
         try {
-            process = goProcess.start(workingDirectory, GO, "install", installSource());
+            process = this.goProcess.start(null, GO, "install", this.moduleName);
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-161")
-                    .message("Error installing go binary {{binary}}.", this.name).toString(), exception);
+                    .message("Error installing go binary {{binary}}.", this.binaryName).toString(), exception);
         }
         process.waitUntilFinished(INSTALLATION_TIMEOUT);
         return this;
-    }
-
-    String installSource() {
-        return String.format("%s/%s@%s", this.sourceUrl, this.name, this.version);
     }
 
     boolean isInstalled() {
@@ -80,7 +80,7 @@ public class GoBinary {
         if (Files.exists(path)) {
             return path.toString();
         }
-        return this.name;
+        return this.binaryName;
     }
 
     Path path() {
@@ -88,7 +88,7 @@ public class GoBinary {
     }
 
     String nameWithSuffix() {
-        return this.name + (isWindows() ? ".exe" : "");
+        return this.binaryName + (isWindows() ? ".exe" : "");
     }
 
     private Path getGoBinPath() {
