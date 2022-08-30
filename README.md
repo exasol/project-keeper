@@ -71,11 +71,11 @@ Using the `excludes` tag you can tell project-keeper to ignore some error-messag
 ```yml
 sources:
   - type: maven
-  path: pom.xml
-  modules:
-    - maven_central
-  excludes:
-    - "E-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'."
+    path: pom.xml
+    modules:
+      - maven_central
+    excludes:
+      - "E-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'."
 excludes:
   - "E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."
   - regex: "E-PK-CORE-16: .*"
@@ -94,7 +94,7 @@ The best way to solve this is to open an issue / pull request at the projects th
 ```yml
 sources:
   - type: maven
-  path: pom.xml
+    path: pom.xml
 linkReplacements:
   - "http://wrong-url.com|https://www.my-dependency.de"
 ```
@@ -118,12 +118,12 @@ Instead, configure the parent in the PK config:
 ```yaml
 sources:
   - type: maven
-  path: pom.xml
-  parentPom:
-    groupId: "com.example"
-    artifactId: "my-parent"
-    version: "1.2.3"
-    relativePath: "../my-parent.pom" # optional
+    path: pom.xml
+    parentPom:
+      groupId: "com.example"
+      artifactId: "my-parent"
+      version: "1.2.3"
+      relativePath: "../my-parent.pom" # optional
 ```
 
 PK will then use this parent-pom as parent for the `pk_generated_parent.pom`.
@@ -222,9 +222,9 @@ For GitHub Actions you can solve this by adding `fetch-depth: 0` to the checkout
 
 ```yaml
 - name: Checkout the repository
-    uses: actions/checkout@v3
-    with:
-      fetch-depth: 0
+  uses: actions/checkout@v3
+  with:
+    fetch-depth: 0
 ```
 
 ---------
