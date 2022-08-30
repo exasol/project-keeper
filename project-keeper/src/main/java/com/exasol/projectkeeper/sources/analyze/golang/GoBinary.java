@@ -29,7 +29,7 @@ public class GoBinary {
     public static final GoBinary GO_LICENSES = new GoBinary("github.com/google", "go-licenses", "latest");
 
     private static final Duration INSTALLATION_TIMEOUT = Duration.ofMinutes(2);
-    private static final Logger LOGGER = Logger.getLogger(GoProcess.class.getName());
+    private static final Logger LOGGER = Logger.getLogger(GoBinary.class.getName());
     private final String sourceUrl;
     private final String name;
     private final String version;
