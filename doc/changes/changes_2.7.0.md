@@ -13,6 +13,7 @@ Some findings of PK have rather long output and contain multiple lines. In order
 * #340: Compute sha256sum inside the target directory <br />
 The checksum now does not include the folder name anymore which removes the need for users to replicate the folder structure on their machine by creating a folder `target` themselves.
 * #323: Enabled PK to install go tools automatically if required.
+* #360: Changed PK to add `language: Generic` when generating file `release_config.yml`.
 
 ## Dependency Updates
 
