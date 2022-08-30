@@ -45,5 +45,4 @@ public class LatestChangesFileValidator implements Validator {
                 .mitigation("Please remove changes file later than current version {{version}}.", this.projectVersion) //
                 .toString()).build());
     }
-
 }
