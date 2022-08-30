@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.mavenrepo.Version;
 import com.vdurmont.semver4j.Semver;
+import com.vdurmont.semver4j.Semver.SemverType;
 
 /**
  * This class represents a doc/changes/changes_x.x.x.md file.
@@ -44,7 +45,7 @@ public class ChangesFile {
         private final Semver version;
 
         public Filename(final String version) {
-            this.version = new Semver(version);
+            this.version = new Semver(version, SemverType.LOOSE);
         }
 
         public String filename() {
@@ -58,6 +59,26 @@ public class ChangesFile {
 
         public String version() {
             return this.version.getValue();
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(this.version);
+        }
+
+        @Override
+        public boolean equals(final Object obj) {
+            if (this == obj) {
+                return true;
+            }
+            if (obj == null) {
+                return false;
+            }
+            if (getClass() != obj.getClass()) {
+                return false;
+            }
+            final Filename other = (Filename) obj;
+            return Objects.equals(this.version, other.version);
         }
     }
 
