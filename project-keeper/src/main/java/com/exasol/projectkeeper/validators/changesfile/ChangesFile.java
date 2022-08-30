@@ -30,7 +30,11 @@ public class ChangesFile {
         this.sections = sections;
     }
 
+    /**
+     * Filename of a changes file, e.g. "changes_1.2.3.md".
+     */
     public static class Filename implements Comparable<Filename> {
+        /** Regular expression to identify valid names of changes files and to extract version number. **/
         public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
 
         public static Filename from(final Path path) {
@@ -44,10 +48,13 @@ public class ChangesFile {
 
         private final Semver version;
 
-        public Filename(final String version) {
+        Filename(final String version) {
             this.version = new Semver(version, SemverType.LOOSE);
         }
 
+        /**
+         * @return filename of the current {@link ChangesFile.Filename} as string
+         */
         public String filename() {
             return "changes_" + this.version + ".md";
         }
@@ -57,6 +64,9 @@ public class ChangesFile {
             return this.version.compareTo(o.version);
         }
 
+        /**
+         * @return version number contained in the filename of current {@link ChangesFile.Filename}
+         */
         public String version() {
             return this.version.getValue();
         }
