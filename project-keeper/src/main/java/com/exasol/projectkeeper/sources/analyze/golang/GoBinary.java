@@ -14,7 +14,7 @@ import com.exasol.errorreporting.ExaError;
 public class GoBinary {
 
     /**
-     * {@link GoBinary} for {@link go} itself.
+     * {@link GoBinary} for {@code go} itself.
      */
     public static final GoBinary GO = new GoBinary(null, "go", null) {
         @Override
@@ -24,7 +24,7 @@ public class GoBinary {
     };
 
     /**
-     * {@link GoBinary} for go-licenses tool.
+     * {@link GoBinary} for tool {@code go-licenses}
      */
     public static final GoBinary GO_LICENSES = new GoBinary("github.com/google", "go-licenses", "latest");
 
@@ -68,9 +68,6 @@ public class GoBinary {
         return String.format("%s/%s@%s", this.sourceUrl, this.name, this.version);
     }
 
-    /**
-     * @return {@code true} if the binary is already installed
-     */
     boolean isInstalled() {
         return Files.exists(path());
     }
@@ -86,9 +83,6 @@ public class GoBinary {
         return this.name;
     }
 
-    /**
-     * @return absolute path to binary including platform suffix
-     */
     Path path() {
         return getGoBinPath().resolve("bin").resolve(nameWithSuffix());
     }
