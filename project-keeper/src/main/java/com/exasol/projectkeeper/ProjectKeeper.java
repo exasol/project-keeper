@@ -99,33 +99,18 @@ public class ProjectKeeper {
         return List.of(this::phase0, this::phase1, this::phase2, this::phase3);
     }
 
-    /**
-     * Get validation phase 0.
-     * <p>
-     * These validators must run before the project file validation, because the project file validation depends on
-     * them.
-     * </p>
-     *
-     * @return {@link ValidationPhase} 0.
+    /*
+     * Phase 0 must run before the project file validation, because the project file validation depends on them.
      */
     private ValidationPhase phase0(final ValidationPhase.Provision provision) {
         return ValidationPhase.from(new LicenseFileValidator(this.projectDir));
     }
 
-    /**
-     * Get validation phase 1.
-     * <p>
-     * Validators in phase 1 validate the build files like for example the pom.xml. In that phase analyzedSources is not
-     * yet available.
-     * </p>
-     *
-     * @return {@link ValidationPhase} 1.
+    /*
+     * Phase 1 validates the build files like for example the pom.xml. In that phase analyzedSources is not yet
+     * available.
      */
     private ValidationPhase phase1(final ValidationPhase.Provision provision) {
-        return new ValidationPhase(null, getPhase1Validators());
-    }
-
-    private List<Validator> getPhase1Validators() {
         final String licenseName = new LicenseNameReader().readLicenseName(this.projectDir);
         final List<Validator> validators = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : this.config.getSources()) {
@@ -136,9 +121,12 @@ public class ProjectKeeper {
                 validators.add(OwnVersionValidator.forCli(this.ownVersion));
             }
         }
-        return validators;
+        return new ValidationPhase(null, validators);
     }
 
+    /*
+     * Phase 1 finally analyzes the sources and detects the version of the current project.
+     */
     private ValidationPhase phase2(final ValidationPhase.Provision provision) {
         final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.config, this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, this.config.getSources());
@@ -154,9 +142,8 @@ public class ProjectKeeper {
         return new ValidationPhase(new ValidationPhase.Provision(projectVersion), validators);
     }
 
-    /**
-     * The {@link ChangelogFileValidator} needs to be in phase 3 since it's dependent of the result of the
-     * {@link ChangesFileValidator}.
+    /*
+     * ChangelogFileValidator needs to be in phase 3 since it depends on the result of the ChangesFileValidator.
      */
     private ValidationPhase phase3(final ValidationPhase.Provision provision) {
         final List<Validator> validators = List.of(

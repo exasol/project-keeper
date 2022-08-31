@@ -4,12 +4,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents a validation phase, can supply a list of validators and
+ * Represents a validation phase, can supply a provision for the next validation phase and a list of validators to be
+ * applied within the current phase.
  */
 public class ValidationPhase {
 
     /**
-     * @param validators validator to be returned by this phase
+     * @param validators list of validators
      * @return new instance of {@link ValidationPhase} with provision {@code null}.
      */
     public static ValidationPhase from(final Validator... validators) {
@@ -22,7 +23,8 @@ public class ValidationPhase {
     /**
      * Create a new instance of {@link ValidationPhase}.
      *
-     * @param validatorSupplier supplier for validators
+     * @param provision  created during the current validation phase
+     * @param validators list of validators to be applied within the current validation phase
      */
     public ValidationPhase(final Provision provision, final List<Validator> validators) {
         this.provision = provision;
@@ -36,6 +38,9 @@ public class ValidationPhase {
         return this.validators;
     }
 
+    /**
+     * @return provision created during the current validation phase
+     */
     public Provision provision() {
         return this.provision;
     }
@@ -55,7 +60,6 @@ public class ValidationPhase {
         }
 
         /**
-         *
          * @return version of the current project
          */
         public String projectVersion() {
