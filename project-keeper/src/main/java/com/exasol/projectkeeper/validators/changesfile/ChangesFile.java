@@ -48,7 +48,12 @@ public class ChangesFile {
 
         private final Semver version;
 
-        Filename(final String version) {
+        /**
+         * Create a new instance of {@link ChangesFile.Filename}.
+         *
+         * @param version version to use for new instance
+         */
+        public Filename(final String version) {
             this.version = new Semver(version, SemverType.LOOSE);
         }
 
