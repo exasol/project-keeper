@@ -66,7 +66,7 @@ class GoBinaryTest {
     }
 
     private GoBinary testee() {
-        return new GoBinary(this.goProcess, "non-existing-go-binary", null);
+        return new GoBinary(this.goProcess, null, "non-existing-go-binary");
     }
 
 }
