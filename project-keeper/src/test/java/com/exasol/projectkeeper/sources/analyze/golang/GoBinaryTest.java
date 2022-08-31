@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
-import static org.hamcrest.Matchers.matchesRegex;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -37,8 +36,9 @@ class GoBinaryTest {
     }
 
     @Test
-    void go_IsInstalled() {
+    void goItself() {
         assertThat(GoBinary.GO.isInstalled(), is(true));
+        assertThat(GoBinary.GO.command(), equalTo("go"));
     }
 
     @Test

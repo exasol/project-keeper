@@ -16,7 +16,7 @@ public class GoBinary {
     /**
      * {@link GoBinary} for {@code go} itself.
      */
-    public static final GoBinary GO = new GoBinary(null, "go", null) {
+    public static final GoBinary GO = new GoBinary(null, "go") {
         @Override
         boolean isInstalled() {
             return true;
