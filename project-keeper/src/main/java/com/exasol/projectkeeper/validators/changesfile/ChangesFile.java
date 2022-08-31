@@ -37,6 +37,11 @@ public class ChangesFile {
         /** Regular expression to identify valid names of changes files and to extract version number. **/
         public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
 
+        /**
+         * @param path path to create a {@link Filename} for
+         * @return If path matches regular expression for valid changes filenames then an {@link Optional} containing a
+         *         new instance of {@link Filename}, otherwise {@code Optional.empty()}.
+         */
         public static Optional<Filename> from(final Path path) {
             final String filename = path.getFileName().toString();
             final Matcher matcher = PATTERN.matcher(filename);
