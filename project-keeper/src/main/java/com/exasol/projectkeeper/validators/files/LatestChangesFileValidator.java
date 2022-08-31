@@ -41,7 +41,7 @@ public class LatestChangesFileValidator implements Validator {
             return empty;
         }
         return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-162")
-                .message("Found newer changes file {{filename}}.", latest.filename().toString())
+                .message("Found newer changes file {{filename}}.", latest.filename())
                 .mitigation("Please remove changes file later than current version {{version}}.", this.projectVersion) //
                 .toString()).build());
     }
