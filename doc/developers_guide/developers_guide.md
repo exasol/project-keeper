@@ -34,7 +34,7 @@ After that the dependencies of PK are available in your local maven repository i
 
 ## Running Manual Tests To Examine a Specific Project
 
-In case on of the users of PK reports a bug for a specific project you can reproduce and debug PK's behavior in your IDE by using an appropriate run configuration.
+In case one of the users of PK reports a bug for a specific project you can reproduce and debug PK's behavior in your IDE by using an appropriate run configuration.
 
 Usually you need to
 1. Checkout the project to be examined
@@ -44,7 +44,7 @@ Usually you need to
    * using the folder containing the examined project as working directory
    * potentially setting some system properties with `-Dproperty=value`], see [Specify PK Version](#specify-pk-version)
 
-### Make project crawler available
+### Make Project Crawler Available
 
 In some cases PK runs maven as a shell command. Maven will then search your for PK module "project crawler" in the version identical to PK opened in your IDE. The following command publishes project crawler to your local maven repository `~/.m2`:
 
@@ -54,7 +54,7 @@ mvn clean install -DskipTests
 
 ### Specify PK Version
 
-PK gets his own version from source package. Unfortunatly this isn't available in IDE. Instead you can specify the version by setting the follwing system property:
+PK gets its own version from source package. Unfortunatly this isn't available in IDE. Instead you can specify the version by setting the follwing system property:
 ```
 -Dcom.exasol.projectkeeper.ownVersion=2.7.0
 ```
