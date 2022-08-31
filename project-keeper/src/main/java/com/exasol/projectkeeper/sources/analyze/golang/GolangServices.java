@@ -66,9 +66,10 @@ class GolangServices {
     }
 
     Map<String, GolangDependencyLicense> getLicenses(final Path absoluteSourcePath, final String module) {
+        final GoBinary goLicenses = GoBinary.GO_LICENSES.install();
         final SimpleProcess process;
         try {
-            process = this.goProcess.start(absoluteSourcePath, List.of("go-licenses", "csv", module));
+            process = this.goProcess.start(absoluteSourcePath, goLicenses, "csv", module);
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
                     .message("Error starting the 'go-licenses' binary.")
@@ -84,8 +85,8 @@ class GolangServices {
     }
 
     Path getModuleDir(final Path absoluteSourcePath, final String moduleName) {
-        final SimpleProcess process = this.goProcess.start(absoluteSourcePath,
-                List.of("go", "list", "-m", "-f", "{{.Dir}}", moduleName));
+        final SimpleProcess process = this.goProcess.start(absoluteSourcePath, GoBinary.GO, "list", "-m", "-f",
+                "{{.Dir}}", moduleName);
         process.waitUntilFinished(Duration.ofSeconds(3));
         final String output = process.getOutputStreamContent().trim();
         if (output.isEmpty()) {
@@ -283,7 +284,7 @@ class GolangServices {
     }
 
     void installDependencies(final Path projectPath) {
-        final SimpleProcess process = this.goProcess.start(projectPath, List.of("go", "get", "-t", "./..."));
+        final SimpleProcess process = this.goProcess.start(projectPath, GoBinary.GO, "get", "-t", "./...");
         process.waitUntilFinished(Duration.ofMinutes(2));
     }
 }
