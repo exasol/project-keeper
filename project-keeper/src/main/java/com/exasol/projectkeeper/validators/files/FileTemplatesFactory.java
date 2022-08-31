@@ -35,6 +35,7 @@ class FileTemplatesFactory {
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
             }
         } else if (onlyGolangProjects(sources)) {
+            // verify templates in root folder including .github/workflows
             templates.addAll(getGolangTemplates());
         } else {
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
@@ -79,7 +80,8 @@ class FileTemplatesFactory {
         if (source instanceof AnalyzedMavenSource) {
             return getMavenTemplates((AnalyzedMavenSource) source);
         } else if (source instanceof AnalyzedGolangSource) {
-            return getGolangTemplates();
+            // do not verify templates (e.g. .github/workflows) for submodules
+            return Collections.emptyList();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-137")
                     .message("Cannot get templates for unknown source type {{type}}", source.getClass().getSimpleName())
