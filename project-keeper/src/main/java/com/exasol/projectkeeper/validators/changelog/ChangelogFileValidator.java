@@ -44,7 +44,7 @@ public class ChangelogFileValidator extends AbstractFileContentValidator {
 
     @Override
     protected String getTemplate() {
-        final List<ChangesFile.Filename> versions = new VersionCollector(this.projectDirectory).collectVersions();
+        final List<ChangesFile.Filename> versions = new VersionCollector(this.projectDirectory).collectChangesFiles();
         return new ChangelogFileGenerator().generate(versions);
     }
 }

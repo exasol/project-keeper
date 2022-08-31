@@ -26,11 +26,11 @@ public class VersionCollector {
     }
 
     /**
-     * List all project-versions by scanning the doc/changes/ folder.
+     * List all changes files in folder doc/changes/.
      *
-     * @return list of project versions
+     * @return list of changes files
      */
-    public List<ChangesFile.Filename> collectVersions() {
+    public List<ChangesFile.Filename> collectChangesFiles() {
         try (final Stream<Path> filesStream = Files.walk(this.projectDirectory.resolve(Path.of("doc", "changes")))) {
             return filesStream //
                     .map(ChangesFile.Filename::from) //

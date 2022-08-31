@@ -37,7 +37,7 @@ class VersionCollectorTest {
                 "0.3.0") //
                 .map(ChangesFile.Filename::new) //
                 .collect(Collectors.toList());
-        assertThat(new VersionCollector(tempDir).collectVersions(), equalTo(expected));
+        assertThat(new VersionCollector(tempDir).collectChangesFiles(), equalTo(expected));
     }
 
     private ChangesFile.Filename createChangesFile(final Path folder, final String version) throws IOException {

@@ -32,7 +32,7 @@ public class LatestChangesFileValidator implements Validator {
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> empty = Collections.emptyList();
-        final List<Filename> list = new VersionCollector(this.projectDirectory).collectVersions();
+        final List<Filename> list = new VersionCollector(this.projectDirectory).collectChangesFiles();
         if (list.isEmpty()) {
             return empty;
         }
