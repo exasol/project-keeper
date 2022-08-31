@@ -17,6 +17,7 @@ public class HasValidationFindingWithMessageMatcher<T extends Iterable<? extends
         this.messagesMatcher = messagesMatcher;
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Matcher<Validator> hasValidationFindingWithMessage(final String expectedMessage) {
         return new HasValidationFindingWithMessageMatcher(hasItem(expectedMessage));
     }
