@@ -1,12 +1,9 @@
 package com.exasol.projectkeeper.validators.changelog;
 
-import static com.vdurmont.semver4j.Semver.SemverType.LOOSE;
-
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import com.vdurmont.semver4j.Semver;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Filename;
 
 /**
  * This class generates the content for the changelog file.
@@ -16,18 +13,17 @@ class ChangelogFileGenerator {
 
     /**
      * Generate the content for the changelog file.
-     * 
+     *
      * @param versions list of project versions
      * @return content for the changelog file
      */
-    String generate(final List<String> versions) {
-        final List<String> sortedVersions = versions.stream().map(version -> new Semver(version, LOOSE))
-                .sorted(Comparator.reverseOrder()).map(Semver::getValue).collect(Collectors.toList());
-        final StringBuilder templateBuilder = new StringBuilder();
-        templateBuilder.append("# Changes" + NL + NL);
-        for (final String version : sortedVersions) {
-            templateBuilder.append("* [" + version + "](changes_" + version + ".md)" + NL);
+    final StringBuilder templateBuilder = new StringBuilder();
+
+    String generate(final List<ChangesFile.Filename> filenames) {
+        this.templateBuilder.append("# Changes" + NL + NL);
+        for (final Filename file : filenames) {
+            this.templateBuilder.append("* [" + file.version() + "](" + file.filename() + ")" + NL);
         }
-        return templateBuilder.toString();
+        return this.templateBuilder.toString();
     }
 }

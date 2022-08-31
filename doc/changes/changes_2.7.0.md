@@ -14,6 +14,7 @@ Some findings of PK have rather long output and contain multiple lines. In order
 The checksum now does not include the folder name anymore which removes the need for users to replicate the folder structure on their machine by creating a folder `target` themselves.
 * #323: Enabled PK to install go tools automatically if required.
 * #360: Changed PK to add `language: Generic` when generating file `release_config.yml`.
+* #89: Changed PK to validate that the current changes file is the latest.
 
 ## Dependency Updates
 

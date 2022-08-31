@@ -7,10 +7,11 @@ import static com.exasol.projectkeeper.validators.finding.SimpleValidationFindin
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
@@ -20,6 +21,7 @@ import com.exasol.projectkeeper.validators.*;
 import com.exasol.projectkeeper.validators.changelog.ChangelogFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
+import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
@@ -93,58 +95,61 @@ public class ProjectKeeper {
         return projectDir.getFileName().toString();
     }
 
-    private List<Supplier<List<Validator>>> getValidatorChain() {
-        return List.of(this::getPhase0Validators, this::getPhase1Validators, this::getPhase2Validators,
-                this::getPhase3Validators);
+    private List<Function<ValidationPhase.Provision, ValidationPhase>> getValidationPhases() {
+        return List.of(this::phase0, this::phase1, this::phase2, this::phase3);
     }
 
-    /**
-     * Get the validators for the 0. validation phase.
-     * <p>
-     * These validators must run before the project file validation, because the project file validation depends on
-     * them.
-     * </p>
-     *
-     * @return validators.
+    /*
+     * Phase 0 must run before the project file validation, because the project file validation depends on them.
      */
-    private List<Validator> getPhase0Validators() {
-        return List.of(new LicenseFileValidator(this.projectDir));
+    private ValidationPhase phase0(final ValidationPhase.Provision provision) {
+        return ValidationPhase.from(new LicenseFileValidator(this.projectDir));
     }
 
-    /**
-     * Get the validators for the 1. validation phase.
-     * <p>
-     * Validators in phase 1 validate the build files like for example the pom.xml. In that phase analyzedSources is not
-     * yet available.
-     * </p>
-     *
-     * @return validators.
+    /*
+     * Phase 1 validates the build files like for example the pom.xml. In that phase analyzedSources is not yet
+     * available.
      */
-    private List<Validator> getPhase1Validators() {
+    private ValidationPhase phase1(final ValidationPhase.Provision provision) {
         final String licenseName = new LicenseNameReader().readLicenseName(this.projectDir);
-        final List<Validator> result = new ArrayList<>();
+        final List<Validator> validators = new ArrayList<>();
         for (final ProjectKeeperConfig.Source source : this.config.getSources()) {
             if (source.getType().equals(MAVEN)) {
-                result.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
+                validators.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
                         source.getParentPom(), new RepoInfo(this.repoName, licenseName)));
             } else {
-                result.add(OwnVersionValidator.forCli(this.ownVersion));
+                validators.add(OwnVersionValidator.forCli(this.ownVersion));
             }
         }
-        return result;
+        return new ValidationPhase(null, validators);
     }
 
-    private List<Validator> getPhase2Validators() {
+    /*
+     * Phase 2 finally analyzes the sources and detects the version of the current project.
+     */
+    private ValidationPhase phase2(final ValidationPhase.Provision provision) {
         final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.config, this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, this.config.getSources());
         final String projectName = getProjectName(analyzedSources);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
-        return List.of(new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger, this.ownVersion),
+        final List<Validator> validators = List.of(
+                new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger, this.ownVersion),
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
                 new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
+        return new ValidationPhase(new ValidationPhase.Provision(projectVersion), validators);
+    }
+
+    /*
+     * ChangelogFileValidator needs to be in phase 3 since it depends on the result of the ChangesFileValidator.
+     */
+    private ValidationPhase phase3(final ValidationPhase.Provision provision) {
+        final List<Validator> validators = List.of(
+                new LatestChangesFileValidator(this.projectDir, provision.projectVersion()),
+                new ChangelogFileValidator(this.projectDir));
+        return new ValidationPhase(provision, validators);
     }
 
     private String getProjectName(final List<AnalyzedSource> analyzedSources) {
@@ -155,14 +160,6 @@ public class ProjectKeeper {
             projectName = capitalizeApStyle(this.repoName.replace("-", " ").replace("_", " "));
         }
         return projectName;
-    }
-
-    private List<Validator> getPhase3Validators() {
-        /*
-         * The {@link ChangelogFileValidator} needs to be in phase 3 since it's dependant of the result of the {@link
-         * ChangesFileValidator}.
-         */
-        return List.of(new ChangelogFileValidator(this.projectDir));
     }
 
     private static ProjectKeeperConfig readConfig(final Path projectDir) {
@@ -215,12 +212,6 @@ public class ProjectKeeper {
         }
     }
 
-    private List<ValidationFinding> runValidation(final List<Validator> validators) {
-        final List<ValidationFinding> findings = validators.stream().flatMap(validator -> validator.validate().stream())
-                .collect(Collectors.toList());
-        return new FindingFilter(this.config.getExcludes()).filterFindings(findings);
-    }
-
     /**
      * Fix all project findings.
      *
@@ -239,14 +230,22 @@ public class ProjectKeeper {
      * @return {@code true} if all {@link PhaseResultHandler} returned {@code true}. {@code false otherwise}
      */
     private boolean runValidationPhases(final PhaseResultHandler phaseResultHandler) {
-        for (final Supplier<List<Validator>> phaseSupplier : getValidatorChain()) {
-            final List<Validator> validators = phaseSupplier.get();
-            final List<ValidationFinding> findings = runValidation(validators);
+        Provision provision = null;
+        for (final Function<Provision, ValidationPhase> phaseSupplier : getValidationPhases()) {
+            final ValidationPhase phase = phaseSupplier.apply(provision);
+            provision = phase.provision();
+            final List<ValidationFinding> findings = runValidation(phase.validators());
             if (!phaseResultHandler.handlePhaseResult(findings)) {
                 return false;
             }
         }
         return true;
+    }
+
+    private List<ValidationFinding> runValidation(final List<Validator> validators) {
+        final List<ValidationFinding> findings = validators.stream().flatMap(validator -> validator.validate().stream())
+                .collect(Collectors.toList());
+        return new FindingFilter(this.config.getExcludes()).filterFindings(findings);
     }
 
     private boolean fixFindings(final List<ValidationFinding> findings) {
