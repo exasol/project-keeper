@@ -34,7 +34,7 @@ public class VersionCollector {
         try (final Stream<Path> filesStream = Files.walk(this.projectDirectory.resolve(Path.of("doc", "changes")))) {
             return filesStream //
                     .map(ChangesFile.Filename::from) //
-                    .filter(Objects::nonNull) //
+                    .flatMap(Optional::stream) //
                     .sorted(Comparator.reverseOrder()) //
                     .collect(Collectors.toList());
         } catch (final IOException exception) {

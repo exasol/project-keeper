@@ -125,7 +125,7 @@ public class ProjectKeeper {
     }
 
     /*
-     * Phase 1 finally analyzes the sources and detects the version of the current project.
+     * Phase 2 finally analyzes the sources and detects the version of the current project.
      */
     private ValidationPhase phase2(final ValidationPhase.Provision provision) {
         final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.config, this.mvnRepo, this.ownVersion)

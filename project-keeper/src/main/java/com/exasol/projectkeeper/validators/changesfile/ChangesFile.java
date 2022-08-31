@@ -37,13 +37,13 @@ public class ChangesFile {
         /** Regular expression to identify valid names of changes files and to extract version number. **/
         public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
 
-        public static Filename from(final Path path) {
+        public static Optional<Filename> from(final Path path) {
             final String filename = path.getFileName().toString();
             final Matcher matcher = PATTERN.matcher(filename);
             if (!matcher.matches()) {
-                return null;
+                return Optional.empty();
             }
-            return new Filename(matcher.replaceFirst("$1"));
+            return Optional.of(new Filename(matcher.replaceFirst("$1")));
         }
 
         private final Semver version;
