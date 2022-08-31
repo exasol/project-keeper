@@ -20,7 +20,7 @@ class GoBinaryTest {
 
     private static final String SEP = File.separator.replace("\\", "\\\\");
     @Mock
-    private final GoProcess goProcess = mock(GoProcess.class);
+    private GoProcess goProcess;
 
     @Test
     void nonExistingBinary() {
