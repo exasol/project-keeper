@@ -65,6 +65,10 @@ public class ProjectKeeper {
         if (packageVersion != null) {
             return packageVersion;
         }
+        final String versionFromProperty = System.getProperty("com.exasol.projectkeeper.ownVersion");
+        if (versionFromProperty != null) {
+            return versionFromProperty;
+        }
         return "(unknownVersion)";
     }
 

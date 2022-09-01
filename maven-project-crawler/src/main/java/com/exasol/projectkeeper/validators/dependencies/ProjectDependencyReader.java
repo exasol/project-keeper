@@ -6,14 +6,16 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.model.*;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuildingException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
-import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.shared.dependencies.License;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
 /**
  * This class reads all dependencies of a pom file (including the plugins) together with their license.
@@ -32,7 +34,7 @@ public class ProjectDependencyReader {
 
     /**
      * Read the dependencies of the pom file (including plugins).
-     * 
+     *
      * @param project maven project
      * @return list of dependencies
      */
@@ -58,8 +60,10 @@ public class ProjectDependencyReader {
 
     private ProjectDependency getLicense(final Dependency dependency, final MavenProject project) {
         try {
+            @SuppressWarnings("unchecked")
+            final List<ArtifactRepository> repos = project.getRemoteArtifactRepositories();
             final var dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
-                    dependency.getGroupId(), dependency.getVersion(), project.getRemoteArtifactRepositories());
+                    dependency.getGroupId(), dependency.getVersion(), repos);
             final List<License> licenses = dependenciesPom.getLicenses().stream()
                     .map(license -> new License(license.getName(), license.getUrl())).collect(Collectors.toList());
             return new ProjectDependency(getDependencyName(dependenciesPom), dependenciesPom.getUrl(), licenses,
@@ -73,7 +77,7 @@ public class ProjectDependencyReader {
     }
 
     private String getDependencyName(final Model dependenciesPom) {
-        if (dependenciesPom.getName() == null || dependenciesPom.getName().isBlank()) {
+        if ((dependenciesPom.getName() == null) || dependenciesPom.getName().isBlank()) {
             return dependenciesPom.getArtifactId();
         } else {
             return dependenciesPom.getName();

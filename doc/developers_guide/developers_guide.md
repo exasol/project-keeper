@@ -11,12 +11,7 @@ You need the following dependencies for running the tests:
 ### go-licenses
 
 [go-licenses](https://github.com/google/go-licenses/) is required for extracting Go module license information.
-
-```sh
-go install github.com/google/go-licenses@v1.2.1
-```
-
-This will install the binary to `$(go env GOPATH)/bin/go-licenses` (by default `$HOME/go/bin/go-licenses`). Project Keeper tries to find the `go-licenses` binary in `$(go env GOPATH)/bin`. If this fails, you will need to add `$(go env GOPATH)/bin` to your `PATH`.
+Since version 2.7.0 PK will automatically install `go-licenses` if required.
 
 ## Building
 
@@ -36,6 +31,33 @@ mvn install --projects . -DskipTests
 ```
 
 After that the dependencies of PK are available in your local maven repository in the version of the current release and hence references to these versions in the pom of the current release are valid.
+
+## Running Manual Tests To Examine a Specific Project
+
+In case one of the users of PK reports a bug for a specific project you can reproduce and debug PK's behavior in your IDE by using an appropriate run configuration.
+
+Usually you need to
+1. Checkout the project to be examined
+2. Potentially modify the project's files
+3. [Make PK's project crawler available to maven using the version opened in your IDE](#make-project-crawler-available)
+4. Create an appropriate launch configuration for PK
+   * using the folder containing the examined project as working directory
+   * potentially setting some system properties with `-Dproperty=value`], see [Specify PK Version](#specify-pk-version)
+
+### Make Project Crawler Available
+
+In some cases PK runs maven as a shell command. Maven will then search your for PK module "project crawler" in the version identical to PK opened in your IDE. The following command publishes project crawler to your local maven repository `~/.m2`:
+
+```shell
+mvn clean install -DskipTests
+```
+
+### Specify PK Version
+
+PK gets its own version from source package. Unfortunatly this isn't available in IDE. Instead you can specify the version by setting the follwing system property:
+```
+-Dcom.exasol.projectkeeper.ownVersion=2.7.0
+```
 
 ## Requirement Tracing
 
