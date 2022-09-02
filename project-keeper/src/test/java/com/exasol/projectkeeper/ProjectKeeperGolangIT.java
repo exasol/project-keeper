@@ -59,8 +59,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
         final String workflowFile = Files
                 .readString(this.projectDir.resolve(".github/workflows/project-keeper-verify.yml"));
         final String shellScript = Files.readString(this.projectDir.resolve(".github/workflows/project-keeper.sh"));
-        assertThat(workflowFile, allOf(containsString("run: go install github.com/google/go-licenses@"),
-                containsString("run: ./.github/workflows/project-keeper.sh")));
+        assertThat(workflowFile, containsString("run: ./.github/workflows/project-keeper.sh"));
         assertThat(shellScript, containsString("readonly version=\"" + currentVersion + "\""));
     }
 

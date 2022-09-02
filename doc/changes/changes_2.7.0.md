@@ -1,4 +1,4 @@
-# Project Keeper 2.7.0, released 2022-??-??
+# Project Keeper 2.7.0, released 2022-09-02
 
 Code name: Enhanced
 
@@ -19,6 +19,7 @@ The checksum now does not include the folder name anymore which removes the need
 ## Bug Fixes
 
 * #350: Changed PK to skip copying templates (e.g. .github/workflows) for golang submodules.
+* #368: Fixed missing PK-verify workflows for mixed projects.
 
 ## Dependency Updates
 
