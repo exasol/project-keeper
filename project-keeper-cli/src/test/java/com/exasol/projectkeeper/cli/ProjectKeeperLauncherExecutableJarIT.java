@@ -80,7 +80,7 @@ class ProjectKeeperLauncherExecutableJarIT {
 
     private void assertProcessSucceeds(final SimpleProcess process, final Matcher<String> expectedOutput,
             final Matcher<String> expectedError) {
-        process.waitUntilFinished(Duration.ofSeconds(60));
+        process.waitUntilFinished(Duration.ofMinutes(2));
         assertAll(() -> assertThat("std output", process.getOutputStreamContent(), expectedOutput),
                 () -> assertThat("std error", process.getErrorStreamContent(), expectedError));
     }
