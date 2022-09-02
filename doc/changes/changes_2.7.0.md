@@ -19,7 +19,7 @@ The checksum now does not include the folder name anymore which removes the need
 ## Bug Fixes
 
 * #350: Changed PK to skip copying templates (e.g. .github/workflows) for golang submodules.
-* #368: Fixed missing PK-verify workflows for mixed projects.
+* #368: Copy workflows project-keeper-verify.yml  and project-keeper.sh for all non-maven projects.
 
 ## Dependency Updates
 
