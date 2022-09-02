@@ -1,0 +1,6 @@
+*.sh    text eol=lf
+*.bat   text eol=crlf
+
+pk_generated_parent.pom  linguist-generated=true
+dependencies.md          linguist-generated=true
+doc/changes/changelog.md linguist-generated=true
