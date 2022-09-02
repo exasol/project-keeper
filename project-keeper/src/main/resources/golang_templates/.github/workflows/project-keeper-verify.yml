@@ -48,8 +48,5 @@ jobs:
             ${{ runner.os }}-go-licenses-${{ hashFiles('.github/workflows/project-keeper-verify.yml') }}
             ${{ runner.os }}-go-licenses-
 
-      - name: Install go-licenses
-        run: go install github.com/google/go-licenses@v1.2.1
-
       - name: Project Keeper Verify
         run: ./.github/workflows/project-keeper.sh
