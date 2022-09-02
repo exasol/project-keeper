@@ -1,4 +1,4 @@
-# Project Keeper 2.7.0, released 2022-??-??
+# Project Keeper 2.7.0, released 2022-09-02
 
 Code name: Enhanced
 
@@ -19,6 +19,7 @@ The checksum now does not include the folder name anymore which removes the need
 ## Bug Fixes
 
 * #350: Changed PK to skip copying templates (e.g. .github/workflows) for golang submodules.
+* #368: Copy workflows project-keeper-verify.yml  and project-keeper.sh for all non-maven projects.
 
 ## Dependency Updates
 
@@ -33,6 +34,7 @@ The checksum now does not include the folder name anymore which removes the need
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.6.2` to `2.7.0`
+* Updated `org.yaml:snakeyaml:1.30` to `1.31`
 
 #### Runtime Dependency Updates
 
@@ -40,6 +42,7 @@ The checksum now does not include the folder name anymore which removes the need
 
 #### Test Dependency Updates
 
+* Updated `com.exasol:maven-project-version-getter:1.1.0` to `1.1.1`
 * Updated `com.exasol:project-keeper-shared-test-setup:2.6.2` to `2.7.0`
 * Updated `org.mockito:mockito-junit-jupiter:4.6.1` to `4.7.0`
 
@@ -51,6 +54,7 @@ The checksum now does not include the folder name anymore which removes the need
 
 #### Test Dependency Updates
 
+* Updated `com.exasol:maven-project-version-getter:1.1.0` to `1.1.1`
 * Updated `com.exasol:project-keeper-shared-test-setup:2.6.2` to `2.7.0`
 
 ### Project Keeper Maven Plugin
@@ -61,6 +65,7 @@ The checksum now does not include the folder name anymore which removes the need
 
 #### Test Dependency Updates
 
+* Updated `com.exasol:maven-project-version-getter:1.1.0` to `1.1.1`
 * Updated `org.mockito:mockito-core:4.6.1` to `4.7.0`
 
 ### Project Keeper Java Project Crawler
@@ -71,6 +76,7 @@ The checksum now does not include the folder name anymore which removes the need
 
 #### Test Dependency Updates
 
+* Updated `com.exasol:maven-project-version-getter:1.1.0` to `1.1.1`
 * Updated `org.mockito:mockito-core:4.6.1` to `4.7.0`
 
 ### Project Keeper Shared Test Setup
@@ -78,3 +84,4 @@ The checksum now does not include the folder name anymore which removes the need
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.6.2` to `2.7.0`
+* Updated `org.yaml:snakeyaml:1.30` to `1.31`

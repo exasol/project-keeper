@@ -34,10 +34,8 @@ class FileTemplatesFactory {
                 templates.add(new FileTemplateFromResource(
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
             }
-        } else if (onlyGolangProjects(sources)) {
-            // verify templates in root folder including .github/workflows
-            templates.addAll(getGolangTemplates());
         } else {
+            templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
@@ -70,10 +68,6 @@ class FileTemplatesFactory {
 
     private boolean isMvnRootProject(final AnalyzedSource source) {
         return (source instanceof AnalyzedMavenSource) && (((AnalyzedMavenSource) source).isRootProject());
-    }
-
-    private boolean onlyGolangProjects(final List<AnalyzedSource> sources) {
-        return sources.stream().allMatch(AnalyzedGolangSource.class::isInstance);
     }
 
     List<FileTemplate> getTemplatesForSource(final AnalyzedSource source) {
@@ -110,10 +104,11 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private List<FileTemplate> getGolangTemplates() {
+    private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates() {
         final ArrayList<FileTemplate> templates = new ArrayList<>();
         final String pathInProject = ".github/workflows/project-keeper-verify.yml";
-        templates.add(new FileTemplateFromResource("golang_templates/" + pathInProject, pathInProject, REQUIRE_EXACT));
+        templates.add(
+                new FileTemplateFromResource("non_maven_templates/" + pathInProject, pathInProject, REQUIRE_EXACT));
         templates.add(new ProjectKeeperShellScript(this.ownVersion));
         return templates;
     }
