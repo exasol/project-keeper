@@ -171,14 +171,14 @@ Run the following commands to verify a project:
 
 ```shell
 cd path/to/project
-java -jar path/to/project-keeper-cli-2.7.0.jar verify
+java -jar path/to/project-keeper-cli-2.7.1.jar verify
 ```
 
 Run the following commands to fix the project structure:
 
 ```shell
 cd path/to/project
-java -jar path/to/project-keeper-cli-2.7.0.jar fix
+java -jar path/to/project-keeper-cli-2.7.1.jar fix
 ```
 
 ## Development
