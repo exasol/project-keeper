@@ -27,7 +27,7 @@ https://repo.maven.apache.org/maven2 during a previous attempt.
 In order to fix this, just install project-keeper:
 
 ```sh
-mvn install --projects . -DskipTests
+mvn install --projects . -DskipTests -Dossindex.skip=true
 ```
 
 After that the dependencies of PK are available in your local maven repository in the version of the current release and hence references to these versions in the pom of the current release are valid.
