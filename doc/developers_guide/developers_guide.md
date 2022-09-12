@@ -20,14 +20,14 @@ When building a new release of PK then Maven might display the following error:
 ```
 [ERROR] Failed to execute goal on project project-keeper-java-project-crawler:
 Could not resolve dependencies for project com.exasol:project-keeper-java-project-crawler:maven-plugin:2.5.0:
-com.exasol:project-keeper-shared-model-classes:jar:2.7.0 was not found in
+com.exasol:project-keeper-shared-model-classes:jar:2.7.1 was not found in
 https://repo.maven.apache.org/maven2 during a previous attempt.
 ```
 
 In order to fix this, just install project-keeper:
 
 ```sh
-mvn install --projects . -DskipTests
+mvn install --projects . -DskipTests -Dossindex.skip=true
 ```
 
 After that the dependencies of PK are available in your local maven repository in the version of the current release and hence references to these versions in the pom of the current release are valid.
