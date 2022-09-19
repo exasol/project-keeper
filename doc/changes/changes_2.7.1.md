@@ -8,6 +8,10 @@ Code name: Minor changes
 
 * #371: Fixed generation of sha256sum files broken by ticket #340.
 
+## Features
+
+* #375: For Golang sources deriving name of project for file `changes.md` from GitHub repository rather than from local folder.
+
 ## Dependency Updates
 
 ### Project Keeper Core
