@@ -8,6 +8,10 @@ Code name: Minor changes
 
 * #371: Fixed generation of sha256sum files broken by ticket #340.
 
+## Features
+
+* #374: If `pom.xml` does not specify a version for current artifact then use version from parent.
+
 ## Dependency Updates
 
 ### Project Keeper Core

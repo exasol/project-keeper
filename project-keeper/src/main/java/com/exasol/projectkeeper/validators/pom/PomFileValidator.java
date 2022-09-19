@@ -6,6 +6,7 @@ import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.stream.Stream;
 
 import org.w3c.dom.*;
 
@@ -169,17 +170,24 @@ public class PomFileValidator implements Validator {
     }
 
     private String getProjectVersion(final Document pom) throws InvalidPomException {
-        final Node versionNode = runXPath(pom, "/project/version");
-        if (versionNode != null) {
-            return versionNode.getTextContent();
-        } else if ((this.parentPomRef != null) && (this.parentPomRef.getVersion() != null)) {
-            return this.parentPomRef.getVersion();
-        } else {
-            throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
-                    .message("Invalid pom file {{file}}: Missing required property /project/version.",
-                            this.projectDirectory.relativize(this.pomFilePath))
-                    .mitigation("Please either set /project/version manually.").toString());
-        }
+        return Stream.of( //
+                versionFrom(runXPath(pom, "/project/version")), //
+                versionFrom(this.parentPomRef), //
+                versionFrom(runXPath(pom, "/project/parent/version"))) //
+                .filter(Objects::nonNull) //
+                .findFirst() //
+                .orElseThrow(() -> new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
+                        .message("Invalid pom file {{file}}: Missing required property /project/version.",
+                                this.projectDirectory.relativize(this.pomFilePath))
+                        .mitigation("Please set /project/version manually.").toString()));
+    }
+
+    private String versionFrom(final Node node) {
+        return node == null ? null : node.getTextContent();
+    }
+
+    private String versionFrom(final ProjectKeeperConfig.ParentPomRef ref) {
+        return ref == null ? null : ref.getVersion();
     }
 
     private List<ValidationFinding> validateAssemblyPlugin(final Node pom, final Path relativePomPath) {
