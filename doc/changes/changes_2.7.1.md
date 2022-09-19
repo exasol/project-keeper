@@ -7,6 +7,7 @@ Code name: Minor changes
 ## Bug Fixes
 
 * #371: Fixed generation of sha256sum files broken by ticket #340.
+* #376: Updated `org.yaml:snakeyaml:jar` to version 1.32 to fix vulnerabilities CVE-2022-38751 and CVE-2022-38752 reported by oss index.
 
 ## Dependency Updates
 
@@ -15,6 +16,7 @@ Code name: Minor changes
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.7.0` to `2.7.1`
+* Updated `org.yaml:snakeyaml:1.31` to `1.32`
 
 #### Runtime Dependency Updates
 
@@ -51,3 +53,4 @@ Code name: Minor changes
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.7.0` to `2.7.1`
+* Updated `org.yaml:snakeyaml:1.31` to `1.32`
