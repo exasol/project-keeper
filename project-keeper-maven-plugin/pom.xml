@@ -124,7 +124,7 @@
                         <exclude>CVE-2021-26291</exclude>
                         <!-- Affects multiple subprojects, see ../pom.xml. -->
                         <exclude>xCVE-2022-38751</exclude>
-                        <exclude>xCVE-2022-38752</exclude>
+                        <exclude>CVE-2022-38752</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
