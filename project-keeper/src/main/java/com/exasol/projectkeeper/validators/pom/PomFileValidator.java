@@ -13,6 +13,7 @@ import org.w3c.dom.*;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.RepoInfo;
 import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.OwnVersionValidator;
@@ -170,16 +171,21 @@ public class PomFileValidator implements Validator {
     }
 
     private String getProjectVersion(final Document pom) throws InvalidPomException {
+        final String xpath1 = "/project/version";
+        final String xpath2 = "/project/parent/version";
         return Stream.of( //
-                versionFrom(runXPath(pom, "/project/version")), //
+                versionFrom(runXPath(pom, xpath1)), //
                 versionFrom(this.parentPomRef), //
-                versionFrom(runXPath(pom, "/project/parent/version"))) //
+                versionFrom(runXPath(pom, xpath2))) //
                 .filter(Objects::nonNull) //
                 .findFirst() //
-                .orElseThrow(() -> new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
-                        .message("Invalid pom file {{file}}: Missing required property /project/version.",
-                                this.projectDirectory.relativize(this.pomFilePath))
-                        .mitigation("Please set /project/version manually.").toString()));
+                .orElseThrow(() -> new InvalidPomException(
+                        ExaError.messageBuilder("E-PK-CORE-111").message("Failed to detect project version.")
+                                .mitigation("Please either set {{xpath1|uq}} or {{xpath2|uq}} in file {{pom file}}",
+                                        xpath1, xpath2, this.projectDirectory.relativize(this.pomFilePath))
+                                .mitigation("or add version to file {{configuration file|uq}}.",
+                                        ProjectKeeperConfigReader.CONFIG_FILE_NAME)
+                                .toString()));
     }
 
     private String versionFrom(final Node node) {

@@ -21,9 +21,10 @@ import lombok.Data;
  * This class reads {@link ProjectKeeperConfig} from file.
  */
 public class ProjectKeeperConfigReader {
+    /** Filename of project keeper's configuration file */
+    public static final String CONFIG_FILE_NAME = ".project-keeper.yml";
     private static final String USER_GUIDE_URL = "https://github.com/exasol/project-keeper-maven-plugin";
     private static final String CHECK_THE_USER_GUIDE = "Please check the user-guide " + USER_GUIDE_URL + ".";
-    private static final String CONFIG_FILE_NAME = ".project-keeper.yml";
     private static final String INVALID_CONFIG_FILE = "Invalid " + CONFIG_FILE_NAME + ".";
 
     /**
