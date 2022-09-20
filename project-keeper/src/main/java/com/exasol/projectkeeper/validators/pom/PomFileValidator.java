@@ -319,7 +319,7 @@ public class PomFileValidator implements Validator {
         final Node node = runXPath(parentTag, property);
         if ((node == null) || !node.getTextContent().equals(expectedValue)) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-104")
-                    .message("Invalid pom file {{file}}: Invalid {{xpath|uq}}'." //
+                    .message("Invalid pom file {{file}}: Invalid {{xpath|uq}}." //
                             + " Expected value is {{expected}}." //
                             + " The pom must declare {{generated parent}} as parent pom.",
                             this.projectDirectory.relativize(this.pomFilePath), //

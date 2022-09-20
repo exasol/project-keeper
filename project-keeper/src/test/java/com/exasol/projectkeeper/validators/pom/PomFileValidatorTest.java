@@ -146,8 +146,9 @@ class PomFileValidatorTest {
         testMavenModel.setGroupId(null);
         testMavenModel.writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessage("E-PK-CORE-102: Invalid pom file pom.xml:"
-                + " Missing required property 'groupId'. Please either set '/project/groupId' or '/project/parent/groupId'."));
+        assertThat(result, hasFindingWithMessage("E-PK-CORE-102: Invalid pom file pom.xml:" //
+                + " Missing required property 'groupId'." //
+                + " Please either set /project/groupId or /project/parent/groupId."));
     }
 
     private List<ValidationFinding> runValidator(final ProjectKeeperConfig.ParentPomRef parentPomRef) {
@@ -205,8 +206,11 @@ class PomFileValidatorTest {
                 "<artifactId>other</artifactId>");
         Files.writeString(pom, invalidPomContent);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessage(
-                "E-PK-CORE-104: Invalid pom file pom.xml: Invalid '/project/parent/artifactId'. Expected value is 'my-test-project-generated-parent'. The pom must declare pk_generated_parent.pom as parent pom. Check the project-keeper user guide if you need a parent pom."));
+        assertThat(result, hasFindingWithMessage("E-PK-CORE-104: Invalid pom file pom.xml:" //
+                + " Invalid /project/parent/artifactId." //
+                + " Expected value is 'my-test-project-generated-parent'."
+                + " The pom must declare pk_generated_parent.pom as parent pom." //
+                + " Check the project-keeper user guide if you need a parent pom."));
     }
 
     // [utest->dsn~verify-own-version~1]
