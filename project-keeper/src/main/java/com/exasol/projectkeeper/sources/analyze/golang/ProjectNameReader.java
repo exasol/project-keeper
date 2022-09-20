@@ -7,6 +7,9 @@ import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Read project name either from root folder or from file {@code .git/config}.
+ */
 public class ProjectNameReader {
 
     static final String GIT_CONFIG = ".git/config";
@@ -15,7 +18,7 @@ public class ProjectNameReader {
 
     /**
      * @param projectDir project's root folder
-     * @return name of project either from root folder or from file
+     * @return name of project either from root folder or from file {@code .git/config}.
      */
     public static String getProjectName(final Path projectDir) {
         final String defaultResult = projectDir.getFileName().toString();
