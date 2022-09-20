@@ -18,7 +18,6 @@ import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
  * This class analyzes Golang source projects.
  */
 public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
-
     private final GolangServices golangServices;
 
     /**
@@ -61,9 +60,9 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private String getProjectName(final Path projectDir, final Source source) {
         if (isRootSource(source)) {
-            return projectDir.getFileName().toString();
+            return ProjectNameReader.getProjectName(projectDir);
         } else {
-            return source.getPath().getParent().getFileName().toString();
+            return ProjectNameReader.getProjectName(source.getPath().getParent());
         }
     }
 
