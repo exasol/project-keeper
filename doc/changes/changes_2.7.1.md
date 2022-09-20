@@ -12,6 +12,7 @@ Code name: Minor changes
 ## Features
 
 * #374: If `pom.xml` does not specify a version for current artifact then use version from parent.
+* #375: For Golang sources deriving name of project for file `changes.md` from GitHub repository rather than from local folder.
 
 ## Dependency Updates
 
