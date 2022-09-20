@@ -28,6 +28,7 @@ import com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper;
 public class PomFileValidator implements Validator {
 
     private static final String PARENT_POM_MITIGATION = "Check the project-keeper user guide if you need a parent pom.";
+    private static final String MUST_DECLARE_GENERATED_PARENT = " The pom must declare {{generated parent}} as parent pom.";
 
     @SuppressWarnings("java:S1075") // not customizable
     static class XPath {
@@ -52,6 +53,10 @@ public class PomFileValidator implements Validator {
         static final String FINAL_NAME = "/project/build/plugins/plugin" //
                 + "[artifactId/text() = 'maven-assembly-plugin']/configuration/finalName";
         static final String DESCRIPTION = "/project/description";
+
+        private XPath() {
+            // only static usage
+        }
     }
 
     private final Path projectDirectory;
@@ -83,7 +88,7 @@ public class PomFileValidator implements Validator {
         try {
             final Document pom = new PomFileIO().parsePomFile(this.pomFilePath);
             final String version = getProjectVersion(pom);
-            final String artifactId = getRequiredTextValue(pom, XPath.ARTIFACT_ID.toString()) + "-generated-parent";
+            final String artifactId = getRequiredTextValue(pom, XPath.ARTIFACT_ID) + "-generated-parent";
             final String groupId = getGroupId(pom);
             final List<ValidationFinding> findings = new ArrayList<>();
             validateGroupId(groupId).ifPresent(findings::add);
@@ -118,7 +123,7 @@ public class PomFileValidator implements Validator {
 
     private Optional<SimpleValidationFinding> validateUrlTag(final Document document) {
         final String expectedUrl = "https://github.com/exasol/" + this.repoInfo.getRepoName() + "/";
-        return validateTagContent(document, "/project", "url", expectedUrl);
+        return validateTagContent(document, XPath.PROJECT, "url", expectedUrl);
     }
 
     private Optional<SimpleValidationFinding> validateTagContent(final Document document, final String parentXPath,
@@ -262,7 +267,7 @@ public class PomFileValidator implements Validator {
                     .withMessage(ExaError.messageBuilder("E-PK-CORE-118")
                             .message("Invalid pom file {{file}}: Invalid {{parent version xpath|uq}}." //
                                     + " Expected value is {{expected}}." //
-                                    + " The pom must declare {{generated parent}} as parent pom.",
+                                    + MUST_DECLARE_GENERATED_PARENT, //
                                     this.projectDirectory.relativize(this.pomFilePath), //
                                     XPath.PARENT_VERSION, //
                                     version, //
@@ -288,7 +293,7 @@ public class PomFileValidator implements Validator {
         if ((node == null) || !comparePaths(expectedValue, Path.of(node.getTextContent()))) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-112").message(
                     "Invalid pom file {{file}}: Invalid {{parent relative path|uq}}. Expected value is {{expected}}."
-                            + " The pom must declare {{generated parent}} as parent pom.",
+                            + MUST_DECLARE_GENERATED_PARENT, //
                     this.projectDirectory.relativize(this.pomFilePath), //
                     XPath.PARENT_RELATIVE_PATH, //
                     expectedValue, //
@@ -310,7 +315,7 @@ public class PomFileValidator implements Validator {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-104")
                     .message("Invalid pom file {{file}}: Invalid {{xpath|uq}}." //
                             + " Expected value is {{expected}}." //
-                            + " The pom must declare {{generated parent}} as parent pom.",
+                            + MUST_DECLARE_GENERATED_PARENT, //
                             this.projectDirectory.relativize(this.pomFilePath), //
                             XPath.PARENT + "/" + property, //
                             expectedValue, //
