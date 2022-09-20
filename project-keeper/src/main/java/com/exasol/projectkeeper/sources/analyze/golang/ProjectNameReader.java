@@ -16,6 +16,10 @@ public class ProjectNameReader {
     private static final String BLANK = "\\p{Blank}*";
     private static final Pattern GIT_URL = Pattern.compile(BLANK + "url" + BLANK + "=" + BLANK + ".*/([^/]*)\\.git$");
 
+    private ProjectNameReader() {
+        // only static usage
+    }
+
     /**
      * @param projectDir project's root folder
      * @return name of project either from root folder or from file {@code .git/config}.
