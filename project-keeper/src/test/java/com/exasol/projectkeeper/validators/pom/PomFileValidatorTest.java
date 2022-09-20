@@ -234,7 +234,7 @@ class PomFileValidatorTest {
         runFix(null);
         final Document pom = new PomFileIO().parsePomFile(this.tempDir.resolve("pom.xml"));
         final String version = XPathErrorHandlingWrapper //
-                .runXPath(pom, PomFileValidator.PROJECT_KEEPER_VERSION_XPATH) //
+                .runXPath(pom, PomFileValidator.XPath.PROJECT_KEEPER_VERSION.toString()) //
                 .getTextContent();
         assertThat(version, not("0.0.1"));
         assertThat(version, matchesRegex(Version.PATTERN));
