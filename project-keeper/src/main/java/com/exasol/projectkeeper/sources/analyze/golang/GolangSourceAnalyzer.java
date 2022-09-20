@@ -3,10 +3,7 @@ package com.exasol.projectkeeper.sources.analyze.golang;
 import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
@@ -21,8 +18,6 @@ import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
  * This class analyzes Golang source projects.
  */
 public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
-
-    private static final Pattern GIT_URL = Pattern.compile(".*/([^/]*)\\.git$");
     private final GolangServices golangServices;
 
     /**
@@ -65,21 +60,10 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private String getProjectName(final Path projectDir, final Source source) {
         if (isRootSource(source)) {
-            return getProjectName(projectDir);
+            return ProjectNameReader.getProjectName(projectDir);
         } else {
-            return getProjectName(source.getPath().getParent());
+            return ProjectNameReader.getProjectName(source.getPath().getParent());
         }
-    }
-
-    private String getProjectName(final Path projectDir) {
-        final SimpleProcess process = SimpleProcess.start(projectDir,
-                Arrays.asList("git", "config", "--get", "remote.origin.url"));
-        final String url = process.getOutputStreamContent().trim();
-        final Matcher matcher = GIT_URL.matcher(url);
-        if (!matcher.matches()) {
-            return projectDir.getFileName().toString();
-        }
-        return matcher.group(1);
     }
 
     private boolean isRootSource(final Source source) {
