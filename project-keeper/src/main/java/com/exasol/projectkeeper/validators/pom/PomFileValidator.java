@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.validators.pom;
 
 import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.withContentEqualTo;
 import static com.exasol.projectkeeper.validators.pom.XmlHelper.addTextElement;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -29,8 +30,8 @@ public class PomFileValidator implements Validator {
     private static final String PARENT_POM_MITIGATION = "Check the project-keeper user guide if you need a parent pom.";
 
     @SuppressWarnings("java:S1075") // not customizable
-    enum XPath {
-        PROJECT("/project"), //
+    static class XPath {
+        static final String PROJECT = "/project";
         /**
          * Xpath to find version of PK maven plugin in POM file.
          *
@@ -38,29 +39,19 @@ public class PomFileValidator implements Validator {
          * Used only internally and in tests.
          * </p>
          */
-        PROJECT_KEEPER_VERSION("/project/build/plugins/plugin" //
+        static final String PROJECT_KEEPER_VERSION = "/project/build/plugins/plugin" //
                 + "[groupId = 'com.exasol' and artifactId = 'project-keeper-maven-plugin'" //
-                + "]/version"), //
-        VERSION("/project/version"), //
-        ARTIFACT_ID("/project/artifactId"), //
-        PARENT("/project/parent"), //
-        PARENT_VERSION("/project/parent/version"), //
-        GROUP_ID("/project/groupId"), //
-        PARENT_GROUP_ID("/project/parent/groupId"), //
-        PARENT_RELATIVE_PATH("/project/parent/relativePath"), //
-        FINAL_NAME("/project/build/plugins/plugin[artifactId/text()='maven-assembly-plugin']/configuration/finalName"), //
-        DESCRIPTION("/project/description");
-
-        private String value;
-
-        private XPath(final String value) {
-            this.value = value;
-        }
-
-        @Override
-        public String toString() {
-            return this.value;
-        }
+                + "]/version";
+        static final String VERSION = "/project/version";
+        static final String ARTIFACT_ID = "/project/artifactId";
+        static final String PARENT = "/project/parent";
+        static final String PARENT_VERSION = "/project/parent/version";
+        static final String GROUP_ID = "/project/groupId";
+        static final String PARENT_GROUP_ID = "/project/parent/groupId";
+        static final String PARENT_RELATIVE_PATH = "/project/parent/relativePath";
+        static final String FINAL_NAME = "/project/build/plugins/plugin" //
+                + "[artifactId/text() = 'maven-assembly-plugin']/configuration/finalName";
+        static final String DESCRIPTION = "/project/description";
     }
 
     private final Path projectDirectory;
@@ -169,8 +160,8 @@ public class PomFileValidator implements Validator {
     private Optional<ValidationFinding> validationDescriptionExists(final Document document) {
         if (runXPath(document, XPath.DESCRIPTION) == null) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-120")
-                    .message("Invalid pom file {{file}}: Missing required property " + XPath.DESCRIPTION + ".",
-                            this.projectDirectory.relativize(this.pomFilePath))
+                    .message("Invalid pom file {{file}}: Missing required property {{property|uq}}.",
+                            this.projectDirectory.relativize(this.pomFilePath), XPath.DESCRIPTION)
                     .mitigation("Please manually add a description.").toString()).build());
         } else {
             return Optional.empty();
@@ -195,15 +186,15 @@ public class PomFileValidator implements Validator {
 
     private String getProjectVersion(final Document pom) throws InvalidPomException {
         return Stream.of( //
-                versionFrom(runXPath(pom, XPath.VERSION.value)), //
+                versionFrom(runXPath(pom, XPath.VERSION)), //
                 versionFrom(this.parentPomRef), //
-                versionFrom(runXPath(pom, XPath.PARENT_VERSION.value)))//
+                versionFrom(runXPath(pom, XPath.PARENT_VERSION)))//
                 .filter(Objects::nonNull) //
                 .findFirst() //
                 .orElseThrow(() -> new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
                         .message("Failed to detect project version.")
-                        .mitigation("Please either set {{xpath1}} or {{xpath2}} in file {{pom file}}", XPath.VERSION,
-                                XPath.PARENT_VERSION, this.projectDirectory.relativize(this.pomFilePath))
+                        .mitigation("Please either set {{xpath1|uq}} or {{xpath2}} in file {{pom file|uq}}",
+                                XPath.VERSION, XPath.PARENT_VERSION, this.projectDirectory.relativize(this.pomFilePath))
                         .mitigation("or add version to file {{configuration file|uq}}.",
                                 ProjectKeeperConfigReader.CONFIG_FILE_NAME)
                         .toString()));
@@ -269,7 +260,7 @@ public class PomFileValidator implements Validator {
         if ((node == null) || !version.equals(node.getTextContent())) {
             final SimpleValidationFinding.Builder findingBuilder = SimpleValidationFinding
                     .withMessage(ExaError.messageBuilder("E-PK-CORE-118")
-                            .message("Invalid pom file {{file}}: Invalid {{parent version xpath}}." //
+                            .message("Invalid pom file {{file}}: Invalid {{parent version xpath|uq}}." //
                                     + " Expected value is {{expected}}." //
                                     + " The pom must declare {{generated parent}} as parent pom.",
                                     this.projectDirectory.relativize(this.pomFilePath), //
@@ -296,7 +287,7 @@ public class PomFileValidator implements Validator {
         final Node node = runXPath(parentTag, "relativePath");
         if ((node == null) || !comparePaths(expectedValue, Path.of(node.getTextContent()))) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-112").message(
-                    "Invalid pom file {{file}}: Invalid {{parent relative path}}. Expected value is {{expected}}."
+                    "Invalid pom file {{file}}: Invalid {{parent relative path|uq}}. Expected value is {{expected}}."
                             + " The pom must declare {{generated parent}} as parent pom.",
                     this.projectDirectory.relativize(this.pomFilePath), //
                     XPath.PARENT_RELATIVE_PATH, //
@@ -364,7 +355,7 @@ public class PomFileValidator implements Validator {
                 throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-102")
                         .message("Invalid pom file {{file}}: Missing required property 'groupId'.",
                                 this.projectDirectory.relativize(this.pomFilePath))
-                        .mitigation("Please either set {{groupId}} or {{parent groupId}}.", XPath.GROUP_ID,
+                        .mitigation("Please either set {{groupId|uq}} or {{parent groupId|uq}}.", XPath.GROUP_ID,
                                 XPath.PARENT_GROUP_ID)
                         .toString());
             }
@@ -375,7 +366,7 @@ public class PomFileValidator implements Validator {
         final Node node = XPathErrorHandlingWrapper.runXPath(pom, xPath);
         if (node == null) {
             throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-101")
-                    .message("Invalid pom file {{file}}: Missing required property {{property}}.",
+                    .message("Invalid pom file {{file}}: Missing required property {{property|uq}}.",
                             this.projectDirectory.relativize(this.pomFilePath), xPath)
                     .mitigation("Please set the property manually.").toString());
         }
@@ -390,11 +381,4 @@ public class PomFileValidator implements Validator {
         }
     }
 
-    private Node runXPath(final Node node, final XPath xpath) {
-        return runXPath(node, xpath.toString());
-    }
-
-    private Node runXPath(final Node node, final String xpath) {
-        return XPathErrorHandlingWrapper.runXPath(node, xpath);
-    }
 }
