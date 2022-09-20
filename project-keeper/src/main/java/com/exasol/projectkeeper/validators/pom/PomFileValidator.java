@@ -48,9 +48,7 @@ public class PomFileValidator implements Validator {
         GROUP_ID("/project/groupId"), //
         PARENT_GROUP_ID("/project/parent/groupId"), //
         PARENT_RELATIVE_PATH("/project/parent/relativePath"), //
-        FINAL_NAME("/project/build/plugins/plugin" //
-                + "[artifactId/text()='maven-assembly-plugin']" //
-                + "/configuration/finalName"), //
+        FINAL_NAME("/project/build/plugins/plugin[artifactId/text()='maven-assembly-plugin']/configuration/finalName"), //
         DESCRIPTION("/project/description");
 
         private String value;
