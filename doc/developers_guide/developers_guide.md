@@ -54,7 +54,7 @@ mvn clean install -DskipTests
 
 ### Specify PK Version
 
-PK gets its own version from source package. Unfortunatly this isn't available in IDE. Instead you can specify the version by setting the follwing system property:
+PK gets its own version from source package. Unfortunatly this isn't available in IDE. Instead you can specify the version by setting the following system property:
 ```
 -Dcom.exasol.projectkeeper.ownVersion=2.7.0
 ```
