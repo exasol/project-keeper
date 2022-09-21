@@ -1,4 +1,4 @@
-# Project Keeper 2.7.1, released 2022-??-??
+# Project Keeper 2.8.0, released 2022-09-21
 
 Code name: Minor changes
 
