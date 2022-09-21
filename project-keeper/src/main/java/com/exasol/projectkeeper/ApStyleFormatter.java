@@ -6,13 +6,21 @@ package com.exasol.projectkeeper;
 public class ApStyleFormatter {
 
     /**
+     * @param string name to be converted
+     * @return human readable format for input string
+     */
+    public static String humanReadable(final String string) {
+        return capitalizeApStyle(string.replace("-", " ").replace("_", " "));
+    }
+
+    /**
      * Format a string in the associated press headline style.
-     * 
+     *
      * @param string string to format
      * @return formatted string
      */
     public static String capitalizeApStyle(final String string) {
-        if (string == null || string.isBlank()) {
+        if ((string == null) || string.isBlank()) {
             return "";
         }
         final String[] parts = string.split(" ");
@@ -22,7 +30,7 @@ public class ApStyleFormatter {
             if (!isFirst) {
                 result.append(" ");
             }
-            if (isFirst || part.length() > 3) {
+            if (isFirst || (part.length() > 3)) {
                 result.append(capitalizeFirstLetter(part));
             } else {
                 result.append(part);

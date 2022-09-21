@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.exasol.projectkeeper.Logger;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -16,7 +15,7 @@ public class FindingsFixer {
 
     /**
      * Create a new instance of {@link FindingsFixer}.
-     * 
+     *
      * @param logger logger to log to
      */
     public FindingsFixer(final Logger logger) {
@@ -25,7 +24,7 @@ public class FindingsFixer {
 
     /**
      * Fix the given findings if they contain a fix.
-     * 
+     *
      * @param findings list of validation findings
      * @return flat list of findings that do not contain a fix
      */
@@ -40,7 +39,6 @@ public class FindingsFixer {
     @RequiredArgsConstructor
     private static class FixingVisitor implements ValidationFinding.Visitor {
         private final Logger logger;
-        @Getter
         private final List<SimpleValidationFinding> unfixed = new ArrayList<>();
 
         @Override
@@ -58,6 +56,13 @@ public class FindingsFixer {
                 eachFinding.accept(this);
             }
             finding.getPostFix().run();
+        }
+
+        /**
+         * @return list of findings that have not been fixed, yet
+         */
+        public List<SimpleValidationFinding> getUnfixed() {
+            return this.unfixed;
         }
     }
 }

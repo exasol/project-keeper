@@ -13,15 +13,23 @@ import org.junit.jupiter.api.io.TempDir;
 class ProjectNameReaderTest {
 
     @Test
-    void withoutGitConfig(@TempDir final Path tempDir) {
-        assertThat(ProjectNameReader.getProjectName(tempDir), equalTo(tempDir.getFileName().toString()));
+    void withoutGitConfig(@TempDir final Path tempDir) throws IOException {
+        emulateGitProject(tempDir, "");
+        assertThat(RepoNameReader.getRepoName(tempDir), equalTo(tempDir.getFileName().toString()));
     }
 
     @Test
     void gitConfig(@TempDir final Path tempDir) throws IOException {
-        final Path file = tempDir.resolve(ProjectNameReader.GIT_CONFIG);
-        Files.createDirectories(file.getParent());
-        Files.writeString(file, " url = https://github.com/exasol/remote-repo.git");
-        assertThat(ProjectNameReader.getProjectName(tempDir), equalTo("remote-repo"));
+        emulateGitProject(tempDir, "[remote \"origin\"]\n" //
+                + " url = https://github.com/exasol/remote-repo.git\n");
+        assertThat(RepoNameReader.getRepoName(tempDir), equalTo("remote-repo"));
+    }
+
+    private void emulateGitProject(final Path folder, final String configuration) throws IOException {
+        Files.createDirectories(folder.resolve(".git/refs"));
+        Files.createDirectories(folder.resolve(".git/objects"));
+        Files.writeString(folder.resolve(".git/HEAD"), "ref: refs/heads/refactor/380-get-project-name");
+        final Path configFile = folder.resolve(".git/config");
+        Files.writeString(configFile, configuration);
     }
 }

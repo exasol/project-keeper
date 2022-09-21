@@ -8,7 +8,6 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -19,7 +18,7 @@ public class ProjectVersionDetector {
 
     /**
      * Detect the version of the overall project.
-     * 
+     *
      * @param config          project-keeper configuration
      * @param analyzedSources analyzed sources
      * @return detected version
@@ -30,7 +29,7 @@ public class ProjectVersionDetector {
             final VersionProviderVisitor visitor = new VersionProviderVisitor(analyzedSources);
             config.getVersionConfig().accept(visitor);
             return visitor.getVersion();
-        } else if (analyzedSources.size() == 1 && analyzedSources.get(0).getVersion() != null) {
+        } else if ((analyzedSources.size() == 1) && (analyzedSources.get(0).getVersion() != null)) {
             return analyzedSources.get(0).getVersion();
         } else {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-116").message(FAILED_TO_DETECT_VERSION
@@ -43,7 +42,6 @@ public class ProjectVersionDetector {
     @RequiredArgsConstructor
     private static class VersionProviderVisitor implements ProjectKeeperConfig.VersionConfig.Visitor {
         private final List<AnalyzedSource> analyzedSources;
-        @Getter
         private String version;
 
         @Override
@@ -83,6 +81,13 @@ public class ProjectVersionDetector {
                             "Please make sure that you defined a source with exactly the same path. The following sources are defined in the config: {{sources}}.",
                             knownSources)
                     .toString());
+        }
+
+        /**
+         * @return version detected by {@link ProjectVersionDetector}
+         */
+        public String getVersion() {
+            return this.version;
         }
     }
 }

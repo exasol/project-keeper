@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 
 import jakarta.json.*;
-import lombok.Getter;
 
 /**
  * This class allows getting the latest version of project-keeper from Maven Central.
@@ -56,7 +55,6 @@ public class MavenRepository {
     static final String GROUP_ID = "com.exasol";
     static final String ARTIFACT_PREFIX = "project-keeper";
 
-    @Getter
     private final String url;
 
     /**
@@ -99,4 +97,10 @@ public class MavenRepository {
         }
     }
 
+    /**
+     * @return URL of this Maven repository
+     */
+    public String getUrl() {
+        return this.url;
+    }
 }
