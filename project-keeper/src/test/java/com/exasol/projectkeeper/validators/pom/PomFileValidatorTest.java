@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.validators.pom;
 
 import static com.exasol.projectkeeper.validators.FindingMatcher.hasFindingWithMessage;
 import static com.exasol.projectkeeper.validators.FindingMatcher.hasFindingWithMessageMatchingRegex;
+import static com.exasol.projectkeeper.validators.pom.XmlPattern.element;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -111,24 +112,26 @@ class PomFileValidatorTest {
 
     @Test
     void testMissingVersion() throws IOException {
-        final TestMavenModel testMavenModel = getTestModel();
-        testMavenModel.setVersion(null);
-        testMavenModel.writeAsPomToProject(this.tempDir);
-        final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessage(
-                "E-PK-CORE-111: Invalid pom file pom.xml: Missing required property /project/version. Please either set /project/version manually."));
+        getTestModel().withVersion(null).writeAsPomToProject(this.tempDir);
+        assertThat(runValidator(null),
+                hasFindingWithMessageMatchingRegex("(?s)E-PK-CORE-111: Failed to detect project version.*"));
     }
 
     @Test
     void testMissingVersionButParentPomRef() throws IOException, XmlPullParserException {
-        final TestMavenModel testMavenModel = getTestModel();
-        testMavenModel.setVersion(null);
-        testMavenModel.writeAsPomToProject(this.tempDir);
+        getTestModel().withVersion(null).withParentVersion("2.3.4").writeAsPomToProject(this.tempDir);
         runFix(new ProjectKeeperConfig.ParentPomRef("com.example", "my-parent", "1.2.3", null));
         try (final FileReader reader = new FileReader(this.tempDir.resolve("pk_generated_parent.pom").toFile())) {
             final Model pom = new MavenXpp3Reader().read(reader);
             assertThat(pom.getVersion(), equalTo("1.2.3"));
         }
+    }
+
+    @Test
+    void testMissingVersionButFromParent() throws IOException, XmlPullParserException {
+        getTestModel().withVersion(null).withParentVersion("2.3.4").writeAsPomToProject(this.tempDir);
+        assertThat(runValidator(null),
+                not(hasFindingWithMessageMatchingRegex("(?s)E-PK-CORE-111: Failed to detect project version.*")));
     }
 
     private Model readModel(final Path projectDir) throws XmlPullParserException, IOException {
@@ -143,8 +146,9 @@ class PomFileValidatorTest {
         testMavenModel.setGroupId(null);
         testMavenModel.writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessage(
-                "E-PK-CORE-102: Invalid pom file pom.xml: Missing required property 'groupId'. Please either set '/project/groupId' or '/project/parent/groupId'."));
+        assertThat(result, hasFindingWithMessage("E-PK-CORE-102: Invalid pom file pom.xml:" //
+                + " Missing required property 'groupId'." //
+                + " Please either set /project/groupId or /project/parent/groupId."));
     }
 
     private List<ValidationFinding> runValidator(final ProjectKeeperConfig.ParentPomRef parentPomRef) {
@@ -173,10 +177,12 @@ class PomFileValidatorTest {
     void testAddParentFix() throws IOException {
         getTestModel().writeAsPomToProject(this.tempDir);
         runFix(null);
-        final String expected = ("<parent>\n" + "        <artifactId>my-test-project-generated-parent</artifactId>\n"
-                + "        <groupId>com.exasol</groupId>\n" + "        <version>0.1.0</version>\n"
-                + "        <relativePath>pk_generated_parent.pom</relativePath>\n" + "    </parent>").replace("\n",
-                        System.lineSeparator());
+        final String expected = XmlPattern.element("parent").children( //
+                element("artifactId", "my-test-project-generated-parent"), //
+                element("groupId", "com.exasol"), //
+                element("version", "0.1.0"), //
+                element("relativePath", "pk_generated_parent.pom")) //
+                .build();
         assertThat(Files.readString(this.tempDir.resolve("pom.xml")), Matchers.containsString(expected));
     }
 
@@ -200,8 +206,11 @@ class PomFileValidatorTest {
                 "<artifactId>other</artifactId>");
         Files.writeString(pom, invalidPomContent);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessage(
-                "E-PK-CORE-104: Invalid pom file pom.xml: Invalid '/project/parent/artifactId'. Expected value is 'my-test-project-generated-parent'. The pom must declare pk_generated_parent.pom as parent pom. Check the project-keeper user guide if you need a parent pom."));
+        assertThat(result, hasFindingWithMessage("E-PK-CORE-104: Invalid pom file pom.xml:" //
+                + " Invalid /project/parent/artifactId." //
+                + " Expected value is 'my-test-project-generated-parent'."
+                + " The pom must declare pk_generated_parent.pom as parent pom." //
+                + " Check the project-keeper user guide if you need a parent pom."));
     }
 
     // [utest->dsn~verify-own-version~1]
@@ -229,7 +238,7 @@ class PomFileValidatorTest {
         runFix(null);
         final Document pom = new PomFileIO().parsePomFile(this.tempDir.resolve("pom.xml"));
         final String version = XPathErrorHandlingWrapper //
-                .runXPath(pom, PomFileValidator.PROJECT_KEEPER_VERSION_XPATH) //
+                .runXPath(pom, PomFileValidator.XPath.PROJECT_KEEPER_VERSION) //
                 .getTextContent();
         assertThat(version, not("0.0.1"));
         assertThat(version, matchesRegex(Version.PATTERN));

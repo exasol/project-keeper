@@ -43,6 +43,13 @@ public class TestMavenModel extends Model {
         return this;
     }
 
+    public TestMavenModel withParentVersion(final String value) {
+        final Parent parent = new Parent();
+        parent.setVersion(value);
+        setParent(parent);
+        return this;
+    }
+
     public TestMavenModel withDescription(final String value) {
         setDescription(value);
         return this;

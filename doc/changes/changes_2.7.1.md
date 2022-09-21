@@ -7,10 +7,11 @@ Code name: Minor changes
 ## Bug Fixes
 
 * #371: Fixed generation of sha256sum files broken by ticket #340.
-* #376: Updated `org.yaml:snakeyaml:jar` to version 1.32 to fix vulnerability CVE-2022-38751 reported by oss index. Vulnerability CVE-2022-38752 is still excluded from check, though, as still unfixed by snakeyaml.
+* #376: Updated `org.yaml:snakeyaml:jar` to version 1.32 to fix vulnerability CVE-2022-38751 reported by oss index. Vulnerability CVE-2022-38752 is still excluded from check, though, as still unfixed by snakeyaml. 
 
 ## Features
 
+* #374: If `pom.xml` does not specify a version for current artifact then use version from parent.
 * #375: For Golang sources deriving name of project for file `changes.md` from GitHub repository rather than from local folder.
 
 ## Dependency Updates
