@@ -15,11 +15,14 @@ public class RepoNameReader {
 
     /**
      * @param folder project's root folder
-     * @return name of the repository or of the specified root folder
+     * @return name of the repository or of the specified folder
      */
     public static String getRepoName(final Path folder) {
+        final String folderName = folder.getFileName().toString();
         try (final GitRepository git = GitRepository.open(folder)) {
-            return git.getRepoNameFromRemote().orElseGet(() -> folder.getFileName().toString());
+            return git.getRepoNameFromRemote().orElseGet(() -> folderName);
+        } catch (final IllegalStateException exception) {
+            return folderName;
         }
     }
 }
