@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.sources;
 import java.nio.file.Path;
 import java.util.Set;
 
+import com.exasol.projectkeeper.ApStyleFormatter;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
@@ -26,9 +27,10 @@ public interface AnalyzedSource {
     Set<ProjectKeeperModule> getModules();
 
     /**
-     * Get a human-readable project name.
+     * Get project name for documentation files, such as changes file, readme and the like.
      * <p>
-     * Usually that's a version of the package name or artifactId without dashes and underscores.
+     * Usually that's something like the package name or artifactId. Project keeper additionally will apply
+     * {@link ApStyleFormatter} to generate a human-readable format.
      * </p>
      *
      * @return project name
