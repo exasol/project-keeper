@@ -14,8 +14,6 @@ import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.Build
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.Fix;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
-import lombok.Getter;
-
 /**
  * Validates if PK itself is up-to-date and performs self-update of called from a pom file.
  */
@@ -53,9 +51,7 @@ public class OwnVersionValidator implements Validator {
     }
 
     private final String currentVersion;
-    @Getter
     private final MavenRepository mavenRepository;
-    @Getter
     private final Updater updater;
 
     OwnVersionValidator(final String currentVersion, final MavenRepository repo, final Updater updater) {

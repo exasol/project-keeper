@@ -93,7 +93,7 @@ class GolangDependencyCalculatorTest {
     }
 
     private Dependency dep(final String moduleName, final String version) {
-        return new Dependency(moduleName, version);
+        return Dependency.builder().moduleName(moduleName).version(version).build();
     }
 
     private GolangDependencyLicense license(final String moduleName, final String licenseName,
@@ -112,7 +112,9 @@ class GolangDependencyCalculatorTest {
     }
 
     private List<ProjectDependency> calculate(final Dependency... goModDependencies) {
-        return GolangDependencyCalculator.calculateDependencies(this.golangServicesMock, PROJECT_PATH,
-                new ModuleInfo(PROJECT_MODULE_NAME, asList(goModDependencies))).getDependencies();
+        return GolangDependencyCalculator
+                .calculateDependencies(this.golangServicesMock, PROJECT_PATH, ModuleInfo.builder()
+                        .moduleName(PROJECT_MODULE_NAME).dependencies(asList(goModDependencies)).build())
+                .getDependencies();
     }
 }

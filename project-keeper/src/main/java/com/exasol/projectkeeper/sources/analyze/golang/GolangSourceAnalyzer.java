@@ -60,9 +60,9 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private String getProjectName(final Path projectDir, final Source source) {
         if (isRootSource(source)) {
-            return ProjectNameReader.getProjectName(projectDir);
+            return RepoNameReader.getRepoName(projectDir);
         } else {
-            return ProjectNameReader.getProjectName(source.getPath().getParent());
+            return RepoNameReader.getRepoName(source.getPath().getParent());
         }
     }
 

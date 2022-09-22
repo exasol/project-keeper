@@ -3,8 +3,6 @@ package com.exasol.projectkeeper.validators.finding;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.Getter;
-
 /**
  * This class ungroups all {@link ValidationFindingGroup}s into one flat list.
  */
@@ -28,7 +26,6 @@ public class FindingsUngrouper {
     }
 
     private static class UngoupingVisitor implements ValidationFinding.Visitor {
-        @Getter
         private final List<SimpleValidationFinding> result = new ArrayList<>();
 
         @Override
@@ -41,6 +38,13 @@ public class FindingsUngrouper {
             for (final ValidationFinding eachFinding : finding.getFindings()) {
                 eachFinding.accept(this);
             }
+        }
+
+        /**
+         * @return list of findings representing the result of the validation
+         */
+        public List<SimpleValidationFinding> getResult() {
+            return this.result;
         }
     }
 }

@@ -4,7 +4,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -45,7 +44,6 @@ public class FindingFilter {
     @RequiredArgsConstructor
     private static class FilteringVisitor implements ValidationFinding.Visitor {
         private final List<Pattern> denyList;
-        @Getter
         private Optional<ValidationFinding> result;
 
         @Override
@@ -80,6 +78,13 @@ public class FindingFilter {
             } else {
                 this.result = Optional.of(new ValidationFindingGroup(filteredNestedFindings, finding.getPostFix()));
             }
+        }
+
+        /**
+         * @return finding matching this filter
+         */
+        public Optional<ValidationFinding> getResult() {
+            return this.result;
         }
     }
 }

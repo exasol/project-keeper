@@ -9,7 +9,8 @@ import java.util.stream.Collectors;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
 
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 /**
@@ -32,7 +33,6 @@ public class SimpleValidationFinding implements ValidationFinding {
     }
 
     private final String message;
-    @Getter
     @Accessors(fluent = true)
     private final boolean isOptional;
     private final Fix fix;
@@ -104,6 +104,13 @@ public class SimpleValidationFinding implements ValidationFinding {
          * @param log logger
          */
         void fixError(Logger log);
+    }
+
+    /**
+     * @return whether the current finding is optional, i.e. can be left unfixed
+     */
+    public boolean isOptional() {
+        return this.isOptional;
     }
 
     /**

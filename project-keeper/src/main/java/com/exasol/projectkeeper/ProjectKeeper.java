@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper;
 
-import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
+import static com.exasol.projectkeeper.ApStyleFormatter.humanReadable;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
 import static com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.blockers;
 
@@ -14,9 +14,9 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;
+import com.exasol.projectkeeper.sources.analyze.golang.RepoNameReader;
 import com.exasol.projectkeeper.validators.*;
 import com.exasol.projectkeeper.validators.changelog.ChangelogFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
@@ -45,7 +45,7 @@ public class ProjectKeeper {
         this.mvnRepo = mvnRepo;
         this.config = config;
         this.ownVersion = ownVersion;
-        this.repoName = getRepoName(projectDir);
+        this.repoName = RepoNameReader.getRepoName(projectDir);
     }
 
     /**
@@ -87,16 +87,6 @@ public class ProjectKeeper {
     static ProjectKeeper createProjectKeeper(final Logger logger, final Path projectDir, final Path mvnRepo,
             final String ownVersion) {
         return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), ownVersion);
-    }
-
-    private String getRepoName(final Path projectDir) {
-        try (final GitRepository gitRepository = GitRepository.open(projectDir)) {
-            return gitRepository.getRepoNameFromRemote().orElseGet(() -> getProjectDirName(projectDir));
-        }
-    }
-
-    private String getProjectDirName(final Path projectDir) {
-        return projectDir.getFileName().toString();
     }
 
     private List<Function<ValidationPhase.Provision, ValidationPhase>> getValidationPhases() {
@@ -157,13 +147,9 @@ public class ProjectKeeper {
     }
 
     private String getProjectName(final List<AnalyzedSource> analyzedSources) {
-        final String projectName;
-        if (analyzedSources.size() == 1) {
-            projectName = analyzedSources.get(0).getProjectName();
-        } else {
-            projectName = capitalizeApStyle(this.repoName.replace("-", " ").replace("_", " "));
-        }
-        return projectName;
+        return humanReadable(analyzedSources.size() == 1 //
+                ? analyzedSources.get(0).getProjectName()
+                : this.repoName);
     }
 
     private static ProjectKeeperConfig readConfig(final Path projectDir) {

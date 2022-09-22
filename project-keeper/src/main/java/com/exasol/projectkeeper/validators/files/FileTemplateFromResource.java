@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.validators.files;
 import java.nio.file.Path;
 
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 
 /**
  * {@link FileTemplate} that reads the content from a resource.
@@ -13,7 +12,6 @@ public class FileTemplateFromResource implements FileTemplate {
 
     private final String templateResource;
     private final String pathInProject;
-    @Getter
     private final Validation validation;
 
     /**
@@ -50,5 +48,10 @@ public class FileTemplateFromResource implements FileTemplate {
     @Override
     public String getContent() {
         return new ResourceReader().readFromResource(this.templateResource);
+    }
+
+    @Override
+    public Validation getValidation() {
+        return this.validation;
     }
 }
