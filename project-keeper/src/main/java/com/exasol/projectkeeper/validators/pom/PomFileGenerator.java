@@ -188,7 +188,7 @@ public class PomFileGenerator {
                 .child(GROUP_ID, parentPomRef.getGroupId()) //
                 .child(ARTIFACT_ID, parentPomRef.getArtifactId()) //
                 .child(VERSION, parentPomRef.getVersion()) //
-                .nullableChild(path == null ? null : element("relativePath", path));
+                .nullableChild(path == null ? null : element("relativePath").child(path));
     }
 
     private ElementBuilder dependenciesBuilder(final Collection<ProjectKeeperModule> enabledModules) {
@@ -208,7 +208,7 @@ public class PomFileGenerator {
                 .child(ARTIFACT_ID, artifactId) //
                 .child(VERSION, version) //
                 .child("scope", scope) //
-                .nullableChild(classifier == null ? null : element("classifier", classifier));
+                .nullableChild(classifier == null ? null : element("classifier").child(classifier));
     }
 
     private ElementBuilder buildBuilder(final Collection<ProjectKeeperModule> enabledModules) {
@@ -221,7 +221,7 @@ public class PomFileGenerator {
                 .child("project.reporting.outputEncoding", "UTF-8") //
                 .child("java.version", "11") //
                 .child("test.excludeTags", "") //
-                .nullableChild(!enabledModules.contains(MAVEN_CENTRAL) ? null : element("gpg.skip", "true"));
+                .nullableChild(!enabledModules.contains(MAVEN_CENTRAL) ? null : element("gpg.skip").child("true"));
     }
 
     private Document createDocument() {
