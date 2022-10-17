@@ -7,6 +7,7 @@ Code name: Minor improvements
 ## Refactorings
 
 * #380: Refactored `getProjectName()` for GolangSources.
+* #384: Added element `<distributionManagement>` to file `pk_generated_parent.pom` required for deployments to maven central.
 
 ## Dependency Updates
 
