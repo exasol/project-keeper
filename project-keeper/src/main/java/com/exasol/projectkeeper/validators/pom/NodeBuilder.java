@@ -4,11 +4,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 /**
- * Builder for {@link w3c.dom.Node}
+ * Builder for {@link org.w3c.dom.Node}
  */
 public interface NodeBuilder {
     /**
-     * @return new instance of a {@link w3c.dom.Node}
+     * @param document document to use for building the Node
+     * @return new instance of a {@link org.w3c.dom.Node}
      */
     public Node build(Document document);
 

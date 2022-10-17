@@ -38,7 +38,7 @@ public class ElementBuilder implements NodeBuilder {
      * Add a text node as child to current element.
      *
      * @param text content of text node
-     * @return
+     * @return this for fluent programming
      */
     public ElementBuilder child(final String text) {
         return child(textNode(text));
