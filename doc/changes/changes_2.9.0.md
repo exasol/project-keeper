@@ -8,6 +8,7 @@ Code name: Minor improvements
 
 * #380: Refactored `getProjectName()` for GolangSources.
 * #383: Generate configuration file for Integrated Development Environment Microsoft Visual Code.
+* #384: Added element `<distributionManagement>` to file `pk_generated_parent.pom` required for deployments to maven central.
 
 ## Dependency Updates
 
