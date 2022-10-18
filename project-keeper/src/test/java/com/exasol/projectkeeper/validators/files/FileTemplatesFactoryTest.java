@@ -28,6 +28,7 @@ class FileTemplatesFactoryTest {
         final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION)
                 .getGlobalTemplates(sources);
         assertContainsTemplate(templates, ".github/workflows/ci-build.yml");
+        assertContainsTemplate(templates, ".vscode/settings.json");
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {

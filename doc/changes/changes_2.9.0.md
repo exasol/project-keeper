@@ -7,6 +7,7 @@ Code name: Minor improvements
 ## Refactorings
 
 * #380: Refactored `getProjectName()` for GolangSources.
+* #383: Generate configuration file for Integrated Development Environment Microsoft Visual Code.
 
 ## Dependency Updates
 
