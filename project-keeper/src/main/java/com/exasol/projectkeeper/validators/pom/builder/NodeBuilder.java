@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators.pom;
+package com.exasol.projectkeeper.validators.pom.builder;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -12,6 +12,13 @@ public interface NodeBuilder {
      * @return new instance of a {@link org.w3c.dom.Node}
      */
     public Node build(Document document);
+
+    /**
+     * @return New instance of {@link DocumentBuilder}
+     */
+    public static DocumentBuilder document() {
+        return new DocumentBuilder();
+    }
 
     /**
      * @param name name of the element to be built by this builder
@@ -44,10 +51,22 @@ public interface NodeBuilder {
     }
 
     /**
+     * Create builder for a text node.
+     *
      * @param text text content of the Node
      * @return New instance of {@link NodeBuilder}
      */
     public static NodeBuilder textNode(final String text) {
         return document -> document.createTextNode(text);
+    }
+
+    /**
+     * Create builder for a comment node.
+     *
+     * @param text textual content of the comment
+     * @return New instance of {@link NodeBuilder}
+     */
+    public static NodeBuilder comment(final String text) {
+        return document -> document.createComment(text);
     }
 }

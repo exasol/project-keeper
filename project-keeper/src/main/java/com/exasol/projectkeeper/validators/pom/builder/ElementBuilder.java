@@ -1,7 +1,6 @@
-package com.exasol.projectkeeper.validators.pom;
+package com.exasol.projectkeeper.validators.pom.builder;
 
-import static com.exasol.projectkeeper.validators.pom.NodeBuilder.element;
-import static com.exasol.projectkeeper.validators.pom.NodeBuilder.textNode;
+import static com.exasol.projectkeeper.validators.pom.builder.NodeBuilder.textNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,27 +10,15 @@ import org.w3c.dom.*;
 /**
  * Builder for DOM Elements
  */
-public class ElementBuilder implements NodeBuilder {
+public class ElementBuilder extends ChildrenBuilder<ElementBuilder> implements NodeBuilder {
 
     private final String namespace;
     private final String name;
     private final List<Attribute> attributes = new ArrayList<>();
-    private final List<NodeBuilder> children = new ArrayList<>();
 
     ElementBuilder(final String namespace, final String name) {
         this.namespace = namespace;
         this.name = name;
-    }
-
-    /**
-     * Add a child element to the current element
-     *
-     * @param name name of the child
-     * @param text text content of the child
-     * @return this for fluent programming
-     */
-    public ElementBuilder child(final String name, final String text) {
-        return child(element(name).child(text));
     }
 
     /**
@@ -40,41 +27,8 @@ public class ElementBuilder implements NodeBuilder {
      * @param text content of text node
      * @return this for fluent programming
      */
-    public ElementBuilder child(final String text) {
+    public ElementBuilder text(final String text) {
         return child(textNode(text));
-    }
-
-    /**
-     * Add a child element to the current element
-     *
-     * @param child child element
-     * @return this for fluent programming
-     */
-    public ElementBuilder child(final NodeBuilder child) {
-        this.children.add(child);
-        return this;
-    }
-
-    /**
-     * Add child only if child != null
-     *
-     * @param child child element
-     * @return this for fluent programming
-     */
-    public ElementBuilder nullableChild(final NodeBuilder child) {
-        if (child != null) {
-            this.children.add(child);
-        }
-        return this;
-    }
-
-    /**
-     * @param children children to add to the current element
-     * @return this for fluent programming
-     */
-    public ElementBuilder children(final List<NodeBuilder> children) {
-        this.children.addAll(children);
-        return this;
     }
 
     /**
@@ -115,6 +69,11 @@ public class ElementBuilder implements NodeBuilder {
         }
         this.children.stream().map(c -> c.build(document)).forEach(element::appendChild);
         return element;
+    }
+
+    @Override
+    protected ElementBuilder getThis() {
+        return this;
     }
 
     static class Attribute {
