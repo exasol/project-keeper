@@ -10,6 +10,9 @@ import java.util.List;
  */
 public abstract class ChildrenBuilder<T extends ChildrenBuilder<T>> {
 
+    /**
+     * children builders of the current builder
+     */
     protected final List<NodeBuilder> children = new ArrayList<>();
 
     /**
@@ -56,5 +59,8 @@ public abstract class ChildrenBuilder<T extends ChildrenBuilder<T>> {
         return getThis();
     }
 
+    /**
+     * @return instance of the current object to support generics
+     */
     protected abstract T getThis();
 }
