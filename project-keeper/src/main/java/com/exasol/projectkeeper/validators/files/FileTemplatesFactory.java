@@ -27,6 +27,7 @@ class FileTemplatesFactory {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(new FileTemplateFromResource(".github/workflows/broken_links_checker.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource("release_config.yml", REQUIRE_EXIST));
+        templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
