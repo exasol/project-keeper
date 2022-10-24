@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper.validators.dependencies.renderer;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
-import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.*;
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.*;
 
 import java.util.List;
 import java.util.Locale;
@@ -21,7 +21,7 @@ public class DependencyPageRenderer {
 
     /**
      * Convert a list of dependencies into a markdown dependency report.
-     * 
+     *
      * @param projectWithDependencies projects to report
      * @return rendered report
      */
@@ -97,7 +97,7 @@ public class DependencyPageRenderer {
 
     private String renderLink(final String name, final String url,
             final MarkdownReferenceBuilder markdownReferenceBuilder) {
-        if (url == null || url.isBlank()) {
+        if ((url == null) || url.isBlank()) {
             return name;
         } else {
             return "[" + name + "][" + markdownReferenceBuilder.getReferenceForUrl(url) + "]";

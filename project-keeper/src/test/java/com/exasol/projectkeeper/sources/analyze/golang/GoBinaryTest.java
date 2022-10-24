@@ -4,7 +4,8 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 
@@ -15,12 +16,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
+
 @ExtendWith(MockitoExtension.class)
 class GoBinaryTest {
 
     private static final String SEP = File.separator.replace("\\", "\\\\");
     @Mock
-    private GoProcess goProcess;
+    private CommandExecutor executor;
 
     @Test
     void nonExistingBinary() {
@@ -43,7 +46,7 @@ class GoBinaryTest {
 
     @Test
     void installFailure() {
-        when(this.goProcess.start(any(), any(), any())).thenThrow(new IllegalStateException("bla bla"));
+        when(this.executor.execute(any(), any())).thenThrow(new IllegalStateException("bla bla"));
         final GoBinary testee = testee();
         final Exception e = assertThrows(IllegalStateException.class, () -> testee.install());
         assertThat(e.getMessage(), Matchers.startsWith("E-PK-CORE-161: Error installing go binary"));
@@ -52,10 +55,8 @@ class GoBinaryTest {
 
     @Test
     void installSuccess() {
-        final SimpleProcess process = mock(SimpleProcess.class);
-        when(this.goProcess.start(any(), any(), any())).thenReturn(process);
         testee().install();
-        verify(process).waitUntilFinished(any());
+        verify(this.executor).execute(any(), any());
     }
 
     @Test
@@ -66,7 +67,6 @@ class GoBinaryTest {
     }
 
     private GoBinary testee() {
-        return new GoBinary(this.goProcess, null, "non-existing-go-binary");
+        return new GoBinary(this.executor, null, "non-existing-go-binary");
     }
-
 }

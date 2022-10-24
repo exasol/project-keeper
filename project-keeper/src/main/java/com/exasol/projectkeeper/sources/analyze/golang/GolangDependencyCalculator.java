@@ -7,14 +7,12 @@ import java.util.*;
 import java.util.Map.Entry;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
-import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
+import com.exasol.projectkeeper.shared.dependencies.*;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 
 class GolangDependencyCalculator {
 
-    private final ModuleInfo moduleInfo;
+    private final GoModule moduleInfo;
     private final Path projectPath;
     private final GolangServices golangServices;
 
@@ -22,7 +20,7 @@ class GolangDependencyCalculator {
     private Map<String, GolangDependencyLicense> allLicenses;
 
     private GolangDependencyCalculator(final GolangServices golangServices, final Path projectPath,
-            final ModuleInfo moduleInfo) {
+            final GoModule moduleInfo) {
         this.golangServices = golangServices;
         this.projectPath = projectPath;
         this.moduleInfo = moduleInfo;
@@ -38,7 +36,7 @@ class GolangDependencyCalculator {
      */
     // [impl -> dsn~golang-dependency-licenses~1]
     static ProjectDependencies calculateDependencies(final GolangServices golangServices, final Path projectPath,
-            final ModuleInfo moduleInfo) {
+            final GoModule moduleInfo) {
         golangServices.installDependencies(projectPath);
         final GolangDependencyCalculator calculator = new GolangDependencyCalculator(golangServices, projectPath,
                 moduleInfo);
@@ -53,12 +51,12 @@ class GolangDependencyCalculator {
         return new ProjectDependencies(projectDependencies);
     }
 
-    private ProjectDependency convertDependency(final Dependency dependency) {
+    private ProjectDependency convertDependency(final VersionedDependency dependency) {
         return ProjectDependency.builder() //
-                .name(dependency.getModuleName()) //
-                .type(getDependencyType(dependency.getModuleName())) //
+                .name(dependency.getName()) //
+                .type(getDependencyType(dependency.getName())) //
                 .websiteUrl(null) //
-                .licenses(List.of(getLicense(dependency.getModuleName()).toLicense())) //
+                .licenses(List.of(getLicense(dependency.getName()).toLicense())) //
                 .build();
     }
 
@@ -104,7 +102,7 @@ class GolangDependencyCalculator {
      * omits test dependencies.
      *
      * @param moduleName the module name
-     * @return the module's depenency type
+     * @return the module's dependency type
      */
     private Type getDependencyType(final String moduleName) {
         return this.compileDependencyLicenses.containsKey(moduleName) ? Type.COMPILE : Type.TEST;

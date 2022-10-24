@@ -2,9 +2,11 @@ package com.exasol.projectkeeper.validators.changesfile.dependencies;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+import java.util.Map.Entry;
 
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
@@ -45,14 +47,15 @@ public class DependencyChangeReportRenderer {
         final List<String> lines = new ArrayList<>();
         final DependencyChangeReport report = namedReport.getReport();
         final String headlinePrefix = isMultiReports ? "####" : "###";
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Compile Dependency Updates",
-                report.getCompileDependencyChanges()));
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Runtime Dependency Updates",
-                report.getRuntimeDependencyChanges()));
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Test Dependency Updates",
-                report.getTestDependencyChanges()));
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Plugin Dependency Updates",
-                report.getPluginDependencyChanges()));
+
+        final Map<Type, String> categories = Map.of( //
+                ProjectDependency.Type.COMPILE, " Compile Dependency Updates", //
+                ProjectDependency.Type.RUNTIME, " Runtime Dependency Updates", //
+                ProjectDependency.Type.TEST, " Test Dependency Updates", //
+                ProjectDependency.Type.PLUGIN, " Plugin Dependency Updates");
+        for (final Entry<Type, String> c : categories.entrySet()) {
+            lines.addAll(renderDependencyChanges(headlinePrefix + c.getValue(), report.getChanges(c.getKey())));
+        }
         if (!lines.isEmpty() && isMultiReports) {
             lines.addAll(0, List.of("", "### " + capitalizeApStyle(namedReport.getSourceName())));
         }

@@ -6,14 +6,16 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
-import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
+import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
 
 @ExtendWith(MockitoExtension.class)
 class GolangServicesTest {
@@ -21,7 +23,7 @@ class GolangServicesTest {
     private static final String MODULE_NAME = "module/name";
 
     @Mock
-    GoProcess goProcessMock;
+    CommandExecutor executor;
 
     @Test
     void calculateChangesIgnoresModuleNameChange() {
@@ -94,13 +96,13 @@ class GolangServicesTest {
 
     private void assertChanges(final GoModFile oldMod, final GoModFile newMod,
             final DependencyChange... expectedChanges) {
-        final List<DependencyChange> changes = service().calculateChanges(oldMod, newMod);
+        final List<DependencyChange> changes = service().calculateChanges(Optional.ofNullable(oldMod), newMod);
         assertAll(() -> assertThat(changes, hasSize(expectedChanges.length)),
                 () -> assertThat(changes, containsInAnyOrder(expectedChanges)));
     }
 
     private GolangServices service() {
-        return new GolangServices(() -> PROJECT_VERSION, this.goProcessMock);
+        return new GolangServices(this.executor, () -> PROJECT_VERSION);
     }
 
     private UpdatedDependency updated(final String moduleName, final String oldVersion, final String newVersion) {
@@ -115,19 +117,22 @@ class GolangServicesTest {
         return new RemovedDependency(null, moduleName, version);
     }
 
-    private GoModFile modFile(final GoModDependency... dependencies) {
+    private GoModFile modFile(final VersionedDependency... dependencies) {
         return modFile("mod", "1.17", dependencies);
     }
 
-    private GoModFile modFile(final String moduleName, final String goVersion, final GoModDependency... dependencies) {
+    private GoModFile modFile(final String moduleName, final String goVersion,
+            final VersionedDependency... dependencies) {
         return new GoModFile(moduleName, goVersion, asList(dependencies));
     }
 
-    private GoModDependency indirectDep(final String name, final String version) {
-        return new GoModDependency(name, version, true);
+    private VersionedDependency indirectDep(final String name, final String version) {
+        return VersionedDependency.builder().name(name).version(version).isIndirect(true).build();
+//        return new Dependency(name, version, true);
     }
 
-    private GoModDependency dep(final String name, final String version) {
-        return new GoModDependency(name, version, false);
+    private VersionedDependency dep(final String name, final String version) {
+        return VersionedDependency.builder().name(name).version(version).isIndirect(false).build();
+//        return new Dependency(name, version, false);
     }
 }

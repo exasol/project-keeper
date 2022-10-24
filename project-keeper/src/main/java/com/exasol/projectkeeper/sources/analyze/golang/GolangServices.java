@@ -1,16 +1,15 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import static java.util.Collections.emptyMap;
 import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.Duration;
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
@@ -19,11 +18,9 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.FixedVersion;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.VersionConfig;
-import com.exasol.projectkeeper.shared.dependencychanges.*;
-import com.exasol.projectkeeper.shared.repository.GitRepository;
-import com.exasol.projectkeeper.shared.repository.TaggedCommit;
-import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
-import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
+import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
+import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
+import com.exasol.projectkeeper.sources.analyze.generic.*;
 
 /**
  * This class provides methods for retrieving information about a Golang project, e.g. its module name, dependencies and
@@ -36,16 +33,16 @@ class GolangServices {
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
 
-    private final Supplier<String> projectVersion;
-    private final GoProcess goProcess;
+    private final Supplier<String> projectVersionSupplier;
+    private final CommandExecutor executor;
 
     GolangServices(final ProjectKeeperConfig config) {
-        this(() -> extractVersion(config), new GoProcess());
+        this(new CommandExecutor(), () -> extractVersion(config));
     }
 
-    GolangServices(final Supplier<String> projectVersion, final GoProcess goProcess) {
-        this.projectVersion = projectVersion;
-        this.goProcess = goProcess;
+    GolangServices(final CommandExecutor executor, final Supplier<String> projectVersionSupplier) {
+        this.executor = executor;
+        this.projectVersionSupplier = projectVersionSupplier;
     }
 
     // [impl -> dsn~golang-project-version~1]
@@ -66,10 +63,22 @@ class GolangServices {
     }
 
     Map<String, GolangDependencyLicense> getLicenses(final Path absoluteSourcePath, final String module) {
+        final String[] licenses = retrieveLicenses(absoluteSourcePath, module).split("\n");
+        return Arrays.stream(licenses) //
+                .filter(not(String::isBlank)) //
+                .map(this::convertDependencyLicense)
+                .collect(toMap(GolangDependencyLicense::getModuleName, Function.identity()));
+    }
+
+    private String retrieveLicenses(final Path absoluteSourcePath, final String module) {
         final GoBinary goLicenses = GoBinary.GO_LICENSES.install();
-        final SimpleProcess process;
+        final ShellCommand shellCommand = ShellCommand.builder() //
+                .timeout(EXECUTION_TIMEOUT) //
+                .command(goLicenses.command()) //
+                .args("csv", module) //
+                .build();
         try {
-            process = this.goProcess.start(absoluteSourcePath, goLicenses, "csv", module);
+            return this.executor.execute(shellCommand, absoluteSourcePath);
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
                     .message("Error starting the 'go-licenses' binary.")
@@ -77,18 +86,15 @@ class GolangServices {
                     .mitigation("Install it by running 'go install github.com/google/go-licenses@v1.2.1'.").toString(),
                     exception);
         }
-        process.waitUntilFinished(EXECUTION_TIMEOUT);
-        return Arrays.stream(process.getOutputStreamContent().split("\n")) //
-                .filter(not(String::isBlank)) //
-                .map(this::convertDependencyLicense)
-                .collect(toMap(GolangDependencyLicense::getModuleName, Function.identity()));
     }
 
     Path getModuleDir(final Path absoluteSourcePath, final String moduleName) {
-        final SimpleProcess process = this.goProcess.start(absoluteSourcePath, GoBinary.GO, "list", "-m", "-f",
-                "{{.Dir}}", moduleName);
-        process.waitUntilFinished(Duration.ofSeconds(3));
-        final String output = process.getOutputStreamContent().trim();
+        final ShellCommand shellCommand = ShellCommand.builder() //
+                .timeout(Duration.ofSeconds(3)) //
+                .command(GoBinary.GO.command()) //
+                .args("list", "-m", "-f", "{{.Dir}}", moduleName) //
+                .build();
+        final String output = this.executor.execute(shellCommand, absoluteSourcePath);
         if (output.isEmpty()) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-160")
                     .message("Did not get directory for module {{module name}}.", moduleName).ticketMitigation()
@@ -125,7 +131,7 @@ class GolangServices {
      * @param absoluteSourcePath the project path containing the {@code go.mod} file
      * @return module information
      */
-    ModuleInfo getModuleInfo(final Path absoluteSourcePath) {
+    GoModule getModuleInfo(final Path absoluteSourcePath) {
         final SimpleProcess process = SimpleProcess.start(absoluteSourcePath, COMMAND_LIST_DIRECT_DEPENDENCIES);
         try {
             process.waitUntilFinished(EXECUTION_TIMEOUT);
@@ -136,14 +142,14 @@ class GolangServices {
                     exception);
         }
         final String[] output = process.getOutputStreamContent().split("\n");
-        final List<Dependency> dependencies = Arrays.stream(output) //
+        final List<VersionedDependency> dependencies = Arrays.stream(output) //
                 .skip(1) // ignore first line, it is the project itself
                 .map(this::convertDependency) //
                 .collect(toList());
-        return ModuleInfo.builder().moduleName(output[0]).dependencies(dependencies).build();
+        return new GoModule(output[0], dependencies);
     }
 
-    private Dependency convertDependency(final String line) {
+    private VersionedDependency convertDependency(final String line) {
         final String[] parts = line.split(" ");
         if (parts.length != 2) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-139")
@@ -154,7 +160,11 @@ class GolangServices {
         final String moduleName = parts[0];
         final String version = parts[1];
         LOGGER.finest(() -> "Found dependency in go.mod: '" + moduleName + "' with version '" + version + "'");
-        return Dependency.builder().moduleName(moduleName).version(version).build();
+        return VersionedDependency.builder() //
+                .name(moduleName) //
+                .version(version) //
+                .isIndirect(false) //
+                .build();
     }
 
     /**
@@ -166,10 +176,11 @@ class GolangServices {
      */
     // [impl -> dsn~golang-changed-dependency~1]
     List<DependencyChange> getDependencyChanges(final Path projectDir, final Path relativeModFile) {
-        final Optional<GoModFile> lastReleaseModFile = getLastReleaseModFileContent(projectDir, relativeModFile)
+        final Optional<GoModFile> lastReleaseModFile = new PreviousRelease(projectDir, getProjectVersion()) //
+                .fileContent(relativeModFile) //
                 .map(GoModFile::parse);
         final GoModFile currentModFile = GoModFile.parse(readFile(projectDir.resolve(relativeModFile)));
-        return calculateChanges(lastReleaseModFile.orElse(null), currentModFile);
+        return calculateChanges(lastReleaseModFile, currentModFile);
     }
 
     private String readFile(final Path file) {
@@ -185,106 +196,30 @@ class GolangServices {
     /**
      * Calculate the list of {@link DependencyChange}s between the given {@link GoModFile}s.
      *
-     * @param oldModFile the content of the 'old' {@code go.mod} file from the previous release
-     * @param newModFile the content of the current {@code go.mod} file
+     * @param previous the content of the {@code go.mod} file from the previous release
+     * @param current  the content of the current {@code go.mod} file
      * @return the list of {@link DependencyChange}s between both versions of the {@code go.mod} file
      */
-    List<DependencyChange> calculateChanges(final GoModFile oldModFile, final GoModFile newModFile) {
-        return new DependencyChangeCalculator(oldModFile, newModFile).calculateChanges();
-    }
-
-    private Optional<String> getLastReleaseModFileContent(final Path projectDir, final Path modFile) {
-        try (final GitRepository repo = GitRepository.open(projectDir)) {
-            return repo.findLatestReleaseCommit(getProjectVersion()).map(tag -> getContent(repo, modFile, tag));
-        }
+    List<DependencyChange> calculateChanges(final Optional<GoModFile> previous, final GoModFile current) {
+        return DependencyChanges.builder() //
+                .from(previous.map(GoModFile::getDirectDependencies)) //
+                .to(current.getDirectDependencies()) //
+                .withChange(GOLANG_DEPENDENCY_NAME, //
+                        previous.map(GoModFile::getGoVersion), //
+                        Optional.ofNullable(current.getGoVersion())) //
+                .build();
     }
 
     String getProjectVersion() {
-        return this.projectVersion.get();
-    }
-
-    private String getContent(final GitRepository repo, final Path relativeModFilePath, final TaggedCommit tag) {
-        try {
-            return repo.getFileFromCommit(relativeModFilePath, tag.getCommit());
-        } catch (final FileNotFoundException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-134")
-                    .message("Go module file {{module file}} does not exist at tag {{tag}}", relativeModFilePath,
-                            tag.getTag())
-                    .toString(), exception);
-        }
-    }
-
-    private static class DependencyChangeCalculator {
-        private final Map<String, GoModDependency> oldDependencies;
-        private final Map<String, GoModDependency> newDependencies;
-        private final GoModFile oldModFile;
-        private final GoModFile newModFile;
-        private final List<DependencyChange> changes = new ArrayList<>();
-
-        private DependencyChangeCalculator(final GoModFile oldModFile, final GoModFile newModFile) {
-            this.oldModFile = oldModFile;
-            this.newModFile = newModFile;
-            this.oldDependencies = oldModFile == null ? emptyMap()
-                    : oldModFile.getDirectDependencies().stream()
-                            .collect(toMap(GoModDependency::getName, Function.identity()));
-            this.newDependencies = newModFile.getDirectDependencies().stream()
-                    .collect(toMap(GoModDependency::getName, Function.identity()));
-        }
-
-        List<DependencyChange> calculateChanges() {
-            calculateGoVersionChanges();
-            calculateDependencyChanges();
-            return this.changes;
-        }
-
-        private void calculateGoVersionChanges() {
-            final String oldVersion = this.oldModFile == null ? null : this.oldModFile.getGoVersion();
-            final String newVersion = this.newModFile.getGoVersion();
-            if ((oldVersion == null) && (newVersion != null)) {
-                dependencyAdded(GOLANG_DEPENDENCY_NAME, newVersion);
-            } else if ((oldVersion != null) && (newVersion == null)) {
-                dependencyRemoved(GOLANG_DEPENDENCY_NAME, oldVersion);
-            } else if ((oldVersion != null) && !oldVersion.equals(newVersion)) {
-                dependencyUpdated(GOLANG_DEPENDENCY_NAME, oldVersion, newVersion);
-            }
-        }
-
-        private void calculateDependencyChanges() {
-            for (final Entry<String, GoModDependency> entry : this.newDependencies.entrySet()) {
-                final String depName = entry.getKey();
-                final String newVersion = entry.getValue().getVersion();
-                if (this.oldDependencies.containsKey(depName)) {
-                    final String oldVersion = this.oldDependencies.get(depName).getVersion();
-                    if (!oldVersion.equals(newVersion)) {
-                        dependencyUpdated(depName, oldVersion, newVersion);
-                    }
-                } else {
-                    dependencyAdded(depName, newVersion);
-                }
-            }
-            for (final Entry<String, GoModDependency> entry : this.oldDependencies.entrySet()) {
-                final String depName = entry.getKey();
-                if (!this.newDependencies.containsKey(depName)) {
-                    dependencyRemoved(depName, entry.getValue().getVersion());
-                }
-            }
-        }
-
-        private void dependencyAdded(final String module, final String version) {
-            this.changes.add(new NewDependency(null, module, version));
-        }
-
-        private void dependencyRemoved(final String module, final String version) {
-            this.changes.add(new RemovedDependency(null, module, version));
-        }
-
-        private void dependencyUpdated(final String module, final String oldVersion, final String newVersion) {
-            this.changes.add(new UpdatedDependency(null, module, oldVersion, newVersion));
-        }
+        return this.projectVersionSupplier.get();
     }
 
     void installDependencies(final Path projectPath) {
-        final SimpleProcess process = this.goProcess.start(projectPath, GoBinary.GO, "get", "-t", "./...");
-        process.waitUntilFinished(Duration.ofMinutes(2));
+        final ShellCommand sc = ShellCommand.builder() //
+                .timeout(Duration.ofMinutes(2)) //
+                .command(GoBinary.GO.command()) //
+                .args("get", "-t", "./...") //
+                .build();
+        this.executor.execute(sc, projectPath);
     }
 }

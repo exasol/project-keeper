@@ -1,34 +1,50 @@
 package com.exasol.projectkeeper.shared.dependencychanges;
 
 import java.lang.reflect.Type;
-import java.util.List;
+import java.util.*;
+import java.util.function.Function;
 
 import org.eclipse.yasson.YassonJsonb;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency;
 
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
 import jakarta.json.bind.serializer.*;
 import jakarta.json.stream.JsonGenerator;
 import jakarta.json.stream.JsonParser;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 /**
  * This class represents a report of changed dependencies.
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class DependencyChangeReport {
-    /** Dependency changes in compile scope */
-    private List<DependencyChange> compileDependencyChanges;
-    /** Dependency changes in runtime scope */
-    private List<DependencyChange> runtimeDependencyChanges;
-    /** Dependency changes in test scope */
-    private List<DependencyChange> testDependencyChanges;
-    /** Dependency changes in plugin scope */
-    private List<DependencyChange> pluginDependencyChanges;
+
+    /**
+     * @return builder for {@link DependencyChangeReport}
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /** Dependency changes in various scopes */
+    private Map<BaseDependency.Type, List<DependencyChange>> changes = new EnumMap<>(BaseDependency.Type.class);
+
+    public DependencyChangeReport() {
+        for (final BaseDependency.Type type : BaseDependency.Type.values()) {
+            this.changes.put(type, new ArrayList<>());
+        }
+    }
+
+    public List<DependencyChange> getChanges(final BaseDependency.Type type) {
+        return this.changes.get(type);
+    }
+
+    // old ordering: compile, runtime, test, plugin
 
     /**
      * Custom serialization can be replaced once https://github.com/eclipse-ee4j/jsonb-api/pull/284 is available.
@@ -79,6 +95,27 @@ public class DependencyChangeReport {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-SMC-3")
                     .message("Failed to find matching class for name {{name}}.", className).ticketMitigation()
                     .toString());
+        }
+    }
+
+    public static final class Builder {
+        private final DependencyChangeReport report = new DependencyChangeReport();
+
+        public Builder typed(final BaseDependency.Type type, final List<DependencyChange> changes) {
+            this.report.changes.put(type, changes);
+            return this;
+        }
+
+        public Builder mixed(final List<DependencyChange> value,
+                final Function<DependencyChange, BaseDependency.Type> typeDetector) {
+            for (final DependencyChange c : value) {
+                this.report.changes.get(typeDetector.apply(c)).add(c);
+            }
+            return this;
+        }
+
+        public DependencyChangeReport build() {
+            return this.report;
         }
     }
 }

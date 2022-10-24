@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies.renderer;
 
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.equalTo;
@@ -124,12 +125,20 @@ class DependencyPageRendererTest {
     }
 
     private ProjectDependency buildDependency(final String id, final List<License> licenses) {
-        final String url = "https://company-" + id + ".com/download";
-        return new ProjectDependency(id, url, licenses, ProjectDependency.Type.COMPILE);
+        return ProjectDependency.builder() //
+                .type(COMPILE) //
+                .name(id) //
+                .websiteUrl("https://company-" + id + ".com/download") //
+                .licenses(licenses) //
+                .build();
     }
 
     private ProjectDependency buildDependency(final ProjectDependency.Type type) {
-        return new ProjectDependency("my-lib", "https://example.com/mylib",
-                List.of(new License("MIT License", "https://mit.edu")), type);
+        return ProjectDependency.builder() //
+                .type(type) //
+                .name("my-lib") //
+                .websiteUrl("https://example.com/mylib") //
+                .licenses(List.of(new License("MIT License", "https://mit.edu"))) //
+                .build();
     }
 }

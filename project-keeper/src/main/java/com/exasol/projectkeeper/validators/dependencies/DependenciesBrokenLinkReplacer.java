@@ -18,7 +18,7 @@ public class DependenciesBrokenLinkReplacer {
 
     /**
      * Create a new instance of {@link DependenciesBrokenLinkReplacer}.
-     * 
+     *
      * @param brokenLinkReplacer broken link replacer dependency injection
      */
     public DependenciesBrokenLinkReplacer(final BrokenLinkReplacer brokenLinkReplacer) {
@@ -27,7 +27,7 @@ public class DependenciesBrokenLinkReplacer {
 
     /**
      * Replace broken links in a list of {@link ProjectDependency}s.
-     * 
+     *
      * @param projectWithDependencies dependencies
      * @return list of dependencies with replaced links
      */
@@ -38,9 +38,12 @@ public class DependenciesBrokenLinkReplacer {
     }
 
     private ProjectDependency replaceBrokenLinks(final ProjectDependency dependency) {
-        return new ProjectDependency(dependency.getName(),
-                this.brokenLinkReplacer.replaceIfBroken(dependency.getWebsiteUrl()),
-                replaceBrokenLicenseLinks(dependency.getLicenses()), dependency.getType());
+        return ProjectDependency.builder() //
+                .type(dependency.getType()) //
+                .name(dependency.getName()) //
+                .websiteUrl(this.brokenLinkReplacer.replaceIfBroken(dependency.getWebsiteUrl())) //
+                .licenses(replaceBrokenLicenseLinks(dependency.getLicenses())) //
+                .build();
     }
 
     private List<License> replaceBrokenLicenseLinks(final List<License> licenses) {

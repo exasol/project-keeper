@@ -27,8 +27,17 @@ public class OsCheck {
     }
 
     /**
+     * @param suffixForWindows suffix for command on operating system windows
+     * @return if detected operating system is windows then return the provided command suffix otherwise return empty
+     *         string.
+     */
+    public static String suffix(final String suffixForWindows) {
+        return detectOperatingSystemType() == OSType.WINDOWS ? suffixForWindows : "";
+    }
+
+    /**
      * Detect the operating system from the {@code os.name} System property.
-     * 
+     *
      * @return the operating system detected
      */
     public OSType getOperatingSystemType() {

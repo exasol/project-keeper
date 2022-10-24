@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.sources.analyze.golang;
+package com.exasol.projectkeeper.sources.analyze.generic;
 
 import java.nio.file.Path;
 

@@ -16,6 +16,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.MavenSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.golang.GolangSourceAnalyzer;
+import com.exasol.projectkeeper.sources.analyze.npm.NpmSourceAnalyzer;
 
 /**
  * This class analyzes source projects of any type by calling the relevant {@link LanguageSpecificSourceAnalyzer}.
@@ -44,7 +45,8 @@ public class SourceAnalyzer {
             final ProjectKeeperConfig config, final Path mvnRepo, final String ownVersion) {
         return Map.of( //
                 SourceType.MAVEN, new MavenSourceAnalyzer(mvnRepo, ownVersion), //
-                SourceType.GOLANG, new GolangSourceAnalyzer(config));
+                SourceType.GOLANG, new GolangSourceAnalyzer(config), //
+                SourceType.NPM, new NpmSourceAnalyzer());
     }
 
     /**

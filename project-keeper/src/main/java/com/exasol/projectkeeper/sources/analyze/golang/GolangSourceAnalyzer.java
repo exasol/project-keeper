@@ -10,8 +10,8 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 
 /**
@@ -41,33 +41,21 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
         validateGolangSource(source);
         final Path absoluteSourceDir = getAbsoluteSourceDir(projectDir, source);
-        final ModuleInfo moduleInfo = this.golangServices.getModuleInfo(absoluteSourceDir);
+        final GoModule moduleInfo = this.golangServices.getModuleInfo(absoluteSourceDir);
         final ProjectDependencies dependencies = GolangDependencyCalculator.calculateDependencies(this.golangServices,
                 absoluteSourceDir, moduleInfo);
-        return AnalyzedGolangSource.builder() //
+        return AnalyzedSourceImpl.builder() //
                 .version(this.golangServices.getProjectVersion()) //
-                .isRootProject(isRootSource(source)) //
+                .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
                 .advertise(source.isAdvertise()) //
                 .modules(source.getModules()) //
                 .path(source.getPath()) //
-                .projectName(getProjectName(projectDir, source)) //
-                .moduleName(moduleInfo.getModuleName()) //
+                .projectName(AnalyzedSourceImpl.projectName(projectDir, source)) //
+                .moduleName(moduleInfo.getName()) //
                 .dependencies(dependencies) //
                 .dependencyChanges(GolangDependencyChangeCalculator.calculateDepencencyChanges(this.golangServices,
                         projectDir, source, dependencies)) //
                 .build();
-    }
-
-    private String getProjectName(final Path projectDir, final Source source) {
-        if (isRootSource(source)) {
-            return RepoNameReader.getRepoName(projectDir);
-        } else {
-            return RepoNameReader.getRepoName(source.getPath().getParent());
-        }
-    }
-
-    private boolean isRootSource(final Source source) {
-        return source.getPath().getParent() == null;
     }
 
     private Path getAbsoluteSourceDir(final Path projectDir, final Source source) {

@@ -23,6 +23,7 @@ import org.junit.jupiter.api.io.TempDir;
 import com.exasol.projectkeeper.TestMavenModel;
 import com.exasol.projectkeeper.TestRepo;
 import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.dependencychanges.UpdatedDependency;
 
@@ -39,7 +40,7 @@ class DependencyUpdateReaderTest {
             final MavenProject currentProject = createProjectWithDependencyUpdate(gitRepo);
             final DependencyChangeReport result = new DependencyUpdateReader(new MavenProjectFromFileReaderStub(),
                     this.tempDir, currentProject.getModel()).readDependencyChanges();
-            assertThat(result.getCompileDependencyChanges(),
+            assertThat(result.getChanges(Type.COMPILE),
                     hasItem(new UpdatedDependency(EXAMPLE_GROUP_ID, EXAMPLE_ARTIFACT_ID, "1.2.3", "1.2.4")));
         }
     }

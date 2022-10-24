@@ -13,6 +13,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 
 class DependencyChangeReportReaderTest {
@@ -35,7 +36,7 @@ class DependencyChangeReportReaderTest {
         newModel.addDependency(dependency);
         final Model oldModel = getNewModel();
         final DependencyChangeReport report = READER.read(oldModel, newModel);
-        assertThat(report.getCompileDependencyChanges(), contains(new NewDependency("com.example", "my-lib", "0.1.0")));
+        assertThat(report.getChanges(Type.COMPILE), contains(new NewDependency("com.example", "my-lib", "0.1.0")));
     }
 
     @Test
@@ -46,8 +47,8 @@ class DependencyChangeReportReaderTest {
         newModel.addDependency(buildDependency("a", ""));
         final Model oldModel = getNewModel();
         final DependencyChangeReport report = READER.read(oldModel, newModel);
-        final List<String> artifactIds = report.getCompileDependencyChanges().stream()
-                .map(DependencyChange::getArtifactId).collect(Collectors.toList());
+        final List<String> artifactIds = report.getChanges(Type.COMPILE).stream().map(DependencyChange::getArtifactId)
+                .collect(Collectors.toList());
         assertThat(artifactIds, contains("a", "b", "c"));
     }
 
@@ -58,7 +59,7 @@ class DependencyChangeReportReaderTest {
         newModel.addDependency(dependency);
         final Model oldModel = getNewModel();
         final DependencyChangeReport report = READER.read(oldModel, newModel);
-        assertThat(report.getTestDependencyChanges(), contains(new NewDependency("com.example", "my-lib", "0.1.0")));
+        assertThat(report.getChanges(Type.TEST), contains(new NewDependency("com.example", "my-lib", "0.1.0")));
     }
 
     @Test
@@ -72,8 +73,7 @@ class DependencyChangeReportReaderTest {
         final Model oldModel = getNewModel();
         oldModel.setBuild(new Build());
         final DependencyChangeReport report = new DependencyChangeReportReader().read(oldModel, newModel);
-        assertThat(report.getPluginDependencyChanges(),
-                contains(new NewDependency("com.example", "my-plugin", "0.1.0")));
+        assertThat(report.getChanges(Type.PLUGIN), contains(new NewDependency("com.example", "my-plugin", "0.1.0")));
     }
 
     private Dependency buildDependency(final String scope) {

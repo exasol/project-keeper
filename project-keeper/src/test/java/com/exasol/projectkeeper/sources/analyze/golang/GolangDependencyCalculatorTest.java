@@ -17,10 +17,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exasol.projectkeeper.shared.dependencies.License;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
-import com.exasol.projectkeeper.sources.analyze.golang.ModuleInfo.Dependency;
+import com.exasol.projectkeeper.shared.dependencies.*;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 
 @ExtendWith(MockitoExtension.class)
 class GolangDependencyCalculatorTest {
@@ -81,7 +79,7 @@ class GolangDependencyCalculatorTest {
     void licenseNotFound() {
         simulateMainModuleLicenses(Map.of());
         simulateLicenses("test1", Map.of());
-        final Dependency dep = dep("test1", "ver1");
+        final VersionedDependency dep = dep("test1", "ver1");
         final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculate(dep));
         assertThat(exception.getMessage(),
                 equalTo("E-PK-CORE-147: No license found for test dependency module 'test1', all licenses: {}"));
@@ -89,11 +87,15 @@ class GolangDependencyCalculatorTest {
 
     private ProjectDependency expectedDep(final String name, final String licencesName, final String licenseUrl,
             final Type type) {
-        return new ProjectDependency(name, null, List.of(new License(licencesName, licenseUrl)), type);
+        return ProjectDependency.builder() //
+                .type(type) //
+                .name(name) //
+                .licenses(List.of(new License(licencesName, licenseUrl))) //
+                .build();
     }
 
-    private Dependency dep(final String moduleName, final String version) {
-        return Dependency.builder().moduleName(moduleName).version(version).build();
+    private VersionedDependency dep(final String moduleName, final String version) {
+        return VersionedDependency.builder().name(moduleName).version(version).isIndirect(false).build();
     }
 
     private GolangDependencyLicense license(final String moduleName, final String licenseName,
@@ -111,10 +113,8 @@ class GolangDependencyCalculatorTest {
         when(this.golangServicesMock.getLicenses(modulePath, moduleName)).thenReturn(licenses);
     }
 
-    private List<ProjectDependency> calculate(final Dependency... goModDependencies) {
-        return GolangDependencyCalculator
-                .calculateDependencies(this.golangServicesMock, PROJECT_PATH, ModuleInfo.builder()
-                        .moduleName(PROJECT_MODULE_NAME).dependencies(asList(goModDependencies)).build())
-                .getDependencies();
+    private List<ProjectDependency> calculate(final VersionedDependency... goModDependencies) {
+        return GolangDependencyCalculator.calculateDependencies(this.golangServicesMock, PROJECT_PATH,
+                new GoModule(PROJECT_MODULE_NAME, asList(goModDependencies))).getDependencies();
     }
 }

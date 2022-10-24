@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import org.apache.maven.model.*;
 
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
@@ -24,17 +25,18 @@ public class DependencyChangeReportReader {
 
     /**
      * Read a dependency change report by comparing two maven models.
-     * 
+     *
      * @param oldModel previous releases maven model
      * @param newModel current maven model
      * @return read model
      */
     public DependencyChangeReport read(final Model oldModel, final Model newModel) {
-        return new DependencyChangeReport(//
-                sort(this.compareDependencies(oldModel, newModel, "compile")),
-                sort(this.compareDependencies(oldModel, newModel, "runtime")),
-                sort(this.compareDependencies(oldModel, newModel, "test")),
-                sort(this.comparePluginDependencies(oldModel, newModel)));
+        return DependencyChangeReport.builder() //
+                .typed(Type.COMPILE, sort(this.compareDependencies(oldModel, newModel, "compile"))) //
+                .typed(Type.RUNTIME, sort(this.compareDependencies(oldModel, newModel, "runtime"))) //
+                .typed(Type.TEST, sort(this.compareDependencies(oldModel, newModel, "test"))) //
+                .typed(Type.PLUGIN, sort(this.comparePluginDependencies(oldModel, newModel))) //
+                .build();
     }
 
     private List<DependencyChange> compareDependencies(final Model oldModel, final Model newModel, final String scope) {
@@ -52,7 +54,7 @@ public class DependencyChangeReportReader {
     private List<Dependency> filterDependenciesByScope(final Model model, final String scope) {
         return model.getDependencies().stream()
                 .filter(dependency -> (scope.equals("compile")
-                        && (dependency.getScope() == null || dependency.getScope().equals("")))
+                        && ((dependency.getScope() == null) || dependency.getScope().equals("")))
                         || scope.equals(dependency.getScope()))
                 .collect(Collectors.toList());
     }
