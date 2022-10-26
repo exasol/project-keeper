@@ -1,13 +1,12 @@
 package com.exasol.projectkeeper.shared.dependencychanges;
 
-import java.lang.reflect.Type;
 import java.util.*;
 import java.util.function.Function;
 
 import org.eclipse.yasson.YassonJsonb;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.dependencies.BaseDependency;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 
 import jakarta.json.bind.JsonbBuilder;
 import jakarta.json.bind.JsonbException;
@@ -15,12 +14,11 @@ import jakarta.json.bind.serializer.*;
 import jakarta.json.stream.JsonGenerator;
 import jakarta.json.stream.JsonParser;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * This class represents a report of changed dependencies.
  */
-@Data
+// @Data
 @AllArgsConstructor
 public class DependencyChangeReport {
 
@@ -32,16 +30,26 @@ public class DependencyChangeReport {
     }
 
     /** Dependency changes in various scopes */
-    private Map<BaseDependency.Type, List<DependencyChange>> changes = new EnumMap<>(BaseDependency.Type.class);
+    private Map<Type, List<DependencyChange>> changes = new EnumMap<>(Type.class);
 
     public DependencyChangeReport() {
-        for (final BaseDependency.Type type : BaseDependency.Type.values()) {
+        for (final Type type : Type.values()) {
             this.changes.put(type, new ArrayList<>());
         }
     }
 
-    public List<DependencyChange> getChanges(final BaseDependency.Type type) {
+    public List<DependencyChange> getChanges(final Type type) {
         return this.changes.get(type);
+    }
+
+    // only for serialization and deserialization
+    public Map<Type, List<DependencyChange>> getChanges() {
+        return this.changes;
+    }
+
+    // only for serialization and deserialization
+    public void setChanges(final Map<Type, List<DependencyChange>> changes) {
+        this.changes = changes;
     }
 
     // old ordering: compile, runtime, test, plugin
@@ -72,7 +80,7 @@ public class DependencyChangeReport {
     public static class DependencyChangeDeserializer implements JsonbDeserializer<DependencyChange> {
         @Override
         public DependencyChange deserialize(final JsonParser parser, final DeserializationContext ctx,
-                final Type rtType) {
+                final java.lang.reflect.Type rtType) {
             parser.next();
             final String className = parser.getString();
             final Class<? extends DependencyChange> dependencyChangeClass = getDependencyChangeClassForName(className);
@@ -101,13 +109,12 @@ public class DependencyChangeReport {
     public static final class Builder {
         private final DependencyChangeReport report = new DependencyChangeReport();
 
-        public Builder typed(final BaseDependency.Type type, final List<DependencyChange> changes) {
+        public Builder typed(final Type type, final List<DependencyChange> changes) {
             this.report.changes.put(type, changes);
             return this;
         }
 
-        public Builder mixed(final List<DependencyChange> value,
-                final Function<DependencyChange, BaseDependency.Type> typeDetector) {
+        public Builder mixed(final List<DependencyChange> value, final Function<DependencyChange, Type> typeDetector) {
             for (final DependencyChange c : value) {
                 this.report.changes.get(typeDetector.apply(c)).add(c);
             }
@@ -117,5 +124,25 @@ public class DependencyChangeReport {
         public DependencyChangeReport build() {
             return this.report;
         }
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DependencyChangeReport other = (DependencyChangeReport) obj;
+        return Objects.equals(this.changes, other.changes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.changes);
     }
 }

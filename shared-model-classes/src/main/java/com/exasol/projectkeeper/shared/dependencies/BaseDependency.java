@@ -3,31 +3,16 @@ package com.exasol.projectkeeper.shared.dependencies;
 /**
  * Base for {@link ProjectDependency} and versioned dependency
  */
-public abstract class BaseDependency {
-    /** Dependency Type */
-    protected Type type;
-    /** Dependency name */
-    protected String name;
-
-    BaseDependency() {
-    }
+public interface BaseDependency {
+    /**
+     * @return type of the dependency
+     */
+    Type getType();
 
     /**
-     * @param type
-     * @param name
+     * @return name of the module of the dependency
      */
-    public BaseDependency(final Type type, final String name) {
-        this.name = name;
-        this.type = type;
-    }
-
-    public Type getType() {
-        return this.type;
-    }
-
-    public String getName() {
-        return this.name;
-    }
+    String getName();
 
     /**
      * Type of a {@link ProjectDependency}.

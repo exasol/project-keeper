@@ -1,23 +1,55 @@
 package com.exasol.projectkeeper.shared.dependencies;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Generic dependency.
  */
-public final class ProjectDependency extends BaseDependency {
+public final class ProjectDependency implements BaseDependency {
 
     public static Builder builder() {
         return new Builder();
     }
 
-    /** Website url */
+    private Type type;
+    private String name;
     private String websiteUrl;
-    /** License */
     private List<License> licenses = new ArrayList<>();
 
-    ProjectDependency() {
+    /**
+     * Create an empty project dependency
+     */
+    public ProjectDependency() {
+    }
+
+    /**
+     * Create a new instance of {@link ProjectDependency} with all fields defined
+     *
+     * @param websiteUrl URL of the website associated with the current project dependency
+     * @param licenses   list of licenses associated with the current project dependency
+     */
+    public ProjectDependency(final Type type, final String name, final String websiteUrl,
+            final List<License> licenses) {
+        this.type = type;
+        this.name = name;
+        this.websiteUrl = websiteUrl;
+        this.licenses = licenses;
+    }
+
+    /**
+     * @return type of the dependency
+     */
+    @Override
+    public Type getType() {
+        return this.type;
+    }
+
+    /**
+     * @return name of the module of the dependency
+     */
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     /**
@@ -32,6 +64,47 @@ public final class ProjectDependency extends BaseDependency {
      */
     public List<License> getLicenses() {
         return this.licenses;
+    }
+
+    // only for serialization and deserialization
+    public void setType(final Type type) {
+        this.type = type;
+    }
+
+    // only for serialization and deserialization
+    public void setName(final String name) {
+        this.name = name;
+    }
+
+    // only for serialization and deserialization
+    public void setWebsiteUrl(final String websiteUrl) {
+        this.websiteUrl = websiteUrl;
+    }
+
+    // only for serialization and deserialization
+    public void setLicenses(final List<License> licenses) {
+        this.licenses = licenses;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(this.licenses, this.name, this.type, this.websiteUrl);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProjectDependency other = (ProjectDependency) obj;
+        return Objects.equals(this.licenses, other.licenses) && Objects.equals(this.name, other.name)
+                && (this.type == other.type) && Objects.equals(this.websiteUrl, other.websiteUrl);
     }
 
     /**

@@ -3,7 +3,7 @@ package com.exasol.projectkeeper.shared.dependencies;
 /**
  * This class represents an abstract dependency enabling to create a report of dependency changes later on.
  */
-public class VersionedDependency extends BaseDependency {
+public class VersionedDependency implements BaseDependency {
 
     /**
      * @return a builder for new instances of {@link VersionedDependency}
@@ -12,10 +12,28 @@ public class VersionedDependency extends BaseDependency {
         return new Builder();
     }
 
+    private Type type;
+    private String name;
     private String version;
     private boolean isIndirect;
 
     VersionedDependency() {
+    }
+
+    /**
+     * @return type of the dependency
+     */
+    @Override
+    public Type getType() {
+        return this.type;
+    }
+
+    /**
+     * @return name of the module of the dependency
+     */
+    @Override
+    public String getName() {
+        return this.name;
     }
 
     /**
