@@ -32,21 +32,34 @@ public class DependencyChangeReport {
     /** Dependency changes in various scopes */
     private Map<Type, List<DependencyChange>> changes = new EnumMap<>(Type.class);
 
+    /**
+     * Default constructor for a new instance of {@link DependencyChangeReport}.
+     */
     public DependencyChangeReport() {
         for (final Type type : Type.values()) {
             this.changes.put(type, new ArrayList<>());
         }
     }
 
+    /**
+     * @param type {@link Type} of dependencies to get changes for
+     * @return list of changes for the specified type
+     */
     public List<DependencyChange> getChanges(final Type type) {
         return this.changes.get(type);
     }
 
+    /**
+     * @return map containing list changes for each {@link Type} of dependencies
+     */
     // only for serialization and deserialization
     public Map<Type, List<DependencyChange>> getChanges() {
         return this.changes;
     }
 
+    /**
+     * @param changes map containing list changes for each {@link Type} of dependencies
+     */
     // only for serialization and deserialization
     public void setChanges(final Map<Type, List<DependencyChange>> changes) {
         this.changes = changes;
@@ -106,21 +119,42 @@ public class DependencyChangeReport {
         }
     }
 
+    /**
+     * Builder for new instances of class{@link DependencyChangeReport}
+     */
     public static final class Builder {
         private final DependencyChangeReport report = new DependencyChangeReport();
 
+        /**
+         * Adds a list of changes for the specified {@link Type} of the changed dependencies.
+         *
+         * @param type    {@link Type} of the changed dependencies.
+         * @param changes list of changes
+         * @return this for fluent programming
+         */
         public Builder typed(final Type type, final List<DependencyChange> changes) {
             this.report.changes.put(type, changes);
             return this;
         }
 
-        public Builder mixed(final List<DependencyChange> value, final Function<DependencyChange, Type> typeDetector) {
-            for (final DependencyChange c : value) {
+        /**
+         * Adds a list of changes each with an individual {@link Type} of the changed dependency.
+         *
+         * @param changes      list of changes
+         * @param typeDetector {@link TypeDetector} to identify the {@link Type} of the dependency for each change
+         * @return this for fluent programming
+         */
+        public Builder mixed(final List<DependencyChange> changes,
+                final Function<DependencyChange, Type> typeDetector) {
+            for (final DependencyChange c : changes) {
                 this.report.changes.get(typeDetector.apply(c)).add(c);
             }
             return this;
         }
 
+        /**
+         * @return new instance of {@link DependencyChangeReport}.
+         */
         public DependencyChangeReport build() {
             return this.report;
         }

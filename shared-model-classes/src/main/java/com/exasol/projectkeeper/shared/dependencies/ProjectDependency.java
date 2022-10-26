@@ -66,21 +66,33 @@ public final class ProjectDependency implements BaseDependency {
         return this.licenses;
     }
 
+    /**
+     * @param type type of the dependency
+     */
     // only for serialization and deserialization
     public void setType(final Type type) {
         this.type = type;
     }
 
+    /**
+     * @param name name of the module of the dependency
+     */
     // only for serialization and deserialization
     public void setName(final String name) {
         this.name = name;
     }
 
+    /**
+     * @param websiteUrl URL of the website associated with the current project dependency
+     */
     // only for serialization and deserialization
     public void setWebsiteUrl(final String websiteUrl) {
         this.websiteUrl = websiteUrl;
     }
 
+    /**
+     * @param licenses list of licenses associated with the current project dependency
+     */
     // only for serialization and deserialization
     public void setLicenses(final List<License> licenses) {
         this.licenses = licenses;
@@ -123,7 +135,6 @@ public final class ProjectDependency implements BaseDependency {
         }
 
         /**
-         *
          * @param name name of the dependency to build
          * @return this for fluent programming
          */
@@ -133,7 +144,6 @@ public final class ProjectDependency implements BaseDependency {
         }
 
         /**
-         *
          * @param websiteUrl URL of the website for the dependency to build
          * @return this for fluent programming
          */
@@ -143,7 +153,6 @@ public final class ProjectDependency implements BaseDependency {
         }
 
         /**
-         *
          * @param licenses list of licenses to associate with the dependency to build
          * @return this for fluent programming
          */
@@ -152,6 +161,9 @@ public final class ProjectDependency implements BaseDependency {
             return this;
         }
 
+        /**
+         * @return new instance of {@link ProjectDependency}
+         */
         public ProjectDependency build() {
             return this.projectDependency;
         }
