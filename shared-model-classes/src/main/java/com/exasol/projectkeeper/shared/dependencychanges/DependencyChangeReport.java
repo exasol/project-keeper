@@ -141,7 +141,7 @@ public class DependencyChangeReport {
          * Adds a list of changes each with an individual {@link Type} of the changed dependency.
          *
          * @param changes      list of changes
-         * @param typeDetector {@link TypeDetector} to identify the {@link Type} of the dependency for each change
+         * @param typeDetector type detector to identify the {@link Type} of the dependency for each change
          * @return this for fluent programming
          */
         public Builder mixed(final List<DependencyChange> changes,

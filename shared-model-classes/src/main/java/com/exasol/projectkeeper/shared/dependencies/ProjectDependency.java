@@ -7,6 +7,9 @@ import java.util.*;
  */
 public final class ProjectDependency implements BaseDependency {
 
+    /**
+     * @return Builder for new instances of {@link ProjectDependency}.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -25,6 +28,8 @@ public final class ProjectDependency implements BaseDependency {
     /**
      * Create a new instance of {@link ProjectDependency} with all fields defined
      *
+     * @param type       type of the dependency
+     * @param name       name of the module of the dependency
      * @param websiteUrl URL of the website associated with the current project dependency
      * @param licenses   list of licenses associated with the current project dependency
      */
@@ -67,33 +72,37 @@ public final class ProjectDependency implements BaseDependency {
     }
 
     /**
+     * Only needed for serialization and deserialization.
+     *
      * @param type type of the dependency
      */
-    // only for serialization and deserialization
     public void setType(final Type type) {
         this.type = type;
     }
 
     /**
+     * Only needed for serialization and deserialization.
+     *
      * @param name name of the module of the dependency
      */
-    // only for serialization and deserialization
     public void setName(final String name) {
         this.name = name;
     }
 
     /**
+     * Only needed for serialization and deserialization.
+     *
      * @param websiteUrl URL of the website associated with the current project dependency
      */
-    // only for serialization and deserialization
     public void setWebsiteUrl(final String websiteUrl) {
         this.websiteUrl = websiteUrl;
     }
 
     /**
+     * Only needed for serialization and deserialization.
+     *
      * @param licenses list of licenses associated with the current project dependency
      */
-    // only for serialization and deserialization
     public void setLicenses(final List<License> licenses) {
         this.licenses = licenses;
     }
