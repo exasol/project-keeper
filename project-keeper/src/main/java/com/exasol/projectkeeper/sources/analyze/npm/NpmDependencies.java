@@ -17,7 +17,7 @@ public class NpmDependencies {
     private final CommandExecutor executor;
     private final PackageJson packageJson;
     private final Path projectDir;
-    private JsonObject dependencies;
+    private JsonObject additionalInfo;
     private Map<String, List<NpmLicense>> licenseMap;
 
     NpmDependencies(final CommandExecutor executor, final PackageJson packageJson) {
@@ -26,22 +26,21 @@ public class NpmDependencies {
         this.projectDir = packageJson.getProjectDir();
     }
 
-//    NpmDependencies(final CommandExecutor executor, final Path projectDir) {
-//        this.executor = executor;
-//        this.projectDir = projectDir;
-//    }
-
+    /**
+     * <ul>
+     * <li>evaluate dependencies from packageJson</li>
+     * <li>differentiate between COMPILE and PLUGIN dependencies</li>
+     * <li>use output of command NpmCommand.LIST_DEPENDENCIES only in second step in order to retrieve additional
+     * information such as the URL</li>
+     * </ul>
+     *
+     * @return list of project dependencies with type, name, website URL, and licenses
+     */
     List<ProjectDependency> getDependencies() {
-        // TODO:
-        // 1. evaluate dependencies from packageJson
-        // 2. differentiate between COMPILE and PLUGIN dependencies
-        // 3. use output of command NpmCommand.LIST_DEPENDENCIES only in second step in order to retrieve additional
-        // information such as the URL
-        final List<VersionedDependency> dep = this.packageJson.getDependencies();
-        this.dependencies = getJsonOutput(this.projectDir, NpmCommand.LIST_DEPENDENCIES) //
+        this.additionalInfo = getJsonOutput(this.projectDir, NpmCommand.LIST_DEPENDENCIES) //
                 .getJsonObject("dependencies");
         this.licenseMap = retrieveNpmLicenses();
-        return this.dependencies.keySet().stream() //
+        return this.packageJson.getDependencies().stream() //
                 .map(this::projectDependency) //
                 .collect(Collectors.toList());
     }
@@ -53,25 +52,26 @@ public class NpmDependencies {
                 .collect(Collectors.toMap(NpmLicense::getModule, List::of));
     }
 
-    private ProjectDependency projectDependency(final String module) {
+    private ProjectDependency projectDependency(final VersionedDependency versionedDependency) {
+        final String moduleName = versionedDependency.getName();
         return ProjectDependency.builder() //
-                .name(module) //
-                .websiteUrl(getUrl(module)) //
-                .type(ProjectDependency.Type.COMPILE) // TODO
-                .licenses(moduleLicenses(module)) //
+                .name(moduleName) //
+                .websiteUrl(getUrl(moduleName)) //
+                .type(versionedDependency.getType()) //
+                .licenses(moduleLicenses(moduleName)) //
                 .build();
     }
 
-    private List<License> moduleLicenses(final String module) {
-        return Optional.ofNullable(this.licenseMap.get(module)) //
+    private List<License> moduleLicenses(final String moduleName) {
+        return Optional.ofNullable(this.licenseMap.get(moduleName)) //
                 .orElse(emptyList()) //
                 .stream() //
                 .map(NpmLicense::toLicense) //
                 .collect(Collectors.toList());
     }
 
-    private String getUrl(final String module) {
-        return this.dependencies.getJsonObject(module).getString("resolved");
+    private String getUrl(final String moduleName) {
+        return this.additionalInfo.getJsonObject(moduleName).getString("resolved");
     }
 
     private JsonObject getJsonOutput(final Path workingDirectory, final ShellCommand cmd) {
