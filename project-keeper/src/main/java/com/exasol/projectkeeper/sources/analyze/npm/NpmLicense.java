@@ -13,11 +13,11 @@ class NpmLicense {
 
     private static final Pattern PATTERN = Pattern.compile("^(.+)@([0-9]+(\\.[0-9]+)*)$");
 
-    static NpmLicense from(final Path folder, final String key, final JsonObject json) {
-        final JsonObject o = json.getJsonObject(key);
+    static NpmLicense from(final String moduleAndVersion, final JsonObject licenseInfos) {
+        final JsonObject o = licenseInfos.getJsonObject(moduleAndVersion);
         final String name = jString(o, "licenses");
         final String mainUrl = jString(o, "repository");
-        final String[] p = moduleAndVersion(key);
+        final String[] p = split(moduleAndVersion);
         return new NpmLicense(p[0], p[1], name, mainUrl);
     }
 
@@ -42,11 +42,11 @@ class NpmLicense {
         return o.containsKey(key) ? o.getString(key) : null;
     }
 
-    private static String[] moduleAndVersion(final String key) {
-        final Matcher matcher = PATTERN.matcher(key);
+    private static String[] split(final String moduleAndVersion) {
+        final Matcher matcher = PATTERN.matcher(moduleAndVersion);
         return matcher.matches() //
                 ? new String[] { matcher.group(1), matcher.group(2) }
-                : new String[] { key, null };
+                : new String[] { moduleAndVersion, null };
     }
 
     private final String module;

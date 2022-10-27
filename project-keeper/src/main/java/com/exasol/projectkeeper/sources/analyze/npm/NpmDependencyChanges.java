@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 
@@ -23,8 +22,8 @@ public class NpmDependencyChanges {
 
     DependencyChangeReport getReport() {
         final Optional<PackageJson> previous = this.current.previousRelease() //
-                .fileContent(Paths.get(PackageJsonReader.FILENAME)) //
-                .map(PackageJsonReader::readFull);
+                .fileContent(PackageJsonReader.PATH) //
+                .map(PackageJsonReader::read);
         final Builder builder = DependencyChangeReport.builder();
         for (final Type type : Type.values()) {
             builder.typed(type, getChanges(previous, type));

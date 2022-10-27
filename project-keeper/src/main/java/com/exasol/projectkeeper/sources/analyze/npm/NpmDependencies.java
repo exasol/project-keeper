@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 
 import static java.util.Collections.emptyList;
 
+import java.io.StringReader;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,14 +17,12 @@ public class NpmDependencies {
 
     private final CommandExecutor executor;
     private final PackageJson packageJson;
-    private final Path projectDir;
     private JsonObject additionalInfo;
     private Map<String, List<NpmLicense>> licenseMap;
 
     NpmDependencies(final CommandExecutor executor, final PackageJson packageJson) {
         this.executor = executor;
         this.packageJson = packageJson;
-        this.projectDir = packageJson.getProjectDir();
     }
 
     /**
@@ -37,7 +36,7 @@ public class NpmDependencies {
      * @return list of project dependencies with type, name, website URL, and licenses
      */
     List<ProjectDependency> getDependencies() {
-        this.additionalInfo = getJsonOutput(this.projectDir, NpmCommand.LIST_DEPENDENCIES) //
+        this.additionalInfo = getJsonOutput(NpmCommand.LIST_DEPENDENCIES) //
                 .getJsonObject("dependencies");
         this.licenseMap = retrieveNpmLicenses();
         return this.packageJson.getDependencies().stream() //
@@ -46,10 +45,9 @@ public class NpmDependencies {
     }
 
     private Map<String, List<NpmLicense>> retrieveNpmLicenses() {
-        final JsonObject json = getJsonOutput(this.projectDir, NpmCommand.LICENSE_CHECKER);
+        final JsonObject json = getJsonOutput(NpmCommand.LICENSE_CHECKER);
         return json.keySet().stream() //
-                .map(key -> NpmLicense.from(this.projectDir, key, json))
-                .collect(Collectors.toMap(NpmLicense::getModule, List::of));
+                .map(key -> NpmLicense.from(key, json)).collect(Collectors.toMap(NpmLicense::getModule, List::of));
     }
 
     private ProjectDependency projectDependency(final VersionedDependency versionedDependency) {
@@ -74,7 +72,13 @@ public class NpmDependencies {
         return this.additionalInfo.getJsonObject(moduleName).getString("resolved");
     }
 
-    private JsonObject getJsonOutput(final Path workingDirectory, final ShellCommand cmd) {
-        return PackageJsonReader.read(this.executor.execute(cmd, workingDirectory));
+    private JsonObject getJsonOutput(final ShellCommand cmd) {
+        final String stdout = this.executor.execute(cmd, getWorkingDir());
+        return JsonIo.read(new StringReader(stdout));
+    }
+
+    private Path getWorkingDir() {
+        final Path path = this.packageJson.getPath();
+        return path == null ? null : path.getParent();
     }
 }

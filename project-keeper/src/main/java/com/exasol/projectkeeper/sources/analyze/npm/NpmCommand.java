@@ -15,6 +15,7 @@ public class NpmCommand {
             .timeout(Duration.ofMinutes(2)) //
             .args("--location=project", "--depth=0", "--json") //
             .build();
+
     public static final ShellCommand LICENSE_CHECKER = ShellCommand.builder() //
             .command(NPX, "license-checker") //
             .timeout(Duration.ofMinutes(2)) //

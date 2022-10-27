@@ -32,16 +32,17 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     }
 
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
-        final PackageJson packageJson = PackageJsonReader.read(projectDir);
+        final Path path = source.getPath();
+        final PackageJson packageJson = PackageJsonReader.read(path);
         return AnalyzedSourceImpl.builder() //
                 .version(packageJson.getVersion()) //
                 .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
                 .advertise(source.isAdvertise()) //
                 .modules(source.getModules()) //
-                .path(source.getPath()) //
+                .path(path) //
                 .projectName(AnalyzedSourceImpl.projectName(projectDir, source)) //
                 .moduleName(packageJson.getModuleName()) //
-                .dependencies(this.npmServices.getDependencies(projectDir)) //
+                .dependencies(this.npmServices.getDependencies(packageJson)) //
                 .dependencyChanges(this.npmServices.getDependencyChangeReport(packageJson)) //
                 .build();
     }
