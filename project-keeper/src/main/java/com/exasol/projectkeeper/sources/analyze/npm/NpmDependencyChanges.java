@@ -14,26 +14,34 @@ import com.exasol.projectkeeper.sources.analyze.generic.DependencyChanges;
  */
 public class NpmDependencyChanges {
 
-    private final PackageJson current;
+    /**
+     * @param current  current release
+     * @param previous previous release or empty optional
+     * @return {@link DependencyChangeReport}
+     */
+    public static DependencyChangeReport report(final PackageJson current, final Optional<PackageJson> previous) {
+        return new NpmDependencyChanges(current, previous).getReport();
+    }
 
-    NpmDependencyChanges(final PackageJson packageJson) {
+    private final PackageJson current;
+    private final Optional<PackageJson> previous;
+
+    NpmDependencyChanges(final PackageJson packageJson, final Optional<PackageJson> previous) {
         this.current = packageJson;
+        this.previous = previous;
     }
 
     DependencyChangeReport getReport() {
-        final Optional<PackageJson> previous = this.current.previousRelease() //
-                .fileContent(PackageJsonReader.PATH) //
-                .map(PackageJsonReader::read);
         final Builder builder = DependencyChangeReport.builder();
         for (final Type type : Type.values()) {
-            builder.typed(type, getChanges(previous, type));
+            builder.typed(type, getChanges(type));
         }
         return builder.build();
     }
 
-    private List<DependencyChange> getChanges(final Optional<PackageJson> previous, final Type type) {
+    private List<DependencyChange> getChanges(final Type type) {
         return DependencyChanges.builder() //
-                .from(previous.map(p -> p.getDependencies(type))) //
+                .from(this.previous.map(p -> p.getDependencies(type))) //
                 .to(this.current.getDependencies(type)) //
                 .build();
     }

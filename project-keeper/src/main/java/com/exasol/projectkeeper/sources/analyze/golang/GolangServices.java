@@ -176,11 +176,11 @@ class GolangServices {
      */
     // [impl -> dsn~golang-changed-dependency~1]
     List<DependencyChange> getDependencyChanges(final Path projectDir, final Path relativeModFile) {
-        final Optional<GoModFile> lastReleaseModFile = new PreviousRelease(projectDir, getProjectVersion()) //
+        final Optional<GoModFile> previous = PreviousRelease.from(projectDir, getProjectVersion()) //
                 .fileContent(relativeModFile) //
                 .map(GoModFile::parse);
-        final GoModFile currentModFile = GoModFile.parse(readFile(projectDir.resolve(relativeModFile)));
-        return calculateChanges(lastReleaseModFile, currentModFile);
+        final GoModFile current = GoModFile.parse(readFile(projectDir.resolve(relativeModFile)));
+        return calculateChanges(previous, current);
     }
 
     private String readFile(final Path file) {

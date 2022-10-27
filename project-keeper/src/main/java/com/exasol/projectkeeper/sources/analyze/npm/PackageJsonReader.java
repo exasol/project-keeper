@@ -2,7 +2,6 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 
 import java.io.StringReader;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -14,9 +13,6 @@ import jakarta.json.JsonObject;
 import jakarta.json.JsonValue;
 
 final class PackageJsonReader {
-
-    /** path of file containing NPM package information */
-    static final Path PATH = Paths.get("package.json");
 
     enum DependencyKey {
         COMPILE("dependencies", Type.COMPILE), //
@@ -31,22 +27,22 @@ final class PackageJsonReader {
         }
     }
 
-    static PackageJson read(final Path path) {
-        final JsonObject json = JsonIo.uncheckedRead(path);
+    static PackageJson read(final Path projectDir, final Path path) {
+        final JsonObject json = JsonIo.uncheckedRead(projectDir.resolve(path));
         return new PackageJsonReader().read(path, json);
     }
 
-    static PackageJson read(final String string) {
+    static PackageJson read(final Path path, final String string) {
         final JsonObject json = JsonIo.read(new StringReader(string));
-        return new PackageJsonReader().read(null, json);
+        return new PackageJsonReader().read(path, json);
     }
 
     PackageJson read(final Path path, final JsonObject content) {
         final String module = retrieveModuleName(content);
         final String version = content.getString("version");
         final List<VersionedDependency> dependencies = new ArrayList<>();
-        dependencies.addAll(versionedDependencies(content, DependencyKey.COMPILE));
         dependencies.addAll(versionedDependencies(content, DependencyKey.PLUGIN));
+        dependencies.addAll(versionedDependencies(content, DependencyKey.COMPILE));
         return new PackageJson(path, module, version, dependencies);
     }
 

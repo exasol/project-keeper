@@ -4,6 +4,7 @@ import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -33,17 +34,18 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
         final Path path = source.getPath();
-        final PackageJson packageJson = PackageJsonReader.read(path);
+        final PackageJson current = PackageJsonReader.read(projectDir, path);
+        final Optional<PackageJson> previous = this.npmServices.retrievePrevious(projectDir, current);
         return AnalyzedSourceImpl.builder() //
-                .version(packageJson.getVersion()) //
+                .version(current.getVersion()) //
                 .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
                 .advertise(source.isAdvertise()) //
                 .modules(source.getModules()) //
                 .path(path) //
                 .projectName(AnalyzedSourceImpl.projectName(projectDir, source)) //
-                .moduleName(packageJson.getModuleName()) //
-                .dependencies(this.npmServices.getDependencies(packageJson)) //
-                .dependencyChanges(this.npmServices.getDependencyChangeReport(packageJson)) //
+                .moduleName(current.getModuleName()) //
+                .dependencies(this.npmServices.getDependencies(current)) //
+                .dependencyChanges(NpmDependencyChanges.report(current, previous)) //
                 .build();
     }
 

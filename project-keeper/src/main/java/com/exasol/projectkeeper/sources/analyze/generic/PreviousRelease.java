@@ -13,14 +13,19 @@ import com.exasol.projectkeeper.shared.repository.TaggedCommit;
  * repository this class enables to get the content of files in the previous version.
  */
 public class PreviousRelease {
-    private final Path projectDir;
-    private final String currentVersion;
 
     /**
      * @param projectDir     root folder of the current project
      * @param currentVersion current version of the current project
      */
-    public PreviousRelease(final Path projectDir, final String currentVersion) {
+    public static PreviousRelease from(final Path projectDir, final String currentVersion) {
+        return new PreviousRelease(projectDir, currentVersion);
+    }
+
+    private final Path projectDir;
+    private final String currentVersion;
+
+    PreviousRelease(final Path projectDir, final String currentVersion) {
         this.projectDir = projectDir;
         this.currentVersion = currentVersion;
     }

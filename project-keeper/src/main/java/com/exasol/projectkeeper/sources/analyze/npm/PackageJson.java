@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
-import com.exasol.projectkeeper.sources.analyze.generic.PreviousRelease;
 
 class PackageJson {
 
@@ -21,10 +20,6 @@ class PackageJson {
         this.moduleName = moduleName;
         this.version = version;
         this.dependencies = dependencies;
-    }
-
-    PreviousRelease previousRelease() {
-        return new PreviousRelease(this.path, this.version);
     }
 
     Path getPath() {

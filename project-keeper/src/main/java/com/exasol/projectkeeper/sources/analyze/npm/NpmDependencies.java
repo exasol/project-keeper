@@ -2,26 +2,22 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 
 import static java.util.Collections.emptyList;
 
-import java.io.StringReader;
-import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.shared.dependencies.*;
-import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
-import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
 
 import jakarta.json.JsonObject;
 
 public class NpmDependencies {
 
-    private final CommandExecutor executor;
+    private final NpmServices services;
     private final PackageJson packageJson;
     private JsonObject additionalInfo;
     private Map<String, List<NpmLicense>> licenseMap;
 
-    NpmDependencies(final CommandExecutor executor, final PackageJson packageJson) {
-        this.executor = executor;
+    NpmDependencies(final NpmServices services, final PackageJson packageJson) {
+        this.services = services;
         this.packageJson = packageJson;
     }
 
@@ -36,8 +32,7 @@ public class NpmDependencies {
      * @return list of project dependencies with type, name, website URL, and licenses
      */
     List<ProjectDependency> getDependencies() {
-        this.additionalInfo = getJsonOutput(NpmCommand.LIST_DEPENDENCIES) //
-                .getJsonObject("dependencies");
+        this.additionalInfo = this.services.listDependencies(this.packageJson.getPath()).getJsonObject("dependencies");
         this.licenseMap = retrieveNpmLicenses();
         return this.packageJson.getDependencies().stream() //
                 .map(this::projectDependency) //
@@ -45,9 +40,10 @@ public class NpmDependencies {
     }
 
     private Map<String, List<NpmLicense>> retrieveNpmLicenses() {
-        final JsonObject json = getJsonOutput(NpmCommand.LICENSE_CHECKER);
+        final JsonObject json = this.services.getLicenses(this.packageJson.getPath());
         return json.keySet().stream() //
-                .map(key -> NpmLicense.from(key, json)).collect(Collectors.toMap(NpmLicense::getModule, List::of));
+                .map(key -> NpmLicense.from(key, json)) //
+                .collect(Collectors.toMap(NpmLicense::getModule, List::of));
     }
 
     private ProjectDependency projectDependency(final VersionedDependency versionedDependency) {
@@ -70,15 +66,5 @@ public class NpmDependencies {
 
     private String getUrl(final String moduleName) {
         return this.additionalInfo.getJsonObject(moduleName).getString("resolved");
-    }
-
-    private JsonObject getJsonOutput(final ShellCommand cmd) {
-        final String stdout = this.executor.execute(cmd, getWorkingDir());
-        return JsonIo.read(new StringReader(stdout));
-    }
-
-    private Path getWorkingDir() {
-        final Path path = this.packageJson.getPath();
-        return path == null ? null : path.getParent();
     }
 }

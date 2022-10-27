@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.shared.dependencies;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Generic dependency.
@@ -126,6 +127,12 @@ public final class ProjectDependency implements BaseDependency {
         final ProjectDependency other = (ProjectDependency) obj;
         return Objects.equals(this.licenses, other.licenses) && Objects.equals(this.name, other.name)
                 && (this.type == other.type) && Objects.equals(this.websiteUrl, other.websiteUrl);
+    }
+
+    @Override
+    public String toString() {
+        return this.type + " dependency '" + this.name + "', " + this.websiteUrl + ", " + this.licenses.size()
+                + " licenses: " + this.licenses.stream().map(License::toString).collect(Collectors.joining(", "));
     }
 
     /**
