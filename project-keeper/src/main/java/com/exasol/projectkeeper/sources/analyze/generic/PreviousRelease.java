@@ -33,7 +33,7 @@ public class PreviousRelease {
     /**
      * @param relative relative path of a file in the Git repository of the project.
      * @return content of the specified file in the previous version of the project or {@code Optional.empty()} if there
-     *         is no previous version.
+     *         is no previous version or the file does not exist in the previous version.
      */
     public Optional<String> fileContent(final Path relative) {
         try (final GitRepository repo = GitRepository.open(this.projectDir)) {

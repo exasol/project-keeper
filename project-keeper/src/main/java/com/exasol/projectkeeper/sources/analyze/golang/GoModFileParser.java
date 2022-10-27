@@ -37,7 +37,6 @@ class GoModFileParser {
                 && (groups.get(2) != null) //
                 && groups.get(2).startsWith("indirect");
         return VersionedDependency.builder().name(groups.get(0)).version(groups.get(1)).isIndirect(indirect).build();
-//        return new Dependency(groups.get(0), groups.get(1), indirect);
     }
 
     void parse(final String content) {

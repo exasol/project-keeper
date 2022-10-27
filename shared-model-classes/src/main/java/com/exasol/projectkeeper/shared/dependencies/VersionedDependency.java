@@ -84,7 +84,6 @@ public class VersionedDependency implements BaseDependency {
         }
 
         /**
-         *
          * @param isIndirect {@code true} if the dependency is indirect, i.e. transitive
          * @return this for fluent programming
          */

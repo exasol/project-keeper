@@ -18,8 +18,6 @@ import lombok.AllArgsConstructor;
 /**
  * This class represents a report of changed dependencies.
  */
-// @Data
-@AllArgsConstructor
 public class DependencyChangeReport {
 
     /**

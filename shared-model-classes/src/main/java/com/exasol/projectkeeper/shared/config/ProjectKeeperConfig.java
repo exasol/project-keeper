@@ -28,7 +28,7 @@ public final class ProjectKeeperConfig {
      * Enum with types for projects
      */
     public enum SourceType {
-        /** maven projects */
+        /** Maven projects */
         MAVEN,
         /** Golang projects */
         GOLANG,
