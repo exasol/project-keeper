@@ -16,7 +16,7 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     private final NpmServices npmServices;
 
     /**
-     * create a new instance of {@link NpmSourceAnalyzer}
+     * Create a new instance of {@link NpmSourceAnalyzer}
      */
     public NpmSourceAnalyzer() {
         this(new NpmServices(new CommandExecutor()));

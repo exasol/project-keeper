@@ -48,6 +48,6 @@ public class AnalyzedSourceImpl implements AnalyzedSource {
     private final String version;
     private final DependencyChangeReport dependencyChanges;
     private final ProjectDependencies dependencies;
-    /** {@code true} if this is the main Go project in the repo (if go.mod lies directly in repo) */
+    /** {@code true} if this is the main project in the repo, i.e. if build script (e.g. go.mod) lies directly in repo. */
     private final boolean isRootProject;
 }

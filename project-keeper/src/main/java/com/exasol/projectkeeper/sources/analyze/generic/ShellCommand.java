@@ -46,7 +46,7 @@ public class ShellCommand {
 
     /**
      * @return Timeout for command execution. If command execution does not terminate after this duration then the
-     *         executor may raise a time out exception.
+     *         executor will raise a time-out exception.
      */
     public Duration timeout() {
         return this.timeout;
@@ -59,11 +59,11 @@ public class ShellCommand {
         private final ShellCommand shellCommand = new ShellCommand();
 
         /**
-         * @param value duration to allow to wait for the command to terminate during execution.
+         * @param timeout duration to allow to wait for the command to terminate during execution.
          * @return this for fluent programming
          */
-        public Builder timeout(final Duration value) {
-            this.shellCommand.timeout = value;
+        public Builder timeout(final Duration timeout) {
+            this.shellCommand.timeout = timeout;
             return this;
         }
 

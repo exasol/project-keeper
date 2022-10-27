@@ -41,7 +41,7 @@ public class DependencyChanges {
         return this;
     }
 
-    private Map<String, VersionedDependency> toMap(final List<VersionedDependency> dependencies) {
+    private static Map<String, VersionedDependency> toMap(final List<VersionedDependency> dependencies) {
         return dependencies.stream().collect(Collectors.toMap(VersionedDependency::getName, Function.identity()));
     }
 

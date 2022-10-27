@@ -128,11 +128,9 @@ class GolangServicesTest {
 
     private VersionedDependency indirectDep(final String name, final String version) {
         return VersionedDependency.builder().name(name).version(version).isIndirect(true).build();
-//        return new Dependency(name, version, true);
     }
 
     private VersionedDependency dep(final String name, final String version) {
         return VersionedDependency.builder().name(name).version(version).isIndirect(false).build();
-//        return new Dependency(name, version, false);
     }
 }
