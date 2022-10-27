@@ -19,12 +19,22 @@ public interface BaseDependency {
      */
     public enum Type {
         /** Compile dependency. */
-        COMPILE,
+        COMPILE("Compile Dependency Updates"),
         /** Runtime dependency */
-        RUNTIME,
+        RUNTIME("Runtime Dependency Updates"),
         /** Test dependency */
-        TEST,
+        TEST("Test Dependency Updates"),
         /** Plugin */
-        PLUGIN
+        PLUGIN("Plugin Dependency Updates");
+
+        private final String header;
+
+        private Type(final String header) {
+            this.header = header;
+        }
+
+        public String getHeader() {
+            return this.header;
+        }
     }
 }

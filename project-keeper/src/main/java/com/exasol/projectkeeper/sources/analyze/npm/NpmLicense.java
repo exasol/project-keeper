@@ -1,7 +1,5 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -19,23 +17,6 @@ class NpmLicense {
         final String mainUrl = jString(o, "repository");
         final String[] p = split(moduleAndVersion);
         return new NpmLicense(p[0], p[1], name, mainUrl);
-    }
-
-    /**
-     * Problem: for URL "https://github.com/a/b" and file ".../node_modules/a/b/LICENSE.txt" this method returns full
-     * URL "https://github.com/a/b/LICENSE.txt" which creates a 404 (file not found). Correct would be
-     * "https://github.com/a/b/blob/main/LICENSE.txt" but this would require internal knowledge about URLs and file
-     * organization in GitHub and would fail for other hosting platforms.
-     *
-     * @param projectDir project folder containing folder "node_modules"
-     * @param mainUrl    main URL of the dependency
-     * @param file       license file inside projectDir/node_modules
-     * @return full URL of license file
-     */
-    static String url(final Path projectDir, final String mainUrl, final String file) {
-        Path rel = projectDir.relativize(Paths.get(file));
-        rel = rel.subpath(3, rel.getNameCount());
-        return mainUrl + "/" + rel.toString();
     }
 
     private static String jString(final JsonObject o, final String key) {

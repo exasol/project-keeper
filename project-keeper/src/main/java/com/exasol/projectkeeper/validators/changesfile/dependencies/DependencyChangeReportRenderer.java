@@ -2,11 +2,10 @@ package com.exasol.projectkeeper.validators.changesfile.dependencies;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 
-import java.util.*;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
@@ -46,15 +45,10 @@ public class DependencyChangeReportRenderer {
     private List<String> renderProject(final NamedDependencyChangeReport namedReport, final boolean isMultiReports) {
         final List<String> lines = new ArrayList<>();
         final DependencyChangeReport report = namedReport.getReport();
-        final String headlinePrefix = isMultiReports ? "####" : "###";
+        final String headlinePrefix = isMultiReports ? "#### " : "### ";
 
-        final Map<Type, String> categories = Map.of( //
-                ProjectDependency.Type.COMPILE, " Compile Dependency Updates", //
-                ProjectDependency.Type.RUNTIME, " Runtime Dependency Updates", //
-                ProjectDependency.Type.TEST, " Test Dependency Updates", //
-                ProjectDependency.Type.PLUGIN, " Plugin Dependency Updates");
-        for (final Entry<Type, String> c : categories.entrySet()) {
-            lines.addAll(renderDependencyChanges(headlinePrefix + c.getValue(), report.getChanges(c.getKey())));
+        for (final Type type : Type.values()) {
+            lines.addAll(renderDependencyChanges(headlinePrefix + type.getHeader(), report.getChanges(type)));
         }
         if (!lines.isEmpty() && isMultiReports) {
             lines.addAll(0, List.of("", "### " + capitalizeApStyle(namedReport.getSourceName())));

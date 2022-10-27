@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
+import static com.exasol.projectkeeper.sources.analyze.npm.JsonFixture.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -11,10 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 
-public class NpmDependencyChangesTest {
-
-    static final String CURRENT = "/npm/current-package.json";
-    static final String PREVIOUS = "/npm/previous-package.json";
+class NpmDependencyChangesTest {
 
     @Test
     void noPrevious() {
@@ -49,7 +47,7 @@ public class NpmDependencyChangesTest {
     }
 
     private DependencyChangeReport report(final String current, final String previous) {
-        return NpmDependencyChanges.report(JsonFixture.packageJson(current),
-                Optional.ofNullable(previous == null ? null : JsonFixture.packageJson(previous)));
+        return NpmDependencyChanges.report(packageJson(current),
+                Optional.ofNullable(previous).map(JsonFixture::packageJson));
     }
 }

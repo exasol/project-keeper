@@ -14,9 +14,9 @@ class PackageJson {
     private final String version;
     private final List<VersionedDependency> dependencies;
 
-    PackageJson(final Path projectDir, final String moduleName, final String version,
+    PackageJson(final Path path, final String moduleName, final String version,
             final List<VersionedDependency> dependencies) {
-        this.path = projectDir;
+        this.path = path;
         this.moduleName = moduleName;
         this.version = version;
         this.dependencies = dependencies;
@@ -24,6 +24,10 @@ class PackageJson {
 
     Path getPath() {
         return this.path;
+    }
+
+    Path getWorkingDir() {
+        return this.path.getParent();
     }
 
     String getModuleName() {

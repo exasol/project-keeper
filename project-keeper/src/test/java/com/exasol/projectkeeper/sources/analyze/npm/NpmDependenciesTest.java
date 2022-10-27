@@ -16,25 +16,18 @@ import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
-import jakarta.json.JsonObject;
-
 @ExtendWith(MockitoExtension.class)
-public class NpmDependenciesTest {
+class NpmDependenciesTest {
 
     @Mock
     NpmServices npmServices;
 
     @Test
-    void test() {
-        final JsonObject info = JsonFixture.fromResource("/npm/dependencies-additional-info.json");
-        when(this.npmServices.listDependencies(any())).thenReturn(info);
+    void getDependencies() {
+        when(this.npmServices.listDependencies(any())).thenReturn(JsonFixture.dependencyInfos());
+        when(this.npmServices.getLicenses(any())).thenReturn(JsonFixture.licenseInfos());
 
-        final JsonObject licenses = JsonFixture.fromResource("/npm/licenses.json");
-        when(this.npmServices.getLicenses(any())).thenReturn(licenses);
-
-        final PackageJson current = JsonFixture.packageJson("/npm/current-package.json");
-
-        final NpmDependencies testee = new NpmDependencies(this.npmServices, current);
+        final NpmDependencies testee = new NpmDependencies(this.npmServices, JsonFixture.samplePackageJson());
         assertThat(testee.getDependencies(), containsInAnyOrder( //
                 dependency(Type.PLUGIN, "changed-plugin", "1.2.0", "CP"), //
                 dependency(Type.PLUGIN, "new-plugin", "1.3.0", "NP"), //

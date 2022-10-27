@@ -16,13 +16,13 @@ class NpmServices {
     private static final String NPM = "npm" + OsCheck.suffix(".cmd");
     private static final String NPX = "npx" + OsCheck.suffix(".cmd");
 
-    private static final ShellCommand LIST_DEPENDENCIES = ShellCommand.builder() //
+    static final ShellCommand LIST_DEPENDENCIES = ShellCommand.builder() //
             .command(NPM, "list") //
             .timeout(Duration.ofMinutes(2)) //
             .args("--location=project", "--depth=0", "--json") //
             .build();
 
-    private static final ShellCommand LICENSE_CHECKER = ShellCommand.builder() //
+    static final ShellCommand LICENSE_CHECKER = ShellCommand.builder() //
             .command(NPX, "license-checker") //
             .timeout(Duration.ofMinutes(2)) //
             .args("--location=project", "--direct", "--json") //
@@ -34,31 +34,31 @@ class NpmServices {
         this.executor = executor;
     }
 
+    PackageJson readPackageJson(final Path path) {
+        return PackageJsonReader.read(path);
+    }
+
     ProjectDependencies getDependencies(final PackageJson packageJson) {
         return new ProjectDependencies(new NpmDependencies(this, packageJson).getDependencies());
     }
 
     Optional<PackageJson> retrievePrevious(final Path projectDir, final PackageJson current) {
+        final Path relative = projectDir.relativize(current.getPath());
         return PreviousRelease.from(projectDir, current.getVersion()) //
-                .fileContent(current.getPath()) //
+                .fileContent(relative) //
                 .map(string -> PackageJsonReader.read(current.getPath(), string));
     }
 
-    JsonObject listDependencies(final Path packageJsonPath) {
-        return getJsonOutput(LIST_DEPENDENCIES, workingDir(packageJsonPath));
+    JsonObject listDependencies(final Path folder) {
+        return getJsonOutput(LIST_DEPENDENCIES, folder);
     }
 
-    JsonObject getLicenses(final Path packageJsonPath) {
-        return getJsonOutput(LICENSE_CHECKER, workingDir(packageJsonPath));
+    JsonObject getLicenses(final Path folder) {
+        return getJsonOutput(LICENSE_CHECKER, folder);
     }
 
-    public JsonObject getJsonOutput(final ShellCommand cmd, final Path workingDir) {
+    private JsonObject getJsonOutput(final ShellCommand cmd, final Path workingDir) {
         final String stdout = this.executor.execute(cmd, workingDir);
         return JsonIo.read(new StringReader(stdout));
     }
-
-    Path workingDir(final Path path) {
-        return path == null ? null : path.getParent();
-    }
-
 }

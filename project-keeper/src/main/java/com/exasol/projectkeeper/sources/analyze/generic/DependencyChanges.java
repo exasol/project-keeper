@@ -104,6 +104,7 @@ public class DependencyChanges {
         } else if ((previous.isPresent()) && !previous.equals(current)) {
             updatedDependency(module, previous.get(), current.get());
         }
+        // dependency is unchanged -- no change to be registered
         return this;
     }
 }

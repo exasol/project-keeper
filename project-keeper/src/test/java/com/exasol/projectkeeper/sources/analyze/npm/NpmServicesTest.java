@@ -1,49 +1,27 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.List;
-import java.util.Optional;
-import java.util.logging.Logger;
+import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LICENSE_CHECKER;
+import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LIST_DEPENDENCIES;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isA;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.shared.dependencies.*;
-import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
-import com.exasol.projectkeeper.validators.changesfile.NamedDependencyChangeReport;
-import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportRenderer;
 
-public class NpmServicesTest {
-
-    NpmServices npmServices = new NpmServices(new CommandExecutor());
-
-    private static final Logger LOGGER = Logger.getLogger(NpmServicesTest.class.getName());
-
-    private static final Path PJ = Paths.get("package.json");
-    private static final Path SMALL_SAMPLE = Paths.get("c:/HOME/Doc/221020-NPM-PK-issue-373/sample-project");
-    private static final Path EMI = Paths.get("c:/Huge/Workspaces/Git/extension-manager-interface");
-
+class NpmServicesTest {
     @Test
-    void changes() throws IOException {
-        final PackageJson current = PackageJsonReader.read(SMALL_SAMPLE, PJ);
-        final Optional<PackageJson> previous = this.npmServices.retrievePrevious(EMI, current);
-        final DependencyChangeReport cReport = NpmDependencyChanges.report(current, previous);
-        final NamedDependencyChangeReport nReport = new NamedDependencyChangeReport("sample project", cReport);
-        final DependencyChangeReportRenderer renderer = new DependencyChangeReportRenderer();
-        renderer.render(List.of(nReport)).forEach(LOGGER::fine);
-    }
+    void getDependencies() {
+        final CommandExecutor executor = mock(CommandExecutor.class);
+        when(executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(JsonFixture.DEPENDENCIES);
+        when(executor.execute(eq(LICENSE_CHECKER), any())).thenReturn(JsonFixture.LICENSES);
 
-    @Test
-    void dependencies() throws IOException {
-        final PackageJson packageJson = PackageJsonReader.read(EMI, PJ);
-        final ProjectDependencies dependencies = this.npmServices.getDependencies(packageJson);
-        for (final ProjectDependency d : dependencies.getDependencies()) {
-            LOGGER.fine(String.format("%s %s %s", d.getType(), d.getName(), d.getWebsiteUrl()));
-            for (final License license : d.getLicenses()) {
-                LOGGER.fine("- " + license.getName() + ": " + license.getUrl());
-            }
-        }
+        final PackageJson current = JsonFixture.samplePackageJson();
+        assertThat(new NpmServices(executor).getDependencies(current), isA(ProjectDependencies.class));
     }
 }

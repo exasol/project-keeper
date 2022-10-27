@@ -32,7 +32,8 @@ public class NpmDependencies {
      * @return list of project dependencies with type, name, website URL, and licenses
      */
     List<ProjectDependency> getDependencies() {
-        this.additionalInfo = this.services.listDependencies(this.packageJson.getPath()).getJsonObject("dependencies");
+        this.additionalInfo = this.services.listDependencies(this.packageJson.getWorkingDir())
+                .getJsonObject("dependencies");
         this.licenseMap = retrieveNpmLicenses();
         return this.packageJson.getDependencies().stream() //
                 .map(this::projectDependency) //
@@ -40,7 +41,7 @@ public class NpmDependencies {
     }
 
     private Map<String, List<NpmLicense>> retrieveNpmLicenses() {
-        final JsonObject json = this.services.getLicenses(this.packageJson.getPath());
+        final JsonObject json = this.services.getLicenses(this.packageJson.getWorkingDir());
         return json.keySet().stream() //
                 .map(key -> NpmLicense.from(key, json)) //
                 .collect(Collectors.toMap(NpmLicense::getModule, List::of));

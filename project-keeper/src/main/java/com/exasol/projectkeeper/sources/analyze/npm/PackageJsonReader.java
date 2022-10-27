@@ -27,9 +27,8 @@ final class PackageJsonReader {
         }
     }
 
-    static PackageJson read(final Path projectDir, final Path path) {
-        final JsonObject json = JsonIo.uncheckedRead(projectDir.resolve(path));
-        return new PackageJsonReader().read(path, json);
+    static PackageJson read(final Path path) {
+        return new PackageJsonReader().read(path, JsonIo.uncheckedRead(path));
     }
 
     static PackageJson read(final Path path, final String string) {
