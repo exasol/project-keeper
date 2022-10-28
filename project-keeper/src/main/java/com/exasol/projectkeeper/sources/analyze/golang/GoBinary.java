@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.OsCheck;
+import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
+import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
 
 /**
  * Represents an executable go binary.
@@ -30,19 +33,19 @@ public class GoBinary {
 
     private static final Duration INSTALLATION_TIMEOUT = Duration.ofMinutes(2);
     private static final Logger LOGGER = Logger.getLogger(GoBinary.class.getName());
-    private final GoProcess goProcess;
+    private final CommandExecutor executor;
     private final String moduleName;
     private final String binaryName;
     private Path goPath;
 
-    GoBinary(final String sourceUrl, final String name) {
-        this(new GoProcess(), sourceUrl, name);
+    GoBinary(final String moduleName, final String name) {
+        this(new CommandExecutor(), moduleName, name);
     }
 
-    GoBinary(final GoProcess goProcess, final String moduleName, final String binaryName) {
-        this.goProcess = goProcess;
+    GoBinary(final CommandExecutor executor, final String moduleName, final String binaryName) {
         this.moduleName = moduleName;
         this.binaryName = binaryName;
+        this.executor = executor;
     }
 
     /**
@@ -55,14 +58,17 @@ public class GoBinary {
             return this;
         }
         LOGGER.info(() -> "Installing missing go binary " + nameWithSuffix());
-        final SimpleProcess process;
+        final ShellCommand shellCommand = ShellCommand.builder() //
+                .timeout(INSTALLATION_TIMEOUT) //
+                .command(GO.command()) //
+                .args("install", this.moduleName) //
+                .build();
         try {
-            process = this.goProcess.start(null, GO, "install", this.moduleName);
+            this.executor.execute(shellCommand, null);
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-161")
                     .message("Error installing go binary {{binary}}.", this.binaryName).toString(), exception);
         }
-        process.waitUntilFinished(INSTALLATION_TIMEOUT);
         return this;
     }
 
@@ -86,7 +92,7 @@ public class GoBinary {
     }
 
     String nameWithSuffix() {
-        return this.binaryName + (isWindows() ? ".exe" : "");
+        return this.binaryName + OsCheck.suffix(".exe");
     }
 
     private Path getGoBinPath() {
@@ -102,9 +108,5 @@ public class GoBinary {
         final Path goPath = Path.of(process.getOutputStreamContent().trim());
         LOGGER.fine(() -> "Found GOPATH '" + goPath + "'");
         return goPath;
-    }
-
-    private static boolean isWindows() {
-        return System.getProperty("os.name").startsWith("Windows");
     }
 }

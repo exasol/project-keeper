@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
-import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.COMPILE;
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -21,8 +21,12 @@ class DependenciesBrokenLinkReplacerTest {
 
     @Test
     void testBrokenProjectUrl() {
-        final ProjectDependency dependency = new ProjectDependency("test", "http://broken.com", Collections.emptyList(),
-                COMPILE);
+        final ProjectDependency dependency = ProjectDependency.builder() //
+                .type(COMPILE) //
+                .name("test") //
+                .websiteUrl("http://broken.com") //
+                .licenses(List.of()) //
+                .build();
         assertThat(runDependencyReplacement(dependency).getWebsiteUrl(), equalTo(FIXED_URL));
     }
 
@@ -33,15 +37,23 @@ class DependenciesBrokenLinkReplacerTest {
 
     @Test
     void testNonBrokenProjectUrl() {
-        final ProjectDependency dependency = new ProjectDependency("test", "http://other.com", Collections.emptyList(),
-                COMPILE);
+        final ProjectDependency dependency = ProjectDependency.builder() //
+                .type(COMPILE) //
+                .name("test") //
+                .websiteUrl("http://other.com") //
+                .licenses(List.of()) //
+                .build();
         assertThat(runDependencyReplacement(dependency).getWebsiteUrl(), equalTo("http://other.com"));
     }
 
     @Test
     void testBrokenLicenseUrl() {
-        final ProjectDependency dependency = new ProjectDependency("test", "http://other.com",
-                List.of(new License("my license", BROKEN_URL)), COMPILE);
+        final ProjectDependency dependency = ProjectDependency.builder() //
+                .type(COMPILE) //
+                .name("test") //
+                .websiteUrl("http://other.com") //
+                .licenses(List.of(new License("my license", BROKEN_URL))) //
+                .build();
         assertThat(runDependencyReplacement(dependency).getLicenses().get(0).getUrl(), equalTo(FIXED_URL));
     }
 

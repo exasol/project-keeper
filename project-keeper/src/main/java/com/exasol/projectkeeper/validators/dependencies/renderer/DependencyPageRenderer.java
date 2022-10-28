@@ -1,14 +1,13 @@
 package com.exasol.projectkeeper.validators.dependencies.renderer;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
-import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.*;
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.*;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import com.exasol.projectkeeper.shared.dependencies.License;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
 
 import net.steppschuh.markdowngenerator.table.Table;
@@ -21,7 +20,7 @@ public class DependencyPageRenderer {
 
     /**
      * Convert a list of dependencies into a markdown dependency report.
-     * 
+     *
      * @param projectWithDependencies projects to report
      * @return rendered report
      */
@@ -56,7 +55,7 @@ public class DependencyPageRenderer {
     }
 
     private String buildDependencySectionForScope(final List<ProjectDependency> dependencies,
-            final ProjectDependency.Type type, final MarkdownReferenceBuilder markdownReferenceBuilder,
+            final BaseDependency.Type type, final MarkdownReferenceBuilder markdownReferenceBuilder,
             final int headlineLevel) {
         final List<ProjectDependency> dependenciesOfThisScope = dependencies.stream()
                 .filter(dependency -> dependency.getType().equals(type)).collect(Collectors.toList());
@@ -97,7 +96,7 @@ public class DependencyPageRenderer {
 
     private String renderLink(final String name, final String url,
             final MarkdownReferenceBuilder markdownReferenceBuilder) {
-        if (url == null || url.isBlank()) {
+        if ((url == null) || url.isBlank()) {
             return name;
         } else {
             return "[" + name + "][" + markdownReferenceBuilder.getReferenceForUrl(url) + "]";

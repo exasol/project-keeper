@@ -74,7 +74,7 @@ class FileTemplatesFactory {
     List<FileTemplate> getTemplatesForSource(final AnalyzedSource source) {
         if (source instanceof AnalyzedMavenSource) {
             return getMavenTemplates((AnalyzedMavenSource) source);
-        } else if (source instanceof AnalyzedGolangSource) {
+        } else if (source instanceof AnalyzedSourceImpl) {
             // do not verify templates (e.g. .github/workflows) for submodules
             return Collections.emptyList();
         } else {

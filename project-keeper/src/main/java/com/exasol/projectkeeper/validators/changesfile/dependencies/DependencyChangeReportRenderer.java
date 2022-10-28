@@ -5,6 +5,7 @@ import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
@@ -44,15 +45,11 @@ public class DependencyChangeReportRenderer {
     private List<String> renderProject(final NamedDependencyChangeReport namedReport, final boolean isMultiReports) {
         final List<String> lines = new ArrayList<>();
         final DependencyChangeReport report = namedReport.getReport();
-        final String headlinePrefix = isMultiReports ? "####" : "###";
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Compile Dependency Updates",
-                report.getCompileDependencyChanges()));
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Runtime Dependency Updates",
-                report.getRuntimeDependencyChanges()));
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Test Dependency Updates",
-                report.getTestDependencyChanges()));
-        lines.addAll(renderDependencyChanges(headlinePrefix + " Plugin Dependency Updates",
-                report.getPluginDependencyChanges()));
+        final String headlinePrefix = isMultiReports ? "#### " : "### ";
+
+        for (final Type type : Type.values()) {
+            lines.addAll(renderDependencyChanges(headlinePrefix + type.getHeader(), report.getChanges(type)));
+        }
         if (!lines.isEmpty() && isMultiReports) {
             lines.addAll(0, List.of("", "### " + capitalizeApStyle(namedReport.getSourceName())));
         }

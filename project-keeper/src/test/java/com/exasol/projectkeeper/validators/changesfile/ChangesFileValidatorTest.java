@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -113,8 +114,7 @@ class ChangesFileValidatorTest {
             final List<DependencyChange> dependencyChanges) throws IOException {
         mavenModel.writeAsPomToProject(this.tempDir);
         return AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).projectName(mavenModel.getName())
-                .dependencyChanges(new DependencyChangeReport(dependencyChanges, //
-                        Collections.emptyList(), Collections.emptyList(), Collections.emptyList()))
+                .dependencyChanges(DependencyChangeReport.builder().typed(Type.COMPILE, dependencyChanges).build()) //
                 .build();
     }
 }

@@ -6,7 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.sources.analyze.golang.GoModFile.GoModDependency;
+import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 
 /**
  * This class implements a parser for {@code go.mod} files.
@@ -16,7 +16,7 @@ class GoModFileParser {
     String moduleName = null;
     String goVersion;
     boolean insideRequireBlock = false;
-    final List<GoModDependency> dependencies = new ArrayList<>();
+    final List<VersionedDependency> dependencies = new ArrayList<>();
 
     GoModFileParser() {
         this.regexps = List.of( //
@@ -32,11 +32,11 @@ class GoModFileParser {
                 }));
     }
 
-    private GoModDependency createDependency(final List<String> groups) {
+    private VersionedDependency createDependency(final List<String> groups) {
         final boolean indirect = (groups.size() >= 3) //
                 && (groups.get(2) != null) //
                 && groups.get(2).startsWith("indirect");
-        return new GoModDependency(groups.get(0), groups.get(1), indirect);
+        return VersionedDependency.builder().name(groups.get(0)).version(groups.get(1)).isIndirect(indirect).build();
     }
 
     void parse(final String content) {

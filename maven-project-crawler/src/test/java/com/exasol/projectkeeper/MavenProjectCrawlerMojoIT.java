@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper;
 
-import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.COMPILE;
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -15,9 +15,7 @@ import org.apache.maven.it.Verifier;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Tag;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
@@ -25,9 +23,7 @@ import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
-import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
-import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
-import com.exasol.projectkeeper.shared.mavenprojectcrawler.ResponseCoder;
+import com.exasol.projectkeeper.shared.mavenprojectcrawler.*;
 
 @Tag("integration")
 class MavenProjectCrawlerMojoIT {
@@ -57,13 +53,17 @@ class MavenProjectCrawlerMojoIT {
         testProject.addDependency("error-reporting-java", "com.exasol", "compile", "0.4.1");
         testProject.writeAsPomToProject(subfolder);
         final CrawledMavenProject crawledProject = runCrawler(subfolder);
+        final ProjectDependency expectedDependency = ProjectDependency.builder() //
+                .type(COMPILE) //
+                .name("error-reporting-java") //
+                .websiteUrl("https://github.com/exasol/error-reporting-java") //
+                .licenses(List.of(new License("MIT", "https://opensource.org/licenses/MIT"))) //
+                .build();
         assertAll(//
                 () -> assertThat(crawledProject.getProjectVersion(), equalTo(TestMavenModel.PROJECT_VERSION)),
                 () -> assertThat(crawledProject.getProjectDependencies().getDependencies(),
-                        Matchers.hasItem(new ProjectDependency("error-reporting-java",
-                                "https://github.com/exasol/error-reporting-java",
-                                List.of(new License("MIT", "https://opensource.org/licenses/MIT")), COMPILE))),
-                () -> assertThat(crawledProject.getDependencyChangeReport().getCompileDependencyChanges(),
+                        Matchers.hasItem(expectedDependency)),
+                () -> assertThat(crawledProject.getDependencyChangeReport().getChanges(COMPILE),
                         Matchers.contains(new NewDependency("com.exasol", "error-reporting-java", "0.4.1")))//
         );
     }

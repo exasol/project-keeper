@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
-import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.*;
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.*;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -13,9 +13,8 @@ import org.apache.maven.project.ProjectBuildingException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.MavenModelFromRepositoryReader;
+import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.shared.dependencies.License;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
 /**
  * This class reads all dependencies of a pom file (including the plugins) together with their license.
@@ -66,8 +65,12 @@ public class ProjectDependencyReader {
                     dependency.getGroupId(), dependency.getVersion(), repos);
             final List<License> licenses = dependenciesPom.getLicenses().stream()
                     .map(license -> new License(license.getName(), license.getUrl())).collect(Collectors.toList());
-            return new ProjectDependency(getDependencyName(dependenciesPom), dependenciesPom.getUrl(), licenses,
-                    mapScopeToDependencyType(dependency.getScope()));
+            return ProjectDependency.builder() //
+                    .type(mapScopeToDependencyType(dependency.getScope())) //
+                    .name(getDependencyName(dependenciesPom)) //
+                    .websiteUrl(dependenciesPom.getUrl()) //
+                    .licenses(licenses) //
+                    .build();
         } catch (final ProjectBuildingException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-49")
                     .message("Failed to get license information for dependency {{groupId}}:{{artifactId}}.",
@@ -84,7 +87,7 @@ public class ProjectDependencyReader {
         }
     }
 
-    private ProjectDependency.Type mapScopeToDependencyType(final String scope) {
+    private BaseDependency.Type mapScopeToDependencyType(final String scope) {
         if (scope == null) {
             return COMPILE;
         } else {

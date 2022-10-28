@@ -18,9 +18,9 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
-import com.exasol.projectkeeper.sources.AnalyzedGolangSource;
+import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 
@@ -127,22 +127,22 @@ class GolangSourceAnalyzerIT {
         assertAll( //
                 () -> assertDependencyLicenses(analyzedProject.getDependencies().getDependencies()),
                 () -> assertDependencyChanges(analyzedProject.getDependencyChanges()),
-                () -> assertThat("module name", ((AnalyzedGolangSource) analyzedProject).getModuleName(),
+                () -> assertThat("module name", ((AnalyzedSourceImpl) analyzedProject).getModuleName(),
                         equalTo("github.com/exasol/my-module")),
                 () -> assertThat("advertise", analyzedProject.isAdvertise(), is(true)),
                 () -> assertThat("version", analyzedProject.getVersion(), equalTo(this.fixture.getProjectVersion())));
     }
 
     private void assertIsrootProject(final AnalyzedSource analyzedProject, final boolean expectedValue) {
-        assertThat("is root project", ((AnalyzedGolangSource) analyzedProject).isRootProject(), is(expectedValue));
+        assertThat("is root project", ((AnalyzedSourceImpl) analyzedProject).isRootProject(), is(expectedValue));
     }
 
     private void assertDependencyChanges(final DependencyChangeReport dependencyChanges) {
-        assertAll(() -> assertThat("plugin dependencies", dependencyChanges.getPluginDependencyChanges(), hasSize(0)),
-                () -> assertThat("runtime dependencies", dependencyChanges.getRuntimeDependencyChanges(), hasSize(0)),
-                () -> assertThat("compile dependencies", dependencyChanges.getCompileDependencyChanges(),
+        assertAll(() -> assertThat("plugin dependencies", dependencyChanges.getChanges(Type.PLUGIN), hasSize(0)),
+                () -> assertThat("runtime dependencies", dependencyChanges.getChanges(Type.RUNTIME), hasSize(0)),
+                () -> assertThat("compile dependencies", dependencyChanges.getChanges(Type.COMPILE),
                         contains(updatedDep("golang", "1.15", "1.16"))),
-                () -> assertThat("test dependencies", dependencyChanges.getTestDependencyChanges(), hasSize(0)));
+                () -> assertThat("test dependencies", dependencyChanges.getChanges(Type.TEST), hasSize(0)));
     }
 
     private DependencyChange updatedDep(final String name, final String oldVersion, final String newVersion) {

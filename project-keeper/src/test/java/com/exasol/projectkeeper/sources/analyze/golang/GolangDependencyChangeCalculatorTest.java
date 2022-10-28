@@ -18,9 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type;
+import com.exasol.projectkeeper.shared.dependencies.*;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -97,17 +96,21 @@ class GolangDependencyChangeCalculatorTest {
     }
 
     private ProjectDependency dep(final String name, final Type type) {
-        return new ProjectDependency(name, null, List.of(), type);
+        return ProjectDependency.builder() //
+                .type(type) //
+                .name(name) //
+                .licenses(List.of()) //
+                .build();
     }
 
     private void assertReport(final DependencyChangeReport report,
             final List<DependencyChange> expectedCompileDependencies,
             final List<DependencyChange> expectedTestDependencies) {
-        assertAll(() -> assertThat("plugin dependencies", report.getPluginDependencyChanges(), hasSize(0)),
-                () -> assertThat("runtime dependencies", report.getRuntimeDependencyChanges(), hasSize(0)),
-                () -> assertThat("compile dependencies", report.getCompileDependencyChanges(),
+        assertAll(() -> assertThat("plugin dependencies", report.getChanges(BaseDependency.Type.PLUGIN), hasSize(0)),
+                () -> assertThat("runtime dependencies", report.getChanges(BaseDependency.Type.RUNTIME), hasSize(0)),
+                () -> assertThat("compile dependencies", report.getChanges(BaseDependency.Type.COMPILE),
                         containsInAnyOrder(expectedCompileDependencies.toArray(new DependencyChange[0]))),
-                () -> assertThat("test dependencies", report.getTestDependencyChanges(),
+                () -> assertThat("test dependencies", report.getChanges(BaseDependency.Type.TEST),
                         containsInAnyOrder(expectedTestDependencies.toArray(new DependencyChange[0]))));
     }
 

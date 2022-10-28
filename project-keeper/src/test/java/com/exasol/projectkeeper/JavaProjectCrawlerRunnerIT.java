@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper;
 
-import static com.exasol.projectkeeper.shared.dependencies.ProjectDependency.Type.COMPILE;
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -18,6 +18,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
@@ -47,12 +48,16 @@ class JavaProjectCrawlerRunnerIT {
                 TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFile);
         final CrawledMavenProject mavenProject = result.getCrawledProjects()
                 .get(pomFile.toAbsolutePath().toString().replace("\\", "/"));
+        final ProjectDependency expectedDependency = ProjectDependency.builder() //
+                .type(COMPILE) //
+                .name("error-reporting-java") //
+                .websiteUrl("https://github.com/exasol/error-reporting-java") //
+                .licenses(List.of(new License("MIT", "https://opensource.org/licenses/MIT"))) //
+                .build();
         assertAll(//
                 () -> assertThat(mavenProject.getProjectDependencies().getDependencies(),
-                        Matchers.hasItem(new ProjectDependency("error-reporting-java",
-                                "https://github.com/exasol/error-reporting-java",
-                                List.of(new License("MIT", "https://opensource.org/licenses/MIT")), COMPILE))),
-                () -> assertThat(mavenProject.getDependencyChangeReport().getCompileDependencyChanges(),
+                        Matchers.hasItem(expectedDependency)),
+                () -> assertThat(mavenProject.getDependencyChangeReport().getChanges(Type.COMPILE),
                         Matchers.contains(new NewDependency(DEPENDENCY_GROUP, DEPENDENCY_ID, DEPENDENCY_VERSION))),
                 () -> assertThat(mavenProject.getProjectVersion(), equalTo(TestMavenModel.PROJECT_VERSION))//
         );

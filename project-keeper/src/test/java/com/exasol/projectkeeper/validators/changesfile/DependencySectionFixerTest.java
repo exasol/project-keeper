@@ -5,11 +5,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.jupiter.api.*;
 
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
@@ -21,11 +21,13 @@ class DependencySectionFixerTest {
 
     @BeforeAll
     static void beforeAll() {
-        source = AnalyzedMavenSource.builder()
-                .dependencyChanges(
-                        new DependencyChangeReport(List.of(new NewDependency("com.example", "my-lib", "1.2.3")),
-                                Collections.emptyList(), Collections.emptyList(), Collections.emptyList()))
-                .projectName("my test project").isRootProject(true).build();
+        source = AnalyzedMavenSource.builder() //
+                .dependencyChanges(DependencyChangeReport.builder() //
+                        .typed(Type.COMPILE, List.of(new NewDependency("com.example", "my-lib", "1.2.3"))) //
+                        .build())
+                .projectName("my test project") //
+                .isRootProject(true) //
+                .build();
     }
 
     @Test

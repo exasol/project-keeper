@@ -89,10 +89,14 @@ public class SimpleProcess {
         final Duration duration = Duration.between(this.startTime, Instant.now());
         final int exitCode = this.process.exitValue();
         if (exitCode != 0) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-126").message(
-                    "Failed to run command {{executed command}} in {{working directory}}, exit code was {{exit code}} after {{duration}}. Output:\n{{std out}}\nError output:\n{{std error}}",
-                    formatCommand(), this.workingDirectory, exitCode, duration, getOutputStreamContent(),
-                    getErrorStreamContent()).toString());
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-126")
+                    .message("Failed to run command {{executed command}} in {{working directory}}," //
+                            + " exit code was {{exit code}} after {{duration}}." //
+                            + " Output:\n{{std out}}\n" //
+                            + "Error output:\n{{std error}}", //
+                            formatCommand(), this.workingDirectory, exitCode, duration, //
+                            getOutputStreamContent(), getErrorStreamContent())
+                    .toString());
         }
         LOGGER.finest(() -> "Command '" + formatCommand() + "' finished successfully after " + duration);
     }
@@ -126,9 +130,11 @@ public class SimpleProcess {
     private void waitForExecutionFinished(final Duration executionTimeout) {
         try {
             if (!this.process.waitFor(executionTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128").message(
-                        "Timeout while waiting {{timeout|uq}}ms for command {{executed command}}. Output was {{output}}\nError output: {{std error}}",
-                        executionTimeout.toMillis(), formatCommand(), getOutputStreamContent(), getErrorStreamContent())
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128")
+                        .message("Timeout while waiting {{timeout|uq}}ms for command {{executed command}}." //
+                                + " Output was {{output}}\nError output: {{std error}}", //
+                                executionTimeout.toMillis(), formatCommand(), //
+                                getOutputStreamContent(), getErrorStreamContent())
                         .toString());
             }
         } catch (final InterruptedException exception) {

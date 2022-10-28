@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.exasol.projectkeeper.sources.analyze.generic.RepoNameReader;
+
 class ProjectNameReaderTest {
 
     @Test

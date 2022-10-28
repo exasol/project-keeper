@@ -13,4 +13,9 @@ public class License {
     private String name;
     /** Link to the license */
     private String url;
+
+    @Override
+    public String toString() {
+        return this.name + " " + this.url;
+    }
 }
