@@ -3,6 +3,9 @@ package com.exasol.projectkeeper.validators.pom;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -21,9 +24,19 @@ import com.exasol.errorreporting.ExaError;
  */
 class PomFileIO {
 
+    private final Map<String, String> properties = new HashMap<>();
+
+    PomFileIO() {
+    }
+
+    PomFileIO property(final String key, final String value) {
+        this.properties.put(key, value);
+        return this;
+    }
+
     /**
      * Write a pom file content into a file.
-     * 
+     *
      * @param document        content
      * @param destinationFile file to write to
      */
@@ -55,6 +68,9 @@ class PomFileIO {
             transformerFactory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
             final var transformer = transformerFactory.newTransformer();
             transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+            for (final Entry<String, String> e : this.properties.entrySet()) {
+                transformer.setOutputProperty(e.getKey(), e.getValue());
+            }
             transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "4");
             final var domSource = new DOMSource(document);
             final var streamResult = new StreamResult(outputStream);
@@ -67,9 +83,7 @@ class PomFileIO {
     }
 
     /*
-     * Trim the whitespace from the given node and its children.
-     * <p>
-     * Inspired by https://stackoverflow.com/a/33564346
+     * Trim the whitespace from the given node and its children. <p> Inspired by https://stackoverflow.com/a/33564346
      * </p>
      */
     public static void trimWhitespace(final Node node) {
