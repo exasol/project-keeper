@@ -1,13 +1,9 @@
 package com.exasol.projectkeeper.shared.dependencies;
 
-/**
- * This class represents an abstract dependency enabling to create a report of dependency changes later on.
- */
+/** This class represents an abstract dependency enabling to create a report of dependency changes later on. */
 public class VersionedDependency implements BaseDependency {
 
-    /**
-     * @return a builder for new instances of {@link VersionedDependency}
-     */
+    /** @return a builder for new instances of {@link VersionedDependency} */
     public static Builder builder() {
         return new Builder();
     }
@@ -20,39 +16,29 @@ public class VersionedDependency implements BaseDependency {
     VersionedDependency() {
     }
 
-    /**
-     * @return type of the dependency
-     */
+    /** @return type of the dependency */
     @Override
     public Type getType() {
         return this.type;
     }
 
-    /**
-     * @return name of the module of the dependency
-     */
+    /** @return name of the module of the dependency */
     @Override
     public String getName() {
         return this.name;
     }
 
-    /**
-     * @return version of the dependency
-     */
+    /** @return version of the dependency */
     public String getVersion() {
         return this.version;
     }
 
-    /**
-     * @return {@code true} if the dependency is indirect, i.e. transitive
-     */
+    /** @return {@code true} if the dependency is indirect, i.e. transitive */
     public boolean isIndirect() {
         return this.isIndirect;
     }
 
-    /**
-     * Builder for a new instance of {@link VersionedDependency}
-     */
+    /** Builder for a new instance of {@link VersionedDependency} */
     public static final class Builder {
         private final VersionedDependency dependency = new VersionedDependency();
 
@@ -92,9 +78,7 @@ public class VersionedDependency implements BaseDependency {
             return this;
         }
 
-        /**
-         * @return new instance of {@link VersionedDependency}
-         */
+        /** @return new instance of {@link VersionedDependency} */
         public VersionedDependency build() {
             return this.dependency;
         }

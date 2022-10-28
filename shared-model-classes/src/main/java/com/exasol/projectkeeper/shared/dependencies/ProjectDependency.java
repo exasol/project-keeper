@@ -3,14 +3,10 @@ package com.exasol.projectkeeper.shared.dependencies;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Generic dependency.
- */
+/** Generic dependency. */
 public final class ProjectDependency implements BaseDependency {
 
-    /**
-     * @return Builder for new instances of {@link ProjectDependency}.
-     */
+    /** @return Builder for new instances of {@link ProjectDependency}. */
     public static Builder builder() {
         return new Builder();
     }
@@ -20,9 +16,7 @@ public final class ProjectDependency implements BaseDependency {
     private String websiteUrl;
     private List<License> licenses = new ArrayList<>();
 
-    /**
-     * Create an empty project dependency
-     */
+    /** Create an empty project dependency */
     public ProjectDependency() {
     }
 
@@ -42,32 +36,24 @@ public final class ProjectDependency implements BaseDependency {
         this.licenses = licenses;
     }
 
-    /**
-     * @return type of the dependency
-     */
+    /** @return type of the dependency */
     @Override
     public Type getType() {
         return this.type;
     }
 
-    /**
-     * @return name of the module of the dependency
-     */
+    /** @return name of the module of the dependency */
     @Override
     public String getName() {
         return this.name;
     }
 
-    /**
-     * @return URL of the website associated with the current project dependency
-     */
+    /** @return URL of the website associated with the current project dependency */
     public String getWebsiteUrl() {
         return this.websiteUrl;
     }
 
-    /**
-     * @return list of licenses associated with the current project dependency
-     */
+    /** @return list of licenses associated with the current project dependency */
     public List<License> getLicenses() {
         return this.licenses;
     }
@@ -135,9 +121,7 @@ public final class ProjectDependency implements BaseDependency {
                 + " licenses: " + this.licenses.stream().map(License::toString).collect(Collectors.joining(", "));
     }
 
-    /**
-     * Builder for a new instance of {@link ProjectDependency}
-     */
+    /** Builder for a new instance of {@link ProjectDependency} */
     public static final class Builder {
         private final ProjectDependency projectDependency = new ProjectDependency();
 
@@ -177,9 +161,7 @@ public final class ProjectDependency implements BaseDependency {
             return this;
         }
 
-        /**
-         * @return new instance of {@link ProjectDependency}
-         */
+        /** @return new instance of {@link ProjectDependency} */
         public ProjectDependency build() {
             return this.projectDependency;
         }
