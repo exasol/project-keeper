@@ -18,9 +18,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -107,11 +106,11 @@ class GolangDependencyChangeCalculatorTest {
     private void assertReport(final DependencyChangeReport report,
             final List<DependencyChange> expectedCompileDependencies,
             final List<DependencyChange> expectedTestDependencies) {
-        assertAll(() -> assertThat("plugin dependencies", report.getChanges(ProjectDependency.Type.PLUGIN), hasSize(0)),
-                () -> assertThat("runtime dependencies", report.getChanges(ProjectDependency.Type.RUNTIME), hasSize(0)),
-                () -> assertThat("compile dependencies", report.getChanges(ProjectDependency.Type.COMPILE),
+        assertAll(() -> assertThat("plugin dependencies", report.getChanges(BaseDependency.Type.PLUGIN), hasSize(0)),
+                () -> assertThat("runtime dependencies", report.getChanges(BaseDependency.Type.RUNTIME), hasSize(0)),
+                () -> assertThat("compile dependencies", report.getChanges(BaseDependency.Type.COMPILE),
                         containsInAnyOrder(expectedCompileDependencies.toArray(new DependencyChange[0]))),
-                () -> assertThat("test dependencies", report.getChanges(ProjectDependency.Type.TEST),
+                () -> assertThat("test dependencies", report.getChanges(BaseDependency.Type.TEST),
                         containsInAnyOrder(expectedTestDependencies.toArray(new DependencyChange[0]))));
     }
 

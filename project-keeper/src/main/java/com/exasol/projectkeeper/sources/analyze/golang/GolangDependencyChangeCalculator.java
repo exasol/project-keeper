@@ -21,7 +21,6 @@ class GolangDependencyChangeCalculator {
     private final Path projectDir;
     private final Source source;
     private final ProjectDependencies dependencies;
-    private List<DependencyChange> changes;
 
     GolangDependencyChangeCalculator(final GolangServices golangServices, final Path projectDir, final Source source,
             final ProjectDependencies dependencies) {
@@ -32,10 +31,11 @@ class GolangDependencyChangeCalculator {
     }
 
     private DependencyChangeReport calculate() {
-        this.changes = this.golangServices.getDependencyChanges(this.projectDir, getRelativeModPath());
+        final List<DependencyChange> changes = this.golangServices.getDependencyChanges(this.projectDir,
+                getRelativeModPath());
         final GolangDependencyType typeDetector = new GolangDependencyType(this.dependencies.getDependencies());
         return DependencyChangeReport.builder() //
-                .mixed(this.changes, typeDetector::getType) //
+                .mixed(changes, typeDetector::getType) //
                 .build();
     }
 

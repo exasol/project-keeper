@@ -7,8 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-import com.exasol.projectkeeper.shared.dependencies.License;
-import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
+import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
 
 import net.steppschuh.markdowngenerator.table.Table;
@@ -56,7 +55,7 @@ public class DependencyPageRenderer {
     }
 
     private String buildDependencySectionForScope(final List<ProjectDependency> dependencies,
-            final ProjectDependency.Type type, final MarkdownReferenceBuilder markdownReferenceBuilder,
+            final BaseDependency.Type type, final MarkdownReferenceBuilder markdownReferenceBuilder,
             final int headlineLevel) {
         final List<ProjectDependency> dependenciesOfThisScope = dependencies.stream()
                 .filter(dependency -> dependency.getType().equals(type)).collect(Collectors.toList());

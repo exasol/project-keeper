@@ -9,7 +9,7 @@ import jakarta.json.JsonObject;
 
 class NpmLicense {
 
-    private static final Pattern PATTERN = Pattern.compile("^(.+)@([0-9]+(\\.[0-9]+)*)$");
+    private static final Pattern PATTERN = Pattern.compile("^(.+)@([0-9]+(\\.[0-9]+)*+)$");
 
     static NpmLicense from(final String moduleAndVersion, final JsonObject licenseInfos) {
         final JsonObject o = licenseInfos.getJsonObject(moduleAndVersion);
