@@ -8,6 +8,7 @@ Support for NPM projects and some additional minor improvements.
 
 ## Features
 
+* #390: Reporting removed Go dependencies as type "unknown".
 * #373: Added support for NPM projects.
 * #383: Generate configuration file for Integrated Development Environment Microsoft Visual Code.
 * #384: Added element `<distributionManagement>` to file `pk_generated_parent.pom` required for deployments to maven central.

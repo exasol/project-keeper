@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
@@ -39,19 +40,11 @@ class GolangDependencyType {
             final String moduleNamePrefix = moduleName.substring(0, moduleName.lastIndexOf("/"));
             GolangDependencyChangeCalculator.LOGGER
                     .finest(() -> "Found prefix '" + moduleNamePrefix + "' for module '" + moduleName + "'.");
-            final Optional<Type> type = this.dependencies.stream() //
+            return this.dependencies.stream() //
                     .filter(dep -> dep.getName().startsWith(moduleNamePrefix)) //
                     .map(ProjectDependency::getType) //
-                    .findFirst();
-            if (type.isPresent()) {
-                return type.get();
-            } else {
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-159")
-                        .message("Error finding type of module prefix {{module name prefix}}," //
-                                + " all available dependencies: {{all dependencies}}.", //
-                                moduleNamePrefix, this.dependencies)
-                        .ticketMitigation().toString());
-            }
+                    .findFirst() //
+                    .orElse(Type.UNKNOWN);
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-158")
                     .message("Unknown suffix for module {{module name}}.", moduleName).ticketMitigation().toString());
