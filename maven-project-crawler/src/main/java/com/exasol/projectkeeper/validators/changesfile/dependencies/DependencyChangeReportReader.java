@@ -36,6 +36,7 @@ public class DependencyChangeReportReader {
                 .typed(Type.RUNTIME, sort(this.compareDependencies(oldModel, newModel, "runtime"))) //
                 .typed(Type.TEST, sort(this.compareDependencies(oldModel, newModel, "test"))) //
                 .typed(Type.PLUGIN, sort(this.comparePluginDependencies(oldModel, newModel))) //
+                // Maven projects do not have dependencies of type DEV
                 .build();
     }
 
