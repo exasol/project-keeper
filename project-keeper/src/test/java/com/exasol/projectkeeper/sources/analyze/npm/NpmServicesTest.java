@@ -4,6 +4,7 @@ import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LICENSE_C
 import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LIST_DEPENDENCIES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -32,6 +33,12 @@ class NpmServicesTest {
     CommandExecutor executor;
     @Mock
     GitService git;
+    @Mock
+    TaggedCommit previousTag;
+
+    private static final String PREVIOUS_VERSION = "1.1.1";
+    private static final Path PROJECT_DIR = Paths.get("/projects/sample-project");
+    private static final Path PACKAGE_JSON_FILE = Paths.get("some/file.txt");
 
     @Test
     void getDependencies() {
@@ -44,19 +51,34 @@ class NpmServicesTest {
     @Test
     void retrievePrevious() throws FileNotFoundException {
         final GitRepository repo = mock(GitRepository.class);
-        when(this.git.getRepository(any())).thenReturn(repo);
-        final TaggedCommit tag = mock(TaggedCommit.class);
-        when(repo.findLatestReleaseCommit(any())).thenReturn(Optional.of(tag));
         when(repo.getFileFromCommit(any(), any())).thenReturn(TestData.PREVIOUS);
+        final PackageJson current = currentPackageJson(PACKAGE_JSON_FILE);
+        final PackageJson previous = retrievePrevious(repo, current);
+        assertThat(previous, notNullValue());
+        assertThat(previous.getVersion(), equalTo("1.0.0"));
+        assertThat(previous.getModuleName(), equalTo(current.getModuleName()));
+    }
 
-        final Path path = Paths.get("some/file.txt");
-        final PackageJson current = TestData.samplePackageJson();
+    @Test
+    void previousNotFound() throws FileNotFoundException {
+        final GitRepository repo = mock(GitRepository.class);
+        when(repo.getFileFromCommit(any(), any())).thenThrow(new FileNotFoundException());
+        when(this.previousTag.getTag()).thenReturn(PREVIOUS_VERSION);
+        final PackageJson current = currentPackageJson(PACKAGE_JSON_FILE);
+        final Exception exception = assertThrows(IllegalStateException.class, () -> retrievePrevious(repo, current));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-134: File " + PACKAGE_JSON_FILE + " does not exist at tag '" + PREVIOUS_VERSION + "'"));
+    }
 
-        final Optional<PackageJson> result = testee().retrievePrevious(path, current);
-        assertThat(result.isPresent(), is(true));
-        final PackageJson actual = result.get();
-        assertThat(actual.getVersion(), equalTo("1.0.0"));
-        assertThat(actual.getModuleName(), equalTo(current.getModuleName()));
+    private PackageJson currentPackageJson(final Path relative) {
+        return TestData.packageJson(PROJECT_DIR.resolve(relative), TestData.CURRENT);
+    }
+
+    private PackageJson retrievePrevious(final GitRepository repo, final PackageJson current)
+            throws FileNotFoundException {
+        when(this.git.getRepository(any())).thenReturn(repo);
+        when(repo.findLatestReleaseCommit(any())).thenReturn(Optional.of(this.previousTag));
+        return testee().retrievePrevious(PROJECT_DIR, current).orElse(null);
     }
 
     private NpmServices testee() {

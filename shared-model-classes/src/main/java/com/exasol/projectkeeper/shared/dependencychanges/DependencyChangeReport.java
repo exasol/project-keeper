@@ -13,7 +13,6 @@ import jakarta.json.bind.JsonbException;
 import jakarta.json.bind.serializer.*;
 import jakarta.json.stream.JsonGenerator;
 import jakarta.json.stream.JsonParser;
-import lombok.AllArgsConstructor;
 
 /**
  * This class represents a report of changed dependencies.

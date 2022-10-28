@@ -97,7 +97,7 @@ class GolangServices {
                 .command(GoBinary.GO.command()) //
                 .args("list", "-m", "-f", "{{.Dir}}", moduleName) //
                 .build();
-        final String output = this.executor.execute(shellCommand, absoluteSourcePath);
+        final String output = this.executor.execute(shellCommand, absoluteSourcePath).trim();
         if (output.isEmpty()) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-160")
                     .message("Did not get directory for module {{module name}}.", moduleName).ticketMitigation()

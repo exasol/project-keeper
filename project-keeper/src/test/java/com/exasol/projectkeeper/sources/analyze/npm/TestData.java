@@ -1,11 +1,15 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
 import java.io.StringReader;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 import jakarta.json.JsonObject;
 
 class TestData {
+
+    static final Path SAMPLE_PATH = Paths.get("/projects/p1/package.json");
+
     static final String CURRENT = jsonString("{", //
             "  'name': 'module-name',", //
             "  'version': '2.0.0',", //
@@ -83,7 +87,11 @@ class TestData {
     }
 
     static PackageJson packageJson(final String content) {
-        return new PackageJsonReader().read(Paths.get(""), json(content));
+        return packageJson(SAMPLE_PATH, content);
+    }
+
+    static PackageJson packageJson(final Path path, final String content) {
+        return new PackageJsonReader().read(path, json(content));
     }
 
     static JsonObject json(final String string) {
