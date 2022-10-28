@@ -5,40 +5,7 @@ import java.nio.file.Paths;
 
 import jakarta.json.JsonObject;
 
-class JsonFixture {
-
-    private JsonFixture() {
-        // only static usage
-    }
-
-    static String jsonString(final String... s) {
-        return String.join("\n", s).replace('\'', '"');
-    }
-
-    static PackageJson samplePackageJson() {
-        return packageJson(CURRENT);
-    }
-
-    static PackageJson previousPackageJson() {
-        return packageJson(PREVIOUS);
-    }
-
-    static PackageJson packageJson(final String content) {
-        return new PackageJsonReader().read(Paths.get(""), fromString(content));
-    }
-
-    static JsonObject dependencyInfos() {
-        return fromString(DEPENDENCIES);
-    }
-
-    static JsonObject licenseInfos() {
-        return fromString(LICENSES);
-    }
-
-    private static JsonObject fromString(final String string) {
-        return JsonIo.read(new StringReader(string));
-    }
-
+class TestData {
     static final String CURRENT = jsonString("{", //
             "  'name': 'module-name',", //
             "  'version': '2.0.0',", //
@@ -106,4 +73,24 @@ class JsonFixture {
             "    }", //
             "  }", //
             "}");
+
+    static String jsonString(final String... s) {
+        return String.join("\n", s).replace('\'', '"');
+    }
+
+    static PackageJson samplePackageJson() {
+        return packageJson(CURRENT);
+    }
+
+    static PackageJson packageJson(final String content) {
+        return new PackageJsonReader().read(Paths.get(""), json(content));
+    }
+
+    static JsonObject json(final String string) {
+        return JsonIo.read(new StringReader(string));
+    }
+
+    private TestData() {
+        // only static usage
+    }
 }

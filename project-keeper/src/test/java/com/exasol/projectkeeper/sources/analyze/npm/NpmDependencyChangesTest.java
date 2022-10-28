@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
-import static com.exasol.projectkeeper.sources.analyze.npm.JsonFixture.*;
+import static com.exasol.projectkeeper.sources.analyze.npm.TestData.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
@@ -48,6 +48,6 @@ class NpmDependencyChangesTest {
 
     private DependencyChangeReport report(final String current, final String previous) {
         return NpmDependencyChanges.report(packageJson(current),
-                Optional.ofNullable(previous).map(JsonFixture::packageJson));
+                Optional.ofNullable(previous).map(TestData::packageJson));
     }
 }

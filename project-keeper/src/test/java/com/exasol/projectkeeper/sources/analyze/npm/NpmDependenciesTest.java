@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
+import static com.exasol.projectkeeper.sources.analyze.npm.TestData.json;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.mockito.ArgumentMatchers.any;
@@ -24,10 +25,10 @@ class NpmDependenciesTest {
 
     @Test
     void getDependencies() {
-        when(this.npmServices.listDependencies(any())).thenReturn(JsonFixture.dependencyInfos());
-        when(this.npmServices.getLicenses(any())).thenReturn(JsonFixture.licenseInfos());
+        when(this.npmServices.listDependencies(any())).thenReturn(json(TestData.DEPENDENCIES));
+        when(this.npmServices.getLicenses(any())).thenReturn(json(TestData.LICENSES));
 
-        final NpmDependencies testee = new NpmDependencies(this.npmServices, JsonFixture.samplePackageJson());
+        final NpmDependencies testee = new NpmDependencies(this.npmServices, TestData.samplePackageJson());
         assertThat(testee.getDependencies(), containsInAnyOrder( //
                 dependency(Type.PLUGIN, "changed-plugin", "1.2.0", "CP"), //
                 dependency(Type.PLUGIN, "new-plugin", "1.3.0", "NP"), //

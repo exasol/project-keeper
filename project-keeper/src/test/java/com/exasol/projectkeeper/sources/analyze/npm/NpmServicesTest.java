@@ -35,9 +35,9 @@ class NpmServicesTest {
 
     @Test
     void getDependencies() {
-        when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(JsonFixture.DEPENDENCIES);
-        when(this.executor.execute(eq(LICENSE_CHECKER), any())).thenReturn(JsonFixture.LICENSES);
-        final PackageJson current = JsonFixture.samplePackageJson();
+        when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
+        when(this.executor.execute(eq(LICENSE_CHECKER), any())).thenReturn(TestData.LICENSES);
+        final PackageJson current = TestData.samplePackageJson();
         assertThat(testee().getDependencies(current), isA(ProjectDependencies.class));
     }
 

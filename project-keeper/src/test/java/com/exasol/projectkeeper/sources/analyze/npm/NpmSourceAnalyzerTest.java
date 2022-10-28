@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
+import static com.exasol.projectkeeper.sources.analyze.npm.TestData.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.iterableWithSize;
@@ -22,15 +23,15 @@ class NpmSourceAnalyzerTest {
     void test() {
         final NpmServices services = mock(NpmServices.class);
 
-        final PackageJson current = JsonFixture.samplePackageJson();
+        final PackageJson current = TestData.packageJson(CURRENT);
         when(services.readPackageJson(any())).thenReturn(current);
-        when(services.listDependencies(any())).thenReturn(JsonFixture.dependencyInfos());
-        when(services.getLicenses(any())).thenReturn(JsonFixture.licenseInfos());
+        when(services.listDependencies(any())).thenReturn(TestData.json(DEPENDENCIES));
+        when(services.getLicenses(any())).thenReturn(TestData.json(LICENSES));
 
         doCallRealMethod().when(services).getDependencies(any());
         final ProjectDependencies dependencies = services.getDependencies(current);
 
-        final Optional<PackageJson> previous = Optional.of(JsonFixture.previousPackageJson());
+        final Optional<PackageJson> previous = Optional.of(TestData.packageJson(PREVIOUS));
         when(services.retrievePrevious(any(), any())).thenReturn(previous);
 
         final Path path = Paths.get("sample/path");
