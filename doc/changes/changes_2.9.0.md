@@ -1,14 +1,14 @@
 # Project Keeper 2.9.0, released 2022-??-??
 
-Code name: Support for NPM projects and additional minor improvements.
+Code name: Support for NPM projects and minor improvements.
 
 ## Summary
 
-Support for NPM projects and additional minor improvements.
+Support for NPM projects and some additional minor improvements.
 
 ## Features
 
-* #373: Support for NPM projects.
+* #373: Added support for NPM projects.
 * #383: Generate configuration file for Integrated Development Environment Microsoft Visual Code.
 * #384: Added element `<distributionManagement>` to file `pk_generated_parent.pom` required for deployments to maven central.
 
