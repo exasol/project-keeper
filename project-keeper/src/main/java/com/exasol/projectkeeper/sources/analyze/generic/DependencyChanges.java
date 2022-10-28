@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 
+/**
+ * This class manages dependency changes. A change may be an added dependency, a removed one or a change in the module
+ * version requested by the dependency.
+ */
 public class DependencyChanges {
 
     /**
