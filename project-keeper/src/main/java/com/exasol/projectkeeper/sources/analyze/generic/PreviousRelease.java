@@ -14,40 +14,66 @@ import com.exasol.projectkeeper.shared.repository.TaggedCommit;
  */
 public class PreviousRelease {
 
+    private final GitService git;
+    private Path projectDir;
+    private String version;
+    private Path file;
+
     /**
-     * @param projectDir     root folder of the current project
-     * @param currentVersion current version of the current project
+     * Constructor for usage in tests.
+     *
+     * @param git {@link GitService} enabling to mock access to Git repository
      */
-    public static PreviousRelease from(final Path projectDir, final String currentVersion) {
-        return new PreviousRelease(projectDir, currentVersion);
+    public PreviousRelease(final GitService git) {
+        this.git = git;
     }
 
-    private final Path projectDir;
-    private final String currentVersion;
-
-    PreviousRelease(final Path projectDir, final String currentVersion) {
+    /**
+     * @param projectDir root folder of the current project
+     * @return this for fluent programming
+     */
+    public PreviousRelease projectDir(final Path projectDir) {
         this.projectDir = projectDir;
-        this.currentVersion = currentVersion;
+        return this;
+    }
+
+    /**
+     * @param version current version of the current project
+     * @return this for fluent programming
+     */
+    public PreviousRelease currentVersion(final String version) {
+        this.version = version;
+        return this;
     }
 
     /**
      * @param relative relative path of a file in the Git repository of the project.
+     * @return this for fluent programming
+     */
+    public PreviousRelease file(final Path relative) {
+        this.file = relative;
+        return this;
+    }
+
+    /**
      * @return content of the specified file in the previous version of the project or {@code Optional.empty()} if there
      *         is no previous version or the file does not exist in the previous version.
      */
-    public Optional<String> fileContent(final Path relative) {
-        try (final GitRepository repo = GitRepository.open(this.projectDir)) {
-            return repo.findLatestReleaseCommit(this.currentVersion).map(tag -> getContent(repo, relative, tag));
+    public Optional<String> getContent() {
+        try (final GitRepository repo = this.git.getRepository(this.projectDir)) {
+            return repo.findLatestReleaseCommit(this.version) //
+                    .map(tag -> getContent(repo, tag));
         }
     }
 
-    private String getContent(final GitRepository repo, final Path relative, final TaggedCommit tag) {
+    private String getContent(final GitRepository repo, final TaggedCommit tag) {
         try {
-            return repo.getFileFromCommit(relative, tag.getCommit());
+            return repo.getFileFromCommit(this.file, tag.getCommit());
         } catch (final FileNotFoundException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-134")
-                    .message("File {{module file}} does not exist at tag {{tag}}", relative, tag.getTag()).toString(),
-                    exception);
+                    .message("File {{module file}} does not exist at tag {{tag}}", //
+                            this.file, tag.getTag())
+                    .toString(), exception);
         }
     }
 }

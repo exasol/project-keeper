@@ -33,15 +33,18 @@ class GolangServices {
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
 
-    private final Supplier<String> projectVersionSupplier;
     private final CommandExecutor executor;
+    private final GitService git;
+    private final Supplier<String> projectVersionSupplier;
 
     GolangServices(final ProjectKeeperConfig config) {
-        this(new CommandExecutor(), () -> extractVersion(config));
+        this(new CommandExecutor(), new GitService(), () -> extractVersion(config));
     }
 
-    GolangServices(final CommandExecutor executor, final Supplier<String> projectVersionSupplier) {
+    GolangServices(final CommandExecutor executor, final GitService git,
+            final Supplier<String> projectVersionSupplier) {
         this.executor = executor;
+        this.git = git;
         this.projectVersionSupplier = projectVersionSupplier;
     }
 
@@ -176,8 +179,11 @@ class GolangServices {
      */
     // [impl -> dsn~golang-changed-dependency~1]
     List<DependencyChange> getDependencyChanges(final Path projectDir, final Path relativeModFile) {
-        final Optional<GoModFile> previous = PreviousRelease.from(projectDir, getProjectVersion()) //
-                .fileContent(relativeModFile) //
+        final Optional<GoModFile> previous = new PreviousRelease(this.git) //
+                .projectDir(projectDir) //
+                .currentVersion(getProjectVersion()) //
+                .file(relativeModFile) //
+                .getContent() //
                 .map(GoModFile::parse);
         final GoModFile current = GoModFile.parse(readFile(projectDir.resolve(relativeModFile)));
         return calculateChanges(previous, current);

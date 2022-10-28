@@ -102,7 +102,7 @@ class GolangServicesTest {
     }
 
     private GolangServices service() {
-        return new GolangServices(this.executor, () -> PROJECT_VERSION);
+        return new GolangServices(this.executor, null, () -> PROJECT_VERSION);
     }
 
     private UpdatedDependency updated(final String moduleName, final String oldVersion, final String newVersion) {

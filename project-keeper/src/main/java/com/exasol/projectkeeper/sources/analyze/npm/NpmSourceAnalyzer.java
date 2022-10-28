@@ -11,6 +11,7 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
+import com.exasol.projectkeeper.sources.analyze.generic.GitService;
 
 public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
@@ -20,7 +21,7 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
      * Create a new instance of {@link NpmSourceAnalyzer}
      */
     public NpmSourceAnalyzer() {
-        this(new NpmServices(new CommandExecutor()));
+        this(new NpmServices(new CommandExecutor(), new GitService()));
     }
 
     NpmSourceAnalyzer(final NpmServices npmServices) {

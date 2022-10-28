@@ -29,9 +29,11 @@ class NpmServices {
             .build();
 
     private final CommandExecutor executor;
+    private final GitService git;
 
-    NpmServices(final CommandExecutor executor) {
+    NpmServices(final CommandExecutor executor, final GitService git) {
         this.executor = executor;
+        this.git = git;
     }
 
     PackageJson readPackageJson(final Path path) {
@@ -43,9 +45,11 @@ class NpmServices {
     }
 
     Optional<PackageJson> retrievePrevious(final Path projectDir, final PackageJson current) {
-        final Path relative = projectDir.relativize(current.getPath());
-        return PreviousRelease.from(projectDir, current.getVersion()) //
-                .fileContent(relative) //
+        return new PreviousRelease(this.git) //
+                .projectDir(projectDir) //
+                .currentVersion(current.getVersion()) //
+                .file(projectDir.relativize(current.getPath())) //
+                .getContent() //
                 .map(string -> PackageJsonReader.read(current.getPath(), string));
     }
 
