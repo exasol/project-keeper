@@ -25,7 +25,9 @@ public interface BaseDependency {
         /** Test dependency */
         TEST("Test Dependency Updates"),
         /** Plugin */
-        PLUGIN("Plugin Dependency Updates");
+        PLUGIN("Plugin Dependency Updates"),
+        /** Development */
+        DEV("Development Dependency Updates");
 
         private final String header;
 

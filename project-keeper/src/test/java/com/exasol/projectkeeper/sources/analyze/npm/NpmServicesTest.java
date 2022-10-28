@@ -3,7 +3,7 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LICENSE_CHECKER;
 import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LIST_DEPENDENCIES;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.isA;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -42,16 +42,21 @@ class NpmServicesTest {
     }
 
     @Test
-    void gitAccess() throws FileNotFoundException {
+    void retrievePrevious() throws FileNotFoundException {
         final GitRepository repo = mock(GitRepository.class);
         when(this.git.getRepository(any())).thenReturn(repo);
         final TaggedCommit tag = mock(TaggedCommit.class);
         when(repo.findLatestReleaseCommit(any())).thenReturn(Optional.of(tag));
-        when(repo.getFileFromCommit(any(), any())).thenReturn("file content");
+        when(repo.getFileFromCommit(any(), any())).thenReturn(TestData.PREVIOUS);
 
         final Path path = Paths.get("some/file.txt");
-        final PackageJson current = null;
-        testee().retrievePrevious(path, current);
+        final PackageJson current = TestData.samplePackageJson();
+
+        final Optional<PackageJson> result = testee().retrievePrevious(path, current);
+        assertThat(result.isPresent(), is(true));
+        final PackageJson actual = result.get();
+        assertThat(actual.getVersion(), equalTo("1.0.0"));
+        assertThat(actual.getModuleName(), equalTo(current.getModuleName()));
     }
 
     private NpmServices testee() {

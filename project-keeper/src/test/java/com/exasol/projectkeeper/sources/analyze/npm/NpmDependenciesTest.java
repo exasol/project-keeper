@@ -30,8 +30,8 @@ class NpmDependenciesTest {
 
         final NpmDependencies testee = new NpmDependencies(this.npmServices, TestData.samplePackageJson());
         assertThat(testee.getDependencies(), containsInAnyOrder( //
-                dependency(Type.PLUGIN, "changed-plugin", "1.2.0", "CP"), //
-                dependency(Type.PLUGIN, "new-plugin", "1.3.0", "NP"), //
+                dependency(Type.DEV, "changed-plugin", "1.2.0", "CP"), //
+                dependency(Type.DEV, "new-plugin", "1.3.0", "NP"), //
                 dependency(Type.COMPILE, "changed-compile", "2.2.0", "CC"), //
                 dependency(Type.COMPILE, "new-compile", "2.3.0", "NC") //
         ));

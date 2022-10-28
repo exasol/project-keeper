@@ -17,7 +17,7 @@ class NpmDependencyChangesTest {
     @Test
     void noPrevious() {
         final DependencyChangeReport expected = DependencyChangeReport.builder() //
-                .typed(Type.PLUGIN, List.of( //
+                .typed(Type.DEV, List.of( //
                         new NewDependency(null, "changed-plugin", "1.2.0"), //
                         new NewDependency(null, "new-plugin", "1.3.0") //
                 )) //
@@ -32,7 +32,7 @@ class NpmDependencyChangesTest {
     @Test
     void withPrevious() {
         final DependencyChangeReport expected = DependencyChangeReport.builder() //
-                .typed(Type.PLUGIN, List.of( //
+                .typed(Type.DEV, List.of( //
                         new UpdatedDependency(null, "changed-plugin", "1.1.0", "1.2.0"), //
                         new NewDependency(null, "new-plugin", "1.3.0"), //
                         new RemovedDependency(null, "removed-plugin", "1.2.0") //

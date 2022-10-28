@@ -16,7 +16,7 @@ final class PackageJsonReader {
 
     enum DependencyKey {
         COMPILE("dependencies", Type.COMPILE), //
-        PLUGIN("devDependencies", Type.PLUGIN);
+        DEV("devDependencies", Type.DEV);
 
         private final String key;
         private final Type type;
@@ -40,7 +40,7 @@ final class PackageJsonReader {
         final String module = retrieveModuleName(content);
         final String version = content.getString("version");
         final List<VersionedDependency> dependencies = new ArrayList<>();
-        dependencies.addAll(versionedDependencies(content, DependencyKey.PLUGIN));
+        dependencies.addAll(versionedDependencies(content, DependencyKey.DEV));
         dependencies.addAll(versionedDependencies(content, DependencyKey.COMPILE));
         return new PackageJson(path, module, version, dependencies);
     }
