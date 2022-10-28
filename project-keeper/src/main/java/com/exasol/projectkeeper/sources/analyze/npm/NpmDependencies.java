@@ -9,7 +9,7 @@ import com.exasol.projectkeeper.shared.dependencies.*;
 
 import jakarta.json.JsonObject;
 
-public class NpmDependencies {
+class NpmDependencies {
 
     private final NpmServices services;
     private final PackageJson packageJson;

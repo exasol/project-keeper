@@ -13,6 +13,9 @@ import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
 import com.exasol.projectkeeper.sources.analyze.generic.GitService;
 
+/**
+ * This class analyzes source projects using <a href="https://www.npmjs.com">Node Package Manager NPM</a>.
+ */
 public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private final NpmServices npmServices;
