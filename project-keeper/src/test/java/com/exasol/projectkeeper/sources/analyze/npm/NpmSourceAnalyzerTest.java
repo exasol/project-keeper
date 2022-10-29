@@ -18,6 +18,10 @@ import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 
+// [itest -> dsn~npm-project-version~1]
+// [itest -> dsn~npm-changed-dependency~1]
+// [itest -> dsn~npm-dependency-licenses~1]
+// [itest -> dsn~npm-dependency-additional-information~1]
 class NpmSourceAnalyzerTest {
     @Test
     void test() {

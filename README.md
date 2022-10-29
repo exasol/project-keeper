@@ -141,6 +141,18 @@ version: 1.2.3
 
 You must specify the project version explicitly, `version > fromSource` is not supported for Golang projects.
 
+## NPM Projects
+
+Project Keeper supports project using the Node Package Manager (NPM). For NPM projects create a `.project-keeper.yml` like this:
+
+```yaml
+sources:
+  - type: npm
+    path: package.json
+```
+
+Project Keeper will read the version of your project from file `package.json`.
+
 ## Usage
 
 ### Maven Plugin

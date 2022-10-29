@@ -7,6 +7,7 @@ import com.exasol.projectkeeper.shared.dependencies.License;
 
 import jakarta.json.JsonObject;
 
+//[impl -> dsn~npm-dependency-licenses~1]
 class NpmLicense {
 
     private static final Pattern PATTERN = Pattern.compile("^(.+)@([0-9]+(\\.[0-9]+)*+)$");

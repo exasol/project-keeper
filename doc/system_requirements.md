@@ -215,7 +215,6 @@ PK can be integrated into the maven lifecycle. By that, it can break the Continu
 Needs: dsn
 
 ### Support for Golang Project
-
 `feat~golang-project-support~1`
 
 PK supports Golang projects.
@@ -223,7 +222,6 @@ PK supports Golang projects.
 Needs: req
 
 #### Get Project Version
-
 `req~golang-project-version~1`
 
 PK can get the project version for Golang projects.
@@ -247,5 +245,43 @@ PK can retrieve changed Golang dependencies that where added, updated or removed
 Covers:
 
 * `feat~golang-project-support~1`
+
+Needs: dsn
+
+### Support for NPM Projects
+`feat~npm-project-support~1`
+
+Project Keeper supports project using the Node Package Manager (NPM).
+
+Needs: req
+
+#### Get Project Version
+`req~npm-project-version~1`
+
+PK can get the project version for NPM projects.
+
+Needs: dsn
+
+#### Get Additional Information For Each Dependency
+`req~npm-dependency-additional-information~1`
+
+PK can retrieve the URL for downloading the artifacts of each NPM dependency.
+
+Needs: dsn
+
+#### Get Licenses of Dependencies
+`req~npm-dependency-licenses~1`
+
+PK can retrieve the licenses of NPM dependencies.
+
+Needs: dsn
+
+#### Get Changed Dependency
+`req~npm-changed-dependency~1`
+
+PK can retrieve changed NPM dependencies that where added, updated or removed since the last release.
+
+Covers:
+* `feat~npm-project-support~1`
 
 Needs: dsn
