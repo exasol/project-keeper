@@ -1,0 +1,2 @@
+To check for updates and to update plugin version inside the templates in this
+folder run can class TemplateUpdater as java application.

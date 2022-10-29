@@ -43,6 +43,9 @@ public class TemplateUpdater {
     }
 
     private void process(final Path file) {
+        if (!file.toString().endsWith(".xml")) {
+            return;
+        }
         final Document pom = this.pomFileIo.parsePomFile(file);
         final String version = getText(pom, VERSION_XPATH);
         final String latest = getLatestVersion(pom);
