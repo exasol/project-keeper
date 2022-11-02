@@ -38,15 +38,14 @@ class PomFileReaderTest {
 
     @Test
     void failFile() throws IOException {
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> PomFileReader.parse(this.tempDir.resolve("abc.xml")));
-        assertThat(exception.getMessage(), startsWith("E-PK-CORE-107: Failed to read pom file "));
+        final Path pomFile = this.tempDir.resolve("non-existing-file.xml");
+        final Exception ex = assertThrows(IllegalStateException.class, () -> PomFileReader.parse(pomFile));
+        assertThat(ex.getMessage(), startsWith("E-PK-CORE-107: Failed to read pom file "));
     }
 
     @Test
     void failString() throws IOException {
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> PomFileReader.parse("blabla"));
-        assertThat(exception.getMessage(), startsWith("E-PK-CORE-108: Failed to read pom from string 'blabla'."));
+        final Exception ex = assertThrows(IllegalStateException.class, () -> PomFileReader.parse("invalid content"));
+        assertThat(ex.getMessage(), startsWith("E-PK-CORE-108: Failed to read pom from string 'invalid content'."));
     }
 }

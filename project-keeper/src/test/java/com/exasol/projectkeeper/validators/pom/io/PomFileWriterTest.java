@@ -51,9 +51,10 @@ class PomFileWriterTest {
     @Test
     void failFile() {
         final Path pomFile = this.tempDir.resolve("non/existing/sample.xml");
-        final Exception exception = assertThrows(IllegalStateException.class,
-                () -> PomFileWriter.writeFile(document(), pomFile));
-        assertThat(exception.getMessage(), startsWith("F-PK-CORE-100: Failed to write POM XML to file "));
+        final Document document = document();
+        final Exception ex = assertThrows(IllegalStateException.class,
+                () -> PomFileWriter.writeFile(document, pomFile));
+        assertThat(ex.getMessage(), startsWith("F-PK-CORE-100: Failed to write POM XML to file "));
     }
 
     @Test
@@ -61,9 +62,9 @@ class PomFileWriterTest {
         final Transformer transformer = mock(Transformer.class);
         doThrow(new TransformerException("")).when(transformer).transform(any(), any());
         final PomFileWriter testee = new PomFileWriter(transformer);
-        final Exception exception = assertThrows(IllegalStateException.class,
-                () -> testee.writeToString(document()));
-        assertThat(exception.getMessage(), equalTo("F-PK-CORE-106: Failed to convert POM XML document to string."));
+        final Document document = document();
+        final Exception ex = assertThrows(IllegalStateException.class, () -> testee.writeToString(document));
+        assertThat(ex.getMessage(), equalTo("F-PK-CORE-106: Failed to convert POM XML document to string."));
     }
 
     private Document document() {
