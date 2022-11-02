@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.validators.pom;
+package com.exasol.projectkeeper.validators.pom.io;
 
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
@@ -7,6 +7,7 @@ import java.nio.file.*;
 import java.util.logging.Logger;
 
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -27,10 +28,14 @@ public class TemplateUpdater {
         new TemplateUpdater().update(Paths.get("src/main/resources/maven_templates"));
     }
 
-    private final PomFileIO pomFileIo;
+    private final PomFileWriter pomFileWriter;
+    private final PomFileReader pomFileReader;
 
-    TemplateUpdater() {
-        this.pomFileIo = new PomFileIO().property(OutputKeys.OMIT_XML_DECLARATION, "yes");
+    TemplateUpdater() throws IllegalStateException {
+        final Transformer transformer = PomFileWriter.createTransformer();
+        transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+        this.pomFileWriter = new PomFileWriter(transformer);
+        this.pomFileReader = PomFileReader.instance();
     }
 
     private void update(final Path path) {
@@ -46,13 +51,13 @@ public class TemplateUpdater {
         if (!file.toString().endsWith(".xml")) {
             return;
         }
-        final Document pom = this.pomFileIo.parsePomFile(file);
+        final Document pom = this.pomFileReader.parseFile(file);
         final String version = getText(pom, VERSION_XPATH);
         final String latest = getLatestVersion(pom);
         if ((version == null) || !version.equals(latest)) {
             LOGGER.info("- " + file.getFileName() + ": Updating version " + version + " -> " + latest);
             runXPath(pom, VERSION_XPATH).setTextContent(latest);
-            this.pomFileIo.writePomFile(pom, file);
+            this.pomFileWriter.writeToFile(pom, file);
         }
     }
 

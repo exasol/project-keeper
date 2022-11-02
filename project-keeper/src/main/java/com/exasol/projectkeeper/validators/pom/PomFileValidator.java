@@ -19,6 +19,8 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.OwnVersionValidator;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator;
 import com.exasol.projectkeeper.validators.finding.*;
+import com.exasol.projectkeeper.validators.pom.io.PomFileReader;
+import com.exasol.projectkeeper.validators.pom.io.PomFileWriter;
 import com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper;
 
 /**
@@ -86,7 +88,7 @@ public class PomFileValidator implements Validator {
     @Override
     public List<ValidationFinding> validate() {
         try {
-            final Document pom = new PomFileIO().parsePomFile(this.pomFilePath);
+            final Document pom = PomFileReader.parse(this.pomFilePath);
             final String version = getProjectVersion(pom);
             final String artifactId = getRequiredTextValue(pom, XPath.ARTIFACT_ID) + "-generated-parent";
             final String groupId = getGroupId(pom);
@@ -177,8 +179,7 @@ public class PomFileValidator implements Validator {
     private List<ValidationFinding> wrapFindingsWithGroupThatWritesPom(final Document pom,
             final List<ValidationFinding> findings) {
         if (hasFindingWithFix(findings)) {
-            return List.of(
-                    new ValidationFindingGroup(findings, () -> new PomFileIO().writePomFile(pom, this.pomFilePath)));
+            return List.of(new ValidationFindingGroup(findings, () -> PomFileWriter.writeFile(pom, this.pomFilePath)));
         } else {
             return findings;
         }

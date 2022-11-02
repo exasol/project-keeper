@@ -31,6 +31,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
+import com.exasol.projectkeeper.validators.pom.io.PomFileReader;
 import com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper;
 
 //[utest->dsn~pom-file-validator~1]
@@ -236,7 +237,7 @@ class PomFileValidatorTest {
     void updateReferenceToProjectKeeperMavenPlugin() {
         getTestModel().withProjectKeeperPlugin("0.0.1").writeAsPomToProject(this.tempDir);
         runFix(null);
-        final Document pom = new PomFileIO().parsePomFile(this.tempDir.resolve("pom.xml"));
+        final Document pom = PomFileReader.parse(this.tempDir.resolve("pom.xml"));
         final String version = XPathErrorHandlingWrapper //
                 .runXPath(pom, PomFileValidator.XPath.PROJECT_KEEPER_VERSION) //
                 .getTextContent();
