@@ -52,8 +52,7 @@ public class TemplateUpdater {
         if ((version == null) || !version.equals(latest)) {
             LOGGER.info("- " + file.getFileName() + ": Updating version " + version + " -> " + latest);
             runXPath(pom, VERSION_XPATH).setTextContent(latest);
-            final Path out = file.getParent().resolve(file.getFileName() + ".out");
-            this.pomFileIo.writePomFile(pom, out);
+            this.pomFileIo.writePomFile(pom, file);
         }
     }
 
