@@ -111,7 +111,8 @@ public class PomFileValidator implements Validator {
         final Node node = runXPath(pom, XPath.PROJECT_KEEPER_VERSION);
         if (node == null) {
             return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-151") //
-                    .message("Pom file contains no reference to project-keeper-maven-plugin.") //
+                    .message("Pom file {{file}} contains no reference to project-keeper-maven-plugin.",
+                            this.pomFilePath) //
                     .toString()) //
                     .optional(true) //
                     .build());
