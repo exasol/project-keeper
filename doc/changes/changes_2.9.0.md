@@ -9,6 +9,7 @@ Support for NPM projects and some additional minor improvements.
 ## Features
 
 * #387: Updated plugin versions for generated files `pk_generated_parent.xml`.
+* #390: Reporting removed Go dependencies as type "unknown".
 * #394: Added requirements and documentation for NPM project support.
 * #388: Added path of POM file to warning message W-PK-CORE-151.
 * #373: Added support for NPM projects.

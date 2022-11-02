@@ -8,7 +8,7 @@ public interface BaseDependency {
     /** @return name of the module of the dependency */
     String getName();
 
-    /** Type of a {@link ProjectDependency}. */
+    /** Type of the dependency */
     public enum Type {
         /** Compile dependency. */
         COMPILE("Compile Dependency Updates"),
@@ -19,7 +19,9 @@ public interface BaseDependency {
         /** Plugin */
         PLUGIN("Plugin Dependency Updates"),
         /** Development */
-        DEV("Development Dependency Updates");
+        DEV("Development Dependency Updates"),
+        /** Unknown used for removed Golang dependencies as Go cannot detect the type anymore. */
+        UNKNOWN("Other Dependency Updates");
 
         private final String header;
 
