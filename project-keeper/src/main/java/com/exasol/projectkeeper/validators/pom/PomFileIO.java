@@ -26,9 +26,6 @@ class PomFileIO {
 
     private final Map<String, String> properties = new HashMap<>();
 
-    PomFileIO() {
-    }
-
     PomFileIO property(final String key, final String value) {
         this.properties.put(key, value);
         return this;
