@@ -218,8 +218,8 @@ class PomFileValidatorTest {
     void noReferenceToProjectKeeperPlugin() {
         getTestModel().writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result,
-                hasFindingWithMessage("W-PK-CORE-151: Pom file contains no reference to project-keeper-maven-plugin."));
+        assertThat(result, hasFindingWithMessageMatchingRegex(
+                "W-PK-CORE-151: Pom file .*pom.xml contains no reference to project-keeper-maven-plugin."));
     }
 
     // [utest->dsn~verify-own-version~1]
