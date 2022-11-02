@@ -251,7 +251,7 @@ Needs: dsn
 ### Support for NPM Projects
 `feat~npm-project-support~1`
 
-Project Keeper supports project using the Node Package Manager (NPM).
+Project Keeper supports projects using the Node Package Manager (NPM).
 
 Needs: req
 

@@ -143,7 +143,7 @@ You must specify the project version explicitly, `version > fromSource` is not s
 
 ## NPM Projects
 
-Project Keeper supports project using the Node Package Manager (NPM). For NPM projects create a `.project-keeper.yml` like this:
+Project Keeper supports projects using the Node Package Manager (NPM). For NPM projects create a `.project-keeper.yml` like this:
 
 ```yaml
 sources:
