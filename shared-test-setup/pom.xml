@@ -35,17 +35,17 @@
         </dependency>
     </dependencies>
     <build>
-      <plugins>
-        <plugin>
-            <groupId>org.sonatype.ossindex.maven</groupId>
-            <artifactId>ossindex-maven-plugin</artifactId>
-            <configuration>
-                <excludeVulnerabilityIds>
-                    <!-- Affects multiple subprojects, see ../pom.xml. -->
-                    <exclude>CVE-2022-38752</exclude>
-                </excludeVulnerabilityIds>
-            </configuration>
-        </plugin>
-      </plugins>
+        <plugins>
+            <plugin>
+                <groupId>org.sonatype.ossindex.maven</groupId>
+                <artifactId>ossindex-maven-plugin</artifactId>
+                <configuration>
+                    <excludeVulnerabilityIds>
+                        <!-- Affects multiple subprojects, see ../pom.xml. -->
+                        <exclude>CVE-2022-38752</exclude>
+                    </excludeVulnerabilityIds>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
