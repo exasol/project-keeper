@@ -28,7 +28,7 @@ Consider, for example, the plugin validator for the pom file. If the pom file va
 
 Covers:
 
-* `feat~fix-findings~1`
+* [`feat~fix-findings~1`](system_requirements.md#fix-findings)
 
 Needs: impl
 
@@ -45,7 +45,7 @@ Rationale: Releasing a new version of PK should not break automated builds of ex
 
 Covers:
 
-* `feat~self-update~1`
+* [`feat~self-update~1`](system_requirements.md#self-update)
 
 Needs: impl, utest, itest
 
@@ -61,7 +61,7 @@ Rationale: CLI users can use PK by executing a jar file with arbitrary location 
 
 Covers:
 
-* `feat~self-update~1`
+* [`feat~self-update~1`](system_requirements.md#self-update)
 
 Needs: impl, utest, itest
 
@@ -73,7 +73,7 @@ We decided to add the template as resources and describe them in a Java structur
 
 Covers:
 
-* `req~verify-existence-of-files~1`
+* [`req~verify-existence-of-files~1`](system_requirements.md#verify-existence-of-files)
 
 Needs: impl, utest, itest
 
@@ -85,7 +85,7 @@ For configuring the deleted files validator we decided on a Java API. For each d
 
 Covers:
 
-* `req~verify-non-existence-of-files~1`
+* [`req~verify-non-existence-of-files~1`](system_requirements.md#verify-non-existence-of-files)
 
 Needs: impl, utest, itest
 
@@ -103,8 +103,8 @@ If a project needs a parent file, users can specify this parent in the PK config
 
 Covers:
 
-* `req~verify-mvn-plugins~1`
-* `req~verify-maven-dependencies~1`
+* [`req~verify-mvn-plugins~1`](system_requirements.md#verify-maven-plugins)
+* [`req~verify-maven-dependencies~1`](system_requirements.md#verify-maven-dependencies)
 
 Needs: impl, utest, itest
 
@@ -146,7 +146,7 @@ For validating the `changelog.md` file we first generate the expected content an
 
 Covers:
 
-* `req~verify-changelog-file~1`
+* [`req~verify-changelog-file~1`](system_requirements.md#verify-changelog.md-file)
 
 Needs: impl, utest, itest
 
@@ -162,7 +162,7 @@ We separated the crawling of the dependency information from the rendering of th
 
 Covers:
 
-* `req~verify-dependencies-file~1`
+* [`req~verify-dependencies-file~1`](system_requirements.md#verify-dependencies.md-file)
 
 Needs: impl, itest
 
@@ -176,7 +176,7 @@ Needs: impl, utest, itest
 
 Covers:
 
-* `req~verify-readme~1`
+* [`req~verify-readme~1`](system_requirements.md#verify-readme.md-file)
 
 ### License File Validator
 
@@ -188,7 +188,7 @@ Needs: impl, utest, itest
 
 Covers:
 
-* `req~verify-license-file~1`
+* [`req~verify-license-file~1`](system_requirements.md#verify-license-file)
 
 ## Gitignore Validator
 
@@ -198,7 +198,7 @@ Needs: impl, utest, itest
 
 Covers:
 
-* `req~verify-gitignore-file~1`
+* [`req~verify-gitignore-file~1`](system_requirements.md#verify-gitignore-file)
 
 ### Reading Project Dependencies
 
@@ -220,7 +220,7 @@ This plugin defines a maven goal named `verify` that checks if the project match
 
 Covers:
 
-* `feat~mvn-integration~1`
+* [`feat~mvn-integration~1`](system_requirements.md#maven-integration)
 
 Needs: impl, itest
 
@@ -232,7 +232,7 @@ This plugin defines a maven goal named `fix` that creates or updates the project
 
 Covers:
 
-* `feat~mvn-integration~1`
+* [`feat~mvn-integration~1`](system_requirements.md#maven-integration)
 
 Needs: impl, itest
 
@@ -246,7 +246,7 @@ We decided to group sets of validations into modules. These modules represent ty
 
 Covers:
 
-* `feat~configuration~1`
+* [`feat~configuration~1`](system_requirements.md#configuration)
 
 Needs: impl, utest
 
@@ -267,7 +267,7 @@ Rationale:
 
 Covers:
 
-* `feat~configuration~1`
+* [`feat~configuration~1`](system_requirements.md#configuration)
 
 Needs: impl, utest, itest
 
@@ -285,7 +285,7 @@ Golang does not store the version number in project files, e.g. `go.mod`. The ve
 
 Covers:
 
-* `req~golang-project-version~1`
+* [`req~golang-project-version~1`](system_requirements.md#get-project-version)
 
 Needs: impl, itest
 
@@ -301,12 +301,11 @@ go-licenses is a simple command line tool that outputs the license name and lice
 
 Covers:
 
-* `req~golang-dependency-licenses~1`
+* [`req~golang-dependency-licenses~1`](system_requirements.md#get-licenses-of-dependencies)
 
 Needs: impl, itest
 
 ### Get Changed Dependency
-
 `dsn~golang-changed-dependency~1`
 
 PK parses the `go.mod` file to get the changed dependencies since the last release. PK ignores dependencies marked with an `// indirect` comment.
@@ -320,6 +319,52 @@ Rationale:
 
 Covers:
 
-* `req~golang-changed-dependency~1`
+* [`req~golang-changed-dependency~1`](system_requirements.md#get-changed-dependency)
+
+Needs: impl, utest, itest
+
+## NPM Support
+
+### Get Project Version
+`dsn~npm-project-version~1`
+
+PK reads the project version from file `package.json`.
+
+Covers:
+* [`req~npm-project-version~1`](system_requirements.md#get-project-version)
+
+Needs: impl, itest
+
+### Get Additional Information About Dependencies
+`dsn~npm-dependency-additional-information~1`
+
+PK uses the command `npm list` for retrieving additional information of the dependencies such as the URL for obtaining the artifacts of the dependency.
+
+Covers:
+* [`req~npm-dependency-additional-information~1`](system_requirements.md#get-additional-information-for-each-dependency)
+
+Needs: impl, utest, itest
+
+### Get Licenses of Dependencies
+`dsn~npm-dependency-licenses~1`
+
+PK uses the NPM `license-checker` for retrieving the licenses of the dependencies.
+
+Rationale:
+
+NPM `license-checker` is a simple command line tool that outputs the license name and license URL as Json. Using `npx` enables to use the `license-checker` even without installation.
+
+Covers:
+* [`req~npm-dependency-licenses~1`](system_requirements.md#get-licenses-of-dependencies)
+
+Needs: impl, utest, itest
+
+### Get Changed Dependency
+`dsn~npm-changed-dependency~1`
+
+PK parses file the `package.json` to get the changed dependencies since the last release.
+
+Covers:
+* [`req~npm-changed-dependency~1`](system_requirements.md#get-changed-dependency)
 
 Needs: impl, utest, itest

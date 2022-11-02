@@ -36,6 +36,7 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         return sources.stream().map(source -> analyzeSource(projectDir, source)).collect(toList());
     }
 
+    // [impl -> dsn~npm-project-version~1]
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source) {
         final Path path = source.getPath();
         final PackageJson current = this.npmServices.readPackageJson(projectDir.resolve(path));
