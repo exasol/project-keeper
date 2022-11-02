@@ -104,7 +104,7 @@ public class GoBinary {
 
     private static Path readGoPath() {
         final SimpleProcess process = SimpleProcess.start(List.of("go", "env", "GOPATH"));
-        process.waitUntilFinished(Duration.ofSeconds(1));
+        process.waitUntilFinished(Duration.ofSeconds(5));
         final Path goPath = Path.of(process.getOutputStreamContent().trim());
         LOGGER.fine(() -> "Found GOPATH '" + goPath + "'");
         return goPath;
