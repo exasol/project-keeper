@@ -61,7 +61,7 @@ PK gets its own version from source package. Unfortunatly this isn't available i
 
 ## Updating Maven Plugins Versions in Template Resources
 
-For Maven projects PK creates a file `pk_generated_parent.pom` containing sections for all Maven plugins required for the current project depending on the PK modules selected in file `.project-keeper.yml`. PK copies each plugin section from a corresponsing resource file in folder [`project-keeper/src/main/resources/maven_templates/`](../../blob/main/project-keeper/src/main/resources/maven_templates/).
+For Maven projects PK creates a file `pk_generated_parent.pom` containing sections for all Maven plugins required for the current project depending on the PK modules selected in file `.project-keeper.yml`. PK copies each plugin section from a corresponding resource file in folder `project-keeper/src/main/resources/maven_templates/`.
 
 Each Maven plugin is identified by its Maven coordinates group, artifact, and version. Here is an example from resource file `artifact-reference-checker-maven-plugin.xml`:
 ```xml
