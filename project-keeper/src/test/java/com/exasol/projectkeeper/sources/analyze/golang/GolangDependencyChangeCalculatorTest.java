@@ -1,16 +1,16 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,8 +18,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -33,28 +34,24 @@ class GolangDependencyChangeCalculatorTest {
     @Test
     void noChanges() {
         simulateChanges();
-        assertReport(calculate(), emptyList(), emptyList());
+        assertReport(calculate(), emptyMap());
     }
 
     @Test
     void singleCompileDependency() {
-        final DependencyChange change1 = change("dep1", "v1");
-        simulateChanges(change1);
-        assertReport(calculate(dep(change1, Type.COMPILE)), List.of(change1), emptyList());
+        verifySingleChange(change("dep1", "v1"), Type.COMPILE);
     }
 
     @Test
     void singleTestDependency() {
-        final DependencyChange change1 = change("dep1", "v1");
-        simulateChanges(change1);
-        assertReport(calculate(dep(change1, Type.TEST)), emptyList(), List.of(change1));
+        verifySingleChange(change("dep1", "v1"), Type.TEST);
     }
 
     @Test
     void golangCategorizedAsCompile() {
         final DependencyChange change1 = change("golang", "v1");
         simulateChanges(change1);
-        assertReport(calculate(), List.of(change1), List.of());
+        assertReport(calculate(), Type.COMPILE, change1);
     }
 
     @Test
@@ -62,8 +59,10 @@ class GolangDependencyChangeCalculatorTest {
         final DependencyChange testChange = change("dep1", "v1");
         final DependencyChange compileChange = change("dep2", "v2");
         simulateChanges(testChange, compileChange);
-        assertReport(calculate(dep(testChange, Type.TEST), dep(compileChange, Type.COMPILE)), List.of(compileChange),
-                List.of(testChange));
+        assertReport(calculate(dep(testChange, Type.TEST), //
+                dep(compileChange, Type.COMPILE)), //
+                Map.of(Type.COMPILE, List.of(compileChange), //
+                        Type.TEST, List.of(testChange)));
     }
 
     @Test
@@ -78,17 +77,20 @@ class GolangDependencyChangeCalculatorTest {
     void missingDependencyTypeValidSuffix() {
         final DependencyChange change1 = change("dep1/v1", "v1");
         simulateChanges(change1);
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculate());
-        assertThat(exception.getMessage(), startsWith(
-                "E-PK-CORE-159: Error finding type of module prefix 'dep1', all available dependencies: []."));
+        assertReport(calculate(), Map.of(Type.UNKNOWN, List.of(change1)));
     }
 
     @Test
     void dependencySuffixChanged() {
         final DependencyChange change1 = change("example.com/mod/v3", "v3.1.0");
         simulateChanges(change1);
-        assertReport(calculate(dep(change("example.com/mod/v2", "v2.0.0"), Type.TEST)), emptyList(),
-                List.of(change("example.com/mod/v3", "v3.1.0")));
+        assertReport(calculate(dep(change("example.com/mod/v2", "v2.0.0"), Type.TEST)),
+                Map.of(Type.TEST, List.of(change("example.com/mod/v3", "v3.1.0"))));
+    }
+
+    private void verifySingleChange(final DependencyChange change, final Type type) {
+        simulateChanges(change);
+        assertReport(calculate(dep(change, type)), type, change);
     }
 
     private ProjectDependency dep(final DependencyChange change, final Type type) {
@@ -103,15 +105,19 @@ class GolangDependencyChangeCalculatorTest {
                 .build();
     }
 
-    private void assertReport(final DependencyChangeReport report,
-            final List<DependencyChange> expectedCompileDependencies,
-            final List<DependencyChange> expectedTestDependencies) {
-        assertAll(() -> assertThat("plugin dependencies", report.getChanges(BaseDependency.Type.PLUGIN), hasSize(0)),
-                () -> assertThat("runtime dependencies", report.getChanges(BaseDependency.Type.RUNTIME), hasSize(0)),
-                () -> assertThat("compile dependencies", report.getChanges(BaseDependency.Type.COMPILE),
-                        containsInAnyOrder(expectedCompileDependencies.toArray(new DependencyChange[0]))),
-                () -> assertThat("test dependencies", report.getChanges(BaseDependency.Type.TEST),
-                        containsInAnyOrder(expectedTestDependencies.toArray(new DependencyChange[0]))));
+    private void assertReport(final DependencyChangeReport report, final Type type, final DependencyChange expected) {
+        assertReport(report, Map.of(type, List.of(expected)));
+    }
+
+    private void assertReport(final DependencyChangeReport report, final Map<Type, List<DependencyChange>> expected) {
+        for (final Type type : Type.values()) {
+            final List<DependencyChange> list = expected.get(type);
+            if (list == null) {
+                assertThat(report.getChanges(type), empty());
+            } else {
+                assertThat(report.getChanges(type), containsInAnyOrder(list.toArray(new DependencyChange[0])));
+            }
+        }
     }
 
     private void simulateChanges(final DependencyChange... dependencyChanges) {
