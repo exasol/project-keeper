@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 
+// [utest -> dsn~npm-changed-dependency~1]
 class NpmDependencyChangesTest {
 
     @Test

@@ -16,12 +16,14 @@ class NpmServices {
     private static final String NPM = "npm" + OsCheck.suffix(".cmd");
     private static final String NPX = "npx" + OsCheck.suffix(".cmd");
 
+    // [impl -> dsn~npm-dependency-licenses~1]
     static final ShellCommand LIST_DEPENDENCIES = ShellCommand.builder() //
             .command(NPM, "list") //
             .timeout(Duration.ofMinutes(2)) //
             .args("--location=project", "--depth=0", "--json") //
             .build();
 
+    // [impl -> dsn~npm-dependency-additional-information~1]
     static final ShellCommand LICENSE_CHECKER = ShellCommand.builder() //
             .command(NPX, "license-checker") //
             .timeout(Duration.ofMinutes(2)) //

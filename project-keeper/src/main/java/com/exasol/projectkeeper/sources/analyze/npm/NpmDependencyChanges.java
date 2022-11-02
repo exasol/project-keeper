@@ -12,6 +12,7 @@ import com.exasol.projectkeeper.sources.analyze.generic.DependencyChanges;
 /**
  * Services for handling NPM modules
  */
+// [impl -> dsn~npm-changed-dependency~1]
 public class NpmDependencyChanges {
 
     /**

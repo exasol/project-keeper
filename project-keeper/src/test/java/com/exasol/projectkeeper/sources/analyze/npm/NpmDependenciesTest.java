@@ -17,6 +17,8 @@ import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 
+// [utest -> dsn~npm-dependency-additional-information~1]
+// [utest -> dsn~npm-dependency-licenses~1]
 @ExtendWith(MockitoExtension.class)
 class NpmDependenciesTest {
 
