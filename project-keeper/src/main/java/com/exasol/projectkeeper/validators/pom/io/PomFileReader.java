@@ -80,7 +80,7 @@ public class PomFileReader {
     Document parseFile(final Path pomFile) {
         try (final InputStream pomFileStream = new FileInputStream(pomFile.toFile())) {
             final Document document = this.documentBuilder.parse(pomFileStream);
-            trimWhitespace(document); // otherwise, the formatter in output adds new-lines
+            trimWhitespace(document); // otherwise, the formatter adds new-lines to the output
             return document;
         } catch (final IOException | SAXException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-107") //
