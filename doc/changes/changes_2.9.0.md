@@ -1,4 +1,4 @@
-# Project Keeper 2.9.0, released 2022-??-??
+# Project Keeper 2.9.0, released 2022-11-02
 
 Code name: Support for NPM projects and minor improvements.
 
