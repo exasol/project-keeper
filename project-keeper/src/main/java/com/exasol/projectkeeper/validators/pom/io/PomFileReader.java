@@ -21,6 +21,7 @@ public class PomFileReader {
      * Read a pom file as XML document.
      *
      * @param file pom file
+     * @return {@link org.w3c.dom.Document} representing the POM file
      */
     public static Document parse(final Path file) {
         return instance().parseFile(file);
@@ -30,7 +31,7 @@ public class PomFileReader {
      * Read a pom file content as XML document.
      *
      * @param content content of a pom.xml file
-     * @return
+     * @return {@link org.w3c.dom.Document} representing the POM file
      */
     public static Document parse(final String content) {
         return instance().parseString(content);
@@ -62,6 +63,8 @@ public class PomFileReader {
      * <p>
      * Inspired by https://stackoverflow.com/a/33564346
      * </p>
+     *
+     * @param node XML node to be trimmed
      */
     public static void trimWhitespace(final Node node) {
         final NodeList children = node.getChildNodes();
