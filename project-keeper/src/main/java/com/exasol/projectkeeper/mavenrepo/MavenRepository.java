@@ -43,12 +43,21 @@ public class MavenRepository {
         }
     }
 
-    private static String url(final String root, final String artifact) {
-        return root + "/solrsearch/select?q=g:" + GROUP_ID + "+AND+a:" + artifact + "&wt=json";
+    private static String url(final String artifactSuffix) {
+        return url(GROUP_ID, ARTIFACT_PREFIX + artifactSuffix);
     }
 
-    private static String url(final String artifactSuffix) {
-        return url(DEFAULT_REPOSITORY_URL, ARTIFACT_PREFIX + artifactSuffix);
+    /**
+     * @param group    Maven group ID
+     * @param artifact Maven artifact ID
+     * @return URL to query latest version
+     */
+    public static String url(final String group, final String artifact) {
+        return url(DEFAULT_REPOSITORY_URL, group, artifact);
+    }
+
+    private static String url(final String root, final String group, final String artifact) {
+        return root + "/solrsearch/select?q=g:" + group + "+AND+a:" + artifact + "&wt=json";
     }
 
     static final String DEFAULT_REPOSITORY_URL = "https://search.maven.org";

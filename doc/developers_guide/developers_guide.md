@@ -59,6 +59,23 @@ PK gets its own version from source package. Unfortunatly this isn't available i
 -Dcom.exasol.projectkeeper.ownVersion=2.7.0
 ```
 
+## Updating Maven Plugins Versions in Template Resources
+
+For Maven projects PK creates a file `pk_generated_parent.pom` containing sections for all Maven plugins required for the current project depending on the PK modules selected in file `.project-keeper.yml`. PK copies each plugin section from a corresponding resource file in folder `project-keeper/src/main/resources/maven_templates/`.
+
+Each Maven plugin is identified by its Maven coordinates group, artifact, and version. Here is an example from resource file `artifact-reference-checker-maven-plugin.xml`:
+```xml
+<plugin>
+    <groupId>com.exasol</groupId>
+    <artifactId>artifact-reference-checker-maven-plugin</artifactId>
+    <version>0.4.0</version>
+</plugin>
+```
+
+If you want to check if newer versions of some of the plugins are available and potentially update the plugin versions in the templates you can run the java class `TemplateUpdater` as java application.
+
+`TemplateUpdater` will inspect the template files and replace the plugin version by the latest version available from maven-central.
+
 ## Requirement Tracing
 
 ```sh
