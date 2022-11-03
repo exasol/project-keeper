@@ -4,7 +4,6 @@ import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LICENSE_C
 import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LIST_DEPENDENCIES;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
@@ -63,11 +62,8 @@ class NpmServicesTest {
     void previousNotFound() throws FileNotFoundException {
         final GitRepository repo = mock(GitRepository.class);
         when(repo.getFileFromCommit(any(), any())).thenThrow(new FileNotFoundException());
-        when(this.previousTag.getTag()).thenReturn(PREVIOUS_VERSION);
         final PackageJson current = currentPackageJson(PACKAGE_JSON_FILE);
-        final Exception exception = assertThrows(IllegalStateException.class, () -> retrievePrevious(repo, current));
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-134: File " + PACKAGE_JSON_FILE + " does not exist at tag '" + PREVIOUS_VERSION + "'"));
+        assertThat(retrievePrevious(repo, current), nullValue());
     }
 
     private PackageJson currentPackageJson(final Path relative) {
