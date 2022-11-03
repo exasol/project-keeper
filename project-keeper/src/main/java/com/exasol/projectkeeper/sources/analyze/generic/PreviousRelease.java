@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 
@@ -70,10 +69,7 @@ public class PreviousRelease {
         try {
             return repo.getFileFromCommit(this.file, tag.getCommit());
         } catch (final FileNotFoundException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-134")
-                    .message("File {{module file}} does not exist at tag {{tag}}", //
-                            this.file, tag.getTag())
-                    .toString(), exception);
+            return null;
         }
     }
 }

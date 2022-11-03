@@ -9,6 +9,7 @@ Fixed some bugs.
 ## Bug Fix
 
 * #397: Categorized Go dependencies as 'unknown' if module name does not contain version number
+* #398: Fixed dependency change report if file `package.json` or `go.mod` is missing in previous release.
 
 ## Dependency Updates
 
