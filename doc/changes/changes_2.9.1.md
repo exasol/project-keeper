@@ -1,4 +1,4 @@
-# Project Keeper 2.9.1, released 2022-??-??
+# Project Keeper 2.9.1, released 2022-11-04
 
 Code name: Minor Changes
 
@@ -10,6 +10,7 @@ Fixed some bugs.
 
 * #397: Categorized Go dependencies as 'unknown' if module name does not contain version number
 * #398: Fixed dependency change report if file `package.json` or `go.mod` is missing in previous release.
+* #400: Improved error handling for missing attributes in `package.json`.
 
 ## Dependency Updates
 
