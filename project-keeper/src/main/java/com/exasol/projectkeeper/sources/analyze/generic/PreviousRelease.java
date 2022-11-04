@@ -4,7 +4,6 @@ import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.Optional;
 
-import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 
@@ -62,18 +61,15 @@ public class PreviousRelease {
     public Optional<String> getContent() {
         try (final GitRepository repo = this.git.getRepository(this.projectDir)) {
             return repo.findLatestReleaseCommit(this.version) //
-                    .map(tag -> getContent(repo, tag));
+                    .flatMap(tag -> getContent(repo, tag));
         }
     }
 
-    private String getContent(final GitRepository repo, final TaggedCommit tag) {
+    private Optional<String> getContent(final GitRepository repo, final TaggedCommit tag) {
         try {
-            return repo.getFileFromCommit(this.file, tag.getCommit());
+            return Optional.of(repo.getFileFromCommit(this.file, tag.getCommit()));
         } catch (final FileNotFoundException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-134")
-                    .message("File {{module file}} does not exist at tag {{tag}}", //
-                            this.file, tag.getTag())
-                    .toString(), exception);
+            return Optional.empty();
         }
     }
 }

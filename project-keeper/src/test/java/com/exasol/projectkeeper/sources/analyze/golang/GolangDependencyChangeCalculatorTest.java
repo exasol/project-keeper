@@ -3,8 +3,8 @@ package com.exasol.projectkeeper.sources.analyze.golang;
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
@@ -69,8 +69,7 @@ class GolangDependencyChangeCalculatorTest {
     void missingDependencyTypeUnkownSuffix() {
         final DependencyChange change1 = change("dep1", "v1");
         simulateChanges(change1);
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculate());
-        assertThat(exception.getMessage(), startsWith("E-PK-CORE-158: Unknown suffix for module 'dep1'."));
+        assertReport(calculate(), Type.UNKNOWN, change1);
     }
 
     @Test
