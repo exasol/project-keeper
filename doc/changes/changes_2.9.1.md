@@ -1,10 +1,10 @@
 # Project Keeper 2.9.1, released 2022-11-04
 
-Code name: Minor Changes
+Code name: Bug Fixes
 
 ## Summary
 
-Fixed some bugs.
+Fixed bugs #397, #398 and #400, see below.
 
 ## Bug Fix
 
