@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 
-import jakarta.json.JsonObject;
-import jakarta.json.JsonValue;
+import jakarta.json.*;
 
 final class PackageJsonReader {
 
@@ -38,7 +38,7 @@ final class PackageJsonReader {
 
     PackageJson read(final Path path, final JsonObject content) {
         final String module = retrieveModuleName(content);
-        final String version = content.getString("version");
+        final String version = retrieveModuleVersion(content);
         final List<VersionedDependency> dependencies = new ArrayList<>();
         dependencies.addAll(versionedDependencies(content, DependencyKey.DEV));
         dependencies.addAll(versionedDependencies(content, DependencyKey.COMPILE));
@@ -48,11 +48,27 @@ final class PackageJsonReader {
     private static final String MODULE_PREFIX = "@exasol/";
 
     private String retrieveModuleName(final JsonObject packageJson) {
-        final String raw = packageJson.getString("name");
-        if (!raw.startsWith(MODULE_PREFIX)) {
-            return raw;
+        final JsonString raw = packageJson.getJsonString("name");
+        if (raw == null) {
+            throw new IllegalArgumentException(
+                    ExaError.messageBuilder("E-PK-CORE-163").message("Missing attribute 'name' in package.json.")
+                            .mitigation("Add a 'name' attribute.").toString());
         }
-        return raw.substring(MODULE_PREFIX.length());
+        final String rawString = raw.getString();
+        if (!rawString.startsWith(MODULE_PREFIX)) {
+            return rawString;
+        }
+        return rawString.substring(MODULE_PREFIX.length());
+    }
+
+    private String retrieveModuleVersion(final JsonObject content) {
+        final JsonString version = content.getJsonString("version");
+        if (version == null) {
+            throw new IllegalArgumentException(
+                    ExaError.messageBuilder("E-PK-CORE-164").message("Missing attribute 'version' in package.json.")
+                            .mitigation("Add a 'version' attribute.").toString());
+        }
+        return version.getString();
     }
 
     private List<VersionedDependency> versionedDependencies(final JsonObject packageJson, final DependencyKey key) {

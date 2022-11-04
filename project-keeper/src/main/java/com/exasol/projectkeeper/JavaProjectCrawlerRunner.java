@@ -77,7 +77,7 @@ public class JavaProjectCrawlerRunner {
             if (!proc.waitFor(90, TimeUnit.SECONDS)) {
                 final String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
-                        .message("Timeout while executing command {{executed command|uq}}. Output was {{output}}",
+                        .message("Timeout while executing command {{executed command|u}}. Output was {{output}}",
                                 commandParts, output)
                         .toString());
             }
@@ -86,7 +86,7 @@ public class JavaProjectCrawlerRunner {
             if (exitCode != 0) {
                 LOGGER.log(Level.SEVERE, output);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78").message(
-                        "Failed to run command {{executed command|uq}}, exit code was {{exit code}}. Output:\n{{output}}",
+                        "Failed to run command {{executed command|u}}, exit code was {{exit code}}. Output:\n{{output}}",
                         commandParts, exitCode, output).toString());
             }
             return new ResponseCoder().decodeResponse(output);

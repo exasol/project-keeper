@@ -26,7 +26,7 @@ import com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper;
 /**
  * Validator for the pom.xml file.
  */
-//[impl->dsn~pom-file-validator~1]
+// [impl->dsn~pom-file-validator~1]
 public class PomFileValidator implements Validator {
 
     private static final String PARENT_POM_MITIGATION = "Check the project-keeper user guide if you need a parent pom.";
@@ -168,7 +168,7 @@ public class PomFileValidator implements Validator {
     private Optional<ValidationFinding> validationDescriptionExists(final Document document) {
         if (runXPath(document, XPath.DESCRIPTION) == null) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-120")
-                    .message("Invalid pom file {{file}}: Missing required property {{property|uq}}.",
+                    .message("Invalid pom file {{file}}: Missing required property {{property|u}}.",
                             this.projectDirectory.relativize(this.pomFilePath), XPath.DESCRIPTION)
                     .mitigation("Please manually add a description.").toString()).build());
         } else {
@@ -200,9 +200,9 @@ public class PomFileValidator implements Validator {
                 .findFirst() //
                 .orElseThrow(() -> new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-111")
                         .message("Failed to detect project version.")
-                        .mitigation("Please either set {{xpath1|uq}} or {{xpath2}} in file {{pom file|uq}}",
+                        .mitigation("Please either set {{xpath1|u}} or {{xpath2}} in file {{pom file|u}}",
                                 XPath.VERSION, XPath.PARENT_VERSION, this.projectDirectory.relativize(this.pomFilePath))
-                        .mitigation("or add version to file {{configuration file|uq}}.",
+                        .mitigation("or add version to file {{configuration file|u}}.",
                                 ProjectKeeperConfigReader.CONFIG_FILE_NAME)
                         .toString()));
     }
@@ -267,7 +267,7 @@ public class PomFileValidator implements Validator {
         if ((node == null) || !version.equals(node.getTextContent())) {
             final SimpleValidationFinding.Builder findingBuilder = SimpleValidationFinding
                     .withMessage(ExaError.messageBuilder("E-PK-CORE-118")
-                            .message("Invalid pom file {{file}}: Invalid {{parent version xpath|uq}}." //
+                            .message("Invalid pom file {{file}}: Invalid {{parent version xpath|u}}." //
                                     + " Expected value is {{expected}}." //
                                     + MUST_DECLARE_GENERATED_PARENT, //
                                     this.projectDirectory.relativize(this.pomFilePath), //
@@ -294,7 +294,7 @@ public class PomFileValidator implements Validator {
         final Node node = runXPath(parentTag, "relativePath");
         if ((node == null) || !comparePaths(expectedValue, Path.of(node.getTextContent()))) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-112").message(
-                    "Invalid pom file {{file}}: Invalid {{parent relative path|uq}}. Expected value is {{expected}}."
+                    "Invalid pom file {{file}}: Invalid {{parent relative path|u}}. Expected value is {{expected}}."
                             + MUST_DECLARE_GENERATED_PARENT, //
                     this.projectDirectory.relativize(this.pomFilePath), //
                     XPath.PARENT_RELATIVE_PATH, //
@@ -315,7 +315,7 @@ public class PomFileValidator implements Validator {
         final Node node = runXPath(parentTag, property);
         if ((node == null) || !node.getTextContent().equals(expectedValue)) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-104")
-                    .message("Invalid pom file {{file}}: Invalid {{xpath|uq}}." //
+                    .message("Invalid pom file {{file}}: Invalid {{xpath|u}}." //
                             + " Expected value is {{expected}}." //
                             + MUST_DECLARE_GENERATED_PARENT, //
                             this.projectDirectory.relativize(this.pomFilePath), //
@@ -362,7 +362,7 @@ public class PomFileValidator implements Validator {
                 throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-102")
                         .message("Invalid pom file {{file}}: Missing required property 'groupId'.",
                                 this.projectDirectory.relativize(this.pomFilePath))
-                        .mitigation("Please either set {{groupId|uq}} or {{parent groupId|uq}}.", XPath.GROUP_ID,
+                        .mitigation("Please either set {{groupId|u}} or {{parent groupId|u}}.", XPath.GROUP_ID,
                                 XPath.PARENT_GROUP_ID)
                         .toString());
             }
@@ -373,7 +373,7 @@ public class PomFileValidator implements Validator {
         final Node node = XPathErrorHandlingWrapper.runXPath(pom, xPath);
         if (node == null) {
             throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-101")
-                    .message("Invalid pom file {{file}}: Missing required property {{property|uq}}.",
+                    .message("Invalid pom file {{file}}: Missing required property {{property|u}}.",
                             this.projectDirectory.relativize(this.pomFilePath), xPath)
                     .mitigation("Please set the property manually.").toString());
         }

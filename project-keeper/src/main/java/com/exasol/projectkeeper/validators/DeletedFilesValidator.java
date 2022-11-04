@@ -55,13 +55,13 @@ public class DeletedFilesValidator implements Validator {
 
     private String getFileExistsErrorMessage(final Path fileThatMustNotExist, final String reason) {
         return ExaError.messageBuilder("E-PK-CORE-26")
-                .message("{{FILE}} exists but must not exist. Reason: {{REASON|uq}}", fileThatMustNotExist.toString(),
+                .message("{{FILE}} exists but must not exist. Reason: {{REASON|u}}", fileThatMustNotExist.toString(),
                         reason)
                 .toString();
     }
 
     private SimpleValidationFinding.Fix getFix(final String fileName, final File file) {
-        return (Logger log) -> {
+        return (final Logger log) -> {
             try {
                 Files.delete(file.toPath());
             } catch (final IOException exception) {

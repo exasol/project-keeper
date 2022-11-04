@@ -17,7 +17,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 /**
  * {@link Validator} for the dependencies.md file.
  */
-//[impl->dsn~depnedency.md-file-validator~1]
+// [impl->dsn~depnedency.md-file-validator~1]
 public class DependenciesValidator implements Validator {
     private final Path dependenciesFile;
     private final List<AnalyzedSource> sources;
@@ -71,7 +71,7 @@ public class DependenciesValidator implements Validator {
             final var actualContent = Files.readString(this.dependenciesFile);
             if (!actualContent.equals(expectedDependenciesPage)) {
                 return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-53").message(
-                        "The dependencies.md file has outdated content.\nExpected content:\n{{expected content|uq}}",
+                        "The dependencies.md file has outdated content.\nExpected content:\n{{expected content|u}}",
                         expectedDependenciesPage).toString())//
                         .andFix(getFix(expectedDependenciesPage)).build());
             }

@@ -47,7 +47,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
                 () -> assertThat(output,
                         containsString("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
                 () -> assertThat(output, containsString(
-                        "E-PK-CORE-105: Invalid pom file pom.xml: Missing required property finalName property in maven-assembly-plugin.")));
+                        "E-PK-CORE-105: Invalid pom file 'pom.xml': Missing required property finalName property in maven-assembly-plugin.")));
     }
 
     @Test
