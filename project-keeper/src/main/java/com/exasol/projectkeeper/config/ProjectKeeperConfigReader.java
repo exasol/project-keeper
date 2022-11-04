@@ -217,7 +217,7 @@ public class ProjectKeeperConfigReader {
                     .map(String::toLowerCase).collect(Collectors.joining(", "));
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-84")
                     .message(INVALID_CONFIG_FILE + " Unsupported source type {{type}}.", rawType)
-                    .mitigation("Please use one of the supported types: {{supported types|uq}}.", supportedTypes)
+                    .mitigation("Please use one of the supported types: {{supported types|u}}.", supportedTypes)
                     .toString());
         }
     }

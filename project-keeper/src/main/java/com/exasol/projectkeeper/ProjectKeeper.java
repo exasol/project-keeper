@@ -244,7 +244,7 @@ public class ProjectKeeper {
 
         for (final SimpleValidationFinding unfixedFinding : unfixedFindings) {
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-67")
-                    .message("Could not auto-fix: {{finding message|uq}}", unfixedFinding.getMessage()).toString());
+                    .message("Could not auto-fix: {{finding message|u}}", unfixedFinding.getMessage()).toString());
         }
 
         if (blockers(unfixedFindings).isEmpty()) {

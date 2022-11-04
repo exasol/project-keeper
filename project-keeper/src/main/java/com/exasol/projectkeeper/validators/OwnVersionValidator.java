@@ -17,8 +17,8 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 /**
  * Validates if PK itself is up-to-date and performs self-update of called from a pom file.
  */
-//[impl->dsn~verify-own-version~1]
-//[impl->dsn~self-update~1]
+// [impl->dsn~verify-own-version~1]
+// [impl->dsn~self-update~1]
 public class OwnVersionValidator implements Validator {
 
     /**
@@ -101,7 +101,7 @@ public class OwnVersionValidator implements Validator {
         } catch (final IOException | JsonContentException exception) {
             throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155") //
                     .message("Could not detect latest available version of project-keeper.") //
-                    .message(" {{message|uq}}.", exception.getMessage()) //
+                    .message(" {{message|u}}.", exception.getMessage()) //
                     .mitigation("Please check network connection and response from {{url}}", repo.getUrl()) //
                     .toString(), exception);
         }
