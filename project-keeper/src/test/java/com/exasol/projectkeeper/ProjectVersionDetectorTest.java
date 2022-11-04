@@ -67,7 +67,7 @@ class ProjectVersionDetectorTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> versionDetector.detectVersion(config, sources));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-115: Failed to detect overall project version. The specified source with path pom.xml did not provide a version. Please specify a different source to read from or set an explicit version in your project-keeper config.."));
+                "E-PK-CORE-115: Failed to detect overall project version. The specified source with path 'pom.xml' did not provide a version. Please specify a different source to read from or set an explicit version in your project-keeper config."));
     }
 
     @Test

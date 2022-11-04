@@ -192,8 +192,8 @@ class ProjectKeeperConfigReaderTest {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), "");
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> this.reader.readConfig(this.tempDir));
-        assertThat(exception.getMessage(), equalTo("E-PK-CORE-90: Could not find .git directory in project-root "
+        assertThat(exception.getMessage(), equalTo("E-PK-CORE-90: Could not find .git directory in project-root '"
                 + this.tempDir
-                + ". Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'."));
+                + "'. Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'."));
     }
 }

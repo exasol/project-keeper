@@ -66,7 +66,7 @@ public class ProjectVersionDetector {
                     .message(FAILED_TO_DETECT_VERSION
                             + " The specified source with path {{path}} did not provide a version.", requestedPath)
                     .mitigation(
-                            "Please specify a different source to read from or set an explicit version in your project-keeper config..")
+                            "Please specify a different source to read from or set an explicit version in your project-keeper config.")
                     .toString());
         }
 

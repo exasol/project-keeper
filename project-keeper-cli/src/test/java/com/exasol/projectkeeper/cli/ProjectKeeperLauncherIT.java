@@ -56,8 +56,9 @@ class ProjectKeeperLauncherIT {
     @Test
     void verifyFailsForProjectWithoutGit() throws IOException, InterruptedException {
         final Path projectDirRealPath = this.projectDir.toRealPath();
-        assertProcessFails("verify", "E-PK-CORE-90: Could not find .git directory in project-root " + projectDirRealPath
-                + ". Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'.");
+        assertProcessFails("verify", "E-PK-CORE-90: Could not find .git directory in project-root '"
+                + projectDirRealPath
+                + "'. Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'.");
     }
 
     @Test

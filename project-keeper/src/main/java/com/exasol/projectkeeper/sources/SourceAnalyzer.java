@@ -99,7 +99,7 @@ public class SourceAnalyzer {
                 .map(Entry::getKey).collect(toList());
         if (!duplicatePaths.isEmpty()) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-149")
-                    .message("Sources use duplicate paths {{duplicate paths}}.", duplicatePaths)
+                    .message("Sources use duplicate paths {{duplicate paths|u}}.", duplicatePaths)
                     .mitigation("Make sure that sources in .project-keeper.yml have unique paths.").toString());
         }
     }

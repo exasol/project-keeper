@@ -26,7 +26,7 @@ import com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper;
 /**
  * Validator for the pom.xml file.
  */
-//[impl->dsn~pom-file-validator~1]
+// [impl->dsn~pom-file-validator~1]
 public class PomFileValidator implements Validator {
 
     private static final String PARENT_POM_MITIGATION = "Check the project-keeper user guide if you need a parent pom.";
@@ -315,7 +315,7 @@ public class PomFileValidator implements Validator {
         final Node node = runXPath(parentTag, property);
         if ((node == null) || !node.getTextContent().equals(expectedValue)) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-104")
-                    .message("Invalid pom file {{file}}: Invalid {{xpath|uq}}." //
+                    .message("Invalid pom file {{file}}: Invalid {{xpath|u}}." //
                             + " Expected value is {{expected}}." //
                             + MUST_DECLARE_GENERATED_PARENT, //
                             this.projectDirectory.relativize(this.pomFilePath), //

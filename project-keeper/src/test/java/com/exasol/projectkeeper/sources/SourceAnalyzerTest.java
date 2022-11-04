@@ -76,7 +76,7 @@ class SourceAnalyzerTest {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyzer.analyze(PROJECT_DIR, sources));
         assertThat(exception.getMessage(),
-                startsWith("E-PK-CORE-150: Did not find analyzed source for path path, all analyzed sources:"));
+                startsWith("E-PK-CORE-150: Did not find analyzed source for path 'path', all analyzed sources:"));
     }
 
     @RepeatedTest(10)
