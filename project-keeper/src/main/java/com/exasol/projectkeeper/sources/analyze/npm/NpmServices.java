@@ -16,6 +16,11 @@ class NpmServices {
     private static final String NPM = "npm" + OsCheck.suffix(".cmd");
     private static final String NPX = "npx" + OsCheck.suffix(".cmd");
 
+    static final ShellCommand FETCH_DEPENDENCIES = ShellCommand.builder() //
+            .command(NPM, "ci") //
+            .timeout(Duration.ofMinutes(5)) //
+            .build();
+
     // [impl -> dsn~npm-dependency-licenses~1]
     static final ShellCommand LIST_DEPENDENCIES = ShellCommand.builder() //
             .command(NPM, "list") //
@@ -32,6 +37,7 @@ class NpmServices {
 
     private final CommandExecutor executor;
     private final GitService git;
+    private boolean fetchedDependencies = false;
 
     NpmServices(final CommandExecutor executor, final GitService git) {
         this.executor = executor;
@@ -64,7 +70,16 @@ class NpmServices {
     }
 
     private JsonObject getJsonOutput(final ShellCommand cmd, final Path workingDir) {
+        fetchDependencies(workingDir);
         final String stdout = this.executor.execute(cmd, workingDir);
         return JsonIo.read(new StringReader(stdout));
+    }
+
+    private void fetchDependencies(final Path folder) {
+        if (this.fetchedDependencies) {
+            return;
+        }
+        this.executor.execute(FETCH_DEPENDENCIES, folder);
+        this.fetchedDependencies = true;
     }
 }
