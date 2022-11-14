@@ -1,0 +1,6 @@
+# This file is only used for release guide.
+# Actual error codes are based on files error_code_config.yml in individual subfolders.
+
+error-tags:
+  PK:
+    highest-index: 0
