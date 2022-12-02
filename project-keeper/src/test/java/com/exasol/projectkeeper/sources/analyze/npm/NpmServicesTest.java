@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
-import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LICENSE_CHECKER;
-import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.LIST_DEPENDENCIES;
+import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -35,12 +34,12 @@ class NpmServicesTest {
     @Mock
     TaggedCommit previousTag;
 
-    private static final String PREVIOUS_VERSION = "1.1.1";
     private static final Path PROJECT_DIR = Paths.get("/projects/sample-project");
     private static final Path PACKAGE_JSON_FILE = Paths.get("some/file.txt");
 
     @Test
     void getDependencies() {
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
         when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
         when(this.executor.execute(eq(LICENSE_CHECKER), any())).thenReturn(TestData.LICENSES);
         final PackageJson current = TestData.samplePackageJson();

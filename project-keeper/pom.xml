@@ -136,7 +136,7 @@
                              https://ossindex.sonatype.org/vulnerability/sonatype-2020-0491 -->
                         <exclude>sonatype-2020-0491</exclude>
                         <!-- Affects multiple subprojects, see ../pom.xml. -->
-                        <exclude>CVE-2022-38752</exclude>
+                        <exclude>CVE-2022-1471</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
