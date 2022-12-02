@@ -104,7 +104,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         final TestMavenModel pomModel = new TestMavenModel();
         pomModel.configureAssemblyPluginFinalName();
         final Repository exasolRepo = new Repository();
-        exasolRepo.setUrl("https://maven.exasol.com/artifactory/exasol-releases");
+        exasolRepo.setUrl("https://repo1.maven.org/maven2");
         exasolRepo.setId("maven.exasol.com");
         pomModel.addRepository(exasolRepo);
         pomModel.addDependency("exasol-jdbc", "com.exasol", "compile", "7.0.4");
