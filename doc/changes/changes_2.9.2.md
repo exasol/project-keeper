@@ -4,7 +4,7 @@ Code name: Fixed Self Update
 
 ## Summary
 
-PK checks for updates at Maven Central to update itself. With this release PK accesses raw files rather than using the [Maven Central REST API](https://central.sonatype.org/search/rest-api-guide/) which showed sporadic failures lately.
+PK checks for updates at Maven Central to update itself. With this release PK accesses XML file `maven-metadata.xml` rather than using the [Maven Central REST API](https://central.sonatype.org/search/rest-api-guide/) which showed sporadic failures lately.
 
 Additionally updated template for build script `.github/workflows/broken_links_checker.yml` to exclude `mysql.com` as this site seems to block requests from `github.com` and fixed a bug in support for NPM projects.
 
