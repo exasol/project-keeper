@@ -43,7 +43,6 @@ public class OwnVersionValidator implements Validator {
      * @return instance of {@link OwnVersionValidator} without the ability to perform a self-update
      */
     public static OwnVersionValidator forCli(final String currentVersion) {
-        // MavenRepository.of(MavenRepository.PROJECT_KEEPER_CLI);
         return new OwnVersionValidator(currentVersion, MavenRepository.projectKeeperCli(), null);
     }
 
