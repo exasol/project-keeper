@@ -4,16 +4,19 @@ import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.*;
 import java.util.logging.Logger;
 
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 import com.exasol.projectkeeper.mavenrepo.MavenRepository;
-import com.exasol.projectkeeper.mavenrepo.MavenRepository.JsonContentException;
+import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
 
 /**
  * This class updates the versions of the plugins in the maven templates. Simply run it as Java application.
@@ -65,10 +68,16 @@ public class TemplateUpdater {
         final String group = getText(pom, PLUGIN + "groupId");
         final String artifact = getText(pom, PLUGIN + "artifactId");
         try {
-            return new MavenRepository(MavenRepository.url(group, artifact)).getLatestVersion();
-        } catch (IOException | JsonContentException exception) {
+            return new MavenRepository(url(group, artifact)).getLatestVersion();
+        } catch (ParserConfigurationException | SAXException | IOException | XmlContentException exception) {
             throw new IllegalStateException(exception);
         }
+    }
+
+    private String url(final String group, final String artifact) {
+        final List<String> list = Arrays.asList(group.split("."));
+        Collections.reverse(list);
+        return MavenRepository.url(String.join("/", list) + "/" + artifact);
     }
 
     private String getText(final Node node, final String xpath) {

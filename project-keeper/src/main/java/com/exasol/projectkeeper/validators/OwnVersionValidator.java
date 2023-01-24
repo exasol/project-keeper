@@ -3,10 +3,14 @@ package com.exasol.projectkeeper.validators;
 import java.io.IOException;
 import java.util.*;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.mavenrepo.MavenRepository;
-import com.exasol.projectkeeper.mavenrepo.MavenRepository.JsonContentException;
+import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
 import com.exasol.projectkeeper.mavenrepo.Version;
 import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatException;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
@@ -98,7 +102,7 @@ public class OwnVersionValidator implements Validator {
                     .message("Could not detect latest available version of project-keeper.") //
                     .message(" Unsupported format of latest version from Maven repository: {{version}}.", versionString) //
                     .toString());
-        } catch (final IOException | JsonContentException exception) {
+        } catch (final IOException | XmlContentException | ParserConfigurationException | SAXException exception) {
             throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155") //
                     .message("Could not detect latest available version of project-keeper.") //
                     .message(" {{message|u}}.", exception.getMessage()) //
