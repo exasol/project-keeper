@@ -63,8 +63,8 @@ public class MavenRepository {
     private final String url;
 
     /**
-     * Productive code is expected to use the static methods {@link MavenRepository#cli} and
-     * {@link MavenRepository#mavenPlugin}.
+     * Productive code is expected to use the static methods {@link MavenRepository#projectKeeperCli()} and
+     * {@link MavenRepository#projectKeeperMavenPlugin()}.
      *
      * <p>
      * This constructor is designated for tests, but as some tests are in a different package the visibility needs to be
