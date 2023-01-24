@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
 
 import org.w3c.dom.Document;
@@ -87,7 +88,9 @@ public class MavenRepository {
      */
     public String getLatestVersion()
             throws ParserConfigurationException, SAXException, IOException, XmlContentException {
-        final DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        final DocumentBuilder db = factory.newDocumentBuilder();
         try (InputStream stream = new URL(this.url).openStream()) {
             return getLatestVersion(db.parse(stream));
         }
