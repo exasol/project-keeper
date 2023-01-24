@@ -21,15 +21,23 @@ public class MavenRepository {
     /**
      * @return Maven repository using URL for cli artifacts of project-keeper.
      */
-    public static MavenRepository cli() {
-        return new MavenRepository(url(PROJECT_KEEPER_PREFIX + "cli"));
+    public static MavenRepository projectKeeperCli() {
+        return of(PROJECT_KEEPER_PREFIX + "cli");
     }
 
     /**
      * @return Maven repository using URL for project-keeper maven-plugin.
      */
-    public static MavenRepository mavenPlugin() {
-        return new MavenRepository(url(PROJECT_KEEPER_PREFIX + "maven-plugin"));
+    public static MavenRepository projectKeeperMavenPlugin() {
+        return of(PROJECT_KEEPER_PREFIX + "maven-plugin");
+    }
+
+    /**
+     * @param urlInfix infix for URL to maven artifact, e.g. "com/exasol/project-keeper-maven-plugin"
+     * @return new instance of {@link MavenRepository} for this artifact
+     */
+    public static MavenRepository of(final String urlInfix) {
+        return new MavenRepository(BASE_URL + urlInfix + METADATA_FILE);
     }
 
     /**
@@ -47,14 +55,10 @@ public class MavenRepository {
         return node.getTextContent();
     }
 
-    public static String url(final String infix) {
-        return BASE_URL + infix + METADATA_FILE;
-    }
-
     static final String BASE_URL = "https://repo1.maven.org/maven2/";
-    static final String PROJECT_KEEPER_PREFIX = "com/exasol/project-keeper-";
     static final String METADATA_FILE = "/maven-metadata.xml";
-    static String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
+    private static final String PROJECT_KEEPER_PREFIX = "com/exasol/project-keeper-";
+    private static String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
 
     private final String url;
 

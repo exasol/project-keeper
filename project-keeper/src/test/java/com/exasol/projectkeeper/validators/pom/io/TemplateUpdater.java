@@ -68,7 +68,7 @@ public class TemplateUpdater {
         final String group = getText(pom, PLUGIN + "groupId");
         final String artifact = getText(pom, PLUGIN + "artifactId");
         try {
-            return new MavenRepository(url(group, artifact)).getLatestVersion();
+            return MavenRepository.of(url(group, artifact)).getLatestVersion();
         } catch (ParserConfigurationException | SAXException | IOException | XmlContentException exception) {
             throw new IllegalStateException(exception);
         }
@@ -77,7 +77,7 @@ public class TemplateUpdater {
     private String url(final String group, final String artifact) {
         final List<String> list = Arrays.asList(group.split("."));
         Collections.reverse(list);
-        return MavenRepository.url(String.join("/", list) + "/" + artifact);
+        return String.join("/", list) + "/" + artifact;
     }
 
     private String getText(final Node node, final String xpath) {

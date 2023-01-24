@@ -32,7 +32,7 @@ public class OwnVersionValidator implements Validator {
      * @return instance of {@link OwnVersionValidator} with the ability to perform a self-update
      */
     public static OwnVersionValidator forMavenPlugin(final String currentVersion, final Updater updater) {
-        return new OwnVersionValidator(currentVersion, MavenRepository.mavenPlugin(), updater);
+        return new OwnVersionValidator(currentVersion, MavenRepository.projectKeeperMavenPlugin(), updater);
     }
 
     /**
@@ -43,7 +43,8 @@ public class OwnVersionValidator implements Validator {
      * @return instance of {@link OwnVersionValidator} without the ability to perform a self-update
      */
     public static OwnVersionValidator forCli(final String currentVersion) {
-        return new OwnVersionValidator(currentVersion, MavenRepository.cli(), null);
+        // MavenRepository.of(MavenRepository.PROJECT_KEEPER_CLI);
+        return new OwnVersionValidator(currentVersion, MavenRepository.projectKeeperCli(), null);
     }
 
     private static List<ValidationFinding> findings(final Fix fix, final String message) {

@@ -1,11 +1,11 @@
 package com.exasol.projectkeeper.mavenrepo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.matchesRegex;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.*;
-import java.net.MalformedURLException;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -21,11 +21,9 @@ import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
 class MavenRepositoryTest {
 
     @Test
-    void url() throws MalformedURLException {
-        final String url = MavenRepository.cli().getUrl();
-        assertThat(url, startsWith(MavenRepository.BASE_URL));
-        assertThat(url, endsWith(MavenRepository.METADATA_FILE));
-        assertThat(url, containsString("-cli"));
+    void url() {
+        final String url = MavenRepository.projectKeeperCli().getUrl();
+        assertThat(url, equalTo("https://repo1.maven.org/maven2/com/exasol/project-keeper-cli/maven-metadata.xml"));
     }
 
     @Test
@@ -47,8 +45,9 @@ class MavenRepositoryTest {
     @Test
     // [itest->dsn~verify-own-version~1]
     void integrationTest() throws Exception {
-        assertThat(MavenRepository.cli().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
-        assertThat(MavenRepository.mavenPlugin().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
+        assertThat(MavenRepository.projectKeeperCli().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
+        assertThat(MavenRepository.projectKeeperMavenPlugin().getLatestVersion(),
+                matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
     }
 
     private Document xmlDocument(final String content) {
