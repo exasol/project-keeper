@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
 
@@ -76,7 +76,7 @@ class GoModFileTest {
 
     @Test
     void parseCompleteFile() throws IOException {
-        final GoModFile file = GoModFile.parse(Files.readString(Paths.get("src/test/resources/go.mod")));
+        final GoModFile file = GoModFile.parse(Files.readString(Path.of("src/test/resources/go.mod")));
         assertModFile(file, "github.com/exasol/exasol-driver-go", "1.17", 35, 4);
     }
 

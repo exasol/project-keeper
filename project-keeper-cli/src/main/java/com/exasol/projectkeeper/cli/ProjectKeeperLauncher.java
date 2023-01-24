@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.cli;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.logging.*;
 
@@ -49,7 +48,7 @@ public class ProjectKeeperLauncher {
      * @param args command line arguments
      */
     public static void main(final String[] args) {
-        final ProjectKeeperLauncher launcher = new ProjectKeeperLauncher(Paths.get("."));
+        final ProjectKeeperLauncher launcher = new ProjectKeeperLauncher(Path.of("."));
         launcher.start(args);
     }
 

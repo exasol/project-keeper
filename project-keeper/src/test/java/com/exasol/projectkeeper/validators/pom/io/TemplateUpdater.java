@@ -3,8 +3,8 @@ package com.exasol.projectkeeper.validators.pom.io;
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.IOException;
-import java.nio.file.*;
-import java.util.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -23,12 +23,12 @@ import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
  */
 public class TemplateUpdater {
 
-    private static final String PLUGIN = "/plugin/";
-    private static final String VERSION_XPATH = PLUGIN + "version";
     private static final Logger LOGGER = Logger.getLogger(TemplateUpdater.class.getName());
 
     public static void main(final String... args) {
-        new TemplateUpdater().update(Paths.get("src/main/resources/maven_templates"));
+        new TemplateUpdater() //
+                .updateTemplates(Path.of("src/main/resources/maven_templates")) //
+                .updatePomFile(Path.of("pom.xml"));
     }
 
     private final PomFileWriter pomFileWriter;
@@ -41,32 +41,69 @@ public class TemplateUpdater {
         this.pomFileReader = PomFileReader.instance();
     }
 
-    private void update(final Path path) {
-        LOGGER.info("Updating templates in folder " + path);
+    private TemplateUpdater updateTemplates(final Path dir) {
+        LOGGER.info("Updating templates in folder " + dir);
         try {
-            Files.list(path).forEach(this::process);
+            Files.list(dir) //
+                    .filter(p -> p.toString().endsWith(".xml")) //
+                    .forEach(this::updateSingleTemplate);
+            return this;
         } catch (final IOException exception) {
             throw new IllegalStateException(exception);
         }
     }
 
-    private void process(final Path file) {
-        if (!file.toString().endsWith(".xml")) {
-            return;
-        }
+    private void updateSingleTemplate(final Path file) {
+        final Reporter logger = (group, artifact, version, latest) -> LOGGER.info( //
+                "- " + file.getFileName() + ": Updating version " + version + " -> " + latest);
         final Document pom = this.pomFileReader.parseFile(file);
-        final String version = getText(pom, VERSION_XPATH);
-        final String latest = getLatestVersion(pom);
-        if ((version == null) || !version.equals(latest)) {
-            LOGGER.info("- " + file.getFileName() + ": Updating version " + version + " -> " + latest);
-            runXPath(pom, VERSION_XPATH).setTextContent(latest);
+        final Node plugin = runXPath(pom, "/plugin");
+        if (updatePlugin(file, plugin, logger)) {
             this.pomFileWriter.writeToFile(pom, file);
         }
     }
 
-    private String getLatestVersion(final Document pom) {
-        final String group = getText(pom, PLUGIN + "groupId");
-        final String artifact = getText(pom, PLUGIN + "artifactId");
+    private boolean updatePlugin(final Path file, final Node plugin, final Reporter logger) {
+        final Node versionNode = runXPath(plugin, "version");
+        if (versionNode == null) {
+            return false;
+        }
+        final String version = versionNode.getTextContent();
+        final String group = getText(plugin, "groupId");
+        final String artifact = getText(plugin, "artifactId");
+        final String latest = getLatestVersion(group, artifact);
+        if ((version != null) && version.equals(latest)) {
+            return false;
+        }
+        logger.report(group, artifact, version, latest);
+        versionNode.setTextContent(latest);
+        return true;
+    }
+
+    private TemplateUpdater updatePomFile(final Path file) {
+        final Reporter logger = (group, artifact, version, latest) -> LOGGER.info( //
+                "- " + file.getFileName() + ": " //
+                        + "Updating version " + "of " + group + ":" + artifact //
+                        + " from " + version + " -> " + latest);
+        final Document pom = this.pomFileReader.parseFile(file);
+        final Node parent = runXPath(pom, "/project/build/plugins");
+        if (parent == null) {
+            return this;
+        }
+        Node plugin = parent.getFirstChild();
+        boolean changed = false;
+        while (plugin != null) {
+            changed |= updatePlugin(file, plugin, logger);
+            plugin = plugin.getNextSibling();
+        }
+        if (changed) {
+            LOGGER.info("  - writing file " + file.toAbsolutePath());
+            this.pomFileWriter.writeToFile(pom, file);
+        }
+        return this;
+    }
+
+    private String getLatestVersion(final String group, final String artifact) {
         try {
             return MavenRepository.of(url(group, artifact)).getLatestVersion();
         } catch (ParserConfigurationException | SAXException | IOException | XmlContentException exception) {
@@ -75,12 +112,15 @@ public class TemplateUpdater {
     }
 
     private String url(final String group, final String artifact) {
-        final List<String> list = Arrays.asList(group.split("."));
-        Collections.reverse(list);
-        return String.join("/", list) + "/" + artifact;
+        return group.replace(".", "/") + "/" + artifact;
     }
 
     private String getText(final Node node, final String xpath) {
         return runXPath(node, xpath).getTextContent();
+    }
+
+    @FunctionalInterface
+    interface Reporter {
+        void report(final String group, final String artifact, final String version, final String latest);
     }
 }

@@ -62,7 +62,7 @@ public class GolangProjectFixture implements AutoCloseable {
     }
 
     public void prepareProjectFiles() {
-        prepareProjectFiles(Paths.get("."), GO_VERSION);
+        prepareProjectFiles(Path.of("."), GO_VERSION);
     }
 
     public void prepareProjectFiles(final Path moduleDir, final String goVersion) {

@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -17,7 +16,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class MavenSourceAnalyzerTest {
-    private static final Path PROJECT_DIR = Paths.get("dir");
+    private static final Path PROJECT_DIR = Path.of("dir");
 
     @Test
     void analyzingEmptySourceListReturnsEmptyList() {

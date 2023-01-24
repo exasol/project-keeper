@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 @ExtendWith(MockitoExtension.class)
 class GolangDependencyCalculatorTest {
 
-    private static final Path PROJECT_PATH = Paths.get("project-path");
+    private static final Path PROJECT_PATH = Path.of("project-path");
     private static final String PROJECT_MODULE_NAME = "main-module";
     @Mock
     private GolangServices golangServicesMock;
@@ -108,7 +107,7 @@ class GolangDependencyCalculatorTest {
     }
 
     private void simulateLicenses(final String moduleName, final Map<String, GolangDependencyLicense> licenses) {
-        final Path modulePath = Paths.get("modulePath");
+        final Path modulePath = Path.of("modulePath");
         when(this.golangServicesMock.getModuleDir(PROJECT_PATH, moduleName)).thenReturn(modulePath);
         when(this.golangServicesMock.getLicenses(modulePath, moduleName)).thenReturn(licenses);
     }

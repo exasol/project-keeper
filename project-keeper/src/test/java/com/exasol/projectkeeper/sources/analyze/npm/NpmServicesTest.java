@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
@@ -34,8 +33,8 @@ class NpmServicesTest {
     @Mock
     TaggedCommit previousTag;
 
-    private static final Path PROJECT_DIR = Paths.get("/projects/sample-project");
-    private static final Path PACKAGE_JSON_FILE = Paths.get("some/file.txt");
+    private static final Path PROJECT_DIR = Path.of("/projects/sample-project");
+    private static final Path PACKAGE_JSON_FILE = Path.of("some/file.txt");
 
     @Test
     void getDependencies() {

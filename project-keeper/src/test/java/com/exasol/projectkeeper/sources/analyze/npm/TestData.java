@@ -2,13 +2,12 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 
 import java.io.StringReader;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import jakarta.json.JsonObject;
 
 class TestData {
 
-    static final Path SAMPLE_PATH = Paths.get("/projects/p1/package.json");
+    static final Path SAMPLE_PATH = Path.of("/projects/p1/package.json");
 
     static final String CURRENT = jsonString("{", //
             "  'name': 'module-name',", //

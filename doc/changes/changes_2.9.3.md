@@ -67,6 +67,10 @@ Additionally changed strategy for inquiry of latest version of PK for self-updat
 
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-plugin-plugin:3.6.4` to `3.7.1`
+
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
