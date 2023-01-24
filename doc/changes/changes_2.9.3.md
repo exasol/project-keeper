@@ -43,6 +43,10 @@ Additionally changed strategy for inquiry of latest version of PK for self-updat
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.11` to `3.12.3`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.2.2` to `3.3.0`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
