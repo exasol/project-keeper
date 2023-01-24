@@ -59,7 +59,7 @@ public class MavenRepository {
     static final String BASE_URL = "https://repo1.maven.org/maven2/";
     static final String METADATA_FILE = "/maven-metadata.xml";
     private static final String PROJECT_KEEPER_PREFIX = "com/exasol/project-keeper-";
-    private static String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
+    private static final String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
 
     private final String url;
 
@@ -90,7 +90,8 @@ public class MavenRepository {
             throws ParserConfigurationException, SAXException, IOException, XmlContentException {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         final DocumentBuilder db = factory.newDocumentBuilder();
         try (InputStream stream = new URL(this.url).openStream()) {
             return getLatestVersion(db.parse(stream));
