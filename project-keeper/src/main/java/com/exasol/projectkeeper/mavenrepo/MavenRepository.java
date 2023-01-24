@@ -90,6 +90,7 @@ public class MavenRepository {
             throws ParserConfigurationException, SAXException, IOException, XmlContentException {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        factory.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
         final DocumentBuilder db = factory.newDocumentBuilder();
         try (InputStream stream = new URL(this.url).openStream()) {
             return getLatestVersion(db.parse(stream));
