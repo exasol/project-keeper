@@ -59,6 +59,9 @@ public class MavenRepository {
     static final String BASE_URL = "https://repo1.maven.org/maven2/";
     static final String METADATA_FILE = "/maven-metadata.xml";
     private static final String PROJECT_KEEPER_PREFIX = "com/exasol/project-keeper-";
+
+    // sonar requests to get this URI from a customizable parameter which is inappropriate in the current situation
+    @SuppressWarnings("java:S1075")
     private static final String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
 
     private final String url;
