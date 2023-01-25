@@ -11,77 +11,97 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class GoModFileTest {
 
     @Test
-    void parseEmptyFile() {
+    void testParseEmptyFile() {
         final GoModFile file = GoModFile.parse("");
         assertModFile(file, null, null, 0, 0);
     }
 
+    @ParameterizedTest
+    @CsvSource({
+            // Line comments
+            "'// Line comment'", "'\t// Leading tab'", "'  // Leading spaces'", "'//NoSpaceAfterSlash'",
+            "'// Trailing space '",
+            // Replace directives
+            "replace something with something", "replace\twith tab",
+            "replace github.com/docker/docker => github.com/docker/docker v20.10.3-0 // 22.06 branch",
+            // Replace block
+            "'replace (\n" //
+                    + "\tgithub.com/docker/docker => github.com/docker/docker v20.10.3-0.20221013203545-33ab36d6b304+incompatible // 22.06 branch\n"
+                    + "more content\n" //
+                    + ")'", })
+    void testParseIgnoresLine(final String line) {
+        final GoModFile file = GoModFile.parse(line);
+        assertModFile(file, null, null, 0, 0);
+    }
+
     @Test
-    void parseModuleName() {
+    void testParseModuleName() {
         final GoModFile file = GoModFile.parse("module github.com/exasol/exasol-driver-go");
         assertModFile(file, "github.com/exasol/exasol-driver-go", null, 0, 0);
     }
 
     @Test
-    void parseGoVersion() {
+    void testParseGoVersion() {
         final GoModFile file = GoModFile.parse("go 1.17");
         assertModFile(file, null, "1.17", 0, 0);
     }
 
     @Test
-    void parseDependencyWithoutCommentIsDirect() {
+    void testParseDependencyWithoutCommentIsDirect() {
         final GoModFile file = GoModFile.parse("github.com/exasol/error-reporting-go v0.1.1");
         assertDependency(file, true, "github.com/exasol/error-reporting-go", "v0.1.1");
     }
 
     @Test
-    void parseDependencyWithUnknownCommentIsDirect() {
+    void testParseDependencyWithUnknownCommentIsDirect() {
         final GoModFile file = GoModFile.parse("github.com/exasol/error-reporting-go v0.1.1 // unknown");
         assertDependency(file, true, "github.com/exasol/error-reporting-go", "v0.1.1");
     }
 
     @Test
-    void parseDependencyWithIndirectCommentIsIndirect() {
+    void testParseDependencyWithIndirectCommentIsIndirect() {
         final GoModFile file = GoModFile.parse("github.com/exasol/error-reporting-go v0.1.1 // indirect");
         assertDependency(file, false, "github.com/exasol/error-reporting-go", "v0.1.1");
     }
 
     @Test
-    void parseDependencyWithIndirectCommentNoSpacesIsIndirect() {
+    void testParseDependencyWithIndirectCommentNoSpacesIsIndirect() {
         final GoModFile file = GoModFile.parse("github.com/exasol/error-reporting-go v0.1.1//indirect");
         assertDependency(file, false, "github.com/exasol/error-reporting-go", "v0.1.1");
     }
 
     @Test
-    void parseDependencyWithIndirectAndAdditionalCommentIsIndirect() {
+    void testParseDependencyWithIndirectAndAdditionalCommentIsIndirect() {
         final GoModFile file = GoModFile.parse("github.com/exasol/error-reporting-go v0.1.1 // indirect more text");
         assertDependency(file, false, "github.com/exasol/error-reporting-go", "v0.1.1");
     }
 
     @Test
-    void parseSingleRequireLine() {
+    void testParseSingleRequireLine() {
         final GoModFile file = GoModFile.parse("require github.com/exasol/exasol-driver-go v0.3.1");
         assertDependency(file, true, "github.com/exasol/exasol-driver-go", "v0.3.1");
     }
 
     @Test
-    void parseSingleRequireLineIndirect() {
+    void testParseSingleRequireLineIndirect() {
         final GoModFile file = GoModFile.parse("require github.com/exasol/exasol-driver-go v0.3.1 // indirect");
         assertDependency(file, false, "github.com/exasol/exasol-driver-go", "v0.3.1");
     }
 
     @Test
-    void parseCompleteFile() throws IOException {
+    void testParseCompleteFile() throws IOException {
         final GoModFile file = GoModFile.parse(Files.readString(Path.of("src/test/resources/go.mod")));
         assertModFile(file, "github.com/exasol/exasol-driver-go", "1.17", 35, 4);
     }
 
     @Test
-    void failsForUnexpectedLines() throws IOException {
+    void testParseFailsForUnexpectedLines() throws IOException {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> GoModFile.parse("unexpected"));
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-138: Found unexpected line 'unexpected' in go.mod file"));
