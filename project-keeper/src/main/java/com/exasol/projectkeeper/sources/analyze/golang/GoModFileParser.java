@@ -33,11 +33,13 @@ class GoModFileParser {
                 RegexAction.create("^\\)$", match -> {
                     this.insideRequireBlock = false;
                     this.insideReplaceBlock = false;
-                }), RegexAction.create("^(?:require\\s+)?([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$", match -> {
+                }), //
+                RegexAction.create("^(?:require\\s+)?([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$", match -> {
                     if (!insideReplaceBlock) {
                         this.dependencies.add(createDependency(match.getGroups()));
                     }
-                }), RegexAction.create(".*", match -> {
+                }), //
+                RegexAction.create(".*", match -> {
                     if (!insideReplaceBlock) {
                         throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-138")
                                 .message("Found unexpected line {{line}} in go.mod file", match.getLine()).toString());
