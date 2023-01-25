@@ -31,15 +31,9 @@ class FileTemplatesFactoryTest {
                 .getGlobalTemplates(sources);
         assertContainsTemplate(templates, ".github/workflows/ci-build.yml");
         assertContainsTemplate(templates, ".vscode/settings.json");
-        assertContainsTemplate(templates, ".gitattributes");
         final Optional<FileTemplate> gitattributes = findTemplate(templates, ".gitattributes");
         assertTrue(gitattributes.isPresent());
         assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom"));
-    }
-
-    @Test
-    void testTemplate() {
-
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {
