@@ -1,63 +1,60 @@
 package com.exasol.projectkeeper.mavenrepo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.matchesRegex;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.io.StringReader;
-import java.net.MalformedURLException;
+import java.io.*;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
-import com.exasol.projectkeeper.mavenrepo.MavenRepository.JsonContentException;
-
-import jakarta.json.*;
+import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
 
 //[utest->dsn~verify-own-version~1]
 class MavenRepositoryTest {
 
     @Test
-    void url() throws MalformedURLException {
-        final String url = MavenRepository.cli().getUrl();
-        assertThat(url, startsWith(MavenRepository.DEFAULT_REPOSITORY_URL));
-        assertThat(url, containsString(MavenRepository.GROUP_ID));
-        assertThat(url, containsString(MavenRepository.ARTIFACT_PREFIX + "-cli"));
+    void url() {
+        final String url = MavenRepository.projectKeeperCli().getUrl();
+        assertThat(url, equalTo("https://repo1.maven.org/maven2/com/exasol/project-keeper-cli/maven-metadata.xml"));
     }
 
     @Test
-    void emptyJson_ThrowsException() throws IOException {
-        final JsonObject json = json("{}");
-        assertThrows(JsonContentException.class, () -> MavenRepository.getLatestVersion(json));
+    void testFailureXmlWithoutVersionInformation() {
+        final Document xml = xmlDocument("<metadata><versioning><other>1.2.3</other></versioning></metadata>");
+        assertThrows(XmlContentException.class, () -> MavenRepository.getLatestVersion(xml));
     }
 
     @Test
-    void jsonWithoutVersionInformation_ThrowsException() throws IOException {
-        final JsonObject json = json("{\"response\": {\"docs\": [{\"other\": \"2.4.6\"}]}}");
-        assertThrows(JsonContentException.class, () -> MavenRepository.getLatestVersion(json));
-    }
-
-    @Test
-    void localResource_Success() throws IOException, JsonContentException {
+    void testSuccessLocalResource() throws Exception {
         final String url = MavenRepositoryTest.class //
-                .getResource("/simulated-maven-central-version-response.json") //
+                .getResource("/simulated-maven-central-version-response.xml") //
                 .toExternalForm();
         final MavenRepository testee = new MavenRepository(url);
-        assertThat(testee.getLatestVersion(), equalTo("2.4.6"));
+        assertThat(testee.getLatestVersion(), equalTo("2.9.1"));
     }
 
     @Tag("integration")
     @Test
     // [itest->dsn~verify-own-version~1]
-    void integrationTest() throws IOException, JsonContentException {
-        assertThat(MavenRepository.cli().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
-        assertThat(MavenRepository.mavenPlugin().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
+    void integrationTest() throws Exception {
+        assertThat(MavenRepository.projectKeeperCli().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
+        assertThat(MavenRepository.projectKeeperMavenPlugin().getLatestVersion(),
+                matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
     }
 
-    private JsonObject json(final String content) {
-        try (JsonReader jr = Json.createReader(new StringReader(content))) {
-            return jr.readObject();
+    private Document xmlDocument(final String content) {
+        try (InputStream stream = new ByteArrayInputStream(content.getBytes())) {
+            return DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(stream);
+        } catch (SAXException | IOException | ParserConfigurationException exception) {
+            throw new IllegalStateException(exception);
         }
     }
 }

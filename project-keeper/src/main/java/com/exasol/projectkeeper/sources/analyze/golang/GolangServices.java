@@ -7,7 +7,8 @@ import static java.util.stream.Collectors.toMap;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Function;
@@ -103,7 +104,7 @@ class GolangServices {
                     .message("Did not get directory for module {{module name}}.", moduleName).ticketMitigation()
                     .toString());
         }
-        final Path path = Paths.get(output).toAbsolutePath();
+        final Path path = Path.of(output).toAbsolutePath();
         LOGGER.finest(() -> "Found module dir '" + path + "' for module '" + moduleName + "'");
         if (!Files.exists(path)) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-156")

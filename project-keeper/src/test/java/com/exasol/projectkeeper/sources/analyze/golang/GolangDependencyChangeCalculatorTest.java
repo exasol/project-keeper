@@ -8,7 +8,6 @@ import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -26,8 +25,8 @@ import com.exasol.projectkeeper.shared.dependencychanges.*;
 @ExtendWith(MockitoExtension.class)
 class GolangDependencyChangeCalculatorTest {
 
-    private static final Path MODULE_GO_MOD = Paths.get("./module/go.mod");
-    private static final Path PROJECT_DIR = Paths.get("project-dir");
+    private static final Path MODULE_GO_MOD = Path.of("./module/go.mod");
+    private static final Path PROJECT_DIR = Path.of("project-dir");
     @Mock
     private GolangServices golangServicesMock;
 

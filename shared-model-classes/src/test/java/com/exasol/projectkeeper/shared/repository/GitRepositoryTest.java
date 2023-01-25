@@ -251,9 +251,9 @@ class GitRepositoryTest {
             this.repository = openRepo(this.tempDir);
             makeCommitAndTag(git, 1, false, "1.2.2");
             makeCommitAndTag(git, 2, false, "1.2.3");
-            final String fileContent1 = this.repository.getFileFromCommit(Paths.get("myFile.txt"),
+            final String fileContent1 = this.repository.getFileFromCommit(Path.of("myFile.txt"),
                     this.repository.findLatestReleaseCommit("1.2.3").get().getCommit());
-            final String fileContent2 = this.repository.getFileFromCommit(Paths.get("myFile.txt"),
+            final String fileContent2 = this.repository.getFileFromCommit(Path.of("myFile.txt"),
                     this.repository.findLatestReleaseCommit(null).get().getCommit());
             assertAll(() -> assertThat("file content tag 1", fileContent1, equalTo("1")), //
                     () -> assertThat("file content tag 1", fileContent2, equalTo("2")));

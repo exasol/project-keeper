@@ -55,7 +55,7 @@ class OwnVersionValidatorTest {
     @Tag("integration")
     @Test
     void versionUpToDate_NoFinding() throws Exception {
-        final String currentVersion = MavenRepository.mavenPlugin().getLatestVersion();
+        final String currentVersion = MavenRepository.projectKeeperMavenPlugin().getLatestVersion();
         final OwnVersionValidator testee = OwnVersionValidator //
                 .forMavenPlugin(currentVersion, mock(Updater.class));
         assertThat(testee.validate(), empty());
@@ -64,7 +64,7 @@ class OwnVersionValidatorTest {
     @Tag("integration")
     @Test
     void cli_NoFinding() throws Exception {
-        final String currentVersion = MavenRepository.cli().getLatestVersion();
+        final String currentVersion = MavenRepository.projectKeeperCli().getLatestVersion();
         final OwnVersionValidator testee = OwnVersionValidator.forCli(currentVersion);
         assertThat(testee.validate(), empty());
     }

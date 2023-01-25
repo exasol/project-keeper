@@ -6,7 +6,7 @@ import static org.hamcrest.Matchers.allOf;
 
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 
 import org.junit.jupiter.api.*;
 
@@ -55,7 +55,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
     }
 
     private void assertGeneratedVerifyWorkflow() throws IOException {
-        final String currentVersion = MavenProjectVersionGetter.getProjectRevision(Paths.get("../parent-pom/pom.xml"));
+        final String currentVersion = MavenProjectVersionGetter.getProjectRevision(Path.of("../parent-pom/pom.xml"));
         final String workflowFile = Files
                 .readString(this.projectDir.resolve(".github/workflows/project-keeper-verify.yml"));
         final String shellScript = Files.readString(this.projectDir.resolve(".github/workflows/project-keeper.sh"));

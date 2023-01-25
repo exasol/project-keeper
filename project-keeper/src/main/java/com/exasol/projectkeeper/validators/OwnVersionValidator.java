@@ -3,10 +3,14 @@ package com.exasol.projectkeeper.validators;
 import java.io.IOException;
 import java.util.*;
 
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.mavenrepo.MavenRepository;
-import com.exasol.projectkeeper.mavenrepo.MavenRepository.JsonContentException;
+import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
 import com.exasol.projectkeeper.mavenrepo.Version;
 import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatException;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
@@ -28,7 +32,7 @@ public class OwnVersionValidator implements Validator {
      * @return instance of {@link OwnVersionValidator} with the ability to perform a self-update
      */
     public static OwnVersionValidator forMavenPlugin(final String currentVersion, final Updater updater) {
-        return new OwnVersionValidator(currentVersion, MavenRepository.mavenPlugin(), updater);
+        return new OwnVersionValidator(currentVersion, MavenRepository.projectKeeperMavenPlugin(), updater);
     }
 
     /**
@@ -39,7 +43,7 @@ public class OwnVersionValidator implements Validator {
      * @return instance of {@link OwnVersionValidator} without the ability to perform a self-update
      */
     public static OwnVersionValidator forCli(final String currentVersion) {
-        return new OwnVersionValidator(currentVersion, MavenRepository.cli(), null);
+        return new OwnVersionValidator(currentVersion, MavenRepository.projectKeeperCli(), null);
     }
 
     private static List<ValidationFinding> findings(final Fix fix, final String message) {
@@ -98,7 +102,7 @@ public class OwnVersionValidator implements Validator {
                     .message("Could not detect latest available version of project-keeper.") //
                     .message(" Unsupported format of latest version from Maven repository: {{version}}.", versionString) //
                     .toString());
-        } catch (final IOException | JsonContentException exception) {
+        } catch (final IOException | XmlContentException | ParserConfigurationException | SAXException exception) {
             throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155") //
                     .message("Could not detect latest available version of project-keeper.") //
                     .message(" {{message|u}}.", exception.getMessage()) //

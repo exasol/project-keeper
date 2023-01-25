@@ -15,7 +15,6 @@ import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
@@ -32,7 +31,7 @@ import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 @ExtendWith(MockitoExtension.class)
 class SourceAnalyzerTest {
 
-    private static final Path PROJECT_DIR = Paths.get("project-dir");
+    private static final Path PROJECT_DIR = Path.of("project-dir");
     @Mock
     private LanguageSpecificSourceAnalyzer golangAnalyzerMock;
     @Mock
@@ -72,7 +71,7 @@ class SourceAnalyzerTest {
     void sourceNotfound() {
         final SourceAnalyzer analyzer = createWithAllAnalyzers();
         final List<Source> sources = List.of(source("path", SourceType.MAVEN));
-        when(this.mavenAnalyzerMock.analyze(any(), any())).thenReturn(List.of(analyzedSource(Paths.get("wrong path"))));
+        when(this.mavenAnalyzerMock.analyze(any(), any())).thenReturn(List.of(analyzedSource(Path.of("wrong path"))));
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyzer.analyze(PROJECT_DIR, sources));
         assertThat(exception.getMessage(),
@@ -101,7 +100,7 @@ class SourceAnalyzerTest {
     }
 
     private Source source(final String path, final SourceType type) {
-        return Source.builder().path(Paths.get(path)).type(type).build();
+        return Source.builder().path(Path.of(path)).type(type).build();
     }
 
     private SourceAnalyzer createWithAllAnalyzers() {

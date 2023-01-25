@@ -8,7 +8,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
 
 import org.junit.jupiter.api.Test;
@@ -38,13 +37,13 @@ class NpmSourceAnalyzerTest {
         final Optional<PackageJson> previous = Optional.of(TestData.packageJson(PREVIOUS));
         when(services.retrievePrevious(any(), any())).thenReturn(previous);
 
-        final Path path = Paths.get("sample/path");
+        final Path path = Path.of("sample/path");
         final Source source = Source.builder() //
                 .path(path) //
                 .modules(Set.of()) //
                 .build();
 
-        final Path projectDir = Paths.get("");
+        final Path projectDir = Path.of("");
         final List<AnalyzedSource> result = new NpmSourceAnalyzer(services).analyze(projectDir, List.of(source));
         assertThat(result, iterableWithSize(1));
         final AnalyzedSourceImpl expected = AnalyzedSourceImpl.builder() //

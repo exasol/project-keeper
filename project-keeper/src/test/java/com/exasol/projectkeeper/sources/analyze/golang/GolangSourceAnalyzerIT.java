@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import org.junit.jupiter.api.*;
@@ -16,12 +15,12 @@ import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
-import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
-import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 
 class GolangSourceAnalyzerIT {
@@ -75,35 +74,35 @@ class GolangSourceAnalyzerIT {
 
     @Test
     void testGoModuleInProjectDirectory() {
-        prepareProjectFiles(Paths.get("."));
+        prepareProjectFiles(Path.of("."));
         final ProjectKeeperConfig config = this.fixture.createDefaultConfig().build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
                 () -> assertCommonProperties(analyzedProject), //
                 () -> assertIsrootProject(analyzedProject, true), //
-                () -> assertThat("project path", analyzedProject.getPath(), equalTo(Paths.get("go.mod"))),
+                () -> assertThat("project path", analyzedProject.getPath(), equalTo(Path.of("go.mod"))),
                 () -> assertThat("project name", analyzedProject.getProjectName(),
                         equalTo(this.projectDir.getFileName().toString())));
     }
 
     @Test
     void testGoModuleInSubdirectory() {
-        prepareProjectFiles(Paths.get("subdir"));
+        prepareProjectFiles(Path.of("subdir"));
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
-                        .path(Paths.get("subdir").resolve("go.mod")).build()))
+                        .path(Path.of("subdir").resolve("go.mod")).build()))
                 .versionConfig(new ProjectKeeperConfig.FixedVersion(this.fixture.getProjectVersion())).build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
                 () -> assertCommonProperties(analyzedProject), //
                 () -> assertIsrootProject(analyzedProject, false),
-                () -> assertThat("project path", analyzedProject.getPath(), equalTo(Paths.get("subdir/go.mod"))),
+                () -> assertThat("project path", analyzedProject.getPath(), equalTo(Path.of("subdir/go.mod"))),
                 () -> assertThat("project name", analyzedProject.getProjectName(), equalTo("subdir")));
     }
 
     @Test
     void testWithAbsoluteSourcePath() {
-        prepareProjectFiles(Paths.get("subdir"));
+        prepareProjectFiles(Path.of("subdir"));
         final Path modPath = this.projectDir.resolve("subdir/go.mod");
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
                 .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)

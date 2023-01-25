@@ -15,5 +15,5 @@
     "sonarlint.connectedMode.project": {
         "connectionId": "exasol",
         "projectKey": "com.exasol:project-keeper-root"
-    },
+    }
 }

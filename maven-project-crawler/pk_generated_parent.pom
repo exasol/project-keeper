@@ -135,7 +135,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.0.0-M8</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we
           have a chance to reach branches in the logging lambdas too. -->
@@ -146,7 +146,7 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>versions-maven-plugin</artifactId>
-                <version>2.13.0</version>
+                <version>2.14.2</version>
                 <executions>
                     <execution>
                         <id>display-updates</id>
@@ -244,7 +244,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
                         <id>copy-jacoco</id>
@@ -264,7 +264,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
-                <version>3.0.0-M7</version>
+                <version>3.0.0-M8</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches
           <property>	                      in the logging lambdas too. -->
@@ -334,7 +334,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <version>1.2.2</version>
                 <executions>
                     <execution>
                         <id>verify</id>

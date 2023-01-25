@@ -9,7 +9,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
@@ -68,7 +69,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     private SimpleProcess run(final Path workingDir, final String... args) throws IOException {
         final String artifactPrefix = "project-keeper-cli";// we need to split this in two lines so that it's not
                                                            // replaced by the artifact-reference-checker
-        final Path jar = Paths.get("target/" + artifactPrefix + "-" + CURRENT_VERSION + ".jar").toAbsolutePath();
+        final Path jar = Path.of("target/" + artifactPrefix + "-" + CURRENT_VERSION + ".jar").toAbsolutePath();
         if (!Files.exists(jar)) {
             fail("Jar " + jar + " not found. Run 'mvn package' to build it.");
         }

@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 class ProjectKeeperShellScript implements FileTemplate {
     private static final String TEMPLATE_PATH = ".github/workflows/project-keeper.sh";
@@ -21,7 +20,7 @@ class ProjectKeeperShellScript implements FileTemplate {
 
     @Override
     public Path getPathInProject() {
-        return Paths.get(TEMPLATE_PATH);
+        return Path.of(TEMPLATE_PATH);
     }
 
     @Override

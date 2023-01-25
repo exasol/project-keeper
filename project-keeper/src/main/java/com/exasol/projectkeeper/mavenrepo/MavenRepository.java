@@ -1,9 +1,17 @@
 package com.exasol.projectkeeper.mavenrepo;
 
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
+
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
-import jakarta.json.*;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.*;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.xml.sax.SAXException;
 
 /**
  * This class allows getting the latest version of project-keeper from Maven Central.
@@ -14,61 +22,53 @@ public class MavenRepository {
     /**
      * @return Maven repository using URL for cli artifacts of project-keeper.
      */
-    public static MavenRepository cli() {
-        return new MavenRepository(url("-cli"));
+    public static MavenRepository projectKeeperCli() {
+        return of(PROJECT_KEEPER_PREFIX + "cli");
     }
 
     /**
      * @return Maven repository using URL for project-keeper maven-plugin.
      */
-    public static MavenRepository mavenPlugin() {
-        return new MavenRepository(url("-maven-plugin"));
+    public static MavenRepository projectKeeperMavenPlugin() {
+        return of(PROJECT_KEEPER_PREFIX + "maven-plugin");
     }
 
     /**
-     * Accessor for Json object, called internally and in unit tests.
+     * @param urlInfix infix for URL to maven artifact, e.g. "com/exasol/project-keeper-maven-plugin"
+     * @return new instance of {@link MavenRepository} for this artifact
+     */
+    public static MavenRepository of(final String urlInfix) {
+        return new MavenRepository(BASE_URL + urlInfix + METADATA_FILE);
+    }
+
+    /**
+     * Accessor for XML document, called internally and in tests.
      *
-     * @param json json object to retrieve latest version from.
+     * @param document XML DOM document to retrieve latest version from
      * @return latest version.
-     * @throws JsonContentException if json does not contain the expected keys.
+     * @throws XmlContentException
      */
-    static String getLatestVersion(final JsonObject json) throws JsonContentException {
-        try {
-            return json.getJsonObject("response") //
-                    .getJsonArray("docs") //
-                    .getJsonObject(0) //
-                    .getString("latestVersion");
-        } catch (final NullPointerException exception) {
-            throw new JsonContentException("Could not find /response/docs[0]/latestVersion in json document.");
+    static String getLatestVersion(final Document document) throws XmlContentException {
+        final Node node = runXPath(document, LATEST_VERSION_XPATH);
+        if (node == null) {
+            throw new XmlContentException("Couldn't find node " + LATEST_VERSION_XPATH);
         }
+        return node.getTextContent();
     }
 
-    private static String url(final String artifactSuffix) {
-        return url(GROUP_ID, ARTIFACT_PREFIX + artifactSuffix);
-    }
+    static final String BASE_URL = "https://repo1.maven.org/maven2/";
+    static final String METADATA_FILE = "/maven-metadata.xml";
+    private static final String PROJECT_KEEPER_PREFIX = "com/exasol/project-keeper-";
 
-    /**
-     * @param group    Maven group ID
-     * @param artifact Maven artifact ID
-     * @return URL to query latest version
-     */
-    public static String url(final String group, final String artifact) {
-        return url(DEFAULT_REPOSITORY_URL, group, artifact);
-    }
-
-    private static String url(final String root, final String group, final String artifact) {
-        return root + "/solrsearch/select?q=g:" + group + "+AND+a:" + artifact + "&wt=json";
-    }
-
-    static final String DEFAULT_REPOSITORY_URL = "https://search.maven.org";
-    static final String GROUP_ID = "com.exasol";
-    static final String ARTIFACT_PREFIX = "project-keeper";
+    // sonar requests to get this URI from a customizable parameter which is inappropriate in the current situation
+    @SuppressWarnings("java:S1075")
+    private static final String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
 
     private final String url;
 
     /**
-     * Productive code is expected to use the static methods {@link MavenRepository#cli} and
-     * {@link MavenRepository#mavenPlugin}.
+     * Productive code is expected to use the static methods {@link MavenRepository#projectKeeperCli()} and
+     * {@link MavenRepository#projectKeeperMavenPlugin()}.
      *
      * <p>
      * This constructor is designated for tests, but as some tests are in a different package the visibility needs to be
@@ -83,25 +83,34 @@ public class MavenRepository {
 
     /**
      * @return latest version of project-keeper in the flavor addressed by the URL of this repository.
-     * @throws IOException          if URL cannot be connected
-     * @throws JsonContentException if json does not contain the expected keys.
+     * @throws ParserConfigurationException in configuring parser failed (implementation error)
+     * @throws SAXException                 in case XML is invalid
+     * @throws IOException                  if URL cannot be connected
+     * @throws XmlContentException          in case Maven metadata XML document does not contains expected XML elements
+     *                                      with latest version
      */
-    public String getLatestVersion() throws IOException, JsonContentException {
-        try (JsonReader reader = Json.createReader(new URL(this.url).openStream())) {
-            return getLatestVersion(reader.readObject());
+    public String getLatestVersion()
+            throws ParserConfigurationException, SAXException, IOException, XmlContentException {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+        final DocumentBuilder db = factory.newDocumentBuilder();
+        try (InputStream stream = new URL(this.url).openStream()) {
+            return getLatestVersion(db.parse(stream));
         }
     }
 
     /**
      * This exception is thrown if response of maven repository in json format does not contain the expected keys.
      */
-    public static class JsonContentException extends Exception {
+    public static class XmlContentException extends Exception {
         private static final long serialVersionUID = 1L;
 
         /**
          * @param message the detail message.
          */
-        public JsonContentException(final String message) {
+        public XmlContentException(final String message) {
             super(message);
         }
     }
