@@ -1,13 +1,21 @@
 # Project Keeper 2.9.3, released 2023-??-??
 
-Code name: Template for .gitignore
+Code name: Validate release config vs. PK's own config
 
 ## Summary
 
-Added template for file `.gitignore` if the file does not exist, yet.
+Added validation for publication to Maven Central. PK now reports an error in the following cases
+
+| File `release_config.yml`                                | File `.project-keeper.yml`                           |
+|----------------------------------------------------------|------------------------------------------------------|
+| exists and contains release platform `maven`             | none of the sources activates module `maven_central` |
+| exists but does **not contain** release platform `maven` | any of the sources activates module `maven_central`  |
+
+Additionally PK creates file `.gitignore` from a template if the file does not exist, yet.
 
 ## Features
 
+* #407: Added validation for publication to Maven Central
 * #404: Added template for file `.gitignore`
 
 ## Dependency Updates
@@ -21,6 +29,9 @@ Added template for file `.gitignore` if the file does not exist, yet.
 #### Test Dependency Updates
 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.11` to `3.12.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-core:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
 
 #### Plugin Dependency Updates
@@ -35,6 +46,7 @@ Added template for file `.gitignore` if the file does not exist, yet.
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.1` to `2.9.3`
 * Updated `javax.xml.bind:jaxb-api:2.3.1` to `2.4.0-b180830.0359`
+* Updated `org.xmlunit:xmlunit-core:2.9.0` to `2.9.1`
 
 #### Runtime Dependency Updates
 
@@ -44,7 +56,11 @@ Added template for file `.gitignore` if the file does not exist, yet.
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.1` to `2.9.3`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.11` to `3.12.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-junit-jupiter:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
+* Updated `org.xmlunit:xmlunit-matchers:2.9.0` to `2.9.1`
 
 #### Plugin Dependency Updates
 
@@ -59,6 +75,7 @@ Added template for file `.gitignore` if the file does not exist, yet.
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-core:2.9.1` to `2.9.3`
+* Updated `org.apache.maven:maven-model:3.8.6` to `3.8.7`
 
 #### Runtime Dependency Updates
 
@@ -67,6 +84,8 @@ Added template for file `.gitignore` if the file does not exist, yet.
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.1` to `2.9.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
 
 #### Plugin Dependency Updates
 
@@ -83,7 +102,11 @@ Added template for file `.gitignore` if the file does not exist, yet.
 
 #### Test Dependency Updates
 
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-core:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
+* Updated `org.xmlunit:xmlunit-matchers:2.9.0` to `2.9.1`
 
 #### Plugin Dependency Updates
 
@@ -103,7 +126,11 @@ Added template for file `.gitignore` if the file does not exist, yet.
 
 #### Test Dependency Updates
 
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-core:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
+* Updated `org.xmlunit:xmlunit-matchers:2.9.0` to `2.9.1`
 
 #### Plugin Dependency Updates
 
