@@ -13,6 +13,7 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 * #408: Changed method to inquire latest version of PK for self-update in file `pom.xml`.
 * #409: Updated broken-links checker configuration
 * #403: Added `npm ci` before checking npm licenses
+* #411: Ignore line comments and `replace` directives in `go.mod` files
 
 ## Dependency Updates
 
@@ -25,6 +26,9 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 #### Test Dependency Updates
 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.11` to `3.12.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-core:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
 
 #### Plugin Dependency Updates
@@ -39,6 +43,7 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.1` to `2.9.2`
 * Updated `javax.xml.bind:jaxb-api:2.3.1` to `2.4.0-b180830.0359`
+* Updated `org.xmlunit:xmlunit-core:2.9.0` to `2.9.1`
 
 #### Runtime Dependency Updates
 
@@ -48,7 +53,11 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.1` to `2.9.2`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.11` to `3.12.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-junit-jupiter:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
+* Updated `org.xmlunit:xmlunit-matchers:2.9.0` to `2.9.1`
 
 #### Plugin Dependency Updates
 
@@ -63,6 +72,7 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-core:2.9.1` to `2.9.2`
+* Updated `org.apache.maven:maven-model:3.8.6` to `3.8.7`
 
 #### Runtime Dependency Updates
 
@@ -71,6 +81,8 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.1` to `2.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
 
 #### Plugin Dependency Updates
 
@@ -87,7 +99,11 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 
 #### Test Dependency Updates
 
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-core:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
+* Updated `org.xmlunit:xmlunit-matchers:2.9.0` to `2.9.1`
 
 #### Plugin Dependency Updates
 
@@ -107,7 +123,11 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 
 #### Test Dependency Updates
 
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
+* Updated `org.mockito:mockito-core:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
+* Updated `org.xmlunit:xmlunit-matchers:2.9.0` to `2.9.1`
 
 #### Plugin Dependency Updates
 
