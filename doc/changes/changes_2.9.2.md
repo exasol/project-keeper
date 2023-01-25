@@ -13,6 +13,7 @@ Additionally updated template for build script `.github/workflows/broken_links_c
 * #408: Changed method to inquire latest version of PK for self-update in file `pom.xml`.
 * #409: Updated broken-links checker configuration
 * #403: Added `npm ci` before checking npm licenses
+* #411: Ignore line comments and `replace` directives in `go.mod` files
 
 ## Dependency Updates
 

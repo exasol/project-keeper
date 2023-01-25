@@ -11,12 +11,32 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 class GoModFileTest {
 
     @Test
     void parseEmptyFile() {
         final GoModFile file = GoModFile.parse("");
+        assertModFile(file, null, null, 0, 0);
+    }
+
+    @ParameterizedTest
+    @CsvSource({
+            // Line comments
+            "'// Line comment'", "'\t// Leading tab'", "'  // Leading spaces'", "'//NoSpaceAfterSlash'",
+            "'// Trailing space '",
+            // Replace directives
+            "replace something with something", "replace\twith tab",
+            "replace github.com/docker/docker => github.com/docker/docker v20.10.3-0 // 22.06 branch",
+            // Replace block
+            "'replace (\n" //
+                    + "\tgithub.com/docker/docker => github.com/docker/docker v20.10.3-0.20221013203545-33ab36d6b304+incompatible // 22.06 branch\n"
+                    + "more content\n" //
+                    + ")'", })
+    void parseIgnoresLine(final String line) {
+        final GoModFile file = GoModFile.parse(line);
         assertModFile(file, null, null, 0, 0);
     }
 

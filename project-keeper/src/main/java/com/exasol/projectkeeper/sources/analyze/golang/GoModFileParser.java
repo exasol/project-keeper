@@ -12,23 +12,36 @@ import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
  * This class implements a parser for {@code go.mod} files.
  */
 class GoModFileParser {
+    private static final Consumer<RegexMatch> IGNORE = match -> {
+    };
+
     private final List<RegexAction> regexps;
     String moduleName = null;
     String goVersion;
     boolean insideRequireBlock = false;
+    boolean insideReplaceBlock = false;
     final List<VersionedDependency> dependencies = new ArrayList<>();
 
     GoModFileParser() {
         this.regexps = List.of( //
+                RegexAction.create("^//(.+)$", IGNORE), //
+                RegexAction.create("^replace \\($", match -> this.insideReplaceBlock = true),
+                RegexAction.create("^replace\\s+(.+)$", IGNORE),
                 RegexAction.create("^module\\s+(.+)$", match -> this.moduleName = match.group(1)),
                 RegexAction.create("^go\\s+(.+)$", match -> this.goVersion = match.group(1)),
                 RegexAction.create("^require \\($", match -> this.insideRequireBlock = true),
-                RegexAction.create("^\\)$", match -> this.insideRequireBlock = false),
-                RegexAction.create("^(?:require\\s+)?([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$",
-                        match -> this.dependencies.add(createDependency(match.getGroups()))),
-                RegexAction.create(".*", match -> {
-                    throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-138")
-                            .message("Found unexpected line {{line}} in go.mod file", match.getLine()).toString());
+                RegexAction.create("^\\)$", match -> {
+                    this.insideRequireBlock = false;
+                    this.insideReplaceBlock = false;
+                }), RegexAction.create("^(?:require\\s+)?([^\\s]+)\\s+([^\\s/]+)(?:\\s*//\\s*(.*))?$", match -> {
+                    if (!insideReplaceBlock) {
+                        this.dependencies.add(createDependency(match.getGroups()));
+                    }
+                }), RegexAction.create(".*", match -> {
+                    if (!insideReplaceBlock) {
+                        throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-138")
+                                .message("Found unexpected line {{line}} in go.mod file", match.getLine()).toString());
+                    }
                 }));
     }
 
