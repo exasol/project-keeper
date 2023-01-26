@@ -17,12 +17,15 @@ Updated template for build script `.github/workflows/broken_links_checker.yml` t
 
 Added template for file `.gitattributes` if the file does not exist, yet.
 
+Added template for file `.gitattributes` if the file does not exist, yet.
+
 ## Bugfixes
 
 * #408: Changed method to inquire latest version of PK for self-update in file `pom.xml`.
 * #409: Updated broken-links checker configuration
 * #403: Added `npm ci` before checking npm licenses
 * #411: Ignore line comments and `replace` directives in `go.mod` files
+* #404: Added template for file `.gitattributes`
 
 ## Features
 
