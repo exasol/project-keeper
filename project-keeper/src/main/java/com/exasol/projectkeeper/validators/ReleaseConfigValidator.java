@@ -22,7 +22,7 @@ import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
- * This class validate release configuration in file {@code release_config.yml}.
+ * This class validates release configuration in file {@code release_config.yml}.
  */
 public class ReleaseConfigValidator implements Validator {
 
