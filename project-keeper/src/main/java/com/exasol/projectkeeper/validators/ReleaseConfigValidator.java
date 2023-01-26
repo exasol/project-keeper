@@ -53,24 +53,27 @@ public class ReleaseConfigValidator implements Validator {
         if (hasSourceWithMavenCentralModule() && !isReleasedToMavenCentral()) {
             return findings(ExaError.messageBuilder("E-PK-CORE-165") //
                     .message("At least one source uses project-keeper module {{pk module}}" //
-                            + " but releases are not published to Maven Central.", //
-                            PK_MAVEN) //
-                    .mitigation("Either add release platform {{platform}} to file {{release config}}", //
-                            RELEASE_MAVEN, RELEASE_CONFIG) //
+                            + " but releases are not published to Maven Central.") //
+                    .mitigation("Either add release platform {{platform}} to file {{release config}}") //
                     .mitigation("or remove PK module {{pk module}}" //
-                            + " from all sources in file {{pk config}}.", //
-                            PK_MAVEN, PK_CONFIG) //
+                            + " from all sources in file {{pk config}}.") //
+                    .parameter("release config", RELEASE_CONFIG) //
+                    .parameter("platform", RELEASE_MAVEN) //
+                    .parameter("pk config", PK_CONFIG) //
+                    .parameter("pk module", PK_MAVEN) //
                     .toString());
         }
         if (isReleasedToMavenCentral() && !hasSourceWithMavenCentralModule()) {
             return findings(ExaError.messageBuilder("E-PK-CORE-166") //
                     .message("Releases are configured for publication to Maven Central" //
-                            + " but no source uses project-keeper module {{pk module}}.", PK_MAVEN) //
-                    .mitigation("Either remove platform {{platform}} from file {{release config}}", //
-                            RELEASE_MAVEN, RELEASE_CONFIG) //
+                            + " but no source uses project-keeper module {{pk module}}.") //
+                    .mitigation("Either remove platform {{platform}} from file {{release config}}") //
                     .mitigation("or add PK module {{pk module}} to at least" //
-                            + " one of the sources in file {{pk config}}.", //
-                            PK_MAVEN, PK_CONFIG) //
+                            + " one of the sources in file {{pk config}}.") //
+                    .parameter("release config", RELEASE_CONFIG) //
+                    .parameter("platform", RELEASE_MAVEN) //
+                    .parameter("pk config", PK_CONFIG) //
+                    .parameter("pk module", PK_MAVEN) //
                     .toString());
         }
         return emptyList();
@@ -90,7 +93,11 @@ public class ReleaseConfigValidator implements Validator {
     }
 
     private boolean isReleasedToMavenCentral() {
-        final Object platforms = readReleaseConfig().get("release-platforms");
+        final Map<String, Object> config = readReleaseConfig();
+        if (config == null) {
+            return false;
+        }
+        final Object platforms = config.get("release-platforms");
         if (platforms == null) {
             return false;
         }
@@ -104,7 +111,7 @@ public class ReleaseConfigValidator implements Validator {
         try (InputStream stream = Files.newInputStream(this.releaseConfig)) {
             return new Yaml().load(stream);
         } catch (final YAMLException | IOException exception) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-??") //
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-167") //
                     .message("Failed to read file {{file}}", this.releaseConfig) //
                     .toString(), exception);
         }
