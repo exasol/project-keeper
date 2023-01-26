@@ -1,14 +1,14 @@
 # Project Keeper 2.9.3, released 2023-??-??
 
-Code name: Template for .gitignore
+Code name: Template for .gitattributes
 
 ## Summary
 
-Added template for file `.gitignore` if the file does not exist, yet.
+Added template for file `.gitattributes` if the file does not exist, yet.
 
 ## Features
 
-* #404: Added template for file `.gitignore`
+* #404: Added template for file `.gitattributes`
 
 ## Dependency Updates
 
