@@ -15,6 +15,10 @@ import com.exasol.projectkeeper.sources.*;
  * Factory for file templates.
  */
 class FileTemplatesFactory {
+
+    private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
+            "linguist-generated=true");
+
     private final Logger logger;
     private final String ownVersion;
 
@@ -29,6 +33,8 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource("release_config.yml", REQUIRE_EXIST));
         templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
+        templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
+                .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
             if (mvnRoot.get().getModules().contains(MAVEN_CENTRAL)) {

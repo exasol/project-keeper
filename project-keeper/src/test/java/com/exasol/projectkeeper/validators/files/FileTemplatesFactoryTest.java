@@ -1,6 +1,8 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
+import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -29,6 +31,9 @@ class FileTemplatesFactoryTest {
                 .getGlobalTemplates(sources);
         assertContainsTemplate(templates, ".github/workflows/ci-build.yml");
         assertContainsTemplate(templates, ".vscode/settings.json");
+        final Optional<FileTemplate> gitattributes = findTemplate(templates, ".gitattributes");
+        assertTrue(gitattributes.isPresent());
+        assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom"));
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {
@@ -74,10 +79,13 @@ class FileTemplatesFactoryTest {
     }
 
     private void assertContainsTemplate(final List<FileTemplate> templates, final String pathInProject) {
-        assertTrue(
-                () -> templates.stream()
-                        .anyMatch(template -> template.getPathInProject().equals(Path.of(pathInProject))),
-                "Expected template " + pathInProject
-                        + " to exist but templates the generated templates did not contain it.");
+        assertTrue(findTemplate(templates, pathInProject).isPresent(), "Expected template " + pathInProject
+                + " to exist but templates the generated templates did not contain it.");
+    }
+
+    private Optional<FileTemplate> findTemplate(final List<FileTemplate> templates, final String pathInProject) {
+        return templates.stream() //
+                .filter(template -> template.getPathInProject().equals(Path.of(pathInProject))) //
+                .findFirst();
     }
 }

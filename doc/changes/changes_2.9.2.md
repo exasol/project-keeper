@@ -1,4 +1,4 @@
-# Project Keeper 2.9.2, released 2023-01-25
+# Project Keeper 2.9.2, released 2023-01-??
 
 Code name: Fixed Self Update
 
@@ -8,12 +8,15 @@ PK checks for updates at Maven Central to update itself. With this release PK ac
 
 Additionally updated template for build script `.github/workflows/broken_links_checker.yml` to exclude `mysql.com` as this site seems to block requests from `github.com` and fixed a bug in support for NPM projects.
 
+Added template for file `.gitattributes` if the file does not exist, yet.
+
 ## Bugfixes
 
 * #408: Changed method to inquire latest version of PK for self-update in file `pom.xml`.
 * #409: Updated broken-links checker configuration
 * #403: Added `npm ci` before checking npm licenses
 * #411: Ignore line comments and `replace` directives in `go.mod` files
+* #404: Added template for file `.gitattributes`
 
 ## Dependency Updates
 

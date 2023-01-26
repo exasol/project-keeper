@@ -1,6 +1,9 @@
 package com.exasol.projectkeeper.validators.files;
 
 import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import lombok.EqualsAndHashCode;
 
@@ -13,6 +16,7 @@ public class FileTemplateFromResource implements FileTemplate {
     private final String templateResource;
     private final String pathInProject;
     private final Validation validation;
+    private final Map<String, String> replacements = new HashMap<>();
 
     /**
      * Create a new instance of {@link FileTemplateFromResource}.
@@ -21,9 +25,7 @@ public class FileTemplateFromResource implements FileTemplate {
      * @param validation    validation criteria for the template
      */
     public FileTemplateFromResource(final String pathInProject, final Validation validation) {
-        this.templateResource = "templates/" + pathInProject;
-        this.pathInProject = pathInProject;
-        this.validation = validation;
+        this("templates/" + pathInProject, pathInProject, validation);
     }
 
     /**
@@ -40,6 +42,19 @@ public class FileTemplateFromResource implements FileTemplate {
         this.validation = validation;
     }
 
+    /**
+     * Add a replacement definition. {@link FileTemplateFromResource} identifies variables in the template by prefix "$"
+     * and replaces each variable with the value provided beforehand.
+     *
+     * @param name        name of the variable
+     * @param replacement text that should be used to replace the variable
+     * @return this for fluent programming
+     */
+    public FileTemplateFromResource replacing(final String name, final String replacement) {
+        this.replacements.put(name, replacement);
+        return this;
+    }
+
     @Override
     public Path getPathInProject() {
         return Path.of(this.pathInProject);
@@ -47,7 +62,11 @@ public class FileTemplateFromResource implements FileTemplate {
 
     @Override
     public String getContent() {
-        return new ResourceReader().readFromResource(this.templateResource);
+        String value = new ResourceReader().readFromResource(this.templateResource);
+        for (final Entry<String, String> rep : this.replacements.entrySet()) {
+            value = value.replace("$" + rep.getKey(), rep.getValue());
+        }
+        return value;
     }
 
     @Override
