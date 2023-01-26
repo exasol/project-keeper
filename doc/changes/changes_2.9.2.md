@@ -1,12 +1,19 @@
 # Project Keeper 2.9.2, released 2023-01-??
 
-Code name: Fixed Self Update
+Code name: Fixed Self Update and Added Validation of Release Config
 
 ## Summary
 
 PK checks for updates at Maven Central to update itself. With this release PK accesses XML file `maven-metadata.xml` rather than using the [Maven Central REST API](https://central.sonatype.org/search/rest-api-guide/) which showed sporadic failures lately.
 
-Additionally updated template for build script `.github/workflows/broken_links_checker.yml` to exclude `mysql.com` as this site seems to block requests from `github.com` and fixed a bug in support for NPM projects.
+Added validation for publication to Maven Central. PK now reports an error in the following cases
+
+| File `release_config.yml`                                | File `.project-keeper.yml`                           |
+|----------------------------------------------------------|------------------------------------------------------|
+| exists and contains release platform `maven`             | none of the sources activates module `maven_central` |
+| exists but does **not contain** release platform `maven` | any of the sources activates module `maven_central`  |
+
+Updated template for build script `.github/workflows/broken_links_checker.yml` to exclude `mysql.com` as this site seems to block requests from `github.com` and fixed a bug in support for NPM projects.
 
 Added template for file `.gitattributes` if the file does not exist, yet.
 
@@ -16,6 +23,11 @@ Added template for file `.gitattributes` if the file does not exist, yet.
 * #409: Updated broken-links checker configuration
 * #403: Added `npm ci` before checking npm licenses
 * #411: Ignore line comments and `replace` directives in `go.mod` files
+* #404: Added template for file `.gitattributes`
+
+## Features
+
+* #407: Added validation for publication to Maven Central
 * #404: Added template for file `.gitattributes`
 
 ## Dependency Updates
