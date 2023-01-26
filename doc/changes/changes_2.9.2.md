@@ -46,6 +46,12 @@ Added template for file `.gitattributes` if the file does not exist, yet.
 * Updated `org.mockito:mockito-core:4.8.1` to `5.0.0`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
 
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.1` to `1.2.2`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.13.0` to `2.14.2`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -70,7 +76,11 @@ Added template for file `.gitattributes` if the file does not exist, yet.
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.1` to `1.2.2`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M7` to `3.0.0-M8`
 * Updated `org.apache.maven.plugins:maven-jar-plugin:3.2.2` to `3.3.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.13.0` to `2.14.2`
 
 ### Project Keeper Command Line Interface
 
@@ -89,6 +99,13 @@ Added template for file `.gitattributes` if the file does not exist, yet.
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.1` to `5.9.2`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.1` to `5.9.2`
 
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.1` to `1.2.2`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.13.0` to `2.14.2`
+
 ### Project Keeper Maven Plugin
 
 #### Compile Dependency Updates
@@ -105,7 +122,12 @@ Added template for file `.gitattributes` if the file does not exist, yet.
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.1` to `1.2.2`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.3.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M7` to `3.0.0-M8`
 * Updated `org.apache.maven.plugins:maven-plugin-plugin:3.6.4` to `3.7.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.13.0` to `2.14.2`
 
 ### Project Keeper Java Project Crawler
 
@@ -122,8 +144,22 @@ Added template for file `.gitattributes` if the file does not exist, yet.
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.6`
 * Updated `org.xmlunit:xmlunit-matchers:2.9.0` to `2.9.1`
 
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.1` to `1.2.2`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.3.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.13.0` to `2.14.2`
+
 ### Project Keeper Shared Test Setup
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.1` to `2.9.2`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.1` to `1.2.2`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0-M7` to `3.0.0-M8`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.13.0` to `2.14.2`

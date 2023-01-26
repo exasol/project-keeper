@@ -358,7 +358,7 @@
 [28]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [29]: http://www.apache.org/licenses/LICENSE-2.0.txt
 [30]: https://maven.apache.org/surefire/maven-surefire-plugin/
-[31]: https://www.mojohaus.org/versions-maven-plugin/
+[31]: https://www.mojohaus.org/versions/versions-maven-plugin/
 [32]: https://maven.apache.org/plugins/maven-deploy-plugin/
 [33]: https://maven.apache.org/plugins/maven-gpg-plugin/
 [34]: https://maven.apache.org/plugins/maven-source-plugin/
