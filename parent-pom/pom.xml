@@ -28,7 +28,7 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>2.9.3</revision>
+        <revision>2.9.2</revision>
         <maven.version>3.8.7</maven.version>
         <junit.version>5.9.2</junit.version>
         <jacoco.version>0.8.8</jacoco.version>
