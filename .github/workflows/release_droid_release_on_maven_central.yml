@@ -23,7 +23,7 @@ jobs:
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Publish to Central Repository
-        run: mvn --batch-mode -Dgpg.skip=false -DskipTests clean deploy
+        run: mvn --batch-mode -Dgpg.skip=false -DskipTests clean deploy # --settings maven-central-settings.xml
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
