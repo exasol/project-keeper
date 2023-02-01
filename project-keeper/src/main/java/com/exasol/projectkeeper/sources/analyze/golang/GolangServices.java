@@ -87,7 +87,7 @@ class GolangServices {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
                     .message("Error starting the 'go-licenses' binary.")
                     .mitigation("Verify that 'go-licenses' is installed.")
-                    .mitigation("Install it by running 'go install github.com/google/go-licenses@v1.2.1'.").toString(),
+                    .mitigation("Install it by running 'go install github.com/google/go-licenses@v1.6.0'.").toString(),
                     exception);
         }
     }
