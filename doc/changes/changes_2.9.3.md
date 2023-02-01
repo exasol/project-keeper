@@ -4,12 +4,16 @@ Code name: Fix GitHub verify workflow
 
 ## Summary
 
-This release fixes fetching dependencies for NPM modules. Dependencies where only fetched for the first NPM module, not for the others. The release also fixes the syntax of the GitHub verify workflow file.
+This release fixes fetching dependencies for NPM modules. Dependencies where only fetched for the first NPM module, not for the others. The release also fixes the syntax of the GitHub verify workflow file and increases the timeout for Maven Central deployments.
 
 ## Bugfixes
 
 * #421: Fixed syntax of GitHub verify workflow
 * #422: Fixed fetching NPM dependencies for multiple modules.
+
+## Refactoring
+
+* #419: Increase timeout for Maven Central deployments
 
 ## Dependency Updates
 
