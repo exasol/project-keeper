@@ -28,12 +28,11 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>2.9.2</revision>
+        <revision>2.9.3</revision>
         <maven.version>3.8.7</maven.version>
         <junit.version>5.9.2</junit.version>
-        <jacoco.version>0.8.8</jacoco.version>
         <xmlunit.version>2.9.1</xmlunit.version>
-        <mockito.version>5.0.0</mockito.version>
+        <mockito.version>5.1.1</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -82,12 +81,6 @@
                 <version>3.0.0</version>
             </dependency>
             <dependency>
-                <groupId>org.glassfish</groupId>
-                <artifactId>jakarta.json</artifactId>
-                <version>2.0.1</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>2.0.4</version>
@@ -114,11 +107,6 @@
                 <groupId>javax.xml.bind</groupId>
                 <artifactId>jaxb-api</artifactId>
                 <version>2.4.0-b180830.0359</version>
-            </dependency>
-            <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>4.0.1</version>
             </dependency>
             <dependency>
                 <groupId>org.xmlunit</groupId>
@@ -213,12 +201,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.jacoco</groupId>
-                <artifactId>org.jacoco.core</artifactId>
-                <version>${jacoco.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.exasol</groupId>
                 <artifactId>maven-plugin-integration-testing</artifactId>
                 <version>1.1.2</version>
@@ -239,7 +221,7 @@
             <dependency>
                 <groupId>nl.jqno.equalsverifier</groupId>
                 <artifactId>equalsverifier</artifactId>
-                <version>3.12.3</version>
+                <version>3.12.4</version>
                 <scope>test</scope>
             </dependency>
             <!-- overriding vulnerable version -->

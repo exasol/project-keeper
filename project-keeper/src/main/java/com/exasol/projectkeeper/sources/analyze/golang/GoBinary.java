@@ -29,7 +29,7 @@ public class GoBinary {
     /**
      * {@link GoBinary} for tool {@code go-licenses}
      */
-    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google/go-licenses@latest", "go-licenses");
+    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google/go-licenses@v1.6.0", "go-licenses");
 
     private static final Duration INSTALLATION_TIMEOUT = Duration.ofMinutes(2);
     private static final Logger LOGGER = Logger.getLogger(GoBinary.class.getName());
