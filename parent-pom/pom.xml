@@ -31,9 +31,8 @@
         <revision>2.9.3</revision>
         <maven.version>3.8.7</maven.version>
         <junit.version>5.9.2</junit.version>
-        <jacoco.version>0.8.8</jacoco.version>
         <xmlunit.version>2.9.1</xmlunit.version>
-        <mockito.version>5.0.0</mockito.version>
+        <mockito.version>5.1.1</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -213,12 +212,6 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
-                <groupId>org.jacoco</groupId>
-                <artifactId>org.jacoco.core</artifactId>
-                <version>${jacoco.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.exasol</groupId>
                 <artifactId>maven-plugin-integration-testing</artifactId>
                 <version>1.1.2</version>
@@ -239,7 +232,7 @@
             <dependency>
                 <groupId>nl.jqno.equalsverifier</groupId>
                 <artifactId>equalsverifier</artifactId>
-                <version>3.12.3</version>
+                <version>3.12.4</version>
                 <scope>test</scope>
             </dependency>
             <!-- overriding vulnerable version -->

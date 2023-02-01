@@ -201,7 +201,6 @@
 | [Hamcrest][14]                         | [BSD License 3][15]                            |
 | [org.xmlunit:xmlunit-matchers][55]     | [The Apache Software License, Version 2.0][29] |
 | [mockito-core][19]                     | [The MIT License][20]                          |
-| [JaCoCo :: Core][73]                   | [Eclipse Public License 2.0][41]               |
 | [Maven Plugin Integration Testing][62] | [MIT License][63]                              |
 | [SLF4J JDK14 Binding][21]              | [MIT License][22]                              |
 | [JaCoCo :: Agent][73]                  | [Eclipse Public License 2.0][41]               |
@@ -261,7 +260,6 @@
 | [org.xmlunit:xmlunit-matchers][55]     | [The Apache Software License, Version 2.0][29] |
 | [SLF4J JDK14 Binding][21]              | [MIT License][22]                              |
 | [mockito-core][19]                     | [The MIT License][20]                          |
-| [JaCoCo :: Core][73]                   | [Eclipse Public License 2.0][41]               |
 | [Maven Plugin Integration Testing][62] | [MIT License][63]                              |
 | [JaCoCo :: Agent][73]                  | [Eclipse Public License 2.0][41]               |
 
