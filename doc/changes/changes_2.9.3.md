@@ -14,6 +14,10 @@ This release fixes the syntax of the GitHub verify workflow file.
 
 ### Project-Keeper Shared Model Classes
 
+#### Runtime Dependency Updates
+
+* Removed `org.glassfish:jakarta.json:2.0.1`
+
 #### Test Dependency Updates
 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.12.3` to `3.12.4`
@@ -24,6 +28,7 @@ This release fixes the syntax of the GitHub verify workflow file.
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.2` to `2.9.3`
+* Removed `org.glassfish.jaxb:jaxb-runtime:4.0.1`
 
 #### Runtime Dependency Updates
 
