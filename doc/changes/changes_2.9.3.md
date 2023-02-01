@@ -6,9 +6,12 @@ Code name: Fix GitHub verify workflow
 
 This release fixes the syntax of the GitHub verify workflow file.
 
+PK's template for github workflow `ci-build-next-java.yml` now uses Maven profile `-P skipNativeImage` for projects using PK module [native_image](../developers_guide/preparing_a_project_for_native_image_builds.md).
+
 ## Features
 
 * #421: Fixed syntax of GitHub verify workflow
+* #416: Updated template for build script `ci-build-next-java.yml` for projects using PK module `native_image`
 
 ## Dependency Updates
 

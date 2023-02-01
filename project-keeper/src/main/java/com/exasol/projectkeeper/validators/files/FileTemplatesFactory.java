@@ -53,7 +53,9 @@ class FileTemplatesFactory {
     private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(getCiBuildTemplate(modules));
-        templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT) //
+                .replacing("skipNativeImage", //
+                        modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : ""));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
                 REQUIRE_EXACT));
