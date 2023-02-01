@@ -56,8 +56,8 @@ public class SimpleProcess {
      * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retrieve its output
      */
     public static SimpleProcess start(final Path workingDirectory, final List<String> command) {
-        LOGGER.finest(
-                () -> "Executing command '" + formatCommand(command) + "' in working dir '" + workingDirectory + "'");
+        LOGGER.finest(() -> "Executing command '" + formatCommand(command) + "' in working dir '" + workingDirectory
+                + "'...");
         try {
             final Process process = new ProcessBuilder(command)
                     .directory(workingDirectory == null ? null : workingDirectory.toFile()) //
