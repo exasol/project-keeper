@@ -4,14 +4,22 @@ Code name: Fix GitHub verify workflow
 
 ## Summary
 
-This release fixes the syntax of the GitHub verify workflow file.
+This release fixes fetching dependencies for NPM modules. Dependencies where only fetched for the first NPM module, not for the others. The release also fixes the syntax of the GitHub verify workflow file and increases the timeout for Maven Central deployments.
 
 PK's template for github workflow `ci-build-next-java.yml` now uses Maven profile `-P skipNativeImage` for projects using PK module [native_image](../developers_guide/preparing_a_project_for_native_image_builds.md).
 
 ## Features
 
-* #421: Fixed syntax of GitHub verify workflow
 * #416: Updated template for build script `ci-build-next-java.yml` for projects using PK module `native_image`
+
+## Bugfixes
+
+* #421: Fixed syntax of GitHub verify workflow
+* #422: Fixed fetching NPM dependencies for multiple modules.
+
+## Refactoring
+
+* #419: Increase timeout for Maven Central deployments
 
 ## Dependency Updates
 

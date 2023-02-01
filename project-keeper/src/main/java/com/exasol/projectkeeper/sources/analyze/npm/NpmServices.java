@@ -3,7 +3,7 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 import java.io.StringReader;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.Optional;
+import java.util.*;
 
 import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
@@ -37,7 +37,7 @@ class NpmServices {
 
     private final CommandExecutor executor;
     private final GitService git;
-    private boolean fetchedDependencies = false;
+    private final Set<Path> workingDirsWithFetchedDependencies = new HashSet<>();
 
     NpmServices(final CommandExecutor executor, final GitService git) {
         this.executor = executor;
@@ -75,11 +75,11 @@ class NpmServices {
         return JsonIo.read(new StringReader(stdout));
     }
 
-    private void fetchDependencies(final Path folder) {
-        if (this.fetchedDependencies) {
+    private void fetchDependencies(final Path workingDir) {
+        if (this.workingDirsWithFetchedDependencies.contains(workingDir)) {
             return;
         }
-        this.executor.execute(FETCH_DEPENDENCIES, folder);
-        this.fetchedDependencies = true;
+        this.executor.execute(FETCH_DEPENDENCIES, workingDir);
+        this.workingDirsWithFetchedDependencies.add(workingDir);
     }
 }

@@ -5,13 +5,13 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.io.FileNotFoundException;
 import java.nio.file.Path;
 import java.util.Optional;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -42,7 +42,7 @@ class NpmServicesTest {
         when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
         when(this.executor.execute(eq(LICENSE_CHECKER), any())).thenReturn(TestData.LICENSES);
         final PackageJson current = TestData.samplePackageJson();
-        assertThat(testee().getDependencies(current), isA(ProjectDependencies.class));
+        assertThat(testee().getDependencies(current), Matchers.isA(ProjectDependencies.class));
     }
 
     @Test
@@ -62,6 +62,30 @@ class NpmServicesTest {
         when(repo.getFileFromCommit(any(), any())).thenThrow(new FileNotFoundException());
         final PackageJson current = currentPackageJson(PACKAGE_JSON_FILE);
         assertThat(retrievePrevious(repo, current), nullValue());
+    }
+
+    @Test
+    void dependenciesFetchedOnlyOnceForWorkingDir() {
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
+        when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
+        final NpmServices testee = testee();
+        final Path workingDir = Path.of("testing-working-dir");
+        testee.listDependencies(workingDir);
+        testee.listDependencies(workingDir);
+        verify(this.executor, times(1)).execute(FETCH_DEPENDENCIES, workingDir);
+    }
+
+    @Test
+    void dependenciesFetchedForEachWorkingDir() {
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
+        when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
+        final NpmServices testee = testee();
+        final Path workingDir1 = Path.of("testing-working-dir1");
+        final Path workingDir2 = Path.of("testing-working-dir2");
+        testee.listDependencies(workingDir1);
+        testee.listDependencies(workingDir2);
+        verify(this.executor, times(1)).execute(FETCH_DEPENDENCIES, workingDir1);
+        verify(this.executor, times(1)).execute(FETCH_DEPENDENCIES, workingDir2);
     }
 
     private PackageJson currentPackageJson(final Path relative) {

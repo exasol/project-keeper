@@ -124,8 +124,6 @@ class GolangServices {
         final String moduleName = parts[0];
         final String licenseUrl = parts[1];
         final String licenseName = parts[2];
-        LOGGER.finest(() -> "Found dependency '" + moduleName + "' with license '" + licenseName + "' and url '"
-                + licenseUrl + "'");
         return new GolangDependencyLicense(moduleName, licenseName, licenseUrl);
     }
 
@@ -163,7 +161,6 @@ class GolangServices {
         }
         final String moduleName = parts[0];
         final String version = parts[1];
-        LOGGER.finest(() -> "Found dependency in go.mod: '" + moduleName + "' with version '" + version + "'");
         return VersionedDependency.builder() //
                 .name(moduleName) //
                 .version(version) //
