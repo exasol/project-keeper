@@ -142,7 +142,7 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
-         * @param value
+         * @param value {@code true} if the current project contains an NPM module
          * @return this for fluent programming
          */
         public Builder hasNpmModule(final boolean value) {
