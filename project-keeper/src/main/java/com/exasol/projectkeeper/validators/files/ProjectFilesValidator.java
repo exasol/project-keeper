@@ -26,29 +26,6 @@ public class ProjectFilesValidator implements Validator {
     private String projectKeeperVersion;
     public boolean hasNpmModule;
 
-//	private ProjectFilesValidator(Builder builder) {
-//		this.projectDirectory = builder.projectDirectory;
-//		this.sources = builder.sources;
-//		this.logger = builder.logger;
-//		this.ownVersion = builder.ownVersion;
-//	}
-
-    /**
-     * Crwate a new instance of {@link ProjectFilesValidator}.
-     *
-     * @param projectDirectory project's root directory
-     * @param sources          list of sources
-     * @param logger           logger
-     * @param ownVersion       the version of the currently running project keeper
-     */
-//    public ProjectFilesValidator(final Path projectDirectory, final List<AnalyzedSource> sources, final Logger logger,
-//            final String ownVersion) {
-//        this.projectDirectory = projectDirectory;
-//        this.sources = sources;
-//        this.logger = logger;
-//        this.ownVersion = ownVersion;
-//    }
-
     /**
      * Crwate a new instance of {@link ProjectFilesValidator}.
      */
