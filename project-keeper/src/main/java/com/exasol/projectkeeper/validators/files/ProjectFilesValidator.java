@@ -58,7 +58,8 @@ public class ProjectFilesValidator implements Validator {
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
-        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion, true);
+        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion,
+                true);
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;
@@ -122,38 +123,59 @@ public class ProjectFilesValidator implements Validator {
     }
 
     /**
-     *
-     * @author chku
-     *
+     * Builder for new instances of {@link ProjectFilesValidator}
      */
     public static final class Builder {
         private final ProjectFilesValidator validator = new ProjectFilesValidator();
 
+        /**
+         * @param projectDirectory project's root directory
+         * @return this for fluent programming
+         */
         public Builder projectDirectory(final Path projectDirectory) {
             this.validator.projectDirectory = projectDirectory;
             return this;
         }
 
+        /**
+         * @param value list of analyzed sources
+         * @return this for fluent programming
+         */
         public Builder analyzedSources(final List<AnalyzedSource> value) {
             this.validator.sources = value;
             return this;
         }
 
+        /**
+         * @param value logger to use for log messages
+         * @return this for fluent programming
+         */
         public Builder logger(final Logger value) {
             this.validator.logger = value;
             return this;
         }
 
+        /**
+         * @param value the version of the currently running project keeper
+         * @return this for fluent programming
+         */
         public Builder projectKeeperVersion(final String value) {
             this.validator.projectKeeperVersion = value;
             return this;
         }
 
+        /**
+         * @param value
+         * @return this for fluent programming
+         */
         public Builder hasNpmModule(final boolean value) {
             this.validator.hasNpmModule = value;
             return this;
         }
 
+        /**
+         * @return new instance of {@link ProjectFilesValidator}
+         */
         public ProjectFilesValidator build() {
             return this.validator;
         }
