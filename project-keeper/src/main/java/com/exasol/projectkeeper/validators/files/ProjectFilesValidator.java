@@ -20,31 +20,45 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 //[impl->dsn~required-files-validator~1]
 public class ProjectFilesValidator implements Validator {
-    private final Path projectDirectory;
-    private final List<AnalyzedSource> sources;
-    private final Logger logger;
-    private final String ownVersion;
+    private Path projectDirectory;
+    private List<AnalyzedSource> sources;
+    private Logger logger;
+    private String projectKeeperVersion;
+    public boolean hasNpmModule;
+
+//	private ProjectFilesValidator(Builder builder) {
+//		this.projectDirectory = builder.projectDirectory;
+//		this.sources = builder.sources;
+//		this.logger = builder.logger;
+//		this.ownVersion = builder.ownVersion;
+//	}
 
     /**
-     * Crate a new instance of {@link ProjectFilesValidator}.
+     * Crwate a new instance of {@link ProjectFilesValidator}.
      *
      * @param projectDirectory project's root directory
      * @param sources          list of sources
      * @param logger           logger
      * @param ownVersion       the version of the currently running project keeper
      */
-    public ProjectFilesValidator(final Path projectDirectory, final List<AnalyzedSource> sources, final Logger logger,
-            final String ownVersion) {
-        this.projectDirectory = projectDirectory;
-        this.sources = sources;
-        this.logger = logger;
-        this.ownVersion = ownVersion;
+//    public ProjectFilesValidator(final Path projectDirectory, final List<AnalyzedSource> sources, final Logger logger,
+//            final String ownVersion) {
+//        this.projectDirectory = projectDirectory;
+//        this.sources = sources;
+//        this.logger = logger;
+//        this.ownVersion = ownVersion;
+//    }
+
+    /**
+     * Crwate a new instance of {@link ProjectFilesValidator}.
+     */
+    ProjectFilesValidator() {
     }
 
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
-        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.ownVersion);
+        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion, true);
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;
@@ -97,6 +111,51 @@ public class ProjectFilesValidator implements Validator {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-119")
                     .message("Unknown template type {{template type}}", template.getValidation()).ticketMitigation()
                     .toString());
+        }
+    }
+
+    /**
+     * @return Builder for a new instance of {@link ProjectFilesValidator}
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     *
+     * @author chku
+     *
+     */
+    public static final class Builder {
+        private final ProjectFilesValidator validator = new ProjectFilesValidator();
+
+        public Builder projectDirectory(final Path projectDirectory) {
+            this.validator.projectDirectory = projectDirectory;
+            return this;
+        }
+
+        public Builder analyzedSources(final List<AnalyzedSource> value) {
+            this.validator.sources = value;
+            return this;
+        }
+
+        public Builder logger(final Logger value) {
+            this.validator.logger = value;
+            return this;
+        }
+
+        public Builder projectKeeperVersion(final String value) {
+            this.validator.projectKeeperVersion = value;
+            return this;
+        }
+
+        public Builder hasNpmModule(final boolean value) {
+            this.validator.hasNpmModule = value;
+            return this;
+        }
+
+        public ProjectFilesValidator build() {
+            return this.validator;
         }
     }
 }

@@ -19,12 +19,27 @@ class FileTemplatesFactory {
     private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
             "linguist-generated=true");
 
+    private static final String NPM_SETUP = lines( //
+            "      - name: Set up NPM", //
+            "        uses: actions/setup-node@v3", //
+            "        with:", //
+            "          node-version: 16", //
+            "          cache: \"npm\"", //
+            "          cache-dependency-path: \"**/package-lock.json\"" //
+    );
+
+    private static String lines(final String... line) {
+        return String.join("\n", Arrays.asList(line));
+    }
+
     private final Logger logger;
     private final String ownVersion;
+    private final boolean hasNpmModule;
 
-    public FileTemplatesFactory(final Logger logger, final String ownVersion) {
+    public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule) {
         this.logger = logger;
         this.ownVersion = ownVersion;
+        this.hasNpmModule = hasNpmModule;
     }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
@@ -42,7 +57,7 @@ class FileTemplatesFactory {
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
             }
         } else {
-            templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
+            templates.addAll(getProjectKeeperVerifyWorkflowTemplates(sources));
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
@@ -113,11 +128,12 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates() {
+    private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates(final List<AnalyzedSource> sources) {
         final ArrayList<FileTemplate> templates = new ArrayList<>();
         final String pathInProject = ".github/workflows/project-keeper-verify.yml";
-        templates.add(
-                new FileTemplateFromResource("non_maven_templates/" + pathInProject, pathInProject, REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource("non_maven_templates/" + pathInProject, //
+                pathInProject, REQUIRE_EXACT) //
+                        .replacing("npmSetup", this.hasNpmModule ? NPM_SETUP : ""));
         templates.add(new ProjectKeeperShellScript(this.ownVersion));
         return templates;
     }

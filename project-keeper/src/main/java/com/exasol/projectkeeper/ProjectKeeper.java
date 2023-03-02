@@ -14,6 +14,8 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.generic.RepoNameReader;
@@ -122,18 +124,30 @@ public class ProjectKeeper {
      * Phase 2 finally analyzes the sources and detects the version of the current project.
      */
     private ValidationPhase phase2(final ValidationPhase.Provision provision) {
+        final List<Source> sources = this.config.getSources();
         final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.config, this.mvnRepo, this.ownVersion)
-                .analyze(this.projectDir, this.config.getSources());
+                .analyze(this.projectDir, sources);
         final String projectName = getProjectName(analyzedSources);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
-        final List<Validator> validators = List.of(
-                new ProjectFilesValidator(this.projectDir, analyzedSources, this.logger, this.ownVersion),
+        final ProjectFilesValidator projectFilesValidator = ProjectFilesValidator.builder() //
+                .projectDirectory(this.projectDir) //
+                .analyzedSources(analyzedSources) //
+                .logger(this.logger) //
+                .projectKeeperVersion(this.ownVersion) //
+                .hasNpmModule(hasSourceOfType(sources, SourceType.NPM))//
+                .build();
+        final List<Validator> validators = List.of( //
+                projectFilesValidator,
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
                 new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
         return new ValidationPhase(new ValidationPhase.Provision(projectVersion), validators);
+    }
+
+    private boolean hasSourceOfType(final List<Source> sources, final SourceType type) {
+        return sources.stream().map(Source::getType).anyMatch(type::equals);
     }
 
     /*

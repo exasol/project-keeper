@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -14,6 +15,7 @@ import java.util.*;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
@@ -27,7 +29,7 @@ class FileTemplatesFactoryTest {
     void testGetCiBuildTemplatesForMavenProject() {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
-        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION)
+        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION, true)
                 .getGlobalTemplates(sources);
         assertContainsTemplate(templates, ".github/workflows/ci-build.yml");
         assertContainsTemplate(templates, ".vscode/settings.json");
@@ -49,7 +51,8 @@ class FileTemplatesFactoryTest {
         final Logger logger = mock(Logger.class);
         final List<AnalyzedSource> sources = List
                 .of(AnalyzedMavenSource.builder().modules(Collections.emptySet()).isRootProject(false).build());
-        final List<FileTemplate> templates = new FileTemplatesFactory(logger, OWN_VERSION).getGlobalTemplates(sources);
+        final List<FileTemplate> templates = new FileTemplatesFactory(logger, OWN_VERSION, true)
+                .getGlobalTemplates(sources);
         assertFalse(() -> templates.stream()
                 .anyMatch(template -> template.getPathInProject().equals(Path.of(".github/workflows/ci-build.yml"))));
         verify(logger).warn(
@@ -59,9 +62,27 @@ class FileTemplatesFactoryTest {
     @Test
     void testGetMavenCentralCiBuildTemplatesForMavenProject() {
         final List<AnalyzedSource> sources = getMavenSourceWithModules(Set.of(MAVEN_CENTRAL));
-        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION)
+        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION, true)
                 .getGlobalTemplates(sources);
         assertContainsTemplate(templates, ".github/workflows/release_droid_release_on_maven_central.yml");
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { false, true })
+    void testProjectKeeperVerifyYml(final boolean hasNpmModule) {
+        final List<AnalyzedSource> sources = List.of(AnalyzedMavenSource.builder() //
+                .modules(Collections.emptySet()).isRootProject(false).build());
+        final List<FileTemplate> actual = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION, hasNpmModule)
+                .getGlobalTemplates(sources);
+        final Optional<FileTemplate> template = findTemplate(actual, ".github/workflows/project-keeper-verify.yml");
+        assertTrue(template.isPresent());
+        final String content = template.get().getContent();
+        assertThat(content, not(containsString("$npmSetup")));
+        if (hasNpmModule) {
+            assertThat(content, containsString("uses: actions/setup-node"));
+        } else {
+            assertThat(content, not(containsString("uses: actions/setup-node")));
+        }
     }
 
     @ParameterizedTest
@@ -73,7 +94,7 @@ class FileTemplatesFactoryTest {
     })
     void testGetTemplatesPerSource(final ProjectKeeperModule module, final String expectedTemplate) {
         final AnalyzedMavenSource source = AnalyzedMavenSource.builder().modules(Set.of(module)).build();
-        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION)
+        final List<FileTemplate> templates = new FileTemplatesFactory(mock(Logger.class), OWN_VERSION, true)
                 .getTemplatesForSource(source);
         assertContainsTemplate(templates, expectedTemplate);
     }
