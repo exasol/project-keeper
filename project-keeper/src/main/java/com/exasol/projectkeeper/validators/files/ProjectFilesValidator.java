@@ -20,31 +20,23 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 //[impl->dsn~required-files-validator~1]
 public class ProjectFilesValidator implements Validator {
-    private final Path projectDirectory;
-    private final List<AnalyzedSource> sources;
-    private final Logger logger;
-    private final String ownVersion;
+    private Path projectDirectory;
+    private List<AnalyzedSource> sources;
+    private Logger logger;
+    private String projectKeeperVersion;
+    private boolean hasNpmModule;
 
     /**
-     * Crate a new instance of {@link ProjectFilesValidator}.
-     *
-     * @param projectDirectory project's root directory
-     * @param sources          list of sources
-     * @param logger           logger
-     * @param ownVersion       the version of the currently running project keeper
+     * Crwate a new instance of {@link ProjectFilesValidator}.
      */
-    public ProjectFilesValidator(final Path projectDirectory, final List<AnalyzedSource> sources, final Logger logger,
-            final String ownVersion) {
-        this.projectDirectory = projectDirectory;
-        this.sources = sources;
-        this.logger = logger;
-        this.ownVersion = ownVersion;
+    ProjectFilesValidator() {
     }
 
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
-        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.ownVersion);
+        final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion,
+                this.hasNpmModule);
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;
@@ -97,6 +89,72 @@ public class ProjectFilesValidator implements Validator {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-119")
                     .message("Unknown template type {{template type}}", template.getValidation()).ticketMitigation()
                     .toString());
+        }
+    }
+
+    /**
+     * @return Builder for a new instance of {@link ProjectFilesValidator}
+     */
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    /**
+     * Builder for new instances of {@link ProjectFilesValidator}
+     */
+    public static final class Builder {
+        private final ProjectFilesValidator validator = new ProjectFilesValidator();
+
+        /**
+         * @param projectDirectory project's root directory
+         * @return this for fluent programming
+         */
+        public Builder projectDirectory(final Path projectDirectory) {
+            this.validator.projectDirectory = projectDirectory;
+            return this;
+        }
+
+        /**
+         * @param value list of analyzed sources
+         * @return this for fluent programming
+         */
+        public Builder analyzedSources(final List<AnalyzedSource> value) {
+            this.validator.sources = value;
+            return this;
+        }
+
+        /**
+         * @param value logger to use for log messages
+         * @return this for fluent programming
+         */
+        public Builder logger(final Logger value) {
+            this.validator.logger = value;
+            return this;
+        }
+
+        /**
+         * @param value the version of the currently running project keeper
+         * @return this for fluent programming
+         */
+        public Builder projectKeeperVersion(final String value) {
+            this.validator.projectKeeperVersion = value;
+            return this;
+        }
+
+        /**
+         * @param value {@code true} if the current project contains an NPM module
+         * @return this for fluent programming
+         */
+        public Builder hasNpmModule(final boolean value) {
+            this.validator.hasNpmModule = value;
+            return this;
+        }
+
+        /**
+         * @return new instance of {@link ProjectFilesValidator}
+         */
+        public ProjectFilesValidator build() {
+            return this.validator;
         }
     }
 }

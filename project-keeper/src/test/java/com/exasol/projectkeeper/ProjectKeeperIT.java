@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -28,6 +29,7 @@ import com.exasol.projectkeeper.test.TestMavenModel;
 @Tag("integration")
 class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
 
+    private static final Logger LOGGER = Logger.getLogger(ProjectKeeperIT.class.getName());
     private MavenProjectFixture fixture;
 
     @BeforeEach
@@ -146,7 +148,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `com.exasol:error-reporting-java:0.1.0` to `0.2.0`")),
                 () -> assertThat(generatedChangesFile,
-                        containsString("* Updated `org.apache.maven.plugins:maven-surefire-plugin:2.12.4` to")));
+                        containsString("* Updated `org.apache.maven.plugins:maven-assembly-plugin:2.2-beta-5` to")));
     }
 
     @Test
