@@ -24,7 +24,7 @@ public class ProjectFilesValidator implements Validator {
     private List<AnalyzedSource> sources;
     private Logger logger;
     private String projectKeeperVersion;
-    public boolean hasNpmModule;
+    private boolean hasNpmModule;
 
     /**
      * Crwate a new instance of {@link ProjectFilesValidator}.
@@ -36,7 +36,7 @@ public class ProjectFilesValidator implements Validator {
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
         final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion,
-                true);
+                this.hasNpmModule);
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;

@@ -57,7 +57,7 @@ class FileTemplatesFactory {
                         ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
             }
         } else {
-            templates.addAll(getProjectKeeperVerifyWorkflowTemplates(sources));
+            templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
@@ -128,7 +128,7 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates(final List<AnalyzedSource> sources) {
+    private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates() {
         final ArrayList<FileTemplate> templates = new ArrayList<>();
         final String pathInProject = ".github/workflows/project-keeper-verify.yml";
         templates.add(new FileTemplateFromResource("non_maven_templates/" + pathInProject, //
