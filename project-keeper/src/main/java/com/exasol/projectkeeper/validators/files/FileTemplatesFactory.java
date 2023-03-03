@@ -23,7 +23,7 @@ class FileTemplatesFactory {
             "      - name: Set up NPM", //
             "        uses: actions/setup-node@v3", //
             "        with:", //
-            "          node-version: 16", //
+            "          node-version: 18", //
             "          cache: \"npm\"", //
             "          cache-dependency-path: \"**/package-lock.json\"" //
     );

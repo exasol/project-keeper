@@ -139,7 +139,6 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     @ValueSource(booleans = { true, false })
     // [itest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
     void testChangesFileGeneration(final boolean released) throws IOException, GitAPIException {
-        LOGGER.info(this.projectDir.toString());
         setupDemoProjectWithDependencyChange(released);
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
