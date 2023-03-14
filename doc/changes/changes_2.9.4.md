@@ -1,4 +1,4 @@
-# Project Keeper 2.9.4, released 2023-??-??
+# Project Keeper 2.9.4, released 2023-03-14
 
 Code name: Non-maven Improvement
 
