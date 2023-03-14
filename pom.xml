@@ -81,17 +81,6 @@
                         <!-- This issue is fixed in Maven 3.8.1. We need to wait until all developers have upgraded their Maven version.
                              https://ossindex.sonatype.org/vulnerability/CVE-2021-26291 -->
                         <exclude>CVE-2021-26291</exclude>
-                        <!-- Exclude vulnerability Stack-based Buffer Overflow (6.5)
-                             found in transitive dependency org.yaml:snakeyaml:jar:1.33
-                             used by as there is no update available currently
-                             This exclude unfortunatly needs to be made in all of the following files:
-                             - pom.xml (this file)
-                             - project-keeper/pom.xml
-                             - project-keeper-cli/pom.xml
-                             - project-keeper-maven-plugin/pom.xml
-                             - shared-test-setup/pom.xml
-                        -->
-                        <exclude>CVE-2022-1471</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

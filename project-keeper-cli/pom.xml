@@ -101,16 +101,6 @@
                     <failOnWarnings>false</failOnWarnings>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.sonatype.ossindex.maven</groupId>
-                <artifactId>ossindex-maven-plugin</artifactId>
-                <configuration>
-                    <excludeVulnerabilityIds>
-                        <!-- Affects multiple subprojects, see ../pom.xml. -->
-                        <exclude>CVE-2022-1471</exclude>
-                    </excludeVulnerabilityIds>
-                </configuration>
-            </plugin>
         </plugins>
     </build>
 </project>
