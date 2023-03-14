@@ -178,7 +178,6 @@ class ProjectKeeperConfigReaderTest {
     }
 
     @Test
-
     void invalidYamlSyntax() throws IOException {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), "{ -");
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
