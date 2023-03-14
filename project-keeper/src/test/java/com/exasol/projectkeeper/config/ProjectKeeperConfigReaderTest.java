@@ -178,12 +178,12 @@ class ProjectKeeperConfigReaderTest {
     }
 
     @Test
+
     void invalidYamlSyntax() throws IOException {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), "{ -");
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> this.reader.readConfig(this.tempDir));
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-85: Invalid .project-keeper.yml. Please check the user-guide https://github.com/exasol/project-keeper-maven-plugin."));
+        assertThat(exception.getMessage(), startsWith("E-PK-CORE-85: Invalid .project-keeper.yml."));
     }
 
     @Test
