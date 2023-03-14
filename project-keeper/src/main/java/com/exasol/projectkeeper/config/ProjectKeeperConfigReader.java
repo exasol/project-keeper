@@ -38,7 +38,7 @@ public class ProjectKeeperConfigReader {
         final Path configFile = projectDirectory.resolve(CONFIG_FILE_NAME);
         validateConfigFileExists(configFile);
         try (final FileReader fileReader = new FileReader(configFile.toFile())) {
-            final ProjectKeeperRawConfig rawConfig = readRawConfig(fileReader);
+            final ProjectKeeperRawConfig rawConfig = readRawConfig(fileReader, configFile);
             return parseRawConfig(rawConfig, projectDirectory);
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-82")
@@ -57,12 +57,13 @@ public class ProjectKeeperConfigReader {
         }
     }
 
-    private ProjectKeeperRawConfig readRawConfig(final FileReader fileReader) {
+    private ProjectKeeperRawConfig readRawConfig(final FileReader fileReader, final Path path) {
         try {
             return new Yaml().loadAs(fileReader, ProjectKeeperRawConfig.class);
         } catch (final YAMLException exception) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-85").message(INVALID_CONFIG_FILE)
-                    .mitigation(CHECK_THE_USER_GUIDE).toString(), exception);
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-85")
+                    .message(INVALID_CONFIG_FILE + " Path: {{path}}", path).mitigation(CHECK_THE_USER_GUIDE).toString(),
+                    exception);
         }
     }
 
