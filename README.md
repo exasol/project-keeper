@@ -1,7 +1,7 @@
 # Project Keeper Maven Plugin
 
 [![Build Status](https://github.com/exasol/project-keeper/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/project-keeper/actions/workflows/ci-build.yml)
-Project keeper core: [![Maven Central – Project keeper core](https://img.shields.io/maven-central/v/com.exasol/project-keeper-core)](https://search.maven.org/artifact/com.exasol/project-keeper-core), Project Keeper Command Line Interface: [![Maven Central – Project Keeper Command Line Interface](https://img.shields.io/maven-central/v/com.exasol/project-keeper-cli)](https://search.maven.org/artifact/com.exasol/project-keeper-cli), Project keeper maven plugin: [![Maven Central – Project keeper maven plugin](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
+Project keeper core: [![Maven Central - Project keeper core](https://img.shields.io/maven-central/v/com.exasol/project-keeper-core)](https://search.maven.org/artifact/com.exasol/project-keeper-core), Project Keeper Command Line Interface: [![Maven Central - Project Keeper Command Line Interface](https://img.shields.io/maven-central/v/com.exasol/project-keeper-cli)](https://search.maven.org/artifact/com.exasol/project-keeper-cli), Project keeper maven plugin: [![Maven Central - Project keeper maven plugin](https://img.shields.io/maven-central/v/com.exasol/project-keeper-maven-plugin)](https://search.maven.org/artifact/com.exasol/project-keeper-maven-plugin)
 
 This maven plugin checks and unifies the project's structure according to the Exasol integration team's repository standards.
 

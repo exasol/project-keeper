@@ -1,4 +1,4 @@
-# Project Keeper 2.9.4, released 2023-03-14
+# Project Keeper 2.9.4, released 2023-03-15
 
 Code name: Non-maven Improvement
 
@@ -8,10 +8,15 @@ Changed GitHub workflow file `project-keeper-verify.yml` for non-maven projects 
 
 Before the missing file `package-lock.json` caused an error message.
 
+This release also changes the Maven Central badge label in the `README.md` file to contain a simple minus `-` instead of a unicode endash `\ux2013`. This makes it easier to copy the expected text in case the file is outdated.
+
+Please note that when upgrading to Project Keeper 2.9.4 you will need to update `README.md` and replace `–` with `-`.
+
 ## Features
 
 * #428: Fixed failure of GitHub Workflow `project-keeper-verify.yml` when no NPM modules are present
 * #430: Updated dependencies
+* #359: Changed expected Maven Central badge label
 
 ## Dependency Updates
 
