@@ -1,17 +1,24 @@
-# Project Keeper 2.9.4, released 2023-03-14
+# Project Keeper 2.9.4, released 2023-03-15
 
 Code name: Non-maven Improvement
 
 ## Summary
 
-Changed GitHub workflow file `project-keeper-verify.yml` for non-maven projects to include step `actions/setup-node` only if the project contains an NPM module.
+Changed GitHub workflow file `project-keeper-verify.yml` for non-maven projects to include step `actions/setup-node` only if the project contains an NPM module. Before the missing file `package-lock.json` caused an error message.
 
-Before the missing file `package-lock.json` caused an error message.
+The release also adds attribute `addDefaultImplementationEntries` with value `true` to `maven-assembly-plugin` in order to add additional entries to file `META-INF/MANIFEST.MF` in generated JARs:
+
+```
+Implementation-Title: ${project.name}
+Implementation-Version: ${project.version}
+Implementation-Vendor: ${project.organization.name}
+```
 
 ## Features
 
 * #428: Fixed failure of GitHub Workflow `project-keeper-verify.yml` when no NPM modules are present
 * #430: Updated dependencies
+* #427: Added `addDefaultImplementationEntries` attribute to `maven-assembly-plugin`
 
 ## Dependency Updates
 

@@ -53,8 +53,10 @@ class PomFileValidatorTest {
                 () -> assertThat(result, hasFindingWithMessage(
                         "E-PK-CORE-105: Invalid pom file 'pom.xml': Missing required property finalName property in maven-assembly-plugin. Use the following template and set finalName:\n<plugin>\n"
                                 + "    <artifactId>maven-assembly-plugin</artifactId>\n"
-                                + "    <groupId>org.apache.maven.plugins</groupId>\n" + "    <configuration>\n"
-                                + "        <finalName>NAME_OF_YOUR_JAR</finalName>\n" + "    </configuration>\n"
+                                + "    <groupId>org.apache.maven.plugins</groupId>\n" //
+                                + "    <configuration>\n" //
+                                + "        <finalName>NAME_OF_YOUR_JAR</finalName>\n" //
+                                + "    </configuration>\n" //
                                 + "</plugin>"))//
         );
     }
