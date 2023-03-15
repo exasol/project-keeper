@@ -171,7 +171,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
     }
 
     private String getMavenCentralBadge(final boolean withProjectName, final AnalyzedMavenSource mavenSource) {
-        final String badge = getBadge("Maven Central &mdash; " + mavenSource.getProjectName(),
+        final String badge = getBadge("Maven Central &ndash; " + mavenSource.getProjectName(),
                 "https://img.shields.io/maven-central/v/com.exasol/" + mavenSource.getArtifactId(),
                 "https://search.maven.org/artifact/com.exasol/" + mavenSource.getArtifactId());
         if (withProjectName) {
