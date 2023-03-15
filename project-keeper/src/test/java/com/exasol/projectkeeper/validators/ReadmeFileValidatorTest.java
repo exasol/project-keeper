@@ -27,7 +27,7 @@ class ReadmeFileValidatorTest {
         final String readme = Files.readString(tempDir.resolve("README.md"));
         assertThat(readme, Matchers.equalTo(adaptLineSeparators("# My Project\n" + "\n"
                 + "[![Build Status](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml)\n"
-                + "[![Maven Central – my project](https://img.shields.io/maven-central/v/com.exasol/my-project)](https://search.maven.org/artifact/com.exasol/my-project)\n"
+                + "[![Maven Central &ndash; my project](https://img.shields.io/maven-central/v/com.exasol/my-project)](https://search.maven.org/artifact/com.exasol/my-project)\n"
                 + "\n"
                 + "[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=com.exasol%3Amy-project&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.exasol%3Amy-project)\n"
                 + "\n"
@@ -58,7 +58,7 @@ class ReadmeFileValidatorTest {
         final String readme = Files.readString(tempDir.resolve("README.md"));
         assertThat(readme, Matchers.startsWith(adaptLineSeparators("# My Project\n" + "\n"
                 + "[![Build Status](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml/badge.svg)](https://github.com/exasol/my-project-repo/actions/workflows/ci-build.yml)\n"
-                + "sub 1: [![Maven Central – sub 1](https://img.shields.io/maven-central/v/com.exasol/sub-1)](https://search.maven.org/artifact/com.exasol/sub-1), sub 2: [![Maven Central – sub 2](https://img.shields.io/maven-central/v/com.exasol/sub-2)](https://search.maven.org/artifact/com.exasol/sub-2)\n")));
+                + "sub 1: [![Maven Central &ndash; sub 1](https://img.shields.io/maven-central/v/com.exasol/sub-1)](https://search.maven.org/artifact/com.exasol/sub-1), sub 2: [![Maven Central &ndash; sub 2](https://img.shields.io/maven-central/v/com.exasol/sub-2)](https://search.maven.org/artifact/com.exasol/sub-2)\n")));
     }
 
     private String adaptLineSeparators(final String string) {

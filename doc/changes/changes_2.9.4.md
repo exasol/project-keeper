@@ -14,11 +14,16 @@ Implementation-Version: ${project.version}
 Implementation-Vendor: ${project.organization.name}
 ```
 
+This release also changes the Maven Central badge label in the `README.md` file to contain `&ndash;` (&ndash;) instead of a unicode endash `\ux2013`. This makes it easier to copy the expected text in case the file is outdated.
+
+Please note that when upgrading to Project Keeper 2.9.4 you will need to update `README.md` and replace `–` with `&ndash;`.
+
 ## Features
 
 * #428: Fixed failure of GitHub Workflow `project-keeper-verify.yml` when no NPM modules are present
 * #430: Updated dependencies
 * #427: Added `addDefaultImplementationEntries` attribute to `maven-assembly-plugin`
+* #359: Changed expected Maven Central badge label
 
 ## Dependency Updates
 
