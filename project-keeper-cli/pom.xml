@@ -69,8 +69,6 @@
                         <manifest>
                             <addClasspath>true</addClasspath>
                             <mainClass>com.exasol.projectkeeper.cli.ProjectKeeperLauncher</mainClass>
-                            <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
-                            <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
                         </manifest>
                     </archive>
                 </configuration>
