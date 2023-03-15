@@ -20,7 +20,8 @@ public class ProjectKeeperConfigWriter {
         try (final FileWriter fileWriter = new FileWriter(projectDirectory.resolve(".project-keeper.yml").toFile())) {
             final DumperOptions dumperOptions = new DumperOptions();
             dumperOptions.setAllowReadOnlyProperties(true);
-            new Yaml(dumperOptions).dump(prepareWriting(config), fileWriter);
+            final String yamlContent = new Yaml(dumperOptions).dumpAsMap(prepareWriting(config));
+            fileWriter.append(yamlContent);
         } catch (final IOException exception) {
             throw new IllegalStateException("Failed to write project-keeper config.", exception);
         }

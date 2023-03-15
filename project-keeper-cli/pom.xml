@@ -62,7 +62,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <finalName>project-keeper-cli-${project.version}</finalName>
                     <archive>
@@ -99,16 +99,6 @@
                     </additionalOptions>
                     <!-- Ignore warning "warning: The code being documented uses modules but the packages defined in https://github.com/exasol/project-keeper/apidocs/ are in the unnamed module." with Java 17-->
                     <failOnWarnings>false</failOnWarnings>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.ossindex.maven</groupId>
-                <artifactId>ossindex-maven-plugin</artifactId>
-                <configuration>
-                    <excludeVulnerabilityIds>
-                        <!-- Affects multiple subprojects, see ../pom.xml. -->
-                        <exclude>CVE-2022-1471</exclude>
-                    </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
         </plugins>

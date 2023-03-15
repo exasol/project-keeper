@@ -131,8 +131,6 @@
                         <!-- No update available for org.apache.maven.shared:maven-shared-utils:3.3.4
                              https://ossindex.sonatype.org/vulnerability/sonatype-2020-0491 -->
                         <exclude>sonatype-2020-0491</exclude>
-                        <!-- Affects multiple subprojects, see ../pom.xml. -->
-                        <exclude>CVE-2022-1471</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

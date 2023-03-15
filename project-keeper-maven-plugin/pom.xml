@@ -94,7 +94,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.7.1</version>
+                <version>3.8.1</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -117,8 +117,6 @@
                         <!-- This issue is fixed in Maven 3.8.1. We need to wait until all developers have upgraded their Maven version.
                              https://ossindex.sonatype.org/vulnerability/CVE-2021-26291 -->
                         <exclude>CVE-2021-26291</exclude>
-                        <!-- Affects multiple subprojects, see ../pom.xml. -->
-                        <exclude>CVE-2022-1471</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
