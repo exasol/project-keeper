@@ -8,6 +8,11 @@
         </descriptors>
         <finalName>NAME_OF_YOUR_JAR</finalName>
         <appendAssemblyId>false</appendAssemblyId>
+        <archive>
+            <manifest>
+                <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+            </manifest>
+        </archive>
     </configuration>
     <executions>
         <execution>
