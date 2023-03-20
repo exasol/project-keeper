@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
+import com.exasol.projectkeeper.validators.workarounds.Workaround;
 
 import net.steppschuh.markdowngenerator.table.Table;
 
@@ -91,10 +92,7 @@ public class DependencyPageRenderer {
     }
 
     private String renderLicense(final License license, final MarkdownReferenceBuilder markdownReferenceBuilder) {
-        String name = license.getName();
-        if (Workarounds.ALTERNATING_DEPENDENCIES.isActive()) {
-            name = name.replace("The Apache Software License", "Apache License");
-        }
+        final String name = Workaround.ALTERNATING_DEPENDENCIES.apply(license.getName());
         return renderLink(name, license.getUrl(), markdownReferenceBuilder);
     }
 

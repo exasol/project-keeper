@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.validators.dependencies.renderer;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -20,10 +19,10 @@ class MarkdownReferenceBuilderTest {
     @ParameterizedTest
     @ValueSource(strings = { "http://maven.apache.org", "https://maven.apache.org" })
     void testReferencesToMAvenApacheOrg(final String url) {
-        assumeTrue(Workarounds.ALTERNATING_DEPENDENCIES.isActive());
         final MarkdownReferenceBuilder referenceBuilder = new MarkdownReferenceBuilder();
         referenceBuilder.getReferenceForUrl(url);
-        assertThat(referenceBuilder.getReferences(), equalTo("[0]: https://maven.apache.org" + System.lineSeparator()));
+        assertThat(referenceBuilder.getReferences(),
+                equalTo("[0]: " + AlternatingDependenciesWorkaraound.URL.to + System.lineSeparator()));
     }
 
     @Test

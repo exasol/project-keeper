@@ -3,6 +3,8 @@ package com.exasol.projectkeeper.validators.dependencies.renderer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import com.exasol.projectkeeper.validators.workarounds.Workaround;
+
 class MarkdownReferenceBuilder {
     private final Map<String, Integer> references = new LinkedHashMap<>();
     private int referenceCounter = 0;
@@ -33,15 +35,13 @@ class MarkdownReferenceBuilder {
      * @return string with the reference mapping. Example: {@code [0]: https://exasol.com}
      */
     public String getReferences() {
-        final var stringBuilder = new StringBuilder();
-        for (final Map.Entry<String, Integer> reference : this.references.entrySet()) {
-            String key = reference.getKey();
-            if (Workarounds.ALTERNATING_DEPENDENCIES.isActive()) {
-                key = key.replace("http://maven.apache.org", "https://maven.apache.org");
-            }
-            stringBuilder.append("[").append(reference.getValue()).append("]: ").append(key)
-                    .append(System.lineSeparator());
+        final var sb = new StringBuilder();
+        for (final Map.Entry<String, Integer> ref : this.references.entrySet()) {
+            sb.append(String.format("[%s]: %s%s", //
+                    ref.getValue(), //
+                    Workaround.ALTERNATING_DEPENDENCIES.apply(ref.getKey()), //
+                    System.lineSeparator()));
         }
-        return stringBuilder.toString();
+        return sb.toString();
     }
 }

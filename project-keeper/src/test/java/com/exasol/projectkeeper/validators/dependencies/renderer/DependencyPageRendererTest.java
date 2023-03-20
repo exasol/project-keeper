@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.validators.dependencies.renderer;
 import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -23,11 +22,12 @@ class DependencyPageRendererTest {
     @ParameterizedTest
     @ValueSource(strings = { "The Apache Software License", "Apache License" })
     void testApachaLicense(final String licenseName) {
-        assumeTrue(Workarounds.ALTERNATING_DEPENDENCIES.isActive());
         final List<ProjectWithDependencies> projects = singleProjectWith( //
                 buildDependency("maven-clean-plugin", List.of(buildLicense(licenseName))));
-        assertThat(new DependencyPageRenderer().render(projects), containsString("Apache License"));
-        assertThat(new DependencyPageRenderer().render(projects), not(containsString("The Apache Software License")));
+        assertThat(new DependencyPageRenderer().render(projects),
+                containsString(AlternatingDependenciesWorkaraound.LICENSE.to));
+        assertThat(new DependencyPageRenderer().render(projects),
+                not(containsString(AlternatingDependenciesWorkaraound.LICENSE.from)));
     }
 
     @Test
