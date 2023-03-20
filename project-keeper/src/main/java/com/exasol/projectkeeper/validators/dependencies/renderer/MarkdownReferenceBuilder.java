@@ -29,13 +29,17 @@ class MarkdownReferenceBuilder {
 
     /**
      * Get the mapping for the references in markdown format
-     * 
+     *
      * @return string with the reference mapping. Example: {@code [0]: https://exasol.com}
      */
     public String getReferences() {
         final var stringBuilder = new StringBuilder();
         for (final Map.Entry<String, Integer> reference : this.references.entrySet()) {
-            stringBuilder.append("[").append(reference.getValue()).append("]: ").append(reference.getKey())
+            String key = reference.getKey();
+            if (Workarounds.ALTERNATIVING_DEPENDENCIES.isActive()) {
+                key = key.replace("http://maven.apache.org", "https://maven.apache.org");
+            }
+            stringBuilder.append("[").append(reference.getValue()).append("]: ").append(key)
                     .append(System.lineSeparator());
         }
         return stringBuilder.toString();

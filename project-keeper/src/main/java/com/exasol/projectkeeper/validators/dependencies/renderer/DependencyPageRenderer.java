@@ -91,7 +91,11 @@ public class DependencyPageRenderer {
     }
 
     private String renderLicense(final License license, final MarkdownReferenceBuilder markdownReferenceBuilder) {
-        return renderLink(license.getName(), license.getUrl(), markdownReferenceBuilder);
+        String name = license.getName();
+        if (Workarounds.ALTERNATIVING_DEPENDENCIES.isActive()) {
+            name = name.replace("The Apache Software License", "Apache License");
+        }
+        return renderLink(name, license.getUrl(), markdownReferenceBuilder);
     }
 
     private String renderLink(final String name, final String url,
