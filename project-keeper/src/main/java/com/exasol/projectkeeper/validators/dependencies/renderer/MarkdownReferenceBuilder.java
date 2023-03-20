@@ -36,7 +36,7 @@ class MarkdownReferenceBuilder {
         final var stringBuilder = new StringBuilder();
         for (final Map.Entry<String, Integer> reference : this.references.entrySet()) {
             String key = reference.getKey();
-            if (Workarounds.ALTERNATIVING_DEPENDENCIES.isActive()) {
+            if (Workarounds.ALTERNATING_DEPENDENCIES.isActive()) {
                 key = key.replace("http://maven.apache.org", "https://maven.apache.org");
             }
             stringBuilder.append("[").append(reference.getValue()).append("]: ").append(key)

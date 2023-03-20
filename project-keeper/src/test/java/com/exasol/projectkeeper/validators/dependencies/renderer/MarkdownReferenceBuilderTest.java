@@ -20,7 +20,7 @@ class MarkdownReferenceBuilderTest {
     @ParameterizedTest
     @ValueSource(strings = { "http://maven.apache.org", "https://maven.apache.org" })
     void testReferencesToMAvenApacheOrg(final String url) {
-        assumeTrue(Workarounds.ALTERNATIVING_DEPENDENCIES.isActive());
+        assumeTrue(Workarounds.ALTERNATING_DEPENDENCIES.isActive());
         final MarkdownReferenceBuilder referenceBuilder = new MarkdownReferenceBuilder();
         referenceBuilder.getReferenceForUrl(url);
         assertThat(referenceBuilder.getReferences(), equalTo("[0]: https://maven.apache.org" + System.lineSeparator()));

@@ -7,12 +7,13 @@ import java.util.Arrays;
  */
 public enum Workarounds {
 
-    ALTERNATIVING_DEPENDENCIES(State.ACTIVE,
+    /** workaround alternating dependencies **/
+    ALTERNATING_DEPENDENCIES(State.ACTIVE,
             description(
-                    "For a few particular licenses issue #436 describes inconsistent results in file dependencies.md.",
-                    "Sometimes the results will use name 'The Apache Software License'",
+                    "For a few particular licenses issue #436 describes inconsistent content of file dependencies.md.",
+                    "Sometimes PK expected the license name 'The Apache Software License'",
                     " while in other cases the name will be 'Apache License'.",
-                    "Even careful and extensive investigations did not identify the root cause of this problem.",
+                    "Even extensive investigations failed to identify the root cause of this problem.",
                     "The current solution is a workaround simply replacing the one string by the",
                     " other to have at least consistent and stable results."));
 

@@ -23,7 +23,7 @@ class DependencyPageRendererTest {
     @ParameterizedTest
     @ValueSource(strings = { "The Apache Software License", "Apache License" })
     void testApachaLicense(final String licenseName) {
-        assumeTrue(Workarounds.ALTERNATIVING_DEPENDENCIES.isActive());
+        assumeTrue(Workarounds.ALTERNATING_DEPENDENCIES.isActive());
         final List<ProjectWithDependencies> projects = singleProjectWith( //
                 buildDependency("maven-clean-plugin", List.of(buildLicense(licenseName))));
         assertThat(new DependencyPageRenderer().render(projects), containsString("Apache License"));
