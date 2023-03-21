@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.shared.dependencies.*;
 import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
-import com.exasol.projectkeeper.validators.workarounds.Workaround;
 
 import net.steppschuh.markdowngenerator.table.Table;
 
@@ -92,8 +91,7 @@ public class DependencyPageRenderer {
     }
 
     private String renderLicense(final License license, final MarkdownReferenceBuilder markdownReferenceBuilder) {
-        final String name = Workaround.ALTERNATING_DEPENDENCIES.apply(license.getName());
-        return renderLink(name, license.getUrl(), markdownReferenceBuilder);
+        return renderLink(license.getName(), license.getUrl(), markdownReferenceBuilder);
     }
 
     private String renderLink(final String name, final String url,

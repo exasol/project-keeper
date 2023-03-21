@@ -2,7 +2,8 @@ package com.exasol.projectkeeper.validators.dependencies.renderer;
 
 import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.util.Arrays;
 import java.util.List;
@@ -10,25 +11,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.validators.dependencies.ProjectWithDependencies;
 
 class DependencyPageRendererTest {
-
-    @ParameterizedTest
-    @ValueSource(strings = { "The Apache Software License", "Apache License" })
-    void testApachaLicense(final String licenseName) {
-        final List<ProjectWithDependencies> projects = singleProjectWith( //
-                buildDependency("maven-clean-plugin", List.of(buildLicense(licenseName))));
-        assertThat(new DependencyPageRenderer().render(projects),
-                containsString(AlternatingDependenciesWorkaraound.LICENSE.to));
-        assertThat(new DependencyPageRenderer().render(projects),
-                not(containsString(AlternatingDependenciesWorkaraound.LICENSE.from)));
-    }
 
     @Test
     void twoDependenciesSameLicense() {

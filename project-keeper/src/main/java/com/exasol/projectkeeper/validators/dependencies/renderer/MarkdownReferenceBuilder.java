@@ -3,8 +3,6 @@ package com.exasol.projectkeeper.validators.dependencies.renderer;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import com.exasol.projectkeeper.validators.workarounds.Workaround;
-
 class MarkdownReferenceBuilder {
     private final Map<String, Integer> references = new LinkedHashMap<>();
     private int referenceCounter = 0;
@@ -37,10 +35,7 @@ class MarkdownReferenceBuilder {
     public String getReferences() {
         final var sb = new StringBuilder();
         for (final Map.Entry<String, Integer> ref : this.references.entrySet()) {
-            sb.append(String.format("[%s]: %s%s", //
-                    ref.getValue(), //
-                    Workaround.ALTERNATING_DEPENDENCIES.apply(ref.getKey()), //
-                    System.lineSeparator()));
+            sb.append(String.format("[%s]: %s%s", ref.getValue(), ref.getKey(), System.lineSeparator()));
         }
         return sb.toString();
     }
