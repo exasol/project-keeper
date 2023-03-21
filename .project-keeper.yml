@@ -72,6 +72,5 @@ excludes:
   - regex: "W-PK-CORE-151: Pom file .* contains no reference to project-keeper-maven-plugin."
   - "E-PK-CORE-17: Missing required file: '.github/workflows/project-keeper-verify.yml'"
   - "E-PK-CORE-17: Missing required file: '.github/workflows/project-keeper.sh'"
-  - regex: "E-PK-CORE-53: The dependencies.md file has outdated content.*"
 linkReplacements:
   - https://eclipse-ee4j.github.io/jsonb-api|https://projects.eclipse.org/projects/ee4j.jsonp
