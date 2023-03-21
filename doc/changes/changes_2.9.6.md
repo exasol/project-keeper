@@ -6,9 +6,12 @@ Code name: Remove Dependencies Workaround
 
 This release removes the workaround for inconsistencies in file `dependencies.md` introduced with release 2.9.5 as the developers preferred to install on the local machines the same maven version as on GitHub which should make the workaround obsolete.
 
+Additionally generated file `pk_generated_parent.pom` now will require at least Maven version 3.8.7 to be used.
+
 ## Features
 
 * #442: Removed workaround for inconsistencies in file `dependencies.md`
+* #444: Changed minimum required version of Maven tool to be used from `3.6.3` to `3.8.7`.
 
 ## Dependency Updates
 
