@@ -1,4 +1,4 @@
-# Project Keeper 2.10.0, released 2023-03-20
+# Project Keeper 2.9.5, released 2023-03-21
 
 Code name: Fixed dependencies validation
 
