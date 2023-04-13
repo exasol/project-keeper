@@ -83,7 +83,7 @@
             <dependency>
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
-                <!-- Version 2.x required because we use internal API. This will be fixed in https://github.com/exasol/project-keeper/issues/449 -->
+                <!-- Upgrade to 3.0.x not possible because we use internal API. This will be fixed in https://github.com/exasol/project-keeper/issues/449 -->
                 <version>2.0.4</version>
             </dependency>
             <dependency>
