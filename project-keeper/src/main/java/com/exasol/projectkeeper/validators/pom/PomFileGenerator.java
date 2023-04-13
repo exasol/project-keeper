@@ -31,6 +31,7 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/ossindex-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-surefire-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/versions-maven-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/duplicate-finder-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-assembly-plugin.xml", JAR_ARTIFACT),
             new SimplePluginTemplateGenerator("maven_templates/maven-jar-plugin-exclusion.xml", JAR_ARTIFACT),
             new SimplePluginTemplateGenerator("maven_templates/artifact-reference-checker-maven-plugin.xml",
@@ -181,7 +182,7 @@ public class PomFileGenerator {
                         ? dependency("org.projectlombok", "lombok", "1.18.26", "provided", null)
                         : null) //
                 .nullableChild(enabledModules.contains(UDF_COVERAGE) //
-                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.8", "test", "runtime")
+                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.9", "test", "runtime")
                         : null);
     }
 

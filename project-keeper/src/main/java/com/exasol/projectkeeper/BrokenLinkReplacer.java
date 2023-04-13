@@ -30,7 +30,8 @@ public class BrokenLinkReplacer {
             "https://sonatype.github.io/ossindex-maven/maven-plugin/", //
             "https://github.com/javaee/jaxb-spec/jaxb-api", "https://github.com/eclipse-ee4j/jaxb-api",
             "https://github.com/exasol/error-code-crawler-maven-plugint",
-            "https://github.com/exasol/error-code-crawler-maven-plugin");
+            "https://github.com/exasol/error-code-crawler-maven-plugin",
+            "https://github.com/eclipse-ee4j/parsson/parsson", "https://github.com/eclipse-ee4j/parsson");
 
     private static final Map<String, String> BUILTIN_REPLACEMENTS_2 = Map.of(
             "https://www.mojohaus.org/flatten-maven-plugin/flatten-maven-plugin",
