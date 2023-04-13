@@ -6,7 +6,7 @@ Code name: Find duplicate classes
 
 This release adds duplicate-finder-maven-plugin to all Maven projects which finds duplicate classes in dependencies. This may cause the build to fail. In this case please fix your dependencies. You can run the plugin manually with `mvn duplicate-finder:check`.
 
-This release also adds a default link replacement for the parsson library and changes the warning log message `Created 'doc/changes/changelog.md'. Don't forget to update it's content!` to level INFO.
+This release also adds a default link replacement for the parsson library and changes the warning log message `Created '*'. Don't forget to update it's content!` to level INFO.
 
 ## Features
 
@@ -15,7 +15,7 @@ This release also adds a default link replacement for the parsson library and ch
 
 ## Bugfixes
 
-* #446: Changed warning log message "Created 'doc/changes/changelog.md'. Don't forget to update it's content!" to level INFO
+* #446: Changed warning log message "Created '*'. Don't forget to update it's content!" to level INFO
 
 ## Dependency Updates
 

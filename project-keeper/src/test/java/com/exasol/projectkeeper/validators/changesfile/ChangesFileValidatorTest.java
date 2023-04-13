@@ -61,7 +61,7 @@ class ChangesFileValidatorTest {
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
-        verify(log).warn("Created 'doc" + File.separator + "changes" + File.separator
+        verify(log).info("Created 'doc" + File.separator + "changes" + File.separator
                 + "changes_1.2.3.md'. Don't forget to update it's content!");
         final List<ValidationFinding> findings = createValidator(source).validate();
         assertThat(findings, empty());
@@ -74,7 +74,7 @@ class ChangesFileValidatorTest {
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
-        verify(log).warn("Created 'doc" + File.separator + "changes" + File.separator
+        verify(log).info("Created 'doc" + File.separator + "changes" + File.separator
                 + "changes_1.2.3.md'. Don't forget to update it's content!");
     }
 

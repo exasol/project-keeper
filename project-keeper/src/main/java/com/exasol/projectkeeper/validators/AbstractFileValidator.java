@@ -64,7 +64,7 @@ public abstract class AbstractFileValidator implements Validator {
             try {
                 Files.createDirectories(this.absoluteFilePath.getParent());
                 writeTemplateFile(this.absoluteFilePath);
-                log.warn("Created '" + this.relativeFilePath + "'. Don't forget to update it's content!");
+                log.info("Created '" + this.relativeFilePath + "'. Don't forget to update it's content!");
             } catch (final IOException exception) {
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-63")
                         .message("Failed to create required file {{file path}}.", this.relativeFilePath).toString());
