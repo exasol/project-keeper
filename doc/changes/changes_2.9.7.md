@@ -45,6 +45,7 @@ This release also adds a default link replacement for the parsson library and ch
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.6` to `2.9.7`
+* Removed `javax.xml.bind:jaxb-api:2.4.0-b180830.0359`
 
 #### Runtime Dependency Updates
 
