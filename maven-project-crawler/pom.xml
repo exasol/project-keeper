@@ -28,11 +28,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-project</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.exasol</groupId>
             <artifactId>error-reporting-java</artifactId>
         </dependency>
@@ -101,13 +96,21 @@
             <plugin>
                 <groupId>org.sonatype.ossindex.maven</groupId>
                 <artifactId>ossindex-maven-plugin</artifactId>
-                <version>3.2.0</version>
                 <configuration>
                     <excludeVulnerabilityIds>
                         <!-- This issue is fixed in Maven 3.8.1. We need to wait until all developers have upgraded their Maven version.
                              https://ossindex.sonatype.org/vulnerability/CVE-2021-26291 -->
                         <exclude>CVE-2021-26291</exclude>
                     </excludeVulnerabilityIds>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.basepom.maven</groupId>
+                <artifactId>duplicate-finder-maven-plugin</artifactId>
+                <configuration>
+                    <ignoredResourcePatterns>
+                        <ignoredResourcePattern>about.html</ignoredResourcePattern>
+                    </ignoredResourcePatterns>
                 </configuration>
             </plugin>
         </plugins>
