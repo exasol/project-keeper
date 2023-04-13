@@ -5,6 +5,7 @@ import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.logging.Logger;
 
 import javax.xml.parsers.ParserConfigurationException;
@@ -27,8 +28,19 @@ public class TemplateUpdater {
 
     public static void main(final String... args) {
         new TemplateUpdater() //
-                .updateTemplates(Path.of("src/main/resources/maven_templates")) //
+                .updateTemplates(findTemplatePath()) //
                 .updatePomFile(Path.of("pom.xml"));
+    }
+
+    private static Path findTemplatePath() {
+        return List
+                .of(Path.of("project-keeper/src/main/resources/maven_templates"),
+                        Path.of("src/main/resources/maven_templates"))
+                .stream() //
+                .filter(p -> Files.isDirectory(p)) //
+                .map(Path::toAbsolutePath) //
+                .findFirst()
+                .orElseThrow(() -> new IllegalStateException("Template directory not found. Adapt working directory"));
     }
 
     private final PomFileWriter pomFileWriter;
