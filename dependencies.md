@@ -376,7 +376,7 @@
 [55]: https://github.com/Steppschuh/Java-Markdown-Generator
 [56]: https://github.com/vdurmont/semver4j
 [57]: https://bitbucket.org/snakeyaml/snakeyaml
-[58]: https://maven.apache.org/ref/3.9.0/maven-model/
+[58]: https://maven.apache.org/ref/3.9.1/maven-model/
 [59]: https://github.com/exasol/maven-project-version-getter/
 [60]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
 [61]: https://github.com/exasol/maven-plugin-integration-testing/
@@ -387,9 +387,9 @@
 [66]: https://github.com/exasol/artifact-reference-checker-maven-plugin/
 [67]: https://github.com/exasol/artifact-reference-checker-maven-plugin/blob/main/LICENSE
 [68]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[69]: https://maven.apache.org/ref/3.9.0/maven-plugin-api/
+[69]: https://maven.apache.org/ref/3.9.1/maven-plugin-api/
 [70]: http://maven.apache.org/
-[71]: https://maven.apache.org/ref/3.9.0/maven-core/
+[71]: https://maven.apache.org/ref/3.9.1/maven-core/
 [72]: https://www.eclemma.org/jacoco/index.html
 [73]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
 [74]: https://maven.apache.org/plugins/maven-dependency-plugin/
