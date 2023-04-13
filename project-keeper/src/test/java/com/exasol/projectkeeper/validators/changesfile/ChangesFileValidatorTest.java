@@ -62,7 +62,7 @@ class ChangesFileValidatorTest {
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
         verify(log).info("Created 'doc" + File.separator + "changes" + File.separator
-                + "changes_1.2.3.md'. Don't forget to update it's content!");
+                + "changes_1.2.3.md'. Don't forget to update its content!");
         final List<ValidationFinding> findings = createValidator(source).validate();
         assertThat(findings, empty());
     }
@@ -75,7 +75,7 @@ class ChangesFileValidatorTest {
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
         assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
         verify(log).info("Created 'doc" + File.separator + "changes" + File.separator
-                + "changes_1.2.3.md'. Don't forget to update it's content!");
+                + "changes_1.2.3.md'. Don't forget to update its content!");
     }
 
     @Test

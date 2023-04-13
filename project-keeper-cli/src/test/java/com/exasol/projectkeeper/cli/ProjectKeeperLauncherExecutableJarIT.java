@@ -38,7 +38,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     void fixingMavenProjectSucceeds() throws InterruptedException, IOException {
         prepareMavenProject();
         assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
-                containsString("[INFO   ] Created 'LICENSE'. Don't forget to update it's content!"));
+                containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
         assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
     }
 
@@ -46,7 +46,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     void fixingGolangProjectSucceeds() throws InterruptedException, IOException {
         prepareGolangProject();
         assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
-                containsString("[INFO   ] Created 'LICENSE'. Don't forget to update it's content!"));
+                containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
         assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
     }
 
