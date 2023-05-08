@@ -23,7 +23,6 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 
-@Disabled
 class GolangSourceAnalyzerIT {
 
     @TempDir
