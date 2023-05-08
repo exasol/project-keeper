@@ -6,9 +6,8 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.*;
+import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -96,8 +95,14 @@ class GoModFileTest {
 
     @Test
     void testParseCompleteFile() throws IOException {
-        final GoModFile file = GoModFile.parse(Files.readString(Path.of("src/test/resources/go.mod")));
+        final GoModFile file = GoModFile.parse(readResourceIntoString("/sample-contents-for-go.mod"));
         assertModFile(file, "github.com/exasol/exasol-driver-go", "1.17", 35, 4);
+    }
+
+    private String readResourceIntoString(final String resource) throws IOException {
+        try (InputStream stream = GoModFileTest.class.getResourceAsStream(resource)) {
+            return new BufferedReader(new InputStreamReader(stream)).lines().collect(Collectors.joining("\n"));
+        }
     }
 
     @Test
