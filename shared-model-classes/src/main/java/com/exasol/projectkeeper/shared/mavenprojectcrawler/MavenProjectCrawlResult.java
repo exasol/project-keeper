@@ -5,7 +5,8 @@ import java.util.Map;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
-import jakarta.json.bind.*;
+import jakarta.json.bind.Jsonb;
+import jakarta.json.bind.JsonbBuilder;
 import lombok.*;
 
 /**
@@ -13,8 +14,8 @@ import lombok.*;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
-public class MavenProjectCrawlResult {
+@NoArgsConstructor // Required for deserializing from json
+public final class MavenProjectCrawlResult {
     private Map<String, CrawledMavenProject> crawledProjects;
 
     /**
@@ -24,9 +25,7 @@ public class MavenProjectCrawlResult {
      * @return deserialized {@link DependencyChangeReport}.
      */
     public static MavenProjectCrawlResult fromJson(final String json) {
-        final JsonbConfig config = new JsonbConfig()
-                .withDeserializers(new DependencyChangeReport.DependencyChangeDeserializer());
-        try (final Jsonb jsonb = JsonbBuilder.create(config)) {
+        try (final Jsonb jsonb = JsonbBuilder.create()) {
             return jsonb.fromJson(json, MavenProjectCrawlResult.class);
         } catch (final Exception exception) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-SMC-2")
@@ -40,9 +39,7 @@ public class MavenProjectCrawlResult {
      * @return JSON string
      */
     public String toJson() {
-        final JsonbConfig config = new JsonbConfig()
-                .withSerializers(new DependencyChangeReport.DependencyChangeSerializer());
-        try (final Jsonb jsonb = JsonbBuilder.create(config)) {
+        try (final Jsonb jsonb = JsonbBuilder.create()) {
             return jsonb.toJson(this);
         } catch (final Exception exception) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-SMC-1")

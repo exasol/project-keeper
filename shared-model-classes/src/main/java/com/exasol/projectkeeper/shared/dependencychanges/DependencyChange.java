@@ -1,8 +1,15 @@
 package com.exasol.projectkeeper.shared.dependencychanges;
 
+import jakarta.json.bind.annotation.JsonbSubtype;
+import jakarta.json.bind.annotation.JsonbTypeInfo;
+
 /**
  * Interface for classes that represent dependency changes (add; update or remove).
  */
+@JsonbTypeInfo(key = "@type", value = { //
+        @JsonbSubtype(alias = "new", type = NewDependency.class),
+        @JsonbSubtype(alias = "removed", type = RemovedDependency.class),
+        @JsonbSubtype(alias = "updated", type = UpdatedDependency.class) })
 public interface DependencyChange {
 
     /**

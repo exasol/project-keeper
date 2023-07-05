@@ -83,8 +83,7 @@
             <dependency>
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
-                <!-- Upgrade to 3.0.x not possible because we use internal API. This will be fixed in https://github.com/exasol/project-keeper/issues/449 -->
-                <version>2.0.4</version>
+                <version>3.0.3</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>

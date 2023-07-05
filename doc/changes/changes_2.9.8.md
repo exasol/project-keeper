@@ -13,6 +13,10 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 * #451: Fixed issues reported by dependabot
 * #453: Added exceptions for broken links checker
 
+## Refactoring
+
+* #449: Migrated to latest yasson version
+
 ## Dependency Updates
 
 ### Project Keeper Core
