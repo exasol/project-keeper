@@ -40,7 +40,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
 | [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
-| [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
+| [Apache Maven Source Plugin][36]                        | [Apache-2.0][18]                               |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
 | [Lombok Maven Plugin][40]                               | [The MIT License][41]                          |
@@ -104,7 +104,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
 | [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
-| [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
+| [Apache Maven Source Plugin][36]                        | [Apache-2.0][18]                               |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
 | [Lombok Maven Plugin][40]                               | [The MIT License][41]                          |
@@ -160,7 +160,7 @@
 | [Artifact reference checker and unifier][66]            | [MIT License][67]                              |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
 | [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
-| [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
+| [Apache Maven Source Plugin][36]                        | [Apache-2.0][18]                               |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
 | [Maven Failsafe Plugin][64]                             | [Apache-2.0][18]                               |
@@ -215,7 +215,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
 | [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
-| [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
+| [Apache Maven Source Plugin][36]                        | [Apache-2.0][18]                               |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
 | [Apache Maven Dependency Plugin][73]                    | [Apache-2.0][18]                               |
@@ -272,7 +272,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
 | [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
-| [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
+| [Apache Maven Source Plugin][36]                        | [Apache-2.0][18]                               |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
 | [Apache Maven Dependency Plugin][73]                    | [Apache-2.0][18]                               |
