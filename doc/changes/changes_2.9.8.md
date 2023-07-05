@@ -38,7 +38,6 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
 * Updated `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1` to `2.0.1`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.4.1` to `1.5.0`
@@ -68,7 +67,6 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
 * Updated `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1` to `2.0.1`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.4.1` to `1.5.0`
@@ -92,7 +90,6 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
 * Updated `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1` to `2.0.1`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.4.1` to `1.5.0`
@@ -118,7 +115,6 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.5.0` to `3.6.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
 * Updated `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1` to `2.0.1`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.4.1` to `1.5.0`
@@ -145,7 +141,6 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.5.0` to `3.6.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
 * Updated `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1` to `2.0.1`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.4.1` to `1.5.0`
