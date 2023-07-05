@@ -376,7 +376,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.4</version>
                 <executions>
                     <execution>
                         <id>verify</id>

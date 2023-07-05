@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.jacoco</groupId>
             <artifactId>org.jacoco.agent</artifactId>
-            <version>0.8.9</version>
+            <version>0.8.11</version>
             <scope>test</scope>
             <classifier>runtime</classifier>
         </dependency>
@@ -362,7 +362,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>1.2.3</version>
+                <version>1.2.4</version>
                 <executions>
                     <execution>
                         <id>verify</id>

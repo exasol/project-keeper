@@ -19,6 +19,25 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 ## Dependency Updates
 
+### Project-Keeper Shared Model Classes
+
+#### Compile Dependency Updates
+
+* Updated `jakarta.json:jakarta.json-api:2.1.1` to `2.1.2`
+* Updated `org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r` to `6.6.0.202305301015-r`
+* Updated `org.eclipse:yasson:2.0.4` to `3.0.3`
+
+#### Test Dependency Updates
+
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.14.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.2` to `5.9.3`
+* Updated `org.mockito:mockito-core:5.3.0` to `5.4.0`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -32,6 +51,14 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.7` to `2.9.8`
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.14.3`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.2` to `5.9.3`
+* Updated `org.mockito:mockito-junit-jupiter:5.3.0` to `5.4.0`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
 
 ### Project Keeper Command Line Interface
 
@@ -42,6 +69,12 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.7` to `2.9.8`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.2` to `5.9.3`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
 
 ### Project Keeper Maven Plugin
 
@@ -49,14 +82,41 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 * Updated `com.exasol:project-keeper-core:2.9.7` to `2.9.8`
 
+#### Test Dependency Updates
+
+* Updated `org.jacoco:org.jacoco.agent:0.8.9` to `0.8.11`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.2` to `5.9.3`
+* Updated `org.mockito:mockito-core:5.3.0` to `5.4.0`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.7` to `2.9.8`
+* Updated `org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r` to `6.6.0.202305301015-r`
+
+#### Test Dependency Updates
+
+* Updated `org.jacoco:org.jacoco.agent:0.8.9` to `0.8.11`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.9.2` to `5.9.3`
+* Updated `org.mockito:mockito-core:5.3.0` to `5.4.0`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
 
 ### Project Keeper Shared Test Setup
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.7` to `2.9.8`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
