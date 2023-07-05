@@ -23,6 +23,7 @@ jobs:
                '{"pattern": "^https?://(www|dev).mysql.com/"},' \
                '{"pattern": "^https?://(www.)?opensource.org"}' \
                '{"pattern": "^https?://(www.)?eclipse.org"}' \
+               '{"pattern": "^https?://projects.eclipse.org"}' \
                ']}' > ./target/broken_links_checker.json
       - uses: gaurav-nelson/github-action-markdown-link-check@v1
         with:
