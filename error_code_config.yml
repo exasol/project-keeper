@@ -3,4 +3,6 @@
 
 error-tags:
   PK:
-    highest-index: 0
+    packages:
+      - dummy
+    highest-index: 1

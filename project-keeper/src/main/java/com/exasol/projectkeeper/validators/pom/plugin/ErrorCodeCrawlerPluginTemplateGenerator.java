@@ -26,7 +26,6 @@ public class ErrorCodeCrawlerPluginTemplateGenerator implements PluginTemplateGe
         final Document document = pluginTemplate.getOwnerDocument();
         final Element sourcePaths = document.createElement("sourcePaths");
         sourcePaths.appendChild(createSourcePathElement(document, "target/delombok/main"));
-        sourcePaths.appendChild(createSourcePathElement(document, "target/delombok/test"));
         final Element configuration = document.createElement("configuration");
         configuration.appendChild(sourcePaths);
         pluginTemplate.appendChild(configuration);
