@@ -1,17 +1,18 @@
-# Project Keeper 2.9.8, released 2023-07-06
+# Project Keeper 2.9.9, released 2023-07-06
 
-Code name: Broken Links Checker and Security Update
+Code name: Support Java Modules
 
 ## Summary
 
-This release fixes security issues CVE-2023-28840, CVE-2023-28842, and CVE-2023-28841 reported by dependabot, all caused by vulnerable versions of components referenced in test resource `project-keeper/src/test/resources/go.mod`. The current release fixes these issues by renaming the test resource to `sample-contents-for-go.mod`.
+This release updates error-code-crawler-maven-plugin to support Java Modules.
 
-Also the release adds two more exceptions for broken links checker as `eclipse.org` seems to block requests.
+## Features
 
-## Bugfixes
+* #456: Updated error-code-crawler-maven-plugin to support Java Modules
 
-* #451: Fixed issues reported by dependabot
-* #453: Added exceptions for broken links checker
+## Refactoring
+
+* #449: Migrated to latest yasson version
 
 ## Dependency Updates
 
@@ -32,7 +33,7 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Plugin Dependency Updates
 
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.3.0`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
 * Updated `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1` to `2.0.1`
@@ -44,15 +45,15 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.9.8` to `2.9.9`
 
 #### Runtime Dependency Updates
 
-* Updated `com.exasol:project-keeper-java-project-crawler:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-java-project-crawler:2.9.8` to `2.9.9`
 
 #### Test Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-test-setup:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-shared-test-setup:2.9.8` to `2.9.9`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.14.1` to `3.14.3`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.2` to `5.9.3`
@@ -60,7 +61,7 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Plugin Dependency Updates
 
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.3.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
@@ -73,17 +74,17 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-core:2.9.8` to `2.9.9`
 
 #### Test Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-test-setup:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-shared-test-setup:2.9.8` to `2.9.9`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.2` to `5.9.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.2` to `5.9.3`
 
 #### Plugin Dependency Updates
 
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.3.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
@@ -96,7 +97,7 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-core:2.9.8` to `2.9.9`
 
 #### Test Dependency Updates
 
@@ -107,7 +108,7 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Plugin Dependency Updates
 
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.3.0`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.5.0` to `3.6.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
@@ -121,7 +122,7 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.9.8` to `2.9.9`
 * Updated `org.eclipse.jgit:org.eclipse.jgit:6.5.0.202303070854-r` to `6.6.0.202305301015-r`
 
 #### Test Dependency Updates
@@ -133,7 +134,7 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Plugin Dependency Updates
 
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.3.0`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.5.0` to `3.6.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.0.0` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.0.1` to `3.1.0`
@@ -147,11 +148,11 @@ Also the release adds two more exceptions for broken links checker as `eclipse.o
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.9.7` to `2.9.8`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.9.8` to `2.9.9`
 
 #### Plugin Dependency Updates
 
-* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.2.4`
+* Updated `com.exasol:error-code-crawler-maven-plugin:1.2.3` to `1.3.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.0.0` to `3.1.2`
 * Updated `org.basepom.maven:duplicate-finder-maven-plugin:1.5.1` to `2.0.1`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.4.1` to `1.5.0`
