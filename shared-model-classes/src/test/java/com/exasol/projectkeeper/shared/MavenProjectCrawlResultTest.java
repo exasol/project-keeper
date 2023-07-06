@@ -1,11 +1,11 @@
 package com.exasol.projectkeeper.shared;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.*;
 
 import java.util.List;
 import java.util.Map;
 
-import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.shared.dependencies.*;
@@ -13,6 +13,9 @@ import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
+
+import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
 class MavenProjectCrawlResultTest {
     private static final ProjectDependency DEPENDENCY = ProjectDependency.builder() //
@@ -35,6 +38,19 @@ class MavenProjectCrawlResultTest {
 
     @Test
     void testSerializeAndDeserialize() {
-        assertThat(MavenProjectCrawlResult.fromJson(CRAWL_RESULT.toJson()), Matchers.equalTo(CRAWL_RESULT));
+        assertThat(MavenProjectCrawlResult.fromJson(CRAWL_RESULT.toJson()), equalTo(CRAWL_RESULT));
+    }
+
+    @Test
+    void testJsonContainsDependencyTypeInfo() {
+        assertThat(CRAWL_RESULT.toJson(), allOf( //
+                containsString("\"@type\":\"new\""), //
+                containsString("\"@type\":\"removed\""), //
+                containsString("\"@type\":\"updated\"")));
+    }
+
+    @Test
+    void testEqualsContract() {
+        EqualsVerifier.forClass(MavenProjectCrawlResult.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 }

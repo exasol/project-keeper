@@ -10,7 +10,7 @@
 | [Project Lombok][0]              | [The MIT License][1]                                                                                         |
 | [Jakarta JSON Processing API][2] | [Eclipse Public License 2.0][3]; [GNU General Public License, version 2 with the GNU Classpath Exception][4] |
 | [JSON-B API][5]                  | [Eclipse Public License 2.0][3]; [GNU General Public License, version 2 with the GNU Classpath Exception][4] |
-| [org.eclipse.yasson][6]          | [Eclipse Public License v. 2.0][7]; [Eclipse Distribution License v. 1.0][8]                                 |
+| [Yasson][6]                      | [Eclipse Public License v. 2.0][7]; [Eclipse Distribution License v. 1.0][8]                                 |
 | [error-reporting-java][9]        | [MIT License][10]                                                                                            |
 | [JGit - Core][11]                | Eclipse Distribution License (New BSD License)                                                               |
 
@@ -39,7 +39,7 @@
 | [Versions Maven Plugin][31]                             | [Apache License, Version 2.0][18]              |
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
-| [Apache Maven GPG Plugin][35]                           | [Apache License, Version 2.0][18]              |
+| [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
 | [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
@@ -103,7 +103,7 @@
 | [Versions Maven Plugin][31]                             | [Apache License, Version 2.0][18]              |
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
-| [Apache Maven GPG Plugin][35]                           | [Apache License, Version 2.0][18]              |
+| [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
 | [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
@@ -159,7 +159,7 @@
 | [Apache Maven JAR Plugin][63]                           | [Apache License, Version 2.0][18]              |
 | [Artifact reference checker and unifier][66]            | [MIT License][67]                              |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
-| [Apache Maven GPG Plugin][35]                           | [Apache License, Version 2.0][18]              |
+| [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
 | [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
@@ -214,11 +214,11 @@
 | [Versions Maven Plugin][31]                             | [Apache License, Version 2.0][18]              |
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
-| [Apache Maven GPG Plugin][35]                           | [Apache License, Version 2.0][18]              |
+| [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
 | [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
-| [Apache Maven Dependency Plugin][73]                    | [Apache License, Version 2.0][18]              |
+| [Apache Maven Dependency Plugin][73]                    | [Apache-2.0][18]                               |
 | [Lombok Maven Plugin][40]                               | [The MIT License][41]                          |
 | [Maven Failsafe Plugin][64]                             | [Apache-2.0][18]                               |
 | [JaCoCo :: Maven Plugin][42]                            | [Eclipse Public License 2.0][43]               |
@@ -271,11 +271,11 @@
 | [Versions Maven Plugin][31]                             | [Apache License, Version 2.0][18]              |
 | [duplicate-finder-maven-plugin Maven Mojo][32]          | [Apache License 2.0][33]                       |
 | [Apache Maven Deploy Plugin][34]                        | [Apache-2.0][18]                               |
-| [Apache Maven GPG Plugin][35]                           | [Apache License, Version 2.0][18]              |
+| [Apache Maven GPG Plugin][35]                           | [Apache-2.0][18]                               |
 | [Apache Maven Source Plugin][36]                        | [Apache License, Version 2.0][18]              |
 | [Apache Maven Javadoc Plugin][37]                       | [Apache-2.0][18]                               |
 | [Nexus Staging Maven Plugin][38]                        | [Eclipse Public License][39]                   |
-| [Apache Maven Dependency Plugin][73]                    | [Apache License, Version 2.0][18]              |
+| [Apache Maven Dependency Plugin][73]                    | [Apache-2.0][18]                               |
 | [Maven Failsafe Plugin][64]                             | [Apache-2.0][18]                               |
 | [JaCoCo :: Maven Plugin][42]                            | [Eclipse Public License 2.0][43]               |
 | [error-code-crawler-maven-plugin][44]                   | [MIT License][45]                              |
@@ -353,7 +353,7 @@
 [29]: http://www.apache.org/licenses/LICENSE-2.0.txt
 [30]: https://maven.apache.org/surefire/maven-surefire-plugin/
 [31]: https://www.mojohaus.org/versions/versions-maven-plugin/
-[32]: https://github.com/basepom/duplicate-finder-maven-plugin
+[32]: https://basepom.github.io/duplicate-finder-maven-plugin
 [33]: http://www.apache.org/licenses/LICENSE-2.0.html
 [34]: https://maven.apache.org/plugins/maven-deploy-plugin/
 [35]: https://maven.apache.org/plugins/maven-gpg-plugin/
