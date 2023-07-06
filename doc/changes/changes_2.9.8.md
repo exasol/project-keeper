@@ -1,14 +1,17 @@
-# Project Keeper 2.9.8, released 2023-??-??
+# Project Keeper 2.9.8, released 2023-07-06
 
-Code name:
+Code name: Broken Links Checker and Security Update
 
 ## Summary
 
 This release fixes security issues CVE-2023-28840, CVE-2023-28842, and CVE-2023-28841 reported by dependabot, all caused by vulnerable versions of components referenced in test resource `project-keeper/src/test/resources/go.mod`. The current release fixes these issues by renaming the test resource to `sample-contents-for-go.mod`.
 
+Also the release adds two more exceptions for broken links checker as `eclipse.org` seems to block requests.
+
 ## Bugfixes
 
 * #451: Fixed issues reported by dependabot
+* #453: Added exceptions for broken links checker
 
 ## Dependency Updates
 
