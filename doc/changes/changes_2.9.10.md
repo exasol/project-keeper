@@ -19,6 +19,7 @@ This release improves handling of `npm ci` by proposing a possible workaround.
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.14.3` to `3.15.1`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.3` to `5.10.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.3` to `5.10.0`
+* Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
 
 ### Project Keeper Core
 
@@ -36,12 +37,17 @@ This release improves handling of `npm ci` by proposing a possible workaround.
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.14.3` to `3.15.1`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.3` to `5.10.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.3` to `5.10.0`
+* Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
 
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-core:2.9.9` to `2.9.10`
+
+#### Runtime Dependency Updates
+
+* Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
 
 #### Test Dependency Updates
 
@@ -59,6 +65,7 @@ This release improves handling of `npm ci` by proposing a possible workaround.
 
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.3` to `5.10.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.3` to `5.10.0`
+* Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
 
 ### Project Keeper Java Project Crawler
 
@@ -70,6 +77,7 @@ This release improves handling of `npm ci` by proposing a possible workaround.
 
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.3` to `5.10.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.3` to `5.10.0`
+* Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
 
 ### Project Keeper Shared Test Setup
 
