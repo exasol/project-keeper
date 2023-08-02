@@ -54,8 +54,10 @@ public class SimpleProcess {
      *                         Java process if {@code null}.
      * @param command          the command to execute
      * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retrieve its output
+     * @throws IllegalStateException if execution fails
      */
-    public static SimpleProcess start(final Path workingDirectory, final List<String> command) {
+    public static SimpleProcess start(final Path workingDirectory, final List<String> command)
+            throws IllegalStateException {
         LOGGER.finest(() -> "Executing command '" + formatCommand(command) + "' in working dir '" + workingDirectory
                 + "'...");
         try {

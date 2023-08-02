@@ -3,6 +3,8 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 import static com.exasol.projectkeeper.sources.analyze.npm.NpmServices.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -86,6 +88,21 @@ class NpmServicesTest {
         testee.listDependencies(workingDir2);
         verify(this.executor, times(1)).execute(FETCH_DEPENDENCIES, workingDir1);
         verify(this.executor, times(1)).execute(FETCH_DEPENDENCIES, workingDir2);
+    }
+
+    @Test
+    void fetchDependenciesSucceeds() {
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
+        assertDoesNotThrow(() -> testee().fetchDependencies(Path.of("testing-working-dir1")));
+    }
+
+    @Test
+    void fetchDependenciesFailsWithIllegalStateException() {
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenThrow(IllegalStateException.class);
+        final NpmServices testee = testee();
+        final Path workingDir = Path.of("testing-working-dir1");
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> testee.fetchDependencies(workingDir));
+        assertThat(exception.getMessage(), equalTo("E-PK-CORE-168: Installing dependencies in 'testing-working-dir1' via 'npm ci' failed. Try running 'npm ci' manually in directory 'testing-working-dir1'."));
     }
 
     private PackageJson currentPackageJson(final Path relative) {

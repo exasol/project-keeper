@@ -5,6 +5,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.sources.analyze.generic.*;
@@ -75,11 +76,19 @@ class NpmServices {
         return JsonIo.read(new StringReader(stdout));
     }
 
-    private void fetchDependencies(final Path workingDir) {
+    void fetchDependencies(final Path workingDir) {
         if (this.workingDirsWithFetchedDependencies.contains(workingDir)) {
             return;
         }
-        this.executor.execute(FETCH_DEPENDENCIES, workingDir);
+        try {
+            this.executor.execute(FETCH_DEPENDENCIES, workingDir);
+        } catch (final RuntimeException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-168")
+                    .message("Installing dependencies in {{working dir}} via 'npm ci' failed.")
+                    .mitigation("Try running 'npm ci' manually in directory {{working dir}}.")
+                    .parameter("working dir", workingDir, "the working directory where 'npm ci' was executed")
+                    .toString(), exception);
+        }
         this.workingDirsWithFetchedDependencies.add(workingDir);
     }
 }
