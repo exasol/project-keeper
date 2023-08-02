@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 class GoModFileTest {
 
     @Test
@@ -132,5 +134,10 @@ class GoModFileTest {
                 () -> assertThat("dependencies", file.getDependencies(), hasSize(expectedDependencies)),
                 () -> assertThat("direct dependencies", file.getDirectDependencies(),
                         hasSize(expectedDirectDependencies)));
+    }
+
+    @Test
+    void equalsContract() {
+        EqualsVerifier.forClass(GoModFile.class).verify();
     }
 }

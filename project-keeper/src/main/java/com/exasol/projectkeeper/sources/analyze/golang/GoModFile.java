@@ -4,21 +4,23 @@ import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toList;
 
 import java.util.List;
+import java.util.Objects;
 
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
-
-import lombok.AllArgsConstructor;
-import lombok.Data;
 
 /**
  * This class represents a parsed {@code go.mod} file.
  */
-@AllArgsConstructor
-@Data
-class GoModFile {
+final class GoModFile {
     private final String moduleName;
     private final String goVersion;
     private final List<VersionedDependency> dependencies;
+
+    GoModFile(final String moduleName, final String goVersion, final List<VersionedDependency> dependencies) {
+        this.moduleName = moduleName;
+        this.goVersion = goVersion;
+        this.dependencies = dependencies;
+    }
 
     private GoModFile(final GoModFileParser parser) {
         this(parser.moduleName, parser.goVersion, parser.dependencies);
@@ -34,5 +36,44 @@ class GoModFile {
         return this.dependencies.stream() //
                 .filter(not(VersionedDependency::isIndirect)) //
                 .collect(toList());
+    }
+
+    String getModuleName() {
+        return moduleName;
+    }
+
+    String getGoVersion() {
+        return goVersion;
+    }
+
+    List<VersionedDependency> getDependencies() {
+        return dependencies;
+    }
+
+    @Override
+    public String toString() {
+        return "GoModFile [moduleName=" + moduleName + ", goVersion=" + goVersion + ", dependencies=" + dependencies
+                + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(moduleName, goVersion, dependencies);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final GoModFile other = (GoModFile) obj;
+        return Objects.equals(moduleName, other.moduleName) && Objects.equals(goVersion, other.goVersion)
+                && Objects.equals(dependencies, other.dependencies);
     }
 }

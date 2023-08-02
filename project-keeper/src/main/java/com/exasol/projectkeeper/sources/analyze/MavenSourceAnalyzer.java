@@ -20,16 +20,25 @@ import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This class analyzes Java Maven projects.
  */
-@RequiredArgsConstructor
+
 public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private final Path mvnRepositoryOverride;
     private final String ownVersion;
+
+    /**
+     * Create a new instance.
+     * 
+     * @param mvnRepositoryOverride maven repository override. Use {@code null} for default
+     * @param ownVersion            project-keeper version
+     */
+    public MavenSourceAnalyzer(final Path mvnRepositoryOverride, final String ownVersion) {
+        this.mvnRepositoryOverride = mvnRepositoryOverride;
+        this.ownVersion = ownVersion;
+    }
 
     @Override
     public List<AnalyzedSource> analyze(final Path projectDir, final List<ProjectKeeperConfig.Source> sources) {
