@@ -99,7 +99,11 @@ public class DependencyPageRenderer {
         if ((url == null) || url.isBlank()) {
             return name;
         } else {
-            return "[" + name + "][" + markdownReferenceBuilder.getReferenceForUrl(url) + "]";
+            return "[" + escapeTableContent(name) + "][" + markdownReferenceBuilder.getReferenceForUrl(url) + "]";
         }
+    }
+
+    private static String escapeTableContent(final String text) {
+        return text.replace("|", "\\|");
     }
 }
