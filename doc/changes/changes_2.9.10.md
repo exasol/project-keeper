@@ -1,14 +1,19 @@
 # Project Keeper 2.9.10, released 2023-??-??
 
-Code name:
+Code name: Minor fixes
 
 ## Summary
 
-This release improves handling of `npm ci` by proposing a possible workaround.
+This release improves handling of `npm ci` by proposing a possible workaround and escapes pipe symbol in the dependencies table.
 
 ## Bugfixes
 
 * #461: Improved handling failed `npm ci`
+* #458: Escape pipe symbol in dependencies table
+
+## Refactoring
+
+* #341: Remove lombok
 
 ## Dependency Updates
 
