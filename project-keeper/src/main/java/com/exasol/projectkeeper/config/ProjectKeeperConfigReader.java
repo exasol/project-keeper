@@ -15,8 +15,6 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
-import lombok.Data;
-
 /**
  * This class reads {@link ProjectKeeperConfig} from file.
  */
@@ -82,7 +80,7 @@ public class ProjectKeeperConfigReader {
         final List<String> excludes = convertExcludes(rawConfig.getExcludes());
         final List<String> linkReplacements = Objects.requireNonNullElseGet(rawConfig.getLinkReplacements(),
                 Collections::emptyList);
-        final ProjectKeeperConfig.VersionConfig version = parseVersion(rawConfig.version, projectDir);
+        final ProjectKeeperConfig.VersionConfig version = parseVersion(rawConfig.getVersion(), projectDir);
 
         return ProjectKeeperConfig.builder().sources(sources).linkReplacements(linkReplacements).excludes(excludes)
                 .versionConfig(version).build();
@@ -160,7 +158,7 @@ public class ProjectKeeperConfigReader {
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
         return ProjectKeeperConfig.Source.builder().path(path).type(convertType(rawType)).modules(modules)
-                .advertise(rawSource.advertise).parentPom(parseParentPomProperty(rawSource.parentPom)).build();
+                .advertise(rawSource.isAdvertise()).parentPom(parseParentPomProperty(rawSource.getParentPom())).build();
     }
 
     private ProjectKeeperConfig.ParentPomRef parseParentPomProperty(
@@ -220,50 +218,6 @@ public class ProjectKeeperConfigReader {
                     .message(INVALID_CONFIG_FILE + " Unsupported source type {{type}}.", rawType)
                     .mitigation("Please use one of the supported types: {{supported types|u}}.", supportedTypes)
                     .toString());
-        }
-    }
-
-    /**
-     * Intermediate class for reading the config.
-     * <p>
-     * SnakeYML requires this class to be public.
-     * </p>
-     */
-    @Data
-    public static class ProjectKeeperRawConfig {
-        private List<Source> sources;
-        private List<String> linkReplacements;
-        /** String or map (regex: string) */
-        private List<Object> excludes;
-        private Object version;
-
-        /**
-         * Intermediate class for reading the config sources.
-         * <p>
-         * SnakeYML requires this class to be public.
-         * </p>
-         */
-        @Data
-        public static class Source {
-            private String path;
-            private String type;
-            private List<String> modules;
-            private boolean advertise = true;
-            private ParentPomRef parentPom;
-        }
-
-        /**
-         * Reference to a parent pom of a maven source.
-         * <p>
-         * SnakeYML requires this class to be public.
-         * </p>
-         */
-        @Data
-        public static class ParentPomRef {
-            private String groupId;
-            private String artifactId;
-            private String version;
-            private String relativePath;
         }
     }
 }
