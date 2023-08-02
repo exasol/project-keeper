@@ -12,8 +12,6 @@ import org.yaml.snakeyaml.Yaml;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
 
-import lombok.Data;
-
 public class ProjectKeeperConfigWriter {
 
     public void writeConfig(final ProjectKeeperConfig config, final Path projectDirectory) {
@@ -52,18 +50,58 @@ public class ProjectKeeperConfigWriter {
         }
     }
 
-    @Data
     public static class ConfigForWriting {
         private final List<Source> sources;
         private final List<String> linkReplacements;
         private final List<String> excludes;
         private final Object version;
 
-        @Data
+        private ConfigForWriting(final List<Source> sources, final List<String> linkReplacements,
+                final List<String> excludes, final Object version) {
+            this.sources = sources;
+            this.linkReplacements = linkReplacements;
+            this.excludes = excludes;
+            this.version = version;
+        }
+
         public static class Source {
             private final String path;
             private final String type;
             private final List<String> modules;
+
+            public Source(final String path, final String type, final List<String> modules) {
+                this.path = path;
+                this.type = type;
+                this.modules = modules;
+            }
+
+            public String getPath() {
+                return path;
+            }
+
+            public String getType() {
+                return type;
+            }
+
+            public List<String> getModules() {
+                return modules;
+            }
+        }
+
+        public List<Source> getSources() {
+            return sources;
+        }
+
+        public List<String> getLinkReplacements() {
+            return linkReplacements;
+        }
+
+        public List<String> getExcludes() {
+            return excludes;
+        }
+
+        public Object getVersion() {
+            return version;
         }
     }
 }
