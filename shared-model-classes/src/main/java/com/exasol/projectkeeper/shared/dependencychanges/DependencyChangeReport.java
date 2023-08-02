@@ -97,6 +97,11 @@ public class DependencyChangeReport {
     }
 
     @Override
+    public String toString() {
+        return "DependencyChangeReport [changes=" + changes + "]";
+    }
+
+    @Override
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

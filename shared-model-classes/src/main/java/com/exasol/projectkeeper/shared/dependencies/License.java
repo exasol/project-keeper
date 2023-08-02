@@ -65,7 +65,7 @@ public final class License {
      * <p>
      * Required for JSON deserializing.
      * 
-     * @param name license URL.
+     * @param url license URL.
      */
     public void setUrl(final String url) {
         this.url = url;
