@@ -16,15 +16,15 @@
 
 ### Test Dependencies
 
-| Dependency                                | License                           |
-| ----------------------------------------- | --------------------------------- |
-| [JUnit Jupiter Engine][12]                | [Eclipse Public License v2.0][13] |
-| [JUnit Jupiter Params][12]                | [Eclipse Public License v2.0][13] |
-| [Hamcrest][14]                            | [BSD License 3][15]               |
-| [JUnit5 System Extensions][16]            | [Eclipse Public License v2.0][7]  |
-| [EqualsVerifier | release normal jar][17] | [Apache License, Version 2.0][18] |
-| [mockito-core][19]                        | [The MIT License][20]             |
-| [SLF4J JDK14 Binding][21]                 | [MIT License][22]                 |
+| Dependency                                 | License                           |
+| ------------------------------------------ | --------------------------------- |
+| [JUnit Jupiter Engine][12]                 | [Eclipse Public License v2.0][13] |
+| [JUnit Jupiter Params][12]                 | [Eclipse Public License v2.0][13] |
+| [Hamcrest][14]                             | [BSD License 3][15]               |
+| [JUnit5 System Extensions][16]             | [Eclipse Public License v2.0][7]  |
+| [EqualsVerifier \| release normal jar][17] | [Apache License, Version 2.0][18] |
+| [mockito-core][19]                         | [The MIT License][20]             |
+| [SLF4J JDK14 Binding][21]                  | [MIT License][22]                 |
 
 ### Plugin Dependencies
 
@@ -70,18 +70,18 @@
 
 ### Test Dependencies
 
-| Dependency                                | License                                        |
-| ----------------------------------------- | ---------------------------------------------- |
-| [Project Keeper shared test setup][52]    | [The MIT License][53]                          |
-| [Maven Project Version Getter][59]        | [MIT License][60]                              |
-| [JUnit Jupiter Engine][12]                | [Eclipse Public License v2.0][13]              |
-| [JUnit Jupiter Params][12]                | [Eclipse Public License v2.0][13]              |
-| [Hamcrest][14]                            | [BSD License 3][15]                            |
-| [org.xmlunit:xmlunit-matchers][54]        | [The Apache Software License, Version 2.0][29] |
-| [mockito-junit-jupiter][19]               | [The MIT License][20]                          |
-| [Maven Plugin Integration Testing][61]    | [MIT License][62]                              |
-| [EqualsVerifier | release normal jar][17] | [Apache License, Version 2.0][18]              |
-| [SLF4J JDK14 Binding][21]                 | [MIT License][22]                              |
+| Dependency                                 | License                                        |
+| ------------------------------------------ | ---------------------------------------------- |
+| [Project Keeper shared test setup][52]     | [The MIT License][53]                          |
+| [Maven Project Version Getter][59]         | [MIT License][60]                              |
+| [JUnit Jupiter Engine][12]                 | [Eclipse Public License v2.0][13]              |
+| [JUnit Jupiter Params][12]                 | [Eclipse Public License v2.0][13]              |
+| [Hamcrest][14]                             | [BSD License 3][15]                            |
+| [org.xmlunit:xmlunit-matchers][54]         | [The Apache Software License, Version 2.0][29] |
+| [mockito-junit-jupiter][19]                | [The MIT License][20]                          |
+| [Maven Plugin Integration Testing][61]     | [MIT License][62]                              |
+| [EqualsVerifier \| release normal jar][17] | [Apache License, Version 2.0][18]              |
+| [SLF4J JDK14 Binding][21]                  | [MIT License][22]                              |
 
 ### Runtime Dependencies
 

@@ -63,6 +63,27 @@ class DependencyPageRendererTest {
                 "[1]: https://mit.edu")));
     }
 
+    @Test
+    void testDependencyWithPipeSymbol() {
+        final ProjectDependency dependency = ProjectDependency.builder() //
+                .type(ProjectDependency.Type.COMPILE) //
+                .name("my|lib") //
+                .websiteUrl("https://example.com/mylib") //
+                .licenses(List.of(new License("MIT|License", "https://mit.edu"))) //
+                .build();
+        final String result = new DependencyPageRenderer().render(singleProjectWith(dependency));
+        assertThat(result, equalTo(lines( //
+                "<!-- @formatter:off -->", //
+                "# Dependencies", "", //
+                "## Compile Dependencies", "", //
+                "| Dependency   | License           |", //
+                "| ------------ | ----------------- |", //
+                "| [my\\|lib][0] | [MIT\\|License][1] |", //
+                "", //
+                "[0]: https://example.com/mylib", //
+                "[1]: https://mit.edu")));
+    }
+
     private List<ProjectWithDependencies> singleProjectWith(final ProjectDependency... dependencies) {
         return List.of(new ProjectWithDependencies("", Arrays.asList(dependencies)));
     }
