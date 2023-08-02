@@ -1,17 +1,13 @@
 package com.exasol.projectkeeper.validators.files;
 
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-
-import lombok.EqualsAndHashCode;
 
 /**
  * {@link FileTemplate} that reads the content from a resource.
  */
-@EqualsAndHashCode
-public class FileTemplateFromResource implements FileTemplate {
+public final class FileTemplateFromResource implements FileTemplate {
 
     private final String templateResource;
     private final String pathInProject;
@@ -72,5 +68,27 @@ public class FileTemplateFromResource implements FileTemplate {
     @Override
     public Validation getValidation() {
         return this.validation;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(templateResource, pathInProject, validation, replacements);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final FileTemplateFromResource other = (FileTemplateFromResource) obj;
+        return Objects.equals(templateResource, other.templateResource)
+                && Objects.equals(pathInProject, other.pathInProject) && validation == other.validation
+                && Objects.equals(replacements, other.replacements);
     }
 }
