@@ -5,8 +5,6 @@ import java.util.List;
 
 import com.exasol.projectkeeper.Logger;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This class runs the {@link SimpleValidationFinding.Fix} callbacks of {@link ValidationFinding}s.
  */
@@ -36,10 +34,13 @@ public class FindingsFixer {
         return visitor.getUnfixed();
     }
 
-    @RequiredArgsConstructor
     private static class FixingVisitor implements ValidationFinding.Visitor {
         private final Logger logger;
         private final List<SimpleValidationFinding> unfixed = new ArrayList<>();
+
+        private FixingVisitor(final Logger logger) {
+            this.logger = logger;
+        }
 
         @Override
         public void visit(final SimpleValidationFinding finding) {
