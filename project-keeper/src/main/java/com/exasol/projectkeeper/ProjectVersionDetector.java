@@ -8,8 +8,6 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This class extracts the overall project version.
  */
@@ -39,10 +37,13 @@ public class ProjectVersionDetector {
         }
     }
 
-    @RequiredArgsConstructor
     private static class VersionProviderVisitor implements ProjectKeeperConfig.VersionConfig.Visitor {
         private final List<AnalyzedSource> analyzedSources;
         private String version;
+
+        private VersionProviderVisitor(final List<AnalyzedSource> analyzedSources) {
+            this.analyzedSources = analyzedSources;
+        }
 
         @Override
         public void visit(final ProjectKeeperConfig.FixedVersion fixedVersion) {

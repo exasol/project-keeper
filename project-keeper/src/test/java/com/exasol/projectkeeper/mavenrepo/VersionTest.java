@@ -11,7 +11,6 @@ import org.junit.jupiter.params.provider.CsvSource;
 import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatException;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 
 //[utest->dsn~verify-own-version~1]
 class VersionTest {
@@ -47,7 +46,6 @@ class VersionTest {
 
     @Test
     void equalsContract() {
-        EqualsVerifier.forClass(Version.class).suppress(Warning.STRICT_INHERITANCE).verify();
+        EqualsVerifier.forClass(Version.class).verify();
     }
-
 }
