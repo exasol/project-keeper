@@ -43,7 +43,7 @@ class SourceAnalyzerIT {
         assertAll(//
                 () -> assertThat(result, Matchers.hasSize(1)), () -> assertThat(first.getPath(), equalTo(path)),
                 () -> assertThat(first.getModules(), equalTo(MODULES)),
-                () -> assertThat(first.isAdvertise(), equalTo(true)),
+                () -> assertThat(first.isAdvertised(), equalTo(true)),
                 () -> assertThat(first.getArtifactId(), equalTo(TestMavenModel.PROJECT_ARTIFACT_ID)),
                 () -> assertThat(first.getProjectName(), equalTo(TestMavenModel.PROJECT_NAME)),
                 () -> assertThat(first.getVersion(), equalTo(TestMavenModel.PROJECT_VERSION)),

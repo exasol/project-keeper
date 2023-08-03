@@ -49,7 +49,7 @@ public interface AnalyzedSource {
      *
      * @return {@code true} if this source should be advertised, e.g. in the README.md
      */
-    boolean isAdvertise();
+    boolean isAdvertised();
 
     /**
      * Get a report of all added/updated/removed dependencies.

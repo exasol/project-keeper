@@ -126,7 +126,7 @@ class GolangSourceAnalyzerIT {
                 () -> assertDependencyChanges(analyzedProject.getDependencyChanges()),
                 () -> assertThat("module name", ((AnalyzedSourceImpl) analyzedProject).getModuleName(),
                         equalTo("github.com/exasol/my-module")),
-                () -> assertThat("advertise", analyzedProject.isAdvertise(), is(true)),
+                () -> assertThat("advertised", analyzedProject.isAdvertised(), is(true)),
                 () -> assertThat("version", analyzedProject.getVersion(), equalTo(this.fixture.getProjectVersion())));
     }
 

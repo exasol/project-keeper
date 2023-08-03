@@ -55,7 +55,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
 
     /** @return advertise this source or not */
     @Override
-    public boolean isAdvertise() {
+    public boolean isAdvertised() {
         return this.advertise;
     }
 
