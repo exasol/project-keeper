@@ -65,8 +65,6 @@ public final class ProjectKeeperConfig {
          * @param sources List with source-projects to crawl
          * @return {@code this}.
          */
-        @java.lang.SuppressWarnings("all")
-        @lombok.Generated
         public ProjectKeeperConfig.ProjectKeeperConfigBuilder sources(final List<Source> sources) {
             this.sources = sources;
             return this;
