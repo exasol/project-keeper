@@ -14,7 +14,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.RepoInfo;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ParentPomRef;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.OwnVersionValidator;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator;
@@ -64,7 +64,7 @@ public class PomFileValidator implements Validator {
     private final Path projectDirectory;
     final Collection<ProjectKeeperModule> enabledModules;
     private final Path pomFilePath;
-    private final ProjectKeeperConfig.ParentPomRef parentPomRef;
+    private final ParentPomRef parentPomRef;
     private final RepoInfo repoInfo;
 
     /**
@@ -77,7 +77,7 @@ public class PomFileValidator implements Validator {
      * @param repoInfo         information about the repository
      */
     public PomFileValidator(final Path projectDirectory, final Collection<ProjectKeeperModule> enabledModules,
-            final Path pomFilePath, final ProjectKeeperConfig.ParentPomRef parentPomRef, final RepoInfo repoInfo) {
+            final Path pomFilePath, final ParentPomRef parentPomRef, final RepoInfo repoInfo) {
         this.projectDirectory = projectDirectory;
         this.enabledModules = enabledModules;
         this.pomFilePath = pomFilePath;
@@ -211,7 +211,7 @@ public class PomFileValidator implements Validator {
         return node == null ? null : node.getTextContent();
     }
 
-    private String versionFrom(final ProjectKeeperConfig.ParentPomRef ref) {
+    private String versionFrom(final ParentPomRef ref) {
         return ref == null ? null : ref.getVersion();
     }
 

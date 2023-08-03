@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
-import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -17,11 +17,12 @@ import org.junit.jupiter.api.*;
 import com.exasol.projectkeeper.ProjectKeeperAbstractMavenIT;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 import com.exasol.projectkeeper.test.TestMavenModel;
 
 @Tag("integration")
-//[itest->dsn~depnedency.md-file-validator~1]
+// [itest->dsn~depnedency.md-file-validator~1]
 // [itest->dsn~reading-project-dependencies~1]
 class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
 
@@ -76,16 +77,16 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
     }
 
     private ProjectKeeperConfigBuilder createConfigWithNoModules() {
-        return ProjectKeeperConfig.builder().sources(List.of(ProjectKeeperConfig.Source.builder()
-                .modules(Collections.emptySet()).type(MAVEN).path(Path.of("pom.xml")).build()));
+        return ProjectKeeperConfig.builder().sources(
+                List.of(Source.builder().modules(Collections.emptySet()).type(MAVEN).path(Path.of("pom.xml")).build()));
     }
 
     @Test
     void testBrokenLinkReplacing() throws IOException {
         createExamplePomFile();
         this.fixture.writeConfig(ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Collections.emptySet()).type(MAVEN)
-                        .path(Path.of("pom.xml")).build()))
+                .sources(List.of(
+                        Source.builder().modules(Collections.emptySet()).type(MAVEN).path(Path.of("pom.xml")).build()))
                 .linkReplacements(
                         List.of("https://www.apache.org/licenses/LICENSE-2.0.txt|https://my-replacement.de")));
         runFix();

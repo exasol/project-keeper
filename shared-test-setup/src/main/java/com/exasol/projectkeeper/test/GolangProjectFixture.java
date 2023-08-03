@@ -4,7 +4,8 @@ import static java.util.Collections.emptySet;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.List;
@@ -13,9 +14,8 @@ import java.util.concurrent.TimeUnit;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
 
 public class GolangProjectFixture implements AutoCloseable {
     private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
@@ -50,10 +50,9 @@ public class GolangProjectFixture implements AutoCloseable {
     }
 
     public ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfig() {
-        return ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
-                        .path(Path.of(GO_MOD_FILE_NAME)).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion(PROJECT_VERSION));
+        return ProjectKeeperConfig.builder().sources(List.of(
+                Source.builder().modules(emptySet()).type(SourceType.GOLANG).path(Path.of(GO_MOD_FILE_NAME)).build()))
+                .versionConfig(new FixedVersion(PROJECT_VERSION));
     }
 
     public void prepareProjectFiles(final ProjectKeeperConfigBuilder configBuilder) {

@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.humanReadable;
-import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.blockers;
 
 import java.nio.file.Path;
@@ -13,9 +13,7 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.generic.RepoNameReader;
@@ -109,7 +107,7 @@ public class ProjectKeeper {
     private ValidationPhase phase1(final ValidationPhase.Provision provision) {
         final String licenseName = new LicenseNameReader().readLicenseName(this.projectDir);
         final List<Validator> validators = new ArrayList<>();
-        for (final ProjectKeeperConfig.Source source : this.config.getSources()) {
+        for (final Source source : this.config.getSources()) {
             if (source.getType().equals(MAVEN)) {
                 validators.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
                         source.getParentPom(), new RepoInfo(this.repoName, licenseName)));

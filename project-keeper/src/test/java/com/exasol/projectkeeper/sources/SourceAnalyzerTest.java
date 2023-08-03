@@ -24,8 +24,8 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
+import com.exasol.projectkeeper.shared.config.Source;
+import com.exasol.projectkeeper.shared.config.SourceType;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 
 @ExtendWith(MockitoExtension.class)

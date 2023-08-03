@@ -10,9 +10,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.MavenSourceAnalyzer;
 import com.exasol.projectkeeper.sources.analyze.golang.GolangSourceAnalyzer;
@@ -56,16 +54,14 @@ public class SourceAnalyzer {
      * @param sources    configured sources
      * @return analyzed sources in the same order as the input
      */
-    public List<AnalyzedSource> analyze(final Path projectDir, final List<ProjectKeeperConfig.Source> sources) {
+    public List<AnalyzedSource> analyze(final Path projectDir, final List<Source> sources) {
         validateUniqueSourcePaths(sources);
         final Map<Path, AnalyzedSource> analyzedSources = analyzeSources(projectDir, sources);
         return fixOrder(sources, analyzedSources);
     }
 
-    private Map<Path, AnalyzedSource> analyzeSources(final Path projectDir,
-            final List<ProjectKeeperConfig.Source> sources) {
-        final Map<SourceType, List<Source>> groupedSources = sources.stream()
-                .collect(groupingBy(ProjectKeeperConfig.Source::getType));
+    private Map<Path, AnalyzedSource> analyzeSources(final Path projectDir, final List<Source> sources) {
+        final Map<SourceType, List<Source>> groupedSources = sources.stream().collect(groupingBy(Source::getType));
         final Map<Path, AnalyzedSource> analyzedSources = new HashMap<>(sources.size());
         for (final Entry<SourceType, List<Source>> entry : groupedSources.entrySet()) {
             final LanguageSpecificSourceAnalyzer analyzer = getAnalyzer(entry.getKey());
@@ -75,8 +71,7 @@ public class SourceAnalyzer {
         return analyzedSources;
     }
 
-    private List<AnalyzedSource> fixOrder(final List<ProjectKeeperConfig.Source> sources,
-            final Map<Path, AnalyzedSource> analyzedSources) {
+    private List<AnalyzedSource> fixOrder(final List<Source> sources, final Map<Path, AnalyzedSource> analyzedSources) {
         return sources.stream().map(source -> findSource(source, analyzedSources)).collect(toList());
     }
 

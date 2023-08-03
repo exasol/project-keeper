@@ -10,9 +10,8 @@ import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType;
+import com.exasol.projectkeeper.shared.config.Source;
+import com.exasol.projectkeeper.shared.config.SourceType;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class MavenSourceAnalyzerTest {
@@ -38,7 +37,7 @@ class MavenSourceAnalyzerTest {
 
     @Test
     void analyzingNonMavenSourceFails() {
-        final List<Source> goSources = List.of(ProjectKeeperConfig.Source.builder().type(SourceType.GOLANG).build());
+        final List<Source> goSources = List.of(Source.builder().type(SourceType.GOLANG).build());
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyze(OWN_VERSION, goSources));
         assertThat(exception.getMessage(),
@@ -47,8 +46,7 @@ class MavenSourceAnalyzerTest {
     }
 
     private List<Source> createMavenSources() {
-        return List.of(ProjectKeeperConfig.Source.builder().type(SourceType.MAVEN).path(PROJECT_DIR.resolve("pom.xml"))
-                .build());
+        return List.of(Source.builder().type(SourceType.MAVEN).path(PROJECT_DIR.resolve("pom.xml")).build());
     }
 
     private List<AnalyzedSource> analyze(final String ownVersion, final List<Source> sources) {

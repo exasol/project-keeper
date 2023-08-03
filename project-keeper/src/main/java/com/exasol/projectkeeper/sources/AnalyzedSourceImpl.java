@@ -3,8 +3,8 @@ package com.exasol.projectkeeper.sources;
 import java.nio.file.Path;
 import java.util.Set;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.sources.analyze.generic.RepoNameReader;
@@ -48,6 +48,8 @@ public class AnalyzedSourceImpl implements AnalyzedSource {
     private final String version;
     private final DependencyChangeReport dependencyChanges;
     private final ProjectDependencies dependencies;
-    /** {@code true} if this is the main project in the repo, i.e. if build script (e.g. go.mod) lies directly in repo. */
+    /**
+     * {@code true} if this is the main project in the repo, i.e. if build script (e.g. go.mod) lies directly in repo.
+     */
     private final boolean isRootProject;
 }

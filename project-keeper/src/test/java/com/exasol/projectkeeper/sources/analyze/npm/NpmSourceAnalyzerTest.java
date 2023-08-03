@@ -12,7 +12,7 @@ import java.util.*;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;

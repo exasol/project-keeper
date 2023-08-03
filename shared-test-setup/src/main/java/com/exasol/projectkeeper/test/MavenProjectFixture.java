@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper.test;
 
-import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.values;
+import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -10,7 +10,7 @@ import java.util.Set;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
 
 public class MavenProjectFixture {
@@ -47,15 +47,14 @@ public class MavenProjectFixture {
 
     public ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithAllModulesBuilder() {
         return ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(Set.of(values())).type(MAVEN)
-                        .path(Path.of(POM_XML)).build()))
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of(POM_XML)));
+                .sources(List.of(Source.builder().modules(Set.of(values())).type(MAVEN).path(Path.of(POM_XML)).build()))
+                .versionConfig(new VersionFromSource(Path.of(POM_XML)));
     }
 
     public ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithoutModulesBuilder() {
         return ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().type(MAVEN).path(Path.of(POM_XML)).build()))
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of(POM_XML)));
+                .sources(List.of(Source.builder().type(MAVEN).path(Path.of(POM_XML)).build()))
+                .versionConfig(new VersionFromSource(Path.of(POM_XML)));
     }
 
     public void writeConfig(final ProjectKeeperConfigBuilder configBuilder) {

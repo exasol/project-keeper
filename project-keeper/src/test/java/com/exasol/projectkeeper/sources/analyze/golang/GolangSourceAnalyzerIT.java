@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.GOLANG;
+import static com.exasol.projectkeeper.shared.config.SourceType.GOLANG;
 import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -13,8 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
@@ -89,9 +88,9 @@ class GolangSourceAnalyzerIT {
     void testGoModuleInSubdirectory() {
         prepareProjectFiles(Path.of("subdir"));
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
+                .sources(List.of(Source.builder().modules(emptySet()).type(SourceType.GOLANG)
                         .path(Path.of("subdir").resolve("go.mod")).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion(this.fixture.getProjectVersion())).build();
+                .versionConfig(new FixedVersion(this.fixture.getProjectVersion())).build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
                 () -> assertCommonProperties(analyzedProject), //
@@ -105,9 +104,8 @@ class GolangSourceAnalyzerIT {
         prepareProjectFiles(Path.of("subdir"));
         final Path modPath = this.projectDir.resolve("subdir/go.mod");
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
-                        .path(modPath).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion(this.fixture.getProjectVersion())).build();
+                .sources(List.of(Source.builder().modules(emptySet()).type(SourceType.GOLANG).path(modPath).build()))
+                .versionConfig(new FixedVersion(this.fixture.getProjectVersion())).build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
                 () -> assertCommonProperties(analyzedProject), //

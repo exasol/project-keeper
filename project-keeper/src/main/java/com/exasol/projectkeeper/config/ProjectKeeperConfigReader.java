@@ -12,8 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.*;
 
 /**
  * This class reads {@link ProjectKeeperConfig} from file.
@@ -76,26 +75,26 @@ public class ProjectKeeperConfigReader {
 
     private ProjectKeeperConfig parseRawConfig(final ProjectKeeperRawConfig rawConfig, final Path projectDir) {
         final List<ProjectKeeperRawConfig.Source> rawSources = rawConfig.getSources();
-        final List<ProjectKeeperConfig.Source> sources = convertSources(projectDir, rawSources);
+        final List<Source> sources = convertSources(projectDir, rawSources);
         final List<String> excludes = convertExcludes(rawConfig.getExcludes());
         final List<String> linkReplacements = Objects.requireNonNullElseGet(rawConfig.getLinkReplacements(),
                 Collections::emptyList);
-        final ProjectKeeperConfig.VersionConfig version = parseVersion(rawConfig.getVersion(), projectDir);
+        final VersionConfig version = parseVersion(rawConfig.getVersion(), projectDir);
 
         return ProjectKeeperConfig.builder().sources(sources).linkReplacements(linkReplacements).excludes(excludes)
                 .versionConfig(version).build();
     }
 
-    private ProjectKeeperConfig.VersionConfig parseVersion(final Object rawVersion, final Path projectDir) {
+    private VersionConfig parseVersion(final Object rawVersion, final Path projectDir) {
         if (rawVersion == null) {
             return null;
         } else if (rawVersion instanceof String) {
-            return new ProjectKeeperConfig.FixedVersion((String) rawVersion);
+            return new FixedVersion((String) rawVersion);
         }
         if (rawVersion instanceof Map) {
             final Object fromMvnSource = ((Map<?, ?>) rawVersion).get("fromSource");
             if (fromMvnSource instanceof String) {
-                return new ProjectKeeperConfig.VersionFromSource(projectDir.resolve(Path.of((String) fromMvnSource)));
+                return new VersionFromSource(projectDir.resolve(Path.of((String) fromMvnSource)));
             }
         }
         throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-113")
@@ -138,35 +137,32 @@ public class ProjectKeeperConfigReader {
         }
     }
 
-    private List<ProjectKeeperConfig.Source> convertSources(final Path projectDir,
-            final List<ProjectKeeperRawConfig.Source> rawSources) {
+    private List<Source> convertSources(final Path projectDir, final List<ProjectKeeperRawConfig.Source> rawSources) {
         if (rawSources == null) {
             return Collections.emptyList();
         } else {
-            final List<ProjectKeeperConfig.Source> sources = new ArrayList<>(rawSources.size());
+            final List<Source> sources = new ArrayList<>(rawSources.size());
             for (final ProjectKeeperRawConfig.Source rawSource : rawSources) {
-                final ProjectKeeperConfig.Source source = convertSource(projectDir, rawSource);
+                final Source source = convertSource(projectDir, rawSource);
                 sources.add(source);
             }
             return sources;
         }
     }
 
-    private ProjectKeeperConfig.Source convertSource(final Path projectDir,
-            final ProjectKeeperRawConfig.Source rawSource) {
+    private Source convertSource(final Path projectDir, final ProjectKeeperRawConfig.Source rawSource) {
         final String rawType = rawSource.getType();
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
-        return ProjectKeeperConfig.Source.builder().path(path).type(convertType(rawType)).modules(modules)
+        return Source.builder().path(path).type(convertType(rawType)).modules(modules)
                 .advertise(rawSource.isAdvertise()).parentPom(parseParentPomProperty(rawSource.getParentPom())).build();
     }
 
-    private ProjectKeeperConfig.ParentPomRef parseParentPomProperty(
-            final ProjectKeeperRawConfig.ParentPomRef rawParentPomRef) {
+    private ParentPomRef parseParentPomProperty(final ProjectKeeperRawConfig.ParentPomRef rawParentPomRef) {
         if (rawParentPomRef == null) {
             return null;
         } else {
-            return new ProjectKeeperConfig.ParentPomRef(rawParentPomRef.getGroupId(), rawParentPomRef.getArtifactId(),
+            return new ParentPomRef(rawParentPomRef.getGroupId(), rawParentPomRef.getArtifactId(),
                     rawParentPomRef.getVersion(), rawParentPomRef.getRelativePath());
         }
     }
@@ -207,12 +203,12 @@ public class ProjectKeeperConfigReader {
         }
     }
 
-    private ProjectKeeperConfig.SourceType convertType(final String rawType) {
+    private SourceType convertType(final String rawType) {
         requireProperty(rawType, "sources/type");
         try {
-            return ProjectKeeperConfig.SourceType.valueOf(rawType.toUpperCase(Locale.ROOT));
+            return SourceType.valueOf(rawType.toUpperCase(Locale.ROOT));
         } catch (final IllegalArgumentException exception) {
-            final String supportedTypes = Arrays.stream(ProjectKeeperConfig.SourceType.values()).map(Enum::toString)
+            final String supportedTypes = Arrays.stream(SourceType.values()).map(Enum::toString)
                     .map(String::toLowerCase).collect(Collectors.joining(", "));
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-84")
                     .message(INVALID_CONFIG_FILE + " Unsupported source type {{type}}.", rawType)

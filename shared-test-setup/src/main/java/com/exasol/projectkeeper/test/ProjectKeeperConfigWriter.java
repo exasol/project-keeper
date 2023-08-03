@@ -9,8 +9,7 @@ import java.util.stream.Collectors;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
+import com.exasol.projectkeeper.shared.config.*;
 
 public class ProjectKeeperConfigWriter {
 
@@ -27,7 +26,7 @@ public class ProjectKeeperConfigWriter {
 
     public ConfigForWriting prepareWriting(final ProjectKeeperConfig config) {
         final List<ConfigForWriting.Source> sourcesForWriting = new ArrayList<>();
-        for (final ProjectKeeperConfig.Source source : config.getSources()) {
+        for (final Source source : config.getSources()) {
             final List<String> modules = source.getModules().stream().map(Enum::name).collect(Collectors.toList());
             sourcesForWriting
                     .add(new ConfigForWriting.Source(source.getPath().toString(), source.getType().name(), modules));

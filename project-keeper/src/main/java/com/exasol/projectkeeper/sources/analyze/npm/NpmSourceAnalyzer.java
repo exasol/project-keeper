@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;

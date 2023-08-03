@@ -13,8 +13,7 @@ import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.VersionConfig.Visitor;
+import com.exasol.projectkeeper.shared.config.VersionConfig.Visitor;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -29,7 +28,7 @@ class ProjectKeeperConfigTest {
                                 "parentRelativePath"))
                         .build()))
                 .excludes(List.of("exclude1")).linkReplacements(List.of("linkReplacement1"))
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("version-pom.xml"))).build();
+                .versionConfig(new VersionFromSource(Path.of("version-pom.xml"))).build();
         assertAll(() -> assertThat(config.getExcludes(), contains("exclude1")),
                 () -> assertThat(config.getLinkReplacements(), contains("linkReplacement1")),
                 () -> assertThat(config.getVersionConfig(), instanceOf(VersionFromSource.class)),
@@ -48,7 +47,7 @@ class ProjectKeeperConfigTest {
     @Test
     void versionFromSourceAcceptsVisitor() {
         final Visitor visitor = mock(Visitor.class);
-        final VersionFromSource version = new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml"));
+        final VersionFromSource version = new VersionFromSource(Path.of("pom.xml"));
         version.accept(visitor);
         verify(visitor).visit(same(version));
     }
@@ -56,7 +55,7 @@ class ProjectKeeperConfigTest {
     @Test
     void fixedVersionAcceptsVisitor() {
         final Visitor visitor = mock(Visitor.class);
-        final FixedVersion version = new ProjectKeeperConfig.FixedVersion("fixed");
+        final FixedVersion version = new FixedVersion("fixed");
         version.accept(visitor);
         verify(visitor).visit(same(version));
     }
