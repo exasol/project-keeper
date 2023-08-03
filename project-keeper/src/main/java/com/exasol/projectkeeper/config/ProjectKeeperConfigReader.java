@@ -155,7 +155,8 @@ public class ProjectKeeperConfigReader {
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
         return Source.builder().path(path).type(convertType(rawType)).modules(modules)
-                .advertise(rawSource.isAdvertise()).parentPom(parseParentPomProperty(rawSource.getParentPom())).build();
+                .advertise(rawSource.isAdvertised()).parentPom(parseParentPomProperty(rawSource.getParentPom()))
+                .build();
     }
 
     private ParentPomRef parseParentPomProperty(final ProjectKeeperRawConfig.ParentPomRef rawParentPomRef) {

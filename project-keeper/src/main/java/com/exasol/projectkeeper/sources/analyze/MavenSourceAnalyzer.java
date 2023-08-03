@@ -32,7 +32,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     /**
      * Create a new instance.
      * 
-     * @param mvnRepositoryOverride maven repository override. Use {@code null} for default
+     * @param mvnRepositoryOverride Maven repository override. Use {@code null} for default
      * @param ownVersion            project-keeper version
      */
     public MavenSourceAnalyzer(final Path mvnRepositoryOverride, final String ownVersion) {

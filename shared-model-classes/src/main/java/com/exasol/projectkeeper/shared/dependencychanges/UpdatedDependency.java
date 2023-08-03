@@ -2,6 +2,8 @@ package com.exasol.projectkeeper.shared.dependencychanges;
 
 import java.util.Objects;
 
+import javax.annotation.processing.Generated;
+
 import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
@@ -81,11 +83,13 @@ public final class UpdatedDependency implements DependencyChange {
     }
 
     @Override
+    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(groupId, artifactId, version, newVersion);
     }
 
     @Override
+    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

@@ -2,6 +2,8 @@ package com.exasol.projectkeeper;
 
 import java.util.Objects;
 
+import javax.annotation.processing.Generated;
+
 /**
  * This class groups information about a repository.
  */
@@ -45,11 +47,13 @@ public final class RepoInfo {
         return "RepoInfo [repoName=" + repoName + ", licenseName=" + licenseName + "]";
     }
 
+    @Generated("vscode")
     @Override
     public int hashCode() {
         return Objects.hash(repoName, licenseName);
     }
 
+    @Generated("vscode")
     @Override
     public boolean equals(final Object obj) {
         if (this == obj) {

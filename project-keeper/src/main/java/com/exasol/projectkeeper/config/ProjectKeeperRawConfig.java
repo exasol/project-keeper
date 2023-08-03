@@ -75,7 +75,7 @@ public class ProjectKeeperRawConfig {
     }
 
     /**
-     * Set link replacements
+     * Set link replacements.
      * 
      * @param linkReplacements link replacements
      */
@@ -145,7 +145,7 @@ public class ProjectKeeperRawConfig {
          * 
          * @return {@code true} if the source should be advertised
          */
-        public boolean isAdvertise() {
+        public boolean isAdvertised() {
             return advertise;
         }
 
@@ -205,7 +205,7 @@ public class ProjectKeeperRawConfig {
     }
 
     /**
-     * Reference to a parent pom of a maven source.
+     * Reference to a parent pom of a Maven source.
      * <p>
      * SnakeYML requires this class to be public.
      * </p>

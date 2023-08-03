@@ -4,6 +4,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.regex.Pattern;
 
+import javax.annotation.processing.Generated;
+
 /**
  * Parse a version number and implement Comparable for that.
  *
@@ -101,6 +103,7 @@ public final class Version implements Comparable<Version> {
     }
 
     @Override
+    @Generated("vscode")
     public int hashCode() {
         final int prime = 31;
         int result = 1;
@@ -110,6 +113,7 @@ public final class Version implements Comparable<Version> {
     }
 
     @Override
+    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

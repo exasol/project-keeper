@@ -3,6 +3,8 @@ package com.exasol.projectkeeper.shared.mavenprojectcrawler;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.annotation.processing.Generated;
+
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
@@ -15,7 +17,7 @@ import jakarta.json.bind.JsonbBuilder;
 public final class MavenProjectCrawlResult {
     private Map<String, CrawledMavenProject> crawledProjects;
 
-    /** Required for deserializing from json */
+    /** Required for deserializing from JSON */
     public MavenProjectCrawlResult() {
         this(null);
     }
@@ -64,11 +66,13 @@ public final class MavenProjectCrawlResult {
     }
 
     @Override
+    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(crawledProjects);
     }
 
     @Override
+    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
