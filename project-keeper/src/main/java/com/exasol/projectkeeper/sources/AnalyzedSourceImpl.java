@@ -17,7 +17,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class AnalyzedSourceImpl implements AnalyzedSource {
+public final class AnalyzedSourceImpl implements AnalyzedSource {
 
     /**
      * @param source source of main or sub module within the current project
