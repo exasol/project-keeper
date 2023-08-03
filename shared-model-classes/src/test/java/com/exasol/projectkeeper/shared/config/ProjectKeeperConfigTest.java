@@ -61,10 +61,7 @@ class ProjectKeeperConfigTest {
     }
 
     @Test
-    void equalsContract() {
-        EqualsVerifier
-                .forClasses(Source.class, ParentPomRef.class, VersionFromSource.class, FixedVersion.class,
-                        ProjectKeeperConfig.class) //
-                .verify();
+    void testEqualsContract() {
+        EqualsVerifier.forClass(ProjectKeeperConfig.class).verify();
     }
 }

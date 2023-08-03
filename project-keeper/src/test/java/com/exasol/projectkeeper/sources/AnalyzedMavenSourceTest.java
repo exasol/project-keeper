@@ -6,7 +6,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 class AnalyzedMavenSourceTest {
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.forClass(AnalyzedMavenSource.class).verify();
     }
 }

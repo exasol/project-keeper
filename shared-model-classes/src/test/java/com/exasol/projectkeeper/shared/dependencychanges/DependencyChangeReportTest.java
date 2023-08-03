@@ -6,7 +6,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 class DependencyChangeReportTest {
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.simple().forClass(DependencyChangeReport.class).verify();
     }
 }

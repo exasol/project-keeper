@@ -6,7 +6,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 class GolangDependencyLicenseTest {
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.forClass(GolangDependencyLicense.class).verify();
     }
 }

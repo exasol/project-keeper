@@ -6,7 +6,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 class FileTemplateFromResourceTest {
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.forClass(FileTemplateFromResource.class).verify();
     }
 }

@@ -7,7 +7,7 @@ import nl.jqno.equalsverifier.Warning;
 
 class ProjectDependenciesTest {
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.forClass(ProjectDependencies.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 }

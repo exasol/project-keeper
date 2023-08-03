@@ -6,7 +6,7 @@ import nl.jqno.equalsverifier.EqualsVerifier;
 
 class ProjectWithDependenciesTest {
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.forClass(ProjectWithDependencies.class).verify();
     }
 }

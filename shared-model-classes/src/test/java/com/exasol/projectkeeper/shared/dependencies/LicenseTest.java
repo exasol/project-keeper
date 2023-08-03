@@ -7,7 +7,7 @@ import nl.jqno.equalsverifier.Warning;
 
 class LicenseTest {
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.forClass(License.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 }

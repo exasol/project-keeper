@@ -45,7 +45,7 @@ class VersionTest {
     }
 
     @Test
-    void equalsContract() {
+    void testEqualsContract() {
         EqualsVerifier.forClass(Version.class).verify();
     }
 }

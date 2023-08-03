@@ -1,12 +1,12 @@
-package com.exasol.projectkeeper;
+package com.exasol.projectkeeper.shared.config;
 
 import org.junit.jupiter.api.Test;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-class RepoInfoTest {
+class SourceTest {
     @Test
     void testEqualsContract() {
-        EqualsVerifier.forClass(RepoInfo.class).verify();
+        EqualsVerifier.forClass(Source.class).verify();
     }
 }
