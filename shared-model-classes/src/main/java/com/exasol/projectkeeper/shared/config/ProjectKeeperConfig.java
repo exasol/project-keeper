@@ -1,26 +1,136 @@
 package com.exasol.projectkeeper.shared.config;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-import lombok.Builder;
-import lombok.Data;
+import javax.annotation.processing.Generated;
 
 /**
  * This class represents the project-keeper configuration.
+ * <p>
+ * Use {@link ProjectKeeperConfig#builder()} for creating new instances.
  */
-@Data
-@Builder
 public final class ProjectKeeperConfig {
-    /** Lists with source-projects to crawl. */
-    @Builder.Default
-    private final List<Source> sources = Collections.emptyList();
-    /** List of replacements for broken links. */
-    @Builder.Default
-    private final List<String> linkReplacements = Collections.emptyList();
+    private final List<Source> sources;
+    private final List<String> linkReplacements;
     // [impl->dsn~excluding~1]
-    /** List of regular expressions that match validation messages to exclude */
-    @Builder.Default
-    private final List<String> excludes = Collections.emptyList();
+    private final List<String> excludes;
     private final VersionConfig versionConfig;
+
+    private ProjectKeeperConfig(final ProjectKeeperConfigBuilder builder) {
+        this.sources = builder.sources;
+        this.linkReplacements = builder.linkReplacements;
+        this.excludes = builder.excludes;
+        this.versionConfig = builder.versionConfig;
+    }
+
+    /** @return List with source-projects to crawl */
+    public List<Source> getSources() {
+        return sources;
+    }
+
+    /** @return List of replacements for broken links */
+    public List<String> getLinkReplacements() {
+        return linkReplacements;
+    }
+
+    /** @return List of regular expressions that match validation messages to exclude */
+    public List<String> getExcludes() {
+        return excludes;
+    }
+
+    /** @return project version configuration */
+    public VersionConfig getVersionConfig() {
+        return versionConfig;
+    }
+
+    /** @return a new builder for creating {@link ProjectKeeperConfig} instances */
+    public static ProjectKeeperConfig.ProjectKeeperConfigBuilder builder() {
+        return new ProjectKeeperConfig.ProjectKeeperConfigBuilder();
+    }
+
+    /**
+     * Builder for creating {@link ProjectKeeperConfig} instances.
+     */
+    public static class ProjectKeeperConfigBuilder {
+        private List<Source> sources = Collections.emptyList();
+        private List<String> linkReplacements = Collections.emptyList();
+        private List<String> excludes = Collections.emptyList();
+        private VersionConfig versionConfig;
+
+        private ProjectKeeperConfigBuilder() {
+            // empty by intention
+        }
+
+        /**
+         * @param sources List with source-projects to crawl
+         * @return {@code this}.
+         */
+        @java.lang.SuppressWarnings("all")
+        @lombok.Generated
+        public ProjectKeeperConfig.ProjectKeeperConfigBuilder sources(final List<Source> sources) {
+            this.sources = sources;
+            return this;
+        }
+
+        /**
+         * @param linkReplacements List of replacements for broken links
+         * @return {@code this}.
+         */
+        public ProjectKeeperConfig.ProjectKeeperConfigBuilder linkReplacements(final List<String> linkReplacements) {
+            this.linkReplacements = linkReplacements;
+            return this;
+        }
+
+        /**
+         * @param excludes List of regular expressions that match validation messages to exclude
+         * @return {@code this}.
+         */
+        public ProjectKeeperConfig.ProjectKeeperConfigBuilder excludes(final List<String> excludes) {
+            this.excludes = excludes;
+            return this;
+        }
+
+        /**
+         * @param versionConfig project version configuration
+         * @return {@code this}.
+         */
+        public ProjectKeeperConfig.ProjectKeeperConfigBuilder versionConfig(final VersionConfig versionConfig) {
+            this.versionConfig = versionConfig;
+            return this;
+        }
+
+        /** @return a new instance */
+        public ProjectKeeperConfig build() {
+            return new ProjectKeeperConfig(this);
+        }
+    }
+
+    @Override
+    public String toString() {
+        return "ProjectKeeperConfig [sources=" + sources + ", linkReplacements=" + linkReplacements + ", excludes="
+                + excludes + ", versionConfig=" + versionConfig + "]";
+    }
+
+    @Override
+    @Generated("vscode")
+    public int hashCode() {
+        return Objects.hash(sources, linkReplacements, excludes, versionConfig);
+    }
+
+    @Override
+    @Generated("vscode")
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProjectKeeperConfig other = (ProjectKeeperConfig) obj;
+        return Objects.equals(sources, other.sources) && Objects.equals(linkReplacements, other.linkReplacements)
+                && Objects.equals(excludes, other.excludes) && Objects.equals(versionConfig, other.versionConfig);
+    }
 }
