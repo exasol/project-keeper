@@ -68,7 +68,7 @@ class GolangSourceAnalyzerIT {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyzeSingleProject(config));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-136: Version config has unexpected type 'com.exasol.projectkeeper.shared.config.ProjectKeeperConfig$VersionFromSource', expected a fixed version. Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3."));
+                "E-PK-CORE-136: Version config has unexpected type 'com.exasol.projectkeeper.shared.config.VersionFromSource', expected a fixed version. Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3."));
     }
 
     @Test
