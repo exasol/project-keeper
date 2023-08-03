@@ -2,6 +2,8 @@ package com.exasol.projectkeeper.shared.config;
 
 import java.util.Objects;
 
+import javax.annotation.processing.Generated;
+
 /**
  * Reference to a parent pom of a maven source.
  */
@@ -54,11 +56,13 @@ public final class ParentPomRef {
     }
 
     @Override
+    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(groupId, artifactId, version, relativePath);
     }
 
     @Override
+    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

@@ -2,6 +2,8 @@ package com.exasol.projectkeeper.shared.config;
 
 import java.util.Objects;
 
+import javax.annotation.processing.Generated;
+
 /**
  * Config for a provided version string.
  */
@@ -13,7 +15,7 @@ public final class FixedVersion implements VersionConfig {
      * 
      * @param version fixed version number
      */
-    public FixedVersion(String version) {
+    public FixedVersion(final String version) {
         this.version = version;
     }
 
@@ -33,12 +35,14 @@ public final class FixedVersion implements VersionConfig {
     }
 
     @Override
+    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(version);
     }
 
     @Override
-    public boolean equals(Object obj) {
+    @Generated("vscode")
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -48,7 +52,7 @@ public final class FixedVersion implements VersionConfig {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        FixedVersion other = (FixedVersion) obj;
+        final FixedVersion other = (FixedVersion) obj;
         return Objects.equals(version, other.version);
     }
 }
