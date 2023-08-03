@@ -10,14 +10,11 @@ import java.util.stream.Collectors;
 import org.w3c.dom.Node;
 
 import com.exasol.projectkeeper.RepoInfo;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ParentPomRef;
+import com.exasol.projectkeeper.shared.config.ParentPomRef;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.validators.pom.builder.*;
 import com.exasol.projectkeeper.validators.pom.io.PomFileWriter;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
-
-import lombok.Data;
 
 /**
  * This class generates the expected content for the auto-generated parent pom file.
@@ -63,8 +60,7 @@ public class PomFileGenerator {
      * @return pom file content
      */
     public String generatePomContent(final Collection<ProjectKeeperModule> enabledModules, final String groupId,
-            final String artifactId, final String version, final ProjectKeeperConfig.ParentPomRef parentPomRef,
-            final RepoInfo repoInfo) {
+            final String artifactId, final String version, final ParentPomRef parentPomRef, final RepoInfo repoInfo) {
         return generatePomContent(new Config(enabledModules, groupId, artifactId, version, parentPomRef, repoInfo));
     }
 
@@ -164,7 +160,7 @@ public class PomFileGenerator {
                         .child("organizationUrl", "https://www.exasol.com/"));
     }
 
-    private ElementBuilder parentReference(final ProjectKeeperConfig.ParentPomRef parentPomRef) {
+    private ElementBuilder parentReference(final ParentPomRef parentPomRef) {
         if (parentPomRef == null) {
             return null;
         }
@@ -221,13 +217,47 @@ public class PomFileGenerator {
         return builder;
     }
 
-    @Data
     private static class Config {
         private final Collection<ProjectKeeperModule> enabledModules;
         private final String groupId;
         private final String artifactId;
         private final String version;
-        private final ProjectKeeperConfig.ParentPomRef parentPomRef;
+        private final ParentPomRef parentPomRef;
         private final RepoInfo repoInfo;
+
+        private Config(final Collection<ProjectKeeperModule> enabledModules, final String groupId,
+                final String artifactId, final String version, final ParentPomRef parentPomRef,
+                final RepoInfo repoInfo) {
+            this.enabledModules = enabledModules;
+            this.groupId = groupId;
+            this.artifactId = artifactId;
+            this.version = version;
+            this.parentPomRef = parentPomRef;
+            this.repoInfo = repoInfo;
+        }
+
+        private Collection<ProjectKeeperModule> getEnabledModules() {
+            return enabledModules;
+        }
+
+        private String getGroupId() {
+            return groupId;
+        }
+
+        private String getArtifactId() {
+            return artifactId;
+        }
+
+        private String getVersion() {
+            return version;
+        }
+
+        private ParentPomRef getParentPomRef() {
+            return parentPomRef;
+        }
+
+        private RepoInfo getRepoInfo() {
+            return repoInfo;
+        }
     }
 }

@@ -16,7 +16,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;

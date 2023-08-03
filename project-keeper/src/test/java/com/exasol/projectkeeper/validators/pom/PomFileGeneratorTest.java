@@ -19,7 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
 import com.exasol.projectkeeper.RepoInfo;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ParentPomRef;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 class PomFileGeneratorTest {
@@ -97,8 +97,8 @@ class PomFileGeneratorTest {
         );
     }
 
-    private Model runGeneration(final List<ProjectKeeperModule> modules,
-            final ProjectKeeperConfig.ParentPomRef parentPomRef) throws IOException, XmlPullParserException {
+    private Model runGeneration(final List<ProjectKeeperModule> modules, final ParentPomRef parentPomRef)
+            throws IOException, XmlPullParserException {
         final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
                 "1.0.0", parentPomRef, new RepoInfo(TEST_REPO_NAME, TEST_REPO_LICENSE));
         try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(
@@ -142,7 +142,7 @@ class PomFileGeneratorTest {
     void testGenerationWithParentPom(final String relativePath, final String expectedRelativePath)
             throws XmlPullParserException, IOException {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT),
-                new ProjectKeeperConfig.ParentPomRef("com.example", "my-parent", "1.2.3", relativePath));
+                new ParentPomRef("com.example", "my-parent", "1.2.3", relativePath));
         final Parent parent = pom.getParent();
         assertAll(//
                 () -> assertThat(parent.getGroupId(), equalTo("com.example")),

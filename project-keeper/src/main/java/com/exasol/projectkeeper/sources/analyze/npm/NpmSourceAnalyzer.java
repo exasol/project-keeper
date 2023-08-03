@@ -6,7 +6,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.AnalyzedSourceImpl;
 import com.exasol.projectkeeper.sources.analyze.LanguageSpecificSourceAnalyzer;
@@ -44,7 +44,7 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         return AnalyzedSourceImpl.builder() //
                 .version(current.getVersion()) //
                 .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
-                .advertise(source.isAdvertise()) //
+                .advertise(source.isAdvertised()) //
                 .modules(source.getModules()) //
                 .path(path) //
                 .projectName(AnalyzedSourceImpl.projectName(projectDir, source)) //

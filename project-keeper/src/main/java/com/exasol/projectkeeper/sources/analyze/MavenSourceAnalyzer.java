@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze;
 
-import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
+import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static java.util.Collections.emptyMap;
 
 import java.io.FileInputStream;
@@ -15,27 +15,35 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.JavaProjectCrawlerRunner;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This class analyzes Java Maven projects.
  */
-@RequiredArgsConstructor
+
 public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private final Path mvnRepositoryOverride;
     private final String ownVersion;
 
+    /**
+     * Create a new instance.
+     * 
+     * @param mvnRepositoryOverride Maven repository override. Use {@code null} for default
+     * @param ownVersion            project-keeper version
+     */
+    public MavenSourceAnalyzer(final Path mvnRepositoryOverride, final String ownVersion) {
+        this.mvnRepositoryOverride = mvnRepositoryOverride;
+        this.ownVersion = ownVersion;
+    }
+
     @Override
-    public List<AnalyzedSource> analyze(final Path projectDir, final List<ProjectKeeperConfig.Source> sources) {
+    public List<AnalyzedSource> analyze(final Path projectDir, final List<Source> sources) {
         final Map<String, CrawledMavenProject> crawledMvnSources = runCrawlerForMvnSources(sources);
-        return sources.stream()
-                .map((final ProjectKeeperConfig.Source source) -> analyzeSource(projectDir, source, crawledMvnSources))
+        return sources.stream().map((final Source source) -> analyzeSource(projectDir, source, crawledMvnSources))
                 .collect(Collectors.toList());
     }
 
@@ -49,9 +57,9 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
      * @param sources list of sources
      * @return crawled maven sources
      */
-    private Map<String, CrawledMavenProject> runCrawlerForMvnSources(final List<ProjectKeeperConfig.Source> sources) {
+    private Map<String, CrawledMavenProject> runCrawlerForMvnSources(final List<Source> sources) {
         final List<Path> mvnSourcePaths = sources.stream().filter(source -> MAVEN.equals(source.getType()))
-                .map(ProjectKeeperConfig.Source::getPath).collect(Collectors.toList());
+                .map(Source::getPath).collect(Collectors.toList());
         if (mvnSourcePaths.isEmpty()) {
             return emptyMap();
         } else {
@@ -60,7 +68,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         }
     }
 
-    private AnalyzedSource analyzeSource(final Path projectDir, final ProjectKeeperConfig.Source source,
+    private AnalyzedSource analyzeSource(final Path projectDir, final Source source,
             final Map<String, CrawledMavenProject> crawledMvnSources) {
         if (MAVEN.equals(source.getType())) {
             final Model model = readMavenModel(source);
@@ -71,7 +79,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
             final CrawledMavenProject crawledMavenProject = getCrawlResultForProject(source, crawledMvnSources);
             final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("pom.xml"));
             return AnalyzedMavenSource.builder().path(source.getPath()).modules(source.getModules())
-                    .advertise(source.isAdvertise()).artifactId(artifactId).projectName(projectName)
+                    .advertise(source.isAdvertised()).artifactId(artifactId).projectName(projectName)
                     .dependencies(crawledMavenProject.getProjectDependencies())
                     .dependencyChanges(crawledMavenProject.getDependencyChangeReport())
                     .version(crawledMavenProject.getProjectVersion()).isRootProject(isRoot).build();
@@ -82,7 +90,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         }
     }
 
-    private CrawledMavenProject getCrawlResultForProject(final ProjectKeeperConfig.Source source,
+    private CrawledMavenProject getCrawlResultForProject(final Source source,
             final Map<String, CrawledMavenProject> crawlResult) {
         final String key = source.getPath().toString()
                 // we use / instead of \ here as a fix for https://github.com/eclipse-ee4j/yasson/issues/540
@@ -95,7 +103,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         return crawlResult.get(key);
     }
 
-    private Model readMavenModel(final ProjectKeeperConfig.Source source) {
+    private Model readMavenModel(final Source source) {
         try (final FileInputStream fileInputStream = new FileInputStream(source.getPath().toFile())) {
             return new MavenXpp3Reader().read(fileInputStream);
         } catch (final Exception exception) {

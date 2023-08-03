@@ -5,10 +5,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
-
-import lombok.RequiredArgsConstructor;
 
 /**
  * This class extracts the overall project version.
@@ -39,18 +37,21 @@ public class ProjectVersionDetector {
         }
     }
 
-    @RequiredArgsConstructor
-    private static class VersionProviderVisitor implements ProjectKeeperConfig.VersionConfig.Visitor {
+    private static class VersionProviderVisitor implements VersionConfig.Visitor {
         private final List<AnalyzedSource> analyzedSources;
         private String version;
 
+        private VersionProviderVisitor(final List<AnalyzedSource> analyzedSources) {
+            this.analyzedSources = analyzedSources;
+        }
+
         @Override
-        public void visit(final ProjectKeeperConfig.FixedVersion fixedVersion) {
+        public void visit(final FixedVersion fixedVersion) {
             this.version = fixedVersion.getVersion();
         }
 
         @Override
-        public void visit(final ProjectKeeperConfig.VersionFromSource versionFromMavenSource) {
+        public void visit(final VersionFromSource versionFromMavenSource) {
             final Path requestedPath = versionFromMavenSource.getPathToPom();
             this.version = this.analyzedSources.stream()//
                     .filter(source -> source.getPath().normalize().equals(requestedPath.normalize()))//

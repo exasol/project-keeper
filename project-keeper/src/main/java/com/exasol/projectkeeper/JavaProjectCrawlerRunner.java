@@ -30,7 +30,7 @@ public class JavaProjectCrawlerRunner {
     /**
      * Create a new instance of {@link JavaProjectCrawlerRunner}.
      *
-     * @param mvnRepositoryOverride maven repository override. USe {@code null} for default
+     * @param mvnRepositoryOverride maven repository override. Use {@code null} for default
      * @param ownVersion            project-keeper version
      */
     public JavaProjectCrawlerRunner(final Path mvnRepositoryOverride, final String ownVersion) {

@@ -9,16 +9,10 @@ import java.util.stream.Collectors;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
 
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.Accessors;
-
 /**
  * This class represents an error that was found during validation.
  */
-@EqualsAndHashCode
-@ToString
-public class SimpleValidationFinding implements ValidationFinding {
+public final class SimpleValidationFinding implements ValidationFinding {
 
     /**
      * Returns mandatory findings.
@@ -33,7 +27,6 @@ public class SimpleValidationFinding implements ValidationFinding {
     }
 
     private final String message;
-    @Accessors(fluent = true)
     private final boolean isOptional;
     private final Fix fix;
 
@@ -166,5 +159,31 @@ public class SimpleValidationFinding implements ValidationFinding {
         public SimpleValidationFinding build() {
             return new SimpleValidationFinding(this.message, this.isOptional, this.fix);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "SimpleValidationFinding [message=" + message + ", isOptional=" + isOptional + ", fix=" + fix + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(message, isOptional, fix);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final SimpleValidationFinding other = (SimpleValidationFinding) obj;
+        return Objects.equals(message, other.message) && isOptional == other.isOptional
+                && Objects.equals(fix, other.fix);
     }
 }

@@ -4,8 +4,6 @@ import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * This class is a filter for {@link ValidationFinding}s.
  */
@@ -41,10 +39,13 @@ public class FindingFilter {
         return result;
     }
 
-    @RequiredArgsConstructor
     private static class FilteringVisitor implements ValidationFinding.Visitor {
         private final List<Pattern> denyList;
         private Optional<ValidationFinding> result;
+
+        FilteringVisitor(final List<Pattern> denyList) {
+            this.denyList = denyList;
+        }
 
         @Override
         public void visit(final SimpleValidationFinding finding) {

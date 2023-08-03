@@ -1,8 +1,8 @@
 package com.exasol.projectkeeper.config;
 
-import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.MAVEN;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.DEFAULT;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
+import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -20,7 +20,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.*;
 
 // [utest->dsn~modules~1]
 class ProjectKeeperConfigReaderTest {
@@ -56,15 +56,14 @@ class ProjectKeeperConfigReaderTest {
                         "linkReplacements:\n" + //
                         "  - \"http://wrong-url.com|my-dependency.de\"\n");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
-        final ProjectKeeperConfig.Source source = config.getSources().get(0);
+        final Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
-                () -> assertThat(source.isAdvertise(), equalTo(false)),
+                () -> assertThat(source.isAdvertised(), equalTo(false)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(MAVEN_CENTRAL, DEFAULT)),
                 () -> assertThat(source.getParentPom(),
-                        equalTo(new ProjectKeeperConfig.ParentPomRef("com.example", "my-parent", "1.2.3",
-                                "./my-parent.xml"))),
+                        equalTo(new ParentPomRef("com.example", "my-parent", "1.2.3", "./my-parent.xml"))),
                 () -> assertThat(config.getExcludes(), containsInAnyOrder(
                         "\\QE-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\\E",
                         "E-PK-CORE-18: .*")),
@@ -82,10 +81,10 @@ class ProjectKeeperConfigReaderTest {
                         "  - type: maven\n" + //
                         "    path: my-sub-project/pom.xml\n");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
-        final ProjectKeeperConfig.Source source = config.getSources().get(0);
+        final Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
-                () -> assertThat(source.isAdvertise(), equalTo(true)),
+                () -> assertThat(source.isAdvertised(), equalTo(true)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(DEFAULT)),
                 () -> assertThat(source.getParentPom(), nullValue()),
@@ -156,7 +155,7 @@ class ProjectKeeperConfigReaderTest {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
                 "version: \"1.2.3\"");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
-        assertThat(config.getVersionConfig(), equalTo(new ProjectKeeperConfig.FixedVersion("1.2.3")));
+        assertThat(config.getVersionConfig(), equalTo(new FixedVersion("1.2.3")));
     }
 
     @Test
@@ -164,8 +163,7 @@ class ProjectKeeperConfigReaderTest {
         Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
                 "version: \n  fromSource: \"./pom.xml\"");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
-        assertThat(config.getVersionConfig(),
-                equalTo(new ProjectKeeperConfig.VersionFromSource(this.tempDir.resolve("./pom.xml"))));
+        assertThat(config.getVersionConfig(), equalTo(new VersionFromSource(this.tempDir.resolve("./pom.xml"))));
     }
 
     @Test

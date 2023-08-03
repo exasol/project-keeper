@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.RepoInfo;
 import com.exasol.projectkeeper.mavenrepo.Version;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.ParentPomRef;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.finding.FindingsFixer;
@@ -110,7 +110,7 @@ class PomFileValidatorTest {
         assertThat(readModel(this.tempDir.resolve("pom.xml")).getUrl(), equalTo("https://github.com/exasol/my-repo/"));
     }
 
-    private void runFix(final ProjectKeeperConfig.ParentPomRef parentPomRef) {
+    private void runFix(final ParentPomRef parentPomRef) {
         new FindingsFixer(mock(Logger.class)).fixFindings(runValidator(parentPomRef));
     }
 
@@ -124,7 +124,7 @@ class PomFileValidatorTest {
     @Test
     void testMissingVersionButParentPomRef() throws IOException, XmlPullParserException {
         getTestModel().withVersion(null).withParentVersion("2.3.4").writeAsPomToProject(this.tempDir);
-        runFix(new ProjectKeeperConfig.ParentPomRef("com.example", "my-parent", "1.2.3", null));
+        runFix(new ParentPomRef("com.example", "my-parent", "1.2.3", null));
         try (final FileReader reader = new FileReader(this.tempDir.resolve("pk_generated_parent.pom").toFile())) {
             final Model pom = new MavenXpp3Reader().read(reader);
             assertThat(pom.getVersion(), equalTo("1.2.3"));
@@ -155,7 +155,7 @@ class PomFileValidatorTest {
                 + " Please either set /project/groupId or /project/parent/groupId."));
     }
 
-    private List<ValidationFinding> runValidator(final ProjectKeeperConfig.ParentPomRef parentPomRef) {
+    private List<ValidationFinding> runValidator(final ParentPomRef parentPomRef) {
         final PomFileValidator validator = new PomFileValidator(this.tempDir,
                 List.of(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.JAR_ARTIFACT), this.tempDir.resolve("pom.xml"),
                 parentPomRef, new RepoInfo("my-repo", "My License"));

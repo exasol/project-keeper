@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class ProjectVersionDetectorTest {
@@ -31,8 +31,7 @@ class ProjectVersionDetectorTest {
     void testGetExplicitVersion() {
         final AnalyzedSource source = mockSource("1.2.3");
         final String result = new ProjectVersionDetector().detectVersion(
-                ProjectKeeperConfig.builder().versionConfig(new ProjectKeeperConfig.FixedVersion("3.2.1")).build(),
-                List.of(source));
+                ProjectKeeperConfig.builder().versionConfig(new FixedVersion("3.2.1")).build(), List.of(source));
         assertThat(result, equalTo("3.2.1"));
     }
 
@@ -42,7 +41,7 @@ class ProjectVersionDetectorTest {
         final AnalyzedSource source1 = mockSource("1.0.0", Path.of("sub1/pom.xml"));
         final AnalyzedSource source2 = mockSource("2.0.0", Path.of("sub2/pom.xml"));
         final String result = new ProjectVersionDetector().detectVersion(
-                ProjectKeeperConfig.builder().versionConfig(new ProjectKeeperConfig.VersionFromSource(path)).build(),
+                ProjectKeeperConfig.builder().versionConfig(new VersionFromSource(path)).build(),
                 List.of(source1, source2));
         assertThat(result, equalTo(expectedVersion));
     }
@@ -62,7 +61,7 @@ class ProjectVersionDetectorTest {
     void testSpecifiedSourceHasNoVersion() {
         final List<AnalyzedSource> sources = List.of(mockSource(null, Path.of("pom.xml")));
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml"))).build();
+                .versionConfig(new VersionFromSource(Path.of("pom.xml"))).build();
         final ProjectVersionDetector versionDetector = new ProjectVersionDetector();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> versionDetector.detectVersion(config, sources));
@@ -74,7 +73,7 @@ class ProjectVersionDetectorTest {
     void testSpecifiedSourceNotFound() {
         final List<AnalyzedSource> sources = Collections.emptyList();
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .versionConfig(new ProjectKeeperConfig.VersionFromSource(Path.of("pom.xml"))).build();
+                .versionConfig(new VersionFromSource(Path.of("pom.xml"))).build();
         final ProjectVersionDetector versionDetector = new ProjectVersionDetector();
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> versionDetector.detectVersion(config, sources));

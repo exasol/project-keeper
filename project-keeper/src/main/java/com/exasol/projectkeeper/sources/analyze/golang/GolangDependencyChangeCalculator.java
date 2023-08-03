@@ -4,7 +4,7 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Source;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;

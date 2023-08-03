@@ -3,7 +3,6 @@ sources:
     path: shared-model-classes/pom.xml
     modules:
       - maven_central
-      - lombok
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -15,7 +14,6 @@ sources:
     modules:
       - maven_central
       - integration_tests
-      - lombok
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -38,7 +36,6 @@ sources:
       - maven_central
       - integration_tests
       - udf_coverage
-      - lombok
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -60,7 +57,6 @@ sources:
     path: shared-test-setup/pom.xml
     advertise: false
     modules:
-      - lombok
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"

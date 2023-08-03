@@ -16,9 +16,7 @@ import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.FixedVersion;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.VersionConfig;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.sources.analyze.generic.*;

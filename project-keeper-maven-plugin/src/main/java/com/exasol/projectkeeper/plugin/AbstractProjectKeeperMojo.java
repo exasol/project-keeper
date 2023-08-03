@@ -13,8 +13,6 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
 
-import lombok.RequiredArgsConstructor;
-
 /**
  * Abstract basis for Mojos in this project.
  */
@@ -72,9 +70,12 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
         }
     }
 
-    @RequiredArgsConstructor
     private static class MvnLogger implements Logger {
         private final Log mvnLog;
+
+        private MvnLogger(final Log mvnLog) {
+            this.mvnLog = mvnLog;
+        }
 
         @Override
         public void info(final String message) {

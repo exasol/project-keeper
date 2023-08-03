@@ -6,9 +6,6 @@ import org.hamcrest.*;
 
 import com.exasol.projectkeeper.validators.finding.*;
 
-import lombok.RequiredArgsConstructor;
-
-@RequiredArgsConstructor
 public class FindingMatcher extends TypeSafeMatcher<List<ValidationFinding>> {
 
     public static Matcher<List<ValidationFinding>> hasFindingWithMessage(final String message) {
@@ -21,6 +18,11 @@ public class FindingMatcher extends TypeSafeMatcher<List<ValidationFinding>> {
 
     private final String expected;
     private final boolean useRegex;
+
+    public FindingMatcher(final String expected, final boolean useRegex) {
+        this.expected = expected;
+        this.useRegex = useRegex;
+    }
 
     @Override
     protected boolean matchesSafely(final List<ValidationFinding> validationFindings) {

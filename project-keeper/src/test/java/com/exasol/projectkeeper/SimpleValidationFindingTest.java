@@ -7,11 +7,13 @@ import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 
+import nl.jqno.equalsverifier.EqualsVerifier;
+
 class SimpleValidationFindingTest {
 
     @Test
     void testWithFix() {
-        final SimpleValidationFinding finding = SimpleValidationFinding.withMessage("").andFix((Logger log) -> {
+        final SimpleValidationFinding finding = SimpleValidationFinding.withMessage("").andFix((final Logger log) -> {
         }).build();
         assertThat(finding.hasFix(), equalTo(true));
     }
@@ -20,5 +22,10 @@ class SimpleValidationFindingTest {
     void testWithoutFix() {
         final SimpleValidationFinding finding = SimpleValidationFinding.withMessage("").build();
         assertThat(finding.hasFix(), equalTo(false));
+    }
+
+    @Test
+    void testEqualsContract() {
+        EqualsVerifier.forClass(SimpleValidationFinding.class).verify();
     }
 }

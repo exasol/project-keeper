@@ -59,7 +59,6 @@ public class ProjectDependencyReader {
 
     private ProjectDependency getLicense(final Dependency dependency, final MavenProject project) {
         try {
-            @SuppressWarnings("unchecked")
             final List<ArtifactRepository> repos = project.getRemoteArtifactRepositories();
             final var dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
                     dependency.getGroupId(), dependency.getVersion(), repos);

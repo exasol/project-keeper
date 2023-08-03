@@ -1,22 +1,35 @@
 package com.exasol.projectkeeper.shared.mavenprojectcrawler;
 
 import java.util.Map;
+import java.util.Objects;
+
+import javax.annotation.processing.Generated;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 
 import jakarta.json.bind.Jsonb;
 import jakarta.json.bind.JsonbBuilder;
-import lombok.*;
 
 /**
  * Result of the maven-project-crawler.
  */
-@Data
-@AllArgsConstructor
-@NoArgsConstructor // Required for deserializing from json
 public final class MavenProjectCrawlResult {
     private Map<String, CrawledMavenProject> crawledProjects;
+
+    /** Required for deserializing from JSON */
+    public MavenProjectCrawlResult() {
+        this(null);
+    }
+
+    /**
+     * Create a new instance.
+     * 
+     * @param crawledProjects the crawled projects
+     */
+    public MavenProjectCrawlResult(final Map<String, CrawledMavenProject> crawledProjects) {
+        this.crawledProjects = crawledProjects;
+    }
 
     /**
      * Deserialize {@link DependencyChangeReport} from JSON string.
@@ -45,5 +58,42 @@ public final class MavenProjectCrawlResult {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-SMC-1")
                     .message("Failed to serialize MavenProjectCrawlResult").ticketMitigation().toString(), exception);
         }
+    }
+
+    @Override
+    public String toString() {
+        return "MavenProjectCrawlResult [crawledProjects=" + crawledProjects + "]";
+    }
+
+    @Override
+    @Generated("vscode")
+    public int hashCode() {
+        return Objects.hash(crawledProjects);
+    }
+
+    @Override
+    @Generated("vscode")
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final MavenProjectCrawlResult other = (MavenProjectCrawlResult) obj;
+        return Objects.equals(crawledProjects, other.crawledProjects);
+    }
+
+    /** @return crawled projects */
+    public Map<String, CrawledMavenProject> getCrawledProjects() {
+        return crawledProjects;
+    }
+
+    /** @param crawledProjects crawled projects */
+    public void setCrawledProjects(final Map<String, CrawledMavenProject> crawledProjects) {
+        this.crawledProjects = crawledProjects;
     }
 }

@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import static com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.SourceType.GOLANG;
+import static com.exasol.projectkeeper.shared.config.SourceType.GOLANG;
 import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -13,8 +13,7 @@ import java.util.List;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.*;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
@@ -69,7 +68,7 @@ class GolangSourceAnalyzerIT {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyzeSingleProject(config));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-136: Version config has unexpected type 'com.exasol.projectkeeper.shared.config.ProjectKeeperConfig$VersionFromSource', expected a fixed version. Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3."));
+                "E-PK-CORE-136: Version config has unexpected type 'com.exasol.projectkeeper.shared.config.VersionFromSource', expected a fixed version. Add a fixed version to your .project-keeper.yml, e.g. version: 1.2.3."));
     }
 
     @Test
@@ -89,9 +88,9 @@ class GolangSourceAnalyzerIT {
     void testGoModuleInSubdirectory() {
         prepareProjectFiles(Path.of("subdir"));
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
+                .sources(List.of(Source.builder().modules(emptySet()).type(SourceType.GOLANG)
                         .path(Path.of("subdir").resolve("go.mod")).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion(this.fixture.getProjectVersion())).build();
+                .versionConfig(new FixedVersion(this.fixture.getProjectVersion())).build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
                 () -> assertCommonProperties(analyzedProject), //
@@ -105,9 +104,8 @@ class GolangSourceAnalyzerIT {
         prepareProjectFiles(Path.of("subdir"));
         final Path modPath = this.projectDir.resolve("subdir/go.mod");
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder()
-                .sources(List.of(ProjectKeeperConfig.Source.builder().modules(emptySet()).type(SourceType.GOLANG)
-                        .path(modPath).build()))
-                .versionConfig(new ProjectKeeperConfig.FixedVersion(this.fixture.getProjectVersion())).build();
+                .sources(List.of(Source.builder().modules(emptySet()).type(SourceType.GOLANG).path(modPath).build()))
+                .versionConfig(new FixedVersion(this.fixture.getProjectVersion())).build();
         final AnalyzedSource analyzedProject = analyzeSingleProject(config);
         assertAll( //
                 () -> assertCommonProperties(analyzedProject), //
@@ -128,7 +126,7 @@ class GolangSourceAnalyzerIT {
                 () -> assertDependencyChanges(analyzedProject.getDependencyChanges()),
                 () -> assertThat("module name", ((AnalyzedSourceImpl) analyzedProject).getModuleName(),
                         equalTo("github.com/exasol/my-module")),
-                () -> assertThat("advertise", analyzedProject.isAdvertise(), is(true)),
+                () -> assertThat("advertised", analyzedProject.isAdvertised(), is(true)),
                 () -> assertThat("version", analyzedProject.getVersion(), equalTo(this.fixture.getProjectVersion())));
     }
 

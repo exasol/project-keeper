@@ -48,14 +48,7 @@
         <developerConnection>scm:git:https://github.com/exasol/project-keeper.git</developerConnection>
         <url>https://github.com/exasol/project-keeper/</url>
     </scm>
-    <dependencies>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-            <version>1.18.28</version>
-            <scope>provided</scope>
-        </dependency>
-    </dependencies>
+    <dependencies/>
     <build>
         <plugins>
             <plugin>
@@ -268,37 +261,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok-maven-plugin</artifactId>
-                <version>1.18.20.0</version>
-                <executions>
-                    <execution>
-                        <id>delombok-main</id>
-                        <phase>generate-sources</phase>
-                        <goals>
-                            <goal>delombok</goal>
-                        </goals>
-                        <configuration>
-                            <addOutputDirectory>false</addOutputDirectory>
-                            <sourceDirectory>src/main/java</sourceDirectory>
-                            <outputDirectory>target/delombok/main</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>delombok-test</id>
-                        <phase>generate-test-sources</phase>
-                        <goals>
-                            <goal>testDelombok</goal>
-                        </goals>
-                        <configuration>
-                            <addOutputDirectory>false</addOutputDirectory>
-                            <sourceDirectory>src/test/java</sourceDirectory>
-                            <outputDirectory>target/delombok/test</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.1.2</version>
@@ -372,11 +334,6 @@
                         </goals>
                     </execution>
                 </executions>
-                <configuration>
-                    <sourcePaths>
-                        <sourcePath>target/delombok/main</sourcePath>
-                    </sourcePaths>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>io.github.zlika</groupId>

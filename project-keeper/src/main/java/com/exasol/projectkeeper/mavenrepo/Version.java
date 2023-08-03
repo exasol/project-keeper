@@ -1,9 +1,10 @@
 package com.exasol.projectkeeper.mavenrepo;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.regex.Pattern;
 
-import lombok.EqualsAndHashCode;
+import javax.annotation.processing.Generated;
 
 /**
  * Parse a version number and implement Comparable for that.
@@ -12,9 +13,8 @@ import lombok.EqualsAndHashCode;
  * Compared to class {@code org.apache.maven.artifact.versioning.ComparableVersion} from Maven this class supports less
  * features, e.g. only numeric version components but avoids an additional dependency.
  */
-//[impl->dsn~verify-own-version~1]
-@EqualsAndHashCode
-public class Version implements Comparable<Version> {
+// [impl->dsn~verify-own-version~1]
+public final class Version implements Comparable<Version> {
 
     /**
      * Regular expression pattern in order to verify version number format.
@@ -102,4 +102,29 @@ public class Version implements Comparable<Version> {
         return this.raw;
     }
 
+    @Override
+    @Generated("vscode")
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(items);
+        result = prime * result + Objects.hash(raw);
+        return result;
+    }
+
+    @Override
+    @Generated("vscode")
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Version other = (Version) obj;
+        return Objects.equals(raw, other.raw) && Arrays.equals(items, other.items);
+    }
 }
