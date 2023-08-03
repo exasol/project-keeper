@@ -45,7 +45,7 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         return AnalyzedSourceImpl.builder() //
                 .version(this.golangServices.getProjectVersion()) //
                 .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
-                .advertise(source.isAdvertise()) //
+                .advertise(source.isAdvertised()) //
                 .modules(source.getModules()) //
                 .path(source.getPath()) //
                 .projectName(AnalyzedSourceImpl.projectName(projectDir, source)) //

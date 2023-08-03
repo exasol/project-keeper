@@ -44,7 +44,7 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         return AnalyzedSourceImpl.builder() //
                 .version(current.getVersion()) //
                 .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
-                .advertise(source.isAdvertise()) //
+                .advertise(source.isAdvertised()) //
                 .modules(source.getModules()) //
                 .path(path) //
                 .projectName(AnalyzedSourceImpl.projectName(projectDir, source)) //

@@ -79,7 +79,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
             final CrawledMavenProject crawledMavenProject = getCrawlResultForProject(source, crawledMvnSources);
             final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("pom.xml"));
             return AnalyzedMavenSource.builder().path(source.getPath()).modules(source.getModules())
-                    .advertise(source.isAdvertise()).artifactId(artifactId).projectName(projectName)
+                    .advertise(source.isAdvertised()).artifactId(artifactId).projectName(projectName)
                     .dependencies(crawledMavenProject.getProjectDependencies())
                     .dependencyChanges(crawledMavenProject.getDependencyChangeReport())
                     .version(crawledMavenProject.getProjectVersion()).isRootProject(isRoot).build();

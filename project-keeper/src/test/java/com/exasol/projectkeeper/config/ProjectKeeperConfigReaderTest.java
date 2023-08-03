@@ -59,7 +59,7 @@ class ProjectKeeperConfigReaderTest {
         final Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
-                () -> assertThat(source.isAdvertise(), equalTo(false)),
+                () -> assertThat(source.isAdvertised(), equalTo(false)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(MAVEN_CENTRAL, DEFAULT)),
                 () -> assertThat(source.getParentPom(),
@@ -84,7 +84,7 @@ class ProjectKeeperConfigReaderTest {
         final Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
-                () -> assertThat(source.isAdvertise(), equalTo(true)),
+                () -> assertThat(source.isAdvertised(), equalTo(true)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(DEFAULT)),
                 () -> assertThat(source.getParentPom(), nullValue()),
