@@ -7,7 +7,7 @@ import java.util.Objects;
  * Group of validation findings with a callback to run after all fixes are applied.
  */
 public final class ValidationFindingGroup implements ValidationFinding {
-    private final List<? extends ValidationFinding> findings;
+    private final List<ValidationFinding> findings;
     private final Runnable postFix;
 
     /**
@@ -16,13 +16,13 @@ public final class ValidationFindingGroup implements ValidationFinding {
      * @param findings findings to group
      * @param postFix  callback to invoke after fixing the contained findings
      */
-    public ValidationFindingGroup(final List<? extends ValidationFinding> findings, final Runnable postFix) {
+    public ValidationFindingGroup(final List<ValidationFinding> findings, final Runnable postFix) {
         this.findings = findings;
         this.postFix = postFix;
     }
 
     /** @return findings to group */
-    public List<? extends ValidationFinding> getFindings() {
+    public List<ValidationFinding> getFindings() {
         return findings;
     }
 

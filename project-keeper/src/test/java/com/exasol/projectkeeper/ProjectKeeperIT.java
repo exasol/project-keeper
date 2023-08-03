@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.logging.Logger;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -28,8 +27,6 @@ import com.exasol.projectkeeper.test.TestMavenModel;
  */
 @Tag("integration")
 class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
-
-    private static final Logger LOGGER = Logger.getLogger(ProjectKeeperIT.class.getName());
     private MavenProjectFixture fixture;
 
     @BeforeEach
