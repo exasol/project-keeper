@@ -26,6 +26,10 @@ This release improves handling of `npm ci` by proposing a possible workaround an
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.3` to `5.10.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
 
+#### Plugin Dependency Updates
+
+* Removed `org.projectlombok:lombok-maven-plugin:1.18.20.0`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -43,6 +47,10 @@ This release improves handling of `npm ci` by proposing a possible workaround an
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.9.3` to `5.10.0`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.3` to `5.10.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
+
+#### Plugin Dependency Updates
+
+* Removed `org.projectlombok:lombok-maven-plugin:1.18.20.0`
 
 ### Project Keeper Command Line Interface
 
@@ -72,6 +80,10 @@ This release improves handling of `npm ci` by proposing a possible workaround an
 * Updated `org.junit.jupiter:junit-jupiter-params:5.9.3` to `5.10.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.7` to `1.7.36`
 
+#### Plugin Dependency Updates
+
+* Removed `org.projectlombok:lombok-maven-plugin:1.18.20.0`
+
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
@@ -89,3 +101,7 @@ This release improves handling of `npm ci` by proposing a possible workaround an
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.9` to `2.9.10`
+
+#### Plugin Dependency Updates
+
+* Removed `org.projectlombok:lombok-maven-plugin:1.18.20.0`
