@@ -68,7 +68,7 @@ class SourceAnalyzerTest {
     }
 
     @Test
-    void sourceNotfound() {
+    void sourceNotFound() {
         final SourceAnalyzer analyzer = createWithAllAnalyzers();
         final List<Source> sources = List.of(source("path", SourceType.MAVEN));
         when(this.mavenAnalyzerMock.analyze(any(), any())).thenReturn(List.of(analyzedSource(Path.of("wrong path"))));
@@ -86,9 +86,9 @@ class SourceAnalyzerTest {
                         source("go1", SourceType.GOLANG), //
                         source("maven2", SourceType.MAVEN), //
                         source("go2", SourceType.GOLANG)));
-        final List<String> analzedPaths = analyzedSources.stream().map(source -> source.getPath().toString())
+        final List<String> analyzedPaths = analyzedSources.stream().map(source -> source.getPath().toString())
                 .collect(toList());
-        assertThat(analzedPaths, contains("maven1", "go1", "maven2", "go2"));
+        assertThat(analyzedPaths, contains("maven1", "go1", "maven2", "go2"));
     }
 
     private AnalyzedSource analyzedSource(final Source originalSource) {
@@ -96,7 +96,7 @@ class SourceAnalyzerTest {
     }
 
     private AnalyzedSource analyzedSource(final Path path) {
-        return new AnalyzedMavenSource(path, null, false, null, null, null, null, null, false);
+        return AnalyzedMavenSource.builder().path(path).build();
     }
 
     private Source source(final String path, final SourceType type) {
