@@ -81,11 +81,16 @@ class GolangServices {
                 .build();
         try {
             return this.executor.execute(shellCommand, absoluteSourcePath);
-        } catch (final IllegalStateException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-142")
-                    .message("Error starting the 'go-licenses' binary.")
-                    .mitigation("Verify that 'go-licenses' is installed.")
-                    .mitigation("Install it by running 'go install github.com/google/go-licenses@v1.6.0'.").toString(),
+        } catch (final RuntimeException exception) {
+            throw new IllegalStateException(
+                    ExaError.messageBuilder("E-PK-CORE-142")
+                            .message("Error starting the 'go-licenses' binary in working dir {{working dir}}.")
+                            .parameter("working dir", absoluteSourcePath,
+                                    "working directory where go-licenses was executed")
+                            .mitigation("Verify that 'go-licenses' is installed.")
+                            .mitigation("Install it by running 'go install github.com/google/go-licenses@latest'.")
+                            .mitigation("If it is already installed, re-install it by running the same command.")
+                            .mitigation("This might be necessary after installing a new Go version.").toString(),
                     exception);
         }
     }

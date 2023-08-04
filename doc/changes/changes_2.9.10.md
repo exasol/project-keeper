@@ -1,15 +1,16 @@
-# Project Keeper 2.9.10, released 2023-??-??
+# Project Keeper 2.9.10, released 2023-08-04
 
 Code name: Minor fixes
 
 ## Summary
 
-This release improves handling of `npm ci` by proposing a possible workaround and escapes pipe symbol in the dependencies table.
+This release improves handling of failed calls `npm ci` and `go-licenses` by proposing possible workarounds. The release also escapes pipe symbol in the dependencies table to fix broken rendering.
 
 ## Bugfixes
 
-* #461: Improved handling failed `npm ci`
+* #461: Improved handling of failed `npm ci`
 * #458: Escape pipe symbol in dependencies table
+* #465: Improved error message of failed `go-licenses`
 
 ## Refactoring
 

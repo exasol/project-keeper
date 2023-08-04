@@ -4,7 +4,12 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.when;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -92,6 +97,20 @@ class GolangServicesTest {
     @Test
     void getVersion() {
         assertThat(service().getProjectVersion(), equalTo(PROJECT_VERSION));
+    }
+
+    @Test
+    void getLicenses() {
+        final GolangServices service = service();
+        final Path path = Path.of("path");
+        when(executor.execute(any(), eq(path))).thenThrow(new IllegalStateException("expected"));
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> service.getLicenses(path, MODULE_NAME));
+        assertThat(exception.getMessage(),
+                allOf(startsWith(
+                        "E-PK-CORE-142: Error starting the 'go-licenses' binary in working dir '" + path + "'."),
+                        containsString("* Install it by running 'go install github.com/google/go-licenses@latest'."),
+                        containsString("* If it is already installed, re-install it by running the same command.")));
     }
 
     private void assertChanges(final GoModFile oldMod, final GoModFile newMod,
