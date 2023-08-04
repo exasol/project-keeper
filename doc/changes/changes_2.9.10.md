@@ -11,6 +11,7 @@ This release improves handling of failed calls `npm ci` and `go-licenses` by pro
 * #461: Improved handling of failed `npm ci`
 * #458: Escape pipe symbol in dependencies table
 * #465: Improved error message of failed `go-licenses`
+* #467: Updated CI templates to run Sonar with Java 17
 
 ## Refactoring
 
