@@ -4,7 +4,7 @@ Code name: Minor fixes
 
 ## Summary
 
-This release improves handling of failed `npm ci` and `go-licenses` calls by proposing possible workarounds. The release also escapes pipe symbol in the dependencies table to fix broken rendering.
+This release improves handling of failed calls `npm ci` and `go-licenses` by proposing possible workarounds. The release also escapes pipe symbol in the dependencies table to fix broken rendering.
 
 ## Bugfixes
 
