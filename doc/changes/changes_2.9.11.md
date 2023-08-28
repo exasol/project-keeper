@@ -25,7 +25,6 @@ This adds three small improvements:
 #### Plugin Dependency Updates
 
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.3.0` to `3.4.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 
 ### Project Keeper Core
 
@@ -46,7 +45,6 @@ This adds three small improvements:
 #### Plugin Dependency Updates
 
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.3.0` to `3.4.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 
 ### Project Keeper Command Line Interface
 
@@ -63,7 +61,6 @@ This adds three small improvements:
 
 * Updated `org.apache.maven.plugins:maven-assembly-plugin:3.5.0` to `3.6.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.3.0` to `3.4.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 
 ### Project Keeper Maven Plugin
 
@@ -79,7 +76,6 @@ This adds three small improvements:
 
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.3.0` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-plugin-plugin:3.8.1` to `3.9.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 
 ### Project Keeper Java Project Crawler
 
@@ -95,7 +91,6 @@ This adds three small improvements:
 
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.3.0` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-plugin-plugin:3.8.1` to `3.9.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.0`
 
 ### Project Keeper Shared Test Setup
 
