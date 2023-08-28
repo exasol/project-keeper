@@ -202,11 +202,11 @@
 | [Apache Maven Compiler Plugin][23]                      | [Apache-2.0][16]                               |
 | [Apache Maven Enforcer Plugin][24]                      | [Apache-2.0][16]                               |
 | [Maven Flatten Plugin][25]                              | [Apache Software Licenese][16]                 |
-| [Maven Plugin Plugin][68]                               | [Apache-2.0][16]                               |
-| [Apache Maven JAR Plugin][59]                           | [Apache License, Version 2.0][16]              |
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][26] | [ASL2][27]                                     |
 | [Maven Surefire Plugin][28]                             | [Apache-2.0][16]                               |
 | [Versions Maven Plugin][29]                             | [Apache License, Version 2.0][16]              |
+| [Maven Plugin Plugin][68]                               | [Apache-2.0][16]                               |
+| [Apache Maven JAR Plugin][59]                           | [Apache License, Version 2.0][16]              |
 | [duplicate-finder-maven-plugin Maven Mojo][30]          | [Apache License 2.0][31]                       |
 | [Apache Maven Deploy Plugin][32]                        | [Apache-2.0][16]                               |
 | [Apache Maven GPG Plugin][33]                           | [Apache-2.0][16]                               |
@@ -259,10 +259,10 @@
 | [Apache Maven Compiler Plugin][23]                      | [Apache-2.0][16]                               |
 | [Apache Maven Enforcer Plugin][24]                      | [Apache-2.0][16]                               |
 | [Maven Flatten Plugin][25]                              | [Apache Software Licenese][16]                 |
-| [Maven Plugin Plugin][68]                               | [Apache-2.0][16]                               |
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][26] | [ASL2][27]                                     |
 | [Maven Surefire Plugin][28]                             | [Apache-2.0][16]                               |
 | [Versions Maven Plugin][29]                             | [Apache License, Version 2.0][16]              |
+| [Maven Plugin Plugin][68]                               | [Apache-2.0][16]                               |
 | [duplicate-finder-maven-plugin Maven Mojo][30]          | [Apache License 2.0][31]                       |
 | [Apache Maven Deploy Plugin][32]                        | [Apache-2.0][16]                               |
 | [Apache Maven GPG Plugin][33]                           | [Apache-2.0][16]                               |

@@ -14,6 +14,10 @@ This adds three small improvements:
 
 * #470: Added three small improvements
 
+## Refactoring
+
+* #58: Removed workaround for CVE-2020-8908
+
 ## Dependency Updates
 
 ### Project-Keeper Shared Model Classes
