@@ -1,6 +1,6 @@
 # Project Keeper 2.9.11, released 2023-08-28
 
-Code name: Three Small Improvements
+Code name: Go version "1.20", `sonar.token`, free GHA space
 
 ## Summary
 
