@@ -12,7 +12,7 @@ This adds three small improvements:
 
 ## Features
 
-* ISSUE_NUMBER: description
+* #470: Added three small improvements
 
 ## Dependency Updates
 
