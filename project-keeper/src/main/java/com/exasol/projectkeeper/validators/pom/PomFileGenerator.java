@@ -202,6 +202,7 @@ public class PomFileGenerator {
                 .child("project.reporting.outputEncoding", "UTF-8") //
                 .child("java.version", "11") //
                 .child("test.excludeTags", "") //
+                .child("skip.surefire.tests", "false") //
                 .nullableChild(!enabledModules.contains(MAVEN_CENTRAL) ? null : element("gpg.skip").text("true"));
     }
 
