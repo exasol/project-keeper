@@ -68,7 +68,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.0</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
@@ -209,6 +209,9 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-source-plugin</artifactId>
+                <!-- Upgrading to 3.3.0 causes the following error:
+        Failed to execute goal org.apache.maven.plugins:maven-source-plugin:3.3.0:jar-no-fork (attach-sources) on project project-keeper-shared-model-classes: Presumably you have configured maven-source-plugn to execute twice times in your build. You have to configure a classifier for at least on of them.
+        Using goal "jar-no-fork" didn't help. See https://stackoverflow.com/questions/76305897/maven-build-fails-after-upgrading-to-maven-source-plugin-from-3-2-1-to-3-3-0 -->
                 <version>3.2.1</version>
                 <executions>
                     <execution>
