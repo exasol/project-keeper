@@ -1,14 +1,13 @@
 # Project Keeper 2.9.11, released 2023-08-28
 
-Code name: Four Small Improvements
+Code name: Three Small Improvements
 
 ## Summary
 
-This adds four small improvements:
+This adds three small improvements:
 
 * Upgrade Go version in workflow files to `"1.20"`
 * Replace deprecated Sonar property `sonar.login` with `sonar.token`
-* Add property `<skipTests>${skip.surefire.tests}</skipTests>` to surefire plugin to allow skipping unit tests with `mvn -Dskip.surefire.tests=true verify`
 * Add step to GitHub actions to free up ~14GB of space by deleting Android and Dotnet from GitHub runner
 
 ## Features
