@@ -234,7 +234,7 @@ For GitHub Actions you can solve this by adding `fetch-depth: 0` to the checkout
 
 ```yaml
 - name: Checkout the repository
-  uses: actions/checkout@v3
+  uses: actions/checkout@v4
   with:
     fetch-depth: 0
 ```
