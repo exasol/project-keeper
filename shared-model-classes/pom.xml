@@ -10,6 +10,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>project-keeper-shared-model-classes</artifactId>
     <name>Project-Keeper shared model classes</name>
+    <url>https://github.com/exasol/project-keeper/</url>
     <dependencies>
         <dependency>
             <groupId>jakarta.json</groupId>
@@ -69,5 +70,4 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
-    <url>https://github.com/exasol/project-keeper/</url>
 </project>
