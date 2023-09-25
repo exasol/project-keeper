@@ -161,7 +161,7 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-jdk14</artifactId>
-                <version>2.0.9</version>
+                <version>1.7.36</version> <!-- Version 1.7.x required to fix error 'SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".' -->
                 <scope>test</scope>
             </dependency>
             <dependency>

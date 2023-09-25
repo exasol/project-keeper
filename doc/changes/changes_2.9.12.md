@@ -21,7 +21,6 @@ This release fixes vulnerability CVE-2023-4759 in dependency `org.eclipse.jgit:o
 #### Test Dependency Updates
 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.1` to `3.15.2`
-* Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.9`
 
 ### Project Keeper Core
 
@@ -37,17 +36,12 @@ This release fixes vulnerability CVE-2023-4759 in dependency `org.eclipse.jgit:o
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.11` to `2.9.12`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.1` to `3.15.2`
-* Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.9`
 
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-core:2.9.11` to `2.9.12`
-
-#### Runtime Dependency Updates
-
-* Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.9`
 
 #### Test Dependency Updates
 
@@ -59,20 +53,12 @@ This release fixes vulnerability CVE-2023-4759 in dependency `org.eclipse.jgit:o
 
 * Updated `com.exasol:project-keeper-core:2.9.11` to `2.9.12`
 
-#### Test Dependency Updates
-
-* Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.9`
-
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:2.9.11` to `2.9.12`
 * Updated `org.eclipse.jgit:org.eclipse.jgit:6.6.0.202305301015-r` to `6.7.0.202309050840-r`
-
-#### Test Dependency Updates
-
-* Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.9`
 
 ### Project Keeper Shared Test Setup
 

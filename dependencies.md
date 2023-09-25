@@ -23,7 +23,7 @@
 | [JUnit5 System Extensions][14]             | [Eclipse Public License v2.0][5]  |
 | [EqualsVerifier \| release normal jar][15] | [Apache License, Version 2.0][16] |
 | [mockito-core][17]                         | [The MIT License][18]             |
-| [SLF4J JDK14 Provider][19]                 | [MIT License][20]                 |
+| [SLF4J JDK14 Binding][19]                  | [MIT License][20]                 |
 
 ### Plugin Dependencies
 
@@ -78,7 +78,7 @@
 | [mockito-junit-jupiter][17]                | [The MIT License][18]                          |
 | [Maven Plugin Integration Testing][57]     | [MIT License][58]                              |
 | [EqualsVerifier \| release normal jar][15] | [Apache License, Version 2.0][16]              |
-| [SLF4J JDK14 Provider][19]                 | [MIT License][20]                              |
+| [SLF4J JDK14 Binding][19]                  | [MIT License][20]                              |
 
 ### Runtime Dependencies
 
@@ -135,9 +135,9 @@
 
 ### Runtime Dependencies
 
-| Dependency                 | License           |
-| -------------------------- | ----------------- |
-| [SLF4J JDK14 Provider][19] | [MIT License][20] |
+| Dependency                | License           |
+| ------------------------- | ----------------- |
+| [SLF4J JDK14 Binding][19] | [MIT License][20] |
 
 ### Plugin Dependencies
 
@@ -191,7 +191,7 @@
 | [org.xmlunit:xmlunit-matchers][50]     | [The Apache Software License, Version 2.0][27] |
 | [mockito-core][17]                     | [The MIT License][18]                          |
 | [Maven Plugin Integration Testing][57] | [MIT License][58]                              |
-| [SLF4J JDK14 Provider][19]             | [MIT License][20]                              |
+| [SLF4J JDK14 Binding][19]              | [MIT License][20]                              |
 | [JaCoCo :: Agent][67]                  | [Eclipse Public License 2.0][39]               |
 
 ### Plugin Dependencies
@@ -246,7 +246,7 @@
 | [JUnit Jupiter Params][10]             | [Eclipse Public License v2.0][11]              |
 | [Hamcrest][12]                         | [BSD License 3][13]                            |
 | [org.xmlunit:xmlunit-matchers][50]     | [The Apache Software License, Version 2.0][27] |
-| [SLF4J JDK14 Provider][19]             | [MIT License][20]                              |
+| [SLF4J JDK14 Binding][19]              | [MIT License][20]                              |
 | [mockito-core][17]                     | [The MIT License][18]                          |
 | [Maven Plugin Integration Testing][57] | [MIT License][58]                              |
 | [JaCoCo :: Agent][67]                  | [Eclipse Public License 2.0][39]               |
