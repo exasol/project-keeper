@@ -1,4 +1,4 @@
-# Project Keeper 2.9.13, released 2023-??-??
+# Project Keeper 2.9.13, released 2023-10-24
 
 Code name: Remove Enforcer Plugin
 
