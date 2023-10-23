@@ -56,13 +56,39 @@ public class ProjectDependencyReader {
 
     private Stream<Dependency> getPluginDependencies() {
         return project.getModel().getBuild().getPlugins().stream() //
-                .filter(this::isDirectPlugin) //
+                .filter(this::isExplicitPlugin) //
                 .map(this::convertPluginToDependency);
     }
 
-    private boolean isDirectPlugin(final Plugin plugin) {
-        System.err.println("--- plugin: " + plugin.getClass().getName() + ": " + plugin);
-        return true;
+    /**
+     * Check if the given plugin is an explicit or implicit plugin.
+     * 
+     * <ul>
+     * <li>Direct plugin (e.g. {@code org.apache.maven.plugins:maven-failsafe-plugin}) are explicitly added to the build
+     * in a pom or parent pom.
+     * <ul>
+     * <li>Source model ID is {@code com.exasol:project-keeper-shared-test-setup-generated-parent:$&#123;revision&#125;}
+     * or {@code com.exasol:project-keeper-cli:$&#123;revision&#125;}</li></li>
+     * <li>Source location is {@code /path/to/project-keeper/project-keeper-cli/pom.xml} or
+     * {@code /path/to/project-keeper/project-keeper-maven-plugin/pk_generated_parent.pom}</li>
+     * </ul>
+     * <li>Indirect plugins (e.g. {@code org.apache.maven.plugins:maven-clean-plugin}) are implicitly added to the build
+     * a Maven lifecycle.
+     * <ul>
+     * <li>Source model ID is {@code org.apache.maven:maven-core:3.8.7:default-lifecycle-bindings}</li>
+     * <li>Source location is {@code null}</li>
+     * </ul>
+     * </li>
+     * </ul>
+     * The Maven API allows distinguishing both types via Source model ID and Source location. We decided to only use
+     * the source location as this requires only a simple not null check.
+     * 
+     * @param plugin the plugin to check
+     * @return {@code true} if the plugin is explicitly added to the build
+     */
+    private boolean isExplicitPlugin(final Plugin plugin) {
+        final String location = plugin.getLocation("").getSource().getLocation();
+        return location != null;
     }
 
     private Dependency convertPluginToDependency(final Plugin plugin) {
