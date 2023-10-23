@@ -46,7 +46,7 @@ class ProjectDependencyReaderTest {
     void explicitPlugin() throws ProjectBuildingException {
         simulateDependencies("group", "art", "ver", "website", List.of(mavenLicense("license", "licenseUrl")));
 
-        assertThat(readDependencies(List.of(plugin("group", "art", "ver", "no-null"))),
+        assertThat(readDependencies(List.of(plugin("group", "art", "ver", "non-null"))),
                 contains(ProjectDependency.builder().type(Type.PLUGIN).name("name:group:art").websiteUrl("website")
                         .licenses(List.of(new License("license", "licenseUrl"))).build()));
     }
@@ -69,14 +69,14 @@ class ProjectDependencyReaderTest {
         when(artifactModelReaderMock.readModel(eq(artifactId), eq(groupId), eq(version), anyList())).thenReturn(model);
     }
 
-    private org.apache.maven.model.License mavenLicense(final String name, final String url) {
+    private org.apache.maven.model.License createMavenLicense(final String name, final String url) {
         final org.apache.maven.model.License license = new org.apache.maven.model.License();
         license.setName(name);
         license.setUrl(url);
         return license;
     }
 
-    private Plugin plugin(final String groupId, final String artifactId, final String version,
+    private Plugin createPlugin(final String groupId, final String artifactId, final String version,
             final String sourceLocation) {
         final Plugin plugin = new Plugin();
         plugin.setGroupId(groupId);

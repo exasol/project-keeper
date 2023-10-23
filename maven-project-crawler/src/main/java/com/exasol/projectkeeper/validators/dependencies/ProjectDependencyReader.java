@@ -66,7 +66,7 @@ public class ProjectDependencyReader {
      * 
      * <ul>
      * <li>Direct plugin (e.g. {@code org.apache.maven.plugins:maven-failsafe-plugin}) are explicitly added to the build
-     * in a pom or parent pom.
+     * in a POM or parent POM.
      * <ul>
      * <li>Source model ID is {@code com.exasol:project-keeper-shared-test-setup-generated-parent:$&#123;revision&#125;}
      * or {@code com.exasol:project-keeper-cli:$&#123;revision&#125;}</li></li>
@@ -82,9 +82,9 @@ public class ProjectDependencyReader {
      * </li>
      * </ul>
      * The Maven API allows distinguishing both types via Source model ID and Source location. We decided to only use
-     * the source location as this requires only a simple not null check.
+     * the source location as this requires only a simple not-null check.
      * 
-     * @param plugin the plugin to check
+     * @param plugin plugin to check
      * @return {@code true} if the plugin is explicitly added to the build
      */
     // [impl -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]

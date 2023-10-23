@@ -16,7 +16,7 @@ import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 
 /**
- * This class reads the pom file including its parent poms of the latest previous release on the current branch.
+ * This class reads the pom file including its parent POMs of the latest previous release on the current branch.
  */
 public class LastReleasePomFileReader {
     private static final Logger LOGGER = Logger.getLogger(LastReleasePomFileReader.class.getName());
