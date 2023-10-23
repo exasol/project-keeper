@@ -22,7 +22,7 @@
 | [Hamcrest][12]                             | [BSD License 3][13]               |
 | [JUnit5 System Extensions][14]             | [Eclipse Public License v2.0][5]  |
 | [EqualsVerifier \| release normal jar][15] | [Apache License, Version 2.0][16] |
-| [mockito-core][17]                         | [The MIT License][18]             |
+| [mockito-core][17]                         | [MIT][18]                         |
 | [SLF4J JDK14 Binding][19]                  | [MIT License][20]                 |
 
 ### Plugin Dependencies
@@ -75,7 +75,7 @@
 | [JUnit Jupiter Params][10]                 | [Eclipse Public License v2.0][11]              |
 | [Hamcrest][12]                             | [BSD License 3][13]                            |
 | [org.xmlunit:xmlunit-matchers][50]         | [The Apache Software License, Version 2.0][27] |
-| [mockito-junit-jupiter][17]                | [The MIT License][18]                          |
+| [mockito-junit-jupiter][17]                | [MIT][18]                                      |
 | [Maven Plugin Integration Testing][57]     | [MIT License][58]                              |
 | [EqualsVerifier \| release normal jar][15] | [Apache License, Version 2.0][16]              |
 | [SLF4J JDK14 Binding][19]                  | [MIT License][20]                              |
@@ -189,7 +189,7 @@
 | [JUnit Jupiter Params][10]             | [Eclipse Public License v2.0][11]              |
 | [Hamcrest][12]                         | [BSD License 3][13]                            |
 | [org.xmlunit:xmlunit-matchers][50]     | [The Apache Software License, Version 2.0][27] |
-| [mockito-core][17]                     | [The MIT License][18]                          |
+| [mockito-core][17]                     | [MIT][18]                                      |
 | [Maven Plugin Integration Testing][57] | [MIT License][58]                              |
 | [SLF4J JDK14 Binding][19]              | [MIT License][20]                              |
 | [JaCoCo :: Agent][67]                  | [Eclipse Public License 2.0][39]               |
@@ -247,7 +247,7 @@
 | [Hamcrest][12]                         | [BSD License 3][13]                            |
 | [org.xmlunit:xmlunit-matchers][50]     | [The Apache Software License, Version 2.0][27] |
 | [SLF4J JDK14 Binding][19]              | [MIT License][20]                              |
-| [mockito-core][17]                     | [The MIT License][18]                          |
+| [mockito-core][17]                     | [MIT][18]                                      |
 | [Maven Plugin Integration Testing][57] | [MIT License][58]                              |
 | [JaCoCo :: Agent][67]                  | [Eclipse Public License 2.0][39]               |
 
@@ -367,7 +367,7 @@
 [51]: https://github.com/Steppschuh/Java-Markdown-Generator
 [52]: https://github.com/vdurmont/semver4j
 [53]: https://bitbucket.org/snakeyaml/snakeyaml
-[54]: https://maven.apache.org/ref/3.9.4/maven-model/
+[54]: https://maven.apache.org/ref/3.9.5/maven-model/
 [55]: https://github.com/exasol/maven-project-version-getter/
 [56]: https://github.com/exasol/maven-project-version-getter/blob/main/LICENSE
 [57]: https://github.com/exasol/maven-plugin-integration-testing/
@@ -378,8 +378,8 @@
 [62]: https://github.com/exasol/artifact-reference-checker-maven-plugin/
 [63]: https://github.com/exasol/artifact-reference-checker-maven-plugin/blob/main/LICENSE
 [64]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[65]: https://maven.apache.org/ref/3.9.4/maven-plugin-api/
-[66]: https://maven.apache.org/ref/3.9.4/maven-core/
+[65]: https://maven.apache.org/ref/3.9.5/maven-plugin-api/
+[66]: https://maven.apache.org/ref/3.9.5/maven-core/
 [67]: https://www.eclemma.org/jacoco/index.html
 [68]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
 [69]: https://maven.apache.org/plugins/maven-dependency-plugin/
