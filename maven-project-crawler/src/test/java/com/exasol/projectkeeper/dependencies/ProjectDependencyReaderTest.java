@@ -44,9 +44,9 @@ class ProjectDependencyReaderTest {
 
     @Test
     void explicitPlugin() throws ProjectBuildingException {
-        simulateDependencies("group", "art", "ver", "website", List.of(mavenLicense("license", "licenseUrl")));
+        simulateDependencies("group", "art", "ver", "website", List.of(createMavenLicense("license", "licenseUrl")));
 
-        assertThat(readDependencies(List.of(plugin("group", "art", "ver", "non-null"))),
+        assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", "non-null"))),
                 contains(ProjectDependency.builder().type(Type.PLUGIN).name("name:group:art").websiteUrl("website")
                         .licenses(List.of(new License("license", "licenseUrl"))).build()));
     }
@@ -54,7 +54,7 @@ class ProjectDependencyReaderTest {
     // [utest -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]
     @Test
     void implicitPlugin() throws ProjectBuildingException {
-        assertThat(readDependencies(List.of(plugin("group", "art", "ver", null))), empty());
+        assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", null))), empty());
     }
 
     private void simulateDependencies(final String groupId, final String artifactId, final String version,
