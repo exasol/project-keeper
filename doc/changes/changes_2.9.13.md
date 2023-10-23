@@ -25,7 +25,7 @@ This release removes plugins from the generated `dependencies.md` file that are 
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.3.0` to `1.3.1`
-* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0` to `3.4.1`
+* Removed `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.5.0` to `3.6.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.0` to `2.16.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.10` to `0.8.11`
@@ -49,7 +49,7 @@ This release removes plugins from the generated `dependencies.md` file that are 
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.3.0` to `1.3.1`
-* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0` to `3.4.1`
+* Removed `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.5.0` to `3.6.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.0` to `2.16.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.10` to `0.8.11`
@@ -69,7 +69,7 @@ This release removes plugins from the generated `dependencies.md` file that are 
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.3.0` to `1.3.1`
-* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0` to `3.4.1`
+* Removed `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.5.0` to `3.6.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.0` to `2.16.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.10` to `0.8.11`
@@ -88,7 +88,7 @@ This release removes plugins from the generated `dependencies.md` file that are 
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.3.0` to `1.3.1`
-* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0` to `3.4.1`
+* Removed `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.5.0` to `3.6.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.0` to `2.16.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.10` to `0.8.11`
@@ -103,11 +103,12 @@ This release removes plugins from the generated `dependencies.md` file that are 
 #### Test Dependency Updates
 
 * Updated `org.mockito:mockito-core:5.5.0` to `5.6.0`
+* Added `org.mockito:mockito-junit-jupiter:5.6.0`
 
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.3.0` to `1.3.1`
-* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0` to `3.4.1`
+* Removed `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.5.0` to `3.6.0`
 * Updated `org.apache.maven.plugins:maven-plugin-plugin:3.9.0` to `3.10.1`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.0` to `2.16.1`
@@ -123,7 +124,7 @@ This release removes plugins from the generated `dependencies.md` file that are 
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:1.3.0` to `1.3.1`
-* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0` to `3.4.1`
+* Removed `org.apache.maven.plugins:maven-enforcer-plugin:3.4.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.16.0` to `2.16.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.10` to `0.8.11`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184` to `3.10.0.2594`
