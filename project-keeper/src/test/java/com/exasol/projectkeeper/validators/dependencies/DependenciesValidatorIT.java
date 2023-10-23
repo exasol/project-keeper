@@ -22,7 +22,7 @@ import com.exasol.projectkeeper.test.MavenProjectFixture;
 import com.exasol.projectkeeper.test.TestMavenModel;
 
 @Tag("integration")
-// [itest->dsn~depnedency.md-file-validator~1]
+// [itest->dsn~dependency.md-file-validator~1]
 // [itest->dsn~reading-project-dependencies~1]
 class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
 

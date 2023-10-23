@@ -17,7 +17,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 /**
  * {@link Validator} for the dependencies.md file.
  */
-// [impl->dsn~depnedency.md-file-validator~1]
+// [impl->dsn~dependency.md-file-validator~1]
 public class DependenciesValidator implements Validator {
     private final Path dependenciesFile;
     private final List<AnalyzedSource> sources;

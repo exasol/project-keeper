@@ -152,7 +152,7 @@ Needs: impl, utest, itest
 
 ### Dependencies.md File Validator
 
-`dsn~depnedency.md-file-validator~1`
+`dsn~dependency.md-file-validator~1`
 
 For validating the `dependencies.md` file we first generate the expected content and then compare the actual file with the expected content.
 
