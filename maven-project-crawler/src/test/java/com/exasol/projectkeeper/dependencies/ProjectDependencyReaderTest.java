@@ -30,16 +30,16 @@ class ProjectDependencyReaderTest {
     @Mock
     MavenModelFromRepositoryReader artifactModelReaderMock;
 
+    @Test
+    void noDependencies() {
+        assertThat(readDependencies(emptyList()), empty());
+    }
+
     private List<ProjectDependency> readDependencies(final List<Plugin> plugins) {
         final MavenProject project = new MavenProject(new Model());
         project.getModel().setBuild(new Build());
         project.getModel().getBuild().setPlugins(plugins);
         return new ProjectDependencyReader(artifactModelReaderMock, project).readDependencies().getDependencies();
-    }
-
-    @Test
-    void noDependencies() {
-        assertThat(readDependencies(emptyList()), empty());
     }
 
     @Test
@@ -49,24 +49,6 @@ class ProjectDependencyReaderTest {
         assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", "non-null"))),
                 contains(ProjectDependency.builder().type(Type.PLUGIN).name("name:group:art").websiteUrl("website")
                         .licenses(List.of(new License("license", "licenseUrl"))).build()));
-    }
-
-    // [utest -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]
-    @Test
-    void implicitPlugin() throws ProjectBuildingException {
-        assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", null))), empty());
-    }
-
-    private void simulateDependencies(final String groupId, final String artifactId, final String version,
-            final String url, final List<org.apache.maven.model.License> licenses) throws ProjectBuildingException {
-        final Model model = new Model();
-        model.setArtifactId(artifactId);
-        model.setGroupId(groupId);
-        model.setVersion(version);
-        model.setName("name:" + groupId + ":" + artifactId);
-        model.setUrl(url);
-        model.setLicenses(licenses);
-        when(artifactModelReaderMock.readModel(eq(artifactId), eq(groupId), eq(version), anyList())).thenReturn(model);
     }
 
     private org.apache.maven.model.License createMavenLicense(final String name, final String url) {
@@ -87,4 +69,23 @@ class ProjectDependencyReaderTest {
         plugin.setLocation("", new InputLocation(0, 0, source));
         return plugin;
     }
+
+    private void simulateDependencies(final String groupId, final String artifactId, final String version,
+            final String url, final List<org.apache.maven.model.License> licenses) throws ProjectBuildingException {
+        final Model model = new Model();
+        model.setArtifactId(artifactId);
+        model.setGroupId(groupId);
+        model.setVersion(version);
+        model.setName("name:" + groupId + ":" + artifactId);
+        model.setUrl(url);
+        model.setLicenses(licenses);
+        when(artifactModelReaderMock.readModel(eq(artifactId), eq(groupId), eq(version), anyList())).thenReturn(model);
+    }
+
+    // [utest -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]
+    @Test
+    void implicitPlugin() throws ProjectBuildingException {
+        assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", null))), empty());
+    }
+
 }

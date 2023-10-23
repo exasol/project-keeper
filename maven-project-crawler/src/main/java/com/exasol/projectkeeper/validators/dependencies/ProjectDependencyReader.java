@@ -65,8 +65,8 @@ public class ProjectDependencyReader {
      * Check if the given plugin is an explicit or implicit plugin.
      * 
      * <ul>
-     * <li>Direct plugin (e.g. {@code org.apache.maven.plugins:maven-failsafe-plugin}) are explicitly added to the build
-     * in a POM or parent POM.
+     * <li>Direct plugins (e.g. {@code org.apache.maven.plugins:maven-failsafe-plugin}) are explicitly added to the
+     * build in a POM or parent POM.
      * <ul>
      * <li>Source model ID is {@code com.exasol:project-keeper-shared-test-setup-generated-parent:$&#123;revision&#125;}
      * or {@code com.exasol:project-keeper-cli:$&#123;revision&#125;}</li></li>
