@@ -6,6 +6,8 @@ Code name: Remove Enforcer Plugin
 
 This release removes plugins from the generated `dependencies.md` file that are defined by Maven itself. This avoids a dependency on the Maven version which allows using any version you want.
 
+The release also reduces build verbosity by setting the `quiet` option of `maven-javadoc-plugin` to `true`.
+
 ## Features
 
 * #480: Removed indirect plugins from `dependencies.md` & remove enforcer plugin
