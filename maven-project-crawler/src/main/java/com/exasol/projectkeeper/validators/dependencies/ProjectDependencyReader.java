@@ -21,31 +21,48 @@ import com.exasol.projectkeeper.shared.dependencies.License;
  */
 public class ProjectDependencyReader {
     private final MavenModelFromRepositoryReader artifactModelReader;
+    private final MavenProject project;
 
     /**
      * Create a new instance of {@link ProjectDependencyReader}.
      *
      * @param artifactModelReader maven dependency reader
+     * @param project             maven project
      */
-    public ProjectDependencyReader(final MavenModelFromRepositoryReader artifactModelReader) {
+    public ProjectDependencyReader(final MavenModelFromRepositoryReader artifactModelReader,
+            final MavenProject project) {
         this.artifactModelReader = artifactModelReader;
+        this.project = project;
     }
 
     /**
      * Read the dependencies of the pom file (including plugins).
      *
-     * @param project maven project
      * @return list of dependencies
      */
-    public ProjectDependencies readDependencies(final MavenProject project) {
-        final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins(project.getModel())
+    public ProjectDependencies readDependencies() {
+        final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins()
                 .map(dependency -> getLicense(dependency, project)).collect(Collectors.toList());
         return new ProjectDependencies(dependencies);
     }
 
-    private Stream<Dependency> getDependenciesIncludingPlugins(final Model model) {
-        return Stream.concat(model.getDependencies().stream(),
-                model.getBuild().getPlugins().stream().map(this::convertPluginToDependency));
+    private Stream<Dependency> getDependenciesIncludingPlugins() {
+        return Stream.concat(getDependencies(), getPluginDependencies());
+    }
+
+    private Stream<Dependency> getDependencies() {
+        return project.getModel().getDependencies().stream();
+    }
+
+    private Stream<Dependency> getPluginDependencies() {
+        return project.getModel().getBuild().getPlugins().stream() //
+                .filter(this::isDirectPlugin) //
+                .map(this::convertPluginToDependency);
+    }
+
+    private boolean isDirectPlugin(final Plugin plugin) {
+        System.err.println("--- plugin: " + plugin.getClass().getName() + ": " + plugin);
+        return true;
     }
 
     private Dependency convertPluginToDependency(final Plugin plugin) {
