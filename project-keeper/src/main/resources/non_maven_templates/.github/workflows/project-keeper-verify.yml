@@ -28,6 +28,10 @@ jobs:
         uses: actions/setup-go@v4
         with:
           go-version: "1.20"
+          cache-dependency-path: |
+            go.sum
+            .github/workflows/project-keeper-verify.yml
+            .github/workflows/project-keeper.sh
 
 $npmSetup
 
@@ -38,17 +42,6 @@ $npmSetup
           key: ${{ runner.os }}-pk-${{ hashFiles('.github/workflows/project-keeper.sh') }}
           restore-keys: |
             ${{ runner.os }}-pk-
-
-      - name: Cache go-licenses
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.cache/go-build
-            ~/go/pkg/mod
-          key: ${{ runner.os }}-go-licenses-${{ hashFiles('.github/workflows/project-keeper-verify.yml') }}
-          restore-keys: |
-            ${{ runner.os }}-go-licenses-${{ hashFiles('.github/workflows/project-keeper-verify.yml') }}
-            ${{ runner.os }}-go-licenses-
 
       - name: Project Keeper Verify
         run: ./.github/workflows/project-keeper.sh
