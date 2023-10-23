@@ -42,7 +42,8 @@ public class ProjectDependencyReader {
      */
     public ProjectDependencies readDependencies() {
         final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins()
-                .map(dependency -> getLicense(dependency, project)).collect(Collectors.toList());
+                .map(dependency -> getLicense(dependency, project)) //
+                .collect(Collectors.toList());
         return new ProjectDependencies(dependencies);
     }
 
@@ -86,6 +87,7 @@ public class ProjectDependencyReader {
      * @param plugin the plugin to check
      * @return {@code true} if the plugin is explicitly added to the build
      */
+    // [impl -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]
     private boolean isExplicitPlugin(final Plugin plugin) {
         final String location = plugin.getLocation("").getSource().getLocation();
         return location != null;

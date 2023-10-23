@@ -166,6 +166,20 @@ Covers:
 
 Needs: impl, itest
 
+#### Excluding Implicit Plugins from Dependencies.md
+
+`dsn~dependency.md-file-validator-excludes-implicit-plugins~1`
+
+PK excludes implicit plugins from `dependencies.md`.
+
+Background:
+
+Maven implicitly adds plugins like `org.apache.maven.plugins:maven-clean-plugin` due to the Maven lifecycle. The version of these plugins depends on the Maven version. Each plugin version defines its own name and license which is included in `dependencies.md`. That means the content of `dependencies.md` depends on the Maven version, causing build failures when using a different Maven version, see [issue #436](https://github.com/exasol/project-keeper/issues/436).
+
+One workaround is pinning the Maven version using `maven-enforcer-plugin` but this causes problems on developer's machines. That's why we decided to remove these implicit plugins from `dependencies.md`.
+
+Needs: impl, utest, itest
+
 ### Readme.md File Validator
 
 `dsn~readme-validator~1`

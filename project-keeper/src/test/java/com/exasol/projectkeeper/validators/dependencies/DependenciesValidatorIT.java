@@ -67,6 +67,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         assertThat(output, containsString("E-PK-CORE-53: The dependencies.md file has outdated content."));
     }
 
+    // [itest -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]
     @Test
     void testFix() throws IOException {
         createExamplePomFile();
