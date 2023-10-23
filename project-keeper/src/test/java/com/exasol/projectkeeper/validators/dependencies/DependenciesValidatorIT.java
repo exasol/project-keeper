@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.validators.dependencies;
 import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.io.IOException;
@@ -27,11 +28,13 @@ import com.exasol.projectkeeper.test.TestMavenModel;
 class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
 
     private MavenProjectFixture fixture;
+    private Path dependenciesFile;
 
     @BeforeEach
     void setup() {
         this.fixture = new MavenProjectFixture(this.projectDir);
         this.fixture.gitInit();
+        this.dependenciesFile = this.projectDir.resolve("dependencies.md");
     }
 
     @Test
@@ -39,7 +42,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         createExamplePomFile();
         this.fixture.writeConfig(createConfigWithNoModules());
         runFix();
-        Files.deleteIfExists(this.projectDir.resolve("dependencies.md"));
+        Files.deleteIfExists(this.dependenciesFile);
         final String output = assertInvalidAndGetOutput();
         assertThat(output, containsString("E-PK-CORE-50: This project does not have a dependencies.md file."));
     }
@@ -49,7 +52,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         createExamplePomFile();
         this.fixture.writeConfig(createConfigWithNoModules());
         runFix();
-        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
+        Files.writeString(this.dependenciesFile, "wrong content");
         final String output = assertInvalidAndGetOutput();
         assertThat(output, containsString("E-PK-CORE-53: The dependencies.md file has outdated content."));
     }
@@ -59,7 +62,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         createExamplePomFileWithNonDefaultRepo();
         this.fixture.writeConfig(createConfigWithNoModules());
         runFix();
-        Files.writeString(this.projectDir.resolve("dependencies.md"), "wrong content");
+        Files.writeString(this.dependenciesFile, "wrong content");
         final String output = assertInvalidAndGetOutput();
         assertThat(output, containsString("E-PK-CORE-53: The dependencies.md file has outdated content."));
     }
@@ -69,10 +72,11 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         createExamplePomFile();
         this.fixture.writeConfig(createConfigWithNoModules());
         runFix();
-        final String dependenciesFileContent = Files.readString(this.projectDir.resolve("dependencies.md"));
+        final String dependenciesFileContent = Files.readString(this.dependenciesFile);
         assertAll(//
                 () -> assertThat(dependenciesFileContent, containsString("error-reporting-java")),
-                () -> assertThat(dependenciesFileContent, containsString("Maven Clean Plugin"))//
+                () -> assertThat(dependenciesFileContent, containsString("SonarQube Scanner for Maven")),
+                () -> assertThat(dependenciesFileContent, not(containsString("Maven Clean Plugin")))//
         );
     }
 
@@ -90,7 +94,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
                 .linkReplacements(
                         List.of("https://www.apache.org/licenses/LICENSE-2.0.txt|https://my-replacement.de")));
         runFix();
-        final String dependenciesFileContent = Files.readString(this.projectDir.resolve("dependencies.md"));
+        final String dependenciesFileContent = Files.readString(this.dependenciesFile);
         assertThat(dependenciesFileContent, containsString("https://my-replacement.de"));
     }
 
