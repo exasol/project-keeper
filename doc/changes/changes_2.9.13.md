@@ -6,11 +6,15 @@ Code name: Remove Enforcer Plugin
 
 This release removes plugins from the generated `dependencies.md` file that are defined by Maven itself. This avoids a dependency on the Maven version which allows using any version you want.
 
-The release also reduces build verbosity by setting the `quiet` option of `maven-javadoc-plugin` to `true`.
+The release also reduces build verbosity by setting the `quiet` option of `maven-javadoc-plugin` to `true` and removes step "Cache go-licenses" from `project-keeper-verify.yml` to fix warnings about existing files already when restoring the cache.
 
 ## Features
 
 * #480: Removed indirect plugins from `dependencies.md` & remove enforcer plugin
+
+## Bugfixes
+
+* #479: Removed step "Cache go-licenses" from project-keeper-verify.yml
 
 ## Dependency Updates
 
