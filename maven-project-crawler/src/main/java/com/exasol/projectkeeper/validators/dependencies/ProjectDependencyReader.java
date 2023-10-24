@@ -21,31 +21,76 @@ import com.exasol.projectkeeper.shared.dependencies.License;
  */
 public class ProjectDependencyReader {
     private final MavenModelFromRepositoryReader artifactModelReader;
+    private final MavenProject project;
 
     /**
      * Create a new instance of {@link ProjectDependencyReader}.
      *
      * @param artifactModelReader maven dependency reader
+     * @param project             maven project
      */
-    public ProjectDependencyReader(final MavenModelFromRepositoryReader artifactModelReader) {
+    public ProjectDependencyReader(final MavenModelFromRepositoryReader artifactModelReader,
+            final MavenProject project) {
         this.artifactModelReader = artifactModelReader;
+        this.project = project;
     }
 
     /**
      * Read the dependencies of the pom file (including plugins).
      *
-     * @param project maven project
      * @return list of dependencies
      */
-    public ProjectDependencies readDependencies(final MavenProject project) {
-        final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins(project.getModel())
-                .map(dependency -> getLicense(dependency, project)).collect(Collectors.toList());
+    public ProjectDependencies readDependencies() {
+        final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins()
+                .map(dependency -> getLicense(dependency, project)) //
+                .collect(Collectors.toList());
         return new ProjectDependencies(dependencies);
     }
 
-    private Stream<Dependency> getDependenciesIncludingPlugins(final Model model) {
-        return Stream.concat(model.getDependencies().stream(),
-                model.getBuild().getPlugins().stream().map(this::convertPluginToDependency));
+    private Stream<Dependency> getDependenciesIncludingPlugins() {
+        return Stream.concat(getDependencies(), getPluginDependencies());
+    }
+
+    private Stream<Dependency> getDependencies() {
+        return project.getModel().getDependencies().stream();
+    }
+
+    private Stream<Dependency> getPluginDependencies() {
+        return project.getModel().getBuild().getPlugins().stream() //
+                .filter(this::isExplicitPlugin) //
+                .map(this::convertPluginToDependency);
+    }
+
+    /**
+     * Check if the given plugin is an explicit or implicit plugin.
+     * 
+     * <ul>
+     * <li>Direct plugins (e.g. {@code org.apache.maven.plugins:maven-failsafe-plugin}) are explicitly added to the
+     * build in a POM or parent POM.
+     * <ul>
+     * <li>Source model ID is {@code com.exasol:project-keeper-shared-test-setup-generated-parent:$&#123;revision&#125;}
+     * or {@code com.exasol:project-keeper-cli:$&#123;revision&#125;}</li></li>
+     * <li>Source location is {@code /path/to/project-keeper/project-keeper-cli/pom.xml} or
+     * {@code /path/to/project-keeper/project-keeper-maven-plugin/pk_generated_parent.pom}</li>
+     * </ul>
+     * <li>Indirect plugins (e.g. {@code org.apache.maven.plugins:maven-clean-plugin}) are implicitly added to the build
+     * a Maven lifecycle.
+     * <ul>
+     * <li>Source model ID is {@code org.apache.maven:maven-core:3.8.7:default-lifecycle-bindings}</li>
+     * <li>Source location is {@code null}</li>
+     * </ul>
+     * </li>
+     * </ul>
+     * The Maven API allows distinguishing both types via Source model ID and Source location. We decided to only use
+     * the source location as this requires only a simple not-null check.
+     * 
+     * @param plugin plugin to check
+     * @return {@code true} if the plugin is explicitly added to the build
+     */
+    // [impl -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]
+    private boolean isExplicitPlugin(final Plugin plugin) {
+        final String location = plugin.getLocation("").getSource().getLocation();
+        return location != null;
     }
 
     private Dependency convertPluginToDependency(final Plugin plugin) {

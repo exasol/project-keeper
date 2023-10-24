@@ -60,8 +60,9 @@ public class DependencyChangeReportReader {
                 .collect(Collectors.toList());
     }
 
-    private List<Dependency> convertPluginsToDependencies(final Model oldModel) {
-        return oldModel.getBuild().getPlugins().stream().map(this::convertPluginToDependency)
+    private List<Dependency> convertPluginsToDependencies(final Model model) {
+        return model.getBuild().getPlugins().stream() //
+                .map(this::convertPluginToDependency) //
                 .collect(Collectors.toList());
     }
 

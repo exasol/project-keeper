@@ -48,8 +48,8 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
             final MavenProject project = readProject(mavenProjectReader, path);
             final DependencyChangeReport dependencyChangeReport = new DependencyUpdateReader(mavenProjectReader,
                     project.getBasedir().toPath(), project.getModel()).readDependencyChanges();
-            final ProjectDependencies dependencies = new ProjectDependencyReader(modelFromRepositoryReader)
-                    .readDependencies(project);
+            final ProjectDependencies dependencies = new ProjectDependencyReader(modelFromRepositoryReader, project)
+                    .readDependencies();
             final CrawledMavenProject crawledMavenProject = new CrawledMavenProject(dependencyChangeReport,
                     dependencies, project.getVersion());
             crawledProjects.put(path, crawledMavenProject);
