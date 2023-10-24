@@ -12,6 +12,9 @@
         <artifactId>project-keeper-maven-plugin-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
+    <prerequisites>
+        <maven>${minimum.maven.version}</maven>
+    </prerequisites>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>
