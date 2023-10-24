@@ -1,12 +1,14 @@
-# Project Keeper 2.9.14, released 2023-??-??
+# Project Keeper 2.9.14, released 2023-10-24
 
-Code name:
+Code name: Add enforcer-plugin
 
 ## Summary
 
+This release adds the enforcer-plugin to generated parent POMs to avoid error messages during build. The minimum Maven version is set to 3.6.3 so that builds also work on Ubuntu 20.04.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #483: Added enforcer-plugin
 
 ## Dependency Updates
 
