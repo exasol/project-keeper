@@ -16,14 +16,14 @@ import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
 
 /**
- * This class reads the pom file of the latest previous release on the current branch.
+ * This class reads the pom file including its parent POMs of the latest previous release on the current branch.
  */
 public class LastReleasePomFileReader {
     private static final Logger LOGGER = Logger.getLogger(LastReleasePomFileReader.class.getName());
 
     /**
-     * Copy pom.xml file from a given git release tag to another directory. If the pom file specifies a parent with
-     * relative path, this method extracts it too.
+     * Copy {@code pom.xml} file from a given git release tag to another directory. If the pom file specifies a parent
+     * with relative path, this method extracts it too.
      *
      * @param projectDirectory  projects root directory
      * @param relativePathToPom path to the pom file to extract (relative to the {@code projectDirectory})

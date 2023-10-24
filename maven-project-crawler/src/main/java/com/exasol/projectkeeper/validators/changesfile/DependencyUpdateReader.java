@@ -54,14 +54,17 @@ public class DependencyUpdateReader {
             if (lastReleasesPomFile.isPresent()) {
                 return parseOldPomFile(lastReleasesPomFile.get());
             } else {
-                final var emptyModel = new Model();
-                final var build = new Build();
-                emptyModel.setBuild(build);
-                return emptyModel;
+                return emptyModel();
             }
         } finally {
             deleteTempDir(tempDirectory);
         }
+    }
+
+    private Model emptyModel() {
+        final var emptyModel = new Model();
+        emptyModel.setBuild(new Build());
+        return emptyModel;
     }
 
     private void deleteTempDir(final Path tempDirectory) {
