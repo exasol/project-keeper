@@ -65,10 +65,10 @@ class PomFileGeneratorTest {
                 () -> assertThat(license.getName(), equalTo("My License")),
                 () -> assertThat(license.getDistribution(), equalTo("repo")),
                 () -> assertThat(pluginNames,
-                        containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "flatten-maven-plugin",
-                                "ossindex-maven-plugin", "reproducible-build-maven-plugin", "maven-surefire-plugin",
-                                "versions-maven-plugin", "jacoco-maven-plugin", "error-code-crawler-maven-plugin",
-                                "duplicate-finder-maven-plugin")));
+                        containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
+                                "flatten-maven-plugin", "ossindex-maven-plugin", "reproducible-build-maven-plugin",
+                                "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
+                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {

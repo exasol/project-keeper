@@ -23,6 +23,7 @@ public class PomFileGenerator {
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
             new SimplePluginTemplateGenerator("maven_templates/sonar-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-compiler-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-enforcer-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/flatten-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/ossindex-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-surefire-plugin.xml", DEFAULT),
@@ -177,7 +178,7 @@ public class PomFileGenerator {
                         ? dependency("org.projectlombok", "lombok", "1.18.28", "provided", null)
                         : null) //
                 .nullableChild(enabledModules.contains(UDF_COVERAGE) //
-                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.10", "test", "runtime")
+                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.11", "test", "runtime")
                         : null);
     }
 
