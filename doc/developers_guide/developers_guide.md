@@ -48,7 +48,7 @@ Usually you need to
 
 In some cases PK runs maven as a shell command. Maven will then search your for PK module "project crawler" in the version identical to PK opened in your IDE. The following command publishes project crawler to your local maven repository `~/.m2`:
 
-```shell
+```sh
 mvn clean install -DskipTests
 ```
 

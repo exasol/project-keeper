@@ -161,13 +161,13 @@ The verification is bound to the maven `package` lifecycle phase. So it is autom
 
 You can also run the checks manually using:
 
-```shell script
+```sh
 mvn project-keeper:verify
 ```
 
 In addition this plugin can also fix the project structure. For that use:
 
-```shell script
+```sh
 mvn project-keeper:fix
 ```
 
@@ -192,14 +192,14 @@ Use the `project-keeper-cli` for analyzing non-Maven projects like Golang.
 
 Run the following commands to verify a project:
 
-```shell
+```sh
 cd path/to/project
 java -jar path/to/project-keeper-cli-2.7.1.jar verify
 ```
 
 Run the following commands to fix the project structure:
 
-```shell
+```sh
 cd path/to/project
 java -jar path/to/project-keeper-cli-2.7.1.jar fix
 ```

@@ -28,7 +28,7 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>2.9.14</revision>
+        <revision>2.9.15</revision>
         <maven.version>3.9.5</maven.version>
         <minimum.maven.version>3.6.3</minimum.maven.version>
         <junit.version>5.10.0</junit.version>
