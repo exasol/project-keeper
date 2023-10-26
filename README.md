@@ -161,14 +161,27 @@ The verification is bound to the maven `package` lifecycle phase. So it is autom
 
 You can also run the checks manually using:
 
-```shell script
+```sh
 mvn project-keeper:verify
 ```
 
 In addition this plugin can also fix the project structure. For that use:
 
-```shell script
+```sh
 mvn project-keeper:fix
+```
+
+For multi-module projects these commands may fail with the following error:
+
+```
+[ERROR] No plugin found for prefix 'project-keeper' in the current project and in the plugin groups [org.apache.maven.plugins, org.codehaus.mojo] available from the repositories [local (/home/user/.m2/repository), central (https://repo.maven.apache.org/maven2)] -> [Help 1]
+```
+
+In this case add command line option `--projects .`:
+
+```sh
+mvn project-keeper:verify --projects .
+mvn project-keeper:fix --projects .
 ```
 
 You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=true` to your maven command.
@@ -179,14 +192,14 @@ Use the `project-keeper-cli` for analyzing non-Maven projects like Golang.
 
 Run the following commands to verify a project:
 
-```shell
+```sh
 cd path/to/project
 java -jar path/to/project-keeper-cli-2.7.1.jar verify
 ```
 
 Run the following commands to fix the project structure:
 
-```shell
+```sh
 cd path/to/project
 java -jar path/to/project-keeper-cli-2.7.1.jar fix
 ```
