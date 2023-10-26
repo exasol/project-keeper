@@ -4,9 +4,9 @@ Code name:
 
 ## Summary
 
-## Features
+## Documentation
 
-* ISSUE_NUMBER: description
+* #485: Added note about `--projects .` command line option to user guide
 
 ## Dependency Updates
 
