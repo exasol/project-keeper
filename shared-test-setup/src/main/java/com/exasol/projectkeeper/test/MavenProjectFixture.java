@@ -11,7 +11,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import com.exasol.projectkeeper.shared.config.*;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
 public class MavenProjectFixture {
     private static final String POM_XML = "pom.xml";
@@ -45,19 +45,19 @@ public class MavenProjectFixture {
         model.writeAsPomToProject(this.projectDir);
     }
 
-    public ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithAllModulesBuilder() {
+    public ProjectKeeperConfig.Builder getConfigWithAllModulesBuilder() {
         return ProjectKeeperConfig.builder()
                 .sources(List.of(Source.builder().modules(Set.of(values())).type(MAVEN).path(Path.of(POM_XML)).build()))
                 .versionConfig(new VersionFromSource(Path.of(POM_XML)));
     }
 
-    public ProjectKeeperConfig.ProjectKeeperConfigBuilder getConfigWithoutModulesBuilder() {
+    public ProjectKeeperConfig.Builder getConfigWithoutModulesBuilder() {
         return ProjectKeeperConfig.builder()
                 .sources(List.of(Source.builder().type(MAVEN).path(Path.of(POM_XML)).build()))
                 .versionConfig(new VersionFromSource(Path.of(POM_XML)));
     }
 
-    public void writeConfig(final ProjectKeeperConfigBuilder configBuilder) {
+    public void writeConfig(final Builder configBuilder) {
         new ProjectKeeperConfigWriter().writeConfig(configBuilder.build(), this.projectDir);
     }
 }

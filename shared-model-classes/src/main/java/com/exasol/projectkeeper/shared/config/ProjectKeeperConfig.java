@@ -17,7 +17,7 @@ public final class ProjectKeeperConfig {
     private final VersionConfig versionConfig;
     private final String ciBuildRunnerOS;
 
-    private ProjectKeeperConfig(final ProjectKeeperConfigBuilder builder) {
+    private ProjectKeeperConfig(final Builder builder) {
         this.sources = builder.sources;
         this.linkReplacements = builder.linkReplacements;
         this.excludes = builder.excludes;
@@ -51,21 +51,21 @@ public final class ProjectKeeperConfig {
     }
 
     /** @return a new builder for creating {@link ProjectKeeperConfig} instances */
-    public static ProjectKeeperConfig.ProjectKeeperConfigBuilder builder() {
-        return new ProjectKeeperConfig.ProjectKeeperConfigBuilder();
+    public static ProjectKeeperConfig.Builder builder() {
+        return new ProjectKeeperConfig.Builder();
     }
 
     /**
      * Builder for creating {@link ProjectKeeperConfig} instances.
      */
-    public static class ProjectKeeperConfigBuilder {
+    public static class Builder {
         private List<Source> sources = Collections.emptyList();
         private List<String> linkReplacements = Collections.emptyList();
         private List<String> excludes = Collections.emptyList();
         private VersionConfig versionConfig;
         private String ciBuildRunnerOS = DEFAULT_CI_BUILD_RUNNER_OS;
 
-        private ProjectKeeperConfigBuilder() {
+        private Builder() {
             // empty by intention
         }
 
@@ -73,7 +73,7 @@ public final class ProjectKeeperConfig {
          * @param sources List with source-projects to crawl
          * @return {@code this}.
          */
-        public ProjectKeeperConfig.ProjectKeeperConfigBuilder sources(final List<Source> sources) {
+        public ProjectKeeperConfig.Builder sources(final List<Source> sources) {
             this.sources = sources;
             return this;
         }
@@ -82,7 +82,7 @@ public final class ProjectKeeperConfig {
          * @param linkReplacements List of replacements for broken links
          * @return {@code this}.
          */
-        public ProjectKeeperConfig.ProjectKeeperConfigBuilder linkReplacements(final List<String> linkReplacements) {
+        public ProjectKeeperConfig.Builder linkReplacements(final List<String> linkReplacements) {
             this.linkReplacements = linkReplacements;
             return this;
         }
@@ -91,7 +91,7 @@ public final class ProjectKeeperConfig {
          * @param excludes List of regular expressions that match validation messages to exclude
          * @return {@code this}.
          */
-        public ProjectKeeperConfig.ProjectKeeperConfigBuilder excludes(final List<String> excludes) {
+        public ProjectKeeperConfig.Builder excludes(final List<String> excludes) {
             this.excludes = excludes;
             return this;
         }
@@ -100,7 +100,7 @@ public final class ProjectKeeperConfig {
          * @param versionConfig project version configuration
          * @return {@code this}.
          */
-        public ProjectKeeperConfig.ProjectKeeperConfigBuilder versionConfig(final VersionConfig versionConfig) {
+        public ProjectKeeperConfig.Builder versionConfig(final VersionConfig versionConfig) {
             this.versionConfig = versionConfig;
             return this;
         }
@@ -109,7 +109,7 @@ public final class ProjectKeeperConfig {
          * @param ciBuildRunnerOS operating system for CI builds (default: {@code ubuntu-latest})
          * @return {@code this}.
          */
-        public ProjectKeeperConfig.ProjectKeeperConfigBuilder ciBuildRunnerOS(final String ciBuildRunnerOS) {
+        public ProjectKeeperConfig.Builder ciBuildRunnerOS(final String ciBuildRunnerOS) {
             if (ciBuildRunnerOS != null) {
                 this.ciBuildRunnerOS = ciBuildRunnerOS;
             }

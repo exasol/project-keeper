@@ -17,7 +17,7 @@ import org.junit.jupiter.api.*;
 
 import com.exasol.projectkeeper.ProjectKeeperAbstractMavenIT;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 import com.exasol.projectkeeper.test.TestMavenModel;
@@ -81,7 +81,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         );
     }
 
-    private ProjectKeeperConfigBuilder createConfigWithNoModules() {
+    private Builder createConfigWithNoModules() {
         return ProjectKeeperConfig.builder().sources(
                 List.of(Source.builder().modules(Collections.emptySet()).type(MAVEN).path(Path.of("pom.xml")).build()));
     }
