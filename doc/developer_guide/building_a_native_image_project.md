@@ -1,4 +1,4 @@
-# Developers Guide for Native-Image Java Projects
+# Developer Guide for Native-Image Java Projects
 
 If you want to configure a new project for native-image builds please check the [corresponding guide](preparing_a_project_for_native_image_builds.md).
 

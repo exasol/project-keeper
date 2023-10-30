@@ -2,4 +2,4 @@ error-tags:
   PK-CORE:
     packages:
       - com.exasol.projectkeeper
-    highest-index: 168
+    highest-index: 169

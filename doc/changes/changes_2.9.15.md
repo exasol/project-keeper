@@ -6,9 +6,12 @@ Code name: Create issues for vulnerabilities
 
 This release updates the `dependencies_check.yml` GitHub workflow to use new [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) action. This action will automatically create GitHub issues for vulnerable dependencies found by the [ossindex-maven plugin](https://sonatype.github.io/ossindex-maven/maven-plugin/).
 
+The release also adds an option that allows selecting the operating system for the GitHub runner. This is useful when the default `ubuntu-latest` does not work in a project.
+
 ## Features
 
 * #489: Added security_issues workflow
+* #492: Added option for selecting the operating system for GitHub workflows
 
 ## Documentation
 

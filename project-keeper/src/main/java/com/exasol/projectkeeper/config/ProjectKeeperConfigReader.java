@@ -81,8 +81,13 @@ public class ProjectKeeperConfigReader {
                 Collections::emptyList);
         final VersionConfig version = parseVersion(rawConfig.getVersion(), projectDir);
 
-        return ProjectKeeperConfig.builder().sources(sources).linkReplacements(linkReplacements).excludes(excludes)
-                .versionConfig(version).build();
+        return ProjectKeeperConfig.builder() //
+                .sources(sources) //
+                .linkReplacements(linkReplacements) //
+                .excludes(excludes) //
+                .versionConfig(version) //
+                .ciBuildRunnerOS(rawConfig.getCiBuildRunnerOS()) //
+                .build();
     }
 
     private VersionConfig parseVersion(final Object rawVersion, final Path projectDir) {

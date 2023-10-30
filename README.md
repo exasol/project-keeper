@@ -62,7 +62,7 @@ This plugin provides different template modules for different kinds of projects.
 | `maven_central`     | This module checks the required configuration for releasing on maven central.                                                                                                                                               |
 | `udf_coverage`      | This module configures the pom for extracting the code coverage from UDF executions.                                                                                                                                        |
 | `lombok`            | This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).                                                                                                                             |
-| `native_image`      | This module configures the project for building Java native-images (executables) for windows, linux and mac. For details see our [native-image guide](doc/developers_guide/preparing_a_project_for_native_image_builds.md). |
+| `native_image`      | This module configures the project for building Java native-images (executables) for windows, linux and mac. For details see our [native-image guide](doc/developer_guide/preparing_a_project_for_native_image_builds.md). |
 
 ### Excluding Findings
 
@@ -101,7 +101,17 @@ The syntax for a replacement is `broken-url|replacement`.
 
 Project-keeper will then use the replacement in the `dependencies.md` file instead of the original url.
 
-## Pom File
+### GitHub Runner Operating System
+
+Some projects require to run the integration tests in the CI build on an operating system other than the default `ubuntu-latest`. In this case you can add the following to file `.project-keeper.yml`:
+
+```yml
+ciBuildRunnerOS: ubuntu-20.04
+```
+
+PK will use this setting for GitHub workflows `ci-build.yml` and `release_droid_prepare_original_checksum.yml` which run integration tests. The other workflows don't run integration tests and will stick to the default `ubuntu-latest`.
+
+## POM File
 
 For maven projects, project-keeper generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
 
@@ -204,23 +214,6 @@ cd path/to/project
 java -jar path/to/project-keeper-cli-2.7.1.jar fix
 ```
 
-## Development
-
-### Adding a Required File
-
-Copy the file to `src/main/resources/templates/<module>/<require_exist | require_exact>`
-For `module` use the name of the module you want to add the required files to. If you want this plugin to only check that the file exists, put it into `require_exist`. If you also want that it check that the file has the same content like the template, add it to `require_exact`. Inside of these folders you can also create sub folders. The sub folder structure of the templates defines the folder structure of the repository.
-
-**Example:**
-
-You created the file `src/main/resources/templates/default/require_exist/test/my_file.md`
-
-This makes the project-keeper check that in all repositories exists the file `test/my_file.md`.
-
-### Adding a Pom File Validation.
-
-Validations for the POM file are defined using code. For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
-
 ### Project Version
 
 PK needs to know about the overall version of the project. For example for validating it in the changes file. For single source projects, PK simply takes the version from the project. For other projects you can:
@@ -262,4 +255,4 @@ Typically, this happens if you did not fetch all tags. Simply run `git pull`.
 * [Changelog](doc/changes/changelog.md)
 * [Features & Requirements](doc/system_requirements.md)
 * [Design](doc/design.md)
-* [Developers Guide](doc/developers_guide/developers_guide.md)
+* [Developer Guide](doc/developer_guide/developer_guide.md)

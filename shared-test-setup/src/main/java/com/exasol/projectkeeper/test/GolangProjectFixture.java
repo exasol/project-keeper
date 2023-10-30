@@ -15,7 +15,7 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
 import com.exasol.projectkeeper.shared.config.*;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.ProjectKeeperConfigBuilder;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
 public class GolangProjectFixture implements AutoCloseable {
     private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
@@ -49,13 +49,13 @@ public class GolangProjectFixture implements AutoCloseable {
         }
     }
 
-    public ProjectKeeperConfig.ProjectKeeperConfigBuilder createDefaultConfig() {
+    public ProjectKeeperConfig.Builder createDefaultConfig() {
         return ProjectKeeperConfig.builder().sources(List.of(
                 Source.builder().modules(emptySet()).type(SourceType.GOLANG).path(Path.of(GO_MOD_FILE_NAME)).build()))
                 .versionConfig(new FixedVersion(PROJECT_VERSION));
     }
 
-    public void prepareProjectFiles(final ProjectKeeperConfigBuilder configBuilder) {
+    public void prepareProjectFiles(final Builder configBuilder) {
         this.writeConfig(configBuilder);
         this.prepareProjectFiles();
     }
@@ -76,7 +76,7 @@ public class GolangProjectFixture implements AutoCloseable {
         return PROJECT_VERSION;
     }
 
-    public void writeConfig(final ProjectKeeperConfig.ProjectKeeperConfigBuilder config) {
+    public void writeConfig(final ProjectKeeperConfig.Builder config) {
         new ProjectKeeperConfigWriter().writeConfig(config.build(), this.projectDir);
     }
 
