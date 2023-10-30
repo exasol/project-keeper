@@ -35,7 +35,6 @@ This release updates the `dependencies_check.yml` GitHub workflow to use new [se
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.14` to `2.9.16`
-* Added `io.netty:netty-handler:4.1.100.Final`
 
 ### Project Keeper Maven Plugin
 

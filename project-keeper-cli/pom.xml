@@ -56,13 +56,6 @@
             <artifactId>maven-project-version-getter</artifactId>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <!-- Vulnerable dependency for testing security-issues workflow -->
-            <groupId>io.netty</groupId>
-            <artifactId>netty-handler</artifactId>
-            <version>4.1.100.Final</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
     <build>
         <plugins>
