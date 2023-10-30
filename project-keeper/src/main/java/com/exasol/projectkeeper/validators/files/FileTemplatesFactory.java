@@ -16,6 +16,7 @@ import com.exasol.projectkeeper.sources.*;
  */
 class FileTemplatesFactory {
 
+    private static final String CI_BUILD_RUNNER_OS_PLACEHOLDER = "ciBuildRunnerOS";
     private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
             "linguist-generated=true");
 
@@ -42,7 +43,7 @@ class FileTemplatesFactory {
         this.logger = Objects.requireNonNull(logger, "logger");
         this.ownVersion = Objects.requireNonNull(ownVersion, "ownVersion");
         this.hasNpmModule = hasNpmModule;
-        this.ciBuildRunnerOS = Objects.requireNonNull(ciBuildRunnerOS, "ciBuildRunnerOS");
+        this.ciBuildRunnerOS = Objects.requireNonNull(ciBuildRunnerOS, CI_BUILD_RUNNER_OS_PLACEHOLDER);
     }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
@@ -76,7 +77,7 @@ class FileTemplatesFactory {
                         modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : ""));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
-                REQUIRE_EXACT).replacing("ciBuildRunnerOS", getCiBuildRunnerOS()));
+                REQUIRE_EXACT).replacing(CI_BUILD_RUNNER_OS_PLACEHOLDER, getCiBuildRunnerOS()));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
                 REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_upload_github_release_assets.yml",
@@ -94,7 +95,7 @@ class FileTemplatesFactory {
                     ".github/workflows/ci-build.yml", REQUIRE_EXACT);
         } else {
             return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT)
-                    .replacing("ciBuildRunnerOS", getCiBuildRunnerOS());
+                    .replacing(CI_BUILD_RUNNER_OS_PLACEHOLDER, getCiBuildRunnerOS());
         }
     }
 
