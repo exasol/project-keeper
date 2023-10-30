@@ -84,15 +84,20 @@ mvn openfasttrace:trace --projects .
 
 ## Adding a Required File
 
-Copy the file to `src/main/resources/templates/<module>/<require_exist | require_exact>`
-For `module` use the name of the module you want to add the required files to. If you want this plugin to only check that the file exists, put it into `require_exist`. If you also want that it check that the file has the same content like the template, add it to `require_exact`. Inside of these folders you can also create sub folders. The sub folder structure of the templates defines the folder structure of the repository.
+Copy the required file to directory `src/main/resources/templates/<module>/<require_exist | require_exact>`.
+
+Replace `<module>` with the name of the module the required file should be added to. 
+
+If you want this plugin to only check that the file exists, put it into `require_exist`. If you also want that it check that the file has the same content like the template, add it to `require_exact`. 
+
+Inside of these folders you can also create sub folders. The sub folder structure of the templates defines the folder structure of the repository.
 
 **Example:**
 
 You created the file `src/main/resources/templates/default/require_exist/test/my_file.md`
 
-This makes the project-keeper check that in all repositories exists the file `test/my_file.md`.
+This makes PK in all repositories to verify that the file `test/my_file.md` exists.
 
 ## Adding a Pom File Validation
 
-Validations for the POM file are defined using code. For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
+Validations for the POM file are defined using code. For maven plugins there is the abstract base class `AbstractPluginPomTemplate` that facilitates the template implementation.

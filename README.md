@@ -103,13 +103,13 @@ Project-keeper will then use the replacement in the `dependencies.md` file inste
 
 ### GitHub Runner Operating System
 
-Some projects require a different operating system for running integration tests in the CI build than the default `ubuntu-latest`. In this case you can add the following to your `.project-keeper.yml`:
+Some projects require to run the integration tests in the CI build on an operating system other than the default `ubuntu-latest`. In this case you can add the following to file `.project-keeper.yml`:
 
 ```yml
 ciBuildRunnerOS: ubuntu-20.04
 ```
 
-PK will use this setting for GitHub workflows `ci-build.yml` and `release_droid_prepare_original_checksum.yml` which run integration tests. The other workflows don't run integration tests and will continue using the default `ubuntu-latest`.
+PK will use this setting for GitHub workflows `ci-build.yml` and `release_droid_prepare_original_checksum.yml` which run integration tests. The other workflows don't run integration tests and will stick to the default `ubuntu-latest`.
 
 ## POM File
 
