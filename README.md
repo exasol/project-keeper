@@ -101,7 +101,17 @@ The syntax for a replacement is `broken-url|replacement`.
 
 Project-keeper will then use the replacement in the `dependencies.md` file instead of the original url.
 
-## Pom File
+### GitHub Runner Operating System
+
+Some projects require a different operating system for running integration tests in the CI build than the default `ubuntu-latest`. In this case you can add the following to your `.project-keeper.yml`:
+
+```yml
+ciBuildRunnerOS: ubuntu-20.04
+```
+
+PK will use this setting for GitHub workflows `ci-build.yml` and `release_droid_prepare_original_checksum.yml` which run integration tests. The other workflows don't run integration tests and will continue using the default `ubuntu-latest`.
+
+## POM File
 
 For maven projects, project-keeper generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
 

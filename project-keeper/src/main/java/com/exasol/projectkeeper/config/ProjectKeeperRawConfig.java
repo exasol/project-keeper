@@ -14,6 +14,7 @@ public class ProjectKeeperRawConfig {
     private List<String> linkReplacements;
     private List<Object> excludes;
     private Object version;
+    private String ciBuildRunnerOS;
 
     /**
      * Get the sources.
@@ -99,6 +100,24 @@ public class ProjectKeeperRawConfig {
      */
     public void setVersion(final Object version) {
         this.version = version;
+    }
+
+    /**
+     * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
+     * 
+     * @return CI build runner operating system
+     */
+    public String getCiBuildRunnerOS() {
+        return ciBuildRunnerOS;
+    }
+
+    /**
+     * Set CI build runner operating system, e.g. {@code ubuntu-20.04}. Default: {@code ubuntu-latest}.
+     * 
+     * @param ciBuildRunnerOS CI build runner operating system
+     */
+    public void setCiBuildRunnerOS(final String ciBuildRunnerOS) {
+        this.ciBuildRunnerOS = ciBuildRunnerOS;
     }
 
     /**
