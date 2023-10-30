@@ -4,6 +4,8 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.Map.Entry;
 
+import com.exasol.errorreporting.ExaError;
+
 /**
  * {@link FileTemplate} that reads the content from a resource.
  */
@@ -60,9 +62,20 @@ public final class FileTemplateFromResource implements FileTemplate {
     public String getContent() {
         String value = new ResourceReader().readFromResource(this.templateResource);
         for (final Entry<String, String> rep : this.replacements.entrySet()) {
-            value = value.replace("$" + rep.getKey(), rep.getValue());
+            value = replacePlaceholder(value, rep);
         }
         return value;
+    }
+
+    private String replacePlaceholder(final String value, final Entry<String, String> rep) {
+        final String newValue = value.replace("$" + rep.getKey(), rep.getValue());
+        if (value.equals(newValue)) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-169")
+                    .message("Placeholder {{placeholder}} not found in template {{template}}.", rep.getKey(),
+                            this.templateResource)
+                    .ticketMitigation().toString());
+        }
+        return newValue;
     }
 
     @Override
