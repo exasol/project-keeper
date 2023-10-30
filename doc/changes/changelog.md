@@ -1,6 +1,5 @@
 # Changes
 
-* [2.9.16](changes_2.9.16.md)
 * [2.9.15](changes_2.9.15.md)
 * [2.9.14](changes_2.9.14.md)
 * [2.9.13](changes_2.9.13.md)
