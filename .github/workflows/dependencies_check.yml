@@ -21,7 +21,8 @@ jobs:
           java-version: 11
           cache: "maven"
       - name: Install Projects
-        run: mvn --batch-mode install -DskipTests # This fixes https://github.com/exasol/project-keeper/issues/330
+        # This fixes https://github.com/exasol/project-keeper/issues/330
+        run: mvn --batch-mode install -DskipTests -Dossindex.fail=false
 
       - name: Generate ossindex report
         run: |
