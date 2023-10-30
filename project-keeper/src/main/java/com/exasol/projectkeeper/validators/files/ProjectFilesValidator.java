@@ -5,8 +5,7 @@ import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.wi
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
@@ -18,25 +17,29 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 /**
  * Validator for the projects file structure.
  */
-//[impl->dsn~required-files-validator~1]
+// [impl->dsn~required-files-validator~1]
 public class ProjectFilesValidator implements Validator {
-    private Path projectDirectory;
-    private List<AnalyzedSource> sources;
-    private Logger logger;
-    private String projectKeeperVersion;
-    private boolean hasNpmModule;
+    private final Path projectDirectory;
+    private final List<AnalyzedSource> sources;
+    private final Logger logger;
+    private final String projectKeeperVersion;
+    private final boolean hasNpmModule;
+    private final String ciBuildRunnerOS;
 
-    /**
-     * Crwate a new instance of {@link ProjectFilesValidator}.
-     */
-    ProjectFilesValidator() {
+    private ProjectFilesValidator(final Builder builder) {
+        this.projectDirectory = Objects.requireNonNull(builder.projectDirectory, "projectDirectory");
+        this.sources = Objects.requireNonNull(builder.sources, "sources");
+        this.logger = Objects.requireNonNull(builder.logger, "logger");
+        this.projectKeeperVersion = Objects.requireNonNull(builder.projectKeeperVersion, "projectKeeperVersion");
+        this.hasNpmModule = builder.hasNpmModule;
+        this.ciBuildRunnerOS = Objects.requireNonNull(builder.ciBuildRunnerOS, "ciBuildRunnerOS");
     }
 
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
         final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion,
-                this.hasNpmModule);
+                this.hasNpmModule, this.ciBuildRunnerOS);
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;
@@ -103,50 +106,69 @@ public class ProjectFilesValidator implements Validator {
      * Builder for new instances of {@link ProjectFilesValidator}
      */
     public static final class Builder {
-        private final ProjectFilesValidator validator = new ProjectFilesValidator();
+        private Path projectDirectory;
+        private List<AnalyzedSource> sources;
+        private Logger logger;
+        private String projectKeeperVersion;
+        private boolean hasNpmModule;
+        private String ciBuildRunnerOS;
+
+        private Builder() {
+            // empty by intention
+        }
 
         /**
          * @param projectDirectory project's root directory
-         * @return this for fluent programming
+         * @return {@code this} for fluent programming
          */
         public Builder projectDirectory(final Path projectDirectory) {
-            this.validator.projectDirectory = projectDirectory;
+            this.projectDirectory = projectDirectory;
             return this;
         }
 
         /**
          * @param value list of analyzed sources
-         * @return this for fluent programming
+         * @return {@code this} for fluent programming
          */
         public Builder analyzedSources(final List<AnalyzedSource> value) {
-            this.validator.sources = value;
+            this.sources = value;
             return this;
         }
 
         /**
          * @param value logger to use for log messages
-         * @return this for fluent programming
+         * @return {@code this} for fluent programming
          */
         public Builder logger(final Logger value) {
-            this.validator.logger = value;
+            this.logger = value;
             return this;
         }
 
         /**
          * @param value the version of the currently running project keeper
-         * @return this for fluent programming
+         * @return {@code this} for fluent programming
          */
         public Builder projectKeeperVersion(final String value) {
-            this.validator.projectKeeperVersion = value;
+            this.projectKeeperVersion = value;
             return this;
         }
 
         /**
          * @param value {@code true} if the current project contains an NPM module
-         * @return this for fluent programming
+         * @return {@code this} for fluent programming
          */
         public Builder hasNpmModule(final boolean value) {
-            this.validator.hasNpmModule = value;
+            this.hasNpmModule = value;
+            return this;
+        }
+
+        /**
+         * 
+         * @param ciBuildRunnerOS operating system to use for CI builds
+         * @return {@code this} for fluent programming
+         */
+        public Builder ciBuildRunnerOS(final String ciBuildRunnerOS) {
+            this.ciBuildRunnerOS = ciBuildRunnerOS;
             return this;
         }
 
@@ -154,7 +176,7 @@ public class ProjectFilesValidator implements Validator {
          * @return new instance of {@link ProjectFilesValidator}
          */
         public ProjectFilesValidator build() {
-            return this.validator;
+            return new ProjectFilesValidator(this);
         }
     }
 }

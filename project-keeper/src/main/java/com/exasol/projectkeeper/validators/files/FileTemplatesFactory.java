@@ -35,11 +35,14 @@ class FileTemplatesFactory {
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
+    private final String ciBuildRunnerOS;
 
-    public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule) {
-        this.logger = logger;
-        this.ownVersion = ownVersion;
+    public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule,
+            final String ciBuildRunnerOS) {
+        this.logger = Objects.requireNonNull(logger, "logger");
+        this.ownVersion = Objects.requireNonNull(ownVersion, "ownVersion");
         this.hasNpmModule = hasNpmModule;
+        this.ciBuildRunnerOS = Objects.requireNonNull(ciBuildRunnerOS, "ciBuildRunnerOS");
     }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
@@ -73,7 +76,7 @@ class FileTemplatesFactory {
                         modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : ""));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
-                REQUIRE_EXACT));
+                REQUIRE_EXACT).replacing("ciBuildRunnerOS", getCiBuildRunnerOS()));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
                 REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_upload_github_release_assets.yml",
@@ -81,12 +84,17 @@ class FileTemplatesFactory {
         return templates;
     }
 
+    private String getCiBuildRunnerOS() {
+        return ciBuildRunnerOS;
+    }
+
     private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
         if (modules.contains(NATIVE_IMAGE)) {
             return new FileTemplateFromResource("templates/.github/workflows/ci-build-native-build.yml",
                     ".github/workflows/ci-build.yml", REQUIRE_EXACT);
         } else {
-            return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT);
+            return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT)
+                    .replacing("ciBuildRunnerOS", getCiBuildRunnerOS());
         }
     }
 
@@ -133,7 +141,7 @@ class FileTemplatesFactory {
         final String pathInProject = ".github/workflows/project-keeper-verify.yml";
         templates.add(new FileTemplateFromResource("non_maven_templates/" + pathInProject, //
                 pathInProject, REQUIRE_EXACT) //
-                        .replacing("npmSetup", this.hasNpmModule ? NPM_SETUP : ""));
+                .replacing("npmSetup", this.hasNpmModule ? NPM_SETUP : ""));
         templates.add(new ProjectKeeperShellScript(this.ownVersion));
         return templates;
     }
