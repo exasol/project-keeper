@@ -22,7 +22,10 @@ jobs:
           cache: "maven"
       - name: Install Projects
         # This fixes https://github.com/exasol/project-keeper/issues/330
-        run: mvn --batch-mode install -DskipTests -Dossindex.fail=false
+        run: |
+          mvn --batch-mode install -DskipTests \
+              -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+              -Djacoco.skip=true -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
       - name: Generate ossindex report
         run: |
