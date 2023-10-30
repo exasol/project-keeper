@@ -81,3 +81,18 @@ If you want to check if newer versions of some of the plugins are available and 
 ```sh
 mvn openfasttrace:trace --projects .
 ```
+
+## Adding a Required File
+
+Copy the file to `src/main/resources/templates/<module>/<require_exist | require_exact>`
+For `module` use the name of the module you want to add the required files to. If you want this plugin to only check that the file exists, put it into `require_exist`. If you also want that it check that the file has the same content like the template, add it to `require_exact`. Inside of these folders you can also create sub folders. The sub folder structure of the templates defines the folder structure of the repository.
+
+**Example:**
+
+You created the file `src/main/resources/templates/default/require_exist/test/my_file.md`
+
+This makes the project-keeper check that in all repositories exists the file `test/my_file.md`.
+
+## Adding a Pom File Validation
+
+Validations for the POM file are defined using code. For maven plugins there is the abstract basis class `AbstractPluginPomTemplate` that facilitates the template implementation.
