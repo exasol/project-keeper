@@ -1,8 +1,14 @@
-# Project Keeper 2.9.15, released 2023-??-??
+# Project Keeper 2.9.15, released 2023-10-30
 
-Code name:
+Code name: Create issues for vulnerabilities
 
 ## Summary
+
+This release updates the `dependencies_check.yml` GitHub workflow to use new [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) action. This action will automatically create GitHub issues for vulnerable dependencies found by the [ossindex-maven plugin](https://sonatype.github.io/ossindex-maven/maven-plugin/).
+
+## Features
+
+* #489: Added security_issues workflow
 
 ## Documentation
 

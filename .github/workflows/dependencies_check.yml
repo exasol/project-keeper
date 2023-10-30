@@ -1,12 +1,15 @@
-name: Dependencies Check
+name: Report Security Issues for Repository
 
 on:
+  workflow_dispatch:
   schedule:
     - cron: "0 2 * * *"
 
 jobs:
-  build:
+  report_security_issues:
     runs-on: ubuntu-latest
+    permissions:
+      issues: write
 
     steps:
       - uses: actions/checkout@v4
@@ -17,6 +20,22 @@ jobs:
           java-version: 11
           cache: "maven"
       - name: Install Projects
-        run: mvn --batch-mode install -DskipTests # This fixes https://github.com/exasol/project-keeper/issues/330
-      - name: Checking dependencies for vulnerabilities
-        run: mvn --batch-mode org.sonatype.ossindex.maven:ossindex-maven-plugin:audit -f pom.xml
+        # This fixes https://github.com/exasol/project-keeper/issues/330
+        run: |
+          mvn --batch-mode install -DskipTests \
+              -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+              -Djacoco.skip=true -Derror-code-crawler.skip=true -Dreproducible.skip=true
+
+      - name: Generate ossindex report
+        run: |
+          mvn org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
+              org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
+              -Dossindex.reportFile=$(pwd)/ossindex-report.json \
+              -Dossindex.fail=false
+
+      - name: Report Security Issues
+        uses: exasol/python-toolbox/.github/actions/security-issues@main
+        with:
+          format: "maven"
+          command: "cat ossindex-report.json"
+          github-token: ${{ secrets.GITHUB_TOKEN }}
