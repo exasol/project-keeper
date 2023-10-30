@@ -62,7 +62,7 @@ This plugin provides different template modules for different kinds of projects.
 | `maven_central`     | This module checks the required configuration for releasing on maven central.                                                                                                                                               |
 | `udf_coverage`      | This module configures the pom for extracting the code coverage from UDF executions.                                                                                                                                        |
 | `lombok`            | This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).                                                                                                                             |
-| `native_image`      | This module configures the project for building Java native-images (executables) for windows, linux and mac. For details see our [native-image guide](doc/developers_guide/preparing_a_project_for_native_image_builds.md). |
+| `native_image`      | This module configures the project for building Java native-images (executables) for windows, linux and mac. For details see our [native-image guide](doc/developer_guide/preparing_a_project_for_native_image_builds.md). |
 
 ### Excluding Findings
 
@@ -255,4 +255,4 @@ Typically, this happens if you did not fetch all tags. Simply run `git pull`.
 * [Changelog](doc/changes/changelog.md)
 * [Features & Requirements](doc/system_requirements.md)
 * [Design](doc/design.md)
-* [Developers Guide](doc/developers_guide/developers_guide.md)
+* [Developer Guide](doc/developer_guide/developer_guide.md)

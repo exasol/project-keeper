@@ -1,4 +1,4 @@
-# Project-Keepers Developers Guide
+# Project-Keepers Developer Guide
 
 ## Install Dependencies
 
