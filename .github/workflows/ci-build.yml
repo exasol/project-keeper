@@ -35,9 +35,8 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go }}
             ${{ runner.os }}-go-
       - name: Install Go tools
         run: go install github.com/google/go-licenses@v1.6.0
