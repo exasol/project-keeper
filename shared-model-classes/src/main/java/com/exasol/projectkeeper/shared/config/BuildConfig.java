@@ -82,12 +82,12 @@ public final class BuildConfig {
 
     @Override
     public String toString() {
-        return "BuildConfig [runnerOs=" + runnerOs + "]";
+        return "BuildConfig [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(runnerOs);
+        return Objects.hash(runnerOs, freeDiskSpace);
     }
 
     @Override
@@ -102,6 +102,6 @@ public final class BuildConfig {
             return false;
         }
         final BuildConfig other = (BuildConfig) obj;
-        return Objects.equals(runnerOs, other.runnerOs);
+        return Objects.equals(runnerOs, other.runnerOs) && freeDiskSpace == other.freeDiskSpace;
     }
 }
