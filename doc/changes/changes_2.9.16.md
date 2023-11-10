@@ -1,4 +1,4 @@
-# Project Keeper 2.9.16, released 2023-??-??
+# Project Keeper 2.9.16, released 2023-11-10
 
 Code name: Support Matrix builds & enable compiler warnings
 
@@ -9,6 +9,7 @@ This release enables linter warnings for the Java compiler by adding argument `-
 ## Features
 
 * #497: Enabled linter warnings
+* #488: Added support for Matrix builds
 
 ## Dependency Updates
 
