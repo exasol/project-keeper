@@ -328,7 +328,7 @@ public class ProjectKeeperRawConfig {
         /**
          * Set CI build runner operating system, e.g. {@code ubuntu-20.04}. Default: {@code ubuntu-latest}.
          * 
-         * @param ciBuildRunnerOS CI build runner operating system
+         * @param runnerOs CI build runner operating system
          */
         public void setRunnerOs(final String runnerOs) {
             this.runnerOs = runnerOs;
