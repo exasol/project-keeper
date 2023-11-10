@@ -9,14 +9,21 @@ public final class BuildConfig {
     private static final String DEFAULT_RUNNER_OS = "ubuntu-latest";
 
     private final String runnerOs;
+    private final boolean freeDiskSpace;
 
     private BuildConfig(final Builder builder) {
         this.runnerOs = Objects.requireNonNull(builder.runnerOs, "runnerOs");
+        this.freeDiskSpace = builder.freeDiskSpace;
     }
 
     /** @return CI build runner operating system */
     public String getRunnerOs() {
         return this.runnerOs;
+    }
+
+    /** @return {@code true} if disk space should be freed before running the build */
+    public boolean shouldFreeDiskSpace() {
+        return freeDiskSpace;
     }
 
     /**
@@ -32,6 +39,7 @@ public final class BuildConfig {
      * Builder to build {@link BuildConfig}.
      */
     public static final class Builder {
+        private boolean freeDiskSpace = false;
         private String runnerOs = DEFAULT_RUNNER_OS;
 
         private Builder() {
@@ -47,6 +55,18 @@ public final class BuildConfig {
             if (runnerOs != null) {
                 this.runnerOs = runnerOs;
             }
+            return this;
+        }
+
+        /**
+         * Some builds need more disk space, e.g. for Docker images. If this is {@code true}, the CI build will free up
+         * disk space before running the actual build. This will slow down the build about one minute.
+         *
+         * @param freeDiskSpace {@code true} if the CI build should free up disk space
+         * @return {@code this} for fluent programming
+         */
+        public Builder freeDiskSpace(final boolean freeDiskSpace) {
+            this.freeDiskSpace = freeDiskSpace;
             return this;
         }
 

@@ -315,6 +315,7 @@ public class ProjectKeeperRawConfig {
      */
     public static class Build {
         private String runnerOs;
+        private boolean freeDiskSpace = false;
 
         /**
          * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
@@ -332,6 +333,20 @@ public class ProjectKeeperRawConfig {
          */
         public void setRunnerOs(final String runnerOs) {
             this.runnerOs = runnerOs;
+        }
+
+        /**
+         * @return {@code true} if the CI build should free disk space before running the build
+         */
+        public boolean shouldFreeDiskSpace() {
+            return freeDiskSpace;
+        }
+
+        /**
+         * @param freeDiskSpace {@code true} if the CI build should free disk space before running the build
+         */
+        public void setFreeDiskSpace(final boolean freeDiskSpace) {
+            this.freeDiskSpace = freeDiskSpace;
         }
     }
 }

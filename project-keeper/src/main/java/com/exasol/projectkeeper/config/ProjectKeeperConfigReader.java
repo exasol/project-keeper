@@ -111,7 +111,9 @@ public class ProjectKeeperConfigReader {
 
     private BuildConfig convertBuildConfig(final Build build) {
         return BuildConfig.builder() //
-                .runnerOs(build != null ? build.getRunnerOs() : null).build();
+                .runnerOs(build != null ? build.getRunnerOs() : null) //
+                .freeDiskSpace(build != null && build.shouldFreeDiskSpace()) //
+                .build();
     }
 
     private List<String> convertExcludes(final List<Object> rawExcludes) {

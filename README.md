@@ -116,6 +116,17 @@ build:
 
 PK will use this setting for GitHub workflows `ci-build.yml` and `release_droid_prepare_original_checksum.yml` which run integration tests. The other workflows don't run integration tests and will stick to the default `ubuntu-latest`.
 
+#### Free Disk Space
+
+Some projects need more disk space during build, e.g. for Docker images. You can free up disk space before the build like this:
+
+```yml
+build:
+  freeDiskSpace: true
+```
+
+This will slow down the build by about one minute.
+
 ## POM File
 
 For maven projects, project-keeper generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.

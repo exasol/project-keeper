@@ -6,6 +6,12 @@ Code name: Support Matrix builds & enable compiler warnings
 
 This release enables linter warnings for the Java compiler by adding argument `-Xlint:all`. This will log warnings but the build won't fail.
 
+The release also adds the following options for the build script:
+* Free up disk space before build
+* Select operating system for build
+
+See the [user guide](../../README.md#ci-build-configuration) for details.
+
 ## Features
 
 * #497: Enabled linter warnings
