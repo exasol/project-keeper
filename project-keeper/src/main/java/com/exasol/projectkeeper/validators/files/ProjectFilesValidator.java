@@ -10,6 +10,7 @@ import java.util.*;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.Validator;
+import com.exasol.projectkeeper.shared.config.BuildConfig;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator.ContentValidator;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
@@ -24,7 +25,7 @@ public class ProjectFilesValidator implements Validator {
     private final Logger logger;
     private final String projectKeeperVersion;
     private final boolean hasNpmModule;
-    private final String ciBuildRunnerOS;
+    private final BuildConfig buildConfig;
 
     private ProjectFilesValidator(final Builder builder) {
         this.projectDirectory = Objects.requireNonNull(builder.projectDirectory, "projectDirectory");
@@ -32,14 +33,14 @@ public class ProjectFilesValidator implements Validator {
         this.logger = Objects.requireNonNull(builder.logger, "logger");
         this.projectKeeperVersion = Objects.requireNonNull(builder.projectKeeperVersion, "projectKeeperVersion");
         this.hasNpmModule = builder.hasNpmModule;
-        this.ciBuildRunnerOS = Objects.requireNonNull(builder.ciBuildRunnerOS, "ciBuildRunnerOS");
+        this.buildConfig = Objects.requireNonNull(builder.buildConfig, "buildConfig");
     }
 
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> findings = new ArrayList<>();
         final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion,
-                this.hasNpmModule, this.ciBuildRunnerOS);
+                this.hasNpmModule, this.buildConfig);
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;
@@ -111,7 +112,7 @@ public class ProjectFilesValidator implements Validator {
         private Logger logger;
         private String projectKeeperVersion;
         private boolean hasNpmModule;
-        private String ciBuildRunnerOS;
+        private BuildConfig buildConfig;
 
         private Builder() {
             // empty by intention
@@ -163,12 +164,11 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
-         * 
-         * @param ciBuildRunnerOS operating system to use for CI builds
+         * @param buildConfig CI build configuration
          * @return {@code this} for fluent programming
          */
-        public Builder ciBuildRunnerOS(final String ciBuildRunnerOS) {
-            this.ciBuildRunnerOS = ciBuildRunnerOS;
+        public Builder ciBuildConfig(final BuildConfig buildConfig) {
+            this.buildConfig = buildConfig;
             return this;
         }
 

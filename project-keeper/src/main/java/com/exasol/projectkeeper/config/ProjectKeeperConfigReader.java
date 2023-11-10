@@ -12,6 +12,7 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.config.ProjectKeeperRawConfig.Build;
 import com.exasol.projectkeeper.shared.config.*;
 
 /**
@@ -79,14 +80,13 @@ public class ProjectKeeperConfigReader {
         final List<String> excludes = convertExcludes(rawConfig.getExcludes());
         final List<String> linkReplacements = Objects.requireNonNullElseGet(rawConfig.getLinkReplacements(),
                 Collections::emptyList);
-        final VersionConfig version = parseVersion(rawConfig.getVersion(), projectDir);
 
         return ProjectKeeperConfig.builder() //
                 .sources(sources) //
                 .linkReplacements(linkReplacements) //
                 .excludes(excludes) //
-                .versionConfig(version) //
-                .ciBuildRunnerOS(rawConfig.getCiBuildRunnerOS()) //
+                .versionConfig(parseVersion(rawConfig.getVersion(), projectDir)) //
+                .buildConfig(convertBuildConfig(rawConfig.getBuild())) //
                 .build();
     }
 
@@ -107,6 +107,11 @@ public class ProjectKeeperConfigReader {
                 .mitigation(
                         "You can either set a version as string or tell PK from which maven source to read the version from with 'fromSource: \"path to project file to read version from\"'.")
                 .toString());
+    }
+
+    private BuildConfig convertBuildConfig(final Build build) {
+        return BuildConfig.builder() //
+                .runnerOs(build != null ? build.getRunnerOs() : null).build();
     }
 
     private List<String> convertExcludes(final List<Object> rawExcludes) {

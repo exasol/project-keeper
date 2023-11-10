@@ -8,6 +8,7 @@ import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.shared.config.BuildConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.*;
 
@@ -36,14 +37,14 @@ class FileTemplatesFactory {
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
-    private final String ciBuildRunnerOS;
+    private final BuildConfig buildConfig;
 
     public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule,
-            final String ciBuildRunnerOS) {
+            final BuildConfig buildConfig) {
         this.logger = Objects.requireNonNull(logger, "logger");
         this.ownVersion = Objects.requireNonNull(ownVersion, "ownVersion");
         this.hasNpmModule = hasNpmModule;
-        this.ciBuildRunnerOS = Objects.requireNonNull(ciBuildRunnerOS, CI_BUILD_RUNNER_OS_PLACEHOLDER);
+        this.buildConfig = Objects.requireNonNull(buildConfig, "buildConfig");
     }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
@@ -86,7 +87,7 @@ class FileTemplatesFactory {
     }
 
     private String getCiBuildRunnerOS() {
-        return ciBuildRunnerOS;
+        return buildConfig.getRunnerOs();
     }
 
     private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {

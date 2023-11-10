@@ -53,13 +53,14 @@ class ProjectKeeperConfigReaderTest {
                         "      artifactId: \"my-parent\"\n" + //
                         "      version: \"1.2.3\"\n" + //
                         "      relativePath: \"./my-parent.xml\"\n" + //
-                        "ciBuildRunnerOS: custom-runner-os\n" + //
+                        "build:\n" + //
+                        "  runnerOs: custom-runner-os\n" + //
                         "linkReplacements:\n" + //
                         "  - \"http://wrong-url.com|my-dependency.de\"\n");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
         final Source source = config.getSources().get(0);
         assertAll(//
-                () -> assertThat(config.getCiBuildRunnerOS(), equalTo("custom-runner-os")),
+                () -> assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("custom-runner-os")),
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
                 () -> assertThat(source.isAdvertised(), equalTo(false)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
@@ -91,7 +92,7 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(DEFAULT)),
                 () -> assertThat(source.getParentPom(), nullValue()),
                 () -> assertThat(config.getExcludes(), equalTo(Collections.emptyList())),
-                () -> assertThat(config.getCiBuildRunnerOS(), equalTo("ubuntu-latest")),
+                () -> assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("ubuntu-latest")),
                 () -> assertThat(config.getLinkReplacements(), equalTo(Collections.emptyList()))//
         );
     }

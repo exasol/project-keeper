@@ -8,46 +8,45 @@ import java.util.*;
  * Use {@link ProjectKeeperConfig#builder()} for creating new instances.
  */
 public final class ProjectKeeperConfig {
-    private static final String DEFAULT_CI_BUILD_RUNNER_OS = "ubuntu-latest";
 
     private final List<Source> sources;
     private final List<String> linkReplacements;
     // [impl->dsn~excluding~1]
     private final List<String> excludes;
     private final VersionConfig versionConfig;
-    private final String ciBuildRunnerOS;
+    private final BuildConfig buildConfig;
 
     private ProjectKeeperConfig(final Builder builder) {
-        this.sources = builder.sources;
-        this.linkReplacements = builder.linkReplacements;
-        this.excludes = builder.excludes;
+        this.sources = Objects.requireNonNull(builder.sources, "sources");
+        this.linkReplacements = Objects.requireNonNull(builder.linkReplacements, "linkReplacements");
+        this.excludes = Objects.requireNonNull(builder.excludes, "excludes");
         this.versionConfig = builder.versionConfig;
-        this.ciBuildRunnerOS = builder.ciBuildRunnerOS;
+        this.buildConfig = Objects.requireNonNull(builder.buildConfig, "buildConfig");
     }
 
     /** @return List with source-projects to crawl */
     public List<Source> getSources() {
-        return sources;
+        return this.sources;
     }
 
     /** @return List of replacements for broken links */
     public List<String> getLinkReplacements() {
-        return linkReplacements;
+        return this.linkReplacements;
     }
 
     /** @return List of regular expressions that match validation messages to exclude */
     public List<String> getExcludes() {
-        return excludes;
+        return this.excludes;
     }
 
     /** @return project version configuration */
     public VersionConfig getVersionConfig() {
-        return versionConfig;
+        return this.versionConfig;
     }
 
-    /** @return CI build runner operating system */
-    public String getCiBuildRunnerOS() {
-        return ciBuildRunnerOS;
+    /** @return CI build configuration */
+    public BuildConfig getCiBuildConfig() {
+        return this.buildConfig;
     }
 
     /** @return a new builder for creating {@link ProjectKeeperConfig} instances */
@@ -63,7 +62,7 @@ public final class ProjectKeeperConfig {
         private List<String> linkReplacements = Collections.emptyList();
         private List<String> excludes = Collections.emptyList();
         private VersionConfig versionConfig;
-        private String ciBuildRunnerOS = DEFAULT_CI_BUILD_RUNNER_OS;
+        private BuildConfig buildConfig = BuildConfig.builder().build();
 
         private Builder() {
             // empty by intention
@@ -106,12 +105,12 @@ public final class ProjectKeeperConfig {
         }
 
         /**
-         * @param ciBuildRunnerOS operating system for CI builds (default: {@code ubuntu-latest})
+         * @param buildConfig project build configuration
          * @return {@code this}.
          */
-        public ProjectKeeperConfig.Builder ciBuildRunnerOS(final String ciBuildRunnerOS) {
-            if (ciBuildRunnerOS != null) {
-                this.ciBuildRunnerOS = ciBuildRunnerOS;
+        public ProjectKeeperConfig.Builder buildConfig(final BuildConfig buildConfig) {
+            if (buildConfig != null) {
+                this.buildConfig = buildConfig;
             }
             return this;
         }
@@ -124,13 +123,14 @@ public final class ProjectKeeperConfig {
 
     @Override
     public String toString() {
-        return "ProjectKeeperConfig [sources=" + sources + ", linkReplacements=" + linkReplacements + ", excludes="
-                + excludes + ", versionConfig=" + versionConfig + "]";
+        return "ProjectKeeperConfig [sources=" + this.sources + ", linkReplacements=" + this.linkReplacements
+                + ", excludes=" + this.excludes + ", versionConfig=" + this.versionConfig + ", buildConfig="
+                + this.buildConfig + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(sources, linkReplacements, excludes, versionConfig, ciBuildRunnerOS);
+        return Objects.hash(this.sources, this.linkReplacements, this.excludes, this.versionConfig, this.buildConfig);
     }
 
     @Override
@@ -145,8 +145,10 @@ public final class ProjectKeeperConfig {
             return false;
         }
         final ProjectKeeperConfig other = (ProjectKeeperConfig) obj;
-        return Objects.equals(sources, other.sources) && Objects.equals(linkReplacements, other.linkReplacements)
-                && Objects.equals(excludes, other.excludes) && Objects.equals(versionConfig, other.versionConfig)
-                && Objects.equals(ciBuildRunnerOS, other.ciBuildRunnerOS);
+        return Objects.equals(this.sources, other.sources)
+                && Objects.equals(this.linkReplacements, other.linkReplacements)
+                && Objects.equals(this.excludes, other.excludes)
+                && Objects.equals(this.versionConfig, other.versionConfig)
+                && Objects.equals(this.buildConfig, other.buildConfig);
     }
 }

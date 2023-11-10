@@ -10,18 +10,18 @@ import java.util.Map;
  * </p>
  */
 public class ProjectKeeperRawConfig {
-    private List<ProjectKeeperRawConfig.Source> sources;
+    private List<Source> sources;
     private List<String> linkReplacements;
     private List<Object> excludes;
     private Object version;
-    private String ciBuildRunnerOS;
+    private Build build;
 
     /**
      * Get the sources.
      * 
      * @return sources
      */
-    public List<ProjectKeeperRawConfig.Source> getSources() {
+    public List<Source> getSources() {
         return sources;
     }
 
@@ -103,21 +103,21 @@ public class ProjectKeeperRawConfig {
     }
 
     /**
-     * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
+     * Get the CI build configuration.
      * 
-     * @return CI build runner operating system
+     * @return build configuration
      */
-    public String getCiBuildRunnerOS() {
-        return ciBuildRunnerOS;
+    public Build getBuild() {
+        return build;
     }
 
     /**
-     * Set CI build runner operating system, e.g. {@code ubuntu-20.04}. Default: {@code ubuntu-latest}.
+     * Set the CI build configuration.
      * 
-     * @param ciBuildRunnerOS CI build runner operating system
+     * @param build build configuration
      */
-    public void setCiBuildRunnerOS(final String ciBuildRunnerOS) {
-        this.ciBuildRunnerOS = ciBuildRunnerOS;
+    public void setBuild(final Build build) {
+        this.build = build;
     }
 
     /**
@@ -305,6 +305,33 @@ public class ProjectKeeperRawConfig {
          */
         public void setRelativePath(final String relativePath) {
             this.relativePath = relativePath;
+        }
+    }
+
+    /**
+     * Intermediate class for reading the CI build configuration sources.
+     * <p>
+     * SnakeYML requires this class to be public.
+     */
+    public static class Build {
+        private String runnerOs;
+
+        /**
+         * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
+         * 
+         * @return CI build runner operating system
+         */
+        public String getRunnerOs() {
+            return runnerOs;
+        }
+
+        /**
+         * Set CI build runner operating system, e.g. {@code ubuntu-20.04}. Default: {@code ubuntu-latest}.
+         * 
+         * @param ciBuildRunnerOS CI build runner operating system
+         */
+        public void setRunnerOs(final String runnerOs) {
+            this.runnerOs = runnerOs;
         }
     }
 }
