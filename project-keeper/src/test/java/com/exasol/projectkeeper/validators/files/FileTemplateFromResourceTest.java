@@ -28,6 +28,16 @@ class FileTemplateFromResourceTest {
     }
 
     @Test
+    void rejectsReplacingTheSameKey() {
+        final FileTemplateFromResource testee = testee();
+        testee.replacing("key", "value1");
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> testee.replacing("key", "value2"));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-170: Cannot add replacement with value 'value2' because 'key' is already registered as replacement with value 'value1'. Remove or rename one of the replacements."));
+    }
+
+    @Test
     void getContentReplacesPlaceholders() {
         final String content = testee().replacing("ciBuildRunnerOS", "custom-runner").getContent();
         assertThat(content, containsString("runs-on: custom-runner"));

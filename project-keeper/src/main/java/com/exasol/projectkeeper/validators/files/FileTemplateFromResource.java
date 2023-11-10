@@ -49,6 +49,12 @@ public final class FileTemplateFromResource implements FileTemplate {
      * @return this for fluent programming
      */
     public FileTemplateFromResource replacing(final String name, final String replacement) {
+        if (this.replacements.containsKey(name)) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-170").message(
+                    "Cannot add replacement with value {{new replacement}} because {{name}} is already registered as replacement with value {{existing value}}.",
+                    replacement, name, replacements.get(name)).mitigation("Remove or rename one of the replacements.")
+                    .toString());
+        }
         this.replacements.put(name, replacement);
         return this;
     }
