@@ -304,7 +304,7 @@
 [15]: https://www.jqno.nl/equalsverifier
 [16]: https://www.apache.org/licenses/LICENSE-2.0.txt
 [17]: https://github.com/mockito/mockito
-[18]: https://github.com/mockito/mockito/blob/main/LICENSE
+[18]: https://opensource.org/licenses/MIT
 [19]: http://www.slf4j.org
 [20]: http://www.opensource.org/licenses/mit-license.php
 [21]: http://sonarsource.github.io/sonar-scanner-maven/
