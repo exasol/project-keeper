@@ -52,6 +52,8 @@ jobs:
               -DtrimStackTrace=false \
               -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
         env:
+          # Set additional environment variable as in scala projects the scalatest plugin does not forward
+          # the system property -Dcom.exasol.dockerdb.image to the test's implementation.
           EXASOL_DB_VERSION: ${{ matrix.exasol_db_version }}
       - name: Publish Test Report
         uses: scacap/action-surefire-report@v1

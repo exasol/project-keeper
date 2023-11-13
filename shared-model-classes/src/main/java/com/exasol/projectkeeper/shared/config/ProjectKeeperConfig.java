@@ -44,7 +44,7 @@ public final class ProjectKeeperConfig {
         return this.versionConfig;
     }
 
-    /** @return CI build configuration */
+    /** @return CI build options */
     public BuildOptions getCiBuildConfig() {
         return this.buildOptions;
     }
@@ -105,7 +105,7 @@ public final class ProjectKeeperConfig {
         }
 
         /**
-         * @param buildOptions project build configuration
+         * @param buildOptions options for project build workflows
          * @return {@code this}.
          */
         public ProjectKeeperConfig.Builder buildOptions(final BuildOptions buildOptions) {

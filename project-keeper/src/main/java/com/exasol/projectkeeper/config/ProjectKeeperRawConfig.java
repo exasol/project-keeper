@@ -107,14 +107,14 @@ public class ProjectKeeperRawConfig {
     /**
      * Get the CI build configuration.
      * 
-     * @return build configuration
+     * @return build options
      */
     public Build getBuild() {
         return build;
     }
 
     /**
-     * Set the CI build configuration.
+     * Set the CI build options.
      * 
      * @param build build configuration
      */
