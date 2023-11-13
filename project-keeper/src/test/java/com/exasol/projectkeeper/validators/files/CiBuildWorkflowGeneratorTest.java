@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.validators.files;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -74,13 +75,18 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     private String releaseDroidOriginalChecksumContent(final BuildConfig.Builder configBuilder) {
-        final String content = testee(configBuilder).createReleaseDroidPrepareOriginalChecksumWorkflow().getContent();
+        final FileTemplate template = testee(configBuilder).createReleaseDroidPrepareOriginalChecksumWorkflow();
+        assertThat(template.getPathInProject(),
+                equalTo(Path.of(".github/workflows/release_droid_prepare_original_checksum.yml")));
+        final String content = template.getContent();
         validateYamlSyntax(content);
         return content;
     }
 
     private String ciBuildContent(final BuildConfig.Builder configBuilder) {
-        final String content = testee(configBuilder).createCiBuildWorkflow().getContent();
+        final FileTemplateFromResource template = testee(configBuilder).createCiBuildWorkflow();
+        assertThat(template.getPathInProject(), equalTo(Path.of(".github/workflows/ci-build.yml")));
+        final String content = template.getContent();
         validateYamlSyntax(content);
         return content;
     }

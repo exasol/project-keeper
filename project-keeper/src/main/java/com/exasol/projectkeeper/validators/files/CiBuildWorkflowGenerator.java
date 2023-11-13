@@ -21,7 +21,8 @@ class CiBuildWorkflowGenerator {
     }
 
     FileTemplateFromResource createCiBuildWorkflow() {
-        final FileTemplateFromResource template = new FileTemplateFromResource(getCiBuildTemplate(), REQUIRE_EXACT)
+        final FileTemplateFromResource template = new FileTemplateFromResource(
+                "templates/.github/workflows/" + getCiBuildTemplate(), ".github/workflows/ci-build.yml", REQUIRE_EXACT)
                 .replacing(CI_BUILD_RUNNER_OS_PLACEHOLDER, buildConfig.getRunnerOs())
                 .replacing("freeDiskSpace", String.valueOf(buildConfig.shouldFreeDiskSpace()));
 
@@ -39,9 +40,9 @@ class CiBuildWorkflowGenerator {
 
     private String getCiBuildTemplate() {
         if (isMatrixBuild()) {
-            return ".github/workflows/ci-build-db-version-matrix.yml";
+            return "ci-build-db-version-matrix.yml";
         } else {
-            return ".github/workflows/ci-build.yml";
+            return "ci-build.yml";
         }
     }
 
