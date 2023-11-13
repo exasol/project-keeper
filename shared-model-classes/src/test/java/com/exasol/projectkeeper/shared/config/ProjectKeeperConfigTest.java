@@ -14,6 +14,7 @@ import java.util.Set;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.shared.config.VersionConfig.Visitor;
+import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -28,11 +29,12 @@ class ProjectKeeperConfigTest {
                                 "parentRelativePath"))
                         .build()))
                 .excludes(List.of("exclude1")).linkReplacements(List.of("linkReplacement1"))
-                .versionConfig(new VersionFromSource(Path.of("version-pom.xml"))).ciBuildRunnerOS("runner-os").build();
+                .versionConfig(new VersionFromSource(Path.of("version-pom.xml")))
+                .buildOptions(BuildOptions.builder().runnerOs("runner-os").build()).build();
         assertAll(() -> assertThat(config.getExcludes(), contains("exclude1")),
                 () -> assertThat(config.getLinkReplacements(), contains("linkReplacement1")),
                 () -> assertThat(config.getVersionConfig(), instanceOf(VersionFromSource.class)),
-                () -> assertThat(config.getCiBuildRunnerOS(), equalTo("runner-os")),
+                () -> assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("runner-os")),
                 () -> assertThat(config.getSources(), hasSize(1)),
                 () -> assertThat(config.getSources().get(0).getType(), equalTo(SourceType.MAVEN)),
                 () -> assertThat(config.getSources().get(0).getPath(), equalTo(Path.of("pom.xml"))),
@@ -48,13 +50,13 @@ class ProjectKeeperConfigTest {
     @Test
     void createConfigWithDefaultRunnerOS() {
         final ProjectKeeperConfig config = ProjectKeeperConfig.builder().build();
-        assertThat(config.getCiBuildRunnerOS(), equalTo("ubuntu-latest"));
+        assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("ubuntu-latest"));
     }
 
     @Test
     void createConfigWithNullRunnerOS() {
-        final ProjectKeeperConfig config = ProjectKeeperConfig.builder().ciBuildRunnerOS(null).build();
-        assertThat(config.getCiBuildRunnerOS(), equalTo("ubuntu-latest"));
+        final ProjectKeeperConfig config = ProjectKeeperConfig.builder().buildOptions(null).build();
+        assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("ubuntu-latest"));
     }
 
     @Test
@@ -76,5 +78,10 @@ class ProjectKeeperConfigTest {
     @Test
     void testEqualsContract() {
         EqualsVerifier.forClass(ProjectKeeperConfig.class).verify();
+    }
+
+    @Test
+    void testToString() {
+        ToStringVerifier.forClass(ProjectKeeperConfig.class).verify();
     }
 }

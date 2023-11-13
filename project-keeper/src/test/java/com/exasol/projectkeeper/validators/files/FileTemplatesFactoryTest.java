@@ -20,6 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -47,7 +48,8 @@ class FileTemplatesFactoryTest {
     }
 
     private FileTemplatesFactory testee(final boolean hasNpmModule) {
-        return new FileTemplatesFactory(loggerMock, OWN_VERSION, hasNpmModule, "ci-build-runner-os");
+        return new FileTemplatesFactory(this.loggerMock, OWN_VERSION, hasNpmModule,
+                BuildOptions.builder().runnerOs("ci-build-runner-os").build());
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {
@@ -65,7 +67,7 @@ class FileTemplatesFactoryTest {
         final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
         assertFalse(() -> templates.stream()
                 .anyMatch(template -> template.getPathInProject().equals(Path.of(".github/workflows/ci-build.yml"))));
-        verify(loggerMock).warn(
+        verify(this.loggerMock).warn(
                 "W-PK-CORE-91: For this project structure project keeper does not know how to configure ci-build. Please create the required actions on your own.");
     }
 

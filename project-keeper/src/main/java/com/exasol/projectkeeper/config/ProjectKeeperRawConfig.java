@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.config;
 
+import static java.util.Collections.emptyList;
+
 import java.util.List;
 import java.util.Map;
 
@@ -10,18 +12,18 @@ import java.util.Map;
  * </p>
  */
 public class ProjectKeeperRawConfig {
-    private List<ProjectKeeperRawConfig.Source> sources;
+    private List<Source> sources;
     private List<String> linkReplacements;
     private List<Object> excludes;
     private Object version;
-    private String ciBuildRunnerOS;
+    private Build build;
 
     /**
      * Get the sources.
      * 
      * @return sources
      */
-    public List<ProjectKeeperRawConfig.Source> getSources() {
+    public List<Source> getSources() {
         return sources;
     }
 
@@ -103,21 +105,21 @@ public class ProjectKeeperRawConfig {
     }
 
     /**
-     * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
+     * Get the CI build configuration.
      * 
-     * @return CI build runner operating system
+     * @return build options
      */
-    public String getCiBuildRunnerOS() {
-        return ciBuildRunnerOS;
+    public Build getBuild() {
+        return build;
     }
 
     /**
-     * Set CI build runner operating system, e.g. {@code ubuntu-20.04}. Default: {@code ubuntu-latest}.
+     * Set the CI build options.
      * 
-     * @param ciBuildRunnerOS CI build runner operating system
+     * @param build build configuration
      */
-    public void setCiBuildRunnerOS(final String ciBuildRunnerOS) {
-        this.ciBuildRunnerOS = ciBuildRunnerOS;
+    public void setBuild(final Build build) {
+        this.build = build;
     }
 
     /**
@@ -305,6 +307,56 @@ public class ProjectKeeperRawConfig {
          */
         public void setRelativePath(final String relativePath) {
             this.relativePath = relativePath;
+        }
+    }
+
+    /**
+     * Intermediate class for de-serializing build options from PK's YAML configuration file
+     * {@link ProjectKeeperConfigReader#CONFIG_FILE_NAME}.
+     * <p>
+     * SnakeYML requires this class to be public.
+     */
+    public static class Build {
+        private String runnerOs;
+        private boolean freeDiskSpace = false;
+        private List<String> exasolDbVersions = emptyList();
+
+        /**
+         * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
+         * 
+         * @return CI build runner operating system
+         */
+        public String getRunnerOs() {
+            return runnerOs;
+        }
+
+        /**
+         * Set CI build runner operating system, e.g. {@code ubuntu-20.04}. Default: {@code ubuntu-latest}.
+         * 
+         * @param runnerOs CI build runner operating system
+         */
+        public void setRunnerOs(final String runnerOs) {
+            this.runnerOs = runnerOs;
+        }
+
+        /** @return {@code true} if the CI build should free disk space before running the build */
+        public boolean shouldFreeDiskSpace() {
+            return freeDiskSpace;
+        }
+
+        /** @param freeDiskSpace {@code true} if the CI build should free disk space before running the build */
+        public void setFreeDiskSpace(final boolean freeDiskSpace) {
+            this.freeDiskSpace = freeDiskSpace;
+        }
+
+        /** @return Exasol DB versions for which to run the CI build */
+        public List<String> getExasolDbVersions() {
+            return exasolDbVersions;
+        }
+
+        /** @param exasolDbVersions Exasol DB versions for which to run the CI build */
+        public void setExasolDbVersions(final List<String> exasolDbVersions) {
+            this.exasolDbVersions = exasolDbVersions;
         }
     }
 }

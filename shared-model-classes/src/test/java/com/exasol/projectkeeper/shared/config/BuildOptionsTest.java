@@ -6,14 +6,15 @@ import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-class FixedVersionTest {
+class BuildOptionsTest {
+
     @Test
     void testEqualsContract() {
-        EqualsVerifier.forClass(FixedVersion.class).verify();
+        EqualsVerifier.forClass(BuildOptions.class).verify();
     }
 
     @Test
     void testToString() {
-        ToStringVerifier.forClass(FixedVersion.class).verify();
+        ToStringVerifier.forClass(BuildOptions.class).verify();
     }
 }

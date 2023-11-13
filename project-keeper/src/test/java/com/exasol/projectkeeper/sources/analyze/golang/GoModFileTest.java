@@ -13,6 +13,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 
+import com.jparams.verifier.tostring.ToStringVerifier;
+
 import nl.jqno.equalsverifier.EqualsVerifier;
 
 class GoModFileTest {
@@ -139,5 +141,8 @@ class GoModFileTest {
     @Test
     void testEqualsContract() {
         EqualsVerifier.forClass(GoModFile.class).verify();
+    }@Test
+    void testToString() {
+        ToStringVerifier.forClass(GoModFile.class).verify();
     }
 }

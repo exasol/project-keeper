@@ -48,4 +48,9 @@ class VersionTest {
     void testEqualsContract() {
         EqualsVerifier.forClass(Version.class).verify();
     }
+
+    @Test
+    void testToString() throws UnsupportedVersionFormatException {
+        assertThat(new Version("1.2.3"), hasToString("1.2.3"));
+    }
 }

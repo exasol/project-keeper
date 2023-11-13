@@ -101,15 +101,44 @@ The syntax for a replacement is `broken-url|replacement`.
 
 Project-keeper will then use the replacement in the `dependencies.md` file instead of the original url.
 
-### GitHub Runner Operating System
+### CI Build Configuration
 
-Some projects require to run the integration tests in the CI build on an operating system other than the default `ubuntu-latest`. In this case you can add the following to file `.project-keeper.yml`:
+PK allows configuring the generated CI-Build workflow scripts using the `build` section in file `.project-keeper.yml`.
+
+#### GitHub Runner Operating System
+
+Some projects require to run the integration tests in the CI build on an operating system other than the default `ubuntu-latest`. In this case you can use the following:
 
 ```yml
-ciBuildRunnerOS: ubuntu-20.04
+build:
+  runnerOs: ubuntu-20.04
 ```
 
 PK will use this setting for GitHub workflows `ci-build.yml` and `release_droid_prepare_original_checksum.yml` which run integration tests. The other workflows don't run integration tests and will stick to the default `ubuntu-latest`.
+
+#### Free Disk Space
+
+Some projects need more disk space during build, e.g. for Docker images. You can free up disk space before the build like this:
+
+```yml
+build:
+  freeDiskSpace: true
+```
+
+This will slow down the build by about one minute.
+
+#### Matrix Build with Exasol DB Versions
+
+To CI build as a matrix build with multiple Exasol DB versions you can add the following:
+
+```yml
+build:
+  exasolDbVersions:
+    - "7.1.24"
+    - "8.23.1"
+```
+
+Sonar will only run for the first version in the list.
 
 ## POM File
 

@@ -41,14 +41,20 @@ public final class FileTemplateFromResource implements FileTemplate {
     }
 
     /**
-     * Add a replacement definition. {@link FileTemplateFromResource} identifies variables in the template by prefix "$"
-     * and replaces each variable with the value provided beforehand.
+     * Add a replacement definition. {@link FileTemplateFromResource} identifies variables in the template by prefix
+     * {@code $} and replaces each variable with the value provided beforehand.
      *
      * @param name        name of the variable
      * @param replacement text that should be used to replace the variable
      * @return this for fluent programming
      */
     public FileTemplateFromResource replacing(final String name, final String replacement) {
+        if (this.replacements.containsKey(name)) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-170").message(
+                    "Cannot add replacement with value {{new replacement}} because {{name}} is already registered as replacement with value {{existing value}}.",
+                    replacement, name, replacements.get(name)).mitigation("Remove or rename one of the replacements.")
+                    .toString());
+        }
         this.replacements.put(name, replacement);
         return this;
     }

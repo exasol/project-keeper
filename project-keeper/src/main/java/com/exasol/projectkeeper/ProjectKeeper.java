@@ -134,7 +134,7 @@ public class ProjectKeeper {
                 .logger(this.logger) //
                 .projectKeeperVersion(this.ownVersion) //
                 .hasNpmModule(hasSourceOfType(sources, SourceType.NPM)) //
-                .ciBuildRunnerOS(config.getCiBuildRunnerOS()) //
+                .ciBuildOptions(config.getCiBuildConfig()) //
                 .build();
         final List<Validator> validators = List.of( //
                 projectFilesValidator,

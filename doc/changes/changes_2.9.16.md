@@ -1,4 +1,4 @@
-# Project Keeper 2.9.16, released 2023-??-??
+# Project Keeper 2.9.16, released 2023-11-13
 
 Code name: Support Matrix builds & enable compiler warnings
 
@@ -6,9 +6,17 @@ Code name: Support Matrix builds & enable compiler warnings
 
 This release enables linter warnings for the Java compiler by adding argument `-Xlint:all`. This will log warnings but the build won't fail.
 
+The release also adds the following options for the build script:
+* Free up disk space before build
+* Select operating system for build
+* Select Exasol DB versions for which to run the build
+
+See the [user guide](../../README.md#ci-build-configuration) for details.
+
 ## Features
 
 * #497: Enabled linter warnings
+* #488: Added support for Matrix builds
 
 ## Dependency Updates
 
@@ -16,6 +24,7 @@ This release enables linter warnings for the Java compiler by adding argument `-
 
 #### Test Dependency Updates
 
+* Added `com.jparams:to-string-verifier:1.4.8`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.2` to `3.15.3`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.0` to `5.10.1`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.0` to `5.10.1`
@@ -39,6 +48,7 @@ This release enables linter warnings for the Java compiler by adding argument `-
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:2.9.15` to `2.9.16`
+* Added `com.jparams:to-string-verifier:1.4.8`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.2` to `3.15.3`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.0` to `5.10.1`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.0` to `5.10.1`

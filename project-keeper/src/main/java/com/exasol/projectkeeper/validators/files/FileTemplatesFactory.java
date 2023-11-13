@@ -8,6 +8,7 @@ import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.*;
 
@@ -15,8 +16,6 @@ import com.exasol.projectkeeper.sources.*;
  * Factory for file templates.
  */
 class FileTemplatesFactory {
-
-    private static final String CI_BUILD_RUNNER_OS_PLACEHOLDER = "ciBuildRunnerOS";
     private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
             "linguist-generated=true");
 
@@ -36,14 +35,16 @@ class FileTemplatesFactory {
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
-    private final String ciBuildRunnerOS;
+    private final BuildOptions buildOptions;
+    private final CiBuildWorkflowGenerator workflowGenerator;
 
     public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule,
-            final String ciBuildRunnerOS) {
+            final BuildOptions buildOptions) {
         this.logger = Objects.requireNonNull(logger, "logger");
         this.ownVersion = Objects.requireNonNull(ownVersion, "ownVersion");
         this.hasNpmModule = hasNpmModule;
-        this.ciBuildRunnerOS = Objects.requireNonNull(ciBuildRunnerOS, CI_BUILD_RUNNER_OS_PLACEHOLDER);
+        this.buildOptions = Objects.requireNonNull(buildOptions, "buildOptions");
+        this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildOptions);
     }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
@@ -76,8 +77,7 @@ class FileTemplatesFactory {
                 .replacing("skipNativeImage", //
                         modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : ""));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
-        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
-                REQUIRE_EXACT).replacing(CI_BUILD_RUNNER_OS_PLACEHOLDER, getCiBuildRunnerOS()));
+        templates.add(workflowGenerator.createReleaseDroidPrepareOriginalChecksumWorkflow());
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
                 REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_upload_github_release_assets.yml",
@@ -85,17 +85,12 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private String getCiBuildRunnerOS() {
-        return ciBuildRunnerOS;
-    }
-
     private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
         if (modules.contains(NATIVE_IMAGE)) {
             return new FileTemplateFromResource("templates/.github/workflows/ci-build-native-build.yml",
                     ".github/workflows/ci-build.yml", REQUIRE_EXACT);
         } else {
-            return new FileTemplateFromResource(".github/workflows/ci-build.yml", REQUIRE_EXACT)
-                    .replacing(CI_BUILD_RUNNER_OS_PLACEHOLDER, getCiBuildRunnerOS());
+            return workflowGenerator.createCiBuildWorkflow();
         }
     }
 

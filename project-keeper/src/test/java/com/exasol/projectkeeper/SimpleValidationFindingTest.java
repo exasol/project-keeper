@@ -6,6 +6,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -27,5 +28,10 @@ class SimpleValidationFindingTest {
     @Test
     void testEqualsContract() {
         EqualsVerifier.forClass(SimpleValidationFinding.class).verify();
+    }
+
+    @Test
+    void testToString() {
+        ToStringVerifier.forClass(SimpleValidationFinding.class).verify();
     }
 }

@@ -207,6 +207,12 @@
                 <version>3.15.3</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>com.jparams</groupId>
+                <artifactId>to-string-verifier</artifactId>
+                <version>1.4.8</version>
+                <scope>test</scope>
+            </dependency>
             <!-- overriding vulnerable version -->
             <dependency>
                 <groupId>junit</groupId>
