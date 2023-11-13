@@ -56,6 +56,9 @@ class ProjectKeeperConfigReaderTest {
                         "build:\n" + //
                         "  runnerOs: custom-runner-os\n" + //
                         "  freeDiskSpace: true\n" + //
+                        "  exasolDbVersions:\n" + //
+                        "    - v1\n" + //
+                        "    - v2\n" + //
                         "linkReplacements:\n" + //
                         "  - \"http://wrong-url.com|my-dependency.de\"\n");
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
@@ -63,6 +66,7 @@ class ProjectKeeperConfigReaderTest {
         assertAll(//
                 () -> assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("custom-runner-os")),
                 () -> assertThat(config.getCiBuildConfig().shouldFreeDiskSpace(), equalTo(true)),
+                () -> assertThat(config.getCiBuildConfig().getExasolDbVersions(), contains("v1", "v2")),
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
                 () -> assertThat(source.isAdvertised(), equalTo(false)),
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
@@ -96,6 +100,7 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(config.getExcludes(), equalTo(Collections.emptyList())),
                 () -> assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("ubuntu-latest")),
                 () -> assertThat(config.getCiBuildConfig().shouldFreeDiskSpace(), equalTo(false)),
+                () -> assertThat(config.getCiBuildConfig().getExasolDbVersions(), empty()),
                 () -> assertThat(config.getLinkReplacements(), equalTo(Collections.emptyList()))//
         );
     }

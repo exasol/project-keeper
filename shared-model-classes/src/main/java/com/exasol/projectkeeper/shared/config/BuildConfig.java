@@ -1,5 +1,9 @@
 package com.exasol.projectkeeper.shared.config;
 
+import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
+
+import java.util.List;
 import java.util.Objects;
 
 /**
@@ -10,10 +14,12 @@ public final class BuildConfig {
 
     private final String runnerOs;
     private final boolean freeDiskSpace;
+    private final List<String> exasolDbVersions;
 
     private BuildConfig(final Builder builder) {
         this.runnerOs = Objects.requireNonNull(builder.runnerOs, "runnerOs");
         this.freeDiskSpace = builder.freeDiskSpace;
+        this.exasolDbVersions = unmodifiableList(Objects.requireNonNull(builder.exasolDbVersions, "exasolDbVersions"));
     }
 
     /** @return CI build runner operating system */
@@ -24,6 +30,15 @@ public final class BuildConfig {
     /** @return {@code true} if disk space should be freed before running the build */
     public boolean shouldFreeDiskSpace() {
         return freeDiskSpace;
+    }
+
+    /**
+     * Exasol DB versions for which to run the CI build. If the list is empty, no Matrix build will be used.
+     *
+     * @return Exasol DB versions for which to run the build
+     */
+    public List<String> getExasolDbVersions() {
+        return exasolDbVersions;
     }
 
     /**
@@ -39,6 +54,7 @@ public final class BuildConfig {
      * Builder to build {@link BuildConfig}.
      */
     public static final class Builder {
+        private List<String> exasolDbVersions = emptyList();
         private boolean freeDiskSpace = false;
         private String runnerOs = DEFAULT_RUNNER_OS;
 
@@ -71,6 +87,20 @@ public final class BuildConfig {
         }
 
         /**
+         * Run the CI build as a matrix build using the given Exasol DB versions. Sonar will only be run using the first
+         * version in the list. If the list is empty, no Matrix build will be used.
+         *
+         * @param exasolDbVersions Exasol DB versions for which to run the build
+         * @return {@code this} for fluent programming
+         */
+        public Builder exasolDbVersions(final List<String> exasolDbVersions) {
+            if (exasolDbVersions != null) {
+                this.exasolDbVersions = exasolDbVersions;
+            }
+            return this;
+        }
+
+        /**
          * Build a new {@link BuildConfig}.
          *
          * @return built class
@@ -82,12 +112,13 @@ public final class BuildConfig {
 
     @Override
     public String toString() {
-        return "BuildConfig [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + "]";
+        return "BuildConfig [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + ",exasolDbVersions="
+                + exasolDbVersions + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(runnerOs, freeDiskSpace);
+        return Objects.hash(runnerOs, freeDiskSpace, exasolDbVersions);
     }
 
     @Override
@@ -102,6 +133,7 @@ public final class BuildConfig {
             return false;
         }
         final BuildConfig other = (BuildConfig) obj;
-        return Objects.equals(runnerOs, other.runnerOs) && freeDiskSpace == other.freeDiskSpace;
+        return Objects.equals(runnerOs, other.runnerOs) && freeDiskSpace == other.freeDiskSpace
+                && Objects.equals(exasolDbVersions, other.exasolDbVersions);
     }
 }

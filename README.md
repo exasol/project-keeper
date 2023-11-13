@@ -127,6 +127,19 @@ build:
 
 This will slow down the build by about one minute.
 
+#### Matrix Build with Exasol DB Versions
+
+To CI build as a matrix build with multiple Exasol DB versions you can add the following:
+
+```yml
+build:
+  exasolDbVersions:
+    - "7.1.24"
+    - "8.23.1"
+```
+
+Sonar will only run for the first version in the list.
+
 ## POM File
 
 For maven projects, project-keeper generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.

@@ -9,6 +9,7 @@ This release enables linter warnings for the Java compiler by adding argument `-
 The release also adds the following options for the build script:
 * Free up disk space before build
 * Select operating system for build
+* Select Exasol DB versions for which to run the build
 
 See the [user guide](../../README.md#ci-build-configuration) for details.
 
