@@ -76,6 +76,18 @@ class CiBuildWorkflowGeneratorTest {
         ));
     }
 
+    @Test
+    void ciBuildMatrixBuildSingleVersion() {
+        assertThat(ciBuildContent(BuildConfig.builder().exasolDbVersions(List.of("v1"))), allOf( //
+                containsString("group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}" + NL), //
+                containsString("matrix:" + NL + "        exasol_db_version: [\"v1\"]"), //
+                containsString("env:" + NL + "      DEFAULT_EXASOL_DB_VERSION: \"v1\""),
+                containsString("-Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}"), //
+                containsString("- name: Sonar analysis" + NL
+                        + "        if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}") //
+        ));
+    }
+
     private String releaseDroidOriginalChecksumContent(final BuildConfig.Builder configBuilder) {
         final FileTemplate template = testee(configBuilder).createReleaseDroidPrepareOriginalChecksumWorkflow();
         assertThat(template.getPathInProject(),
