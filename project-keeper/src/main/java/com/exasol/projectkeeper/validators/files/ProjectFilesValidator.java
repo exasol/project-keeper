@@ -10,7 +10,7 @@ import java.util.*;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.Validator;
-import com.exasol.projectkeeper.shared.config.BuildConfig;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.files.RequiredFileValidator.ContentValidator;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
@@ -25,7 +25,7 @@ public class ProjectFilesValidator implements Validator {
     private final Logger logger;
     private final String projectKeeperVersion;
     private final boolean hasNpmModule;
-    private final BuildConfig buildConfig;
+    private final BuildOptions buildConfig;
 
     private ProjectFilesValidator(final Builder builder) {
         this.projectDirectory = Objects.requireNonNull(builder.projectDirectory, "projectDirectory");
@@ -33,7 +33,7 @@ public class ProjectFilesValidator implements Validator {
         this.logger = Objects.requireNonNull(builder.logger, "logger");
         this.projectKeeperVersion = Objects.requireNonNull(builder.projectKeeperVersion, "projectKeeperVersion");
         this.hasNpmModule = builder.hasNpmModule;
-        this.buildConfig = Objects.requireNonNull(builder.buildConfig, "buildConfig");
+        this.buildConfig = Objects.requireNonNull(builder.buildOptions, "buildConfig");
     }
 
     @Override
@@ -112,7 +112,7 @@ public class ProjectFilesValidator implements Validator {
         private Logger logger;
         private String projectKeeperVersion;
         private boolean hasNpmModule;
-        private BuildConfig buildConfig;
+        private BuildOptions buildOptions;
 
         private Builder() {
             // empty by intention
@@ -164,11 +164,11 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
-         * @param buildConfig CI build configuration
+         * @param buildOptions CI build options
          * @return {@code this} for fluent programming
          */
-        public Builder ciBuildConfig(final BuildConfig buildConfig) {
-            this.buildConfig = buildConfig;
+        public Builder ciBuildOptions(final BuildOptions buildOptions) {
+            this.buildOptions = buildOptions;
             return this;
         }
 

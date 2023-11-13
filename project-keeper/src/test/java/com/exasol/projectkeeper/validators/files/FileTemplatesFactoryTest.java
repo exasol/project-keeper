@@ -20,7 +20,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.shared.config.BuildConfig;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -49,7 +49,7 @@ class FileTemplatesFactoryTest {
 
     private FileTemplatesFactory testee(final boolean hasNpmModule) {
         return new FileTemplatesFactory(this.loggerMock, OWN_VERSION, hasNpmModule,
-                BuildConfig.builder().runnerOs("ci-build-runner-os").build());
+                BuildOptions.builder().runnerOs("ci-build-runner-os").build());
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {

@@ -30,7 +30,7 @@ class ProjectKeeperConfigTest {
                         .build()))
                 .excludes(List.of("exclude1")).linkReplacements(List.of("linkReplacement1"))
                 .versionConfig(new VersionFromSource(Path.of("version-pom.xml")))
-                .buildConfig(BuildConfig.builder().runnerOs("runner-os").build()).build();
+                .buildOptions(BuildOptions.builder().runnerOs("runner-os").build()).build();
         assertAll(() -> assertThat(config.getExcludes(), contains("exclude1")),
                 () -> assertThat(config.getLinkReplacements(), contains("linkReplacement1")),
                 () -> assertThat(config.getVersionConfig(), instanceOf(VersionFromSource.class)),
@@ -55,7 +55,7 @@ class ProjectKeeperConfigTest {
 
     @Test
     void createConfigWithNullRunnerOS() {
-        final ProjectKeeperConfig config = ProjectKeeperConfig.builder().buildConfig(null).build();
+        final ProjectKeeperConfig config = ProjectKeeperConfig.builder().buildOptions(null).build();
         assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("ubuntu-latest"));
     }
 

@@ -14,14 +14,14 @@ public final class ProjectKeeperConfig {
     // [impl->dsn~excluding~1]
     private final List<String> excludes;
     private final VersionConfig versionConfig;
-    private final BuildConfig buildConfig;
+    private final BuildOptions buildOptions;
 
     private ProjectKeeperConfig(final Builder builder) {
         this.sources = Objects.requireNonNull(builder.sources, "sources");
         this.linkReplacements = Objects.requireNonNull(builder.linkReplacements, "linkReplacements");
         this.excludes = Objects.requireNonNull(builder.excludes, "excludes");
         this.versionConfig = builder.versionConfig;
-        this.buildConfig = Objects.requireNonNull(builder.buildConfig, "buildConfig");
+        this.buildOptions = Objects.requireNonNull(builder.buildOptions, "buildOptions");
     }
 
     /** @return List with source-projects to crawl */
@@ -45,8 +45,8 @@ public final class ProjectKeeperConfig {
     }
 
     /** @return CI build configuration */
-    public BuildConfig getCiBuildConfig() {
-        return this.buildConfig;
+    public BuildOptions getCiBuildConfig() {
+        return this.buildOptions;
     }
 
     /** @return a new builder for creating {@link ProjectKeeperConfig} instances */
@@ -62,7 +62,7 @@ public final class ProjectKeeperConfig {
         private List<String> linkReplacements = Collections.emptyList();
         private List<String> excludes = Collections.emptyList();
         private VersionConfig versionConfig;
-        private BuildConfig buildConfig = BuildConfig.builder().build();
+        private BuildOptions buildOptions = BuildOptions.builder().build();
 
         private Builder() {
             // empty by intention
@@ -105,12 +105,12 @@ public final class ProjectKeeperConfig {
         }
 
         /**
-         * @param buildConfig project build configuration
+         * @param buildOptions project build configuration
          * @return {@code this}.
          */
-        public ProjectKeeperConfig.Builder buildConfig(final BuildConfig buildConfig) {
-            if (buildConfig != null) {
-                this.buildConfig = buildConfig;
+        public ProjectKeeperConfig.Builder buildOptions(final BuildOptions buildOptions) {
+            if (buildOptions != null) {
+                this.buildOptions = buildOptions;
             }
             return this;
         }
@@ -124,13 +124,13 @@ public final class ProjectKeeperConfig {
     @Override
     public String toString() {
         return "ProjectKeeperConfig [sources=" + this.sources + ", linkReplacements=" + this.linkReplacements
-                + ", excludes=" + this.excludes + ", versionConfig=" + this.versionConfig + ", buildConfig="
-                + this.buildConfig + "]";
+                + ", excludes=" + this.excludes + ", versionConfig=" + this.versionConfig + ", buildOptions="
+                + this.buildOptions + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(this.sources, this.linkReplacements, this.excludes, this.versionConfig, this.buildConfig);
+        return Objects.hash(this.sources, this.linkReplacements, this.excludes, this.versionConfig, this.buildOptions);
     }
 
     @Override
@@ -149,6 +149,6 @@ public final class ProjectKeeperConfig {
                 && Objects.equals(this.linkReplacements, other.linkReplacements)
                 && Objects.equals(this.excludes, other.excludes)
                 && Objects.equals(this.versionConfig, other.versionConfig)
-                && Objects.equals(this.buildConfig, other.buildConfig);
+                && Objects.equals(this.buildOptions, other.buildOptions);
     }
 }

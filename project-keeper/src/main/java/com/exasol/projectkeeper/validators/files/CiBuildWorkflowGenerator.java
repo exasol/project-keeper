@@ -3,32 +3,32 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXACT;
 import static java.util.stream.Collectors.joining;
 
-import com.exasol.projectkeeper.shared.config.BuildConfig;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 
 class CiBuildWorkflowGenerator {
-    private final BuildConfig buildConfig;
+    private final BuildOptions buildOptions;
 
-    CiBuildWorkflowGenerator(final BuildConfig buildConfig) {
-        this.buildConfig = buildConfig;
+    CiBuildWorkflowGenerator(final BuildOptions buildOptions) {
+        this.buildOptions = buildOptions;
     }
 
     FileTemplate createReleaseDroidPrepareOriginalChecksumWorkflow() {
         return new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
                 REQUIRE_EXACT) //
-                .replacing("ciBuildRunnerOS", buildConfig.getRunnerOs())
-                .replacing("freeDiskSpace", String.valueOf(buildConfig.shouldFreeDiskSpace()));
+                .replacing("ciBuildRunnerOS", buildOptions.getRunnerOs())
+                .replacing("freeDiskSpace", String.valueOf(buildOptions.shouldFreeDiskSpace()));
     }
 
     FileTemplateFromResource createCiBuildWorkflow() {
         final FileTemplateFromResource template = new FileTemplateFromResource(
                 "templates/.github/workflows/" + getCiBuildTemplate(), ".github/workflows/ci-build.yml", REQUIRE_EXACT)
-                .replacing("ciBuildRunnerOS", buildConfig.getRunnerOs())
-                .replacing("freeDiskSpace", String.valueOf(buildConfig.shouldFreeDiskSpace()));
+                .replacing("ciBuildRunnerOS", buildOptions.getRunnerOs())
+                .replacing("freeDiskSpace", String.valueOf(buildOptions.shouldFreeDiskSpace()));
 
         if (isMatrixBuild()) {
             template.replacing("matrixExasolDbVersions",
-                    buildConfig.getExasolDbVersions().stream().map(this::quote).collect(joining(", ")));
-            template.replacing("defaultExasolDbVersion", quote(buildConfig.getExasolDbVersions().get(0)));
+                    buildOptions.getExasolDbVersions().stream().map(this::quote).collect(joining(", ")));
+            template.replacing("defaultExasolDbVersion", quote(buildOptions.getExasolDbVersions().get(0)));
         }
         return template;
     }
@@ -46,6 +46,6 @@ class CiBuildWorkflowGenerator {
     }
 
     private boolean isMatrixBuild() {
-        return !buildConfig.getExasolDbVersions().isEmpty();
+        return !buildOptions.getExasolDbVersions().isEmpty();
     }
 }

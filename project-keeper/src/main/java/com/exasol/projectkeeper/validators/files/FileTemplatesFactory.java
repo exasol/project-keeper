@@ -8,7 +8,7 @@ import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.shared.config.BuildConfig;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.*;
 
@@ -35,16 +35,16 @@ class FileTemplatesFactory {
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
-    private final BuildConfig buildConfig;
+    private final BuildOptions buildOptions;
     private final CiBuildWorkflowGenerator workflowGenerator;
 
     public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule,
-            final BuildConfig buildConfig) {
+            final BuildOptions buildOptions) {
         this.logger = Objects.requireNonNull(logger, "logger");
         this.ownVersion = Objects.requireNonNull(ownVersion, "ownVersion");
         this.hasNpmModule = hasNpmModule;
-        this.buildConfig = Objects.requireNonNull(buildConfig, "buildConfig");
-        this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildConfig);
+        this.buildOptions = Objects.requireNonNull(buildOptions, "buildOptions");
+        this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildOptions);
     }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {

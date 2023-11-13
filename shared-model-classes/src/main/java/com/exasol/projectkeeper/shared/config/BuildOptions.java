@@ -9,14 +9,14 @@ import java.util.Objects;
 /**
  * CI build configuration.
  */
-public final class BuildConfig {
+public final class BuildOptions {
     private static final String DEFAULT_RUNNER_OS = "ubuntu-latest";
 
     private final String runnerOs;
     private final boolean freeDiskSpace;
     private final List<String> exasolDbVersions;
 
-    private BuildConfig(final Builder builder) {
+    private BuildOptions(final Builder builder) {
         this.runnerOs = Objects.requireNonNull(builder.runnerOs, "runnerOs");
         this.freeDiskSpace = builder.freeDiskSpace;
         this.exasolDbVersions = unmodifiableList(Objects.requireNonNull(builder.exasolDbVersions, "exasolDbVersions"));
@@ -42,7 +42,7 @@ public final class BuildConfig {
     }
 
     /**
-     * Creates builder to build {@link BuildConfig}.
+     * Creates builder to build {@link BuildOptions}.
      *
      * @return created builder
      */
@@ -51,7 +51,7 @@ public final class BuildConfig {
     }
 
     /**
-     * Builder to build {@link BuildConfig}.
+     * Builder to build {@link BuildOptions}.
      */
     public static final class Builder {
         private List<String> exasolDbVersions = emptyList();
@@ -101,12 +101,12 @@ public final class BuildConfig {
         }
 
         /**
-         * Build a new {@link BuildConfig}.
+         * Build a new {@link BuildOptions}.
          *
          * @return built class
          */
-        public BuildConfig build() {
-            return new BuildConfig(this);
+        public BuildOptions build() {
+            return new BuildOptions(this);
         }
     }
 
@@ -132,7 +132,7 @@ public final class BuildConfig {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final BuildConfig other = (BuildConfig) obj;
+        final BuildOptions other = (BuildOptions) obj;
         return Objects.equals(runnerOs, other.runnerOs) && freeDiskSpace == other.freeDiskSpace
                 && Objects.equals(exasolDbVersions, other.exasolDbVersions);
     }

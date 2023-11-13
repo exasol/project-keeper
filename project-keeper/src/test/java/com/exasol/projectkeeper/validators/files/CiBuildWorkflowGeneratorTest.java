@@ -9,7 +9,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;
 
-import com.exasol.projectkeeper.shared.config.BuildConfig;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 
 class CiBuildWorkflowGeneratorTest {
 
@@ -17,47 +17,47 @@ class CiBuildWorkflowGeneratorTest {
 
     @Test
     void rdOrgChecksumContainsRunnerOs() {
-        assertThat(releaseDroidOriginalChecksumContent(BuildConfig.builder().runnerOs("my-runner-os")),
+        assertThat(releaseDroidOriginalChecksumContent(BuildOptions.builder().runnerOs("my-runner-os")),
                 containsString("runs-on: my-runner-os"));
     }
 
     @Test
     void rdOrgChecksumDoesNotFreeDiskSpace() {
-        assertThat(releaseDroidOriginalChecksumContent(BuildConfig.builder().freeDiskSpace(false)),
+        assertThat(releaseDroidOriginalChecksumContent(BuildOptions.builder().freeDiskSpace(false)),
                 containsString("- name: Free Disk Space" + NL + //
                         "        if: ${{ false }}"));
     }
 
     @Test
     void rdOrgChecksumDoesFreeDiskSpace() {
-        assertThat(releaseDroidOriginalChecksumContent(BuildConfig.builder().freeDiskSpace(true)),
+        assertThat(releaseDroidOriginalChecksumContent(BuildOptions.builder().freeDiskSpace(true)),
                 containsString("- name: Free Disk Space" + NL + //
                         "        if: ${{ true }}"));
     }
 
     @Test
     void ciBuildContainsRunnerOs() {
-        assertThat(ciBuildContent(BuildConfig.builder().runnerOs("my-runner-os")),
+        assertThat(ciBuildContent(BuildOptions.builder().runnerOs("my-runner-os")),
                 containsString("runs-on: my-runner-os"));
     }
 
     @Test
     void ciBuildDoesNotFreeDiskSpace() {
-        assertThat(ciBuildContent(BuildConfig.builder().freeDiskSpace(false)),
+        assertThat(ciBuildContent(BuildOptions.builder().freeDiskSpace(false)),
                 containsString("- name: Free Disk Space" + NL + //
                         "        if: ${{ false }}"));
     }
 
     @Test
     void ciBuildDoesFreeDiskSpace() {
-        assertThat(ciBuildContent(BuildConfig.builder().freeDiskSpace(true)),
+        assertThat(ciBuildContent(BuildOptions.builder().freeDiskSpace(true)),
                 containsString("- name: Free Disk Space" + NL + //
                         "        if: ${{ true }}"));
     }
 
     @Test
     void ciBuildNonMatrixBuild() {
-        assertThat(ciBuildContent(BuildConfig.builder()), allOf( //
+        assertThat(ciBuildContent(BuildOptions.builder()), allOf( //
                 containsString("group: ${{ github.workflow }}-${{ github.ref }}" + NL), //
                 not(containsString("matrix")), //
                 not(containsString("com.exasol.dockerdb.image")) //
@@ -66,7 +66,7 @@ class CiBuildWorkflowGeneratorTest {
 
     @Test
     void ciBuildMatrixBuild() {
-        assertThat(ciBuildContent(BuildConfig.builder().exasolDbVersions(List.of("v1", "v2"))), allOf( //
+        assertThat(ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1", "v2"))), allOf( //
                 containsString("group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}" + NL), //
                 containsString("matrix:" + NL + "        exasol_db_version: [\"v1\", \"v2\"]"), //
                 containsString("env:" + NL + "      DEFAULT_EXASOL_DB_VERSION: \"v1\""),
@@ -78,7 +78,7 @@ class CiBuildWorkflowGeneratorTest {
 
     @Test
     void ciBuildMatrixBuildSingleVersion() {
-        assertThat(ciBuildContent(BuildConfig.builder().exasolDbVersions(List.of("v1"))), allOf( //
+        assertThat(ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1"))), allOf( //
                 containsString("group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}" + NL), //
                 containsString("matrix:" + NL + "        exasol_db_version: [\"v1\"]"), //
                 containsString("env:" + NL + "      DEFAULT_EXASOL_DB_VERSION: \"v1\""),
@@ -88,8 +88,8 @@ class CiBuildWorkflowGeneratorTest {
         ));
     }
 
-    private String releaseDroidOriginalChecksumContent(final BuildConfig.Builder configBuilder) {
-        final FileTemplate template = testee(configBuilder).createReleaseDroidPrepareOriginalChecksumWorkflow();
+    private String releaseDroidOriginalChecksumContent(final BuildOptions.Builder optionsBuilder) {
+        final FileTemplate template = testee(optionsBuilder).createReleaseDroidPrepareOriginalChecksumWorkflow();
         assertThat(template.getPathInProject(),
                 equalTo(Path.of(".github/workflows/release_droid_prepare_original_checksum.yml")));
         final String content = template.getContent();
@@ -97,8 +97,8 @@ class CiBuildWorkflowGeneratorTest {
         return content;
     }
 
-    private String ciBuildContent(final BuildConfig.Builder configBuilder) {
-        final FileTemplateFromResource template = testee(configBuilder).createCiBuildWorkflow();
+    private String ciBuildContent(final BuildOptions.Builder optionsBuilder) {
+        final FileTemplateFromResource template = testee(optionsBuilder).createCiBuildWorkflow();
         assertThat(template.getPathInProject(), equalTo(Path.of(".github/workflows/ci-build.yml")));
         final String content = template.getContent();
         validateYamlSyntax(content);
@@ -109,7 +109,7 @@ class CiBuildWorkflowGeneratorTest {
         new Yaml().load(content);
     }
 
-    private CiBuildWorkflowGenerator testee(final BuildConfig.Builder configBuilder) {
-        return new CiBuildWorkflowGenerator(configBuilder.build());
+    private CiBuildWorkflowGenerator testee(final BuildOptions.Builder optionsBuilder) {
+        return new CiBuildWorkflowGenerator(optionsBuilder.build());
     }
 }

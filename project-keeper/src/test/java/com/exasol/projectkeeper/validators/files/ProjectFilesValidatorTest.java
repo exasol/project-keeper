@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.shared.config.BuildConfig;
+import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -158,7 +158,7 @@ class ProjectFilesValidatorTest {
                 .analyzedSources(sources) //
                 .logger(mock(Logger.class)) //
                 .projectKeeperVersion(OWN_VERSION) //
-                .ciBuildConfig(BuildConfig.builder().runnerOs("ci-runner-os").build()) //
+                .ciBuildOptions(BuildOptions.builder().runnerOs("ci-runner-os").build()) //
                 .build();
     }
 

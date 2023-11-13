@@ -86,7 +86,7 @@ public class ProjectKeeperConfigReader {
                 .linkReplacements(linkReplacements) //
                 .excludes(excludes) //
                 .versionConfig(parseVersion(rawConfig.getVersion(), projectDir)) //
-                .buildConfig(convertBuildConfig(rawConfig.getBuild())) //
+                .buildOptions(convertBuildOptions(rawConfig.getBuild())) //
                 .build();
     }
 
@@ -109,8 +109,8 @@ public class ProjectKeeperConfigReader {
                 .toString());
     }
 
-    private BuildConfig convertBuildConfig(final Build build) {
-        return BuildConfig.builder() //
+    private BuildOptions convertBuildOptions(final Build build) {
+        return BuildOptions.builder() //
                 .runnerOs(build != null ? build.getRunnerOs() : null) //
                 .freeDiskSpace(build != null && build.shouldFreeDiskSpace()) //
                 .exasolDbVersions(build != null ? build.getExasolDbVersions() : null) //
