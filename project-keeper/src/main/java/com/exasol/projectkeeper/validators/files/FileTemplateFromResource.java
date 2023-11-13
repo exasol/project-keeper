@@ -41,8 +41,8 @@ public final class FileTemplateFromResource implements FileTemplate {
     }
 
     /**
-     * Add a replacement definition. {@link FileTemplateFromResource} identifies variables in the template by prefix "$"
-     * and replaces each variable with the value provided beforehand.
+     * Add a replacement definition. {@link FileTemplateFromResource} identifies variables in the template by prefix
+     * {@code $} and replaces each variable with the value provided beforehand.
      *
      * @param name        name of the variable
      * @param replacement text that should be used to replace the variable

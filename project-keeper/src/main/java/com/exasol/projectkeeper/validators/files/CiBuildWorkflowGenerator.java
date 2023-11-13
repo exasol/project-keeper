@@ -6,7 +6,6 @@ import static java.util.stream.Collectors.joining;
 import com.exasol.projectkeeper.shared.config.BuildConfig;
 
 class CiBuildWorkflowGenerator {
-    private static final String CI_BUILD_RUNNER_OS_PLACEHOLDER = "ciBuildRunnerOS";
     private final BuildConfig buildConfig;
 
     CiBuildWorkflowGenerator(final BuildConfig buildConfig) {
@@ -16,14 +15,14 @@ class CiBuildWorkflowGenerator {
     FileTemplate createReleaseDroidPrepareOriginalChecksumWorkflow() {
         return new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
                 REQUIRE_EXACT) //
-                .replacing(CI_BUILD_RUNNER_OS_PLACEHOLDER, buildConfig.getRunnerOs())
+                .replacing("ciBuildRunnerOS", buildConfig.getRunnerOs())
                 .replacing("freeDiskSpace", String.valueOf(buildConfig.shouldFreeDiskSpace()));
     }
 
     FileTemplateFromResource createCiBuildWorkflow() {
         final FileTemplateFromResource template = new FileTemplateFromResource(
                 "templates/.github/workflows/" + getCiBuildTemplate(), ".github/workflows/ci-build.yml", REQUIRE_EXACT)
-                .replacing(CI_BUILD_RUNNER_OS_PLACEHOLDER, buildConfig.getRunnerOs())
+                .replacing("ciBuildRunnerOS", buildConfig.getRunnerOs())
                 .replacing("freeDiskSpace", String.valueOf(buildConfig.shouldFreeDiskSpace()));
 
         if (isMatrixBuild()) {
