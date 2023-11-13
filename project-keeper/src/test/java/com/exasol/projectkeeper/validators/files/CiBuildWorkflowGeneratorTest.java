@@ -2,6 +2,8 @@ package com.exasol.projectkeeper.validators.files;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -10,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.Yaml;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
+import com.exasol.projectkeeper.validators.files.FileTemplate.Validation;
 
 class CiBuildWorkflowGeneratorTest {
 
@@ -90,23 +93,26 @@ class CiBuildWorkflowGeneratorTest {
 
     private String releaseDroidOriginalChecksumContent(final BuildOptions.Builder optionsBuilder) {
         final FileTemplate template = testee(optionsBuilder).createReleaseDroidPrepareOriginalChecksumWorkflow();
-        assertThat(template.getPathInProject(),
-                equalTo(Path.of(".github/workflows/release_droid_prepare_original_checksum.yml")));
         final String content = template.getContent();
-        validateYamlSyntax(content);
+        assertAll(() -> assertThat(template.getValidation(), equalTo(Validation.REQUIRE_EXACT)),
+                () -> assertThat(template.getPathInProject(),
+                        equalTo(Path.of(".github/workflows/release_droid_prepare_original_checksum.yml"))),
+                () -> validateYamlSyntax(content));
         return content;
     }
 
     private String ciBuildContent(final BuildOptions.Builder optionsBuilder) {
         final FileTemplateFromResource template = testee(optionsBuilder).createCiBuildWorkflow();
-        assertThat(template.getPathInProject(), equalTo(Path.of(".github/workflows/ci-build.yml")));
         final String content = template.getContent();
-        validateYamlSyntax(content);
+        assertAll(() -> assertThat(template.getPathInProject(), equalTo(Path.of(".github/workflows/ci-build.yml"))),
+                () -> assertThat(template.getValidation(), equalTo(Validation.REQUIRE_EXACT)),
+                () -> validateYamlSyntax(content));
         return content;
     }
 
     private void validateYamlSyntax(final String content) {
-        new Yaml().load(content);
+        final Yaml yaml = new Yaml();
+        assertDoesNotThrow(() -> yaml.load(content));
     }
 
     private CiBuildWorkflowGenerator testee(final BuildOptions.Builder optionsBuilder) {
