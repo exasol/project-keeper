@@ -110,10 +110,13 @@ public class ProjectKeeperConfigReader {
     }
 
     private BuildOptions convertBuildOptions(final Build build) {
+        if (build == null) {
+            return BuildOptions.builder().build();
+        }
         return BuildOptions.builder() //
-                .runnerOs(build != null ? build.getRunnerOs() : null) //
-                .freeDiskSpace(build != null && build.shouldFreeDiskSpace()) //
-                .exasolDbVersions(build != null ? build.getExasolDbVersions() : null) //
+                .runnerOs(build.getRunnerOs()) //
+                .freeDiskSpace(build.shouldFreeDiskSpace()) //
+                .exasolDbVersions(build.getExasolDbVersions()) //
                 .build();
     }
 
