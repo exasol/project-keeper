@@ -311,7 +311,8 @@ public class ProjectKeeperRawConfig {
     }
 
     /**
-     * Intermediate class for reading the CI build configuration sources.
+     * Intermediate class for de-serializing build options from PK's YAML configuration file
+     * {@link ProjectKeeperConfigReader#CONFIG_FILE_NAME}.
      * <p>
      * SnakeYML requires this class to be public.
      */
