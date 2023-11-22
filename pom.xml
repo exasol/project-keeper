@@ -14,7 +14,7 @@
         <module>maven-project-crawler</module>
         <module>project-keeper-maven-plugin</module>
     </modules>
-    <name>Project Keeper Project</name>
+    <name>Project Keeper Root Project</name>
     <build>
         <plugins>
             <plugin>
@@ -40,7 +40,7 @@
             <plugin>
                 <groupId>org.itsallcode</groupId>
                 <artifactId>openfasttrace-maven-plugin</artifactId>
-                <version>1.6.1</version>
+                <version>1.6.2</version>
                 <executions>
                     <execution>
                         <id>trace-requirements</id>

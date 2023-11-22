@@ -1,7 +1,7 @@
 <!-- @formatter:off -->
 # Dependencies
 
-## Project-keeper Shared Model Classes
+## Project Keeper Shared Model Classes
 
 ### Compile Dependencies
 
@@ -53,7 +53,7 @@
 
 | Dependency                                | License                                        |
 | ----------------------------------------- | ---------------------------------------------- |
-| [Project-Keeper shared model classes][44] | [The MIT License][45]                          |
+| [Project Keeper shared model classes][44] | [The MIT License][45]                          |
 | [org.xmlunit:xmlunit-core][46]            | [The Apache Software License, Version 2.0][28] |
 | [error-reporting-java][7]                 | [MIT License][8]                               |
 | [Markdown Generator][47]                  | [The Apache Software License, Version 2.0][28] |
@@ -81,7 +81,7 @@
 
 | Dependency                                | License               |
 | ----------------------------------------- | --------------------- |
-| [Project keeper Java project crawler][44] | [The MIT License][45] |
+| [Project Keeper Java project crawler][44] | [The MIT License][45] |
 
 ### Plugin Dependencies
 
@@ -112,7 +112,7 @@
 
 | Dependency                | License               |
 | ------------------------- | --------------------- |
-| [Project keeper core][44] | [The MIT License][45] |
+| [Project Keeper Core][44] | [The MIT License][45] |
 | [error-reporting-java][7] | [MIT License][8]      |
 | [Maven Model][50]         | [Apache-2.0][16]      |
 
@@ -163,7 +163,7 @@
 
 | Dependency                                | License               |
 | ----------------------------------------- | --------------------- |
-| [Project keeper core][44]                 | [The MIT License][45] |
+| [Project Keeper Core][44]                 | [The MIT License][45] |
 | [Maven Plugin Tools Java Annotations][60] | [Apache-2.0][16]      |
 | [Maven Plugin API][61]                    | [Apache-2.0][16]      |
 | [Maven Core][62]                          | [Apache-2.0][16]      |
@@ -214,7 +214,7 @@
 
 | Dependency                                | License                                        |
 | ----------------------------------------- | ---------------------------------------------- |
-| [Project-Keeper shared model classes][44] | [The MIT License][45]                          |
+| [Project Keeper shared model classes][44] | [The MIT License][45]                          |
 | [Maven Plugin Tools Java Annotations][60] | [Apache-2.0][16]                               |
 | [Maven Plugin API][61]                    | [Apache-2.0][16]                               |
 | [error-reporting-java][7]                 | [MIT License][8]                               |
@@ -267,7 +267,7 @@
 
 | Dependency                                | License                           |
 | ----------------------------------------- | --------------------------------- |
-| [Project-Keeper shared model classes][44] | [The MIT License][45]             |
+| [Project Keeper shared model classes][44] | [The MIT License][45]             |
 | [SnakeYAML][49]                           | [Apache License, Version 2.0][28] |
 | [Hamcrest][12]                            | [BSD License 3][13]               |
 | [Maven Model][50]                         | [Apache-2.0][16]                  |

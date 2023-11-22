@@ -5,7 +5,7 @@
     <artifactId>project-keeper-parent-pom</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
-    <name>Project keeper parent pom</name>
+    <name>Project Keeper parent pom</name>
     <description>This tool checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
     </description>
@@ -28,7 +28,7 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>2.9.16</revision>
+        <revision>2.9.17</revision>
         <maven.version>3.9.5</maven.version>
         <minimum.maven.version>3.6.3</minimum.maven.version>
         <junit.version>5.10.1</junit.version>

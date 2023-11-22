@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>project-keeper-java-project-crawler</artifactId>
     <packaging>maven-plugin</packaging>
-    <name>Project keeper Java project crawler</name>
+    <name>Project Keeper Java project crawler</name>
     <description>Crawler for maven projects.</description>
     <parent>
         <relativePath>./pk_generated_parent.pom</relativePath>
