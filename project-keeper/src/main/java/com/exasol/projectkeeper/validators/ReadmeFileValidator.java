@@ -21,7 +21,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 // [impl->dsn~readme-validator~1]
 public class ReadmeFileValidator extends AbstractFileContentValidator {
     private static final String NL = System.lineSeparator();
-    private static final String NATIVE_IMAGE_DEV_GUIDE = "https://github.com/exasol/project-keeper/blob/main/doc/developers_guide/preparing_a_project_for_native_image_builds.md";
+    private static final String NATIVE_IMAGE_DEV_GUIDE = "https://github.com/exasol/project-keeper/blob/main/doc/user_guide/preparing_a_project_for_native_image_builds.md";
     private final String projectName;
     private final String repoName;
     private final List<AnalyzedSource> sources;
@@ -61,8 +61,8 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
         }
         if (this.hasNativeImageSource && !content.contains(NATIVE_IMAGE_DEV_GUIDE)) {
             findings.add(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-144")
-                    .message("The project's README.md does not reference the developers guide for native images.'")
-                    .mitigation("Please add the link: '[Developers guide for native-image projects]("
+                    .message("The project's README.md does not reference the developer guide for native images.'")
+                    .mitigation("Please add the link: '[Developer guide for native-image projects]("
                             + NATIVE_IMAGE_DEV_GUIDE + ")'.")
                     .toString()).build());
         }
@@ -83,7 +83,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
                 "* [Changelog](doc/changes/changelog.md)" + NL + //
                 "* [Dependencies](dependencies.md)";
         if (this.hasNativeImageSource) {
-            template += NL + "* [Developers guide for native-image projects](" + NATIVE_IMAGE_DEV_GUIDE + ")";
+            template += NL + "* [Developer guide for native-image projects](" + NATIVE_IMAGE_DEV_GUIDE + ")";
         }
         return template;
     }
