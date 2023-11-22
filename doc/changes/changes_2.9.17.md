@@ -4,6 +4,8 @@ Code name:
 
 ## Summary
 
+This release adds documentation describing how Project Keeper works with non-Maven projects.
+
 ## Documentation
 
 * #501: Documented usage for non-Maven projects
