@@ -3,8 +3,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>project-keeper-maven-plugin</artifactId>
     <packaging>maven-plugin</packaging>
-    <name>Project keeper maven plugin</name>
-    <description>This maven plugin runs project-keeper.</description>
+    <name>Project Keeper Maven plugin</name>
+    <description>This Maven plugin runs Project Keeper.</description>
     <url>https://github.com/exasol/project-keeper/</url>
     <parent>
         <relativePath>./pk_generated_parent.pom</relativePath>
