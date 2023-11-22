@@ -43,13 +43,25 @@ sources:
 
 ### Sources
 
-For project-keeper a 'source' is a project inside a repository. For example a maven-project. In the future project-keeper will be able to crawl multiple source-projects from one repository. However, for now, you must specify exactly one maven source.
+For PK a 'source' is a project inside a repository, e.g. a Maven module. PK is able to crawl multiple source projects from one repository.
 
 Supported project types:
 
-* `maven`: Projects with maven build. The path must point to the `pom.xml` file.
+* `maven`: Projects with Maven build. The path must point to the `pom.xml` file
+* `golang`: Go projects. Path must point to the `go.mod` file
+* `npm`: NPM based JavaScript or TypeScript projects. Path must point to the `package.json` file
 
-If you have multiple sources in a project, project-keeper will list all of them as badges in the project's `README.md`. If you want to hide one source, you can set `advertise: false` for this source.
+If you have multiple sources in a project, PK will list all of them as badges in the project's `README.md`. If you want to hide one source, you can set `advertise: false` for this source.
+
+### Project Keeper Verify for non-Maven Projects
+
+Maven projects use PK's Maven plugin to run PK verify during the `verify` Maven lifecycle. To run PK verify also for other projects, PK generates GitHub workflow `.github/workflows/project-keeper-verify.yml` and shell script `.github/workflows/project-keeper.sh`. Both files are only generated if there is **no** Maven module in the project root, i.e. there is no Maven source with `path: pom.xml` in `.project-keeper.yml`.
+
+You can run PK fix for non-Maven projects with the following command:
+
+```sh
+./.github/workflows/project-keeper.sh fix
+```
 
 ### Modules
 
@@ -66,7 +78,7 @@ This plugin provides different template modules for different kinds of projects.
 
 ### Excluding Findings
 
-Using the `excludes` tag you can tell project-keeper to ignore some error-messages:
+Using the `excludes` tag you can tell PK to ignore some error-messages:
 
 ```yml
 sources:
@@ -77,6 +89,7 @@ sources:
 excludes:
   - "E-PK-CORE-15: Missing maven plugin org.codehaus.mojo:versions-maven-plugin."
   - regex: "E-PK-CORE-16: .*"
+  - regex: "W-PK-CORE-151: Pom file .* contains no reference to project-keeper-maven-plugin."
 ```
 
 Note that you can also use regular expressions (see example above). If a finding is excluded it will not show up on validation and will not be fixed.
@@ -87,7 +100,7 @@ You can define excludes globally (like `E-PK-CORE-15` and `E-PK-CORE-16` in the 
 
 Some dependencies define invalid / outdated links to their project homepage. PK writes these links to the `dependencies.md` file. This will make the link checker break the build since a project file contains broken links.
 
-The best way to solve this is to open an issue / pull request at the projects that contain the wrong url. Since this is, however not always possible you can, as a mitigation, also define a replacement for links:
+The best way to solve this is to open an issue / pull request at the projects that contain the wrong URL. Since this is, however not always possible you can, as a mitigation, also define a replacement for links:
 
 ```yml
 sources:
@@ -99,11 +112,11 @@ linkReplacements:
 
 The syntax for a replacement is `broken-url|replacement`.
 
-Project-keeper will then use the replacement in the `dependencies.md` file instead of the original url.
+PK will then use the replacement in the `dependencies.md` file instead of the original URL.
 
 ### CI Build Configuration
 
-PK allows configuring the generated CI-Build workflow scripts using the `build` section in file `.project-keeper.yml`.
+PK allows customizing the generated CI-Build workflow scripts using the `build` section in file `.project-keeper.yml` using the following options:
 
 #### GitHub Runner Operating System
 
@@ -142,13 +155,13 @@ Sonar will only run for the first version in the list.
 
 ## POM File
 
-For maven projects, project-keeper generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
+For Maven projects, PK generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
 
 The `pk_generated_parent.pom` file is required during the build and must be checked into version control. Run `mvn project-keeper:fix` to update the file instead of editing it manually.
 
-### Using a Parent Pom
+### Using a Parent POM
 
-If you want to use a parent pom for your project, that's not possible directly since your `pom.xml` must use the `pk_generated_parent.pom` as parent.
+If you want to use a parent POM for your project, that's not possible directly since your `pom.xml` must use the `pk_generated_parent.pom` as parent.
 
 Instead, configure the parent in the PK config:
 
