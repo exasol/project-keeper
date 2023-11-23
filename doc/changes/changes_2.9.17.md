@@ -9,6 +9,7 @@ This release adds documentation describing how Project Keeper works with non-Mav
 ## Documentation
 
 * #501: Documented usage for non-Maven projects
+* #493: Created user guide and cleanup Readme.md
 
 ## Dependency Updates
 

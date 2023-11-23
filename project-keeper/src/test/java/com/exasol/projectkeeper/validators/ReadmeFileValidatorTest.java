@@ -49,7 +49,7 @@ class ReadmeFileValidatorTest {
         getValidator(tempDir, getNativeImageMavenProject()).validate().forEach(FindingFixHelper::fix);
         final String readme = Files.readString(tempDir.resolve("README.md"));
         assertThat(readme, containsString(adaptLineSeparators(
-                "\n* [Developers guide for native-image projects](https://github.com/exasol/project-keeper/blob/main/doc/developers_guide/preparing_a_project_for_native_image_builds.md)")));
+                "\n* [Developer guide for native-image projects](https://github.com/exasol/project-keeper/blob/main/doc/user_guide/preparing_a_project_for_native_image_builds.md)")));
     }
 
     @Test
@@ -103,6 +103,6 @@ class ReadmeFileValidatorTest {
         Files.writeString(tempDir.resolve("README.md"), "");
         final ReadmeFileValidator validator = getValidator(tempDir, getNativeImageMavenProject());
         assertThat(validator, validationErrorMessages(hasItems(containsString(
-                "E-PK-CORE-144: The project's README.md does not reference the developers guide for native images.' Please add the link: '[Developers guide for native-image projects](https://github.com/exasol/project-keeper/blob/main/doc/developers_guide/preparing_a_project_for_native_image_builds.md)'."))));
+                "E-PK-CORE-144: The project's README.md does not reference the developer guide for native images.' Please add the link: '[Developer guide for native-image projects](https://github.com/exasol/project-keeper/blob/main/doc/user_guide/preparing_a_project_for_native_image_builds.md)'."))));
     }
 }
