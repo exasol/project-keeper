@@ -1,10 +1,16 @@
-# Project Keeper 2.9.17, released 2023-??-??
+# Project Keeper 2.9.17, released 2023-11-27
 
-Code name:
+Code name: Simplify matrix job configuration
 
 ## Summary
 
-This release adds documentation describing how Project Keeper works with non-Maven projects.
+This release improves matrix builds, adding a new job `build` that depends on the matrix build job. This simplifies configuring branch protection rules because it's not necessary any more to update the job names when upgrading the tested database version.
+
+The release also adds documentation describing how Project Keeper works with non-Maven projects extracts the user guide into a separate file.
+
+## Feature
+
+* #504: Used single job name for Matrix builds
 
 ## Documentation
 
