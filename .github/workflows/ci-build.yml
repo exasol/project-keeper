@@ -37,8 +37,13 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+      - name: Print env
+        run: env
       - name: Run tests and build with Maven
         run: |
+          echo $JAVA_HOME/
+          java --version
+          mvn --version
           mvn --batch-mode clean verify install \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
