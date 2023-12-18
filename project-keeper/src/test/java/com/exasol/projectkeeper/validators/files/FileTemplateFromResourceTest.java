@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -50,5 +49,20 @@ class FileTemplateFromResourceTest {
         assertThat(exception.getMessage(), equalTo(
                 "E-PK-CORE-169: Placeholder 'unknownPlaceholder' not found in template 'templates/.github/workflows/ci-build.yml'."
                         + " This is an internal error that should not happen. Please report it by opening a GitHub issue."));
+    }
+
+    // [utest -> dsn~eclipse-prefs-java-version~1]
+    @Test
+    void getContentReplacesAllPlaceholders() {
+        final String content = eclipseConfigTestee().replacing("javaVersion", "21").getContent();
+        assertThat(content, allOf( //
+                containsString("org.eclipse.jdt.core.compiler.compliance=21"),
+                containsString("org.eclipse.jdt.core.compiler.codegen.targetPlatform=21"),
+                containsString("org.eclipse.jdt.core.compiler.source=21"), //
+                not(containsString("$javaVersion"))));
+    }
+
+    private FileTemplateFromResource eclipseConfigTestee() {
+        return new FileTemplateFromResource(".settings/org.eclipse.jdt.core.prefs", Validation.REQUIRE_EXACT);
     }
 }

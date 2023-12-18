@@ -21,6 +21,7 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
  */
 // [impl -> dsn~mvn-toolchain~1]
 public class PomFileGenerator {
+    public static final String DEFAULT_JAVA_VERSION = "11";
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
             new SimplePluginTemplateGenerator("maven_templates/sonar-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-toolchains-plugin.xml", DEFAULT),
@@ -202,7 +203,7 @@ public class PomFileGenerator {
         return element("properties") //
                 .child("project.build.sourceEncoding", "UTF-8") //
                 .child("project.reporting.outputEncoding", "UTF-8") //
-                .child("java.version", "11") //
+                .child("java.version", DEFAULT_JAVA_VERSION) //
                 .child("sonar.organization", "exasol") //
                 .child("sonar.host.url", "https://sonarcloud.io") //
                 .child("test.excludeTags", "") //

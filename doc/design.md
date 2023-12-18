@@ -278,6 +278,19 @@ Covers:
 
 Needs: impl, utest
 
+### Generate `.settings/org.eclipse.jdt.core.prefs` with Java Version
+`dsn~eclipse-prefs-java-version~1`
+
+PK generates Eclipse config file `.settings/org.eclipse.jdt.core.prefs` with the correct Java version:
+* If `pom.xml` contains property `java.version`, PK uses this version
+* If `pom.xml` does not contain property `java.version`, PK uses `11` as default
+
+Rationale:
+
+IDEs like Eclipse or VS Code modify `.settings/org.eclipse.jdt.core.prefs` when loading projects with Java version different from the default `11`. Generating the file with the correct version avoids excluding the file from PK.
+
+Needs: impl, utest, itest
+
 ## Non-Maven Integration
 `dsn~pk-verify-workflow~1`
 

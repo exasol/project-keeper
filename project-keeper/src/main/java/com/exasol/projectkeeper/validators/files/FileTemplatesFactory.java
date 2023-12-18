@@ -103,7 +103,8 @@ class FileTemplatesFactory {
         final Set<ProjectKeeperModule> enabledModules = source.getModules();
         if (enabledModules.contains(DEFAULT)) {
             templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.ui.prefs", REQUIRE_EXACT));
-            templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.core.prefs", REQUIRE_EXACT));
+            templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.core.prefs", REQUIRE_EXACT)
+                    .replacing("javaVersion", source.getJavaVersion()));
             templates.add(new FileTemplateFromResource("src/test/resources/logging.properties", REQUIRE_EXACT));
             templates.add(new FileTemplateFromResource("versionsMavenPluginRules.xml", REQUIRE_EXACT));
         }

@@ -36,6 +36,7 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
 
+    // [impl -> dsn~eclipse-prefs-java-version~1]
     @Override
     public void execute() {
         final MavenProjectFromFileReader mavenProjectReader = new DefaultMavenProjectFromFileReader(
@@ -50,8 +51,9 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
                     project.getBasedir().toPath(), project.getModel()).readDependencyChanges();
             final ProjectDependencies dependencies = new ProjectDependencyReader(modelFromRepositoryReader, project)
                     .readDependencies();
+            final String javaVersion = project.getProperties().getProperty("java.version", null);
             final CrawledMavenProject crawledMavenProject = new CrawledMavenProject(dependencyChangeReport,
-                    dependencies, project.getVersion());
+                    dependencies, project.getVersion(), javaVersion);
             crawledProjects.put(path, crawledMavenProject);
         }
         final MavenProjectCrawlResult report = new MavenProjectCrawlResult(crawledProjects);

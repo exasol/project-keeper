@@ -111,6 +111,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     @Test
     // [itest->dsn~mvn-fix-goal~1]
     // [itest->dsn~license-file-validator~1]
+    // [itest -> dsn~eclipse-prefs-java-version~1]
     void testFix() throws IOException {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();
@@ -118,8 +119,15 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         final ToStringLogger logger = new ToStringLogger();
         final boolean success = getProjectKeeper(logger).fix();
-        assertThat(success, equalTo(true));
-        assertThat(this.projectDir.resolve("LICENSE").toFile(), anExistingFile());
+        final String eclipseJdtCorePrefsContent = Files
+                .readString(this.projectDir.resolve(".settings/org.eclipse.jdt.core.prefs"));
+        assertAll( //
+                () -> assertThat(success, equalTo(true)),
+                () -> assertThat(this.projectDir.resolve("LICENSE").toFile(), anExistingFile()),
+                () -> assertThat(eclipseJdtCorePrefsContent, allOf( //
+                        containsString("org.eclipse.jdt.core.compiler.compliance=11"),
+                        containsString("org.eclipse.jdt.core.compiler.codegen.targetPlatform=11"),
+                        containsString("org.eclipse.jdt.core.compiler.source=11"))));
     }
 
     @Test

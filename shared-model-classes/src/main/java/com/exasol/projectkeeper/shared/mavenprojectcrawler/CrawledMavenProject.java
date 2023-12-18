@@ -14,10 +14,11 @@ public final class CrawledMavenProject {
     private DependencyChangeReport dependencyChangeReport;
     private ProjectDependencies projectDependencies;
     private String projectVersion;
+    private String javaVersion;
 
     /** Default constructor required for JSON serialization. */
     public CrawledMavenProject() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     /**
@@ -25,13 +26,16 @@ public final class CrawledMavenProject {
      * 
      * @param dependencyChangeReport dependency change report
      * @param projectDependencies    dependencies
-     * @param projectVersion         version
+     * @param projectVersion         project version
+     * @param javaVersion            Java version from the {@code java.version} property or {@code null} if property is
+     *                               not defined
      */
     public CrawledMavenProject(final DependencyChangeReport dependencyChangeReport,
-            final ProjectDependencies projectDependencies, final String projectVersion) {
+            final ProjectDependencies projectDependencies, final String projectVersion, final String javaVersion) {
         this.dependencyChangeReport = dependencyChangeReport;
         this.projectDependencies = projectDependencies;
         this.projectVersion = projectVersion;
+        this.javaVersion = javaVersion;
     }
 
     /** @return dependency change report */
@@ -54,9 +58,16 @@ public final class CrawledMavenProject {
         this.projectDependencies = projectDependencies;
     }
 
-    /** @return version */
+    /** @return project version */
     public String getProjectVersion() {
         return projectVersion;
+    }
+
+    /**
+     * @return Java version from the {@code java.version} property or {@code null} if property is not defined
+     */
+    public String getJavaVersion() {
+        return javaVersion;
     }
 
     /** @param projectVersion version */
@@ -64,16 +75,23 @@ public final class CrawledMavenProject {
         this.projectVersion = projectVersion;
     }
 
+    /**
+     * @param javaVersion Java version from the {@code java.version} property or {@code null} if property is not defined
+     */
+    public void setJavaVersion(final String javaVersion) {
+        this.javaVersion = javaVersion;
+    }
+
     @Override
     public String toString() {
         return "CrawledMavenProject [dependencyChangeReport=" + dependencyChangeReport + ", projectDependencies="
-                + projectDependencies + ", projectVersion=" + projectVersion + "]";
+                + projectDependencies + ", projectVersion=" + projectVersion + ", javaVersion=" + javaVersion + "]";
     }
 
     @Override
     @Generated("vscode")
     public int hashCode() {
-        return Objects.hash(dependencyChangeReport, projectDependencies, projectVersion);
+        return Objects.hash(dependencyChangeReport, projectDependencies, projectVersion, javaVersion);
     }
 
     @Override
@@ -91,6 +109,7 @@ public final class CrawledMavenProject {
         final CrawledMavenProject other = (CrawledMavenProject) obj;
         return Objects.equals(dependencyChangeReport, other.dependencyChangeReport)
                 && Objects.equals(projectDependencies, other.projectDependencies)
-                && Objects.equals(projectVersion, other.projectVersion);
+                && Objects.equals(projectVersion, other.projectVersion)
+                && Objects.equals(javaVersion, other.javaVersion);
     }
 }
