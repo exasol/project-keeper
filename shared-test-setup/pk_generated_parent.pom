@@ -96,6 +96,9 @@
                                 <requireMavenVersion>
                                     <version>3.6.3</version>
                                 </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>17</version>
+                                </requireJavaVersion>
                             </rules>
                         </configuration>
                     </execution>
