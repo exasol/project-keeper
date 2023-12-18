@@ -21,6 +21,7 @@ Code name:
 
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.2` to `3.2.3`
+* Added `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0`
 
 ### Project Keeper Core
 
@@ -43,6 +44,7 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.2` to `3.2.3`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.2` to `3.2.3`
+* Added `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0`
 
 ### Project Keeper Command Line Interface
 
@@ -60,6 +62,7 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.2` to `3.2.3`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.2` to `3.2.3`
+* Added `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0`
 
 ### Project Keeper Maven Plugin
 
@@ -76,6 +79,7 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.2` to `3.2.3`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.2` to `3.2.3`
+* Added `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0`
 
 ### Project Keeper Java Project Crawler
 
@@ -93,6 +97,7 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.2` to `3.2.3`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.2` to `3.2.3`
+* Added `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0`
 
 ### Project Keeper Shared Test Setup
 
@@ -103,3 +108,4 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.2` to `3.2.3`
+* Added `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0`

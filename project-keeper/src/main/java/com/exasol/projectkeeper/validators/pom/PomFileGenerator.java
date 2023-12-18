@@ -202,6 +202,8 @@ public class PomFileGenerator {
                 .child("project.build.sourceEncoding", "UTF-8") //
                 .child("project.reporting.outputEncoding", "UTF-8") //
                 .child("java.version", "11") //
+                .child("sonar.organization", "exasol") //
+                .child("sonar.host.url", "https://sonarcloud.io") //
                 .child("test.excludeTags", "") //
                 .nullableChild(!enabledModules.contains(MAVEN_CENTRAL) ? null : element("gpg.skip").text("true"));
     }
