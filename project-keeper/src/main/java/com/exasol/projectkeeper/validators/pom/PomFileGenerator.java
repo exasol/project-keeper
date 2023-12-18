@@ -21,6 +21,7 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
  */
 // [impl -> dsn~mvn-toolchain~1]
 public class PomFileGenerator {
+    /** Default Java version if none is specified in {@code pom.xml} property {@code java.version}. */
     public static final String DEFAULT_JAVA_VERSION = "11";
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
             new SimplePluginTemplateGenerator("maven_templates/sonar-maven-plugin.xml", DEFAULT),
