@@ -23,7 +23,7 @@ jobs:
           distribution: "temurin"
           java-version: |
             11
-            17 # Default
+            17
           cache: "maven"
       - name: Enable testcontainer reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
