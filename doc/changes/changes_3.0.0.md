@@ -1,4 +1,4 @@
-# Project Keeper 2.10.0, released 2023-??-??
+# Project Keeper 3.0.0, released 2023-??-??
 
 Code name:
 
@@ -6,7 +6,7 @@ Code name:
 
 ## Features
 
-* ISSUE_NUMBER: description
+* #508: Use Toolchain Plugin for Maven builds
 
 ## Dependency Updates
 
@@ -27,15 +27,15 @@ Code name:
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.9.17` to `3.0.0`
 
 #### Runtime Dependency Updates
 
-* Updated `com.exasol:project-keeper-java-project-crawler:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-java-project-crawler:2.9.17` to `3.0.0`
 
 #### Test Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-test-setup:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-shared-test-setup:2.9.17` to `3.0.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.3` to `3.15.4`
 * Updated `org.mockito:mockito-junit-jupiter:5.7.0` to `5.8.0`
 
@@ -50,12 +50,12 @@ Code name:
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-core:2.9.17` to `3.0.0`
 * Updated `org.apache.maven:maven-model:3.9.5` to `3.9.6`
 
 #### Test Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-test-setup:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-shared-test-setup:2.9.17` to `3.0.0`
 
 #### Plugin Dependency Updates
 
@@ -68,7 +68,7 @@ Code name:
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-core:2.9.17` to `3.0.0`
 
 #### Test Dependency Updates
 
@@ -85,7 +85,7 @@ Code name:
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.9.17` to `3.0.0`
 
 #### Test Dependency Updates
 
@@ -103,7 +103,7 @@ Code name:
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:2.9.17` to `2.10.0`
+* Updated `com.exasol:project-keeper-shared-model-classes:2.9.17` to `3.0.0`
 
 #### Plugin Dependency Updates
 
