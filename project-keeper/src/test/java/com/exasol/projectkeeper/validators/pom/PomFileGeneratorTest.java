@@ -42,6 +42,7 @@ class PomFileGeneratorTest {
         return pom.getDependencies().stream().map(Dependency::getArtifactId).collect(Collectors.toList());
     }
 
+    // [utest -> dsn~mvn-toolchain~1]
     @Test
     void testGenerateWithDefaultModule() throws XmlPullParserException, IOException {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);

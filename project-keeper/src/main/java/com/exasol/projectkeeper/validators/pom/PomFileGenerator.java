@@ -19,6 +19,7 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
 /**
  * This class generates the expected content for the auto-generated parent pom file.
  */
+// [impl -> dsn~mvn-toolchain~1]
 public class PomFileGenerator {
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
             new SimplePluginTemplateGenerator("maven_templates/sonar-maven-plugin.xml", DEFAULT),
