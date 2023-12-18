@@ -20,8 +20,8 @@ jobs:
         with:
           distribution: "temurin"
           java-version: |
-            "11"
-            "17" # Default
+            11
+            17 # Default
           cache: "maven"
       - name: Build with Maven skipping tests
         run: mvn --batch-mode clean verify -DskipTests

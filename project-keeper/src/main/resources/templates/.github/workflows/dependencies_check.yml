@@ -19,8 +19,8 @@ jobs:
         with:
           distribution: "temurin"
           java-version: |
-            "11"
-            "17" # Default
+            11
+            17 # Default
           cache: "maven"
 
       - name: Generate ossindex report

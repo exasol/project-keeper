@@ -34,8 +34,8 @@ jobs:
         with:
           distribution: "temurin"
           java-version: |
-            "11"
-            "17" # Default
+            11
+            17 # Default
           cache: "maven"
       - name: Cache SonarCloud packages
         uses: actions/cache@v3

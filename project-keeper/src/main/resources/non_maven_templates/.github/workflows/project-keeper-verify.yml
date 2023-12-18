@@ -25,8 +25,8 @@ jobs:
         with:
           distribution: "temurin"
           java-version: |
-            "11"
-            "17" # Default
+            11
+            17 # Default
           cache-dependency-path: |
             .github/workflows/project-keeper-verify.yml
             .github/workflows/project-keeper.sh
