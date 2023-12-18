@@ -8,6 +8,8 @@ This release adds support for using different Java versions for running Maven an
 
 This is a breaking change as it requires PK users to install both JDK versions 11 and 17 and create `~/.m2/toolchains.xml`. See the [user guide](../user_guide/user_guide.md#prerequisites-for-using-project-keeper) and [troubleshooting](../user_guide/user_guide.md#troubleshooting) for details.
 
+Project Keeper itself is now also built with Java 17, so you need Java 17 to run PK.
+
 ## Features
 
 * #508: Use Toolchain Plugin for Maven builds
