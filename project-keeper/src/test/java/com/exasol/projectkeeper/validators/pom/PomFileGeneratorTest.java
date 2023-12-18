@@ -68,7 +68,8 @@ class PomFileGeneratorTest {
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
                                 "flatten-maven-plugin", "ossindex-maven-plugin", "reproducible-build-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
-                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin")));
+                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
+                                "maven-toolchains-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
