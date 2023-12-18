@@ -21,9 +21,9 @@ class FileTemplatesFactory {
 
     private static final String NPM_SETUP = lines( //
             "      - name: Set up NPM", //
-            "        uses: actions/setup-node@v3", //
+            "        uses: actions/setup-node@v4", //
             "        with:", //
-            "          node-version: 18", //
+            "          node-version: 20", //
             "          cache: \"npm\"", //
             "          cache-dependency-path: \"**/package-lock.json\"" //
     );
