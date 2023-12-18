@@ -22,7 +22,12 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 11
+          java-version: |
+            "11"
+            "17" # Default
+          cache-dependency-path: |
+            .github/workflows/project-keeper-verify.yml
+            .github/workflows/project-keeper.sh
 
       - name: Set up Go
         uses: actions/setup-go@v5

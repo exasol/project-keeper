@@ -21,7 +21,9 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 11
+          java-version: |
+            "11"
+            "17" # Default
           cache: "maven"
       - name: Set up Go
         uses: actions/setup-go@v5

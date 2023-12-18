@@ -17,7 +17,9 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 11
+          java-version: |
+            "11"
+            "17" # Default
           cache: "maven"
       - name: Install Projects
         # This fixes https://github.com/exasol/project-keeper/issues/330

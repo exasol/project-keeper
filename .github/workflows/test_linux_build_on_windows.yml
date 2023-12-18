@@ -21,7 +21,9 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 11
+          java-version: |
+            "11"
+            "17" # Default
           cache: "maven"
       - name: Set up Go
         uses: actions/setup-go@v5
@@ -33,9 +35,8 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go }}
             ${{ runner.os }}-go-
       - name: Install Go tools
         run: go install github.com/google/go-licenses@v1.6.0
@@ -72,7 +73,9 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 11
+          java-version: |
+            "11"
+            "17" # Default
           cache: "maven"
       - name: Download jar
         uses: actions/download-artifact@v4
