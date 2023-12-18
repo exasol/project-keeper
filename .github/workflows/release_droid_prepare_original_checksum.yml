@@ -29,17 +29,13 @@ jobs:
           path: |
             ~/.cache/go-build
             ~/go/pkg/mod
-          key: ${{ runner.os }}-go-${{ matrix.go }}-${{ hashFiles('**/go.sum') }}
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
           restore-keys: |
-            ${{ runner.os }}-go-${{ matrix.go }}
             ${{ runner.os }}-go-
       - name: Install Go tools
         run: go install github.com/google/go-licenses@v1.6.0
       - name: Run tests and build with Maven
-        run: |
-          mvn --batch-mode clean verify install \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -DtrimStackTrace=false
+        run: mvn --batch-mode clean verify install
       - name: Prepare checksum
         run: find target -maxdepth 1 -name *.jar -exec sha256sum "{}" + > original_checksum
       - name: Upload checksum to the artifactory

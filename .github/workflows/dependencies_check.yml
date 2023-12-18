@@ -13,7 +13,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 11
+      - name: Set up JDKs
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
@@ -21,12 +21,6 @@ jobs:
             "11"
             "17" # Default
           cache: "maven"
-      - name: Install Projects
-        # This fixes https://github.com/exasol/project-keeper/issues/330
-        run: |
-          mvn --batch-mode install -DskipTests \
-              -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true \
-              -Djacoco.skip=true -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
       - name: Generate ossindex report
         run: |

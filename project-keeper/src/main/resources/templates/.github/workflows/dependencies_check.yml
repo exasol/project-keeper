@@ -13,11 +13,13 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - name: Set up JDK 17
+      - name: Set up JDKs
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 17
+          java-version: |
+            "11"
+            "17" # Default
           cache: "maven"
 
       - name: Generate ossindex report
