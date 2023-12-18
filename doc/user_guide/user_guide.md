@@ -8,6 +8,8 @@ This guide describes how to use Project Keeper (PK) in a project.
 
 Projects that use PK require JDK versions 17 (for running Maven) and 11 (for compiling and testing). This means that developers must install both JDK versions on their machine.
 
+Make sure that environment variable `JAVA_HOME` points to JDK 17.
+
 ### Configure Maven's `toolchains.xml`
 
 Create file `~/.m2/toolchains.xml` with the following content and adapt the `jdkHome` elements to your local installation.
