@@ -1,4 +1,4 @@
-# Project Keeper 3.0.0, released 2023-12-18
+# Project Keeper 3.0.0, released 2023-12-19
 
 Code name: Support Java 17 builds
 
