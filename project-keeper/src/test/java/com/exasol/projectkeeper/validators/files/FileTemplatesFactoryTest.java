@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.verify;
@@ -87,12 +86,10 @@ class FileTemplatesFactoryTest {
         final Optional<FileTemplate> template = findTemplate(actual, ".github/workflows/project-keeper-verify.yml");
         assertTrue(template.isPresent());
         final String content = template.get().getContent();
-        assertThat(content, not(containsString("$npmSetup")));
-        if (hasNpmModule) {
-            assertThat(content, containsString("uses: actions/setup-node"));
-        } else {
-            assertThat(content, not(containsString("uses: actions/setup-node")));
-        }
+        assertThat(content, allOf(not(containsString("$npmSetup")), //
+                not(containsString("$installNode")), //
+                containsString("uses: actions/setup-node@v4\n" + //
+                        "        if: ${{ " + hasNpmModule + " }}")));
     }
 
     @ParameterizedTest
