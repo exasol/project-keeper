@@ -19,19 +19,6 @@ class FileTemplatesFactory {
     private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
             "linguist-generated=true");
 
-    private static final String NPM_SETUP = lines( //
-            "      - name: Set up NPM", //
-            "        uses: actions/setup-node@v3", //
-            "        with:", //
-            "          node-version: 18", //
-            "          cache: \"npm\"", //
-            "          cache-dependency-path: \"**/package-lock.json\"" //
-    );
-
-    private static String lines(final String... line) {
-        return String.join("\n", Arrays.asList(line));
-    }
-
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
@@ -116,7 +103,8 @@ class FileTemplatesFactory {
         final Set<ProjectKeeperModule> enabledModules = source.getModules();
         if (enabledModules.contains(DEFAULT)) {
             templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.ui.prefs", REQUIRE_EXACT));
-            templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.core.prefs", REQUIRE_EXACT));
+            templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.core.prefs", REQUIRE_EXACT)
+                    .replacing("javaVersion", source.getJavaVersion()));
             templates.add(new FileTemplateFromResource("src/test/resources/logging.properties", REQUIRE_EXACT));
             templates.add(new FileTemplateFromResource("versionsMavenPluginRules.xml", REQUIRE_EXACT));
         }
@@ -132,12 +120,13 @@ class FileTemplatesFactory {
         return templates;
     }
 
+    // [impl -> dsn~pk-verify-workflow~1]
     private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates() {
         final ArrayList<FileTemplate> templates = new ArrayList<>();
         final String pathInProject = ".github/workflows/project-keeper-verify.yml";
         templates.add(new FileTemplateFromResource("non_maven_templates/" + pathInProject, //
                 pathInProject, REQUIRE_EXACT) //
-                .replacing("npmSetup", this.hasNpmModule ? NPM_SETUP : ""));
+                .replacing("installNode", String.valueOf(this.hasNpmModule)));
         templates.add(new ProjectKeeperShellScript(this.ownVersion));
         return templates;
     }

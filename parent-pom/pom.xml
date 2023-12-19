@@ -28,12 +28,12 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>2.9.17</revision>
-        <maven.version>3.9.5</maven.version>
+        <revision>3.0.0</revision>
+        <maven.version>3.9.6</maven.version>
         <minimum.maven.version>3.6.3</minimum.maven.version>
         <junit.version>5.10.1</junit.version>
         <xmlunit.version>2.9.1</xmlunit.version>
-        <mockito.version>5.7.0</mockito.version>
+        <mockito.version>5.8.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -204,7 +204,7 @@
             <dependency>
                 <groupId>nl.jqno.equalsverifier</groupId>
                 <artifactId>equalsverifier</artifactId>
-                <version>3.15.3</version>
+                <version>3.15.4</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

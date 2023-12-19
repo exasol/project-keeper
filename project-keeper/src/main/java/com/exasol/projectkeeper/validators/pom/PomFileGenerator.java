@@ -19,9 +19,13 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
 /**
  * This class generates the expected content for the auto-generated parent pom file.
  */
+// [impl -> dsn~mvn-toolchain~1]
 public class PomFileGenerator {
+    /** Default Java version if none is specified in {@code pom.xml} property {@code java.version}. */
+    public static final String DEFAULT_JAVA_VERSION = "11";
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
             new SimplePluginTemplateGenerator("maven_templates/sonar-maven-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-toolchains-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-compiler-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-enforcer-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/flatten-maven-plugin.xml", DEFAULT),
@@ -175,7 +179,7 @@ public class PomFileGenerator {
     private ElementBuilder dependencies(final Collection<ProjectKeeperModule> enabledModules) {
         return element("dependencies") //
                 .nullableChild(enabledModules.contains(LOMBOK) //
-                        ? dependency("org.projectlombok", "lombok", "1.18.28", "provided", null)
+                        ? dependency("org.projectlombok", "lombok", "1.18.30", "provided", null)
                         : null) //
                 .nullableChild(enabledModules.contains(UDF_COVERAGE) //
                         ? dependency("org.jacoco", "org.jacoco.agent", "0.8.11", "test", "runtime")
@@ -200,7 +204,9 @@ public class PomFileGenerator {
         return element("properties") //
                 .child("project.build.sourceEncoding", "UTF-8") //
                 .child("project.reporting.outputEncoding", "UTF-8") //
-                .child("java.version", "11") //
+                .child("java.version", DEFAULT_JAVA_VERSION) //
+                .child("sonar.organization", "exasol") //
+                .child("sonar.host.url", "https://sonarcloud.io") //
                 .child("test.excludeTags", "") //
                 .nullableChild(!enabledModules.contains(MAVEN_CENTRAL) ? null : element("gpg.skip").text("true"));
     }

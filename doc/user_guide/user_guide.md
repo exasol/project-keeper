@@ -1,5 +1,44 @@
 # User Guide
 
+This guide describes how to use Project Keeper (PK) in a project.
+
+## Prerequisites for Using Project Keeper
+
+### Install Required JDK Versions
+
+Projects that use PK require JDK versions 17 (for running Maven) and 11 (for compiling and testing). This means that developers must install both JDK versions on their machine.
+
+Make sure that environment variable `JAVA_HOME` points to JDK 17.
+
+### Configure Maven's `toolchains.xml`
+
+Create file `~/.m2/toolchains.xml` with the following content and adapt the `jdkHome` elements to your local installation.
+
+```xml
+<toolchains xmlns="http://maven.apache.org/TOOLCHAINS/1.1.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/TOOLCHAINS/1.1.0 http://maven.apache.org/xsd/toolchains-1.1.0.xsd">
+    <toolchain>
+        <type>jdk</type>
+        <provides>
+            <version>11</version>
+        </provides>
+        <configuration>
+            <jdkHome>/path/to/jdk_11/</jdkHome>
+        </configuration>
+    </toolchain>
+    <toolchain>
+        <type>jdk</type>
+        <provides>
+            <version>17</version>
+        </provides>
+        <configuration>
+            <jdkHome>/path/to/jdk_17/</jdkHome>
+        </configuration>
+    </toolchain>
+</toolchains>
+```
+
 ## Installation
 
 Install this plugin by adding the following lines to your project's `pom.xml` file:
@@ -151,6 +190,20 @@ For Maven projects, PK generates a `pk_generated_parent.pom` file. This file con
 
 The `pk_generated_parent.pom` file is required during the build and must be checked into version control. Run `mvn project-keeper:fix` to update the file instead of editing it manually.
 
+### Overriding Defaults
+
+If a configuration in `pk_generated_parent.pom` does not apply to your project you can override it in `pom.xml`.
+
+#### JDK Toolchain Version
+
+By default PK configures the project to use Java 11. If you need to use a different version, you can override it by adding a property to your `pom.xml`:
+
+```xml
+<properties>
+    <java.version>17</java.version>
+</properties>
+```
+
 ### Using a Parent POM
 
 If you want to use a parent POM for your project, that's not possible directly since your `pom.xml` must use the `pk_generated_parent.pom` as parent.
@@ -283,3 +336,29 @@ For GitHub Actions you can solve this by adding `fetch-depth: 0` to the checkout
 **Problem:** PK locally shows more dependency changes than in CI.
 
 Typically, this happens if you did not fetch all tags. Simply run `git pull`.
+
+---
+
+**Problem:** Maven build fails with the following error message:
+
+```
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-enforcer-plugin:3.4.1:enforce (enforce-maven) on project project-keeper-shared-model-classes: 
+[ERROR] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion failed with message:
+[ERROR] Detected JDK version 11.0.18 (JAVA_HOME=/Users/chp/Applications/java/jdk-11.0.18+10/Contents/Home) is not in the allowed range [17,).
+```
+
+This means that environment variable `JAVA_HOME` points to a JDK 11. Please ensure that JDK 17 is installed and `JAVA_HOME` points to it.
+
+See section [Install Required JDK Versions](#install-required-jdk-versions) for details.
+
+---
+
+**Problem:**: Maven build fails with the following error message:
+
+```
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-toolchains-plugin:3.1.0:toolchain (default) on project project-keeper-shared-model-classes: Cannot find matching toolchain definitions for the following toolchain types:
+[ERROR] jdk [ version='11' ]
+[ERROR] Please make sure you define the required toolchains in your ~/.m2/toolchains.xml file.
+```
+
+Ensure that `~/.m2/toolchains.xml` exists and contains a JDK version 11. See section [Configure Maven's `toolchains.xml`](#configure-mavens-toolchainsxml) for details.

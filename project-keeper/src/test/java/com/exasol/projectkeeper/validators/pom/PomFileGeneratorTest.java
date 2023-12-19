@@ -42,6 +42,7 @@ class PomFileGeneratorTest {
         return pom.getDependencies().stream().map(Dependency::getArtifactId).collect(Collectors.toList());
     }
 
+    // [utest -> dsn~mvn-toolchain~1]
     @Test
     void testGenerateWithDefaultModule() throws XmlPullParserException, IOException {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
@@ -68,7 +69,8 @@ class PomFileGeneratorTest {
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
                                 "flatten-maven-plugin", "ossindex-maven-plugin", "reproducible-build-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
-                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin")));
+                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
+                                "maven-toolchains-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {

@@ -54,6 +54,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
                 containsString("| github.com/exasol/exasol-test-setup-abstraction-server/go-client | [MIT][1]")));
     }
 
+    // [itest -> dsn~pk-verify-workflow~1]
     private void assertGeneratedVerifyWorkflow() throws IOException {
         final String currentVersion = MavenProjectVersionGetter.getProjectRevision(Path.of("../parent-pom/pom.xml"));
         final String workflowFile = Files

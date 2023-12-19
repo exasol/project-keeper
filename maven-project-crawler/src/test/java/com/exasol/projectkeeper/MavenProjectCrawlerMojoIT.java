@@ -3,6 +3,7 @@ package com.exasol.projectkeeper;
 import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.io.IOException;
@@ -44,6 +45,7 @@ class MavenProjectCrawlerMojoIT {
                 Path.of("./.flattened-pom.xml").toFile());
     }
 
+    // [itest -> dsn~eclipse-prefs-java-version~1]
     @Test
     void testCrawlProject() throws GitAPIException, IOException, VerificationException {
         final Path subfolder = this.tempDir.resolve("subfolder").toAbsolutePath();
@@ -51,6 +53,7 @@ class MavenProjectCrawlerMojoIT {
         Git.init().setDirectory(subfolder.toFile()).call().close();
         final TestMavenModel testProject = new TestMavenModel();
         testProject.addDependency("error-reporting-java", "com.exasol", "compile", "0.4.1");
+        testProject.setJavaVersionProperty("17");
         testProject.writeAsPomToProject(subfolder);
         final CrawledMavenProject crawledProject = runCrawler(subfolder);
         final ProjectDependency expectedDependency = ProjectDependency.builder() //
@@ -64,8 +67,21 @@ class MavenProjectCrawlerMojoIT {
                 () -> assertThat(crawledProject.getProjectDependencies().getDependencies(),
                         Matchers.hasItem(expectedDependency)),
                 () -> assertThat(crawledProject.getDependencyChangeReport().getChanges(COMPILE),
-                        Matchers.contains(new NewDependency("com.exasol", "error-reporting-java", "0.4.1")))//
+                        Matchers.contains(new NewDependency("com.exasol", "error-reporting-java", "0.4.1"))),
+                () -> assertThat(crawledProject.getJavaVersion(), equalTo("17")) //
         );
+    }
+
+    // [itest -> dsn~eclipse-prefs-java-version~1]
+    @Test
+    void testCrawlProjectWithoutJavaVersion() throws GitAPIException, IOException, VerificationException {
+        final Path subfolder = this.tempDir.resolve("subfolder").toAbsolutePath();
+        Files.createDirectory(subfolder);
+        Git.init().setDirectory(subfolder.toFile()).call().close();
+        final TestMavenModel testProject = new TestMavenModel();
+        testProject.writeAsPomToProject(subfolder);
+        final CrawledMavenProject crawledProject = runCrawler(subfolder);
+        assertThat(crawledProject.getJavaVersion(), nullValue());
     }
 
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {

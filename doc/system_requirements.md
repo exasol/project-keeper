@@ -206,15 +206,41 @@ Different projects require different project structures. For example, projects t
 
 Needs: dsn
 
-### Maven Integration
+### Build Integration
 
+PK can be integrated into the CI build so that it can break the Continuous Integration (CI) build if the project structure is invalid.
+
+#### Maven Integration
 `feat~mvn-integration~1`
 
-PK can be integrated into the maven lifecycle. By that, it can break the Continuous Integration (CI) build if the project structure is invalid.
+PK can be integrated into the Maven lifecycle. By that, it can break the Continuous Integration (CI) build if the project structure is invalid.
 
 Needs: dsn
 
-### Support for Golang Project
+#### Integration for Non-Maven Projects
+`feat~non-mvn-integration~1`
+
+PK can be integrated into non-Maven projects (e.g. Golang or NPM). By that, it can break the Continuous Integration (CI) build if the project structure is invalid.
+
+Needs: dsn
+
+### Support for Maven Projects
+
+#### Support Building With Multiple Java Versions
+`feat~mvn-multiple-java-versions~1`
+
+PK generates CI build scripts that allow building and testing Java projects with Java versions 11 and 17.
+
+Rationale:
+
+More and more libraries and tools for Java don't support Java 11 anymore, only Java 17 and later. At the same time we still need to support building projects for Java 11 (e.g. because they run in Exasol's UDFs). Examples:
+
+* `sonar-maven-plugin` has deprecated analysis with Java 11 and will require Java 17 soon.
+* A dependency of [error-code-crawler-maven-plugin](https://github.com/exasol/error-code-crawler-maven-plugin/) is only published for Java 17. In order to fix [a vulnerability](https://github.com/exasol/error-code-crawler-maven-plugin/issues/95) we need to upgrade the complete project to Java 17 and thus all projects that use error-code-crawler-maven-plugin.
+
+Needs: dsn
+
+### Support for Golang Projects
 `feat~golang-project-support~1`
 
 PK supports Golang projects.

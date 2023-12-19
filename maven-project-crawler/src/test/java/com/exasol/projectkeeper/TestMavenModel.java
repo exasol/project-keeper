@@ -32,6 +32,10 @@ public class TestMavenModel extends Model {
         this.addDependency(dependency);
     }
 
+    public void setJavaVersionProperty(final String javaVersion) {
+        this.addProperty("java.version", javaVersion);
+    }
+
     public void writeAsPomToProject(final Path projectDir) throws IOException {
         try (final FileWriter fileWriter = new FileWriter(projectDir.resolve("pom.xml").toFile())) {
             new MavenXpp3Writer().write(fileWriter, this);

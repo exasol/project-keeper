@@ -68,6 +68,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         }
     }
 
+    // [impl -> dsn~eclipse-prefs-java-version~1]
     private AnalyzedSource analyzeSource(final Path projectDir, final Source source,
             final Map<String, CrawledMavenProject> crawledMvnSources) {
         if (MAVEN.equals(source.getType())) {
@@ -82,7 +83,8 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .advertise(source.isAdvertised()).artifactId(artifactId).projectName(projectName)
                     .dependencies(crawledMavenProject.getProjectDependencies())
                     .dependencyChanges(crawledMavenProject.getDependencyChangeReport())
-                    .version(crawledMavenProject.getProjectVersion()).isRootProject(isRoot).build();
+                    .version(crawledMavenProject.getProjectVersion()).isRootProject(isRoot)
+                    .javaVersion(crawledMavenProject.getJavaVersion()).build();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-93")
                     .message("Analyzing of {{type}} is not supported by MavenSourceAnalyzer", source.getType())

@@ -33,7 +33,7 @@ class MavenProjectCrawlResultTest {
                     new UpdatedDependency("com.example", "my-updated-dependency", "1.0.0", "1.0.1"))) //
             .build();
     private static final CrawledMavenProject CRAWLED_MAVEN_PROJECT = new CrawledMavenProject(REPORT,
-            PROJECT_DEPENDENCIES, "1.2.3");
+            PROJECT_DEPENDENCIES, "1.2.3", "17");
     private static final MavenProjectCrawlResult CRAWL_RESULT = new MavenProjectCrawlResult(
             Map.of("pom.xml", CRAWLED_MAVEN_PROJECT));
 
@@ -48,6 +48,12 @@ class MavenProjectCrawlResultTest {
                 containsString("\"@type\":\"new\""), //
                 containsString("\"@type\":\"removed\""), //
                 containsString("\"@type\":\"updated\"")));
+    }
+
+    // [utest -> dsn~eclipse-prefs-java-version~1]
+    @Test
+    void testJsonContainsJavaVersion() {
+        assertThat(CRAWL_RESULT.toJson(), containsString("\"javaVersion\":\"17\""));
     }
 
     @Test

@@ -250,6 +250,66 @@ Covers:
 
 Needs: impl, itest
 
+### Use Maven Toolchain
+`dsn~mvn-toolchain~1`
+
+PK generates build scripts with the following changes:
+* `pk_generated_parent.pom` contains `maven-toolchains-plugin`, using toolchain version `${java.version}`.
+  * This ensures that the same toolchain version is used for the build as the configured Java version.
+  * Plugins like `maven-compiler-plugin` and `maven-surefire-plugin` use the toolchain configured in `${java.version}`.
+    * This is an improvement over Maven's default behavior to use the Java version of `JAVA_HOME` for compiling and testing. This caused problems when JDK 17 was installed but the project requires a build with JDK 11. The user had to manually override `JAVA_HOME` to point to JDK 11 in order to fix the build.
+  * This allows projects to override the Java version in their `pom.xml` file using the `<properties>` element.
+* `pk_generated_parent.pom` configures `maven-enforcer-plugin` to require Java 17 for the build.
+  * This ensures that builds fail early in case an older JDK is used.
+* All GitHub workflows `.github/workflows/*.yml` install both Java versions 11 and 17 using action `actions/setup-java`.
+  * Action `actions/setup-java` automatically generates `~/.m2/toolchains.xml` with the paths to the installed JDKs.
+  * PK specifies Java 17 as the last option, making it the default for the build. This means that Maven will automatically use Java 17 for running the build and plugins.
+
+Users will need to do the following:
+* Install both JDKs 11 and 17 locally on their machines
+* Configure environment variable `JAVA_HOME` to point to JDK 17
+* Create `~/.m2/toolchains.xml` pointing to JDKs 11 and 17.
+
+PK's user guide describes how to do this.
+
+Covers:
+
+* [feat~mvn-multiple-java-versions~1](system_requirements.md#support-building-with-multiple-java-versions)
+
+Needs: impl, utest
+
+### Generate `.settings/org.eclipse.jdt.core.prefs` with Java Version
+`dsn~eclipse-prefs-java-version~1`
+
+PK generates Eclipse config file `.settings/org.eclipse.jdt.core.prefs` with the correct Java version:
+* If `pom.xml` contains property `java.version`, PK uses this version
+* If `pom.xml` does not contain property `java.version`, PK uses `11` as default
+
+Rationale:
+
+IDEs like Eclipse or VS Code modify `.settings/org.eclipse.jdt.core.prefs` when loading projects with Java version different from the default `11`. Generating the file with the correct version avoids excluding the file from PK.
+
+Needs: impl, utest, itest
+
+## Non-Maven Integration
+`dsn~pk-verify-workflow~1`
+
+For projects that don't contain a Maven module in the root folder, PK generates the following files:
+
+- `.github/workflows/project-keeper.sh`: This bash script downloads Project Keeper using `maven-dependency-plugin` and runs it.
+- `.github/workflows/project-keeper-verify.yml`: This GitHub workflow runs for every build and calls the script above.
+
+Rationale:
+
+* Projects that contain a Maven module in the root folder can use the default [Maven verify goal](#maven-verify-goal) and don' require this separate workflow and script.
+* Users can call the bash script manually with the `fix` option to automatically fix issues with the build scripts.
+
+Covers:
+
+* [`feat~non-mvn-integration~1`](system_requirements.md#integration-for-non-maven-projects)
+
+Needs: impl, itest
+
 ## Configuration
 
 ### Modules
