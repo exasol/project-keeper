@@ -190,6 +190,20 @@ For Maven projects, PK generates a `pk_generated_parent.pom` file. This file con
 
 The `pk_generated_parent.pom` file is required during the build and must be checked into version control. Run `mvn project-keeper:fix` to update the file instead of editing it manually.
 
+### Overriding Defaults
+
+If a configuration in `pk_generated_parent.pom` does not apply to your project you can override it in `pom.xml`.
+
+#### JDK Toolchain Version
+
+By default PK configures the project to use Java 11. If you need to use a different version, you can override it by adding a property to your `pom.xml`:
+
+```xml
+<properties>
+    <java.version>17</java.version>
+</properties>
+```
+
 ### Using a Parent POM
 
 If you want to use a parent POM for your project, that's not possible directly since your `pom.xml` must use the `pk_generated_parent.pom` as parent.
