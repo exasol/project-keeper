@@ -132,11 +132,13 @@ public class SimpleProcess {
     private void waitForExecutionFinished(final Duration executionTimeout) {
         try {
             if (!this.process.waitFor(executionTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
+                final String outputStreamContentUntilNow = this.outputStreamConsumer.getCurrentContent();
+                final String errorStreamContentUntilNow = this.errorStreamConsumer.getCurrentContent();
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128")
                         .message("Timeout while waiting {{timeout|u}}ms for command {{executed command}}." //
-                                + " Output was {{output}}\nError output: {{std error}}", //
+                                + " Output was {{std output}}\nError output: {{std error}}", //
                                 executionTimeout.toMillis(), formatCommand(), //
-                                getOutputStreamContent(), getErrorStreamContent())
+                                outputStreamContentUntilNow, errorStreamContentUntilNow)
                         .toString());
             }
         } catch (final InterruptedException exception) {

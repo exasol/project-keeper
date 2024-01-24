@@ -44,6 +44,16 @@ public class CollectingConsumer implements StreamConsumer {
                     "Stream reading did not finish after timeout of {{timeout}}. Content collected until now: {{content}}.",
                     timeout, this.stringBuilder.toString()).ticketMitigation().toString());
         }
+        return getCurrentContent();
+    }
+
+    /**
+     * Returns the current content read from the stream, without waiting for the stream to complete. This is useful in
+     * case of a error or timeout where you don't want to wait for the process to complete.
+     * 
+     * @return current stream content
+     */
+    public String getCurrentContent() {
         return this.stringBuilder.toString();
     }
 }

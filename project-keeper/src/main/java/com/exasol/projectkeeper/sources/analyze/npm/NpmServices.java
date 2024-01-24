@@ -25,14 +25,14 @@ class NpmServices {
     // [impl -> dsn~npm-dependency-licenses~1]
     static final ShellCommand LIST_DEPENDENCIES = ShellCommand.builder() //
             .command(NPM, "list") //
-            .timeout(Duration.ofMinutes(2)) //
+            .timeout(Duration.ofMinutes(4)) //
             .args("--location=project", "--depth=0", "--json") //
             .build();
 
     // [impl -> dsn~npm-dependency-additional-information~1]
     static final ShellCommand LICENSE_CHECKER = ShellCommand.builder() //
             .command(NPX, "license-checker") //
-            .timeout(Duration.ofMinutes(2)) //
+            .timeout(Duration.ofMinutes(4)) //
             .args("--location=project", "--direct", "--json") //
             .build();
 

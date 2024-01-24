@@ -71,18 +71,20 @@ public class JavaProjectCrawlerRunner {
             LOGGER.fine(() -> "Executing command " + commandParts);
             final Process proc = new ProcessBuilder(commandParts).redirectErrorStream(true).start();
 
-            final CollectingConsumer streamConsumer = new AsyncStreamReader()
+            final CollectingConsumer outputStreamConsumer = new AsyncStreamReader()
                     .startCollectingConsumer(proc.getInputStream());
+            final CollectingConsumer errorStreamConsumer = new AsyncStreamReader()
+                    .startCollectingConsumer(proc.getErrorStream());
 
             if (!proc.waitFor(90, TimeUnit.SECONDS)) {
-                final String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81")
-                        .message("Timeout while executing command {{executed command|u}}. Output was {{output}}",
-                                commandParts, output)
-                        .toString());
+                final String stdOutput = outputStreamConsumer.getCurrentContent();
+                final String stdError = errorStreamConsumer.getCurrentContent();
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-81").message(
+                        "Timeout while executing command {{executed command|u}}. Output: {{std output}}, error: {{std error}}",
+                        commandParts, stdOutput, stdError).toString());
             }
             final int exitCode = proc.exitValue();
-            final String output = streamConsumer.getContent(STREAM_READING_TIMEOUT);
+            final String output = outputStreamConsumer.getContent(STREAM_READING_TIMEOUT);
             if (exitCode != 0) {
                 LOGGER.log(Level.SEVERE, output);
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-78").message(
