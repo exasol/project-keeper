@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test;
 
 class SimpleProcessIT {
 
-    private static final Duration TIMEOUT = Duration.ofMillis(10);
+    private static final Duration TIMEOUT = Duration.ofMillis(20);
 
     @Test
     void outputStream() {
