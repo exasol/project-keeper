@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.sources.analyze.golang;
+package com.exasol.projectkeeper.sources.analyze.generic;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -26,7 +26,7 @@ public class SimpleProcess {
     private final List<String> command;
     private final Instant startTime;
 
-    private SimpleProcess(final Process process, final CollectingConsumer outputStreamConsumer,
+    SimpleProcess(final Process process, final CollectingConsumer outputStreamConsumer,
             final CollectingConsumer errorStreamConsumer, final Path workingDirectory, final List<String> command,
             final Instant startTime) {
         this.process = process;
@@ -97,7 +97,7 @@ public class SimpleProcess {
                             + " Output:\n{{std out}}\n" //
                             + "Error output:\n{{std error}}", //
                             formatCommand(), this.workingDirectory, exitCode, duration, //
-                            getOutputStreamContent(), getErrorStreamContent())
+                            getOutputStreamContent().trim(), getErrorStreamContent().trim())
                     .toString());
         }
         LOGGER.finest(() -> "Command '" + formatCommand() + "' finished successfully after " + duration);
@@ -123,7 +123,7 @@ public class SimpleProcess {
      */
     public String getErrorStreamContent() {
         try {
-            return this.errorStreamConsumer.getContent(Duration.ofMillis(500));
+            return this.errorStreamConsumer.getContent(Duration.ofSeconds(5));
         } catch (final InterruptedException exception) {
             throw handleInterruptedException(exception);
         }
@@ -132,8 +132,8 @@ public class SimpleProcess {
     private void waitForExecutionFinished(final Duration executionTimeout) {
         try {
             if (!this.process.waitFor(executionTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
-                final String outputStreamContentUntilNow = this.outputStreamConsumer.getCurrentContent();
-                final String errorStreamContentUntilNow = this.errorStreamConsumer.getCurrentContent();
+                final String outputStreamContentUntilNow = this.outputStreamConsumer.getCurrentContent().trim();
+                final String errorStreamContentUntilNow = this.errorStreamConsumer.getCurrentContent().trim();
                 throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-128")
                         .message("Timeout while waiting {{timeout|u}}ms for command {{executed command}}." //
                                 + " Output was {{std output}}\nError output: {{std error}}", //

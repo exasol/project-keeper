@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
-import com.exasol.projectkeeper.sources.analyze.golang.SimpleProcess;
+import com.exasol.projectkeeper.sources.analyze.generic.SimpleProcess;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 
