@@ -7,8 +7,9 @@ This maven plugin checks and unifies the project's structure according to the Ex
 
 ## Usage in a Nutshell for Maven
 
-1. Create config file
+1. Create config file `~/.m2/toolchains.xml` for the Maven toolchains plugin, see [user guide](doc/user_guide/user_guide.md#configure-mavens-toolchainsxml) for details.
 
+2. Create config file
    ```yml
    sources:
      - type: maven
@@ -17,8 +18,7 @@ This maven plugin checks and unifies the project's structure according to the Ex
          - maven_central
    ```
 
-2. Add PK plugin to your `pom.xml`:
-
+3. Add PK plugin to your `pom.xml`:
    ```xml
    <plugins>
        <plugin>
@@ -36,13 +36,12 @@ This maven plugin checks and unifies the project's structure according to the Ex
    </plugins>
    ```
 
-3. Run PK fix:
-
+4. Run PK fix:
    ```sh
    mvn project-keeper:fix --projects .
    ```
 
-4. Run PK verify:
+5. Run PK verify:
    ```sh
    mvn project-keeper:verify --projects .
    ```
