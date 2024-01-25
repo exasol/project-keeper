@@ -30,7 +30,7 @@ jobs:
         with:
           go-version: "1.21"
       - name: Cache Go modules
-        uses: actions/cache@v3
+        uses: actions/cache@v4
         with:
           path: |
             ~/.cache/go-build
@@ -57,7 +57,7 @@ jobs:
           cp $(find project-keeper-maven-plugin/target/ -regextype sed -regex ".*/project-keeper-maven-plugin-[0-9]\+\.[0-9]\+\.[0-9]\+\(-SNAPSHOT\)\?\.jar") artifact/project-keeper-maven-plugin.jar
           cp project-keeper-maven-plugin/.flattened-pom.xml artifact/project-keeper-maven-plugin.pom
       - name: Upload jar artifact
-        uses: actions/upload-artifact@master
+        uses: actions/upload-artifact@v4
         with:
           name: project-keeper-jar
           path: artifact
