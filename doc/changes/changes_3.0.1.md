@@ -1,12 +1,14 @@
-# Project Keeper 3.0.1, released 2024-??-??
+# Project Keeper 3.0.1, released 2024-01-25
 
-Code name:
+Code name: Fixed timeout exception handling
 
 ## Summary
 
-## Features
+This release fixes the exception handling for process timeouts. When a started process timed out, PK threw exception `E-PK-CORE-99: Stream reading did not finish after timeout of PT5S` instead of the correct `E-PK-CORE-128: Timeout while waiting 10ms for command '...'.`, hiding the root cause of the problem.
 
-* ISSUE_NUMBER: description
+## Bugfixes
+
+* #518: Fixed exception handling for process timeouts
 
 ## Dependency Updates
 
