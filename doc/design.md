@@ -442,3 +442,159 @@ Covers:
 * [`req~npm-changed-dependency~1`](system_requirements.md#get-changed-dependency)
 
 Needs: impl, utest, itest
+
+## Automatic Dependency Update Process
+
+This consists of the following steps:
+1. Trigger the dependency update process
+2. Update dependencies
+3. Create a pull request
+
+#### Triggering the Dependency Update Process
+`dsn~trigger-dependency-updates~1`
+
+PK generates the `dependencies_check.yml` GitHub workflow so that it launches the `dependencies_update.yml` workflow when it detects new vulnerabilities.
+
+Rationale:
+
+`dependencies_check.yml` already uses the [security-issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) tool from the [python-toolbox](https://github.com/exasol/python-toolbox) to create issues for new vulnerabilities. Re-implementing this in PK is not necessary.
+
+Covers
+* [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
+
+Needs: impl, utest, itest
+
+#### Update Dependencies Mode
+`dsn~update-dependencies-mode~1`
+
+PK provides an `update-dependencies` mode in addition to `fix` and `verify`. This mode performs the following steps:
+
+1. Increment version of the project
+2. Update dependencies to their latest version
+3. Create changelog containing information about the fixed vulnerabilities (if available)
+
+Rationale:
+
+* We implement this in PK because
+  * PK already contains code for working with versions and changelog, so we can reuse this code
+  * The `update-dependencies` mode is also useful for running locally on the developer's machine when working on a non-security related task
+* We don't implement git/GitHub operations in PK because
+  * This would couple PK to GitHub
+  * This would be surprising when running it locally
+  * This would require credentials for accessing the GitHub API
+
+Covers
+* [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
+* [`req~auto-create-changelog~1`](system_requirements.md#automatically-create-change-log-entry)
+
+Needs: dsn
+
+##### Incrementing the Version
+`dsn~increment-version~1`
+
+PK increments the patch version. PK does not modify the version if the current version was not yet released (i.e. there is not release in the latest changelog file).
+
+Rationale:
+
+Leaving the version unchanged when it was not yet released avoids surprises when running this locally.
+
+Covers
+* [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
+
+Needs: impl, utest, itest
+
+##### Upgrade Dependencies
+`dsn~upgrade-dependencies~1`
+
+PK upgrades dependencies using the [versions-maven-plugin](https://www.mojohaus.org/versions/versions-maven-plugin/index.html):
+
+```sh
+mvn versions:use-latest-releases && mvn versions:update-properties
+```
+
+Rationale:
+
+* This avoids re-inventing the wheel.
+* The plugin supports excluding dependencies from the upgrade that could cause problems using the [`<excludes>`](https://www.mojohaus.org/versions/versions-maven-plugin/use-latest-releases-mojo.html#excludes) configuration.
+
+Covers
+* [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
+
+Needs: impl, utest, itest
+
+##### Generate Changelog
+
+PK generates the changelog for the fixed vulnerabilities if the required information is available. The changelog contains the following information:
+* Issues that fix the vulnerabilities
+* CVE-number, description and severity of each vulnerability
+* The vulnerable dependency, its version and scope 
+
+Rationale:
+* The `dependencies_check.yml` workflow detects vulnerabilities and creates issues. It will output information about the created issues and the vulnerabilities. This information is passed to `dependencies_update.yml` as a parameter and forwarded to PK's `update-dependencies` mode.
+* Vulnerability information must be optional in order to allow running the process locally.
+
+Covers
+* [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
+
+Needs: impl, utest, itest
+
+#### Generate `dependencies_update.yml` workflow
+`dsn~dependencies_update-workflow~1`
+
+PK generates the `dependencies_update.yml` GitHub workflow.
+
+Covers
+* [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
+* [`req~auto-create-changelog~1`](system_requirements.md#automatically-create-change-log-entry)
+* [`req~auto-create-pr~1`](system_requirements.md#automatically-create-a-pull-request)
+
+Needs: dsn
+
+##### `dependencies_update.yml` Workflow Receives Vulnerability Info
+`dsn~dependencies_update-vulnerability-info~1`
+
+PK generates the `dependencies_update.yml` workflow so that it receives information about vulnerabilities and issues as optional parameter.
+
+Needs: impl, utest, itest
+
+Covers
+* [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
+
+##### `dependencies_update.yml` Workflow Starts PK `update-dependencies` Mode
+`dsn~dependencies_update-starts-pk-update~1`
+
+PK generates the `dependencies_update.yml` workflow so that it starts PK's [`update-dependencies` mode](#update-dependencies-mode), passing information about vulnerabilities.
+
+Rationale:
+
+PK needs the vulnerability info for generating the changelog.
+
+Needs: impl, utest, itest
+
+Covers
+* [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
+
+##### `dependencies_update.yml` Workflow Creates a Pull Request
+`dsn~dependencies_update-creates-pull-request~1`
+
+PK generates the `dependencies_update.yml` workflow so that it creates a Pull Request in GitHub. This requires the following steps:
+1. Create a new local branch using a random name
+2. Commit local changes using a commit message that contains the issue number
+3. Push the branch
+4. Create a new pull request with `Closes` comments for each issue number
+5. Send a Slack notification
+  * If the workflow fails: send a warning containing the workflow run
+  * If the workflow succeeded: send a success message containing the pull request link
+
+Rationale:
+
+We implement this in a workflow and not in PK because
+* Git/GitHub operations should not be done locally to avoid surprises
+* GitHub action automatically have credentials for pushing and creating a pull request
+
+Note: Implementing this in a workflow makes it hard to do integration tests. We accept that there are no integration tests for running the workflow.
+
+Needs: impl, utest, itest
+
+Covers:
+* [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)

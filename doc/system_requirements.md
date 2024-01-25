@@ -311,3 +311,76 @@ Covers:
 * `feat~npm-project-support~1`
 
 Needs: dsn
+
+### Automatic Dependency Update Process
+`feat~automatic-dependency-update-process~1`
+
+PK supports the automatic dependency process. This speeds up fixing vulnerabilities in third party dependencies and creating releases.
+
+Rationale:
+
+We have 130+ projects in the integration team that often require dependency updates due to security issues that are found in the dependencies or transitive dependencies. Most of the time the update is a combination of pulling the latest source, updating the dependencies, updating the change log, running the tests locally, on success pushing the branch, running CI and creating a release.
+
+* Auto-update dependencies
+* Automatically create change log entry
+* Automatically run local tests
+* Automatically push branch
+* Automatically run CI
+* Release
+
+Needs: req
+
+#### Auto-update dependencies
+`req~auto-update-dependencies~1`
+
+PK automatically updates dependencies when a new vulnerability is found.
+
+Covers:
+* `feat~automatic-dependency-update-process~1`
+
+Needs: dsn
+
+#### Automatically create change log entry
+`req~auto-create-changelog~1`
+
+PK automatically generates the change log for fixed vulnerabilities.
+
+Rationale:
+
+The change log for fixed vulnerabilities always has the same structure and can be easily automated to avoid manual work.
+
+Covers:
+* `feat~automatic-dependency-update-process~1`
+
+Needs: dsn
+
+#### Automatically Create a Pull Request
+`req~auto-create-pr~1`
+
+PK creates a new Pull Request after upgrading dependencies.
+
+Rationale:
+
+A pull requests allows to
+* automatically run tests using the upgraded dependencies to verify if the upgrade caused any problems
+* review and approve changes
+* manually modify files in case of problems
+
+Covers:
+* `feat~automatic-dependency-update-process~1`
+
+Needs: dsn
+
+#### Release
+`req~auto-release~1`
+
+PK automatically builds a new release whenever the `main` branch is updated.
+
+Rationale:
+
+This reduces manual work, it's not necessary any more to manually run release-droid.
+
+Covers:
+* `feat~automatic-dependency-update-process~1`
+
+Needs: dsn
