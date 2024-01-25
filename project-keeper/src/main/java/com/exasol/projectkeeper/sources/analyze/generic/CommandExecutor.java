@@ -2,8 +2,6 @@ package com.exasol.projectkeeper.sources.analyze.generic;
 
 import java.nio.file.Path;
 
-import com.exasol.projectkeeper.sources.analyze.golang.SimpleProcess;
-
 /**
  * Enable to execute a {@link ShellCommand} and hence to mock this in tests.
  */

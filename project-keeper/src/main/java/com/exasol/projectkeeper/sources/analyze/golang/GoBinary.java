@@ -8,8 +8,7 @@ import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.OsCheck;
-import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
-import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
+import com.exasol.projectkeeper.sources.analyze.generic.*;
 
 /**
  * Represents an executable go binary.

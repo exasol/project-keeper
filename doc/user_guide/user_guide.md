@@ -362,3 +362,7 @@ See section [Install Required JDK Versions](#install-required-jdk-versions) for 
 ```
 
 Ensure that `~/.m2/toolchains.xml` exists and contains a JDK version 11. See section [Configure Maven's `toolchains.xml`](#configure-mavens-toolchainsxml) for details.
+
+**Problem:**: Running PK using Maven fails but the error message is not helpful.
+
+Run Maven with the `--errors` option to get a stack trace.
