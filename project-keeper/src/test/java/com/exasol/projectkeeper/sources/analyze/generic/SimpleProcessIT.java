@@ -8,10 +8,14 @@ import java.time.Duration;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 
+// Windows has problems with the timeout of 10ms. Running these tests under Unix is enough.
+@DisabledOnOs(OS.WINDOWS)
 class SimpleProcessIT {
 
-    private static final Duration TIMEOUT = Duration.ofMillis(20);
+    private static final Duration TIMEOUT = Duration.ofMillis(10);
 
     @Test
     void outputStream() {
