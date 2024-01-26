@@ -371,7 +371,7 @@ Covers:
 
 Needs: dsn
 
-#### Release
+#### Automatic Release
 `req~auto-release~1`
 
 PK automatically builds a new release whenever the `main` branch is updated.

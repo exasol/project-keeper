@@ -582,7 +582,7 @@ PK generates the `dependencies_update.yml` workflow so that it creates a Pull Re
 2. Commit local changes using a commit message that contains the issue number
 3. Push the branch
 4. Create a new pull request with `Closes` comments for each issue number
-5. Send a Slack notification
+5. If the Slack notification URL is available as secret: send a Slack notification
   * If the workflow fails: send a warning containing the workflow run
   * If the workflow succeeded: send a success message containing the pull request link
 
@@ -591,6 +591,10 @@ Rationale:
 We implement this in a workflow and not in PK because
 * Git/GitHub operations should not be done locally to avoid surprises
 * GitHub action automatically have credentials for pushing and creating a pull request
+* The Slack notification URL might not be available as secret to all repositories, so this step must be optional
+* Sending notifications to developers to
+  * investigate a failed update process
+  * review and merge a new pull request
 
 Note: Implementing this in a workflow makes it hard to do integration tests. We accept that there are no integration tests for running the workflow.
 
@@ -598,3 +602,167 @@ Needs: impl, utest, itest
 
 Covers:
 * [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
+
+#### Generate `release.yml` workflow
+`dsn~release-workflow~1`
+
+PK generates the `release.yml` GitHub workflow for Maven projects. This workflow runs the build including tests, integration tests, releases to Maven Central and on GitHub.
+
+Rationale:
+* The release process is limited to Maven projects. Support for other projects may be added later.
+* The previous build process using release-droid used separate steps for testing and releasing. This allowed re-starting a release (e.g. to Maven Central) in case of failures, without having to start potentially long running tests (~40 minutes).
+  * The new process always runs the complete process, it's not possible to skip tests.
+  * We accept this disadvantage of potential slow release times for now because the release process to Maven Central is usually stable nowadays.
+
+Covers:
+* [`req~auto-release~1`](system_requirements.md#automatic-release)
+
+Needs: dsn
+
+##### `release.yml` Workflow Triggers
+`dsn~release-workflow-triggers~1`
+
+PK generates the `release.yml` workflow so that it is triggered by the following events:
+* manual triggering (`workflow_dispatch`)
+* push to `main` branch (`push: branches: - main`)
+
+Rationale:
+* Manually triggering simplifies debugging in case of problems
+* Hard-coding the `main` branch for the `push` trigger is OK because we assume that all repositories use the same development workflow
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: impl, utest, itest
+
+##### `release.yml` Workflow Release Verification
+`dsn~release-workflow-run-verify-release~1`
+
+PK generates the `release.yml` workflow so that it runs PK in `verify-release` mode, see [`dsn~verify-release-mode~1`](#verify-release-mode).
+
+Rationale:
+This ensures that all preconditions for the release are met (e.g. current release date). In the previous process this was checked by release-droid.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: impl, utest, itest
+
+##### `release.yml` Workflow Runs Build
+`dsn~release-workflow-run-build~1`
+
+PK generates the `release.yml` workflow so that it runs the build including tests, integration tests and verifications (`mvn verify`).
+
+Rationale:
+* Supporting other build tools is not necessary for now because building and testing of other components (e.g. JavaScript extensions using `npm`) can be included into the Maven build process using the `exec-maven-plugin` plugin.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: impl, utest, itest
+
+##### `release.yml` Workflow Deploys to Maven Central
+`dsn~release-workflow-deploy-maven-central~1`
+
+If at least one source in `.project-keeper.yml` uses the `maven_central` module, PK generates the `release.yml` workflow so that it runs deploys the project to Maven Central (`mvn deploy`).
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: impl, utest, itest
+
+##### `release.yml` Workflow Creates GitHub Release
+`dsn~release-workflow-create-github-release~1`
+
+PK generates the `release.yml` workflow so that it creates a new GitHub release for the new version.
+
+Rationale:
+* In the old release process this was implemented in release-droid (`GitHubReleaseMaker.createReleaseModel()`).
+* The GitHub workflow has permissions to use the GitHub API.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: impl, utest, itest
+
+##### `release.yml` Workflow Creates Tags for Golang Modules
+`dsn~release-workflow-create-golang-tags~1`
+
+PK generates the `release.yml` workflow so that it creates the correct tags for Golang modules.
+
+Rationale:
+* In the old release process this was implemented in release-droid (`Revision.getTags()`).
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: impl, utest, itest
+
+#### `verify-release` Mode
+`dsn~verify-release-mode~1`
+
+PK provides an `verify-release` mode in addition to `fix`, `verify` and `update-dependencies`.
+
+If any of the checks fails, PK fails with an exit code > 0 to signal a build failure.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: dsn
+
+##### `verify-release` Mode Runs PK Verify
+`dsn~verify-release-mode-verify~1`
+
+PK's `verify-release` mode runs the same validations as the `verify` mode.
+
+Rationale:
+This simplifies usage because it's not necessary to start PK twice.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+Needs: impl, utest, itest
+
+##### `verify-release` Mode Checks Release Date
+`dsn~verify-release-mode-verify-release-date~1`
+
+PK's `verify-release` mode verifies that the release date in the current version's changelog is the current date.
+
+Rationale:
+* The release date must be up-to-date. In the previous release process this was checked by release-droid.
+* This allows opting out of releasing:
+  * The `release.yml` workflow runs for every push to the `main` branch. This is not always intended if developers want to wait with the release and add more changes in other pull requests.
+  * Setting the release date to `2024-??-??` will let the `verify-release` mode fail which will stop the release build.
+* Possible future improvement:
+  * To avoid creating a PR just for updating the release date we could add an optional parameter to the `release.yml` workflow that updates the release date and commits this change directly to `main`.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+Needs: impl, utest, itest
+
+##### `verify-release` Mode Checks All Issues are Closed
+`dsn~verify-release-mode-verify-issues-closed~1`
+
+PK's `verify-release` mode verifies that all GitHub issues mentioned in the current version's changelog are closed.
+
+Rationale:
+* In the previous release process this was checked by release-droid.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+Needs: impl, utest, itest
+
+##### `verify-release` Mode Checks Version Increment
+`dsn~verify-release-mode-verify-version-increment~1`
+
+PK's `verify-release` mode verifies that current version was incremented correctly based on the previous version.
+
+Rationale:
+* In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+Needs: impl, utest, itest
