@@ -1,4 +1,4 @@
-@startuml Automatic Dependency Update Process
+@startuml dependencies_update_process
 
 start
 :**dependencies_check.yml** workflow

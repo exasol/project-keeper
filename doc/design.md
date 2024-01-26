@@ -450,6 +450,8 @@ This consists of the following steps:
 2. Update dependencies
 3. Create a pull request
 
+![Activity Diagram for the dependencies update process](images/dependencies_update_process.svg)
+
 #### Triggering the Dependency Update Process
 `dsn~trigger-dependency-updates~1`
 
@@ -613,6 +615,8 @@ Rationale:
 * The previous build process using release-droid used separate steps for testing and releasing. This allowed re-starting a release (e.g. to Maven Central) in case of failures, without having to start potentially long running tests (~40 minutes).
   * The new process always runs the complete process, it's not possible to skip tests.
   * We accept this disadvantage of potential slow release times for now because the release process to Maven Central is usually stable nowadays.
+
+![Activity diagram of the release process](images/release_process.svg)
 
 Covers:
 * [`req~auto-release~1`](system_requirements.md#automatic-release)

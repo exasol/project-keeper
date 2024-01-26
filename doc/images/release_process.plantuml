@@ -1,4 +1,4 @@
-@startuml Automatic Release Process
+@startuml release_process
 
 start
 note right
