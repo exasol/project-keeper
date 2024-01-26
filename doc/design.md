@@ -489,10 +489,10 @@ Covers:
 
 Needs: dsn
 
-##### Incrementing the Version
+##### Incrementing the Project Version
 `dsn~increment-version~1`
 
-PK increments the patch version. PK does not modify the version if the current version was not yet released (i.e. there is not release in the latest changelog file).
+PK increments the project's patch version. PK does not modify the version if the current version was not yet released (i.e. there is not release in the latest changelog file).
 
 Rationale:
 
@@ -761,6 +761,23 @@ PK's `verify-release` mode verifies that current version was incremented correct
 
 Rationale:
 * In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+Needs: impl, utest, itest
+
+##### `verify-release` Mode Sets GitHub Action Output Parameters
+`dsn~verify-release-mode-output-parameters~1`
+
+PK's `verify-release` mode outputs the following information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter):
+* Project version
+* Code name from changelog
+* Remaining content of changelog
+
+Rationale:
+* The `release.yml` workflow needs this information for creating the GitHub release.
+* Steps in a GitHub workflow can read the output parameters of other steps.
 
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)

@@ -1,0 +1,25 @@
+@startuml Automatic Dependency Update Process
+
+start
+:**dependencies_check.yml** workflow
+(triggered daily);
+note right
+  Pass information about created
+  issues & vulnerabilities to
+  **dependencies_update.yml**
+end note
+if(vulnerable dependencies found?) then (yes)
+  group **dependencies_update.yml** workflow
+    group PK **update-dependencies** 
+      :Increment project version;
+      :Update dependencies;
+      :Generate changelog;
+    end group
+    :Create pull request;
+    :Send notification;
+  end group
+else (no)
+  stop
+endif
+stop
+@enduml

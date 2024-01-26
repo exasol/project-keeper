@@ -1,0 +1,37 @@
+@startuml Automatic Release Process
+
+start
+note right
+  Triggered manually or
+  on pushes to main branch.
+end note
+group **release.yml** workflow
+  :Run PK **verify-release** as Maven plugin;
+  group PK **verify-release**
+    if(Check release date\n(allow skipping the release)) then (current date)
+      :Run PK **verify**;
+      :Run additional release checks;
+      :Write changelog content to file;
+      note right
+        Required for creating
+        the GitHub release
+      end note
+    else (not current date)
+      stop
+    endif
+  end group
+  :Run build and tests;
+  :Send notification;
+  if(Maven Central deployment required) then (required)
+    :Run **mvn deploy**;
+  endif
+  :Calculate checksums for release artifacts;
+  :Create GitHub release &
+  attach artifacts.;
+  note right
+    Reads changelog
+    content from file
+  end note
+end group
+stop
+@enduml
