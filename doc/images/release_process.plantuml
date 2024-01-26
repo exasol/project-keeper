@@ -6,9 +6,17 @@ note right
   on pushes to main branch.
 end note
 group **release.yml** workflow
+  note right
+    Generated
+    by PK
+  end note
   :Run PK **verify-release** as Maven plugin;
   group PK **verify-release**
-    if(Check release date\n(allow skipping the release)) then (current date)
+    note right
+      Implemented
+      in PK
+    end note
+    if(Release date up-to-date?\n(allow skipping the release)) then (up-to-date)
       :Run PK **verify**;
       :Run additional release checks;
       :Write changelog content to file;
@@ -16,22 +24,28 @@ group **release.yml** workflow
         Required for creating
         the GitHub release
       end note
-    else (not current date)
+    else (invalid/outdated)
+      :Fail build;
       stop
     endif
   end group
-  :Run build and tests;
-  :Send notification;
+  :Run **mvn verify**;
   if(Maven Central deployment required) then (required)
     :Run **mvn deploy**;
   endif
   :Calculate checksums for release artifacts;
-  :Create GitHub release &
-  attach artifacts.;
+  :Create GitHub release;
   note right
     Reads changelog
     content from file
   end note
+  :Attach release artifacts and
+  checksums to GitHub release;
+  note right
+    Customizable
+  end note
+  :Send Slack notification
+  for success & failure;
 end group
 stop
 @enduml
