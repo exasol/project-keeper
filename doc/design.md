@@ -459,7 +459,7 @@ Rationale:
 
 `dependencies_check.yml` already uses the [security-issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) tool from the [python-toolbox](https://github.com/exasol/python-toolbox) to create issues for new vulnerabilities. Re-implementing this in PK is not necessary.
 
-Covers
+Covers:
 * [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
 
 Needs: impl, utest, itest
@@ -483,7 +483,7 @@ Rationale:
   * This would be surprising when running it locally
   * This would require credentials for accessing the GitHub API
 
-Covers
+Covers:
 * [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
 * [`req~auto-create-changelog~1`](system_requirements.md#automatically-create-change-log-entry)
 
@@ -498,7 +498,7 @@ Rationale:
 
 Leaving the version unchanged when it was not yet released avoids surprises when running this locally.
 
-Covers
+Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
 Needs: impl, utest, itest
@@ -517,7 +517,7 @@ Rationale:
 * This avoids re-inventing the wheel.
 * The plugin supports excluding dependencies from the upgrade that could cause problems using the [`<excludes>`](https://www.mojohaus.org/versions/versions-maven-plugin/use-latest-releases-mojo.html#excludes) configuration.
 
-Covers
+Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
 Needs: impl, utest, itest
@@ -533,7 +533,7 @@ Rationale:
 * The `dependencies_check.yml` workflow detects vulnerabilities and creates issues. It will output information about the created issues and the vulnerabilities. This information is passed to `dependencies_update.yml` as a parameter and forwarded to PK's `update-dependencies` mode.
 * Vulnerability information must be optional in order to allow running the process locally.
 
-Covers
+Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
 Needs: impl, utest, itest
@@ -543,7 +543,7 @@ Needs: impl, utest, itest
 
 PK generates the `dependencies_update.yml` GitHub workflow.
 
-Covers
+Covers:
 * [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
 * [`req~auto-create-changelog~1`](system_requirements.md#automatically-create-change-log-entry)
 * [`req~auto-create-pr~1`](system_requirements.md#automatically-create-a-pull-request)
@@ -557,7 +557,7 @@ PK generates the `dependencies_update.yml` workflow so that it receives informat
 
 Needs: impl, utest, itest
 
-Covers
+Covers:
 * [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
 
 ##### `dependencies_update.yml` Workflow Starts PK `update-dependencies` Mode
@@ -571,7 +571,7 @@ PK needs the vulnerability info for generating the changelog.
 
 Needs: impl, utest, itest
 
-Covers
+Covers:
 * [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
 
 ##### `dependencies_update.yml` Workflow Creates a Pull Request
