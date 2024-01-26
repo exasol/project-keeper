@@ -266,7 +266,7 @@ Needs: dsn
 
 `req~golang-changed-dependency~1`
 
-PK can retrieve changed Golang dependencies that where added, updated or removed since the last release.
+PK can retrieve changed Golang dependencies that were added, updated or removed since the last release.
 
 Covers:
 
@@ -305,7 +305,7 @@ Needs: dsn
 #### Get Changed Dependency
 `req~npm-changed-dependency~1`
 
-PK can retrieve changed NPM dependencies that where added, updated or removed since the last release.
+PK can retrieve changed NPM dependencies that were added, updated or removed since the last release.
 
 Covers:
 * `feat~npm-project-support~1`
