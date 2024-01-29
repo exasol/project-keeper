@@ -50,8 +50,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <!-- FIXME: Remove this once tracing is completed -->
-                    <failBuild>false</failBuild>
+                    <failBuild>true</failBuild>
                     <reportOutputFormat>html</reportOutputFormat>
                     <reportVerbosity>ALL</reportVerbosity>
                     <reportShowOrigin>true</reportShowOrigin>

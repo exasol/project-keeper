@@ -356,7 +356,6 @@ Covers:
 
 #### Archive Configured JAR Artifact
 `dsn~customize-release-artifacts-jar~0`
-Status: draft
 
 PK adds the JAR name configured in the `maven-assembly-plugin` to the list of release artifacts.
 
@@ -367,11 +366,10 @@ Rationale:
 Covers:
 * [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 #### Common List of Release Artifacts
 `dsn~customize-release-artifacts-hard-coded~0`
-Status: draft
 
 PK adds the following files to a hard coded list of release artifacts:
 * `target/error_code_report.json`
@@ -383,7 +381,7 @@ Rationale:
 Covers:
 * [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 #### Custom Release Artifacts
 `dsn~customize-release-artifacts-custom~0`
@@ -396,7 +394,7 @@ This allows adding project-specific release artifacts like `.js` extensions.
 Covers:
 * [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ### Customize Build Process
 `dsn~customize-build-process~0`
@@ -524,7 +522,7 @@ Rationale:
 Covers:
 * [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 #### Update Dependencies Mode
 `dsn~update-dependencies-mode~1`
@@ -563,7 +561,7 @@ Leaving the version unchanged when it was not yet released avoids surprises when
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### Upgrade Dependencies
 `dsn~upgrade-dependencies~1`
@@ -582,7 +580,7 @@ Rationale:
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### Generate Changelog
 
@@ -598,7 +596,7 @@ Rationale:
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 #### Generate `dependencies_update.yml` workflow
 `dsn~dependencies_update-workflow~1`
@@ -617,7 +615,7 @@ Needs: dsn
 
 PK generates the `dependencies_update.yml` workflow so that it receives information about vulnerabilities and issues as optional parameter.
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 Covers:
 * [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
@@ -631,7 +629,7 @@ Rationale:
 
 PK needs the vulnerability info for generating the changelog.
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 Covers:
 * [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
@@ -660,7 +658,7 @@ We implement this in a workflow and not in PK because
 
 Note: Implementing this in a workflow makes it hard to do integration tests. We accept that there are no integration tests for running the workflow.
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 Covers:
 * [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
@@ -705,7 +703,7 @@ Rationale:
 Covers:
 * [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `release.yml` Workflow Release Verification
 `dsn~release-workflow-run-verify-release~1`
@@ -718,7 +716,7 @@ This ensures that all preconditions for the release are met (e.g. current releas
 Covers:
 * [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `release.yml` Workflow Runs Build
 `dsn~release-workflow-run-build~1`
@@ -731,7 +729,7 @@ Rationale:
 Covers:
 * [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `release.yml` Workflow Deploys to Maven Central
 `dsn~release-workflow-deploy-maven-central~1`
@@ -741,7 +739,7 @@ If at least one source in `.project-keeper.yml` uses the `maven_central` module,
 Covers:
 * [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `release.yml` Workflow Creates GitHub Release
 `dsn~release-workflow-create-github-release~1`
@@ -755,7 +753,7 @@ Rationale:
 Covers:
 * [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `release.yml` Workflow Creates Tags for Golang Modules
 `dsn~release-workflow-create-golang-tags~1`
@@ -768,7 +766,7 @@ Rationale:
 Covers:
 * [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 #### `verify-release` Mode
 `dsn~verify-release-mode~1`
@@ -793,7 +791,7 @@ This simplifies usage because it's not necessary to start PK twice.
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `verify-release` Mode Checks Release Date
 `dsn~verify-release-mode-verify-release-date~1`
@@ -811,7 +809,7 @@ Rationale:
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `verify-release` Mode Checks All Issues are Closed
 `dsn~verify-release-mode-verify-issues-closed~1`
@@ -824,7 +822,7 @@ Rationale:
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `verify-release` Mode Checks Version Increment
 `dsn~verify-release-mode-verify-version-increment~1`
@@ -837,7 +835,7 @@ Rationale:
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
 
 ##### `verify-release` Mode Sets GitHub Action Output Parameters
 `dsn~verify-release-mode-output-parameters~1`
@@ -854,4 +852,4 @@ Rationale:
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
-Needs: impl, utest, itest
+-Needs: impl, utest, itest
