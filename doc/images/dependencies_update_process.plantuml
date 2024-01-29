@@ -8,7 +8,7 @@ note right
   issues & vulnerabilities to
   **dependencies_update.yml**
 end note
-if(vulnerable dependencies found?) then (yes)
+if(Vulnerable dependencies found?) then (yes)
   group **dependencies_update.yml** workflow
     note right
       GitHub Workflow
@@ -20,14 +20,25 @@ if(vulnerable dependencies found?) then (yes)
         Implement
         in PK
       end note
-      if(latest version already released?)
+      if(Latest version already released?) then (yes)
         :Increment project version;
+      else (no)
       endif
       :Update dependencies;
-      :Generate changelog;
       :Run PK fix;
+      note right
+        Add dependency changes to
+        changelog, Update list of
+        dependencies, ...
+      end note
+      :Update changlog: add fixed vulnerabilites;
+      if(pom.xml contains artifact-reference-checker-maven-plugin) then (yes)
+        :Run artifact-reference-checker-maven-plugin:fix;
+      else (no)
+      endif
     end group
-    :Create pull request;
+    :Create branch, commit, push &
+    create pull request;
     note right
       Needs information about
       issues & vulnerabilities
