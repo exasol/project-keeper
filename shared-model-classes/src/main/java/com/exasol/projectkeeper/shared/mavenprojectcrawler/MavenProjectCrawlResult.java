@@ -37,6 +37,7 @@ public final class MavenProjectCrawlResult {
      * @param json serialized JSON
      * @return deserialized {@link DependencyChangeReport}.
      */
+    @SuppressWarnings("try") // Jsonb.close() might throw InterruptedException
     public static MavenProjectCrawlResult fromJson(final String json) {
         try (final Jsonb jsonb = JsonbBuilder.create()) {
             return jsonb.fromJson(json, MavenProjectCrawlResult.class);
@@ -51,6 +52,7 @@ public final class MavenProjectCrawlResult {
      *
      * @return JSON string
      */
+    @SuppressWarnings("try") // Jsonb.close() might throw InterruptedException
     public String toJson() {
         try (final Jsonb jsonb = JsonbBuilder.create()) {
             return jsonb.toJson(this);
