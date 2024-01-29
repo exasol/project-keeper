@@ -13,6 +13,7 @@ import java.util.stream.Collectors;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
+import com.exasol.projectkeeper.dependencyupdate.DependencyUpdater;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;
@@ -279,5 +280,29 @@ public class ProjectKeeper {
          * @return {@code false} if the validation should stop after this phase.
          */
         boolean handlePhaseResult(final List<ValidationFinding> findings);
+    }
+
+    /**
+     * Verify the project and return validation provisions.
+     *
+     * @return Validation provisions if the validation succeeded
+     * @throws IllegalStateException if validation fails
+     */
+    private Provision getValidationProvision() {
+        Provision provision = null;
+        for (final Function<Provision, ValidationPhase> phaseSupplier : getValidationPhases()) {
+            final ValidationPhase phase = phaseSupplier.apply(provision);
+            provision = phase.provision();
+            final List<ValidationFinding> findings = runValidation(phase.validators());
+            if (!handleVerifyFindings(findings)) {
+                throw new IllegalStateException(ExaError.messageBuilder("").message("").toString());
+            }
+        }
+        return provision;
+    }
+
+    public boolean updateDependencies() {
+        final Provision provision = getValidationProvision();
+        return DependencyUpdater.create(logger, projectDir, provision.projectVersion()).updateDependencies();
     }
 }

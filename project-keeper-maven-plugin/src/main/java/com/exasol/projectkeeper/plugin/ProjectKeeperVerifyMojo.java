@@ -7,7 +7,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import com.exasol.projectkeeper.ProjectKeeper;
 
 /**
- * Entry point for the verify goal.
+ * Entry point for the {code verify} goal.
  * <p>
  * Run using {@code mvn project-keeper:verify}
  * </p>

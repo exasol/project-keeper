@@ -31,7 +31,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
             final List<AnalyzedSource> sources) {
-        super(projectDirectory, Path.of("doc", "changes", new ChangesFile.Filename(projectVersion).filename()));
+        super(projectDirectory, ChangesFile.getPathForVersion(projectVersion));
         this.projectVersion = projectVersion;
         this.projectName = projectName;
         this.sources = sources;
@@ -72,9 +72,11 @@ public class ChangesFileValidator extends AbstractFileValidator {
     }
 
     private ChangesFile getTemplate() {
-        final var changesFile = ChangesFile.builder()
-                .setHeader(List.of("# " + this.projectName + " " + this.projectVersion + ", released "
-                        + LocalDateTime.now().getYear() + "-??-??", "", "Code name:", "")) //
+        final String releaseDate = LocalDateTime.now().getYear() + "-??-??";
+        final var changesFile = ChangesFile.builder().projectName(this.projectName).projectVersion(this.projectVersion)
+                .releaseDate(releaseDate)
+                .setHeader(List.of("# " + this.projectName + " " + this.projectVersion + ", released " + releaseDate,
+                        "", "Code name:", "")) //
                 .addSection(List.of("## Summary", "", "## Features", "", "* ISSUE_NUMBER: description", "")) //
                 .build();
         return fixSections(changesFile);

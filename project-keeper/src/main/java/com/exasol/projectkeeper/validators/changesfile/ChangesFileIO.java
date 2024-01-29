@@ -4,14 +4,21 @@ import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Builder;
 
 /**
  * This class reads and writes a {@link ChangesFile} from disk.
  */
 public class ChangesFileIO {
+    private static final String PROJECT_NAME_PATTERN = "[\\w\\s-]+";
+    private static final String VERSION_PATTERN = "\\d+\\.\\d+\\.\\d+";
+    private static final String DATE_PATTERN = "\\d{4}-[\\d?]{2}-[\\d?]{2}";
+    private static final Pattern FIRST_LINE_PATTERN = Pattern
+            .compile("^# (" + PROJECT_NAME_PATTERN + ") (" + VERSION_PATTERN + "), released (" + DATE_PATTERN + ")$");
     private static final Pattern SECTION_HEADING_PATTERN = Pattern.compile("\\s*##\\s.*");
     private static final String LINE_SEPARATOR = System.lineSeparator();
 
@@ -23,24 +30,47 @@ public class ChangesFileIO {
      */
     public ChangesFile read(final Path file) {
         try (final var fileReader = new BufferedReader(new FileReader(file.toFile()))) {
-            String sectionHeader = null;
-            String line;
-            final var builder = ChangesFile.builder();
-            final List<String> lineBuffer = new ArrayList<>();
-            while ((line = fileReader.readLine()) != null) {
-                if (SECTION_HEADING_PATTERN.matcher(line).matches()) {
-                    makeSection(sectionHeader, builder, lineBuffer);
-                    sectionHeader = line;
-                }
-                lineBuffer.add(line);
-            }
-            makeSection(sectionHeader, builder, lineBuffer);
-            return builder.build();
+            return read(file, fileReader);
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-39")
                     .message("Failed to read changes file {{file}}.").parameter("file", file.toString()).toString(),
                     exception);
         }
+    }
+
+    ChangesFile read(final Path file, final BufferedReader fileReader) throws IOException {
+        String sectionHeader = null;
+        String line;
+        int lineCount = 0;
+        final var builder = ChangesFile.builder();
+        final List<String> lineBuffer = new ArrayList<>();
+        while ((line = fileReader.readLine()) != null) {
+            if (lineCount == 0) {
+                parseFirstLine(file, line, builder);
+            }
+            if (SECTION_HEADING_PATTERN.matcher(line).matches()) {
+                makeSection(sectionHeader, builder, lineBuffer);
+                sectionHeader = line;
+            }
+            lineBuffer.add(line);
+            lineCount++;
+        }
+        makeSection(sectionHeader, builder, lineBuffer);
+        return builder.build();
+    }
+
+    private void parseFirstLine(final Path filePath, final String line, final Builder builder) {
+        final Matcher matcher = FIRST_LINE_PATTERN.matcher(line);
+        if (!matcher.matches()) {
+            throw new IllegalStateException(ExaError.messageBuilder("PK-CORE-171")
+                    .message("Changes file {{file path}} contains invalid first line {{first line}}.", filePath, line)
+                    .mitigation("Update first line so that it matches regex {{expected regular expression}}",
+                            FIRST_LINE_PATTERN)
+                    .toString());
+        }
+        builder.projectName(matcher.group(1)) //
+                .projectVersion(matcher.group(2)) //
+                .releaseDate(matcher.group(3));
     }
 
     private void makeSection(final String sectionHeader, final ChangesFile.Builder builder,

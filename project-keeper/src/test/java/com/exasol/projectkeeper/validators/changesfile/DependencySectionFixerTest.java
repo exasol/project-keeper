@@ -13,9 +13,10 @@ import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Builder;
 
 @Tag("integration")
-//[utest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
+// [utest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
 class DependencySectionFixerTest {
     private static AnalyzedMavenSource source;
 
@@ -32,16 +33,20 @@ class DependencySectionFixerTest {
 
     @Test
     void testSectionIsAdded() {
-        final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading")).build();
+        final ChangesFile changesFile = changesFileBuilder().setHeader(List.of("heading")).build();
         final List<ChangesFileSection> sections = new DependencySectionFixer(List.of(source)).fix(changesFile)
                 .getSections();
         assertThat(sections.size(), equalTo(1));
         assertThat(sections.get(0).getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
     }
 
+    private Builder changesFileBuilder() {
+        return ChangesFile.builder().projectName("projectName").projectVersion("1.2.3").releaseDate("releaseDate");
+    }
+
     @Test
     void testSectionIsUpdated() {
-        final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading"))
+        final ChangesFile changesFile = changesFileBuilder().setHeader(List.of("heading"))
                 .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
         final ChangesFile fixedChangesFile = new DependencySectionFixer(List.of(source)).fix(changesFile);
         final List<ChangesFileSection> sections = fixedChangesFile.getSections();
@@ -52,7 +57,7 @@ class DependencySectionFixerTest {
 
     @Test
     void testHeaderIsPreserved() {
-        final ChangesFile changesFile = ChangesFile.builder().setHeader(List.of("heading"))
+        final ChangesFile changesFile = changesFileBuilder().setHeader(List.of("heading"))
                 .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
         final ChangesFile fixedChangesFile = new DependencySectionFixer(List.of(source)).fix(changesFile);
         assertThat(changesFile.getHeaderSectionLines(), equalTo(fixedChangesFile.getHeaderSectionLines()));

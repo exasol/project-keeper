@@ -6,7 +6,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import com.exasol.projectkeeper.ProjectKeeper;
 
 /**
- * Entry point for the fix goal.
+ * Entry point for the {@code fix} goal.
  * <p>
  * Run using {@code mvn project-keeper:fix}
  * </p>

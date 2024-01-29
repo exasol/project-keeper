@@ -19,6 +19,7 @@ public class ProjectKeeperLauncher {
     private static final Logger LOGGER = Logger.getLogger(ProjectKeeperLauncher.class.getName());
     private static final String GOAL_VERIFY = "verify";
     private static final String GOAL_FIX = "fix";
+    private static final String GOAL_UPGRADE_DEPENDENCIES = "update-dependencies";
 
     private final Path currentWorkingDir;
 
@@ -60,7 +61,21 @@ public class ProjectKeeperLauncher {
 
     private void runProjectKeeper(final String goal) {
         final ProjectKeeper projectKeeper = createProjectKeeper();
-        final boolean success = goal.equals(GOAL_FIX) ? projectKeeper.fix() : projectKeeper.verify();
+        final boolean success;
+        switch (goal) {
+        case GOAL_FIX:
+            success = projectKeeper.fix();
+            break;
+        case GOAL_VERIFY:
+            success = projectKeeper.verify();
+            break;
+        case GOAL_UPGRADE_DEPENDENCIES:
+            success = projectKeeper.updateDependencies();
+            break;
+        default:
+            success = false;
+            break;
+        }
         if (!success) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CLI-1").message("Failed to run project keeper {{goal}}", goal)
@@ -73,10 +88,12 @@ public class ProjectKeeperLauncher {
     }
 
     private void verifyCommandLineArguments(final String[] args) {
-        if ((args == null) || (args.length != 1) || !(GOAL_FIX.equals(args[0]) || GOAL_VERIFY.equals(args[0]))) {
+        if ((args == null) || (args.length != 1) || !(GOAL_FIX.equals(args[0]) || GOAL_VERIFY.equals(args[0])
+                || GOAL_UPGRADE_DEPENDENCIES.equals(args[0]))) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CLI-2")
                     .message("Got no or invalid command line argument {{arguments}}.", Arrays.toString(args))
-                    .mitigation("Please only specify arguments '" + GOAL_VERIFY + "' or '" + GOAL_FIX + "'.")
+                    .mitigation("Please only specify arguments '" + GOAL_VERIFY + "', '" + GOAL_FIX + "' or '"
+                            + GOAL_UPGRADE_DEPENDENCIES + "'.")
                     .toString());
         }
     }

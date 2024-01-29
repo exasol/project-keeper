@@ -12,7 +12,7 @@ import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyCh
 /**
  * This class fixes the dependency section of a {@link ChangesFile}.
  */
-//[impl->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
+// [impl->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
 class DependencySectionFixer {
     private final List<AnalyzedSource> sources;
 
@@ -41,7 +41,7 @@ class DependencySectionFixer {
         if (!renderedReport.isEmpty()) {
             sections.add(new ChangesFileSection(renderedReport));
         }
-        return new ChangesFile(List.copyOf(changesFile.getHeaderSectionLines()), sections);
+        return changesFile.toBuilder().sections(sections).build();
     }
 
     private NamedDependencyChangeReport getDependencyChangesOfSource(final AnalyzedSource source) {

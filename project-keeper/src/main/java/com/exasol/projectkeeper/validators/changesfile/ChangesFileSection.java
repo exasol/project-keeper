@@ -11,7 +11,7 @@ import com.exasol.errorreporting.ExaError;
  * Each level two heading (##) starts a new section.
  * </p>
  */
-public class ChangesFileSection {
+public final class ChangesFileSection {
     private final List<String> content;
 
     /**
@@ -24,7 +24,7 @@ public class ChangesFileSection {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-36")
                     .message("changes file sections must not be empty.").ticketMitigation().toString());
         }
-        this.content = content;
+        this.content = List.copyOf(content);
     }
 
     /**
