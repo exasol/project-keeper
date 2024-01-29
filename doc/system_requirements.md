@@ -336,7 +336,7 @@ Needs: req
 PK automatically updates dependencies when a new vulnerability is found.
 
 Covers:
-* `feat~automatic-dependency-update-process~1`
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
 
 Needs: dsn
 
@@ -350,7 +350,7 @@ Rationale:
 The change log for fixed vulnerabilities always has the same structure and can be easily automated to avoid manual work.
 
 Covers:
-* `feat~automatic-dependency-update-process~1`
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
 
 Needs: dsn
 
@@ -367,7 +367,7 @@ A pull requests allows to
 * manually modify files in case of problems
 
 Covers:
-* `feat~automatic-dependency-update-process~1`
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
 
 Needs: dsn
 
@@ -381,6 +381,48 @@ Rationale:
 This reduces manual work, it's not necessary any more to manually run release-droid.
 
 Covers:
-* `feat~automatic-dependency-update-process~1`
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
 
 Needs: dsn
+
+### Customizable Workflows
+`feat~customize-workflows~0`
+
+PK allows customizing the `ci-build.yml` and `release.yml` workflows with project-specific build steps.
+
+Rationale:
+Some projects use customized workflows and exclude them from PK generation. Allowing to customize workflows will simplify maintenance of GH workflows.
+
+Needs: req
+
+#### Customize Release Artifacts
+`req~customize-release-artifacts~0`
+
+PK allows customizing the list of files that are attached to new GitHub releases in the `release.yml` workflow.
+
+Rationale:
+Some projects need to release custom files like executable `.jar` files or `.js` extensions.
+
+Needs: dsn
+
+Covers:
+* [`feat~customize-workflows~0`](#customizable-workflows)
+
+#### Customize Build Process
+`req~customize-release-artifacts~0`
+
+PK allows adding pre and post steps during the build process as well as customize the actual build step.
+
+Rationale:
+Some projects need to
+* install additional tools like Go, Node
+* prepare files (e.g. `test_config.properties`) with configuration and credentials
+* prepare test infrastructure with `terraform init && terraform apply`
+* pass additional environment variables (e.g. AWS credentials) to the build step
+* attach files to the workflow (e.g. `classes.lst` for the S3 virtual schema)
+* run cleanup steps like `terraform destroy`
+
+Needs: dsn
+
+Covers:
+* [`feat~customize-workflows~0`](#customizable-workflows)

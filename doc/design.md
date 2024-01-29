@@ -612,9 +612,17 @@ PK generates the `release.yml` GitHub workflow for Maven projects. This workflow
 
 Rationale:
 * The release process is limited to Maven projects. Support for other projects may be added later.
-* The previous build process using release-droid used separate steps for testing and releasing. This allowed re-starting a release (e.g. to Maven Central) in case of failures, without having to start potentially long running tests (~40 minutes).
+* The previous build process with release-droid used separate steps for testing and releasing. This allowed re-starting a release (e.g. to Maven Central) in case of failures, without having to start potentially long running tests (~40 minutes).
   * The new process always runs the complete process, it's not possible to skip tests.
   * We accept this disadvantage of potential slow release times for now because the release process to Maven Central is usually stable nowadays.
+* We implement the workflow purely with a single generated GitHub actions. An alternative would be to implement parts of the build logic (e.g. checksum of build artifacts) as workflow steps implemented in JavaScript.
+  * Advantages:
+    * All generated code is one file, no need to use multiple files or reference other workflows
+    * Simple, standalone implementation
+  * Disadvantage:
+    * Long generated workflow file
+    * Not easily testable, one option would be [nektos/act](https://github.com/nektos/act)
+  * We accept the disadvantages for now. However the architecture allows changing this in the future.
 
 ![Activity diagram of the release process](images/release_process.svg)
 
