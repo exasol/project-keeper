@@ -409,7 +409,7 @@ Covers:
 * [`feat~customize-workflows~0`](#customizable-workflows)
 
 #### Customize Build Process
-`req~customize-release-artifacts~0`
+`req~customize-build-process~0`
 
 PK allows adding pre and post steps during the build process as well as customize the actual build step.
 

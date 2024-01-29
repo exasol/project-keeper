@@ -345,6 +345,66 @@ Covers:
 
 Needs: impl, utest, itest
 
+### Customize Release Artifacts
+`dsn~customize-release-artifacts~0`
+
+PK allows customizing the list of files that are attached to new GitHub releases in the `release.yml` workflow.
+
+Needs: dsn
+Covers:
+* [`req~customize-release-artifacts~0`](system_requirements.md#customize-release-artifacts)
+
+#### Archive Configured JAR Artifact
+`dsn~customize-release-artifacts-jar~0`
+Status: draft
+
+PK adds the JAR name configured in the `maven-assembly-plugin` to the list of release artifacts.
+
+Rationale:
+* This avoids duplicating configuration already present in `pom.xml`.
+* This requires evaluating placeholders, e.g. `document-files-virtual-schema-dist-${vs-common-document-files.version}-s3-${project.version}`.
+
+Covers:
+* [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
+
+Needs: impl, utest, itest
+
+#### Common List of Release Artifacts
+`dsn~customize-release-artifacts-hard-coded~0`
+Status: draft
+
+PK adds the following files to a hard coded list of release artifacts:
+* `target/error_code_report.json`
+
+Rationale:
+* These files are created by all projects.
+* Hard coding this list in PK avoids duplication in the `.project-keeper.yml`
+
+Covers:
+* [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
+
+Needs: impl, utest, itest
+
+#### Custom Release Artifacts
+`dsn~customize-release-artifacts-custom~0`
+
+PK adds a list of configured files to the list of release artifacts.
+
+Rationale:
+This allows adding project-specific release artifacts like `.js` extensions.
+
+Covers:
+* [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
+
+Needs: impl, utest, itest
+
+### Customize Build Process
+`dsn~customize-build-process~0`
+
+Covers:
+
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
 ## Golang Support
 
 ### Get Project Version
