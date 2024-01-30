@@ -25,7 +25,10 @@ class ChangesFileIOTest {
         final ChangesFile changesFile = new ChangesFileIO().read(changesFilePath);
         final List<String> headings = changesFile.getSections().stream().map(ChangesFileSection::getHeading)
                 .collect(Collectors.toList());
-        assertThat(changesFile.getHeaderSectionLines().get(0), equalTo("# My Project 0.1.0, released 1980-01-01"));
+        assertThat(changesFile.getProjectName(), equalTo("My Project"));
+        assertThat(changesFile.getProjectVersion().toString(), equalTo("0.1.0"));
+        assertThat(changesFile.getReleaseDate(), equalTo("1980-01-01"));
+        assertThat(changesFile.getParsedReleaseDate().get(), equalTo(LocalDate.parse("1980-01-01")));
         assertThat(headings, contains("## Summary", "## Features", "## Bug Fixes", "## Documentation", "## Refactoring",
                 "## Dependency Updates"));
     }
@@ -37,8 +40,9 @@ class ChangesFileIOTest {
                 .build();
         final Path testFile = this.tempDir.resolve("myFile.md");
         new ChangesFileIO().write(changesFile, testFile);
-        assertThat(Files.readString(testFile),
-                equalTo("# MyChanges" + System.lineSeparator() + "## My Subsection" + System.lineSeparator()));
+        assertThat(Files.readString(testFile), equalTo("# project 1.2.3, released 2023-??-??" + System.lineSeparator() + //
+                "# MyChanges" + System.lineSeparator() + //
+                "## My Subsection" + System.lineSeparator()));
     }
 
     @Test

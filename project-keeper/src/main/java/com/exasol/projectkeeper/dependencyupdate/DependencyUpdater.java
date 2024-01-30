@@ -35,6 +35,7 @@ public class DependencyUpdater {
      * 
      * @param projectKeeper
      * 
+     * @param projectKeeper         project keeper reference
      * @param logger                the logger to which we should write log messages
      * @param projectDir            the project directory
      * @param currentProjectVersion the project's current version

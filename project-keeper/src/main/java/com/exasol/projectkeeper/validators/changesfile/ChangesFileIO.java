@@ -47,12 +47,13 @@ public class ChangesFileIO {
         while ((line = fileReader.readLine()) != null) {
             if (lineCount == 0) {
                 parseFirstLine(file, line, builder);
+            } else {
+                if (SECTION_HEADING_PATTERN.matcher(line).matches()) {
+                    makeSection(sectionHeader, builder, lineBuffer);
+                    sectionHeader = line;
+                }
+                lineBuffer.add(line);
             }
-            if (SECTION_HEADING_PATTERN.matcher(line).matches()) {
-                makeSection(sectionHeader, builder, lineBuffer);
-                sectionHeader = line;
-            }
-            lineBuffer.add(line);
             lineCount++;
         }
         makeSection(sectionHeader, builder, lineBuffer);
@@ -103,10 +104,17 @@ public class ChangesFileIO {
     }
 
     void write(final ChangesFile changesFile, final Writer writer) throws IOException {
+        writeFirstLine(writer, changesFile);
         writeSection(writer, changesFile.getHeaderSectionLines());
         for (final ChangesFileSection section : changesFile.getSections()) {
             writeSection(writer, section.getContent());
         }
+    }
+
+    private void writeFirstLine(final Writer writer, final ChangesFile changesFile) throws IOException {
+        writer.write("# " + changesFile.getProjectName() + " " + changesFile.getProjectVersion() + ", released "
+                + changesFile.getReleaseDate());
+        writer.write(LINE_SEPARATOR);
     }
 
     private void writeSection(final Writer fileWriter, final List<String> content) throws IOException {

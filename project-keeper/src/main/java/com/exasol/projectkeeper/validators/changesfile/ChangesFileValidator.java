@@ -74,9 +74,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
     private ChangesFile getTemplate() {
         final String releaseDate = LocalDateTime.now().getYear() + "-??-??";
         final var changesFile = ChangesFile.builder().projectName(this.projectName).projectVersion(this.projectVersion)
-                .releaseDate(releaseDate)
-                .setHeader(List.of("# " + this.projectName + " " + this.projectVersion + ", released " + releaseDate,
-                        "", "Code name:", "")) //
+                .releaseDate(releaseDate).setHeader(List.of("", "Code name:", "")) //
                 .addSection(List.of("## Summary", "", "## Features", "", "* ISSUE_NUMBER: description", "")) //
                 .build();
         return fixSections(changesFile);
