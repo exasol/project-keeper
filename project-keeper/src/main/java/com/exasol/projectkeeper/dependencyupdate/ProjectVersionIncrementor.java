@@ -76,7 +76,6 @@ class ProjectVersionIncrementor {
                     pom.getVersion(), path, currentProjectVersion).toString());
         }
         final String nextVersion = getIncrementedVersion(currentProjectVersion);
-        System.out.println("#### Incremeing  to " + nextVersion);
         logger.info("Incrementing version from " + currentProjectVersion + " to " + nextVersion + " in POM " + path);
         pom.setVersion(nextVersion);
         writePom(path, pom);
