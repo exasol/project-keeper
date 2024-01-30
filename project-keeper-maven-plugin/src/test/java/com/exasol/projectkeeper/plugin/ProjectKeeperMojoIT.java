@@ -31,6 +31,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 
 class ProjectKeeperMojoIT {
+    private static final String ORIGINAL_SLF4J_VERSION = "1.7.36";
     private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
     private static final Logger LOG = Logger.getLogger(ProjectKeeperMojoIT.class.getName());
 
@@ -46,7 +47,9 @@ class ProjectKeeperMojoIT {
     @BeforeEach
     void beforeEach(final TestInfo test) throws IOException, GitAPIException {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
-        new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION).writeAsPomToProject(this.projectDir);
+        new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION) //
+                .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION) //
+                .writeAsPomToProject(this.projectDir);
         LOG.info(() -> "Running test " + test.getDisplayName() + "...");
         verifier = mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
     }
@@ -103,7 +106,10 @@ class ProjectKeeperMojoIT {
         verifier.executeGoal("project-keeper:update-dependencies");
         verifier.verify(true);
 
-        assertThat("incremented version", readPom().getVersion(), equalTo("0.1.1"));
+        final Model updatedPom = readPom();
+        assertThat("incremented version", updatedPom.getVersion(), equalTo("0.1.1"));
+        assertThat("updated SLF4J version", updatedPom.getDependencies().get(0).getVersion(),
+                allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), startsWith("2.")));
     }
 
     private void updateReleaseDate(final String changeLogVersion, final String newReleaseDate) {
