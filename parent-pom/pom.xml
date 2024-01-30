@@ -252,6 +252,10 @@
                     <processDependencies>true</processDependencies>
                     <processDependencyManagement>true</processDependencyManagement>
                     <processParent>false</processParent>
+                    <excludes>
+                        <!-- Dependencies use SLF4J 1.7 so we can't upgrade to 2 -->
+                        <exclude>org.slf4j:slf4j-jdk14:jar:*:*</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
