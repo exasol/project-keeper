@@ -63,10 +63,9 @@ class ProjectKeeperMojoIT {
     // [itest->dsn~mvn-verify-goal~1]
     void testVerify() throws IOException {
         Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
-        Files.writeString(this.projectDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "    path: pom.xml\n");
+        writeProjectKeeperConfig("sources:\n" + //
+                "  - type: maven\n" + //
+                "    path: pom.xml\n");
         final VerificationException exception = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = exception.getMessage();
@@ -78,13 +77,12 @@ class ProjectKeeperMojoIT {
 
     @Test
     void testJacocoAgentIsExtracted() throws VerificationException, IOException {
-        Files.writeString(this.projectDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "    path: pom.xml\n" + //
-                        "    modules:\n" + //
-                        "      - integration_tests\n" + //
-                        "      - udf_coverage\n");
+        writeProjectKeeperConfig("sources:\n" + //
+                "  - type: maven\n" + //
+                "    path: pom.xml\n" + //
+                "    modules:\n" + //
+                "      - integration_tests\n" + //
+                "      - udf_coverage\n");
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");
         assertThat(this.projectDir.resolve(Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar")).toFile(),
@@ -93,10 +91,9 @@ class ProjectKeeperMojoIT {
 
     @Test
     void testUpgradeDependencies() throws VerificationException, IOException {
-        Files.writeString(this.projectDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "    path: pom.xml\n");
+        writeProjectKeeperConfig("sources:\n" + //
+                "  - type: maven\n" + //
+                "    path: pom.xml\n");
         verifier.executeGoal("project-keeper:fix");
         assertThat("original version", readPom().getVersion(), equalTo("0.1.0"));
 
@@ -133,12 +130,15 @@ class ProjectKeeperMojoIT {
     @ParameterizedTest
     @ValueSource(strings = { "verify", "fix", "update-dependencies" })
     void testSkip(final String phase) throws IOException, VerificationException {
-        Files.writeString(this.projectDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "    path: pom.xml\n");
+        writeProjectKeeperConfig("sources:\n" + //
+                "  - type: maven\n" + //
+                "    path: pom.xml\n");
         verifier.setSystemProperty("project-keeper.skip", "true");
         verifier.executeGoal("project-keeper:" + phase);
         verifier.verifyTextInLog("Skipping project-keeper.");
+    }
+
+    private void writeProjectKeeperConfig(final String content) throws IOException {
+        Files.writeString(this.projectDir.resolve(".project-keeper.yml"), content);
     }
 }
