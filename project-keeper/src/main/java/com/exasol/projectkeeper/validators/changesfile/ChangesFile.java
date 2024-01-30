@@ -306,7 +306,7 @@ public final class ChangesFile {
         /**
          * Set all sections of the changes file.
          *
-         * @param lines list of sections
+         * @param sections list of sections
          * @return self for fluent programming
          */
         public Builder sections(final List<ChangesFileSection> sections) {
