@@ -87,7 +87,7 @@
                         <arg>-Werror</arg>
                     </compilerArgs>
                 </configuration>
-            </plugin>  
+            </plugin>
         </plugins>
     </build>
 </project>
