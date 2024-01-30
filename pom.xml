@@ -13,6 +13,7 @@
         <module>shared-test-setup</module>
         <module>maven-project-crawler</module>
         <module>project-keeper-maven-plugin</module>
+        <module>parent-pom</module>
     </modules>
     <name>Project Keeper Root Project</name>
     <build>

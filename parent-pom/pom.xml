@@ -5,7 +5,7 @@
     <artifactId>project-keeper-parent-pom</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
-    <name>Project Keeper parent pom</name>
+    <name>Project Keeper Parent POM</name>
     <description>This tool checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
     </description>
@@ -112,7 +112,7 @@
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
                 <!-- Upgrading to 6.8.0 causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
-                <version>6.7.0.202309050840-r</version>
+                <version>6.8.0.202311291450-r</version>
             </dependency>
             <dependency>
                 <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -226,5 +226,34 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.16.2</version>
+                <executions>
+                    <execution>
+                        <id>display-updates</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>display-plugin-updates</goal>
+                            <goal>display-dependency-updates</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rulesUri>file:///${project.basedir}/../project-keeper/versionsMavenPluginRules.xml</rulesUri>
+                    <allowDowngrade>false</allowDowngrade>
+                    <allowIncrementalUpdates>true</allowIncrementalUpdates>
+                    <allowMinorUpdates>true</allowMinorUpdates>
+                    <allowMajorUpdates>true</allowMajorUpdates>
+                    <allowSnapshots>false</allowSnapshots>
+                    <generateBackupPoms>true</generateBackupPoms>
+                    <processDependencies>true</processDependencies>
+                    <processDependencyManagement>true</processDependencyManagement>
+                    <processParent>false</processParent>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
