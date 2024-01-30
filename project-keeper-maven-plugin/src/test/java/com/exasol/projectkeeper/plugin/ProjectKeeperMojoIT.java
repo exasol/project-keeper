@@ -1,17 +1,20 @@
 package com.exasol.projectkeeper.plugin;
 
 import static com.exasol.projectkeeper.plugin.TestEnvBuilder.CURRENT_VERSION;
+import static java.util.stream.Collectors.joining;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.logging.Logger;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
@@ -29,8 +32,11 @@ import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 
 class ProjectKeeperMojoIT {
     private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
+    private static final Logger LOG = Logger.getLogger(ProjectKeeperMojoIT.class.getName());
+
     @TempDir
     protected Path projectDir;
+    private Verifier verifier;
 
     @BeforeAll
     static void beforeAll() {
@@ -38,9 +44,19 @@ class ProjectKeeperMojoIT {
     }
 
     @BeforeEach
-    void beforeEach() throws IOException, GitAPIException {
+    void beforeEach(final TestInfo test) throws IOException, GitAPIException {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
         new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION).writeAsPomToProject(this.projectDir);
+        LOG.info(() -> "Running test " + test.getDisplayName() + "...");
+        verifier = mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
+    }
+
+    @AfterEach
+    void logMavenOutput(final TestInfo test) throws VerificationException {
+        verifier.resetStreams();
+        final List<String> lines = verifier.loadFile(verifier.getBasedir(), verifier.getLogFileName(), false);
+        LOG.info(() -> "Maven log output for test " + test.getDisplayName() + ": " + lines.size() + " lines\n"
+                + lines.stream().collect(joining("\n")));
     }
 
     @Test
@@ -51,7 +67,6 @@ class ProjectKeeperMojoIT {
                 "sources:\n" + //
                         "  - type: maven\n" + //
                         "    path: pom.xml\n");
-        final Verifier verifier = getVerifier();
         final VerificationException exception = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = exception.getMessage();
@@ -70,7 +85,6 @@ class ProjectKeeperMojoIT {
                         "    modules:\n" + //
                         "      - integration_tests\n" + //
                         "      - udf_coverage\n");
-        final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");
         assertThat(this.projectDir.resolve(Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar")).toFile(),
@@ -79,12 +93,10 @@ class ProjectKeeperMojoIT {
 
     @Test
     void testUpgradeDependencies() throws VerificationException, IOException {
-        final PrintStream out = System.out;
         Files.writeString(this.projectDir.resolve(".project-keeper.yml"), //
                 "sources:\n" + //
                         "  - type: maven\n" + //
                         "    path: pom.xml\n");
-        final Verifier verifier = getVerifier();
         verifier.executeGoal("project-keeper:fix");
         assertThat("original version", readPom().getVersion(), equalTo("0.1.0"));
 
@@ -94,9 +106,6 @@ class ProjectKeeperMojoIT {
         verifier.executeGoal("project-keeper:update-dependencies");
         verifier.verify(true);
 
-        final List<String> lines = verifier.loadFile(verifier.getBasedir(), verifier.getLogFileName(), false);
-        out.println("Got " + lines.size() + " lines:");
-        lines.forEach(out::println);
         assertThat("incremented version", readPom().getVersion(), equalTo("0.1.1"));
     }
 
@@ -128,13 +137,8 @@ class ProjectKeeperMojoIT {
                 "sources:\n" + //
                         "  - type: maven\n" + //
                         "    path: pom.xml\n");
-        final Verifier verifier = getVerifier();
         verifier.setSystemProperty("project-keeper.skip", "true");
         verifier.executeGoal("project-keeper:" + phase);
         verifier.verifyTextInLog("Skipping project-keeper.");
-    }
-
-    protected Verifier getVerifier() {
-        return mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
     }
 }
