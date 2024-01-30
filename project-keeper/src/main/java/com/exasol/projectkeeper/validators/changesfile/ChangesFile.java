@@ -4,13 +4,9 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
-import com.exasol.projectkeeper.mavenrepo.Version;
 import com.vdurmont.semver4j.Semver;
-import com.vdurmont.semver4j.Semver.SemverType;
 
 /**
  * This class represents a doc/changes/changes_x.x.x.md file.
@@ -39,79 +35,7 @@ public final class ChangesFile {
      * @return relative path of the changes file, e.g. {@code doc/changes/changes_1.2.3.md}
      */
     public static Path getPathForVersion(final String projectVersion) {
-        return Path.of("doc", "changes", new Filename(projectVersion).filename());
-    }
-
-    /**
-     * Filename of a changes file, e.g. {@code changes_1.2.3.md}.
-     */
-    public static final class Filename implements Comparable<Filename> {
-        /** Regular expression to identify valid names of changes files and to extract version number. **/
-        public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
-
-        /**
-         * @param path path to create a {@link Filename} for
-         * @return If path matches regular expression for valid changes filenames then an {@link Optional} containing a
-         *         new instance of {@link Filename}, otherwise {@code Optional.empty()}.
-         */
-        public static Optional<Filename> from(final Path path) {
-            final String filename = path.getFileName().toString();
-            final Matcher matcher = PATTERN.matcher(filename);
-            if (!matcher.matches()) {
-                return Optional.empty();
-            }
-            return Optional.of(new Filename(matcher.replaceFirst("$1")));
-        }
-
-        private final Semver version;
-
-        /**
-         * Create a new instance of {@link ChangesFile.Filename}.
-         *
-         * @param version version to use for new instance
-         */
-        public Filename(final String version) {
-            this.version = new Semver(version, SemverType.LOOSE);
-        }
-
-        /**
-         * @return filename of the current {@link ChangesFile.Filename} as string
-         */
-        public String filename() {
-            return "changes_" + this.version + ".md";
-        }
-
-        @Override
-        public int compareTo(final Filename o) {
-            return this.version.compareTo(o.version);
-        }
-
-        /**
-         * @return version number contained in the filename of current {@link ChangesFile.Filename}
-         */
-        public String version() {
-            return this.version.getValue();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.version);
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final Filename other = (Filename) obj;
-            return Objects.equals(this.version, other.version);
-        }
+        return Path.of("doc", "changes", new ChangesFileName(projectVersion).filename());
     }
 
     /**

@@ -11,7 +11,6 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Builder;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Filename;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -20,11 +19,6 @@ class ChangesFileTest {
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(ChangesFile.class).verify();
-    }
-
-    @Test
-    void equalsContractFilename() {
-        EqualsVerifier.forClass(Filename.class).verify();
     }
 
     @Test

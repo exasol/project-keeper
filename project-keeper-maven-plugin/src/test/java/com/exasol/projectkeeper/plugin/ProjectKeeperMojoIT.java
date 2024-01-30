@@ -29,6 +29,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 
 class ProjectKeeperMojoIT {
     private static final String ORIGINAL_SLF4J_VERSION = "1.7.36";
@@ -107,9 +108,13 @@ class ProjectKeeperMojoIT {
         verifier.verify(true);
 
         final Model updatedPom = readPom();
-        assertThat("incremented version", updatedPom.getVersion(), equalTo("0.1.1"));
-        assertThat("updated SLF4J version", updatedPom.getDependencies().get(0).getVersion(),
-                allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), startsWith("2.")));
+        final String newVersion = "0.1.1";
+        assertThat("incremented version", updatedPom.getVersion(), equalTo(newVersion));
+        final String updatedSlf4jVersion = updatedPom.getDependencies().get(0).getVersion();
+        assertThat("updated SLF4J version", updatedSlf4jVersion,
+                allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), not(startsWith("1.")), startsWith("2.")));
+        final String changesContent = Files.readString(projectDir.resolve(ChangesFile.getPathForVersion(newVersion)));
+        assertThat(changesContent, allOf(startsWith("blah")));
     }
 
     private void updateReleaseDate(final String changeLogVersion, final String newReleaseDate) {

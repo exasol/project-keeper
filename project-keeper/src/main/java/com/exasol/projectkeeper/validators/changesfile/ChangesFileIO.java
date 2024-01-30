@@ -92,12 +92,8 @@ public class ChangesFileIO {
      * @param destinationFile file to write to
      */
     public void write(final ChangesFile changesFile, final Path destinationFile) {
-        try (final var fileWriter = new BufferedWriter(new FileWriter(destinationFile.toFile()))) {
-            writeSection(fileWriter, changesFile.getHeaderSectionLines());
-            for (final ChangesFileSection section : changesFile.getSections()) {
-                writeSection(fileWriter, section.getContent());
-            }
-            fileWriter.flush();
+        try (final var writer = new BufferedWriter(new FileWriter(destinationFile.toFile()))) {
+            write(changesFile, writer);
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-41").message("Failed to write changes file {{file name}}.")
@@ -106,7 +102,14 @@ public class ChangesFileIO {
         }
     }
 
-    private void writeSection(final BufferedWriter fileWriter, final List<String> content) throws IOException {
+    void write(final ChangesFile changesFile, final Writer writer) throws IOException {
+        writeSection(writer, changesFile.getHeaderSectionLines());
+        for (final ChangesFileSection section : changesFile.getSections()) {
+            writeSection(writer, section.getContent());
+        }
+    }
+
+    private void writeSection(final Writer fileWriter, final List<String> content) throws IOException {
         for (final String line : content) {
             fileWriter.write(line);
             fileWriter.write(LINE_SEPARATOR);

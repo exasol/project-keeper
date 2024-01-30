@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.List;
@@ -42,50 +43,75 @@ class ChangesFileIOTest {
 
     @Test
     void testReadAndWrite() throws IOException {
-        final Path changesFilePath = loadExampleFileToTempDir();
-        final ChangesFileIO changesFileIO = new ChangesFileIO();
-        final ChangesFile changesFile = changesFileIO.read(changesFilePath);
-        final Path testFile = this.tempDir.resolve("result.md");
-        changesFileIO.write(changesFile, testFile);
-        assertThat(Files.readString(testFile), equalTo(Files.readString(changesFilePath)));
+        final String content = readExampleFile();
+        assertReadWrite(content);
     }
 
     @Test
     void testReadInvalidFirstLineFails() {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> read("# invalid first line"));
+                () -> readFromString("# invalid first line"));
         assertThat(exception.getMessage(), startsWith(
                 "E-PK-CORE-171: Changes file 'dummy-file' contains invalid first line '# invalid first line'. Update first line so that it matches regex"));
     }
 
     @Test
     void testReadFirstLineWithDummyReleaseDate() throws IOException {
-        final ChangesFile changesFile = read("# Project Name 1.2.3, released 2024-??-??");
+        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-??-??");
         assertThat(changesFile.getProjectName(), equalTo("Project Name"));
         assertThat(changesFile.getProjectVersion().toString(), equalTo("1.2.3"));
         assertThat(changesFile.getReleaseDate(), equalTo("2024-??-??"));
         assertThat(changesFile.getParsedReleaseDate().isPresent(), is(false));
+        assertWriteRead(changesFile);
     }
 
     @Test
     void testReadFirstLineWithValidReleaseDate() throws IOException {
-        final ChangesFile changesFile = read("# Project Name 1.2.3, released 2024-01-29");
+        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-01-29");
         assertThat(changesFile.getProjectName(), equalTo("Project Name"));
         assertThat(changesFile.getProjectVersion().toString(), equalTo("1.2.3"));
         assertThat(changesFile.getReleaseDate(), equalTo("2024-01-29"));
         assertThat(changesFile.getParsedReleaseDate().get(), equalTo(LocalDate.parse("2024-01-29")));
-    }
-
-    ChangesFile read(final String content) throws IOException {
-        return new ChangesFileIO().read(Path.of("dummy-file"), new BufferedReader(new StringReader(content)));
+        assertWriteRead(changesFile);
     }
 
     private Path loadExampleFileToTempDir() throws IOException {
         final Path changesFile = this.tempDir.resolve("changed_0.1.0.md");
-        try (final InputStream exampleFileStream = getClass().getClassLoader()
-                .getResourceAsStream("changesFileExample1.md")) {
+        try (final InputStream exampleFileStream = getExampleFileStream()) {
             Files.copy(Objects.requireNonNull(exampleFileStream), changesFile, StandardCopyOption.REPLACE_EXISTING);
         }
         return changesFile;
+    }
+
+    private String readExampleFile() throws IOException {
+        try (final InputStream exampleFileStream = getExampleFileStream()) {
+            return new String(exampleFileStream.readAllBytes(), StandardCharsets.UTF_8);
+        }
+    }
+
+    private InputStream getExampleFileStream() {
+        return getClass().getClassLoader().getResourceAsStream("changesFileExample1.md");
+    }
+
+    private void assertWriteRead(final ChangesFile changesFile) throws IOException {
+        final String content = writeToString(changesFile);
+        final ChangesFile readChangesFile = readFromString(content);
+        assertThat(readChangesFile, equalTo(changesFile));
+    }
+
+    private void assertReadWrite(final String content) throws IOException {
+        final ChangesFile changesFile = readFromString(content);
+        final String writtenContent = writeToString(changesFile);
+        assertThat(writtenContent, equalTo(content));
+    }
+
+    private String writeToString(final ChangesFile changesFile) throws IOException {
+        final StringWriter stringWriter = new StringWriter();
+        new ChangesFileIO().write(changesFile, stringWriter);
+        return stringWriter.toString();
+    }
+
+    private ChangesFile readFromString(final String content) throws IOException {
+        return new ChangesFileIO().read(Path.of("dummy-file"), new BufferedReader(new StringReader(content)));
     }
 }
