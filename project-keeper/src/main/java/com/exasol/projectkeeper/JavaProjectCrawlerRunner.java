@@ -5,16 +5,17 @@ import java.io.UncheckedIOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.OsCheck.OSType;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.ResponseCoder;
+import com.exasol.projectkeeper.sources.analyze.generic.MavenProcessBuilder;
 import com.exasol.projectkeeper.stream.AsyncStreamReader;
 import com.exasol.projectkeeper.stream.CollectingConsumer;
 
@@ -53,22 +54,9 @@ public class JavaProjectCrawlerRunner {
         final String projectList = Arrays.stream(pomFiles).map(pomFile -> pomFile.toAbsolutePath().toString()
                 // we use / instead of \ here as a fix for https://github.com/eclipse-ee4j/yasson/issues/540
                 .replace(FileSystems.getDefault().getSeparator(), "/")).collect(Collectors.joining(";"));
+        final List<String> commandParts = buildMavenCommand(projectList);
+        LOGGER.fine(() -> "Executing command " + commandParts);
         try {
-            final List<String> commandParts = new ArrayList<>(List.of(getMavenExecutable(), "--batch-mode",
-                    "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
-                    "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + "crawl",
-                    "-DprojectsToCrawl=" + projectList,
-                    /*
-                     * We need to disable the model cache here since it caches the parent poms with {revision} as
-                     * version and then runs into trouble since the cache is different when reading the old pom (for
-                     * comparing dependencies).
-                     */
-                    "-Dmaven.defaultProjectBuilder.disableGlobalModelCache=true"));
-            if (this.mvnRepositoryOverride != null) {
-                commandParts.add("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
-            }
-
-            LOGGER.fine(() -> "Executing command " + commandParts);
             final Process proc = new ProcessBuilder(commandParts).redirectErrorStream(true).start();
 
             final CollectingConsumer outputStreamConsumer = new AsyncStreamReader()
@@ -100,13 +88,22 @@ public class JavaProjectCrawlerRunner {
         }
     }
 
-    private String getMavenExecutable() {
-        final OSType osType = new OsCheck().getOperatingSystemType();
-        if (osType == OSType.WINDOWS) {
-            return "mvn.cmd";
-        } else {
-            return "mvn";
+    private List<String> buildMavenCommand(final String projectList) {
+        final MavenProcessBuilder command = MavenProcessBuilder.create().addArguments("--batch-mode",
+                "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
+                "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + "crawl",
+                "-DprojectsToCrawl=" + projectList,
+                /*
+                 * We need to disable the model cache here since it caches the parent poms with {revision} as version
+                 * and then runs into trouble since the cache is different when reading the old pom (for comparing
+                 * dependencies).
+                 */
+                "-Dmaven.defaultProjectBuilder.disableGlobalModelCache=true");
+
+        if (this.mvnRepositoryOverride != null) {
+            command.addArgument("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
         }
+        return command.build();
     }
 
     private String getRunFailedMessage() {
