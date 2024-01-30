@@ -69,6 +69,13 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
+    void updateDependenciesJavaProjectSucceeds() throws InterruptedException, IOException {
+        prepareMavenProject();
+        assertProcessSucceeds("fix");
+        assertProcessSucceeds("update-dependencies");
+    }
+
+    @Test
     void fixingGolangProjectSucceeds() throws InterruptedException, IOException {
         prepareGolangProject();
         assertProcessSucceeds("fix");
