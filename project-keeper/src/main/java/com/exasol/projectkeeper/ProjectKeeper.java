@@ -295,8 +295,14 @@ public class ProjectKeeper {
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());
             if (!handleVerifyFindings(findings)) {
-                throw new IllegalStateException(ExaError.messageBuilder("").message("").toString());
+                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-175")
+                        .message("Validation failed, see log messages for details.")
+                        .mitigation("Fix findings and try again.").toString());
             }
+        }
+        if (provision == null) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-176")
+                    .message("Validation did not return required provision.").ticketMitigation().toString());
         }
         return provision;
     }

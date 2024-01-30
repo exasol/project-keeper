@@ -62,7 +62,7 @@ public class ChangesFileIO {
     private void parseFirstLine(final Path filePath, final String line, final Builder builder) {
         final Matcher matcher = FIRST_LINE_PATTERN.matcher(line);
         if (!matcher.matches()) {
-            throw new IllegalStateException(ExaError.messageBuilder("PK-CORE-171")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-171")
                     .message("Changes file {{file path}} contains invalid first line {{first line}}.", filePath, line)
                     .mitigation("Update first line so that it matches regex {{expected regular expression}}",
                             FIRST_LINE_PATTERN)
