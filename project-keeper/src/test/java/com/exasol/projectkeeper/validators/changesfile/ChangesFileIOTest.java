@@ -55,7 +55,7 @@ class ChangesFileIOTest {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> read("# invalid first line"));
         assertThat(exception.getMessage(), startsWith(
-                "PK-CORE-171: Changes file 'dummy-file' contains invalid first line '# invalid first line'. Update first line so that it matches regex"));
+                "E-PK-CORE-171: Changes file 'dummy-file' contains invalid first line '# invalid first line'. Update first line so that it matches regex"));
     }
 
     @Test
