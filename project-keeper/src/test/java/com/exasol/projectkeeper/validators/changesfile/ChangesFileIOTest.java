@@ -25,7 +25,7 @@ class ChangesFileIOTest {
         final ChangesFile changesFile = new ChangesFileIO().read(changesFilePath);
         final List<String> headings = changesFile.getSections().stream().map(ChangesFileSection::getHeading)
                 .collect(Collectors.toList());
-        assertThat(changesFile.getHeading(), equalTo("# My Project 0.1.0, released 1980-01-01"));
+        assertThat(changesFile.getHeaderSectionLines().get(0), equalTo("# My Project 0.1.0, released 1980-01-01"));
         assertThat(headings, contains("## Summary", "## Features", "## Bug Fixes", "## Documentation", "## Refactoring",
                 "## Dependency Updates"));
     }

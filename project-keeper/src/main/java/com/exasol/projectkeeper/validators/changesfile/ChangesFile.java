@@ -112,15 +112,6 @@ public final class ChangesFile {
     }
 
     /**
-     * Get the heading of the file.
-     *
-     * @return heading (1. line)
-     */
-    public String getHeading() {
-        return this.headerSectionLines.get(0);
-    }
-
-    /**
      * Get a list of sections (starting with a ## heading).
      *
      * @return list of sections
@@ -246,14 +237,5 @@ public final class ChangesFile {
         public ChangesFile build() {
             return new ChangesFile(this);
         }
-    }
-
-    /**
-     * Get the heading for the dependency updates section.
-     * 
-     * @return heading
-     */
-    public static String getDependencyUpdatesHeading() {
-        return DEPENDENCY_UPDATES_HEADING;
     }
 }
