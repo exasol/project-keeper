@@ -378,7 +378,8 @@ PK automatically builds a new release whenever the `main` branch is updated.
 
 Rationale:
 
-This reduces manual work, it's not necessary any more to manually run release-droid.
+* This reduces manual work, it's not necessary any more to manually run release-droid.
+* If a release is not intended, the user can leave the release date in the changes file undefined, e.g. `2024-??-??`. See [`dsn~release-workflow-run-verify-release~1`](design.md#releaseyml-workflow-release-verification).
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
