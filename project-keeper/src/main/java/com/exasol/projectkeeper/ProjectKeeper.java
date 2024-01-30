@@ -307,6 +307,11 @@ public class ProjectKeeper {
         return provision;
     }
 
+    /**
+     * Update dependencies in the project.
+     * 
+     * @return {@code true} if the update was successful.
+     */
     public boolean updateDependencies() {
         final Provision provision = getValidationProvision();
         return DependencyUpdater.create(logger, projectDir, provision.projectVersion()).updateDependencies();

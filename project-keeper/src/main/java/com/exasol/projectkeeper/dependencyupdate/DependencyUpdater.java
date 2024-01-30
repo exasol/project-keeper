@@ -18,6 +18,14 @@ public class DependencyUpdater {
 
     }
 
+    /**
+     * Create a new instance.
+     * 
+     * @param logger                the logger to which we should write log messages
+     * @param projectDir            the project directory
+     * @param currentProjectVersion the project's current version
+     * @return a new dependency updater
+     */
     public static DependencyUpdater create(final Logger logger, final Path projectDir,
             final String currentProjectVersion) {
         return new DependencyUpdater(logger, new ProjectVersionIncrementor(logger, projectDir, currentProjectVersion));

@@ -324,6 +324,11 @@ public final class ChangesFile {
         }
     }
 
+    /**
+     * Get the heading for the dependency updates section.
+     * 
+     * @return heading
+     */
     public static String getDependencyUpdatesHeading() {
         return DEPENDENCY_UPDATES_HEADING;
     }
