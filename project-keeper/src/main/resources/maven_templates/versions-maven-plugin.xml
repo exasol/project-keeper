@@ -23,5 +23,7 @@
         <processDependencies>true</processDependencies>
         <processDependencyManagement>true</processDependencyManagement>
         <processParent>false</processParent>
+        <autoLinkItems>true</autoLinkItems>
+        <excludeReactor>true</excludeReactor>
     </configuration>
 </plugin>
