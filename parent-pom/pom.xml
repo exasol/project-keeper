@@ -111,8 +111,8 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <!-- Upgrading to 6.8.0 causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
-                <version>6.8.0.202311291450-r</version>
+                <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
+                <version>6.7.0.202309050840-r</version>
             </dependency>
             <dependency>
                 <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -255,6 +255,8 @@
                     <excludes>
                         <!-- Dependencies use SLF4J 1.7 so we can't upgrade to 2 -->
                         <exclude>org.slf4j:slf4j-jdk14:jar:*:*</exclude>
+                        <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
+                        <exclude>org.eclipse.jgit:org.eclipse.jgit:jar:*:6.8.0.202311291450-r</exclude>
                     </excludes>
                 </configuration>
             </plugin>

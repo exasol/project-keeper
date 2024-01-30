@@ -12,10 +12,6 @@ Code name: Automatic Security Updates
 
 ### Project Keeper Shared Model Classes
 
-#### Compile Dependency Updates
-
-* Updated `org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r` to `6.8.0.202311291450-r`
-
 #### Test Dependency Updates
 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.4` to `3.15.6`
@@ -94,7 +90,6 @@ Code name: Automatic Security Updates
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:3.0.1` to `4.0.0`
-* Updated `org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r` to `6.8.0.202311291450-r`
 
 #### Test Dependency Updates
 
