@@ -15,8 +15,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.github.hamstercommunity.matcher.auto.AutoMatcher;
-
 class ChangesFileIOTest {
     @TempDir
     Path tempDir;
@@ -147,7 +145,6 @@ class ChangesFileIOTest {
         final String content = writeToString(changesFile);
         final ChangesFile readChangesFile = readFromString(content);
         assertThat(readChangesFile.toString(), equalTo(changesFile.toString()));
-        assertThat(readChangesFile, AutoMatcher.equalTo(changesFile));
         assertThat(readChangesFile, equalTo(changesFile));
     }
 
