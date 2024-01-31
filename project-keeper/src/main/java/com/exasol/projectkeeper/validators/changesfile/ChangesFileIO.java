@@ -19,8 +19,7 @@ public class ChangesFileIO {
     private static final String DATE_PATTERN = "\\d{4}-[\\d?]{2}-[\\d?]{2}";
     private static final Pattern FIRST_LINE_PATTERN = Pattern
             .compile("^# (" + PROJECT_NAME_PATTERN + ") (" + VERSION_PATTERN + "), released (" + DATE_PATTERN + ")$");
-    private static final Pattern SECTION_HEADING_PATTERN = Pattern.compile("\\s*##\\s.*");
-    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String LINE_SEPARATOR = "\n";
 
     /**
      * Read a {@link ChangesFile} from disk.
