@@ -32,13 +32,13 @@ public class DependencyUpdater {
      * Create a new instance.
      * 
      * @param projectKeeper         project keeper reference
-     * @param config
+     * @param config                project keeper configuration
      * @param logger                the logger to which we should write log messages
      * @param projectDir            the project directory
      * @param currentProjectVersion the project's current version
      * @return a new dependency updater
      */
-    public static DependencyUpdater create(final ProjectKeeper projectKeeper, ProjectKeeperConfig config,
+    public static DependencyUpdater create(final ProjectKeeper projectKeeper, final ProjectKeeperConfig config,
             final Logger logger, final Path projectDir, final String currentProjectVersion) {
         return new DependencyUpdater(projectKeeper, logger, projectDir,
                 new ProjectVersionIncrementor(config, logger, projectDir, currentProjectVersion));
