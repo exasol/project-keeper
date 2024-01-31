@@ -25,12 +25,12 @@ public final class ChangesFile {
     private final ChangesFileSection dependencyChangeSection;
 
     private ChangesFile(final Builder builder) {
-        this.projectName = Objects.requireNonNull(builder.projectName, "missing projectName");
-        this.projectVersion = Objects.requireNonNull(builder.projectVersion, "missing projectVersion");
-        this.releaseDate = Objects.requireNonNull(builder.releaseDate, "missing releaseDate");
+        this.projectName = builder.projectName;
+        this.projectVersion = builder.projectVersion;
+        this.releaseDate = builder.releaseDate;
         this.codeName = builder.codeName;
         this.summarySection = builder.summarySection;
-        this.sections = List.copyOf(Objects.requireNonNull(builder.sections, "missing sections"));
+        this.sections = List.copyOf(builder.sections);
         this.dependencyChangeSection = builder.dependencyChangeSection;
     }
 
@@ -61,8 +61,8 @@ public final class ChangesFile {
      */
     public Builder toBuilder() {
         return builder().projectName(this.projectName).projectVersion(this.projectVersion.toString())
-                .releaseDate(this.releaseDate).summary(this.summarySection).sections(List.copyOf(this.sections))
-                .dependencyChangeSection(this.dependencyChangeSection);
+                .releaseDate(this.releaseDate).codeName(this.codeName).summary(this.summarySection)
+                .sections(List.copyOf(this.sections)).dependencyChangeSection(this.dependencyChangeSection);
     }
 
     /**

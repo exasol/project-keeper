@@ -41,7 +41,10 @@ class ChangesFileTest {
 
     private Builder builder() {
         return ChangesFile.builder().projectName("name").projectVersion("1.2.3").releaseDate("2023-??-??")
-                .summary(ChangesFileSection.builder("## Summary").build())
+                .codeName("my code name")
+                .summary(ChangesFileSection.builder("## Summary").addLine("summary content").build())
+                .dependencyChangeSection(ChangesFileSection.builder("## Dependency Updates")
+                        .addLine("dependency update content").build())
                 .addSection(ChangesFileSection.builder("section 1").build());
     }
 
