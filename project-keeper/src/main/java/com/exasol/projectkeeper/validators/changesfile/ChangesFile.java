@@ -288,7 +288,7 @@ public final class ChangesFile {
                 return this;
             }
             if (!section.getHeading().equals(DEPENDENCY_UPDATES_HEADING)) {
-                throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-178").message(
+                throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-179").message(
                         "Dependency change section has invalid heading {{heading}}, expected {{expected heading}}",
                         section.getHeading(), DEPENDENCY_UPDATES_HEADING).ticketMitigation().toString());
             }

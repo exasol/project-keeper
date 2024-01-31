@@ -33,8 +33,6 @@ public class DependencyUpdater {
     /**
      * Create a new instance.
      * 
-     * @param projectKeeper
-     * 
      * @param projectKeeper         project keeper reference
      * @param logger                the logger to which we should write log messages
      * @param projectDir            the project directory

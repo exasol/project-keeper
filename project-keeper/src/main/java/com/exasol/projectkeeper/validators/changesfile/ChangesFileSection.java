@@ -63,12 +63,20 @@ public final class ChangesFileSection {
         return heading + "\n" + String.join("\n", this.content);
     }
 
+    /**
+     * Create a new {@link Builder} for creating a {@link ChangesFileSection}.
+     * 
+     * @param heading the heading for the new section
+     * @return a new builder
+     */
     public static Builder builder(final String heading) {
         return new Builder(heading);
     }
 
+    /**
+     * A builder for creating {@link ChangesFileSection}s.
+     */
     public static class Builder {
-
         private final String heading;
         private final List<String> lines = new ArrayList<>();
 
@@ -76,21 +84,44 @@ public final class ChangesFileSection {
             this.heading = heading;
         }
 
+        /**
+         * Add the given lines to the content of the new {@code ChangesFileSection}.
+         * 
+         * @param lines lines to add
+         * @return {@code this} for fluent programming
+         */
         public Builder addLines(final String... lines) {
             this.lines.addAll(asList(lines));
             return this;
         }
 
+        /**
+         * Add the given lines to the content of the new {@code ChangesFileSection}.
+         * 
+         * @param lines lines to add
+         * @return {@code this} for fluent programming
+         */
         public Builder addLines(final List<String> lines) {
             this.lines.addAll(lines);
             return this;
         }
 
+        /**
+         * Add the given line to the content of the new {@code ChangesFileSection}.
+         * 
+         * @param line line to add
+         * @return {@code this} for fluent programming
+         */
         public Builder addLine(final String line) {
             this.lines.add(line);
             return this;
         }
 
+        /**
+         * Build a new {@link ChangesFileSection}.
+         * 
+         * @return a new {@link ChangesFileSection}.
+         */
         public ChangesFileSection build() {
             return new ChangesFileSection(this);
         }
