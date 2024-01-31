@@ -230,7 +230,7 @@ public final class ChangesFile {
          * @return self for fluent programming
          */
         public Builder codeName(final String codeName) {
-            this.codeName = codeName.isBlank() ? null : codeName;
+            this.codeName = codeName != null && codeName.isBlank() ? null : codeName;
             return this;
         }
 
