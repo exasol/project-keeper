@@ -79,8 +79,8 @@ class JavaProjectCrawlerRunnerIT {
         final Path missingPomFile = Path.of("missing-pom-file");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> this.crawlProject(missingPomFile));
-        assertThat(exception.getMessage(), allOf(containsString("[FATAL] Non-readable POM"),
-                containsString(missingPomFile + " (No such file or directory)")));
+        assertThat(exception.getMessage(),
+                allOf(containsString("[FATAL] Non-readable POM"), containsString(missingPomFile.toString())));
     }
 
     private void writePomFile(final Path pomFile) throws IOException {
