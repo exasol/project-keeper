@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class MvnProjectWithProjectKeeperPluginWriter {
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
@@ -39,6 +40,19 @@ public class MvnProjectWithProjectKeeperPluginWriter {
         dependency.setArtifactId(artifactId);
         dependency.setVersion(version);
         this.model.getDependencies().add(dependency);
+        return this;
+    }
+
+    public MvnProjectWithProjectKeeperPluginWriter setArtifactFinalName(final String finalName) {
+        final Plugin plugin = new Plugin();
+        plugin.setGroupId("org.apache.maven.plugins");
+        plugin.setArtifactId("maven-assembly-plugin");
+        final Xpp3Dom configuration = new Xpp3Dom("configuration");
+        final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
+        finalNameElement.setValue(finalName);
+        configuration.addChild(finalNameElement);
+        plugin.setConfiguration(configuration);
+        this.model.getBuild().addPlugin(plugin);
         return this;
     }
 

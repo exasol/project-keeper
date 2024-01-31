@@ -2,14 +2,12 @@ package com.exasol.projectkeeper.dependencyupdate;
 
 import java.nio.file.Path;
 import java.time.Duration;
-import java.time.Instant;
-import java.util.List;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.analyze.generic.MavenProcessBuilder;
-import com.exasol.projectkeeper.sources.analyze.generic.SimpleProcess;
 
 /**
  * This class runs the dependency update process.
@@ -34,15 +32,16 @@ public class DependencyUpdater {
      * Create a new instance.
      * 
      * @param projectKeeper         project keeper reference
+     * @param config
      * @param logger                the logger to which we should write log messages
      * @param projectDir            the project directory
      * @param currentProjectVersion the project's current version
      * @return a new dependency updater
      */
-    public static DependencyUpdater create(final ProjectKeeper projectKeeper, final Logger logger,
-            final Path projectDir, final String currentProjectVersion) {
+    public static DependencyUpdater create(final ProjectKeeper projectKeeper, ProjectKeeperConfig config,
+            final Logger logger, final Path projectDir, final String currentProjectVersion) {
         return new DependencyUpdater(projectKeeper, logger, projectDir,
-                new ProjectVersionIncrementor(logger, projectDir, currentProjectVersion));
+                new ProjectVersionIncrementor(config, logger, projectDir, currentProjectVersion));
     }
 
     /**
@@ -79,11 +78,8 @@ public class DependencyUpdater {
     }
 
     private void runMaven(final String mavenGoal) {
-        final List<String> command = MavenProcessBuilder.create().addArgument("--batch-mode").addArgument(mavenGoal)
-                .build();
-        final Instant start = Instant.now();
-        SimpleProcess.start(projectDir, command).waitUntilFinished(MAVEN_COMMAND_TIMEOUT);
-        logger.info("Running maven goal " + mavenGoal + " took " + Duration.between(start, Instant.now()));
+        MavenProcessBuilder.create().addArgument(mavenGoal).workingDir(projectDir).startSimpleProcess()
+                .waitUntilFinished(MAVEN_COMMAND_TIMEOUT);
     }
 
     private void runProjectKeeperFix() {

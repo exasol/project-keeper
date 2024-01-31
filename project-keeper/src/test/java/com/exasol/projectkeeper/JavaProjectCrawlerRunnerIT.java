@@ -2,8 +2,9 @@ package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -44,8 +45,7 @@ class JavaProjectCrawlerRunnerIT {
         Git.init().setDirectory(tempDir.toFile()).call().close();
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
-        final MavenProjectCrawlResult result = new JavaProjectCrawlerRunner(testMavenRepo,
-                TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFile);
+        final MavenProjectCrawlResult result = crawlProject(pomFile);
         final CrawledMavenProject mavenProject = result.getCrawledProjects()
                 .get(pomFile.toAbsolutePath().toString().replace("\\", "/"));
         final ProjectDependency expectedDependency = ProjectDependency.builder() //
@@ -61,6 +61,26 @@ class JavaProjectCrawlerRunnerIT {
                         Matchers.contains(new NewDependency(DEPENDENCY_GROUP, DEPENDENCY_ID, DEPENDENCY_VERSION))),
                 () -> assertThat(mavenProject.getProjectVersion(), equalTo(TestMavenModel.PROJECT_VERSION))//
         );
+    }
+
+    MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
+        return new JavaProjectCrawlerRunner(testMavenRepo, TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFiles);
+    }
+
+    @Test
+    void testGetDependencyChangesFailsForEmptyPomList() throws GitAPIException, IOException {
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> crawlProject());
+        assertThat(exception.getMessage(), containsString(
+                "E-PK-MPC-64: Property 'projectsToCrawl' is not defined or empty. Specify property with least one pom file."));
+    }
+
+    @Test
+    void testGetDependencyChangesFailsForMissingPom() throws GitAPIException, IOException {
+        final Path missingPomFile = Path.of("missing-pom-file");
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> this.crawlProject(missingPomFile));
+        assertThat(exception.getMessage(), allOf(containsString("[FATAL] Non-readable POM"),
+                containsString(missingPomFile + " (No such file or directory)")));
     }
 
     private void writePomFile(final Path pomFile) throws IOException {

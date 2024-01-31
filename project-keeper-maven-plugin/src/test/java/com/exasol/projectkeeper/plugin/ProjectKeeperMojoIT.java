@@ -23,6 +23,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -50,8 +51,9 @@ class ProjectKeeperMojoIT {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
         new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION) //
                 .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION) //
+                .setArtifactFinalName("dummy-${project.version}") //
                 .writeAsPomToProject(this.projectDir);
-        LOG.info(() -> "Running test " + test.getDisplayName() + "...");
+        LOG.info(() -> "Running test " + test.getDisplayName() + " using project " + this.projectDir + "...");
         verifier = mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
     }
 
@@ -89,15 +91,19 @@ class ProjectKeeperMojoIT {
                 "      - udf_coverage\n");
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");
-        assertThat(this.projectDir.resolve(Path.of("target", "jacoco-agent", "org.jacoco.agent-runtime.jar")).toFile(),
-                anExistingFile());
+        assertThat(projectDir.resolve("target/jacoco-agent/org.jacoco.agent-runtime.jar").toFile(), anExistingFile());
     }
 
     @Test
     void testUpgradeDependencies() throws VerificationException, IOException {
         writeProjectKeeperConfig("sources:\n" + //
                 "  - type: maven\n" + //
-                "    path: pom.xml\n");
+                "    path: pom.xml\n" + //
+                "    modules:\n" + //
+                "      - jar_artifact\n");
+        final Path userGuidePath = projectDir.resolve("user_guide.md");
+        writeFile(userGuidePath, "artifact reference: dummy-0.1.0.jar");
+
         verifier.executeGoal("project-keeper:fix");
         assertThat("original version", readPom().getVersion(), equalTo("0.1.0"));
 
@@ -113,8 +119,10 @@ class ProjectKeeperMojoIT {
         final String updatedSlf4jVersion = updatedPom.getDependencies().get(0).getVersion();
         assertThat("updated SLF4J version", updatedSlf4jVersion,
                 allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), not(startsWith("1.")), startsWith("2.")));
-        final String changesContent = Files.readString(projectDir.resolve(ChangesFile.getPathForVersion(newVersion)));
-        assertThat(changesContent, allOf(startsWith("blah")));
+        assertContent(userGuidePath, equalTo("artifact reference: dummy-0.1.1.jar\n"));
+        assertContent(ChangesFile.getPathForVersion(newVersion),
+                allOf(startsWith("# My Test Project 0.1.1, released 2024-??-??"),
+                        containsString("* Added `org.slf4j:slf4j-api:")));
     }
 
     private void updateReleaseDate(final String changeLogVersion, final String newReleaseDate) {
@@ -150,6 +158,18 @@ class ProjectKeeperMojoIT {
     }
 
     private void writeProjectKeeperConfig(final String content) throws IOException {
-        Files.writeString(this.projectDir.resolve(".project-keeper.yml"), content);
+        writeFile(this.projectDir.resolve(".project-keeper.yml"), content);
+    }
+
+    private void writeFile(final Path path, final String content) throws IOException {
+        Files.writeString(path, content);
+    }
+
+    private void assertContent(Path path, final Matcher<String> contentMatcher) throws IOException {
+        if (!path.isAbsolute()) {
+            path = projectDir.resolve(path);
+        }
+        final String changesContent = Files.readString(path);
+        assertThat(changesContent, contentMatcher);
     }
 }

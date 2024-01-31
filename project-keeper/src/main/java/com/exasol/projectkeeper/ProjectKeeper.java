@@ -314,6 +314,7 @@ public class ProjectKeeper {
      */
     public boolean updateDependencies() {
         final Provision provision = getValidationProvision();
-        return DependencyUpdater.create(this, logger, projectDir, provision.projectVersion()).updateDependencies();
+        return DependencyUpdater.create(this, config, logger, projectDir, provision.projectVersion())
+                .updateDependencies();
     }
 }
