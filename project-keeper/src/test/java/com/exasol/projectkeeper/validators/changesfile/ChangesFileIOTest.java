@@ -133,7 +133,7 @@ class ChangesFileIOTest {
 
     private String readExampleFile() throws IOException {
         try (final InputStream exampleFileStream = getExampleFileStream()) {
-            return new String(exampleFileStream.readAllBytes(), StandardCharsets.UTF_8);
+            return new String(exampleFileStream.readAllBytes(), StandardCharsets.UTF_8).replace("\r\n", "\n");
         }
     }
 
