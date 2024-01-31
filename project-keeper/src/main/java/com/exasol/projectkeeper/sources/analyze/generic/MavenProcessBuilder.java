@@ -2,8 +2,11 @@ package com.exasol.projectkeeper.sources.analyze.generic;
 
 import static java.util.Arrays.asList;
 
+import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.OsCheck.OSType;
@@ -13,7 +16,10 @@ import com.exasol.projectkeeper.OsCheck.OSType;
  */
 public class MavenProcessBuilder {
 
+    private static final Logger LOG = Logger.getLogger(MavenProcessBuilder.class.getName());
+    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
     private final List<String> command = new ArrayList<>();
+    private Path workingDir = null;
 
     private MavenProcessBuilder() {
         // Use create() method
@@ -27,6 +33,7 @@ public class MavenProcessBuilder {
     public static MavenProcessBuilder create() {
         final MavenProcessBuilder builder = new MavenProcessBuilder();
         builder.addArgument(getMavenExecutable());
+        builder.addArgument("--batch-mode");
         return builder;
     }
 
@@ -53,12 +60,23 @@ public class MavenProcessBuilder {
     }
 
     /**
-     * Build the command that can be used as argument for {@link ProcessBuilder}.
+     * Define the working directory where to execute the command. Default: {@code null}.
      * 
-     * @return the command
+     * @param workingDir working dir
+     * @return {@code this} for fluent programming
      */
-    public List<String> build() {
-        return List.copyOf(this.command);
+    public MavenProcessBuilder workingDir(final Path workingDir) {
+        this.workingDir = workingDir;
+        return this;
+    }
+
+    /**
+     * Build the command and run it.
+     * 
+     * @return the running {@link SimpleProcess}
+     */
+    public SimpleProcess startSimpleProcess() {
+        return SimpleProcess.start(workingDir, command);
     }
 
     private static String getMavenExecutable() {
