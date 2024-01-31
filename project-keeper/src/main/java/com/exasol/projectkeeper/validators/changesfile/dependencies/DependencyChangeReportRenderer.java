@@ -2,14 +2,12 @@ package com.exasol.projectkeeper.validators.changesfile.dependencies;
 
 import static com.exasol.projectkeeper.ApStyleFormatter.capitalizeApStyle;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChange;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
-import com.exasol.projectkeeper.validators.changesfile.NamedDependencyChangeReport;
+import com.exasol.projectkeeper.validators.changesfile.*;
 
 /**
  * String renderer for {@link DependencyChangeReport}.
@@ -20,17 +18,15 @@ public class DependencyChangeReportRenderer {
      * Render a {@link DependencyChangeReport} to string.
      *
      * @param reports reports to render
-     * @return rendered report as a list of lines
+     * @return rendered report as a section
      */
-    public List<String> render(final List<NamedDependencyChangeReport> reports) {
+    public Optional<ChangesFileSection> render(final List<NamedDependencyChangeReport> reports) {
         final List<String> content = renderContent(reports);
-        final List<String> lines = new ArrayList<>();
         if (content.isEmpty()) {
-            return lines;
+            return Optional.empty();
         }
-        lines.add(ChangesFile.DEPENDENCY_UPDATES_HEADING);
-        lines.addAll(content);
-        return lines;
+        return Optional.of(ChangesFileSection.builder(ChangesFile.DEPENDENCY_UPDATES_HEADING) //
+                .addLines(content).build());
     }
 
     private List<String> renderContent(final List<NamedDependencyChangeReport> reports) {

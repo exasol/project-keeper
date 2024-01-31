@@ -1,9 +1,7 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
-import static com.exasol.projectkeeper.validators.changesfile.ChangesFile.DEPENDENCY_UPDATES_HEADING;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -35,20 +33,12 @@ class DependencySectionFixer {
     public ChangesFile fix(final ChangesFile changesFile) {
         final List<NamedDependencyChangeReport> reports = this.sources.stream().map(this::getDependencyChangesOfSource)
                 .collect(Collectors.toList());
-        final List<String> renderedReport = new DependencyChangeReportRenderer().render(reports);
-        final List<ChangesFileSection> sections = new ArrayList<>(changesFile.getSections());
-        removeDependencySection(sections);
-        if (!renderedReport.isEmpty()) {
-            sections.add(new ChangesFileSection(renderedReport));
-        }
-        return changesFile.toBuilder().sections(sections).build();
+        final Optional<ChangesFileSection> dependencyChanges = new DependencyChangeReportRenderer().render(reports);
+        return changesFile.toBuilder() //
+                .dependencyChangeSection(dependencyChanges.orElse(null)).build();
     }
 
     private NamedDependencyChangeReport getDependencyChangesOfSource(final AnalyzedSource source) {
         return new NamedDependencyChangeReport(source.getProjectName(), source.getDependencyChanges());
-    }
-
-    private void removeDependencySection(final List<ChangesFileSection> sections) {
-        sections.removeIf(section -> section.getHeading().compareToIgnoreCase(DEPENDENCY_UPDATES_HEADING) == 0);
     }
 }

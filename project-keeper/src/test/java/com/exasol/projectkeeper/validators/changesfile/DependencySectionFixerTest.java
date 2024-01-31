@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import static com.exasol.projectkeeper.validators.changesfile.ChangesFile.DEPENDENCY_UPDATES_HEADING;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.*;
 
 import java.util.List;
 
@@ -33,33 +32,43 @@ class DependencySectionFixerTest {
 
     @Test
     void testSectionIsAdded() {
-        final ChangesFile changesFile = changesFileBuilder().setHeader(List.of("heading")).build();
-        final List<ChangesFileSection> sections = new DependencySectionFixer(List.of(source)).fix(changesFile)
-                .getSections();
-        assertThat(sections.size(), equalTo(1));
-        assertThat(sections.get(0).getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
+        final ChangesFile changesFile = changesFileBuilder().addSection(ChangesFileSection.builder("heading").build())
+                .build();
+        final ChangesFile fixedChangesFile = new DependencySectionFixer(List.of(source)).fix(changesFile);
+        assertThat(fixedChangesFile.getDependencyChangeSection().get().getHeading(),
+                equalTo(DEPENDENCY_UPDATES_HEADING));
     }
 
     private Builder changesFileBuilder() {
-        return ChangesFile.builder().projectName("projectName").projectVersion("1.2.3").releaseDate("releaseDate");
+        return ChangesFile.builder().projectName("projectName").projectVersion("1.2.3").releaseDate("releaseDate")
+                .summary(ChangesFileSection.builder("## Summary").build());
     }
 
     @Test
     void testSectionIsUpdated() {
-        final ChangesFile changesFile = changesFileBuilder().setHeader(List.of("heading"))
-                .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
+        final ChangesFile changesFile = changesFileBuilder().dependencyChangeSection(
+                ChangesFileSection.builder("## Dependency Updates").addLine("content will be overwritten").build())
+                .build();
         final ChangesFile fixedChangesFile = new DependencySectionFixer(List.of(source)).fix(changesFile);
-        final List<ChangesFileSection> sections = fixedChangesFile.getSections();
-        assertThat(sections.size(), equalTo(1));
-        assertThat(sections.get(0).getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
-        assertThat("dependency fixer changed the changes file", changesFile, not(equalTo(fixedChangesFile)));
+        final ChangesFileSection changesFileSection = fixedChangesFile.getDependencyChangeSection().get();
+        assertThat(changesFileSection.getHeading(), equalTo(DEPENDENCY_UPDATES_HEADING));
+        assertThat(changesFileSection.getContent(),
+                contains("", "### Compile Dependency Updates", "", "* Added `com.example:my-lib:1.2.3`"));
+        assertThat("dependency fixer changed the changes file", changesFile,
+                allOf(not(equalTo(fixedChangesFile)), not(sameInstance(fixedChangesFile))));
     }
 
     @Test
-    void testHeaderIsPreserved() {
-        final ChangesFile changesFile = changesFileBuilder().setHeader(List.of("heading"))
-                .addSection(List.of(DEPENDENCY_UPDATES_HEADING, "myLine")).build();
-        final ChangesFile fixedChangesFile = new DependencySectionFixer(List.of(source)).fix(changesFile);
-        assertThat(changesFile.getHeaderSectionLines(), equalTo(fixedChangesFile.getHeaderSectionLines()));
+    void testDependencySectionIsRemoved() {
+        final ChangesFile changesFile = changesFileBuilder().addSection(ChangesFileSection.builder("heading").build())
+                .dependencyChangeSection(ChangesFileSection.builder("## Dependency Updates")
+                        .addLine("content will be preserved").build())
+                .build();
+        final ChangesFile fixedChangesFile = new DependencySectionFixer(List.of()).fix(changesFile);
+
+        assertThat(fixedChangesFile.getDependencyChangeSection().isPresent(), is(false));
+        assertThat(fixedChangesFile, not(sameInstance(changesFile)));
+        assertThat("dependency fixer changed the changes file", changesFile,
+                allOf(not(equalTo(fixedChangesFile)), not(sameInstance(fixedChangesFile))));
     }
 }

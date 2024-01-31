@@ -33,7 +33,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 class ChangesFileValidatorTest {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
-    private static final String LINE_SEPARATOR = System.lineSeparator();
+    private static final String LINE_SEPARATOR = "\n";
 
     @TempDir
     Path tempDir;

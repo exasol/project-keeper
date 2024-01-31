@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
+import com.github.hamstercommunity.matcher.auto.AutoMatcher;
+
 class ChangesFileIOTest {
     @TempDir
     Path tempDir;
@@ -29,20 +31,23 @@ class ChangesFileIOTest {
         assertThat(changesFile.getProjectVersion().toString(), equalTo("0.1.0"));
         assertThat(changesFile.getReleaseDate(), equalTo("1980-01-01"));
         assertThat(changesFile.getParsedReleaseDate().get(), equalTo(LocalDate.parse("1980-01-01")));
-        assertThat(headings, contains("## Summary", "## Features", "## Bug Fixes", "## Documentation", "## Refactoring",
-                "## Dependency Updates"));
+        assertThat(changesFile.getSummarySection().get().getContent(), contains("", "My summary", ""));
+        assertThat(headings, contains("## Features", "## Bug Fixes", "## Documentation", "## Refactoring"));
+        assertThat(changesFile.getDependencyChangeSection().get().getHeading(), equalTo("## Dependency Updates"));
+        assertThat(changesFile.getDependencyChangeSection().get().getContent(), hasSize(18));
     }
 
     @Test
     void testWriting() throws IOException {
         final ChangesFile changesFile = ChangesFile.builder().projectName("project").projectVersion("1.2.3")
-                .releaseDate("2023-??-??").setHeader(List.of("# MyChanges")).addSection(List.of("## My Subsection"))
-                .build();
+                .releaseDate("2023-??-??").codeName("my code name")
+                .summary(ChangesFileSection.builder("## Summary").addLine("my summary content").build())
+                .addSection(ChangesFileSection.builder("# MyChanges").build())
+                .addSection(ChangesFileSection.builder("## My Subsection").addLine("content").build()).build();
         final Path testFile = this.tempDir.resolve("myFile.md");
         new ChangesFileIO().write(changesFile, testFile);
-        assertThat(Files.readString(testFile), equalTo("# project 1.2.3, released 2023-??-??" + System.lineSeparator() + //
-                "# MyChanges" + System.lineSeparator() + //
-                "## My Subsection" + System.lineSeparator()));
+        assertThat(Files.readString(testFile), equalTo(
+                "# project 1.2.3, released 2023-??-??\n\nCode name: my code name\n\n## Summary\nmy summary content\n# MyChanges\n## My Subsection\ncontent\n"));
     }
 
     @Test
@@ -61,22 +66,63 @@ class ChangesFileIOTest {
 
     @Test
     void testReadFirstLineWithDummyReleaseDate() throws IOException {
-        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-??-??");
+        final ChangesFile changesFile = readFromString(
+                "# Project Name 1.2.3, released 2024-??-??\nCode name: my code name\n## Summary\n\n");
         assertThat(changesFile.getProjectName(), equalTo("Project Name"));
         assertThat(changesFile.getProjectVersion().toString(), equalTo("1.2.3"));
         assertThat(changesFile.getReleaseDate(), equalTo("2024-??-??"));
+        assertThat(changesFile.getCodeName(), equalTo("my code name"));
         assertThat(changesFile.getParsedReleaseDate().isPresent(), is(false));
         assertWriteRead(changesFile);
     }
 
     @Test
     void testReadFirstLineWithValidReleaseDate() throws IOException {
-        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-01-29");
+        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-01-29\n## Summary\n\n");
         assertThat(changesFile.getProjectName(), equalTo("Project Name"));
         assertThat(changesFile.getProjectVersion().toString(), equalTo("1.2.3"));
         assertThat(changesFile.getReleaseDate(), equalTo("2024-01-29"));
         assertThat(changesFile.getParsedReleaseDate().get(), equalTo(LocalDate.parse("2024-01-29")));
         assertWriteRead(changesFile);
+    }
+
+    @Test
+    void testReadMissingSummary() throws IOException {
+        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-01-29");
+        assertThat(changesFile.getSummarySection().isEmpty(), is(true));
+    }
+
+    @Test
+    void testReadEmptySummary() throws IOException {
+        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-01-29\n## Summary");
+        final ChangesFileSection summary = changesFile.getSummarySection().get();
+        assertThat(summary.getHeading(), equalTo("## Summary"));
+        assertThat(summary.getContent(), emptyIterable());
+    }
+
+    @Test
+    void testReadSummary() throws IOException {
+        final ChangesFile changesFile = readFromString(
+                "# Project Name 1.2.3, released 2024-01-29\n## Summary\nmy\ncontent\n");
+        final ChangesFileSection summary = changesFile.getSummarySection().get();
+        assertThat(summary.getHeading(), equalTo("## Summary"));
+        assertThat(summary.getContent(), contains("my", "content"));
+        assertWriteRead(changesFile);
+    }
+
+    @Test
+    void testReadNoDependencySection() throws IOException {
+        final ChangesFile changesFile = readFromString("# Project Name 1.2.3, released 2024-01-29\n## Summary");
+        assertThat(changesFile.getDependencyChangeSection().isEmpty(), is(true));
+    }
+
+    @Test
+    void testReadDependencySection() throws IOException {
+        final ChangesFile changesFile = readFromString(
+                "# Project Name 1.2.3, released 2024-01-29\n## Summary\n## Dependency Updates\nmy\ncontent");
+        assertThat(changesFile.getDependencyChangeSection().isEmpty(), is(false));
+        assertThat(changesFile.getDependencyChangeSection().get().getHeading(), equalTo("## Dependency Updates"));
+        assertThat(changesFile.getDependencyChangeSection().get().getContent(), contains("my", "content"));
     }
 
     private Path loadExampleFileToTempDir() throws IOException {
@@ -100,6 +146,8 @@ class ChangesFileIOTest {
     private void assertWriteRead(final ChangesFile changesFile) throws IOException {
         final String content = writeToString(changesFile);
         final ChangesFile readChangesFile = readFromString(content);
+        assertThat(readChangesFile.toString(), equalTo(changesFile.toString()));
+        assertThat(readChangesFile, AutoMatcher.equalTo(changesFile));
         assertThat(readChangesFile, equalTo(changesFile));
     }
 

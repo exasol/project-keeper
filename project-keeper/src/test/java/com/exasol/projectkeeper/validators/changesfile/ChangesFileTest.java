@@ -6,11 +6,11 @@ import static org.hamcrest.Matchers.is;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
-import java.util.List;
 
 import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Builder;
+import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
@@ -19,6 +19,11 @@ class ChangesFileTest {
     @Test
     void equalsContract() {
         EqualsVerifier.forClass(ChangesFile.class).verify();
+    }
+
+    @Test
+    void testToString() {
+        ToStringVerifier.forClass(ChangesFile.class).verify();
     }
 
     @Test
@@ -36,7 +41,8 @@ class ChangesFileTest {
 
     private Builder builder() {
         return ChangesFile.builder().projectName("name").projectVersion("1.2.3").releaseDate("2023-??-??")
-                .addSection(List.of("section 1")).setHeader(List.of("header 1"));
+                .summary(ChangesFileSection.builder("## Summary").build())
+                .addSection(ChangesFileSection.builder("section 1").build());
     }
 
     @Test
