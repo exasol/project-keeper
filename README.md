@@ -54,5 +54,5 @@ See the [User Guide](doc/user_guide/user_guide.md) for details and for non-Maven
 - [Developer Guide](doc/developer_guide/developer_guide.md)
 - [Dependencies](dependencies.md)
 - [Changelog](doc/changes/changelog.md)
-- [Features & Requirements](doc/system_requirements.md)
-- [Design](doc/design.md)
+- [Features & Requirements](doc/requirements/system_requirements.md)
+- [Design](doc/requirements/design.md)

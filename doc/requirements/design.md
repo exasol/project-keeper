@@ -345,6 +345,64 @@ Covers:
 
 Needs: impl, utest, itest
 
+### Customize Release Artifacts
+`dsn~customize-release-artifacts~0`
+
+PK allows customizing the list of files that are attached to new GitHub releases in the `release.yml` workflow.
+
+Needs: dsn
+Covers:
+* [`req~customize-release-artifacts~0`](system_requirements.md#customize-release-artifacts)
+
+#### Archive Configured JAR Artifact
+`dsn~customize-release-artifacts-jar~0`
+
+PK adds the JAR name configured in the `maven-assembly-plugin` to the list of release artifacts.
+
+Rationale:
+* This avoids duplicating configuration already present in `pom.xml`.
+* This requires evaluating placeholders, e.g. `document-files-virtual-schema-dist-${vs-common-document-files.version}-s3-${project.version}`.
+
+Covers:
+* [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
+
+-Needs: impl, utest, itest
+
+#### Common List of Release Artifacts
+`dsn~customize-release-artifacts-hard-coded~0`
+
+PK adds the following files to a hard coded list of release artifacts:
+* `target/error_code_report.json`
+
+Rationale:
+* These files are created by all projects.
+* Hard coding this list in PK avoids duplication in the `.project-keeper.yml`
+
+Covers:
+* [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
+
+-Needs: impl, utest, itest
+
+#### Custom Release Artifacts
+`dsn~customize-release-artifacts-custom~0`
+
+PK adds a list of configured files to the list of release artifacts.
+
+Rationale:
+This allows adding project-specific release artifacts like `.js` extensions.
+
+Covers:
+* [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
+
+-Needs: impl, utest, itest
+
+### Customize Build Process
+`dsn~customize-build-process~0`
+
+Covers:
+
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
 ## Golang Support
 
 ### Get Project Version
@@ -442,3 +500,357 @@ Covers:
 * [`req~npm-changed-dependency~1`](system_requirements.md#get-changed-dependency)
 
 Needs: impl, utest, itest
+
+## Automatic Dependency Update Process
+
+This consists of the following steps:
+1. Trigger the dependency update process
+2. Update dependencies
+3. Create a pull request
+
+![Activity Diagram for the dependencies update process](images/dependencies_update_process.svg)
+
+#### Triggering the Dependency Update Process
+`dsn~trigger-dependency-updates~1`
+
+PK generates the `dependencies_check.yml` GitHub workflow so that it launches the `dependencies_update.yml` workflow when it detects new vulnerabilities.
+
+Rationale:
+
+`dependencies_check.yml` already uses the [security-issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) tool from the [python-toolbox](https://github.com/exasol/python-toolbox) to create issues for new vulnerabilities. Re-implementing this in PK is not necessary.
+
+Covers:
+* [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
+
+-Needs: impl, utest, itest
+
+#### Update Dependencies Mode
+`dsn~update-dependencies-mode~1`
+
+PK provides an `update-dependencies` mode in addition to `fix` and `verify`. This mode performs the following steps:
+
+1. Increment version of the project
+2. Update dependencies to their latest version
+3. Create changelog containing information about the fixed vulnerabilities (if available)
+
+Rationale:
+
+* We implement this in PK because
+  * PK already contains code for working with versions and changelog, so we can reuse this code
+  * The `update-dependencies` mode is also useful for running locally on the developer's machine when working on a non-security related task
+* We don't implement git/GitHub operations in PK because
+  * This would couple PK to GitHub
+  * This would be surprising when running it locally
+  * This would require credentials for accessing the GitHub API
+
+Covers:
+* [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
+* [`req~auto-create-changelog~1`](system_requirements.md#automatically-create-change-log-entry)
+
+Needs: dsn
+
+##### Incrementing the Project Version
+`dsn~increment-version~1`
+
+PK increments the project's patch version. PK does not modify the version if the current version was not yet released (i.e. there is not release in the latest changelog file).
+
+Rationale:
+
+Leaving the version unchanged when it was not yet released avoids surprises when running this locally.
+
+Covers:
+* [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
+
+-Needs: impl, utest, itest
+
+##### Upgrade Dependencies
+`dsn~upgrade-dependencies~1`
+
+PK upgrades dependencies using the [versions-maven-plugin](https://www.mojohaus.org/versions/versions-maven-plugin/index.html):
+
+```sh
+mvn versions:use-latest-releases && mvn versions:update-properties
+```
+
+Rationale:
+
+* This avoids re-inventing the wheel.
+* The plugin supports excluding dependencies from the upgrade that could cause problems using the [`<excludes>`](https://www.mojohaus.org/versions/versions-maven-plugin/use-latest-releases-mojo.html#excludes) configuration.
+
+Covers:
+* [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
+
+-Needs: impl, utest, itest
+
+##### Generate Changelog
+
+PK generates the changelog for the fixed vulnerabilities if the required information is available. The changelog contains the following information:
+* Issues that fix the vulnerabilities
+* CVE-number, description and severity of each vulnerability
+* The vulnerable dependency, its version and scope 
+
+Rationale:
+* The `dependencies_check.yml` workflow detects vulnerabilities and creates issues. It will output information about the created issues and the vulnerabilities. This information is passed to `dependencies_update.yml` as a parameter and forwarded to PK's `update-dependencies` mode.
+* Vulnerability information must be optional in order to allow running the process locally.
+
+Covers:
+* [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
+
+-Needs: impl, utest, itest
+
+#### Generate `dependencies_update.yml` workflow
+`dsn~dependencies_update-workflow~1`
+
+PK generates the `dependencies_update.yml` GitHub workflow.
+
+Covers:
+* [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
+* [`req~auto-create-changelog~1`](system_requirements.md#automatically-create-change-log-entry)
+* [`req~auto-create-pr~1`](system_requirements.md#automatically-create-a-pull-request)
+
+Needs: dsn
+
+##### `dependencies_update.yml` Workflow Receives Vulnerability Info
+`dsn~dependencies_update-vulnerability-info~1`
+
+PK generates the `dependencies_update.yml` workflow so that it receives information about vulnerabilities and issues as optional parameter.
+
+-Needs: impl, utest, itest
+
+Covers:
+* [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
+
+##### `dependencies_update.yml` Workflow Starts PK `update-dependencies` Mode
+`dsn~dependencies_update-starts-pk-update~1`
+
+PK generates the `dependencies_update.yml` workflow so that it starts PK's [`update-dependencies` mode](#update-dependencies-mode), passing information about vulnerabilities.
+
+Rationale:
+
+PK needs the vulnerability info for generating the changelog.
+
+-Needs: impl, utest, itest
+
+Covers:
+* [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
+
+##### `dependencies_update.yml` Workflow Creates a Pull Request
+`dsn~dependencies_update-creates-pull-request~1`
+
+PK generates the `dependencies_update.yml` workflow so that it creates a Pull Request in GitHub. This requires the following steps:
+1. Create a new local branch using a random name
+2. Commit local changes using a commit message that contains the issue number
+3. Push the branch
+4. Create a new pull request with `Closes` comments for each issue number
+5. If the Slack notification URL is available as secret: send a Slack notification
+  * If the workflow fails: send a warning containing the workflow run
+  * If the workflow succeeded: send a success message containing the pull request link
+
+Rationale:
+
+We implement this in a workflow and not in PK because
+* Git/GitHub operations should not be done locally to avoid surprises
+* GitHub action automatically have credentials for pushing and creating a pull request
+* The Slack notification URL might not be available as secret to all repositories, so this step must be optional
+* Sending notifications to developers to
+  * investigate a failed update process
+  * review and merge a new pull request
+
+Note: Implementing this in a workflow makes it hard to do integration tests. We accept that there are no integration tests for running the workflow.
+
+-Needs: impl, utest, itest
+
+Covers:
+* [`dsn~dependencies_update-workflow~1`](#generate-dependencies_updateyml-workflow)
+
+#### Generate `release.yml` workflow
+`dsn~release-workflow~1`
+
+PK generates the `release.yml` GitHub workflow for Maven projects. This workflow runs the build including tests, integration tests, releases to Maven Central and on GitHub.
+
+Rationale:
+* The release process is limited to Maven projects. Support for other projects may be added later.
+* The previous build process with release-droid used separate steps for testing and releasing. This allowed re-starting a release (e.g. to Maven Central) in case of failures, without having to start potentially long running tests (~40 minutes).
+  * The new process always runs the complete process, it's not possible to skip tests.
+  * We accept this disadvantage of potential slow release times for now because the release process to Maven Central is usually stable nowadays.
+* We implement the workflow purely with a single generated GitHub actions. An alternative would be to implement parts of the build logic (e.g. checksum of build artifacts) as workflow steps implemented in JavaScript.
+  * Advantages:
+    * All generated code is one file, no need to use multiple files or reference other workflows
+    * Simple, standalone implementation
+  * Disadvantage:
+    * Long generated workflow file
+    * Not easily testable, one option would be [nektos/act](https://github.com/nektos/act)
+  * We accept the disadvantages for now. However the architecture allows changing this in the future.
+
+![Activity diagram of the release process](images/release_process.svg)
+
+Covers:
+* [`req~auto-release~1`](system_requirements.md#automatic-release)
+
+Needs: dsn
+
+##### `release.yml` Workflow Triggers
+`dsn~release-workflow-triggers~1`
+
+PK generates the `release.yml` workflow so that it is triggered by the following events:
+* manual triggering (`workflow_dispatch`)
+* push to `main` branch (`push: branches: - main`)
+
+Rationale:
+* Manually triggering simplifies debugging in case of problems
+* Hard-coding the `main` branch for the `push` trigger is OK because we assume that all repositories use the same development workflow
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+-Needs: impl, utest, itest
+
+##### `release.yml` Workflow Release Verification
+`dsn~release-workflow-run-verify-release~1`
+
+PK generates the `release.yml` workflow so that it runs PK in `verify-release` mode, see [`dsn~verify-release-mode~1`](#verify-release-mode).
+
+Rationale:
+* This ensures that all preconditions for the release are met (e.g. current release date). In the previous process this was checked by release-droid.
+* Checking the release date allows skipping a release. I.e. when no release is planned when updating the `main` branch, the user can leave the release date undefined, e.g. `2024-??-??`. This will let `verify-release` fail and the release is cancelled.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+-Needs: impl, utest, itest
+
+##### `release.yml` Workflow Runs Build
+`dsn~release-workflow-run-build~1`
+
+PK generates the `release.yml` workflow so that it runs the build including tests, integration tests and verifications (`mvn verify`).
+
+Rationale:
+* Supporting other build tools is not necessary for now because building and testing of other components (e.g. JavaScript extensions using `npm`) can be included into the Maven build process using the `exec-maven-plugin` plugin.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+-Needs: impl, utest, itest
+
+##### `release.yml` Workflow Deploys to Maven Central
+`dsn~release-workflow-deploy-maven-central~1`
+
+If at least one source in `.project-keeper.yml` uses the `maven_central` module, PK generates the `release.yml` workflow so that it runs deploys the project to Maven Central (`mvn deploy`).
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+-Needs: impl, utest, itest
+
+##### `release.yml` Workflow Creates GitHub Release
+`dsn~release-workflow-create-github-release~1`
+
+PK generates the `release.yml` workflow so that it creates a new GitHub release for the new version.
+
+Rationale:
+* In the old release process this was implemented in release-droid (`GitHubReleaseMaker.createReleaseModel()`).
+* The GitHub workflow has permissions to use the GitHub API.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+-Needs: impl, utest, itest
+
+##### `release.yml` Workflow Creates Tags for Golang Modules
+`dsn~release-workflow-create-golang-tags~1`
+
+PK generates the `release.yml` workflow so that it creates the correct tags for Golang modules.
+
+Rationale:
+* In the old release process this was implemented in release-droid (`Revision.getTags()`).
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+-Needs: impl, utest, itest
+
+#### `verify-release` Mode
+`dsn~verify-release-mode~1`
+
+PK provides an `verify-release` mode in addition to `fix`, `verify` and `update-dependencies`.
+
+If any of the checks fails, PK fails with an exit code > 0 to signal a build failure.
+
+Covers:
+* [`dsn~release-workflow~1`](#generate-releaseyml-workflow)
+
+Needs: dsn
+
+##### `verify-release` Mode Runs PK Verify
+`dsn~verify-release-mode-verify~1`
+
+PK's `verify-release` mode runs the same validations as the `verify` mode.
+
+Rationale:
+This simplifies usage because it's not necessary to start PK twice.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+-Needs: impl, utest, itest
+
+##### `verify-release` Mode Checks Release Date
+`dsn~verify-release-mode-verify-release-date~1`
+
+PK's `verify-release` mode verifies that the release date in the current version's changelog is the current date.
+
+Rationale:
+* The release date must be up-to-date. In the previous release process this was checked by release-droid.
+* This allows opting out of releasing:
+  * The `release.yml` workflow runs for every push to the `main` branch. This is not always intended if developers want to wait with the release and add more changes in other pull requests.
+  * Setting the release date to `2024-??-??` will let the `verify-release` mode fail which will stop the release build.
+* Possible future improvement:
+  * To avoid creating a PR just for updating the release date we could add an optional parameter to the `release.yml` workflow that updates the release date and commits this change directly to `main`.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+-Needs: impl, utest, itest
+
+##### `verify-release` Mode Checks All Issues are Closed
+`dsn~verify-release-mode-verify-issues-closed~1`
+
+PK's `verify-release` mode verifies that all GitHub issues mentioned in the current version's changelog are closed.
+
+Rationale:
+* In the previous release process this was checked by release-droid.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+-Needs: impl, utest, itest
+
+##### `verify-release` Mode Checks Version Increment
+`dsn~verify-release-mode-verify-version-increment~1`
+
+PK's `verify-release` mode verifies that current version was incremented correctly based on the previous version.
+
+Rationale:
+* In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+-Needs: impl, utest, itest
+
+##### `verify-release` Mode Sets GitHub Action Output Parameters
+`dsn~verify-release-mode-output-parameters~1`
+
+PK's `verify-release` mode outputs the following information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter):
+* Project version
+* Code name from changelog
+* Remaining content of changelog
+
+Rationale:
+* The `release.yml` workflow needs this information for creating the GitHub release.
+* Steps in a GitHub workflow can read the output parameters of other steps.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+-Needs: impl, utest, itest

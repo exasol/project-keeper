@@ -266,7 +266,7 @@ Needs: dsn
 
 `req~golang-changed-dependency~1`
 
-PK can retrieve changed Golang dependencies that where added, updated or removed since the last release.
+PK can retrieve changed Golang dependencies that were added, updated or removed since the last release.
 
 Covers:
 
@@ -305,9 +305,125 @@ Needs: dsn
 #### Get Changed Dependency
 `req~npm-changed-dependency~1`
 
-PK can retrieve changed NPM dependencies that where added, updated or removed since the last release.
+PK can retrieve changed NPM dependencies that were added, updated or removed since the last release.
 
 Covers:
 * `feat~npm-project-support~1`
 
 Needs: dsn
+
+### Automatic Dependency Update Process
+`feat~automatic-dependency-update-process~1`
+
+PK supports a process for automated dependency update. This speeds up fixing vulnerabilities in third party dependencies and creating releases.
+
+Rationale:
+
+The Exasol integration team maintains more than 130 projects that often require dependency updates due to security issues that are found in direct or transitive dependencies. In most cases the update requires pulling the latest source, updating the dependencies, updating the change log, running the tests locally, on success pushing the branch, running CI and creating a release as shown in the following bullet-list.
+
+* Update dependencies
+* Create change log entry
+* Run local tests
+* Push branch
+* Run CI
+* Release
+
+Needs: req
+
+#### Auto-update dependencies
+`req~auto-update-dependencies~1`
+
+PK automatically updates dependencies when the `dependencies_check.yml` workflow finds a new vulnerability.
+
+Covers:
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
+
+Needs: dsn
+
+#### Automatically create change log entry
+`req~auto-create-changelog~1`
+
+PK generates an entry in the changes file for fixed vulnerabilities.
+
+Rationale:
+
+The changes file entries for fixed vulnerabilities always have the same structure and can be easily automated to avoid manual work.
+
+Covers:
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
+
+Needs: dsn
+
+#### Automatically Create a Pull Request
+`req~auto-create-pr~1`
+
+PK creates a new Pull Request after upgrading dependencies.
+
+Rationale:
+
+A pull requests allows to
+* automatically run tests using the updated dependencies to verify if the upgrade caused any problems
+* review and approve changes
+* manually modify files in case of problems
+
+Covers:
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
+
+Needs: dsn
+
+#### Automatic Release
+`req~auto-release~1`
+
+PK automatically builds a new release whenever the `main` branch is updated.
+
+Rationale:
+
+* This reduces manual work, it's not necessary any more to manually run release-droid.
+* Optionally the user can indicate to apply the changes, but postpone creating a release.
+
+Covers:
+* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
+
+Needs: dsn
+
+### Customizable Workflows
+`feat~customize-workflows~0`
+
+PK allows customizing the `ci-build.yml` and `release.yml` workflows with project-specific build steps.
+
+Rationale:
+Currently some projects are already using customized workflows but needed to exclude them from PK generation. Allowing to customize workflows will simplify maintenance of GH workflows.
+
+Needs: req
+
+#### Customize Release Artifacts
+`req~customize-release-artifacts~0`
+
+PK allows customizing the list of files that are attached to new GitHub releases in the `release.yml` workflow.
+
+Rationale:
+Some projects need to release custom files like executable `.jar` files or `.js` extensions.
+
+Needs: dsn
+
+Covers:
+* [`feat~customize-workflows~0`](#customizable-workflows)
+
+#### Customize Build Process
+`req~customize-build-process~0`
+
+PK allows adding pre and post steps during the build process as well as customizing the actual build step.
+
+Rationale:
+Some projects need to
+* install additional tools like Go, Node
+* prepare files (e.g. `test_config.properties`) with configuration and credentials
+* prepare test infrastructure with `terraform init && terraform apply`
+* pass additional environment variables (e.g. AWS credentials) to the build step
+* attach files to the workflow (e.g. `classes.lst` for the S3 virtual schema)
+* run cleanup steps like `terraform destroy`
+
+Needs: dsn
+
+Covers:
+* [`feat~customize-workflows~0`](#customizable-workflows)

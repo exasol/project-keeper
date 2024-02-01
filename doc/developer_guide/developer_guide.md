@@ -6,12 +6,24 @@ You need the following dependencies for running the tests:
 
 * Java Development Kit 11
 * Maven 3.6.3 or later
-* Go 1.16 or later for testing Go support, see [installation guide](https://go.dev/doc/install)
+* Go 1.20 or later for testing Go support, see [installation guide](https://go.dev/doc/install)
 
 ### go-licenses
 
 [go-licenses](https://github.com/google/go-licenses/) is required for extracting Go module license information.
 Since version 2.7.0 PK will automatically install `go-licenses` if required.
+
+## Requirements and Design
+
+Design documents are located at
+* [requirements/system_requirements.md](../requirements/system_requirements.md)
+* [requirements/design.md](../requirements/design.md)
+
+After modifying the `.plantuml` files in `doc/images/` please generate the `.svg` diagrams by running the following command and commit them to Git:
+
+```sh
+./scripts/build_diagrams.sh
+```
 
 ## Building
 

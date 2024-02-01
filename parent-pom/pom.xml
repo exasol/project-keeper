@@ -28,12 +28,12 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>3.0.1</revision>
+        <revision>4.0.0</revision>
         <maven.version>3.9.6</maven.version>
         <minimum.maven.version>3.6.3</minimum.maven.version>
         <junit.version>5.10.1</junit.version>
         <xmlunit.version>2.9.1</xmlunit.version>
-        <mockito.version>5.8.0</mockito.version>
+        <mockito.version>5.10.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>11</maven.compiler.source>
@@ -89,7 +89,7 @@
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
-                <version>3.10.2</version>
+                <version>3.11.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>
@@ -111,6 +111,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
+                <!-- Upgrading to 6.8.0 causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
                 <version>6.7.0.202309050840-r</version>
             </dependency>
             <dependency>
@@ -204,7 +205,7 @@
             <dependency>
                 <groupId>nl.jqno.equalsverifier</groupId>
                 <artifactId>equalsverifier</artifactId>
-                <version>3.15.4</version>
+                <version>3.15.6</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -213,13 +214,17 @@
                 <version>1.4.8</version>
                 <scope>test</scope>
             </dependency>
-            <!-- overriding vulnerable version -->
-            <dependency>
-                <groupId>junit</groupId>
-                <artifactId>junit</artifactId>
-                <version>4.13.2</version>
-                <scope>test</scope>
-            </dependency>
         </dependencies>
     </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-plugin-plugin</artifactId>
+                    <version>3.11.0</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
