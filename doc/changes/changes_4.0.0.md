@@ -6,7 +6,7 @@ Code name: Automatic Security Updates
 
 ## Features
 
-* #515: Added automatic dependency upgrade
+* #515: Added requirements and design for automatic dependency upgrade
 
 ## Dependency Updates
 

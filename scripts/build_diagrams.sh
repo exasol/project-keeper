@@ -9,10 +9,10 @@ set -o pipefail
 base_dir="$( cd "$(dirname "$0")/.." >/dev/null 2>&1 ; pwd -P )"
 readonly base_dir
 
-readonly diagrams_dir="$base_dir/doc/images"
-readonly output_dir="$base_dir/doc/images"
+readonly diagrams_dir="$base_dir/doc/requirements/images"
+readonly output_dir="$base_dir/doc/requirements/images"
 
-if [[ "$(ls -A $output_dir/*.svg)" ]]; then
+if [[ "$(ls -A "$output_dir"/*.svg)" ]]; then
   echo "Deleting diagrams from $output_dir..."
   rm "$output_dir"/*.svg
 fi
