@@ -711,7 +711,8 @@ Covers:
 PK generates the `release.yml` workflow so that it runs PK in `verify-release` mode, see [`dsn~verify-release-mode~1`](#verify-release-mode).
 
 Rationale:
-This ensures that all preconditions for the release are met (e.g. current release date). In the previous process this was checked by release-droid.
+* This ensures that all preconditions for the release are met (e.g. current release date). In the previous process this was checked by release-droid.
+* Checking the release date allows skipping a release. I.e. when no release is planned when updating the `main` branch, the user can leave the release date undefined, e.g. `2024-??-??`. This will let `verify-release` fail and the release is cancelled.
 
 Covers:
 * [`dsn~release-workflow~1`](#generate-releaseyml-workflow)

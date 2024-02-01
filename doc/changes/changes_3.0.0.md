@@ -4,7 +4,7 @@ Code name: Support Java 17 builds
 
 ## Summary
 
-This release adds support for using different Java versions for running Maven and for compiling/testing projects. We use the `maven-toolchains-plugin` to implement this. See [requirements](../system_requirements.md#support-building-with-multiple-java-versions) and [software design](../design.md#use-maven-toolchain) for implementation details.
+This release adds support for using different Java versions for running Maven and for compiling/testing projects. We use the `maven-toolchains-plugin` to implement this. See [requirements](../requirements/system_requirements.md#support-building-with-multiple-java-versions) and [software design](../requirements/design.md#use-maven-toolchain) for implementation details.
 
 This is a breaking change as it requires PK users to install both JDK versions 11 and 17 and create `~/.m2/toolchains.xml`. See the [user guide](../user_guide/user_guide.md#prerequisites-for-using-project-keeper) and [troubleshooting](../user_guide/user_guide.md#troubleshooting) for details.
 

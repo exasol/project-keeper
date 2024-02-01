@@ -16,8 +16,8 @@ Since version 2.7.0 PK will automatically install `go-licenses` if required.
 ## Requirements and Design
 
 Design documents are located at
-* [system_requirements.md](../system_requirements.md)
-* [design.md](../design.md)
+* [requirements/system_requirements.md](../requirements/system_requirements.md)
+* [requirements/design.md](../requirements/design.md)
 
 After modifying the `.plantuml` files in `doc/images/` please generate the `.svg` diagrams by running the following command and commit them to Git:
 

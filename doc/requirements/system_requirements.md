@@ -315,17 +315,17 @@ Needs: dsn
 ### Automatic Dependency Update Process
 `feat~automatic-dependency-update-process~1`
 
-PK supports the automatic dependency process. This speeds up fixing vulnerabilities in third party dependencies and creating releases.
+PK supports a process for automated dependency update. This speeds up fixing vulnerabilities in third party dependencies and creating releases.
 
 Rationale:
 
-We have 130+ projects in the integration team that often require dependency updates due to security issues that are found in the dependencies or transitive dependencies. Most of the time the update is a combination of pulling the latest source, updating the dependencies, updating the change log, running the tests locally, on success pushing the branch, running CI and creating a release.
+The Exasol integration team maintains more than 130 projects that often require dependency updates due to security issues that are found in direct or transitive dependencies. In most cases the update requires pulling the latest source, updating the dependencies, updating the change log, running the tests locally, on success pushing the branch, running CI and creating a release as shown in the following bullet-list.
 
-* Auto-update dependencies
-* Automatically create change log entry
-* Automatically run local tests
-* Automatically push branch
-* Automatically run CI
+* Update dependencies
+* Create change log entry
+* Run local tests
+* Push branch
+* Run CI
 * Release
 
 Needs: req
@@ -333,7 +333,7 @@ Needs: req
 #### Auto-update dependencies
 `req~auto-update-dependencies~1`
 
-PK automatically updates dependencies when a new vulnerability is found.
+PK automatically updates dependencies when the `dependencies_check.yml` workflow finds a new vulnerability.
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
@@ -343,11 +343,11 @@ Needs: dsn
 #### Automatically create change log entry
 `req~auto-create-changelog~1`
 
-PK automatically generates the change log for fixed vulnerabilities.
+PK generates an entry in the changes file for fixed vulnerabilities.
 
 Rationale:
 
-The change log for fixed vulnerabilities always has the same structure and can be easily automated to avoid manual work.
+The changes file entries for fixed vulnerabilities always have the same structure and can be easily automated to avoid manual work.
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
@@ -362,7 +362,7 @@ PK creates a new Pull Request after upgrading dependencies.
 Rationale:
 
 A pull requests allows to
-* automatically run tests using the upgraded dependencies to verify if the upgrade caused any problems
+* automatically run tests using the updated dependencies to verify if the upgrade caused any problems
 * review and approve changes
 * manually modify files in case of problems
 
@@ -378,7 +378,8 @@ PK automatically builds a new release whenever the `main` branch is updated.
 
 Rationale:
 
-This reduces manual work, it's not necessary any more to manually run release-droid.
+* This reduces manual work, it's not necessary any more to manually run release-droid.
+* Optionally the user can indicate to apply the changes, but postpone creating a release.
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
@@ -391,7 +392,7 @@ Needs: dsn
 PK allows customizing the `ci-build.yml` and `release.yml` workflows with project-specific build steps.
 
 Rationale:
-Some projects use customized workflows and exclude them from PK generation. Allowing to customize workflows will simplify maintenance of GH workflows.
+Currently some projects are already using customized workflows but needed to exclude them from PK generation. Allowing to customize workflows will simplify maintenance of GH workflows.
 
 Needs: req
 
@@ -411,7 +412,7 @@ Covers:
 #### Customize Build Process
 `req~customize-build-process~0`
 
-PK allows adding pre and post steps during the build process as well as customize the actual build step.
+PK allows adding pre and post steps during the build process as well as customizing the actual build step.
 
 Rationale:
 Some projects need to
