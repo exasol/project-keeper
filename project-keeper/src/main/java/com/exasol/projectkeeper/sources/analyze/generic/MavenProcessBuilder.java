@@ -3,10 +3,8 @@ package com.exasol.projectkeeper.sources.analyze.generic;
 import static java.util.Arrays.asList;
 
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 
 import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.OsCheck.OSType;
@@ -15,9 +13,6 @@ import com.exasol.projectkeeper.OsCheck.OSType;
  * This class allows building and starting a {@code mvn} command.
  */
 public class MavenProcessBuilder {
-
-    private static final Logger LOG = Logger.getLogger(MavenProcessBuilder.class.getName());
-    private static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(30);
     private final List<String> command = new ArrayList<>();
     private Path workingDir = null;
 
