@@ -333,7 +333,7 @@ Needs: req
 #### Auto-update dependencies
 `req~auto-update-dependencies~1`
 
-PK automatically updates dependencies when a new vulnerability is found.
+PK automatically updates dependencies when the `dependencies_check.yml` workflow finds a new vulnerability.
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
@@ -343,11 +343,11 @@ Needs: dsn
 #### Automatically create change log entry
 `req~auto-create-changelog~1`
 
-PK generates an entry in the change log for fixed vulnerabilities.
+PK generates an entry in the changes file for fixed vulnerabilities.
 
 Rationale:
 
-The change log for fixed vulnerabilities always has the same structure and can be easily automated to avoid manual work.
+The changes file entries for fixed vulnerabilities always have the same structure and can be easily automated to avoid manual work.
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
@@ -362,7 +362,7 @@ PK creates a new Pull Request after upgrading dependencies.
 Rationale:
 
 A pull requests allows to
-* automatically run tests using the upgraded dependencies to verify if the upgrade caused any problems
+* automatically run tests using the updated dependencies to verify if the upgrade caused any problems
 * review and approve changes
 * manually modify files in case of problems
 
@@ -379,7 +379,7 @@ PK automatically builds a new release whenever the `main` branch is updated.
 Rationale:
 
 * This reduces manual work, it's not necessary any more to manually run release-droid.
-* If a release is not intended, the user can leave the release date in the changes file undefined, e.g. `2024-??-??`. See [`dsn~release-workflow-run-verify-release~1`](design.md#releaseyml-workflow-release-verification).
+* Optionally the user can indicate to apply the changes, but postpone creating a release.
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
