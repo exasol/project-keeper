@@ -115,14 +115,14 @@ class ProjectKeeperMojoIT {
 
         final Model updatedPom = readPom();
         final String newVersion = "0.1.1";
-        assertThat("incremented version", updatedPom.getVersion(), equalTo(newVersion));
         final String updatedSlf4jVersion = updatedPom.getDependencies().get(0).getVersion();
-        assertThat("updated SLF4J version", updatedSlf4jVersion,
-                allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), not(startsWith("1.")), startsWith("2.")));
-        assertContent(userGuidePath, equalTo("artifact reference: dummy-0.1.1.jar\n"));
-        assertContent(ChangesFile.getPathForVersion(newVersion),
-                allOf(startsWith("# My Test Project 0.1.1, released 2024-??-??"),
-                        containsString("* Added `org.slf4j:slf4j-api:")));
+        assertAll(() -> assertThat("incremented version", updatedPom.getVersion(), equalTo(newVersion)),
+                () -> assertThat("updated SLF4J version", updatedSlf4jVersion,
+                        allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), not(startsWith("1.")), startsWith("2."))),
+                () -> assertContent(userGuidePath, startsWith("artifact reference: dummy-0.1.1.jar")),
+                () -> assertContent(ChangesFile.getPathForVersion(newVersion),
+                        allOf(startsWith("# My Test Project 0.1.1, released 2024-??-??"),
+                                containsString("* Added `org.slf4j:slf4j-api:"))));
     }
 
     private void updateReleaseDate(final String changeLogVersion, final String newReleaseDate) {
@@ -170,6 +170,6 @@ class ProjectKeeperMojoIT {
             path = projectDir.resolve(path);
         }
         final String changesContent = Files.readString(path);
-        assertThat(changesContent, contentMatcher);
+        assertThat("content of file " + path, changesContent, contentMatcher);
     }
 }
