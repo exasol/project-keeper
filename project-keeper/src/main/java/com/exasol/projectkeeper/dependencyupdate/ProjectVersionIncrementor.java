@@ -74,18 +74,18 @@ class ProjectVersionIncrementor {
         return LocalDate.ofInstant(clock.instant(), UTC_ZONE);
     }
 
-    void incrementProjectVersion() {
-
+    String incrementProjectVersion() {
         final Model pom = readPom();
         if (!this.currentProjectVersion.equals(pom.getVersion())) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-174").message(
                     "Inconsistent project version {{version in pom file}} found in pom {{pom file path}}, expected {{expected version}}",
                     pom.getVersion(), pom.getPomFile(), currentProjectVersion).ticketMitigation().toString());
         }
-        incrementVersion(pom);
+        final String nextVersion = incrementVersion(pom);
         if (usesReferenceCheckerPlugin()) {
             updateReferences();
         }
+        return nextVersion;
     }
 
     private boolean usesReferenceCheckerPlugin() {
@@ -98,12 +98,13 @@ class ProjectVersionIncrementor {
                 .startSimpleProcess().waitUntilFinished(Duration.ofSeconds(30));
     }
 
-    private void incrementVersion(final Model pom) {
+    private String incrementVersion(final Model pom) {
         final String nextVersion = getIncrementedVersion(currentProjectVersion);
         logger.info("Incrementing version from " + currentProjectVersion + " to " + nextVersion + " in POM "
                 + pom.getPomFile());
         pom.setVersion(nextVersion);
         writePom(pom);
+        return nextVersion;
     }
 
     static String getIncrementedVersion(final String version) {

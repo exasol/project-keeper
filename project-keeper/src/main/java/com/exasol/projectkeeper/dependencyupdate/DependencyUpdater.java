@@ -8,6 +8,8 @@ import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.analyze.generic.MavenProcessBuilder;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 
 /**
  * This class runs the dependency update process.
@@ -19,13 +21,20 @@ public class DependencyUpdater {
     private final Logger logger;
     private final Path projectDir;
     private final ProjectVersionIncrementor projectVersionIncrementor;
+    private final ChangesFileIO changesFileIO;
+    private final String currentProjectVersion;
+    private final ChangesFileUpdater changesFileUpdater;
 
     DependencyUpdater(final ProjectKeeper projectKeeper, final Logger logger, final Path projectDir,
-            final ProjectVersionIncrementor projectVersionIncrementor) {
+            final String currentProjectVersion, final ProjectVersionIncrementor projectVersionIncrementor,
+            final ChangesFileIO changesFileIO, final ChangesFileUpdater changesFileUpdater) {
         this.projectKeeper = projectKeeper;
         this.logger = logger;
         this.projectDir = projectDir;
+        this.currentProjectVersion = currentProjectVersion;
         this.projectVersionIncrementor = projectVersionIncrementor;
+        this.changesFileIO = changesFileIO;
+        this.changesFileUpdater = changesFileUpdater;
     }
 
     /**
@@ -40,8 +49,9 @@ public class DependencyUpdater {
      */
     public static DependencyUpdater create(final ProjectKeeper projectKeeper, final ProjectKeeperConfig config,
             final Logger logger, final Path projectDir, final String currentProjectVersion) {
-        return new DependencyUpdater(projectKeeper, logger, projectDir,
-                new ProjectVersionIncrementor(config, logger, projectDir, currentProjectVersion));
+        return new DependencyUpdater(projectKeeper, logger, projectDir, currentProjectVersion,
+                new ProjectVersionIncrementor(config, logger, projectDir, currentProjectVersion), new ChangesFileIO(),
+                new ChangesFileUpdater());
     }
 
     /**
@@ -56,19 +66,20 @@ public class DependencyUpdater {
      * @return {@code true} if the process succeeded.
      */
     public boolean updateDependencies() {
-        incrementProjectVersion();
+        final String version = incrementProjectVersion();
         updateDependencyVersions();
         runProjectKeeperFix();
-        updateChangelog();
+        updateChangelog(version);
         return true;
     }
 
-    private void incrementProjectVersion() {
+    private String incrementProjectVersion() {
         if (projectVersionIncrementor.isCurrentVersionReleased()) {
             logger.info("Current version was already released: increment version");
-            projectVersionIncrementor.incrementProjectVersion();
+            return projectVersionIncrementor.incrementProjectVersion();
         } else {
             logger.info("Current version was not yet released: no need to increment");
+            return currentProjectVersion;
         }
     }
 
@@ -91,7 +102,14 @@ public class DependencyUpdater {
         }
     }
 
-    private void updateChangelog() {
-        // TODO Auto-generated method stub
+    private void updateChangelog(final String version) {
+        final Path changesFilePath = getChangesFilePath(version);
+        final ChangesFile changesFile = changesFileIO.read(changesFilePath);
+        final ChangesFile updatedChanges = changesFileUpdater.update(changesFile);
+        changesFileIO.write(updatedChanges, changesFilePath);
+    }
+
+    private Path getChangesFilePath(final String version) {
+        return projectDir.resolve(ChangesFile.getPathForVersion(version));
     }
 }
