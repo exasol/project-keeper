@@ -10,7 +10,8 @@
   "java.sources.organizeImports.staticStarThreshold": 3,
   "java.test.config": {
     "vmArgs": [
-      "-Djava.util.logging.config.file=src/test/resources/logging.properties"
+      "-Djava.util.logging.config.file=src/test/resources/logging.properties",
+      "-Dcom.exasol.projectkeeper.ownVersion=4.0.0"
     ]
   },
   "sonarlint.connectedMode.project": {

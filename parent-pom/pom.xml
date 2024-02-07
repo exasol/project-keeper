@@ -5,7 +5,7 @@
     <artifactId>project-keeper-parent-pom</artifactId>
     <packaging>pom</packaging>
     <version>${revision}</version>
-    <name>Project Keeper parent pom</name>
+    <name>Project Keeper Parent POM</name>
     <description>This tool checks and unifies a project's structure according to the Exasol integration team's
         repository standards.
     </description>
@@ -31,7 +31,7 @@
         <revision>4.0.0</revision>
         <maven.version>3.9.6</maven.version>
         <minimum.maven.version>3.6.3</minimum.maven.version>
-        <junit.version>5.10.1</junit.version>
+        <junit.version>5.10.2</junit.version>
         <xmlunit.version>2.9.1</xmlunit.version>
         <mockito.version>5.10.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -111,7 +111,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <!-- Upgrading to 6.8.0 causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
+                <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
                 <version>6.7.0.202309050840-r</version>
             </dependency>
             <dependency>
@@ -214,6 +214,12 @@
                 <version>1.4.8</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.itsallcode</groupId>
+                <artifactId>hamcrest-auto-matcher</artifactId>
+                <version>0.6.0</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <build>
@@ -226,5 +232,40 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.16.2</version>
+                <executions>
+                    <execution>
+                        <id>display-updates</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>display-plugin-updates</goal>
+                            <goal>display-dependency-updates</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <rulesUri>file:///${project.basedir}/../project-keeper/versionsMavenPluginRules.xml</rulesUri>
+                    <allowDowngrade>false</allowDowngrade>
+                    <allowIncrementalUpdates>true</allowIncrementalUpdates>
+                    <allowMinorUpdates>true</allowMinorUpdates>
+                    <allowMajorUpdates>true</allowMajorUpdates>
+                    <allowSnapshots>false</allowSnapshots>
+                    <generateBackupPoms>true</generateBackupPoms>
+                    <processDependencies>true</processDependencies>
+                    <processDependencyManagement>true</processDependencyManagement>
+                    <processParent>false</processParent>
+                    <excludes>
+                        <!-- Dependencies use SLF4J 1.7 so we can't upgrade to 2 -->
+                        <exclude>org.slf4j:slf4j-jdk14:jar:*:*</exclude>
+                        <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
+                        <exclude>org.eclipse.jgit:org.eclipse.jgit:jar:*:6.8.0.202311291450-r</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
+        </plugins>
     </build>
 </project>
