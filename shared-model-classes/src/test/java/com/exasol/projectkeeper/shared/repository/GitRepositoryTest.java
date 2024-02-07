@@ -7,7 +7,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -176,6 +177,7 @@ class GitRepositoryTest {
     }
 
     @Test
+    @SuppressWarnings("try") // auto-closeable resource git is never referenced in body of corresponding try statement
     void testFindLatestReleaseCommitNoCommit() throws IllegalStateException, GitAPIException, IOException {
         try (final Git git = gitInit()) {
             this.repository = openRepo(this.tempDir);
