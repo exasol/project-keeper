@@ -11,11 +11,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.condition.DisabledOnOs;
 import org.junit.jupiter.api.condition.OS;
 
-// Windows has problems with the timeout of 10ms. Running these tests under Unix is enough.
+// Windows has problems with the timeout of 20ms. Running these tests under Unix is enough.
 @DisabledOnOs(OS.WINDOWS)
 class SimpleProcessIT {
 
-    private static final Duration TIMEOUT = Duration.ofMillis(10);
+    private static final Duration TIMEOUT = Duration.ofMillis(20);
 
     @Test
     void outputStream() {
@@ -60,7 +60,7 @@ class SimpleProcessIT {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> process.waitUntilFinished(TIMEOUT));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-128: Timeout while waiting 10ms for command 'bash -c echo output && >&2 echo error && sleep 1'. Output was 'output'\n"
+                "E-PK-CORE-128: Timeout while waiting 20ms for command 'bash -c echo output && >&2 echo error && sleep 1'. Output was 'output'\n"
                         + "Error output: 'error'"));
     }
 

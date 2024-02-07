@@ -1,32 +1,59 @@
 package com.exasol.projectkeeper.plugin;
 
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 
-public class MvnProjectWithProjectKeeperPluginWriter extends Model {
-    private static final long serialVersionUID = -8757020322006895512L;
+public class MvnProjectWithProjectKeeperPluginWriter {
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
     public static final String PROJECT_VERSION = "0.1.0";
+    private final Model model;
 
     public MvnProjectWithProjectKeeperPluginWriter(final String projectKeeperVersion) {
-        this.setBuild(new Build());
-        this.setVersion(PROJECT_VERSION);
-        this.setArtifactId(PROJECT_ARTIFACT_ID);
-        this.setGroupId("com.exasol");
-        this.setModelVersion("4.0.0");
-        this.setDescription("my project description");
+        this.model = new Model();
+        this.model.setBuild(new Build());
+        this.model.setVersion(PROJECT_VERSION);
+        this.model.setArtifactId(PROJECT_ARTIFACT_ID);
+        this.model.setGroupId("com.exasol");
+        this.model.setModelVersion("4.0.0");
+        this.model.setDescription("my project description");
         addProjectKeeperPlugin(projectKeeperVersion);
     }
 
-    public void writeAsPomToProject(final Path projectDir) throws IOException {
-        try (final FileWriter fileWriter = new FileWriter(projectDir.resolve("pom.xml").toFile())) {
-            new MavenXpp3Writer().write(fileWriter, this);
+    public void writeAsPomToProject(final Path projectDir) {
+        final Path path = projectDir.resolve("pom.xml");
+        try (final FileWriter fileWriter = new FileWriter(path.toFile())) {
+            new MavenXpp3Writer().write(fileWriter, this.model);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException("Failed writing POM to file " + path, exception);
         }
+    }
+
+    public MvnProjectWithProjectKeeperPluginWriter addDependency(final String groupId, final String artifactId,
+            final String version) {
+        final Dependency dependency = new Dependency();
+        dependency.setGroupId(groupId);
+        dependency.setArtifactId(artifactId);
+        dependency.setVersion(version);
+        this.model.getDependencies().add(dependency);
+        return this;
+    }
+
+    public MvnProjectWithProjectKeeperPluginWriter setArtifactFinalName(final String finalName) {
+        final Plugin plugin = new Plugin();
+        plugin.setGroupId("org.apache.maven.plugins");
+        plugin.setArtifactId("maven-assembly-plugin");
+        final Xpp3Dom configuration = new Xpp3Dom("configuration");
+        final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
+        finalNameElement.setValue(finalName);
+        configuration.addChild(finalNameElement);
+        plugin.setConfiguration(configuration);
+        this.model.getBuild().addPlugin(plugin);
+        return this;
     }
 
     private void addProjectKeeperPlugin(final String version) {
@@ -37,6 +64,6 @@ public class MvnProjectWithProjectKeeperPluginWriter extends Model {
         final PluginExecution execution = new PluginExecution();
         execution.setGoals(List.of("verify"));
         projectKeeperPlugin.setExecutions(List.of(execution));
-        this.getBuild().addPlugin(projectKeeperPlugin);
+        this.model.getBuild().addPlugin(projectKeeperPlugin);
     }
 }

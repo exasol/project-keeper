@@ -7,7 +7,7 @@ import java.util.List;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.VersionCollector;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Filename;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFileName;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
@@ -32,11 +32,11 @@ public class LatestChangesFileValidator implements Validator {
     @Override
     public List<ValidationFinding> validate() {
         final List<ValidationFinding> empty = Collections.emptyList();
-        final List<Filename> list = new VersionCollector(this.projectDirectory).collectChangesFiles();
+        final List<ChangesFileName> list = new VersionCollector(this.projectDirectory).collectChangesFiles();
         if (list.isEmpty()) {
             return empty;
         }
-        final Filename latest = list.get(0);
+        final ChangesFileName latest = list.get(0);
         if (latest.version().equals(this.projectVersion)) {
             return empty;
         }
