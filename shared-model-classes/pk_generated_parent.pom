@@ -181,6 +181,17 @@
                 </executions>
                 <configuration>
                     <rulesUri>file:///${project.basedir}/versionsMavenPluginRules.xml</rulesUri>
+                    <allowDowngrade>false</allowDowngrade>
+                    <allowIncrementalUpdates>true</allowIncrementalUpdates>
+                    <allowMinorUpdates>true</allowMinorUpdates>
+                    <allowMajorUpdates>true</allowMajorUpdates>
+                    <allowSnapshots>false</allowSnapshots>
+                    <generateBackupPoms>true</generateBackupPoms>
+                    <processDependencies>true</processDependencies>
+                    <processDependencyManagement>true</processDependencyManagement>
+                    <processParent>false</processParent>
+                    <autoLinkItems>true</autoLinkItems>
+                    <excludeReactor>true</excludeReactor>
                 </configuration>
             </plugin>
             <plugin>

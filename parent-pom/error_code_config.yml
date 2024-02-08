@@ -1,0 +1,8 @@
+# This file is only used for release guide.
+# Actual error codes are based on files error_code_config.yml in individual subfolders.
+
+error-tags:
+  PK-PARENT:
+    packages:
+      - dummy
+    highest-index: 1
