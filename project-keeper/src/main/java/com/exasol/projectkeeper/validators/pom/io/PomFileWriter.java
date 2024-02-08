@@ -12,12 +12,11 @@ import javax.xml.transform.stream.StreamResult;
 import org.w3c.dom.Document;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 /**
  * This class implements write access to a POM file as an XML document.
  * <p>
- * Use {@link PomFileIO} if you need the Maven POM model.
+ * Use {@link com.exasol.projectkeeper.validators.pom.PomFileIO} if you need the Maven POM model.
  */
 public class PomFileWriter {
 
