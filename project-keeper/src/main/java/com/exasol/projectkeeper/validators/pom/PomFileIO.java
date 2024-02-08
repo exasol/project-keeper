@@ -13,7 +13,7 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * This class reads and writes POM files.
+ * This class reads and writes POM files using the Maven POM {@link Model} class.
  */
 public class PomFileIO {
 
