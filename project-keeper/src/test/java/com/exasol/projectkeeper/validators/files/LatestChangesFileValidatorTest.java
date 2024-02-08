@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.validators.changesfile.ChangesFileName;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 
 class LatestChangesFileValidatorTest {
@@ -38,7 +38,7 @@ class LatestChangesFileValidatorTest {
         final Path folder = tempDir.resolve(Path.of("doc", "changes"));
         Files.createDirectories(folder);
         for (final String v : versions) {
-            final ChangesFileName cfile = new ChangesFileName(v);
+            final ChangesFile.Filename cfile = new ChangesFile.Filename(v);
             Files.createFile(folder.resolve(cfile.filename()));
         }
         return new LatestChangesFileValidator(tempDir, "2.0.0");

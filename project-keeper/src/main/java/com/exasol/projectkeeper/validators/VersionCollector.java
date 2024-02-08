@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFileName;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 
 /**
  * This class list all project-versions by scanning the doc/changes/ folder.
@@ -30,10 +30,10 @@ public class VersionCollector {
      *
      * @return list of changes files
      */
-    public List<ChangesFileName> collectChangesFiles() {
+    public List<ChangesFile.Filename> collectChangesFiles() {
         try (final Stream<Path> filesStream = Files.walk(this.projectDirectory.resolve(Path.of("doc", "changes")))) {
             return filesStream //
-                    .map(ChangesFileName::from) //
+                    .map(ChangesFile.Filename::from) //
                     .flatMap(Optional::stream) //
                     .sorted(Comparator.reverseOrder()) //
                     .collect(Collectors.toList());
