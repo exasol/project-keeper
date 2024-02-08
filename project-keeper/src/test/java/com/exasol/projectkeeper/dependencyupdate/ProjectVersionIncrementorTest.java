@@ -93,9 +93,14 @@ class ProjectVersionIncrementorTest {
         when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
         final String newVersion = testee(configWithJarArtifact(), CURRENT_PROJECT_VERSION).incrementProjectVersion();
         assertAll(() -> assertThat(newVersion, equalTo("1.2.4")),
-                () -> assertThat(pomModel.getVersion(), equalTo(newVersion)),
-                () -> assertThat(getExecutedCommand().commandline(), contains(startsWith("mvn"),
-                        equalTo("--batch-mode"), equalTo("artifact-reference-checker:unify"))));
+                () -> assertThat(pomModel.getVersion(), equalTo(newVersion)), () -> assertMavenExecuted());
+    }
+
+    private void assertMavenExecuted(final String... mavenArguments) {
+        final ShellCommand command = getExecutedCommand();
+        assertThat(command.workingDir().get(), equalTo(PROJECT_DIR));
+        assertThat(command.commandline(),
+                contains(startsWith("mvn"), equalTo("--batch-mode"), equalTo("artifact-reference-checker:unify")));
     }
 
     private ShellCommand getExecutedCommand() {

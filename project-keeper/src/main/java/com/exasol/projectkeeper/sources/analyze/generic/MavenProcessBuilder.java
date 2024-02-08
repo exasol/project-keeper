@@ -83,7 +83,11 @@ public class MavenProcessBuilder {
      * @return the built command
      */
     public ShellCommand buildCommand() {
-        return ShellCommand.builder().command(getMavenExecutable()).args(this.args).timeout(this.timeout).build();
+        return ShellCommand.builder().command(getMavenExecutable()) //
+                .args(this.args) //
+                .timeout(this.timeout) //
+                .workingDir(workingDir) //
+                .build();
     }
 
     private static String getMavenExecutable() {
