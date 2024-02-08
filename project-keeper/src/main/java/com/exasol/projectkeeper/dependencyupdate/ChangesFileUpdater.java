@@ -6,11 +6,7 @@ import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Builder;
 class ChangesFileUpdater {
     ChangesFile update(final ChangesFile changesFile) {
         final Builder builder = changesFile.toBuilder();
-        update(builder);
+        // Changes file will be updated in the next PR
         return builder.build();
-    }
-
-    private void update(final Builder builder) {
-
     }
 }
