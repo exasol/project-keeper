@@ -40,8 +40,8 @@ class VersionCollectorTest {
     }
 
     private ChangesFileName createChangesFile(final Path folder, final String version) throws IOException {
-        final ChangesFileName cfile = new ChangesFileName(version);
-        Files.createFile(folder.resolve(cfile.filename()));
-        return cfile;
+        final ChangesFileName file = new ChangesFileName(version);
+        Files.createFile(folder.resolve(file.filename()));
+        return file;
     }
 }
