@@ -1,9 +1,11 @@
 package com.exasol.projectkeeper.sources.analyze.generic;
 
+import java.util.Objects;
+
 /**
  * Result of executing a process.
  */
-public class ProcessResult {
+public final class ProcessResult {
     private final String outputStreamContent;
     private final String errorStreamContent;
 
@@ -34,5 +36,32 @@ public class ProcessResult {
      */
     public String getErrorStreamContent() {
         return errorStreamContent;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(outputStreamContent, errorStreamContent);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProcessResult other = (ProcessResult) obj;
+        return Objects.equals(outputStreamContent, other.outputStreamContent)
+                && Objects.equals(errorStreamContent, other.errorStreamContent);
+    }
+
+    @Override
+    public String toString() {
+        return "ProcessResult [outputStreamContent=" + outputStreamContent + ", errorStreamContent="
+                + errorStreamContent + "]";
     }
 }

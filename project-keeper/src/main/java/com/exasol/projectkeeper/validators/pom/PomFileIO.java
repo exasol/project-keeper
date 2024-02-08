@@ -13,7 +13,10 @@ import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import com.exasol.errorreporting.ExaError;
 
 /**
- * This class reads and writes POM files.
+ * This class reads and writes POM files using the Maven POM {@link Model} class.
+ * <p>
+ * Use {@link com.exasol.projectkeeper.validators.pom.io.PomFileReader} or
+ * {@link com.exasol.projectkeeper.validators.pom.io.PomFileWriter} if you want to read/write POM files as XML.
  */
 public class PomFileIO {
 
