@@ -49,4 +49,3 @@ My summary
 * Added `<dependency groupId>:<dependency artifactId>:<version>`
 * Updated `<dependency groupId>:<dependency artifactId>:<old version>` to `<new version>`
 * Removed `<dependency groupId>:<dependency artifactId>:<version>`
-

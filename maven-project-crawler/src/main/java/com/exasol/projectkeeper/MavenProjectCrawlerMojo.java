@@ -39,6 +39,11 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
     // [impl -> dsn~eclipse-prefs-java-version~1]
     @Override
     public void execute() {
+        if (this.projectsToCrawl == null || this.projectsToCrawl.isBlank()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-MPC-64")
+                    .message("Property {{property name}} is not defined or empty.", PROPERTY_PROJECTS_TO_CRAWL)
+                    .mitigation("Specify property with least one pom file.").toString());
+        }
         final MavenProjectFromFileReader mavenProjectReader = new DefaultMavenProjectFromFileReader(
                 this.mavenProjectBuilder, this.session);
         final MavenModelFromRepositoryReader modelFromRepositoryReader = new MavenModelFromRepositoryReader(

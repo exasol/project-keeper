@@ -30,7 +30,7 @@ class MavenSourceAnalyzerTest {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyze(OWN_VERSION, mavenSources));
         assertThat(exception.getMessage(),
-                allOf(containsString("E-PK-CORE-78: Failed to run command"),
+                allOf(containsString("E-PK-CORE-126: Failed to run command"),
                         containsString("[ERROR] Plugin com.exasol:project-keeper-java-project-crawler:" + OWN_VERSION
                                 + " or one of its dependencies could not be resolved")));
     }
