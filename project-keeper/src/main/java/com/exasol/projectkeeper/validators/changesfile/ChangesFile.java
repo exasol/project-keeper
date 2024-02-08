@@ -1,105 +1,47 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
-import com.exasol.projectkeeper.mavenrepo.Version;
+import com.exasol.errorreporting.ExaError;
 import com.vdurmont.semver4j.Semver;
-import com.vdurmont.semver4j.Semver.SemverType;
 
 /**
  * This class represents a doc/changes/changes_x.x.x.md file.
  */
-public class ChangesFile {
+public final class ChangesFile {
     /** Headline of the dependency updates section. */
     public static final String DEPENDENCY_UPDATES_HEADING = "## Dependency Updates";
-    private final List<String> headerSectionLines;
+    /** Headline of the Summary section. */
+    public static final String SUMMARY_HEADING = "## Summary";
+    private final String projectName;
+    private final Semver projectVersion;
+    private final String releaseDate;
+    private final String codeName;
+    private final ChangesFileSection summarySection;
     private final List<ChangesFileSection> sections;
+    private final ChangesFileSection dependencyChangeSection;
 
-    /**
-     * Create a new instance of {@link ChangesFile}.
-     *
-     * @param headerLines lines of the changes file until the first level section
-     * @param sections    sections of the changes file
-     */
-    public ChangesFile(final List<String> headerLines, final List<ChangesFileSection> sections) {
-        this.headerSectionLines = headerLines;
-        this.sections = sections;
+    private ChangesFile(final Builder builder) {
+        this.projectName = builder.projectName;
+        this.projectVersion = builder.projectVersion;
+        this.releaseDate = builder.releaseDate;
+        this.codeName = builder.codeName;
+        this.summarySection = builder.summarySection;
+        this.sections = List.copyOf(builder.sections);
+        this.dependencyChangeSection = builder.dependencyChangeSection;
     }
 
     /**
-     * Filename of a changes file, e.g. "changes_1.2.3.md".
+     * Get the relative path of the changes file for the given version.
+     * 
+     * @param projectVersion project version
+     * @return relative path of the changes file, e.g. {@code doc/changes/changes_1.2.3.md}
      */
-    public static class Filename implements Comparable<Filename> {
-        /** Regular expression to identify valid names of changes files and to extract version number. **/
-        public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
-
-        /**
-         * @param path path to create a {@link Filename} for
-         * @return If path matches regular expression for valid changes filenames then an {@link Optional} containing a
-         *         new instance of {@link Filename}, otherwise {@code Optional.empty()}.
-         */
-        public static Optional<Filename> from(final Path path) {
-            final String filename = path.getFileName().toString();
-            final Matcher matcher = PATTERN.matcher(filename);
-            if (!matcher.matches()) {
-                return Optional.empty();
-            }
-            return Optional.of(new Filename(matcher.replaceFirst("$1")));
-        }
-
-        private final Semver version;
-
-        /**
-         * Create a new instance of {@link ChangesFile.Filename}.
-         *
-         * @param version version to use for new instance
-         */
-        public Filename(final String version) {
-            this.version = new Semver(version, SemverType.LOOSE);
-        }
-
-        /**
-         * @return filename of the current {@link ChangesFile.Filename} as string
-         */
-        public String filename() {
-            return "changes_" + this.version + ".md";
-        }
-
-        @Override
-        public int compareTo(final Filename o) {
-            return this.version.compareTo(o.version);
-        }
-
-        /**
-         * @return version number contained in the filename of current {@link ChangesFile.Filename}
-         */
-        public String version() {
-            return this.version.getValue();
-        }
-
-        @Override
-        public int hashCode() {
-            return Objects.hash(this.version);
-        }
-
-        @Override
-        public boolean equals(final Object obj) {
-            if (this == obj) {
-                return true;
-            }
-            if (obj == null) {
-                return false;
-            }
-            if (getClass() != obj.getClass()) {
-                return false;
-            }
-            final Filename other = (Filename) obj;
-            return Objects.equals(this.version, other.version);
-        }
+    public static Path getPathForVersion(final String projectVersion) {
+        return Path.of("doc", "changes", new ChangesFileName(projectVersion).filename());
     }
 
     /**
@@ -112,24 +54,65 @@ public class ChangesFile {
     }
 
     /**
-     * Get the header of the changes section.
-     * <p>
-     * The header includes all lines until the first section {@code ##} starts.
-     * </p>
-     *
-     * @return list of lines of the header
+     * Get a builder configured with the this ChangesFile. This is useful for creating a copy and modify some parts of
+     * this object.
+     * 
+     * @return a preconfigured builder
      */
-    public List<String> getHeaderSectionLines() {
-        return this.headerSectionLines;
+    public Builder toBuilder() {
+        return builder().projectName(this.projectName).projectVersion(this.projectVersion.toString())
+                .releaseDate(this.releaseDate).codeName(this.codeName).summary(this.summarySection)
+                .sections(List.copyOf(this.sections)).dependencyChangeSection(this.dependencyChangeSection);
     }
 
     /**
-     * Get the heading of the file.
-     *
-     * @return heading (1. line)
+     * Get the project name for the first header line, e.g. {@code Project Keeper}.
+     * 
+     * @return project name
      */
-    public String getHeading() {
-        return this.headerSectionLines.get(0);
+    public String getProjectName() {
+        return projectName;
+    }
+
+    /**
+     * Get the project version for the first header line, e.g. {@code 1.2.3}.
+     * 
+     * @return project version
+     */
+    public Semver getProjectVersion() {
+        return projectVersion;
+    }
+
+    /**
+     * Get the release date for the first header line, e.g. {@code 2024-01-29} or {@code 2024-??-??}.
+     * 
+     * @return release date
+     */
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    /**
+     * Get the code name of the release.
+     * 
+     * @return code name
+     */
+    public String getCodeName() {
+        return codeName;
+    }
+
+    /**
+     * Get the parsed release date for the first header line. If the date is not valid (e.g. {@code 2024-??-??}), this
+     * will return an empty {@link Optional}.
+     * 
+     * @return release date
+     */
+    public Optional<LocalDate> getParsedReleaseDate() {
+        try {
+            return Optional.of(LocalDate.parse(this.getReleaseDate()));
+        } catch (final DateTimeParseException exception) {
+            return Optional.empty();
+        }
     }
 
     /**
@@ -141,60 +124,175 @@ public class ChangesFile {
         return this.sections;
     }
 
-    @Override
-    public boolean equals(final Object other) {
-        if (this == other) {
-            return true;
-        }
-        if ((other == null) || (getClass() != other.getClass())) {
-            return false;
-        }
-        final ChangesFile that = (ChangesFile) other;
-        return Objects.equals(this.headerSectionLines, that.headerSectionLines)
-                && Objects.equals(this.sections, that.sections);
+    /**
+     * Get the dependency change section.
+     * 
+     * @return dependency change section
+     */
+    public Optional<ChangesFileSection> getDependencyChangeSection() {
+        return Optional.ofNullable(dependencyChangeSection);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(this.headerSectionLines, this.sections);
+    /**
+     * Get the summary section.
+     *
+     * @return summary section
+     */
+    public Optional<ChangesFileSection> getSummarySection() {
+        return Optional.ofNullable(this.summarySection);
     }
 
     @Override
     public String toString() {
-        return String.join("\n", this.headerSectionLines) + "\n"
-                + this.sections.stream().map(ChangesFileSection::toString).collect(Collectors.joining("\n"));
+        return "ChangesFile [projectName=" + projectName + ", projectVersion=" + projectVersion + ", releaseDate="
+                + releaseDate + ", codeName=" + codeName + ", summarySection=" + summarySection + ", sections="
+                + sections + ", dependencyChangeSection=" + dependencyChangeSection + "]";
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(projectName, projectVersion, releaseDate, codeName, summarySection, sections,
+                dependencyChangeSection);
+    }
+
+    @Override
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChangesFile other = (ChangesFile) obj;
+        return Objects.equals(projectName, other.projectName) && Objects.equals(projectVersion, other.projectVersion)
+                && Objects.equals(releaseDate, other.releaseDate) && Objects.equals(codeName, other.codeName)
+                && Objects.equals(summarySection, other.summarySection) && Objects.equals(sections, other.sections)
+                && Objects.equals(dependencyChangeSection, other.dependencyChangeSection);
     }
 
     /**
      * Builder for {@link ChangesFile}.
      */
     public static class Builder {
-        private final List<ChangesFileSection> sections = new ArrayList<>();
-        private List<String> header = Collections.emptyList();
+
+        private String projectName;
+        private Semver projectVersion;
+        private String releaseDate;
+        private String codeName;
+        private ChangesFileSection summarySection;
+        private List<ChangesFileSection> sections = new ArrayList<>();
+        private ChangesFileSection dependencyChangeSection;
 
         private Builder() {
             // private constructor to hide public default
         }
 
         /**
-         * Set the header of the changes file.
+         * Set the project name for the first header line, e.g. {@code Project Keeper}.
          *
-         * @param header list of lines
+         * @param projectName project name
          * @return self for fluent programming
          */
-        public Builder setHeader(final List<String> header) {
-            this.header = header;
+        public Builder projectName(final String projectName) {
+            this.projectName = projectName;
+            return this;
+        }
+
+        /**
+         * Set the project version for the first header line, e.g. {@code 1.2.3}.
+         *
+         * @param projectVersion project version
+         * @return self for fluent programming
+         */
+        public Builder projectVersion(final String projectVersion) {
+            this.projectVersion = new Semver(projectVersion);
+            return this;
+        }
+
+        /**
+         * Set the release date for the first header line, e.g. {@code 2024-01-29} or {@code 2024-??-??}.
+         *
+         * @param releaseDate release date
+         * @return self for fluent programming
+         */
+        public Builder releaseDate(final String releaseDate) {
+            this.releaseDate = releaseDate;
+            return this;
+        }
+
+        /**
+         * Set the code name of the release.
+         *
+         * @param codeName code name
+         * @return self for fluent programming
+         */
+        public Builder codeName(final String codeName) {
+            this.codeName = codeName != null && codeName.isBlank() ? null : codeName;
             return this;
         }
 
         /**
          * Add a section to the changes file.
          *
-         * @param lines list of lines
+         * @param section section
          * @return self for fluent programming
          */
-        public Builder addSection(final List<String> lines) {
-            this.sections.add(new ChangesFileSection(lines));
+        public Builder addSection(final ChangesFileSection section) {
+            this.sections.add(section);
+            return this;
+        }
+
+        /**
+         * Set the {@code Summary} section for the changes file.
+         *
+         * @param section section
+         * @return self for fluent programming
+         */
+        public Builder summary(final ChangesFileSection section) {
+            if (section == null) {
+                this.summarySection = null;
+                return this;
+            }
+            if (!section.getHeading().equals(SUMMARY_HEADING)) {
+                throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-178").message(
+                        "Dependency change section has invalid heading {{heading}}, expected {{expected heading}}",
+                        section.getHeading(), SUMMARY_HEADING).ticketMitigation().toString());
+            }
+            this.summarySection = section;
+            return this;
+        }
+
+        /**
+         * Set all sections of the changes file.
+         *
+         * @param sections list of sections
+         * @return self for fluent programming
+         */
+        public Builder sections(final List<ChangesFileSection> sections) {
+            this.sections = List.copyOf(sections);
+            return this;
+        }
+
+        /**
+         * Add a an optional {@code Dependency Updates} section to the changes file.
+         *
+         * @param section section
+         * @return self for fluent programming
+         */
+        public Builder dependencyChangeSection(final ChangesFileSection section) {
+            if (section == null) {
+                this.dependencyChangeSection = null;
+                return this;
+            }
+            if (!section.getHeading().equals(DEPENDENCY_UPDATES_HEADING)) {
+                throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-179").message(
+                        "Dependency change section has invalid heading {{heading}}, expected {{expected heading}}",
+                        section.getHeading(), DEPENDENCY_UPDATES_HEADING).ticketMitigation().toString());
+            }
+            this.dependencyChangeSection = section;
             return this;
         }
 
@@ -204,7 +302,8 @@ public class ChangesFile {
          * @return built {@link ChangesFile}
          */
         public ChangesFile build() {
-            return new ChangesFile(this.header, this.sections);
+            return new ChangesFile(this);
         }
+
     }
 }

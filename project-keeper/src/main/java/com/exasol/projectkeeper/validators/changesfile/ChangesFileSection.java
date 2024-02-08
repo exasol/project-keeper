@@ -1,9 +1,8 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
-import java.util.List;
-import java.util.Objects;
+import static java.util.Arrays.asList;
 
-import com.exasol.errorreporting.ExaError;
+import java.util.*;
 
 /**
  * Section of a {@link ChangesFile}.
@@ -11,20 +10,14 @@ import com.exasol.errorreporting.ExaError;
  * Each level two heading (##) starts a new section.
  * </p>
  */
-public class ChangesFileSection {
+public final class ChangesFileSection {
+
+    private final String heading;
     private final List<String> content;
 
-    /**
-     * Create a new instance of {@link ChangesFileSection}.
-     * 
-     * @param content lines
-     */
-    public ChangesFileSection(final List<String> content) {
-        if (content.isEmpty()) {
-            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-36")
-                    .message("changes file sections must not be empty.").ticketMitigation().toString());
-        }
-        this.content = content;
+    private ChangesFileSection(final Builder builder) {
+        this.heading = Objects.requireNonNull(builder.heading, "header");
+        this.content = List.copyOf(builder.lines);
     }
 
     /**
@@ -33,7 +26,7 @@ public class ChangesFileSection {
      * @return heading
      */
     public String getHeading() {
-        return this.content.get(0);
+        return this.heading;
     }
 
     /**
@@ -46,22 +39,91 @@ public class ChangesFileSection {
     }
 
     @Override
-    public boolean equals(final Object other) {
-        if (this == other)
-            return true;
-        if (other == null || getClass() != other.getClass())
-            return false;
-        final ChangesFileSection that = (ChangesFileSection) other;
-        return Objects.equals(this.content, that.content);
+    public int hashCode() {
+        return Objects.hash(heading, content);
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(this.content);
+    public boolean equals(final Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ChangesFileSection other = (ChangesFileSection) obj;
+        return Objects.equals(heading, other.heading) && Objects.equals(content, other.content);
     }
 
     @Override
     public String toString() {
-        return String.join("\n", this.content);
+        return heading + "\n" + String.join("\n", this.content);
+    }
+
+    /**
+     * Create a new {@link Builder} for creating a {@link ChangesFileSection}.
+     * 
+     * @param heading the heading for the new section
+     * @return a new builder
+     */
+    public static Builder builder(final String heading) {
+        return new Builder(heading);
+    }
+
+    /**
+     * A builder for creating {@link ChangesFileSection}s.
+     */
+    public static class Builder {
+        private final String heading;
+        private final List<String> lines = new ArrayList<>();
+
+        private Builder(final String heading) {
+            this.heading = heading;
+        }
+
+        /**
+         * Add the given lines to the content of the new {@code ChangesFileSection}.
+         * 
+         * @param lines lines to add
+         * @return {@code this} for fluent programming
+         */
+        public Builder addLines(final String... lines) {
+            this.lines.addAll(asList(lines));
+            return this;
+        }
+
+        /**
+         * Add the given lines to the content of the new {@code ChangesFileSection}.
+         * 
+         * @param lines lines to add
+         * @return {@code this} for fluent programming
+         */
+        public Builder addLines(final List<String> lines) {
+            this.lines.addAll(lines);
+            return this;
+        }
+
+        /**
+         * Add the given line to the content of the new {@code ChangesFileSection}.
+         * 
+         * @param line line to add
+         * @return {@code this} for fluent programming
+         */
+        public Builder addLine(final String line) {
+            this.lines.add(line);
+            return this;
+        }
+
+        /**
+         * Build a new {@link ChangesFileSection}.
+         * 
+         * @return a new {@link ChangesFileSection}.
+         */
+        public ChangesFileSection build() {
+            return new ChangesFileSection(this);
+        }
     }
 }

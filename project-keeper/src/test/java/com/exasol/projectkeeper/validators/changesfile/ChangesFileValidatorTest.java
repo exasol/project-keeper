@@ -4,10 +4,8 @@ import static com.exasol.projectkeeper.FileContentMatcher.hasContent;
 import static com.exasol.projectkeeper.HasNoMoreFindingsAfterApplyingFixesMatcher.hasNoMoreFindingsAfterApplyingFixes;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasNoValidationFindings;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindingWithMessage;
-import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 
@@ -35,6 +33,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 class ChangesFileValidatorTest {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
+    private static final String LINE_SEPARATOR = "\n";
 
     @TempDir
     Path tempDir;
@@ -55,12 +54,18 @@ class ChangesFileValidatorTest {
     }
 
     @Test
-    void noDepdendencyUpdates() throws IOException {
+    void noDependencyUpdates() throws IOException {
         final AnalyzedMavenSource source = createTestSetup(new TestMavenModel(), Collections.emptyList());
         final Logger log = mock(Logger.class);
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
-        assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
+        assertThat(changesFile,
+                hasContent(equalTo("# my-project 1.2.3, released 2024-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "Code name:" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "## Summary" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "## Features" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "* ISSUE_NUMBER: description" + LINE_SEPARATOR + LINE_SEPARATOR)));
+
         verify(log).info("Created 'doc" + File.separator + "changes" + File.separator
                 + "changes_1.2.3.md'. Don't forget to update its content!");
         final List<ValidationFinding> findings = createValidator(source).validate();
@@ -73,7 +78,15 @@ class ChangesFileValidatorTest {
         final Logger log = mock(Logger.class);
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
-        assertThat(changesFile, hasContent(startsWith("# my-project 1.2.3, release")));
+        assertThat(changesFile,
+                hasContent(equalTo("# my-project 1.2.3, released 2024-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "Code name:" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "## Summary" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "## Features" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "* ISSUE_NUMBER: description" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "## Dependency Updates" + LINE_SEPARATOR + LINE_SEPARATOR //
+                        + "### Compile Dependency Updates" + LINE_SEPARATOR + LINE_SEPARATOR
+                        + "* Added `com.example:my-lib:1.2.3`" + LINE_SEPARATOR)));
         verify(log).info("Created 'doc" + File.separator + "changes" + File.separator
                 + "changes_1.2.3.md'. Don't forget to update its content!");
     }
@@ -85,7 +98,9 @@ class ChangesFileValidatorTest {
         final AnalyzedMavenSource source = createTestSetup(model);
         createValidator(source).validate().forEach(FindingFixHelper::fix);
         final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
-        assertThat(changesFile, hasContent(containsString("my-lib")));
+        assertThat(changesFile, hasContent(endsWith("## Dependency Updates" + LINE_SEPARATOR + LINE_SEPARATOR //
+                + "### Compile Dependency Updates" + LINE_SEPARATOR + LINE_SEPARATOR //
+                + "* Added `com.example:my-lib:1.2.3`" + LINE_SEPARATOR)));
     }
 
     @Test

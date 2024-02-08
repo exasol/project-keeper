@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFileName;
 
 class ChangelogFileGeneratorTest {
     @Test
@@ -27,7 +27,7 @@ class ChangelogFileGeneratorTest {
         assertThat(new ChangelogFileGenerator().generate(files(version)), containsString(version));
     }
 
-    private List<ChangesFile.Filename> files(final String... versions) {
-        return Arrays.stream(versions).map(ChangesFile.Filename::new).collect(Collectors.toList());
+    private List<ChangesFileName> files(final String... versions) {
+        return Arrays.stream(versions).map(ChangesFileName::new).collect(Collectors.toList());
     }
 }

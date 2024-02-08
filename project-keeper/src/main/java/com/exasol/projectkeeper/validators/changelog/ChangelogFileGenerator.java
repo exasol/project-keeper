@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.validators.changelog;
 
 import java.util.List;
 
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Filename;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFileName;
 
 /**
  * This class generates the content for the changelog file.
@@ -19,9 +18,9 @@ class ChangelogFileGenerator {
      */
     final StringBuilder templateBuilder = new StringBuilder();
 
-    String generate(final List<ChangesFile.Filename> filenames) {
+    String generate(final List<ChangesFileName> filenames) {
         this.templateBuilder.append("# Changes" + NL + NL);
-        for (final Filename file : filenames) {
+        for (final ChangesFileName file : filenames) {
             this.templateBuilder.append("* [" + file.version() + "](" + file.filename() + ")" + NL);
         }
         return this.templateBuilder.toString();

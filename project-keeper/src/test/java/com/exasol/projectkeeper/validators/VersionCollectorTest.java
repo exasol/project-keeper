@@ -13,8 +13,7 @@ import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Filename;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFileName;
 
 class VersionCollectorTest {
     @Test
@@ -29,20 +28,20 @@ class VersionCollectorTest {
                 "1.0.0")) {
             createChangesFile(folder, version);
         }
-        final List<ChangesFile.Filename> expected = Stream.of( //
+        final List<ChangesFileName> expected = Stream.of( //
                 "1.1.0", //
                 "1.0.10", //
                 "1.0.2", //
                 "1.0.0", //
                 "0.3.0") //
-                .map(ChangesFile.Filename::new) //
+                .map(ChangesFileName::new) //
                 .collect(Collectors.toList());
         assertThat(new VersionCollector(tempDir).collectChangesFiles(), equalTo(expected));
     }
 
-    private ChangesFile.Filename createChangesFile(final Path folder, final String version) throws IOException {
-        final Filename cfile = new Filename(version);
-        Files.createFile(folder.resolve(cfile.filename()));
-        return cfile;
+    private ChangesFileName createChangesFile(final Path folder, final String version) throws IOException {
+        final ChangesFileName file = new ChangesFileName(version);
+        Files.createFile(folder.resolve(file.filename()));
+        return file;
     }
 }
