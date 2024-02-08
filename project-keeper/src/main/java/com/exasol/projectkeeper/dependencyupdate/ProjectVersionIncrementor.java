@@ -2,18 +2,12 @@ package com.exasol.projectkeeper.dependencyupdate;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.JAR_ARTIFACT;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.*;
 import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
@@ -21,6 +15,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.analyze.generic.MavenProcessBuilder;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
+import com.exasol.projectkeeper.validators.pom.PomFileIO;
 import com.vdurmont.semver4j.Semver;
 
 class ProjectVersionIncrementor {
@@ -31,18 +26,22 @@ class ProjectVersionIncrementor {
     private final Clock clock;
     private final Path projectDir;
     private final Logger logger;
+    private final PomFileIO pomFileIO;
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
             final String currentProjectVersion) {
-        this(config, logger, projectDir, currentProjectVersion, new ChangesFileIO(), Clock.systemUTC());
+        this(config, logger, projectDir, currentProjectVersion, new ChangesFileIO(), new PomFileIO(),
+                Clock.systemUTC());
     }
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
-            final String currentProjectVersion, final ChangesFileIO changesFileIO, final Clock clock) {
+            final String currentProjectVersion, final ChangesFileIO changesFileIO, final PomFileIO pomFileIO,
+            final Clock clock) {
         this.config = config;
         this.logger = logger;
         this.projectDir = projectDir;
         this.changesFileIO = changesFileIO;
+        this.pomFileIO = pomFileIO;
         this.clock = clock;
         this.currentProjectVersion = Objects.requireNonNull(currentProjectVersion, "currentProjectVersion");
     }
@@ -75,11 +74,12 @@ class ProjectVersionIncrementor {
     }
 
     String incrementProjectVersion() {
-        final Model pom = readPom();
+        final Path path = getPomPath();
+        final Model pom = pomFileIO.readPom(path);
         if (!this.currentProjectVersion.equals(pom.getVersion())) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-174").message(
-                    "Inconsistent project version {{version in pom file}} found in pom {{pom file path}}, expected {{expected version}}",
-                    pom.getVersion(), pom.getPomFile(), currentProjectVersion).ticketMitigation().toString());
+                    "Inconsistent project version {{version in pom file}} found in pom {{pom file path}}, expected {{expected version}}.",
+                    pom.getVersion(), path, currentProjectVersion).ticketMitigation().toString());
         }
         final String nextVersion = incrementVersion(pom);
         if (usesReferenceCheckerPlugin()) {
@@ -112,24 +112,9 @@ class ProjectVersionIncrementor {
         return current.nextPatch().toString();
     }
 
-    private Model readPom() {
-        final Path path = getPomPath();
-        try {
-            return new MavenXpp3Reader().read(Files.newBufferedReader(path));
-        } catch (IOException | XmlPullParserException exception) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-172")
-                    .message("Failed to read pom {{pom file path}}", path).toString(), exception);
-        }
-    }
-
     private void writePom(final Model pom) {
         final Path path = getPomPath();
-        try {
-            new MavenXpp3Writer().write(Files.newOutputStream(path), pom);
-        } catch (final IOException exception) {
-            throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-173")
-                    .message("Failed to write pom {{pom file path}}", path).toString(), exception);
-        }
+        pomFileIO.writePom(pom, path);
     }
 
     private Path getPomPath() {

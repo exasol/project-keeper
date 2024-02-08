@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.sources.analyze;
 import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static java.util.Collections.emptyMap;
 
-import java.io.FileInputStream;
 import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
@@ -11,7 +10,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.JavaProjectCrawlerRunner;
@@ -19,6 +17,7 @@ import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 /**
  * This class analyzes Java Maven projects.
@@ -106,14 +105,6 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     }
 
     private Model readMavenModel(final Source source) {
-        try (final FileInputStream fileInputStream = new FileInputStream(source.getPath().toFile())) {
-            return new MavenXpp3Reader().read(fileInputStream);
-        } catch (final Exception exception) {
-            // Catch Exception instead of org.codehaus.plexus.util.xml.pull.XmlPullParserException helps avoid adding
-            // runtime dependency org.codehaus.plexus:plexus-utils
-            throw new IllegalStateException(
-                    ExaError.messageBuilder("E-PK-CORE-94").message("Failed to analyze maven source.").toString(),
-                    exception);
-        }
+        return new PomFileIO().readPom(source.getPath());
     }
 }

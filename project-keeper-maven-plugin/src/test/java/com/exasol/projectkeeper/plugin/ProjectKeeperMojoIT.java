@@ -19,8 +19,6 @@ import java.util.logging.Logger;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.model.Model;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
-import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matcher;
@@ -31,6 +29,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
+import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 class ProjectKeeperMojoIT {
     private static final String ORIGINAL_SLF4J_VERSION = "1.7.36";
@@ -138,12 +137,7 @@ class ProjectKeeperMojoIT {
     }
 
     private Model readPom() {
-        final Path path = projectDir.resolve("pom.xml");
-        try {
-            return new MavenXpp3Reader().read(Files.newBufferedReader(path));
-        } catch (IOException | XmlPullParserException exception) {
-            throw new IllegalStateException("failed to parse " + path + ": " + exception.getMessage(), exception);
-        }
+        return new PomFileIO().readPom(projectDir.resolve("pom.xml"));
     }
 
     @ParameterizedTest

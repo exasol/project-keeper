@@ -1,12 +1,12 @@
 package com.exasol.projectkeeper.plugin;
 
-import java.io.*;
 import java.nio.file.Path;
 import java.util.List;
 
 import org.apache.maven.model.*;
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
+
+import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 public class MvnProjectWithProjectKeeperPluginWriter {
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
@@ -26,11 +26,7 @@ public class MvnProjectWithProjectKeeperPluginWriter {
 
     public void writeAsPomToProject(final Path projectDir) {
         final Path path = projectDir.resolve("pom.xml");
-        try (final FileWriter fileWriter = new FileWriter(path.toFile())) {
-            new MavenXpp3Writer().write(fileWriter, this.model);
-        } catch (final IOException exception) {
-            throw new UncheckedIOException("Failed writing POM to file " + path, exception);
-        }
+        new PomFileIO().writePom(model, path);
     }
 
     public MvnProjectWithProjectKeeperPluginWriter addDependency(final String groupId, final String artifactId,

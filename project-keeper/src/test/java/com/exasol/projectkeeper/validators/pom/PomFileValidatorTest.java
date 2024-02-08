@@ -8,7 +8,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.mock;
 
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -16,7 +15,6 @@ import java.util.List;
 
 import org.apache.maven.model.Model;
 import org.apache.maven.model.Parent;
-import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -115,33 +113,29 @@ class PomFileValidatorTest {
     }
 
     @Test
-    void testMissingVersion() throws IOException {
+    void testMissingVersion() {
         getTestModel().withVersion(null).writeAsPomToProject(this.tempDir);
         assertThat(runValidator(null),
                 hasFindingWithMessageMatchingRegex("(?s)E-PK-CORE-111: Failed to detect project version.*"));
     }
 
     @Test
-    void testMissingVersionButParentPomRef() throws IOException, XmlPullParserException {
+    void testMissingVersionButParentPomRef() {
         getTestModel().withVersion(null).withParentVersion("2.3.4").writeAsPomToProject(this.tempDir);
         runFix(new ParentPomRef("com.example", "my-parent", "1.2.3", null));
-        try (final FileReader reader = new FileReader(this.tempDir.resolve("pk_generated_parent.pom").toFile())) {
-            final Model pom = new MavenXpp3Reader().read(reader);
-            assertThat(pom.getVersion(), equalTo("1.2.3"));
-        }
+        final Model pom = new PomFileIO().readPom(this.tempDir.resolve("pk_generated_parent.pom"));
+        assertThat(pom.getVersion(), equalTo("1.2.3"));
     }
 
     @Test
-    void testMissingVersionButFromParent() throws IOException, XmlPullParserException {
+    void testMissingVersionButFromParent() {
         getTestModel().withVersion(null).withParentVersion("2.3.4").writeAsPomToProject(this.tempDir);
         assertThat(runValidator(null),
                 not(hasFindingWithMessageMatchingRegex("(?s)E-PK-CORE-111: Failed to detect project version.*")));
     }
 
-    private Model readModel(final Path projectDir) throws XmlPullParserException, IOException {
-        try (final FileReader fileReader = new FileReader(projectDir.toFile())) {
-            return new MavenXpp3Reader().read(fileReader);
-        }
+    private Model readModel(final Path projectDir) {
+        return new PomFileIO().readPom(projectDir);
     }
 
     @Test

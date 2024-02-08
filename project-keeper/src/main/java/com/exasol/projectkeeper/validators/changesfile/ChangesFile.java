@@ -109,7 +109,7 @@ public final class ChangesFile {
      */
     public Optional<LocalDate> getParsedReleaseDate() {
         try {
-            return Optional.of(LocalDate.parse(this.getReleaseDate()));
+            return Optional.ofNullable(this.getReleaseDate()).map(LocalDate::parse);
         } catch (final DateTimeParseException exception) {
             return Optional.empty();
         }
