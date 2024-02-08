@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.sources.analyze.generic;
 import static java.util.Arrays.asList;
 
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,8 +13,9 @@ import com.exasol.projectkeeper.OsCheck;
  * This class allows building and starting a {@code mvn} command.
  */
 public class MavenProcessBuilder {
-    private final List<String> command = new ArrayList<>();
+    private final List<String> args = new ArrayList<>();
     private Path workingDir = null;
+    private Duration timeout = null;
 
     private MavenProcessBuilder() {
         // Use create() method
@@ -26,7 +28,6 @@ public class MavenProcessBuilder {
      */
     public static MavenProcessBuilder create() {
         final MavenProcessBuilder builder = new MavenProcessBuilder();
-        builder.addArgument(getMavenExecutable());
         builder.addArgument("--batch-mode");
         return builder;
     }
@@ -38,7 +39,7 @@ public class MavenProcessBuilder {
      * @return {@code this} for fluent programming
      */
     public MavenProcessBuilder addArguments(final String... arguments) {
-        command.addAll(asList(arguments));
+        args.addAll(asList(arguments));
         return this;
     }
 
@@ -49,7 +50,7 @@ public class MavenProcessBuilder {
      * @return {@code this} for fluent programming
      */
     public MavenProcessBuilder addArgument(final String argument) {
-        command.add(argument);
+        args.add(argument);
         return this;
     }
 
@@ -65,12 +66,27 @@ public class MavenProcessBuilder {
     }
 
     /**
-     * Build the command and run it.
+     * Set the timeout for running the process.
      * 
-     * @return the running {@link SimpleProcess}
+     * @param timeout process timeout
+     * @return {@code this} for fluent programming
      */
-    public SimpleProcess startSimpleProcess() {
-        return SimpleProcess.start(workingDir, command);
+    public MavenProcessBuilder timeout(final Duration timeout) {
+        this.timeout = timeout;
+        return this;
+    }
+
+    /**
+     * Build a {@link ShellCommand} that can be started with {@link CommandExecutor}.
+     * 
+     * @return the built command
+     */
+    public ShellCommand buildCommand() {
+        return ShellCommand.builder().command(getMavenExecutable()) //
+                .args(this.args) //
+                .timeout(this.timeout) //
+                .workingDir(workingDir) //
+                .build();
     }
 
     private static String getMavenExecutable() {

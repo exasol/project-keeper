@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.generic;
 
+import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.logging.Logger;
@@ -22,6 +23,7 @@ public class ShellCommand {
     private Duration timeout;
     private String mainCommand;
     private String subCommand;
+    private Path workingDir = null;
     private final List<String> options = new ArrayList<>();
 
     /**
@@ -53,6 +55,15 @@ public class ShellCommand {
     }
 
     /**
+     * Working directory for the process.
+     * 
+     * @return working dir
+     */
+    public Optional<Path> workingDir() {
+        return Optional.ofNullable(this.workingDir);
+    }
+
+    /**
      * Builder for a new instance of {@link ShellCommand}.
      */
     public static class Builder {
@@ -64,6 +75,15 @@ public class ShellCommand {
          */
         public Builder timeout(final Duration timeout) {
             this.shellCommand.timeout = timeout;
+            return this;
+        }
+
+        /**
+         * @param workingDir optional working directory for the process
+         * @return this for fluent programming
+         */
+        public Builder workingDir(final Path workingDir) {
+            this.shellCommand.workingDir = workingDir;
             return this;
         }
 
@@ -94,7 +114,15 @@ public class ShellCommand {
          * @return this for fluent programming
          */
         public Builder args(final String... value) {
-            this.shellCommand.options.addAll(Arrays.asList(value));
+            return this.args(Arrays.asList(value));
+        }
+
+        /**
+         * @param value additional options and arguments to the command
+         * @return this for fluent programming
+         */
+        public Builder args(final List<String> value) {
+            this.shellCommand.options.addAll(value);
             return this;
         }
 

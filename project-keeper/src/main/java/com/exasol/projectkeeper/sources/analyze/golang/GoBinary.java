@@ -63,7 +63,7 @@ public class GoBinary {
                 .args("install", this.moduleName) //
                 .build();
         try {
-            this.executor.execute(shellCommand, null);
+            this.executor.execute(shellCommand);
         } catch (final IllegalStateException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-161")
                     .message("Error installing go binary {{binary}}.", this.binaryName).toString(), exception);

@@ -22,8 +22,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.repository.GitRepository;
 import com.exasol.projectkeeper.shared.repository.TaggedCommit;
-import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
-import com.exasol.projectkeeper.sources.analyze.generic.GitService;
+import com.exasol.projectkeeper.sources.analyze.generic.*;
 
 @ExtendWith(MockitoExtension.class)
 class NpmServicesTest {
@@ -40,9 +39,10 @@ class NpmServicesTest {
 
     @Test
     void getDependencies() {
-        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
-        when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
-        when(this.executor.execute(eq(LICENSE_CHECKER), any())).thenReturn(TestData.LICENSES);
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn(new ProcessResult("", null));
+        when(this.executor.execute(eq(LIST_DEPENDENCIES), any()))
+                .thenReturn(new ProcessResult(TestData.DEPENDENCIES, null));
+        when(this.executor.execute(eq(LICENSE_CHECKER), any())).thenReturn(new ProcessResult(TestData.LICENSES, null));
         final PackageJson current = TestData.samplePackageJson();
         assertThat(testee().getDependencies(current), Matchers.isA(ProjectDependencies.class));
     }
@@ -68,8 +68,9 @@ class NpmServicesTest {
 
     @Test
     void dependenciesFetchedOnlyOnceForWorkingDir() {
-        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
-        when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn(new ProcessResult("", null));
+        when(this.executor.execute(eq(LIST_DEPENDENCIES), any()))
+                .thenReturn(new ProcessResult(TestData.DEPENDENCIES, null));
         final NpmServices testee = testee();
         final Path workingDir = Path.of("testing-working-dir");
         testee.listDependencies(workingDir);
@@ -79,8 +80,9 @@ class NpmServicesTest {
 
     @Test
     void dependenciesFetchedForEachWorkingDir() {
-        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
-        when(this.executor.execute(eq(LIST_DEPENDENCIES), any())).thenReturn(TestData.DEPENDENCIES);
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn(new ProcessResult("", null));
+        when(this.executor.execute(eq(LIST_DEPENDENCIES), any()))
+                .thenReturn(new ProcessResult(TestData.DEPENDENCIES, null));
         final NpmServices testee = testee();
         final Path workingDir1 = Path.of("testing-working-dir1");
         final Path workingDir2 = Path.of("testing-working-dir2");
@@ -92,7 +94,7 @@ class NpmServicesTest {
 
     @Test
     void fetchDependenciesSucceeds() {
-        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn("");
+        when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenReturn(new ProcessResult("", null));
         assertDoesNotThrow(() -> testee().fetchDependencies(Path.of("testing-working-dir1")));
     }
 
@@ -101,8 +103,10 @@ class NpmServicesTest {
         when(this.executor.execute(eq(FETCH_DEPENDENCIES), any())).thenThrow(IllegalStateException.class);
         final NpmServices testee = testee();
         final Path workingDir = Path.of("testing-working-dir1");
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> testee.fetchDependencies(workingDir));
-        assertThat(exception.getMessage(), equalTo("E-PK-CORE-168: Installing dependencies in 'testing-working-dir1' via 'npm ci' failed. Try running 'npm ci' manually in directory 'testing-working-dir1'."));
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> testee.fetchDependencies(workingDir));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-168: Installing dependencies in 'testing-working-dir1' via 'npm ci' failed. Try running 'npm ci' manually in directory 'testing-working-dir1'."));
     }
 
     private PackageJson currentPackageJson(final Path relative) {
