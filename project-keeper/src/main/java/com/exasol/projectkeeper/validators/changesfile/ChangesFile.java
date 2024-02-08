@@ -130,7 +130,7 @@ public final class ChangesFile {
      * @return dependency change section
      */
     public Optional<ChangesFileSection> getDependencyChangeSection() {
-        return Optional.ofNullable(dependencyChangeSection);
+        return Optional.ofNullable(this.dependencyChangeSection);
     }
 
     /**
