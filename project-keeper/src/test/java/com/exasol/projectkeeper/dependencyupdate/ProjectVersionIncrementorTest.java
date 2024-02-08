@@ -19,11 +19,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.config.*;
+import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
+import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
@@ -43,6 +46,8 @@ class ProjectVersionIncrementorTest {
     private ChangesFileIO changesFileIOMock;
     @Mock
     private PomFileIO pomFileIOMock;
+    @Mock
+    private CommandExecutor commandExecutorMock;
 
     @ParameterizedTest
     @CsvSource(nullValues = "NULL", value = { "NULL, false", "invalid data, false", "2007-??-??, false",
@@ -82,16 +87,21 @@ class ProjectVersionIncrementorTest {
     }
 
     @Test
-    void incrementProjectVersionWithJarArtifactTriesToUpdateReferences() {
+    void incrementProjectVersionWithJarArtifactUpdatesReferences() {
         final Model pomModel = new Model();
         pomModel.setVersion(CURRENT_PROJECT_VERSION);
         when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
-        final ProjectVersionIncrementor testee = testee(configWithJarArtifact());
-        // This fails because the project dir does not exist when we try to run reference checker.
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                testee::incrementProjectVersion);
-        assertThat(exception.getMessage(), startsWith(
-                "E-PK-CORE-125: Error executing command 'mvn --batch-mode artifact-reference-checker:unify'."));
+        final String newVersion = testee(configWithJarArtifact(), CURRENT_PROJECT_VERSION).incrementProjectVersion();
+        assertAll(() -> assertThat(newVersion, equalTo("1.2.4")),
+                () -> assertThat(pomModel.getVersion(), equalTo(newVersion)),
+                () -> assertThat(getExecutedCommand().commandline(), contains(startsWith("mvn"),
+                        equalTo("--batch-mode"), equalTo("artifact-reference-checker:unify"))));
+    }
+
+    private ShellCommand getExecutedCommand() {
+        final ArgumentCaptor<ShellCommand> arg = ArgumentCaptor.forClass(ShellCommand.class);
+        verify(commandExecutorMock).execute(arg.capture());
+        return arg.getValue();
     }
 
     private ProjectVersionIncrementor testee() {
@@ -104,7 +114,7 @@ class ProjectVersionIncrementorTest {
 
     private ProjectVersionIncrementor testee(final ProjectKeeperConfig config, final String currentProjectVersion) {
         return new ProjectVersionIncrementor(config, loggerMock, PROJECT_DIR, currentProjectVersion, changesFileIOMock,
-                pomFileIOMock, fixedClock);
+                pomFileIOMock, commandExecutorMock, fixedClock);
     }
 
     private ProjectKeeperConfig configWithJarArtifact() {

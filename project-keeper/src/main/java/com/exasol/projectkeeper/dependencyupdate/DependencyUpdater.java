@@ -7,7 +7,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.sources.analyze.generic.MavenProcessBuilder;
+import com.exasol.projectkeeper.sources.analyze.generic.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 
@@ -24,10 +24,12 @@ public class DependencyUpdater {
     private final ChangesFileIO changesFileIO;
     private final String currentProjectVersion;
     private final ChangesFileUpdater changesFileUpdater;
+    private final CommandExecutor commandExecutor;
 
     DependencyUpdater(final ProjectKeeper projectKeeper, final Logger logger, final Path projectDir,
             final String currentProjectVersion, final ProjectVersionIncrementor projectVersionIncrementor,
-            final ChangesFileIO changesFileIO, final ChangesFileUpdater changesFileUpdater) {
+            final ChangesFileIO changesFileIO, final ChangesFileUpdater changesFileUpdater,
+            final CommandExecutor commandExecutor) {
         this.projectKeeper = projectKeeper;
         this.logger = logger;
         this.projectDir = projectDir;
@@ -35,6 +37,7 @@ public class DependencyUpdater {
         this.projectVersionIncrementor = projectVersionIncrementor;
         this.changesFileIO = changesFileIO;
         this.changesFileUpdater = changesFileUpdater;
+        this.commandExecutor = commandExecutor;
     }
 
     /**
@@ -51,7 +54,7 @@ public class DependencyUpdater {
             final Logger logger, final Path projectDir, final String currentProjectVersion) {
         return new DependencyUpdater(projectKeeper, logger, projectDir, currentProjectVersion,
                 new ProjectVersionIncrementor(config, logger, projectDir, currentProjectVersion), new ChangesFileIO(),
-                new ChangesFileUpdater());
+                new ChangesFileUpdater(), new CommandExecutor());
     }
 
     /**
@@ -89,8 +92,9 @@ public class DependencyUpdater {
     }
 
     private void runMaven(final String mavenGoal) {
-        MavenProcessBuilder.create().addArgument(mavenGoal).workingDir(projectDir).startSimpleProcess()
-                .waitUntilFinished(MAVEN_COMMAND_TIMEOUT);
+        final ShellCommand command = MavenProcessBuilder.create().addArgument(mavenGoal).workingDir(projectDir)
+                .timeout(MAVEN_COMMAND_TIMEOUT).buildCommand();
+        commandExecutor.execute(command);
     }
 
     private void runProjectKeeperFix() {

@@ -12,7 +12,7 @@ import org.apache.maven.model.Model;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.sources.analyze.generic.MavenProcessBuilder;
+import com.exasol.projectkeeper.sources.analyze.generic.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
@@ -27,21 +27,23 @@ class ProjectVersionIncrementor {
     private final Path projectDir;
     private final Logger logger;
     private final PomFileIO pomFileIO;
+    private final CommandExecutor commandExecutor;
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
             final String currentProjectVersion) {
         this(config, logger, projectDir, currentProjectVersion, new ChangesFileIO(), new PomFileIO(),
-                Clock.systemUTC());
+                new CommandExecutor(), Clock.systemUTC());
     }
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
             final String currentProjectVersion, final ChangesFileIO changesFileIO, final PomFileIO pomFileIO,
-            final Clock clock) {
+            final CommandExecutor commandExecutor, final Clock clock) {
         this.config = config;
         this.logger = logger;
         this.projectDir = projectDir;
         this.changesFileIO = changesFileIO;
         this.pomFileIO = pomFileIO;
+        this.commandExecutor = commandExecutor;
         this.clock = clock;
         this.currentProjectVersion = Objects.requireNonNull(currentProjectVersion, "currentProjectVersion");
     }
@@ -94,8 +96,9 @@ class ProjectVersionIncrementor {
 
     private void updateReferences() {
         logger.info("Unify artifact references");
-        MavenProcessBuilder.create().addArgument("artifact-reference-checker:unify").workingDir(projectDir)
-                .startSimpleProcess().waitUntilFinished(Duration.ofSeconds(30));
+        final ShellCommand command = MavenProcessBuilder.create().addArgument("artifact-reference-checker:unify")
+                .workingDir(projectDir).timeout(Duration.ofSeconds(30)).buildCommand();
+        commandExecutor.execute(command);
     }
 
     private String incrementVersion(final Model pom) {
