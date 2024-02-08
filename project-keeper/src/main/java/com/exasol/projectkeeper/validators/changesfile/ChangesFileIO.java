@@ -2,7 +2,7 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import java.io.*;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -46,8 +46,6 @@ public class ChangesFileIO {
         final BufferedReader reader;
         final Builder builder = ChangesFile.builder();
         ChangesFileSection.Builder currentSection;
-
-        final List<String> lineBuffer = new ArrayList<>();
         int lineCount = 0;
 
         Parser(final Path file, final BufferedReader reader) {
