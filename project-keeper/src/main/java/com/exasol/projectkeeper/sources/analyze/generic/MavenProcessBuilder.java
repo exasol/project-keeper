@@ -75,11 +75,6 @@ public class MavenProcessBuilder {
     }
 
     private static String getMavenExecutable() {
-        final OSType osType = new OsCheck().getOperatingSystemType();
-        if (osType == OSType.WINDOWS) {
-            return "mvn.cmd";
-        } else {
-            return "mvn";
-        }
+        return "mvn" + OsCheck.suffix(".cmd");
     }
 }
