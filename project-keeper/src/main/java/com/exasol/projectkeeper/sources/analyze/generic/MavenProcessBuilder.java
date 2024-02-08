@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.exasol.projectkeeper.OsCheck;
-import com.exasol.projectkeeper.OsCheck.OSType;
 
 /**
  * This class allows building and starting a {@code mvn} command.
@@ -91,11 +90,6 @@ public class MavenProcessBuilder {
     }
 
     private static String getMavenExecutable() {
-        final OSType osType = new OsCheck().getOperatingSystemType();
-        if (osType == OSType.WINDOWS) {
-            return "mvn.cmd";
-        } else {
-            return "mvn";
-        }
+        return "mvn" + OsCheck.suffix(".cmd");
     }
 }
