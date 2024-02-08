@@ -69,8 +69,9 @@ class ProjectVersionIncrementorTest {
 
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 testee::incrementProjectVersion);
-        assertThat(exception.getMessage(), startsWith(
-                "E-PK-CORE-174: Inconsistent project version '1.2.2' found in pom 'ProjectDir/pom.xml', expected '1.2.3'."));
+        assertThat(exception.getMessage(),
+                startsWith("E-PK-CORE-174: Inconsistent project version '1.2.2' found in pom '" + POM_PATH
+                        + "', expected '1.2.3'."));
     }
 
     @ParameterizedTest
