@@ -8,14 +8,14 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.AbstractFileContentValidator;
 import com.exasol.projectkeeper.validators.VersionCollector;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
+import com.exasol.projectkeeper.validators.changesfile.ChangesFileName;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
  * This is a {@link Validator} for the changelog files.
  */
-//[impl->dsn~verify-changelog-file~1]
+// [impl->dsn~verify-changelog-file~1]
 public class ChangelogFileValidator extends AbstractFileContentValidator {
     private final Path projectDirectory;
 
@@ -44,7 +44,7 @@ public class ChangelogFileValidator extends AbstractFileContentValidator {
 
     @Override
     protected String getTemplate() {
-        final List<ChangesFile.Filename> versions = new VersionCollector(this.projectDirectory).collectChangesFiles();
+        final List<ChangesFileName> versions = new VersionCollector(this.projectDirectory).collectChangesFiles();
         return new ChangelogFileGenerator().generate(versions);
     }
 }
