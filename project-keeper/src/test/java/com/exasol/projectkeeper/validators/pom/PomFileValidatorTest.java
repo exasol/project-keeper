@@ -123,7 +123,7 @@ class PomFileValidatorTest {
     void testMissingVersionButParentPomRef() {
         getTestModel().withVersion(null).withParentVersion("2.3.4").writeAsPomToProject(this.tempDir);
         runFix(new ParentPomRef("com.example", "my-parent", "1.2.3", null));
-        final Model pom = new PomFileIO().readPom(this.tempDir.resolve("pk_generated_parent.pom"));
+        final Model pom = readModel(this.tempDir.resolve("pk_generated_parent.pom"));
         assertThat(pom.getVersion(), equalTo("1.2.3"));
     }
 
@@ -134,8 +134,8 @@ class PomFileValidatorTest {
                 not(hasFindingWithMessageMatchingRegex("(?s)E-PK-CORE-111: Failed to detect project version.*")));
     }
 
-    private Model readModel(final Path projectDir) {
-        return new PomFileIO().readPom(projectDir);
+    private Model readModel(final Path file) {
+        return new PomFileIO().readPom(file);
     }
 
     @Test
