@@ -12,6 +12,9 @@
         <version>${revision}</version>
     </parent>
     <url>https://github.com/exasol/project-keeper/</url>
+    <properties>
+        <java.version>17</java.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>

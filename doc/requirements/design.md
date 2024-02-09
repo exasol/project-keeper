@@ -582,6 +582,18 @@ Covers:
 
 -Needs: impl, utest, itest
 
+##### Retrieve Vulnerability Information
+
+PK reads the information about potentially fixed vulnerabilities in dependencies from Java System Property `project-keeper:vulnerabilities` in JSONL format.
+
+Rationale:
+* The `dependencies_check.yml` workflow detects vulnerabilities and creates issues. It outputs information about the created issues and the vulnerabilities. This information is passed to `dependencies_update.yml` as a parameter and forwarded to PK via the system property.
+
+Covers:
+* [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
+
+-Needs: impl, utest, itest
+
 ##### Generate Changelog
 
 PK generates the changelog for the fixed vulnerabilities if the required information is available. The changelog contains the following information:
@@ -589,9 +601,10 @@ PK generates the changelog for the fixed vulnerabilities if the required informa
 * CVE-number, description and severity of each vulnerability
 * The vulnerable dependency, its version and scope 
 
+PK does not update the changes file if no information is available.
+
 Rationale:
-* The `dependencies_check.yml` workflow detects vulnerabilities and creates issues. It will output information about the created issues and the vulnerabilities. This information is passed to `dependencies_update.yml` as a parameter and forwarded to PK's `update-dependencies` mode.
-* Vulnerability information must be optional in order to allow running the process locally.
+* Vulnerability information must be optional in order to allow running the process locally or to trigger the GitHub action manually.
 
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
