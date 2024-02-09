@@ -60,9 +60,14 @@ public final class ChangesFile {
      * @return a preconfigured builder
      */
     public Builder toBuilder() {
-        return builder().projectName(this.projectName).projectVersion(this.projectVersion.toString())
-                .releaseDate(this.releaseDate).codeName(this.codeName).summary(this.summarySection)
-                .sections(List.copyOf(this.sections)).dependencyChangeSection(this.dependencyChangeSection);
+        return builder() //
+                .projectName(this.projectName)
+                .projectVersion(this.projectVersion != null ? this.projectVersion.toString() : null)
+                .releaseDate(this.releaseDate) //
+                .codeName(this.codeName) //
+                .summary(this.summarySection) //
+                .sections(List.copyOf(this.sections)) //
+                .dependencyChangeSection(this.dependencyChangeSection);
     }
 
     /**
@@ -208,7 +213,7 @@ public final class ChangesFile {
          * @return self for fluent programming
          */
         public Builder projectVersion(final String projectVersion) {
-            this.projectVersion = new Semver(projectVersion);
+            this.projectVersion = projectVersion != null ? new Semver(projectVersion) : null;
             return this;
         }
 

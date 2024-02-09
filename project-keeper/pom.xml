@@ -97,6 +97,11 @@
             <artifactId>to-string-verifier</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.junit-pioneer</groupId>
+            <artifactId>junit-pioneer</artifactId>
+            <scope>test</scope>
+        </dependency>
         <!-- Fix warning from SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".-->
         <dependency>
             <groupId>org.slf4j</groupId>

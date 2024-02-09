@@ -61,7 +61,7 @@ public class ProjectKeeper {
         return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), getOwnVersion());
     }
 
-    private static String getOwnVersion() {
+    static String getOwnVersion() {
         final String packageVersion = ProjectKeeper.class.getPackage().getImplementationVersion();
         if (packageVersion != null) {
             return packageVersion;
