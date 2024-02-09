@@ -72,7 +72,7 @@ class NpmServices {
 
     private JsonObject getJsonOutput(final ShellCommand cmd, final Path workingDir) {
         fetchDependencies(workingDir);
-        final String stdout = this.executor.execute(cmd, workingDir);
+        final String stdout = this.executor.execute(cmd, workingDir).getOutputStreamContent();
         return JsonIo.read(new StringReader(stdout));
     }
 

@@ -78,9 +78,9 @@ class GolangServices {
                 .timeout(EXECUTION_TIMEOUT) //
                 .command(goLicenses.command()) //
                 .args("csv", module) //
-                .build();
+                .workingDir(absoluteSourcePath).build();
         try {
-            return this.executor.execute(shellCommand, absoluteSourcePath);
+            return this.executor.execute(shellCommand).getOutputStreamContent();
         } catch (final RuntimeException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-142")
@@ -100,8 +100,9 @@ class GolangServices {
                 .timeout(Duration.ofSeconds(3)) //
                 .command(GoBinary.GO.command()) //
                 .args("list", "-m", "-f", "{{.Dir}}", moduleName) //
+                .workingDir(absoluteSourcePath) //
                 .build();
-        final String output = this.executor.execute(shellCommand, absoluteSourcePath).trim();
+        final String output = this.executor.execute(shellCommand).getOutputStreamContent().trim();
         if (output.isEmpty()) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-160")
                     .message("Did not get directory for module {{module name}}.", moduleName).ticketMitigation()
@@ -226,7 +227,8 @@ class GolangServices {
                 .timeout(Duration.ofMinutes(2)) //
                 .command(GoBinary.GO.command()) //
                 .args("get", "-t", "./...") //
+                .workingDir(projectPath) //
                 .build();
-        this.executor.execute(sc, projectPath);
+        this.executor.execute(sc);
     }
 }

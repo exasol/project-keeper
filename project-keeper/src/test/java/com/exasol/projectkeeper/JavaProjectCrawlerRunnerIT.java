@@ -6,12 +6,10 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matchers;
@@ -26,6 +24,7 @@ import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
 import com.exasol.projectkeeper.test.TestMavenModel;
+import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 @Tag("integration")
 class JavaProjectCrawlerRunnerIT {
@@ -83,11 +82,9 @@ class JavaProjectCrawlerRunnerIT {
                 allOf(containsString("[FATAL] Non-readable POM"), containsString(missingPomFile.toString())));
     }
 
-    private void writePomFile(final Path pomFile) throws IOException {
+    private void writePomFile(final Path pomFile) {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency(DEPENDENCY_ID, DEPENDENCY_GROUP, "", DEPENDENCY_VERSION);
-        try (final FileWriter fileWriter = new FileWriter(pomFile.toFile())) {
-            new MavenXpp3Writer().write(fileWriter, model);
-        }
+        new PomFileIO().writePom(model, pomFile);
     }
 }

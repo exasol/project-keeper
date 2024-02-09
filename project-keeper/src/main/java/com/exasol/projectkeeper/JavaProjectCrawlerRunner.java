@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.ResponseCoder;
-import com.exasol.projectkeeper.sources.analyze.generic.MavenProcessBuilder;
-import com.exasol.projectkeeper.sources.analyze.generic.SimpleProcess;
+import com.exasol.projectkeeper.sources.analyze.generic.*;
 
 /**
  * Runs the maven plugin goal on the current repository and returns the parsed result.
@@ -43,9 +42,8 @@ public class JavaProjectCrawlerRunner {
 
     private String runCrawlerPlugin(final Path... pomFiles) {
         final MavenProcessBuilder builder = buildMavenCommand(pomFiles);
-        final SimpleProcess process = builder.startSimpleProcess();
-        process.waitUntilFinished(Duration.ofSeconds(90));
-        return new ResponseCoder().decodeResponse(process.getOutputStreamContent());
+        final ProcessResult result = new CommandExecutor().execute(builder.buildCommand());
+        return new ResponseCoder().decodeResponse(result.getOutputStreamContent());
     }
 
     private MavenProcessBuilder buildMavenCommand(final Path... pomFiles) {
@@ -60,7 +58,8 @@ public class JavaProjectCrawlerRunner {
                          * comparing dependencies).
                          */
                         "-Dmaven.defaultProjectBuilder.disableGlobalModelCache=true")
-                .workingDir(null);
+                .workingDir(null) //
+                .timeout(Duration.ofSeconds(90));
 
         if (this.mvnRepositoryOverride != null) {
             builder.addArgument("-Dmaven.repo.local=" + this.mvnRepositoryOverride);

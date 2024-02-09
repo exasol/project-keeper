@@ -46,7 +46,7 @@ class GoBinaryTest {
 
     @Test
     void installFailure() {
-        when(this.executor.execute(any(), any())).thenThrow(new IllegalStateException("bla bla"));
+        when(this.executor.execute(any())).thenThrow(new IllegalStateException("bla bla"));
         final GoBinary testee = testee();
         final Exception e = assertThrows(IllegalStateException.class, () -> testee.install());
         assertThat(e.getMessage(), Matchers.startsWith("E-PK-CORE-161: Error installing go binary"));
@@ -56,7 +56,7 @@ class GoBinaryTest {
     @Test
     void installSuccess() {
         testee().install();
-        verify(this.executor).execute(any(), any());
+        verify(this.executor).execute(any());
     }
 
     @Test

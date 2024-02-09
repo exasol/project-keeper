@@ -129,6 +129,15 @@ public class SimpleProcess {
         }
     }
 
+    /**
+     * Get the process result containing output and error stream content.
+     * 
+     * @return result
+     */
+    public ProcessResult getResult() {
+        return new ProcessResult(getOutputStreamContent(), getErrorStreamContent());
+    }
+
     private void waitForExecutionFinished(final Duration executionTimeout) {
         try {
             if (!this.process.waitFor(executionTimeout.toMillis(), TimeUnit.MILLISECONDS)) {
