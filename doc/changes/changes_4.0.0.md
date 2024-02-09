@@ -40,6 +40,7 @@ Code name: Automatic Security Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:3.0.1` to `4.0.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.4` to `3.15.6`
+* Added `org.junit-pioneer:junit-pioneer:2.2.0`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.1` to `5.10.2`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.1` to `5.10.2`
 * Updated `org.mockito:mockito-junit-jupiter:5.8.0` to `5.10.0`
