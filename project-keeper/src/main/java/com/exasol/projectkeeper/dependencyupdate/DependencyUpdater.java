@@ -8,7 +8,6 @@ import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.analyze.generic.*;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 
 /**
@@ -21,21 +20,18 @@ public class DependencyUpdater {
     private final Logger logger;
     private final Path projectDir;
     private final ProjectVersionIncrementor projectVersionIncrementor;
-    private final ChangesFileIO changesFileIO;
     private final String currentProjectVersion;
     private final ChangesFileUpdater changesFileUpdater;
     private final CommandExecutor commandExecutor;
 
     DependencyUpdater(final ProjectKeeper projectKeeper, final Logger logger, final Path projectDir,
             final String currentProjectVersion, final ProjectVersionIncrementor projectVersionIncrementor,
-            final ChangesFileIO changesFileIO, final ChangesFileUpdater changesFileUpdater,
-            final CommandExecutor commandExecutor) {
+            final ChangesFileUpdater changesFileUpdater, final CommandExecutor commandExecutor) {
         this.projectKeeper = projectKeeper;
         this.logger = logger;
         this.projectDir = projectDir;
         this.currentProjectVersion = currentProjectVersion;
         this.projectVersionIncrementor = projectVersionIncrementor;
-        this.changesFileIO = changesFileIO;
         this.changesFileUpdater = changesFileUpdater;
         this.commandExecutor = commandExecutor;
     }
@@ -53,8 +49,9 @@ public class DependencyUpdater {
     public static DependencyUpdater create(final ProjectKeeper projectKeeper, final ProjectKeeperConfig config,
             final Logger logger, final Path projectDir, final String currentProjectVersion) {
         return new DependencyUpdater(projectKeeper, logger, projectDir, currentProjectVersion,
-                new ProjectVersionIncrementor(config, logger, projectDir, currentProjectVersion), new ChangesFileIO(),
-                new ChangesFileUpdater(), new CommandExecutor());
+                new ProjectVersionIncrementor(config, logger, projectDir, currentProjectVersion),
+                new ChangesFileUpdater(new VulnerabilityInfoProvider(), new ChangesFileIO(), projectDir),
+                new CommandExecutor());
     }
 
     /**
@@ -72,7 +69,7 @@ public class DependencyUpdater {
         final String version = incrementProjectVersion();
         updateDependencyVersions();
         runProjectKeeperFix();
-        updateChangelog(version);
+        changesFileUpdater.updateChanges(version);
         return true;
     }
 
@@ -98,22 +95,11 @@ public class DependencyUpdater {
     }
 
     private void runProjectKeeperFix() {
-        logger.info("Running project-keeper fix");
+        logger.info("Running project-keeper fix...");
         if (!projectKeeper.fix()) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-177")
                     .message("Running project-keeper fix failed, see errors above.")
                     .mitigation("Fix findings and try again.").toString());
         }
-    }
-
-    private void updateChangelog(final String version) {
-        final Path changesFilePath = getChangesFilePath(version);
-        final ChangesFile changesFile = changesFileIO.read(changesFilePath);
-        final ChangesFile updatedChanges = changesFileUpdater.update(changesFile);
-        changesFileIO.write(updatedChanges, changesFilePath);
-    }
-
-    private Path getChangesFilePath(final String version) {
-        return projectDir.resolve(ChangesFile.getPathForVersion(version));
     }
 }

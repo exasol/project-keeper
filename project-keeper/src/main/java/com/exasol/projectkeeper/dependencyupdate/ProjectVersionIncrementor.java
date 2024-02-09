@@ -18,6 +18,9 @@ import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
 import com.vdurmont.semver4j.Semver;
 
+/**
+ * This class can increment the project's version.
+ */
 class ProjectVersionIncrementor {
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
     private final ProjectKeeperConfig config;
@@ -75,6 +78,12 @@ class ProjectVersionIncrementor {
         return LocalDate.ofInstant(clock.instant(), UTC_ZONE);
     }
 
+    /**
+     * Increment the project's patch version. If the project produces a JAR (i.e. uses the {@code JAR_ARTIFACT} module),
+     * it runs its {@code artifact-reference-checker:unify} goal to update references to the JAR file.
+     * 
+     * @return the new, incremented version
+     */
     String incrementProjectVersion() {
         final Path path = getPomPath();
         final Model pom = pomFileIO.readPom(path);
