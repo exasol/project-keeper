@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.equalTo;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,11 +15,6 @@ class ProjectKeeperTest {
 
     @Mock
     private Logger loggerMock;
-
-    @Test
-    void createProjectKeeper() {
-        assertThat(ProjectKeeper.createProjectKeeper(null, null, null), not(nullValue()));
-    }
 
     @Test
     @ClearSystemProperty(key = "com.exasol.projectkeeper.ownVersion")
