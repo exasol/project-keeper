@@ -13,7 +13,7 @@
         <version>${revision}</version>
     </parent>
     <properties>
-        <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
+        <!-- Workaround for https://github.com/exasol/project-keeper/issues/530 -->
         <java.version>17</java.version>
     </properties>
     <prerequisites>
