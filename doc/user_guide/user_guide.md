@@ -268,6 +268,12 @@ In addition this plugin can also fix the project structure. For that use:
 mvn project-keeper:fix
 ```
 
+Run the following commands to update dependencies:
+
+```sh
+mvn project-keeper:update-dependencies
+```
+
 For multi-module projects these commands may fail with the following error:
 
 ```
@@ -279,6 +285,7 @@ In this case add command line option `--projects .`:
 ```sh
 mvn project-keeper:verify --projects .
 mvn project-keeper:fix --projects .
+mvn project-keeper:update-dependencies --projects .
 ```
 
 You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=true` to your maven command.
@@ -299,6 +306,13 @@ Run the following commands to fix the project structure:
 ```sh
 cd path/to/project
 java -jar path/to/project-keeper-cli-2.7.1.jar fix
+```
+
+Run the following commands to update dependencies:
+
+```sh
+cd path/to/project
+java -jar path/to/project-keeper-cli-2.7.1.jar update-dependencies
 ```
 
 ### Project Version

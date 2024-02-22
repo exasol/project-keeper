@@ -42,7 +42,7 @@ class ProjectKeeperLauncherIT {
     @MethodSource("invalidArguments")
     void failsForWrongArguments(final String... args) throws IOException, InterruptedException {
         assertProcessFails(args, "E-PK-CLI-2: Got no or invalid command line argument '" + Arrays.toString(args)
-                + "'. Please only specify arguments 'verify' or 'fix'.");
+                + "'. Please only specify arguments 'verify', 'fix' or 'update-dependencies'.");
     }
 
     @Test
@@ -50,7 +50,7 @@ class ProjectKeeperLauncherIT {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ProjectKeeperLauncher.main(null));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CLI-2: Got no or invalid command line argument 'null'. Please only specify arguments 'verify' or 'fix'."));
+                "E-PK-CLI-2: Got no or invalid command line argument 'null'. Please only specify arguments 'verify', 'fix' or 'update-dependencies'."));
     }
 
     @Test
@@ -66,6 +66,13 @@ class ProjectKeeperLauncherIT {
         prepareMavenProject();
         assertProcessSucceeds("fix");
         assertProcessSucceeds("verify");
+    }
+
+    @Test
+    void updateDependenciesJavaProjectSucceeds() throws InterruptedException, IOException {
+        prepareMavenProject();
+        assertProcessSucceeds("fix");
+        assertProcessSucceeds("update-dependencies");
     }
 
     @Test
