@@ -17,5 +17,6 @@
         <failOnError>true</failOnError>
         <failOnWarnings>true</failOnWarnings>
         <quiet>true</quiet>
+        <source>${java.version}</source>
     </configuration>
 </plugin>
