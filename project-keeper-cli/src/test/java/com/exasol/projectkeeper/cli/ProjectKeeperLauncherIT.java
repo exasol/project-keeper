@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.cli;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.startsWith;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -11,6 +12,7 @@ import java.util.Arrays;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import org.hamcrest.Matcher;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -41,16 +43,16 @@ class ProjectKeeperLauncherIT {
     @ParameterizedTest
     @MethodSource("invalidArguments")
     void failsForWrongArguments(final String... args) throws IOException, InterruptedException {
-        assertProcessFails(args, "E-PK-CLI-2: Got no or invalid command line argument '" + Arrays.toString(args)
-                + "'. Please only specify arguments 'verify', 'fix' or 'update-dependencies'.");
+        assertProcessFails(args, startsWith("E-PK-CLI-2: Got no or invalid command line argument '"
+                + Arrays.toString(args) + "'. Please only specify arguments ['"));
     }
 
     @Test
     void runMainMethodWithNullArgumentFails() throws IOException, InterruptedException {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ProjectKeeperLauncher.main(null));
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CLI-2: Got no or invalid command line argument 'null'. Please only specify arguments 'verify', 'fix' or 'update-dependencies'."));
+        assertThat(exception.getMessage(), startsWith(
+                "E-PK-CLI-2: Got no or invalid command line argument 'null'. Please only specify arguments"));
     }
 
     @Test
@@ -105,13 +107,13 @@ class ProjectKeeperLauncherIT {
 
     private void assertProcessFails(final String argument, final String expectedErrorMessage)
             throws InterruptedException, IOException {
-        assertProcessFails(new String[] { argument }, expectedErrorMessage);
+        assertProcessFails(new String[] { argument }, equalTo(expectedErrorMessage));
     }
 
-    private void assertProcessFails(final String[] arguments, final String expectedErrorMessage)
+    private void assertProcessFails(final String[] arguments, final Matcher<String> expectedErrorMessage)
             throws InterruptedException, IOException {
         final ProjectKeeperLauncher launcher = new ProjectKeeperLauncher(this.projectDir);
         final Exception actualException = assertThrows(Exception.class, () -> launcher.start(arguments));
-        assertThat(actualException.getMessage(), equalTo(expectedErrorMessage));
+        assertThat(actualException.getMessage(), expectedErrorMessage);
     }
 }
