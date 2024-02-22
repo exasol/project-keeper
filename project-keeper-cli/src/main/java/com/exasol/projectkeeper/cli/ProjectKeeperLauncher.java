@@ -78,7 +78,7 @@ public class ProjectKeeperLauncher {
 
     private ProjectKeeperGoal getProjectKeeperGoal(final String goal) {
         final ProjectKeeperGoal failure = pk -> {
-            LOGGER.warning(() -> ExaError.messageBuilder("goal").message("Goal {{goal}} not supported.", goal)
+            LOGGER.warning(() -> ExaError.messageBuilder("E-PK-CLI-5").message("Goal {{goal}} not supported.", goal)
                     .mitigation("Use one of the supported goals: {{supported goals}}", ACCEPT_GOALS.keySet())
                     .toString());
             return false;
