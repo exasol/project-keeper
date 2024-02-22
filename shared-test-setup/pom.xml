@@ -48,6 +48,15 @@
                     </compilerArgs>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <configuration>
+                    <!-- Avoid warnings about missing javadoc comments "no comment".
+                    This module contains only test code, no production code. -->
+                    <doclint>-missing</doclint>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
     <url>https://github.com/exasol/project-keeper/</url>
