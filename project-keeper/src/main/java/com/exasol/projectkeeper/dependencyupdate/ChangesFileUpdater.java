@@ -16,6 +16,7 @@ import com.exasol.projectkeeper.validators.changesfile.ChangesFileSection.Builde
  * This class updates the the changesfile (e.g. {@code doc/changes/changes_1.2.0.md} for a given version, adding
  * information about fixed vulnerabilities in dependencies.
  */
+// [impl->dsn~dependency-updater.update-changelog~1]
 class ChangesFileUpdater {
     private static final Pattern ISSUE_URL_PATTERN = Pattern.compile("^https://github.com/exasol/[^/]+/issues/(\\d+)$");
     private static final String SECURITY_SECTION_HEADER = "## Security";

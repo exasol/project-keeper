@@ -561,7 +561,7 @@ Leaving the version unchanged when it was not yet released avoids surprises when
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
--Needs: impl, utest, itest
+Needs: impl, utest, itest
 
 ##### Update Dependencies
 `dsn~dependency-updater.update-dependencies~1`
@@ -580,7 +580,7 @@ Rationale:
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
--Needs: impl, utest, itest
+Needs: impl, utest, itest
 
 ##### Retrieve Vulnerability Information
 `dsn~dependency-updater.read-vulnerability-info~1`
@@ -596,7 +596,7 @@ Rationale:
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
--Needs: impl, utest, itest
+Needs: impl, utest, itest
 
 ##### Generate Changelog
 `dsn~dependency-updater.update-changelog~1`
@@ -614,7 +614,7 @@ Rationale:
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
 
--Needs: impl, utest, itest
+Needs: impl, utest, itest
 
 #### Generate `dependencies_update.yml` workflow
 `dsn~dependency-updater.workflow.generate~1`

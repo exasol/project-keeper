@@ -94,6 +94,10 @@ class ProjectKeeperMojoIT {
         assertThat(projectDir.resolve("target/jacoco-agent/org.jacoco.agent-runtime.jar").toFile(), anExistingFile());
     }
 
+    // [itest->dsn~dependency-updater.increment-version~1]
+    // [itest->dsn~dependency-updater.update-dependencies~1]
+    // [itest->dsn~dependency-updater.read-vulnerability-info~1]
+    // [itest->dsn~dependency-updater.update-changelog~1]
     @Test
     void testUpgradeDependencies() throws VerificationException, IOException {
         writeProjectKeeperConfig("sources:\n" + //

@@ -23,6 +23,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import com.exasol.projectkeeper.validators.changesfile.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile.Builder;
 
+// [utest->dsn~dependency-updater.update-changelog~1]
 @ExtendWith(MockitoExtension.class)
 class ChangesFileUpdaterTest {
 
