@@ -84,6 +84,21 @@ Supported project types:
 
 If you have multiple sources in a project, PK will list all of them as badges in the project's `README.md`. If you want to hide one source, you can set `advertise: false` for this source.
 
+### Project Version
+
+PK needs to know about the overall version of the project. For example for validating it in the changes file. For single source projects, PK simply takes the version from the project. For other projects you can:
+
+- Define the version explicitly in the config:
+  ```yaml
+  version: "1.2.3"
+  ```
+  This is required for Go projects.
+- Define a source. PK will then take the version of that source:
+  ```yaml
+  version:
+    fromSource: "subModule1/pom.xml"
+  ```
+
 ### Project Keeper Verify for non-Maven Projects
 
 Maven projects use PK's Maven plugin to run PK verify during the `verify` Maven lifecycle. To run PK verify also for other projects, PK generates GitHub workflow `.github/workflows/project-keeper-verify.yml` and shell script `.github/workflows/project-keeper.sh`. Both files are only generated if there is **no** Maven module in the project root, i.e. there is no Maven source with `path: pom.xml` in `.project-keeper.yml`.
@@ -314,21 +329,6 @@ Run the following commands to update dependencies:
 cd path/to/project
 java -jar path/to/project-keeper-cli-2.7.1.jar update-dependencies
 ```
-
-### Project Version
-
-PK needs to know about the overall version of the project. For example for validating it in the changes file. For single source projects, PK simply takes the version from the project. For other projects you can:
-
-- Define the version explicitly in the config:
-  ```yaml
-  version: "1.2.3"
-  ```
-  This is required for Go projects.
-- Define a source. PK will then take the version of that source:
-  ```yaml
-  version:
-    fromSource: "subModule1/pom.xml"
-  ```
 
 ## Troubleshooting
 

@@ -575,7 +575,7 @@ mvn versions:use-latest-releases && mvn versions:update-properties
 Rationale:
 
 * This avoids re-inventing the wheel.
-* The plugin supports excluding dependencies from the upgrade that could cause problems using the [`<excludes>`](https://www.mojohaus.org/versions/versions-maven-plugin/use-latest-releases-mojo.html#excludes) configuration.
+* The plugin supports excluding dependencies from the update that could cause problems using the [`<excludes>`](https://www.mojohaus.org/versions/versions-maven-plugin/use-latest-releases-mojo.html#excludes) configuration.
 
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)
