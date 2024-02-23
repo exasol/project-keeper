@@ -13,6 +13,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -103,6 +104,15 @@ class ProjectKeeperMojoIT {
         final Path userGuidePath = projectDir.resolve("user_guide.md");
         writeFile(userGuidePath, "artifact reference: dummy-0.1.0.jar");
 
+        setVulnerabilityInfo("""
+                {
+                    "cve": "CVE-2017-10355",
+                    "cwe": "CWE-833",
+                    "description": "sonatype-2017-0348 - xerces:xercesImpl - Denial of Service (DoS)",
+                    "coordinates": "xerces:xercesImpl:jar:2.12.2:test",
+                    "references": ["https://link1", "https://link2"],
+                    "issue_url": "https://github.com/exasol/testing-release-robot/issues/709"
+                }""");
         verifier.executeGoal("project-keeper:fix");
         assertThat("original version", readPom().getVersion(), equalTo("0.1.0"));
 
@@ -119,9 +129,31 @@ class ProjectKeeperMojoIT {
                 () -> assertThat("updated SLF4J version", updatedSlf4jVersion,
                         allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), not(startsWith("1.")), startsWith("2."))),
                 () -> assertContent(userGuidePath, startsWith("artifact reference: dummy-0.1.1.jar")),
-                () -> assertContent(ChangesFile.getPathForVersion(newVersion),
-                        allOf(startsWith("# My Test Project 0.1.1, released 2024-??-??"),
-                                containsString("* Added `org.slf4j:slf4j-api:"))));
+                () -> assertContent(ChangesFile.getPathForVersion(newVersion), allOf(
+                        startsWith("# My Test Project 0.1.1, released 2024-??-??"),
+                        containsString(
+                                "Code name: Fixed vulnerability CVE-2017-10355 in xerces:xercesImpl:jar:2.12.2:test"),
+                        containsString("""
+                                ### CVE-2017-10355 (CWE-833) in dependency `xerces:xercesImpl:jar:2.12.2:test`
+                                sonatype-2017-0348 - xerces:xercesImpl - Denial of Service (DoS)
+                                #### References
+                                * https://link1
+                                * https://link2"""), containsString(
+                                """
+                                        ## Security
+
+                                        * #709: Fixed vulnerability CVE-2017-10355 in dependency `xerces:xercesImpl:jar:2.12.2:test`"""))));
+    }
+
+    private void setVulnerabilityInfo(final String... vulnerabilityInfoJson) {
+        final String jsonlContent = Arrays.stream(vulnerabilityInfoJson) //
+                .map(this::removeLineBreaks) //
+                .collect(joining("\n"));
+        verifier.setSystemProperty("project-keeper:vulnerabilities", jsonlContent);
+    }
+
+    private String removeLineBreaks(final String multiLineText) {
+        return multiLineText.replace("\n", "");
     }
 
     private void updateReleaseDate(final String changeLogVersion, final String newReleaseDate) {
