@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper;
 
 /**
- * This class formats a string in the associated press headline style.
+ * This class formats a string in the Associated Press (AP) headline style.
  */
 public class ApStyleFormatter {
 
