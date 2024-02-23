@@ -24,6 +24,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -99,6 +101,7 @@ class ProjectKeeperMojoIT {
     // [itest->dsn~dependency-updater.read-vulnerability-info~1]
     // [itest->dsn~dependency-updater.update-changelog~1]
     @Test
+    @DisabledOnOs(OS.WINDOWS) // Passing vulnerability JSONL via system property fails on Windows
     void testUpgradeDependencies() throws VerificationException, IOException {
         writeProjectKeeperConfig("sources:\n" + //
                 "  - type: maven\n" + //
