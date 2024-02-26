@@ -588,7 +588,7 @@ Needs: impl, utest, itest
 PK reads the information about potentially fixed vulnerabilities in dependencies from Java System Property `project-keeper:vulnerabilities` in JSONL format.
 
 Rationale:
-* The `dependencies_check.yml` workflow detects vulnerabilities and creates issues. It outputs information about the created issues and the vulnerabilities. This information is passed to `dependencies_update.yml` as a parameter and forwarded to PK via the system property.
+* The `dependencies_check.yml` workflow detects vulnerabilities and creates issues. It outputs information about the created issues and the vulnerabilities. This information is passed to the workflow `dependencies_update.yml` as a parameter which forwards it to PK via the system property.
 * Using a system property instead of a file avoids reading from disk.
 * Using a system property instead of a command-line argument avoids extracting the parameter from the command line.
 * This will only be used in an automatic workflow, not by a user.
