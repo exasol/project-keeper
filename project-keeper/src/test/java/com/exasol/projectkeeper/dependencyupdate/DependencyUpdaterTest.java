@@ -67,6 +67,7 @@ class DependencyUpdaterTest {
         verify(projectKeeperMock).fix();
     }
 
+    // [utest->dsn~dependency-updater.update-dependencies~1]
     @Test
     void updateDependenciesRunsVersionsPlugin() {
         when(projectKeeperMock.fix()).thenReturn(true);

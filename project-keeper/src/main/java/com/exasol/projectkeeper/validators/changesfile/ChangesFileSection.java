@@ -74,6 +74,15 @@ public final class ChangesFileSection {
     }
 
     /**
+     * Create a builder with the same content as this section.
+     * 
+     * @return preconfigured builder
+     */
+    public Builder toBuilder() {
+        return builder(this.heading).addLines(this.content);
+    }
+
+    /**
      * A builder for creating {@link ChangesFileSection}s.
      */
     public static class Builder {

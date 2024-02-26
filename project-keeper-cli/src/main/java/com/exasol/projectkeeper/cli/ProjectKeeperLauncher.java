@@ -95,8 +95,7 @@ public class ProjectKeeperLauncher {
                 || GOAL_UPDATE_DEPENDENCIES.equals(args[0]))) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CLI-2")
                     .message("Got no or invalid command line argument {{arguments}}.", Arrays.toString(args))
-                    .mitigation("Please only specify arguments '" + GOAL_VERIFY + "', '" + GOAL_FIX + "' or '"
-                            + GOAL_UPDATE_DEPENDENCIES + "'.")
+                    .mitigation("Please only specify arguments {{supported goals}}.", ACCEPT_GOALS.keySet())
                     .toString());
         }
     }

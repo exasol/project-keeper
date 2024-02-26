@@ -31,6 +31,7 @@ import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
+// [utest->dsn~dependency-updater.increment-version~1]
 @ExtendWith(MockitoExtension.class)
 class ProjectVersionIncrementorTest {
 
