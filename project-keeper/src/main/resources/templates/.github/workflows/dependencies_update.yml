@@ -49,6 +49,16 @@ jobs:
         env:
           CREATED_ISSUES: ${{ inputs.vulnerability_issues }}
 
+      - name: Project Keeper Fix
+        run: |
+          mvn --batch-mode com.exasol:project-keeper-maven-plugin:fix --projects .
+
+      - name: Project Keeper Fix for updated Project Keeper version
+        # Calling PK fix a second time is necessary because the first invocation potentially updated PK itself.
+        # So we need to run PK fix again with the latest PK version.
+        run: |
+          mvn --batch-mode com.exasol:project-keeper-maven-plugin:fix --projects .
+
       - name: Generate PR comment
         id: pr-comment
         run: |
