@@ -84,6 +84,21 @@ Supported project types:
 
 If you have multiple sources in a project, PK will list all of them as badges in the project's `README.md`. If you want to hide one source, you can set `advertise: false` for this source.
 
+### Project Version
+
+PK needs to know about the overall version of the project. For example for validating it in the changes file. For single source projects, PK simply takes the version from the project. For other projects you can:
+
+- Define the version explicitly in the config:
+  ```yaml
+  version: "1.2.3"
+  ```
+  This is required for Go projects.
+- Define a source. PK will then take the version of that source:
+  ```yaml
+  version:
+    fromSource: "subModule1/pom.xml"
+  ```
+
 ### Project Keeper Verify for non-Maven Projects
 
 Maven projects use PK's Maven plugin to run PK verify during the `verify` Maven lifecycle. To run PK verify also for other projects, PK generates GitHub workflow `.github/workflows/project-keeper-verify.yml` and shell script `.github/workflows/project-keeper.sh`. Both files are only generated if there is **no** Maven module in the project root, i.e. there is no Maven source with `path: pom.xml` in `.project-keeper.yml`.
@@ -184,7 +199,7 @@ build:
 
 Sonar will only run for the first version in the list.
 
-## POM File
+## Maven Projects
 
 For Maven projects, PK generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
 
@@ -203,6 +218,27 @@ By default PK configures the project to use Java 11. If you need to use a differ
     <java.version>17</java.version>
 </properties>
 ```
+
+#### Exclude Dependencies From Automatic Version Update
+
+PK's [update-dependencies](#update-dependencies) mode updates the project's `pom.xml` files and updates the versions of all dependencies. In certain cases this could break the build. To exclude a dependency from the automatic update, add the following to your `pom.xml`:
+
+```xml
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>versions-maven-plugin</artifactId>
+    <configuration>
+        <excludes>
+            <!-- Dependencies use SLF4J 1.7 so we can't upgrade to 2 -->
+            <exclude>org.slf4j:slf4j-jdk14:jar:*:*</exclude>
+            <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
+            <exclude>org.eclipse.jgit:org.eclipse.jgit:jar:*:6.8.0.202311291450-r</exclude>
+        </excludes>
+    </configuration>
+</plugin>
+```
+
+See the [documentation for `<excludes>`](https://www.mojohaus.org/versions/versions-maven-plugin/use-latest-releases-mojo.html#excludes) of the versions-maven-plugin for details.
 
 ### Using a Parent POM
 
@@ -254,6 +290,8 @@ Project Keeper will read the version of your project from file `package.json`.
 
 Use the `project-keeper-maven-plugin` for analyzing Maven projects.
 
+#### Verification
+
 The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.
 
 You can also run the checks manually using:
@@ -262,17 +300,23 @@ You can also run the checks manually using:
 mvn project-keeper:verify
 ```
 
+#### Fix
+
 In addition this plugin can also fix the project structure. For that use:
 
 ```sh
 mvn project-keeper:fix
 ```
 
+#### Update Dependencies
+
 Run the following commands to update dependencies:
 
 ```sh
 mvn project-keeper:update-dependencies
 ```
+
+#### Multi-Module Maven Projects
 
 For multi-module projects these commands may fail with the following error:
 
@@ -292,43 +336,14 @@ You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=tr
 
 ### Standalone Command Line Interface
 
-Use the `project-keeper-cli` for analyzing non-Maven projects like Golang.
-
-Run the following commands to verify a project:
+Use the `project-keeper-cli` for analyzing non-Maven projects like Golang. PK `fix` generates a shell script that simplifies running PK standalone on the command line:
 
 ```sh
 cd path/to/project
-java -jar path/to/project-keeper-cli-2.7.1.jar verify
+./.github/workflows/project-keeper.sh $GOAL
 ```
 
-Run the following commands to fix the project structure:
-
-```sh
-cd path/to/project
-java -jar path/to/project-keeper-cli-2.7.1.jar fix
-```
-
-Run the following commands to update dependencies:
-
-```sh
-cd path/to/project
-java -jar path/to/project-keeper-cli-2.7.1.jar update-dependencies
-```
-
-### Project Version
-
-PK needs to know about the overall version of the project. For example for validating it in the changes file. For single source projects, PK simply takes the version from the project. For other projects you can:
-
-- Define the version explicitly in the config:
-  ```yaml
-  version: "1.2.3"
-  ```
-  This is required for Go projects.
-- Define a source. PK will then take the version of that source:
-  ```yaml
-  version:
-    fromSource: "subModule1/pom.xml"
-  ```
+The standalone variant supports the same goals as the Maven plugin: `fix`, `verify` and `update-dependencies`.
 
 ## Troubleshooting
 

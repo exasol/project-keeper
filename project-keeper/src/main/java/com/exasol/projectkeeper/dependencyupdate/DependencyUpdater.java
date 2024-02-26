@@ -65,6 +65,8 @@ public class DependencyUpdater {
      * 
      * @return {@code true} if the process succeeded.
      */
+    // [impl->dsn~dependency-updater.increment-version~1]
+    // [impl->dsn~dependency-updater.update-changelog~1]
     public boolean updateDependencies() {
         final String version = incrementProjectVersion();
         updateDependencyVersions();
@@ -83,6 +85,7 @@ public class DependencyUpdater {
         }
     }
 
+    // [impl->dsn~dependency-updater.update-dependencies~1]
     private void updateDependencyVersions() {
         runMaven("versions:use-latest-releases");
         runMaven("versions:update-properties");

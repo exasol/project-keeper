@@ -11,7 +11,10 @@
         <artifactId>project-keeper-core-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
-    <url>https://github.com/exasol/project-keeper/</url>
+    <properties>
+        <!-- Workaround for https://github.com/exasol/project-keeper/issues/530 -->
+        <java.version>17</java.version>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -137,4 +140,5 @@
             </plugin>
         </plugins>
     </build>
+    <url>https://github.com/exasol/project-keeper/</url>
 </project>

@@ -29,6 +29,8 @@
     </distributionManagement>
     <properties>
         <revision>4.0.0</revision>
+        <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
+        <java.version>17</java.version>
         <maven.version>3.9.6</maven.version>
         <minimum.maven.version>3.6.3</minimum.maven.version>
         <junit.version>5.10.2</junit.version>
@@ -36,8 +38,6 @@
         <mockito.version>5.10.0</mockito.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <maven.compiler.source>11</maven.compiler.source>
-        <maven.compiler.target>11</maven.compiler.target>
         <gpg.skip>true</gpg.skip>
     </properties>
 

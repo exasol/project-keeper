@@ -13,6 +13,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -23,6 +24,8 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matcher;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -93,7 +96,12 @@ class ProjectKeeperMojoIT {
         assertThat(projectDir.resolve("target/jacoco-agent/org.jacoco.agent-runtime.jar").toFile(), anExistingFile());
     }
 
+    // [itest->dsn~dependency-updater.increment-version~1]
+    // [itest->dsn~dependency-updater.update-dependencies~1]
+    // [itest->dsn~dependency-updater.read-vulnerability-info~1]
+    // [itest->dsn~dependency-updater.update-changelog~1]
     @Test
+    @DisabledOnOs(OS.WINDOWS) // Passing vulnerability JSONL via system property fails on Windows
     void testUpgradeDependencies() throws VerificationException, IOException {
         writeProjectKeeperConfig("sources:\n" + //
                 "  - type: maven\n" + //
@@ -103,6 +111,15 @@ class ProjectKeeperMojoIT {
         final Path userGuidePath = projectDir.resolve("user_guide.md");
         writeFile(userGuidePath, "artifact reference: dummy-0.1.0.jar");
 
+        setVulnerabilityInfo("""
+                {
+                    "cve": "CVE-2017-10355",
+                    "cwe": "CWE-833",
+                    "description": "sonatype-2017-0348 - xerces:xercesImpl - Denial of Service (DoS)",
+                    "coordinates": "xerces:xercesImpl:jar:2.12.2:test",
+                    "references": ["https://link1", "https://link2"],
+                    "issue_url": "https://github.com/exasol/testing-release-robot/issues/709"
+                }""");
         verifier.executeGoal("project-keeper:fix");
         assertThat("original version", readPom().getVersion(), equalTo("0.1.0"));
 
@@ -119,9 +136,31 @@ class ProjectKeeperMojoIT {
                 () -> assertThat("updated SLF4J version", updatedSlf4jVersion,
                         allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), not(startsWith("1.")), startsWith("2."))),
                 () -> assertContent(userGuidePath, startsWith("artifact reference: dummy-0.1.1.jar")),
-                () -> assertContent(ChangesFile.getPathForVersion(newVersion),
-                        allOf(startsWith("# My Test Project 0.1.1, released 2024-??-??"),
-                                containsString("* Added `org.slf4j:slf4j-api:"))));
+                () -> assertContent(ChangesFile.getPathForVersion(newVersion), allOf(
+                        startsWith("# My Test Project 0.1.1, released 2024-??-??"),
+                        containsString(
+                                "Code name: Fixed vulnerability CVE-2017-10355 in xerces:xercesImpl:jar:2.12.2:test"),
+                        containsString("""
+                                ### CVE-2017-10355 (CWE-833) in dependency `xerces:xercesImpl:jar:2.12.2:test`
+                                sonatype-2017-0348 - xerces:xercesImpl - Denial of Service (DoS)
+                                #### References
+                                * https://link1
+                                * https://link2"""), containsString(
+                                """
+                                        ## Security
+
+                                        * #709: Fixed vulnerability CVE-2017-10355 in dependency `xerces:xercesImpl:jar:2.12.2:test`"""))));
+    }
+
+    private void setVulnerabilityInfo(final String... vulnerabilityInfoJson) {
+        final String jsonlContent = Arrays.stream(vulnerabilityInfoJson) //
+                .map(this::removeLineBreaks) //
+                .collect(joining("\n"));
+        verifier.setSystemProperty("project-keeper:vulnerabilities", jsonlContent);
+    }
+
+    private String removeLineBreaks(final String multiLineText) {
+        return multiLineText.replace("\n", "");
     }
 
     private void updateReleaseDate(final String changeLogVersion, final String newReleaseDate) {

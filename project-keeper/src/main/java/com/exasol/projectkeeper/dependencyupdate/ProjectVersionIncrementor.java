@@ -21,6 +21,7 @@ import com.vdurmont.semver4j.Semver;
 /**
  * This class can increment the project's version.
  */
+// [impl->dsn~dependency-updater.increment-version~1]
 class ProjectVersionIncrementor {
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
     private final ProjectKeeperConfig config;
