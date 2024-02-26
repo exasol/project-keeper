@@ -32,7 +32,6 @@ jobs:
       - name: Print issues
         run: |
           echo "Issues from Action input: $ISSUES"
-        shell: bash
         env:
           ISSUES: ${{ inputs.vulnerability_issues }}
 
@@ -43,20 +42,15 @@ jobs:
           script: |
             core.setFailed('Not running on a branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch')
 
-      - name: Update dependencies (TODO)
-        shell: bash
+      - name: Update dependencies
         run: |
-          echo "Updating dependencies..."
-          echo "Updating changelog for $CREATED_ISSUES"
-          echo "File updated $(date)" >> README.md
-          echo "Issues: $CREATED_ISSUES" >> README.md
-          echo >> README.md
+          mvn --batch-mode com.exasol:project-keeper-maven-plugin:update-dependencies --projects . \
+              -Dproject-keeper:vulnerabilities="$CREATED_ISSUES"
         env:
           CREATED_ISSUES: ${{ inputs.vulnerability_issues }}
 
       - name: Generate PR comment
         id: pr-comment
-        shell: bash
         run: |
           echo 'comment<<EOF' >> "$GITHUB_OUTPUT"
           echo 'This Pull Request was created by `dependencies_update.yml` workflow' >> "$GITHUB_OUTPUT"
@@ -66,14 +60,12 @@ jobs:
           CREATED_ISSUES: ${{ inputs.vulnerability_issues }}
 
       - name: Configure git
-        shell: bash
         run: |
           git config --global user.email "opensource@exasol.com"
           git config --global user.name "Automatic Dependency Updater"
 
       - name: Create branch
         if: ${{ github.ref == 'refs/heads/main' }}
-        shell: bash
         run: |
           branch_name="dependency-update/$(date "+%Y%m%d%H%M%S")"
           echo "Creating branch $branch_name"
@@ -81,7 +73,6 @@ jobs:
 
       - name: Commit changes & push
         if: ${{ startsWith(github.ref, 'refs/heads/' ) }}
-        shell: bash
         run: |
           branch_name=$(git rev-parse --abbrev-ref HEAD)
           echo "Current branch: $branch_name, local changes:"
@@ -95,7 +86,6 @@ jobs:
 
       - name: Create pull request
         if: ${{ github.ref == 'refs/heads/main' }}
-        shell: bash
         run: |
           gh pr create --base main --title "Update dependencies" --body "$COMMENT"
         env:
