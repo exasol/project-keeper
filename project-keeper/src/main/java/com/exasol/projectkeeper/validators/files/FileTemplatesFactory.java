@@ -64,6 +64,8 @@ class FileTemplatesFactory {
                 .replacing("skipNativeImage", //
                         modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : ""));
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
+        // [impl->dsn~dependency-updater.workflow.generate~1]
+        templates.add(new FileTemplateFromResource(".github/workflows/dependencies_update.yml", REQUIRE_EXACT));
         templates.add(workflowGenerator.createReleaseDroidPrepareOriginalChecksumWorkflow());
         templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
                 REQUIRE_EXACT));
