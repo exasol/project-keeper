@@ -43,7 +43,7 @@ jobs:
       - name: Install Projects
         # This fixes https://github.com/exasol/project-keeper/issues/330
         run: |
-          mvn --batch-mode -T 1C install -DskipTests \
+          mvn --batch-mode --threads 1C install -DskipTests \
               -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true \
               -Djacoco.skip=true -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
