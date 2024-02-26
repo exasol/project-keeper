@@ -42,6 +42,16 @@ class FileTemplatesFactoryTest {
         assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom"));
     }
 
+    // [utest->dsn~dependency-updater.workflow.generate~1]
+    @Test
+    void testGenerateDependencyUpdateWorkflow() {
+        final Set<ProjectKeeperModule> modules = Collections.emptySet();
+        final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
+        final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
+        assertContainsTemplate(templates, ".github/workflows/dependencies_check.yml");
+        assertContainsTemplate(templates, ".github/workflows/dependencies_update.yml");
+    }
+
     private FileTemplatesFactory testee() {
         return testee(true);
     }

@@ -33,8 +33,7 @@ Covers:
 Needs: impl
 
 
-### Project Keeper Self Update
-
+### Project Keeper Verifies Own Version
 `dsn~verify-own-version~1`
 
 PK is able to detect its own current installed version, retrieve the latest version available for download, and to validate if the current version is not older than the latest available.
@@ -49,6 +48,7 @@ Covers:
 
 Needs: impl, utest, itest
 
+### Project Keeper Self Update
 `dsn~self-update~1`
 
 PK performs self-update only for Maven projects.
@@ -626,7 +626,7 @@ Covers:
 * [`req~auto-create-changelog~1`](system_requirements.md#automatically-create-change-log-entry)
 * [`req~auto-create-pr~1`](system_requirements.md#automatically-create-a-pull-request)
 
-Needs: dsn
+Needs: dsn, impl, utest
 
 ##### `dependencies_update.yml` Workflow Receives Vulnerability Info
 `dsn~dependency-updater.workflow.vulnerability-info~1`
@@ -648,6 +648,21 @@ Rationale:
 PK needs the vulnerability info for generating the changelog.
 
 -Needs: impl, utest, itest
+
+Covers:
+* [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
+
+##### `dependencies_update.yml` Workflow Starts PK `fix` Mode twice
+`dsn~dependency-updater.workflow.start-pk-fix~1`
+
+PK generates the `dependencies_update.yml` workflow so that it starts PK's `fix` mode twice after updating dependencies.
+
+Rationale:
+
+* After updating dependency versions, the workflow runs PK `fix` to update the dependencies section in the changes file.
+* PK `fix` will potentially update PK to a newer version in `pom.xml` (see [`dsn~self-update~1`](#project-keeper-self-update)). So the workflow runs PK `fix` a second time (using the updated PK version) to update all generated files.
+
+-Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
