@@ -1,12 +1,18 @@
-# Project Keeper 4.0.0, released 2024-??-??
+# Project Keeper 4.0.0, released 2024-02-26
 
 Code name: Automatic Security Updates
 
 ## Summary
 
+This release adds the `update-dependencies` mode ([see user guide](../user_guide/user_guide.md#update-dependencies)) and a `dependencies_update.yml` workflow.
+
+When the `dependencies_check.yml` workflow detects vulnerabilities, it will start the `dependencies_update.yml` workflow that updates dependencies to their latest versions and creates a pull request.
+
+See the [user guide](../user_guide/user_guide.md#exclude-dependencies-from-automatic-version-update) if you want to exclude some dependencies from the automatic version update.
+
 ## Features
 
-* #515: Added requirements and design for automatic dependency update
+* #515: Added automatic dependency update workflow
 
 ## Dependency Updates
 
