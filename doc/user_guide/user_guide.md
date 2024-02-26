@@ -316,7 +316,7 @@ Run the following commands to update dependencies:
 mvn project-keeper:update-dependencies
 ```
 
-Command will increment the project's patch version if the current version is already released.
+The command will increment the project's patch version if the current version is already released.
 
 #### Multi-Module Maven Projects
 
