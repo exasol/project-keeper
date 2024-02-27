@@ -56,6 +56,7 @@ jobs:
       - name: Project Keeper Fix for updated Project Keeper version
         # Calling PK fix a second time is necessary because the first invocation potentially updated PK itself.
         # So we need to run PK fix again with the latest PK version.
+        # [impl->dsn~dependency-updater.workflow.start-pk-fix~1]
         run: |
           mvn --batch-mode com.exasol:project-keeper-maven-plugin:fix --projects .
 
@@ -63,8 +64,13 @@ jobs:
         id: pr-comment
         run: |
           echo 'comment<<EOF' >> "$GITHUB_OUTPUT"
-          echo 'This Pull Request was created by `dependencies_update.yml` workflow' >> "$GITHUB_OUTPUT"
-          echo $CREATED_ISSUES | jq --raw-output '. | "Closes " + .issue_url + " (" + .cve + ")"' >> "$GITHUB_OUTPUT"
+          echo 'This Pull Request was created by [`dependencies_update.yml`](https://github.com/exasol/project-keeper/blob/main/project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml) workflow.' >> "$GITHUB_OUTPUT"
+          echo 'It updates dependencies to fix the following vulnerabilities:' >> "$GITHUB_OUTPUT"
+          echo $CREATED_ISSUES | jq --raw-output '. | "* Closes " + .issue_url + " (" + .cve + ")"' >> "$GITHUB_OUTPUT"
+          echo >> "$GITHUB_OUTPUT"
+          echo '# ⚠️ Checks don't run for this PR by default ⚠️' >> "$GITHUB_OUTPUT"
+          echo 'Please click the **Close pull request** button and then **Reopen pull request** to trigger running checks.' >> "$GITHUB_OUTPUT"
+          echo 'See https://github.com/exasol/project-keeper/issues/534 for details.' >> "$GITHUB_OUTPUT"
           echo 'EOF' >> "$GITHUB_OUTPUT"
         env:
           CREATED_ISSUES: ${{ inputs.vulnerability_issues }}
