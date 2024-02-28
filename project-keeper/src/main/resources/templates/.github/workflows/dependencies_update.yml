@@ -68,7 +68,7 @@ jobs:
           echo 'It updates dependencies to fix the following vulnerabilities:' >> "$GITHUB_OUTPUT"
           echo $CREATED_ISSUES | jq --raw-output '. | "* Closes " + .issue_url + " (" + .cve + ")"' >> "$GITHUB_OUTPUT"
           echo >> "$GITHUB_OUTPUT"
-          echo '# ⚠️ Checks don't run for this PR by default ⚠️' >> "$GITHUB_OUTPUT"
+          echo '# ⚠️ This PR does not trigger CI workflows by default ⚠️' >> "$GITHUB_OUTPUT"
           echo 'Please click the **Close pull request** button and then **Reopen pull request** to trigger running checks.' >> "$GITHUB_OUTPUT"
           echo 'See https://github.com/exasol/project-keeper/issues/534 for details.' >> "$GITHUB_OUTPUT"
           echo 'EOF' >> "$GITHUB_OUTPUT"
@@ -95,7 +95,7 @@ jobs:
           git diff --stat
           git diff --numstat
           echo "Committing changes..."
-          git commit --all --message "Update dependencies"
+          git commit --all --message "🔐 Update dependencies to fix vulnerabilities"
           echo "Pushing branch $branch_name..."
           git push --set-upstream origin $branch_name
           echo "Done."
@@ -103,7 +103,7 @@ jobs:
       - name: Create pull request
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          gh pr create --base main --title "Update dependencies" --body "$COMMENT"
+          gh pr create --base main --title "🔐 Update dependencies to fix vulnerabilities" --body "$COMMENT"
         env:
           COMMENT: ${{ steps.pr-comment.outputs.comment }}
           GH_TOKEN: ${{ github.token }}

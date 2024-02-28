@@ -662,7 +662,7 @@ Rationale:
 * After updating dependency versions, the workflow runs PK `fix` to update the dependencies section in the changes file.
 * PK `fix` will potentially update PK to a newer version in `pom.xml` (see [`dsn~self-update~1`](#project-keeper-self-update)). So the workflow runs PK `fix` a second time (using the updated PK version) to update all generated files.
 
--Needs: impl
+Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
