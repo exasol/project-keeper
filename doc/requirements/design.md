@@ -696,6 +696,23 @@ Note: Implementing this in a workflow makes it hard to do integration tests. We 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
+##### `dependencies_update.yml` Workflow Trigger Pull Request CI Build Manually
+`dsn~dependency-updater.workflow.pull-request-trigger-ci-build~1`
+
+PK generates the `dependencies_update.yml` workflow so that it adds a note to the [created Pull Request](#dependencies_updateyml-workflow-creates-a-pull-request) that instructs the user how to trigger the CI build for the Pull Request.
+
+Rationale:
+
+* When the `dependencies_update.yml` creates the PR with dependency updates using the default `GITHUB_TOKEN`, the checks for this PR don't run initially.
+  * See the [GitHub documentation](https://docs.github.com/en/actions/using-workflows/triggering-a-workflow#triggering-a-workflow-from-a-workflow) about triggering workflows with `GITHUB_TOKEN`.
+* This [list](https://github.com/peter-evans/create-pull-request/blob/main/docs/concepts-guidelines.md#triggering-further-workflow-runs) suggests possible workarounds for triggering the PR checks:
+  * Tell the user to modify the PR (e.g. by closing and reopening it)
+  * Use an alterative GitHub token for creating the PR, i.e. a Personal Access Token (PAT) or a GitHub App Token
+* We decided to accept the inconvenience of the manual step and avoid the trouble of configuring the additional token.
+* If necessary we can chose a different implementation later.
+
+Needs: impl
+
 #### Generate `release.yml` workflow
 `dsn~release-workflow.generate~1`
 

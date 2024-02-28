@@ -62,6 +62,7 @@ jobs:
 
       - name: Generate PR comment
         id: pr-comment
+        # [impl->dsn~dependency-updater.workflow.pull-request-trigger-ci-build~1]
         run: |
           echo 'comment<<EOF' >> "$GITHUB_OUTPUT"
           echo 'This Pull Request was created by [`dependencies_update.yml`](https://github.com/exasol/project-keeper/blob/main/project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml) workflow.' >> "$GITHUB_OUTPUT"
