@@ -60,7 +60,8 @@ public final class ChangesFileSection {
 
     @Override
     public String toString() {
-        return heading + "\n" + String.join("\n", this.content);
+        final String text = heading + "\n" + String.join("\n", this.content);
+        return text.replaceAll("(?m)\n{3,}", "\n\n");
     }
 
     /**

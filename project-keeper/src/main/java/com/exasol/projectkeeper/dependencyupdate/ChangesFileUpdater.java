@@ -1,10 +1,11 @@
 package com.exasol.projectkeeper.dependencyupdate;
 
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 import java.nio.file.Path;
-import java.util.*;
-import java.util.function.Predicate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -57,25 +58,23 @@ class ChangesFileUpdater {
 
         private ChangesFile update() {
             return changesFile.toBuilder() //
-                    .codeName(append(changesFile.getCodeName(), ", ", createCodeName())) //
+                    .codeName(createCodeName()) //
                     .summary(createSummary()) //
                     .sections(createOtherSections()) //
                     .build();
         }
 
         private String createCodeName() {
+            String codeName = changesFile.getCodeName() != null ? changesFile.getCodeName().trim() : "";
+            codeName += codeName.isBlank() ? "Fixed " : ", fixed ";
             if (vulnerabilities.size() == 1) {
                 final Vulnerability vulnerability = vulnerabilities.get(0);
-                return "Fixed vulnerability " + vulnerability.cve() + " in " + vulnerability.coordinates();
+                codeName += "vulnerability " + vulnerability.cve() + " in " + vulnerability.coordinates();
+            } else {
+                codeName += "vulnerabilities "
+                        + vulnerabilities.stream().map(Vulnerability::cve).collect(joining(", "));
             }
-            return "Fixed vulnerabilities " + vulnerabilities.stream().map(Vulnerability::cve).collect(joining(", "));
-        }
-
-        private String append(final String currentText, final String separator, final String newText) {
-            return Optional.ofNullable(currentText) //
-                    .filter(Predicate.not(String::isBlank)) //
-                    .map(text -> text + separator + newText) //
-                    .orElse(newText);
+            return codeName;
         }
 
         private ChangesFileSection createSummary() {
@@ -107,8 +106,20 @@ class ChangesFileUpdater {
             final List<ChangesFileSection> sections = new ArrayList<>();
             sections.add(buildSecuritySection());
             sections.addAll(changesFile.getSections().stream()
-                    .filter(section -> !section.getHeading().equals(SECURITY_SECTION_HEADER)).toList());
+                    .filter(section -> !section.getHeading().equals(SECURITY_SECTION_HEADER)) //
+                    .filter(not(this::isDefaultFeaturesSection)).toList());
             return sections;
+        }
+
+        private boolean isDefaultFeaturesSection(final ChangesFileSection section) {
+            if (!section.getHeading().equals(ChangesFileValidator.FEATURES_SECTION)) {
+                return false;
+            }
+            return section.getContent().stream() //
+                    .map(String::trim) //
+                    .filter(not(String::isEmpty)) //
+                    .filter(line -> !line.equals(ChangesFileValidator.FIXED_ISSUE_TEMPLATE)) //
+                    .findAny().isEmpty();
         }
 
         private ChangesFileSection buildSecuritySection() {
