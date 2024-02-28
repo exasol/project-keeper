@@ -67,6 +67,7 @@ jobs:
 
       - name: Generate PR comment
         id: pr-comment
+        # [impl->dsn~dependency-updater.workflow.pull-request-trigger-ci-build~1]
         run: |
           echo 'comment<<EOF' >> "$GITHUB_OUTPUT"
           echo 'This Pull Request was created by [`dependencies_update.yml`](https://github.com/exasol/project-keeper/blob/main/project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml) workflow.' >> "$GITHUB_OUTPUT"
@@ -96,13 +97,19 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/heads/' ) }}
         run: |
           branch_name=$(git rev-parse --abbrev-ref HEAD)
-          echo "Current branch: $branch_name, local changes:"
+          echo "Current branch: $branch_name"
+          echo "git diff --stat"
           git diff --stat
+          echo "git diff --numstat"
           git diff --numstat
+          echo "git diff --name-status"
+          git diff --name-status
+          echo "Adding untracked files:"
+          git add . --verbose --all
           echo "Committing changes..."
-          git commit --all --message "🔐 Update dependencies to fix vulnerabilities"
+          git commit --message "🔐 Update dependencies to fix vulnerabilities"
           echo "Pushing branch $branch_name..."
-          git push --set-upstream origin $branch_name
+          git push --set-upstream origin "$branch_name"
           echo "Done."
 
       - name: Create pull request

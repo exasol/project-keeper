@@ -92,13 +92,19 @@ jobs:
         if: ${{ startsWith(github.ref, 'refs/heads/' ) }}
         run: |
           branch_name=$(git rev-parse --abbrev-ref HEAD)
-          echo "Current branch: $branch_name, local changes:"
+          echo "Current branch: $branch_name"
+          echo "git diff --stat"
           git diff --stat
+          echo "git diff --numstat"
           git diff --numstat
+          echo "git diff --name-status"
+          git diff --name-status
+          echo "Adding untracked files:"
+          git add . --verbose --all
           echo "Committing changes..."
-          git commit --all --message "🔐 Update dependencies to fix vulnerabilities"
+          git commit --message "🔐 Update dependencies to fix vulnerabilities"
           echo "Pushing branch $branch_name..."
-          git push --set-upstream origin $branch_name
+          git push --set-upstream origin "$branch_name"
           echo "Done."
 
       - name: Create pull request
