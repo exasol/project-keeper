@@ -9,13 +9,13 @@ import static org.mockito.Mockito.*;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.*;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -156,6 +156,33 @@ class ChangesFileUpdaterTest {
         }
         assertThat(updatedSections, hasSize(test.expected.size()));
         assertThat(updatedSections, equalTo(test.expected));
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = { "* ISSUE_NUMBER: description", " * ISSUE_NUMBER: description",
+            "* ISSUE_NUMBER: description ", "\t* ISSUE_NUMBER: description", "* ISSUE_NUMBER: description\n" })
+    void defaultFeatureSectionRemoved(final String fixedIssuesTemplate) {
+        final Builder builder = ChangesFile.builder();
+        builder.addSection(
+                ChangesFileSection.builder("## Features").addLine("").addLine(fixedIssuesTemplate).addLine("").build());
+        final List<ChangesFileSection> updatedSections = getUpdatedChanges(List.of(vulnerability(1)), builder.build())
+                .getSections();
+        final Optional<ChangesFileSection> featuresSection = updatedSections.stream()
+                .filter(section -> section.getHeading().equals("## Features")).findAny();
+        assertThat("Features section was removed", featuresSection.isEmpty(), is(true));
+    }
+
+    @Test
+    void nonDefaultFeatureSectionNotRemoved() {
+        final Builder builder = ChangesFile.builder();
+        final ChangesFileSection originalFeaturesSection = ChangesFileSection.builder("## Features").addLine("")
+                .addLine("* #1: Fixed a bug").addLine("* ISSUE_NUMBER: description").addLine("").build();
+        builder.addSection(originalFeaturesSection);
+        final List<ChangesFileSection> updatedSections = getUpdatedChanges(List.of(vulnerability(1)), builder.build())
+                .getSections();
+        final Optional<ChangesFileSection> featuresSection = updatedSections.stream()
+                .filter(section -> section.getHeading().equals("## Features")).findAny();
+        assertThat(featuresSection.get(), equalTo(originalFeaturesSection));
     }
 
     private static ChangesFileSection securitySection(final String... lines) {

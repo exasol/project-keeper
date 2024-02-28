@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.dependencyupdate;
 
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 import java.nio.file.Path;
@@ -105,8 +106,20 @@ class ChangesFileUpdater {
             final List<ChangesFileSection> sections = new ArrayList<>();
             sections.add(buildSecuritySection());
             sections.addAll(changesFile.getSections().stream()
-                    .filter(section -> !section.getHeading().equals(SECURITY_SECTION_HEADER)).toList());
+                    .filter(section -> !section.getHeading().equals(SECURITY_SECTION_HEADER)) //
+                    .filter(not(this::isDefaultFeaturesSection)).toList());
             return sections;
+        }
+
+        private boolean isDefaultFeaturesSection(final ChangesFileSection section) {
+            if (!section.getHeading().equals(ChangesFileValidator.FEATURES_SECTION)) {
+                return false;
+            }
+            return section.getContent().stream() //
+                    .map(String::trim) //
+                    .filter(not(String::isEmpty)) //
+                    .filter(line -> !line.equals(ChangesFileValidator.FIXED_ISSUE_TEMPLATE)) //
+                    .findAny().isEmpty();
         }
 
         private ChangesFileSection buildSecuritySection() {

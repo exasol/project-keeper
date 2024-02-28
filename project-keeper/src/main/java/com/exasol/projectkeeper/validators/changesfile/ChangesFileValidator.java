@@ -17,6 +17,8 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
  */
 public class ChangesFileValidator extends AbstractFileValidator {
+    public static final String FIXED_ISSUE_TEMPLATE = "* ISSUE_NUMBER: description";
+    public static final String FEATURES_SECTION = "## Features";
     private final String projectName;
     private final List<AnalyzedSource> sources;
     private final String projectVersion;
@@ -77,8 +79,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
                 .releaseDate(releaseDate) //
                 .codeName("") //
                 .summary(ChangesFileSection.builder("## Summary").build())
-                .addSection(ChangesFileSection.builder("## Features").addLines("", "* ISSUE_NUMBER: description", "")
-                        .build()) //
+                .addSection(ChangesFileSection.builder(FEATURES_SECTION).addLines("", FIXED_ISSUE_TEMPLATE, "").build()) //
                 .build();
         return fixSections(changesFile);
     }
