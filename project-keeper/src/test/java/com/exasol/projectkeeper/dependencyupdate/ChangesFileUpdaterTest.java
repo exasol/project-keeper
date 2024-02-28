@@ -59,9 +59,9 @@ class ChangesFileUpdaterTest {
                 testCase(null, List.of(vulnerability(1), vulnerability(2)), "Fixed vulnerabilities cve-1, cve-2"), //
                 testCase("", List.of(vulnerability(1), vulnerability(2)), "Fixed vulnerabilities cve-1, cve-2"), //
                 testCase("Existing Text", List.of(vulnerability(1)),
-                        "Existing Text, Fixed vulnerability cve-1 in coordinates-1"), //
+                        "Existing Text, fixed vulnerability cve-1 in coordinates-1"), //
                 testCase("Existing Text", List.of(vulnerability(1), vulnerability(2)),
-                        "Existing Text, Fixed vulnerabilities cve-1, cve-2") //
+                        "Existing Text, fixed vulnerabilities cve-1, cve-2") //
         );
     }
 
