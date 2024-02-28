@@ -1,8 +1,10 @@
 # Project Keeper 4.1.0, released 2024-??-??
 
-Code name: ???
+Code name: Trigger PR CI build
 
 ## Summary
+
+This release updates the comment of the dependency updating Pull Request to instruct the user how to trigger the CI build for the Pull Request.
 
 ## Bugfixes
 
