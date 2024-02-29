@@ -53,25 +53,13 @@ jobs:
         env:
           CREATED_ISSUES: ${{ steps.security-issues.outputs.created-issues }}
 
-      - name: Report Status to Slack channel
-        if: always()
-        uses: ravsamhq/notify-slack-action@v2
-        with:
-          status: ${{ job.status }}
-          token: ${{ secrets.GITHUB_TOKEN }}
-          notification_title: "Dependency check in {repo} has {status_message}"
-          message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
-          notify_when: "failure,cancelled,warnings,skipped"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK }}
-
   start_dependency_udpate:
     needs: report_security_issues
     if: ${{ needs.report_security_issues.outputs.created-issues }}
     concurrency:
       cancel-in-progress: true
       group: "dependency_update"
-    secrets: inherit
+    secrets: inherit # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
     permissions:
       contents: write
       pull-requests: write

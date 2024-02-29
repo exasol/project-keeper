@@ -6,6 +6,10 @@ Code name: Trigger PR CI build
 
 This release updates the comment of the dependency updating Pull Request to instruct the user how to trigger the CI build for the Pull Request. It also sends Slack notifications when the dependency check or update fails.
 
+### Migration Guide
+
+When upgrading a repository to the new version make sure that the repository has access to GitHub secret `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK`. This is required for Slack notifications for new Pull Requests. The workflows will still run but won't send notifications if the secret is missing.
+
 ## Features
 
 * #536: Added Slack notification when dependency check or update fails
