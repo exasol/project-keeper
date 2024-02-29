@@ -347,6 +347,24 @@ cd path/to/project
 
 The standalone variant supports the same goals as the Maven plugin: `fix`, `verify` and `update-dependencies`.
 
+## Generated GitHub Workflows
+
+PK generates the following GitHub scheduled Workflows:
+
+### [`broken_links_checker.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/broken_links_checker.yml)
+
+Scheduled weekly, checks Markdown files for broken links.
+
+### [`dependencies_check.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_check.yml)
+
+Scheduled daily, checks the Maven project for vulnerable dependencies, creates new issues using [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) and starts the [`dependencies_update.yml`](#dependencies_updateyml) workflow that updates dependencies.
+
+### [`dependencies_update.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml)
+
+This workflow is triggered manually or by workflow [`dependencies_check.yml`](#dependencies_checkyml). It updates dependencies, creates a changelog with fixed vulnerabilities and creates a new Pull Requests.
+
+In order to send notifications, this workflow requires GitHub secret `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK`.
+
 ## Troubleshooting
 
 **Problem:** Validation on CI fails but succeeds locally. In the CI PK wants to list all dependencies as `Added`.

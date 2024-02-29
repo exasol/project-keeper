@@ -1,4 +1,4 @@
-name: Report Security Issues for Repository
+name: Report Security Issues
 on:
   workflow_dispatch:
   schedule:
@@ -59,6 +59,8 @@ jobs:
     concurrency:
       cancel-in-progress: true
       group: "dependency_update"
+    # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
+    secrets: inherit
     permissions:
       contents: write
       pull-requests: write
