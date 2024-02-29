@@ -1,4 +1,4 @@
-# Project Keeper 4.1.0, released 2024-??-??
+# Project Keeper 4.1.0, released 2024-02-29
 
 Code name: Trigger PR CI build
 
