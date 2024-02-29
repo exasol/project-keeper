@@ -59,7 +59,8 @@ jobs:
     concurrency:
       cancel-in-progress: true
       group: "dependency_update"
-    secrets: inherit # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
+    # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
+    secrets: inherit
     permissions:
       contents: write
       pull-requests: write
