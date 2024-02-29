@@ -4,7 +4,11 @@ Code name: Trigger PR CI build
 
 ## Summary
 
-This release updates the comment of the dependency updating Pull Request to instruct the user how to trigger the CI build for the Pull Request.
+This release updates the comment of the dependency updating Pull Request to instruct the user how to trigger the CI build for the Pull Request. It also sends Slack notifications when the dependency check or update fails.
+
+## Features
+
+* #536: Added Slack notification when dependency check or update fails
 
 ## Bugfixes
 

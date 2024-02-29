@@ -4,7 +4,7 @@ on:
     inputs:
       vulnerability_issues:
         description: "GitHub issues for vulnerable dependencies as JSONL"
-        required: false
+        required: true
         type: string
   workflow_dispatch:
 
@@ -17,6 +17,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up JDKs
         uses: actions/setup-java@v4
@@ -65,19 +67,40 @@ jobs:
         run: |
           mvn --batch-mode com.exasol:project-keeper-maven-plugin:fix --projects .
 
-      - name: Generate PR comment
+      - name: Generate Pull Request comment
         id: pr-comment
         # [impl->dsn~dependency-updater.workflow.pull-request-trigger-ci-build~1]
         run: |
           echo 'comment<<EOF' >> "$GITHUB_OUTPUT"
           echo 'This Pull Request was created by [`dependencies_update.yml`](https://github.com/exasol/project-keeper/blob/main/project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml) workflow.' >> "$GITHUB_OUTPUT"
-          echo 'It updates dependencies to fix the following vulnerabilities:' >> "$GITHUB_OUTPUT"
-          echo $CREATED_ISSUES | jq --raw-output '. | "* Closes " + .issue_url + " (" + .cve + ")"' >> "$GITHUB_OUTPUT"
+          if [ -n "$CREATED_ISSUES" ]; then
+            echo 'It updates dependencies to fix the following vulnerabilities:' >> "$GITHUB_OUTPUT"
+            echo $CREATED_ISSUES | jq --raw-output '. | "* Closes " + .issue_url + " (" + .cve + ")"' >> "$GITHUB_OUTPUT"
+          else
+            echo 'It updates dependencies.' >> "$GITHUB_OUTPUT"
+          fi
           echo >> "$GITHUB_OUTPUT"
           echo '# ⚠️ This PR does not trigger CI workflows by default ⚠️' >> "$GITHUB_OUTPUT"
           echo 'Please click the **Close pull request** button and then **Reopen pull request** to trigger running checks.' >> "$GITHUB_OUTPUT"
           echo 'See https://github.com/exasol/project-keeper/issues/534 for details.' >> "$GITHUB_OUTPUT"
           echo 'EOF' >> "$GITHUB_OUTPUT"
+
+          cat "$GITHUB_OUTPUT"
+        env:
+          CREATED_ISSUES: ${{ inputs.vulnerability_issues }}
+
+      - name: Generate Pull Request Title
+        id: pr-title
+        run: |
+          if [ -n "$CREATED_ISSUES" ]; then
+            echo "Security issues are available"
+            echo "title=🔐 Update dependencies to fix vulnerabilities" >> "$GITHUB_OUTPUT"
+          else
+            echo "Security issues are not available"
+            echo "title=Update dependencies" >> "$GITHUB_OUTPUT"
+          fi
+
+          cat "$GITHUB_OUTPUT"
         env:
           CREATED_ISSUES: ${{ inputs.vulnerability_issues }}
 
@@ -107,15 +130,44 @@ jobs:
           echo "Adding untracked files:"
           git add . --verbose --all
           echo "Committing changes..."
-          git commit --message "🔐 Update dependencies to fix vulnerabilities"
+          git commit --message "$TITLE"
           echo "Pushing branch $branch_name..."
           git push --set-upstream origin "$branch_name"
           echo "Done."
+        env:
+          TITLE: ${{ steps.pr-title.outputs.title }}
 
       - name: Create pull request
+        id: create-pr
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          gh pr create --base main --title "🔐 Update dependencies to fix vulnerabilities" --body "$COMMENT"
+          pr_url=$(gh pr create --base main --title "$TITLE" --body "$COMMENT")
+          echo "Created Pull Request: $pr_url"
+          echo "pr_url=$pr_url" >> "$GITHUB_OUTPUT"
         env:
           COMMENT: ${{ steps.pr-comment.outputs.comment }}
+          TITLE: ${{ steps.pr-title.outputs.title }}
           GH_TOKEN: ${{ github.token }}
+
+      - name: Report failure Status to Slack channel
+        if: ${{ always() }}
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ job.status }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          notification_title: "Dependency check in {repo} has {status_message}"
+          message_format: "{emoji} *{workflow}* {status_message} in <{repo_url}|{repo}>"
+          notify_when: "failure,cancelled,warnings"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK }}
+
+      - name: Report new Pull Request to Slack channel
+        if: ${{ steps.create-pr.outputs.pr_url }}
+        uses: ravsamhq/notify-slack-action@v2
+        with:
+          status: ${{ job.status }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          notification_title: "Dependency update for {repo} created a Pull Request"
+          message_format: "{workflow} created Pull Request ${{ steps.create-pr.outputs.pr_url }}"
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK }}
