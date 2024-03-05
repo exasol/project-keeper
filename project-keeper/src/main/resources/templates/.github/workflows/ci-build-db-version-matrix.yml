@@ -10,6 +10,9 @@ on:
 jobs:
   matrix-build:
     runs-on: $ciBuildRunnerOS
+    defaults:
+      run:
+        shell: "bash"
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}
       cancel-in-progress: true

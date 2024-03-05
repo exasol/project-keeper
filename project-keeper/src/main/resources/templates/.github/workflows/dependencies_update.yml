@@ -14,6 +14,9 @@ on:
 jobs:
   update_dependencies:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
     permissions:
       contents: write
       pull-requests: write

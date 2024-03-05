@@ -9,6 +9,9 @@ on:
 jobs:
   report_security_issues:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
     permissions:
       contents: read
       issues: write
