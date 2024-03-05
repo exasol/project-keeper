@@ -3,8 +3,7 @@
 name: CI Build
 on:
   push:
-    branches:
-      - main
+    branches: ["main"]
   pull_request:
 
 jobs:
@@ -79,3 +78,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - run: echo "Build successful"
+
+  # [impl->dsn~release-workflow.ci-build-starts-release~1]
+  start_release:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      cancel-in-progress: false
+      group: "release"
+    secrets: inherit
+    permissions:
+      contents: write
+      actions: read
+    uses: ./.github/workflows/release.yml
+    with:
+      started-from-ci: true
