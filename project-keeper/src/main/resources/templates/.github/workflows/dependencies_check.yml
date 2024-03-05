@@ -57,7 +57,7 @@ jobs:
     if: ${{ needs.report_security_issues.outputs.created-issues }}
     concurrency:
       cancel-in-progress: true
-      group: "dependency_update"
+      group: "dependencies_update"
     # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
     secrets: inherit
     permissions:
