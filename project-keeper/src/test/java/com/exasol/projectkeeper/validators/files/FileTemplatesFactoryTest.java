@@ -28,6 +28,7 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 @ExtendWith(MockitoExtension.class)
 class FileTemplatesFactoryTest {
     private static final String OWN_VERSION = "version";
+    private static final String NEWLINE = System.lineSeparator();
     @Mock
     Logger loggerMock;
 
@@ -128,10 +129,10 @@ class FileTemplatesFactoryTest {
         final List<FileTemplate> templates = testee().getGlobalTemplates(List.of(rootSource, childSource));
         final Optional<FileTemplate> template = findTemplate(templates, ".github/workflows/release.yml");
         assertThat(template.get().getContent(), allOf(not(containsString("mavenCentralDeployment")),
-                containsString("- name: Publish to Central Repository\n" + //
-                        "        if: ${{ " + mavenCentral + " && (! inputs.skip-maven-central) }}\n" + //
-                        "        run: |\n" + //
-                        "          mvn --batch-mode -Dgpg.skip=false -DskipTests deploy\n")));
+                containsString("- name: Publish to Central Repository" + NEWLINE + //
+                        "        if: ${{ " + mavenCentral + " && (! inputs.skip-maven-central) }}" + NEWLINE + //
+                        "        run: |" + NEWLINE + //
+                        "          mvn --batch-mode -Dgpg.skip=false -DskipTests deploy" + NEWLINE)));
     }
 
     private void assertContainsTemplate(final List<FileTemplate> templates, final String pathInProject) {
