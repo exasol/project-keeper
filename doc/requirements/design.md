@@ -820,7 +820,7 @@ If at least one source in `.project-keeper.yml` uses the `maven_central` module,
 Covers:
 * [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 ##### `release.yml` Workflow Creates GitHub Release
 `dsn~release-workflow.create-github-release~1`

@@ -41,6 +41,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: Set up Maven Central Repository
+        if: ${{ $mavenCentralDeployment }}
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
@@ -53,6 +54,15 @@ jobs:
           server-password: MAVEN_PASSWORD
           gpg-private-key: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
+      - name: Set up JDKs
+        if: ${{ ! $mavenCentralDeployment }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: "temurin"
+          java-version: |
+            11
+            17
+          cache: "maven"
 
       # Check preconditions
 
@@ -109,13 +119,14 @@ jobs:
 
       # Maven Central Deployment
       - name: List secret GPG keys
-        if: ${{ ! inputs.skip-maven-central }}
+        if: ${{ $mavenCentralDeployment && (! inputs.skip-maven-central) }}
         run: gpg --list-secret-keys
+      # [impl->dsn~release-workflow.deploy-maven-central~1]
       - name: Publish to Central Repository
+        if: ${{ $mavenCentralDeployment && (! inputs.skip-maven-central) }}
         run: |
-          mvn --batch-mode -Dgpg.skip=false -DskipTests test # deploy
+          mvn --batch-mode -Dgpg.skip=false -DskipTests deploy
           echo "Published to Maven Central" >> "$GITHUB_STEP_SUMMARY"
-        if: ${{ ! inputs.skip-maven-central }}
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
