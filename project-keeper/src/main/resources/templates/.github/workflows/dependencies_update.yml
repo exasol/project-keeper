@@ -4,6 +4,7 @@ name: Update dependencies
 on:
   workflow_call:
     inputs:
+      # [impl->dsn~dependency-updater.workflow.vulnerability-info~1]
       vulnerability_issues:
         description: "GitHub issues for vulnerable dependencies as JSONL"
         required: true
@@ -45,6 +46,7 @@ jobs:
             core.setFailed('Not running on a branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch')
 
       - name: Update dependencies
+        # [impl->dsn~dependency-updater.workflow.start-pk-update~1]
         run: |
           mvn --batch-mode com.exasol:project-keeper-maven-plugin:update-dependencies --projects . \
               -Dproject-keeper:vulnerabilities="$CREATED_ISSUES"
@@ -64,6 +66,7 @@ jobs:
 
       - name: Generate Pull Request comment
         id: pr-comment
+        # [impl->dsn~dependency-updater.workflow.create-pull-request~1]
         # [impl->dsn~dependency-updater.workflow.pull-request-trigger-ci-build~1]
         run: |
           echo 'comment<<EOF' >> "$GITHUB_OUTPUT"

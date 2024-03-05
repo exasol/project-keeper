@@ -204,7 +204,7 @@ Covers:
 
 * [`req~verify-license-file~1`](system_requirements.md#verify-license-file)
 
-## Gitignore Validator
+### Gitignore Validator
 
 `dsn~gitignore-validator~1`
 
@@ -522,7 +522,7 @@ Rationale:
 Covers:
 * [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
 
--Needs: impl, utest, itest
+Needs: impl
 
 #### Update Dependencies Mode
 `dsn~update-dependencies-mode~1`
@@ -633,7 +633,7 @@ Needs: dsn, impl, utest
 
 PK generates the `dependencies_update.yml` workflow so that it receives information about vulnerabilities and issues as optional parameter.
 
--Needs: impl, utest, itest
+Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
@@ -647,7 +647,7 @@ Rationale:
 
 PK needs the vulnerability info for generating the changelog.
 
--Needs: impl, utest, itest
+Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
@@ -691,7 +691,7 @@ We implement this in a workflow and not in PK because
 
 Note: Implementing this in a workflow makes it hard to do integration tests. We accept that there are no integration tests for running the workflow.
 
--Needs: impl, utest, itest
+Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
