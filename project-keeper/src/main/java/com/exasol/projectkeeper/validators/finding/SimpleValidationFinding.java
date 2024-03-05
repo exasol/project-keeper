@@ -30,14 +30,7 @@ public final class SimpleValidationFinding implements ValidationFinding {
     private final boolean isOptional;
     private final Fix fix;
 
-    /**
-     * Create a new instance of {@link SimpleValidationFinding}.
-     *
-     * @param message    error message
-     * @param isOptional whether fixing this finding is mandatory or finding can be accepted (for a while)
-     * @param fix        function that fixes the error.
-     */
-    public SimpleValidationFinding(final String message, final boolean isOptional, final Fix fix) {
+    private SimpleValidationFinding(final String message, final boolean isOptional, final Fix fix) {
         this.message = message;
         this.isOptional = isOptional;
         this.fix = fix;

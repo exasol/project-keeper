@@ -892,7 +892,7 @@ Rationale:
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 #### `verify-release` Mode Checks All Issues are Closed
 `dsn~verify-release-mode.verify-issues-closed~1`

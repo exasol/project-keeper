@@ -19,10 +19,12 @@ public class ProjectKeeperLauncher {
     }
     private static final Logger LOGGER = Logger.getLogger(ProjectKeeperLauncher.class.getName());
     private static final String GOAL_VERIFY = "verify";
+    private static final String GOAL_VERIFY_RELEASE = "verify-release";
     private static final String GOAL_FIX = "fix";
     private static final String GOAL_UPDATE_DEPENDENCIES = "update-dependencies";
     private static final Map<String, ProjectKeeperGoal> ACCEPT_GOALS = Map.of( //
             GOAL_VERIFY, ProjectKeeper::verify, //
+            GOAL_VERIFY_RELEASE, ProjectKeeper::verifyRelease, //
             GOAL_FIX, ProjectKeeper::fix, //
             GOAL_UPDATE_DEPENDENCIES, ProjectKeeper::updateDependencies //
     );

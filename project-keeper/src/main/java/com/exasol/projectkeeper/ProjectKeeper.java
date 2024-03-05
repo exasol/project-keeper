@@ -26,6 +26,7 @@ import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
+import com.exasol.projectkeeper.validators.release.ReleaseValidationBuilder;
 
 /**
  * This is the entry-point class of project-keeper-core.
@@ -94,6 +95,10 @@ public class ProjectKeeper {
         return List.of(this::phase0, this::phase1, this::phase2, this::phase3);
     }
 
+    private List<Function<ValidationPhase.Provision, ValidationPhase>> getReleaseValidationPhases() {
+        return List.of(this::phase0, this::phase1, this::phase2, this::phase3, this::releaseValidationPhase);
+    }
+
     /*
      * Phase 0 must run before the project file validation, because the project file validation depends on them.
      */
@@ -160,6 +165,11 @@ public class ProjectKeeper {
         return new ValidationPhase(provision, validators);
     }
 
+    private ValidationPhase releaseValidationPhase(final ValidationPhase.Provision provision) {
+        final ReleaseValidationBuilder builder = new ReleaseValidationBuilder(provision.projectVersion(), projectDir);
+        return new ValidationPhase(provision, builder.validators());
+    }
+
     private String getProjectName(final List<AnalyzedSource> analyzedSources) {
         return humanReadable(analyzedSources.size() == 1 //
                 ? analyzedSources.get(0).getProjectName()
@@ -181,7 +191,7 @@ public class ProjectKeeper {
      * @return {@code true} if project is valid
      */
     public boolean verify() {
-        return runValidationPhases(this::handleVerifyFindings);
+        return runValidationPhases(getValidationPhases(), this::handleVerifyFindings);
     }
 
     private boolean handleVerifyFindings(final List<ValidationFinding> findings) {
@@ -217,25 +227,40 @@ public class ProjectKeeper {
     }
 
     /**
+     * Verify the project structure for a release.
+     * <p>
+     * PK interprets the validation as "successful" if there are no mandatory findings. Optional findings are ignored in
+     * this place.
+     * </p>
+     *
+     * @return {@code true} if project is valid
+     */
+    public boolean verifyRelease() {
+        return runValidationPhases(getReleaseValidationPhases(), this::handleVerifyFindings);
+    }
+
+    /**
      * Fix all project findings.
      *
      * @return {@code true} if all mandatory findings could be fixed
      */
     public boolean fix() {
-        return runValidationPhases(this::fixFindings);
+        return runValidationPhases(getValidationPhases(), this::fixFindings);
     }
 
     /**
      * Run the validation phase handler.
      *
+     * @param validationPhases   validation phases to run
      * @param phaseResultHandler function List<ValidationFinding> -> boolean that is called after each phase. If the
      *                           function returns {@code false} this method aborts the execution and returns
      *                           {@code false}.
      * @return {@code true} if all {@link PhaseResultHandler} returned {@code true}. {@code false otherwise}
      */
-    private boolean runValidationPhases(final PhaseResultHandler phaseResultHandler) {
+    private boolean runValidationPhases(final List<Function<Provision, ValidationPhase>> validationPhases,
+            final PhaseResultHandler phaseResultHandler) {
         Provision provision = null;
-        for (final Function<Provision, ValidationPhase> phaseSupplier : getValidationPhases()) {
+        for (final Function<Provision, ValidationPhase> phaseSupplier : validationPhases) {
             final ValidationPhase phase = phaseSupplier.apply(provision);
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());
