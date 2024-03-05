@@ -19,26 +19,6 @@ class CiBuildWorkflowGeneratorTest {
     private static String NL = System.lineSeparator();
 
     @Test
-    void rdOrgChecksumContainsRunnerOs() {
-        assertThat(releaseDroidOriginalChecksumContent(BuildOptions.builder().runnerOs("my-runner-os")),
-                containsString("runs-on: my-runner-os"));
-    }
-
-    @Test
-    void rdOrgChecksumDoesNotFreeDiskSpace() {
-        assertThat(releaseDroidOriginalChecksumContent(BuildOptions.builder().freeDiskSpace(false)),
-                containsString("- name: Free Disk Space" + NL + //
-                        "        if: ${{ false }}"));
-    }
-
-    @Test
-    void rdOrgChecksumDoesFreeDiskSpace() {
-        assertThat(releaseDroidOriginalChecksumContent(BuildOptions.builder().freeDiskSpace(true)),
-                containsString("- name: Free Disk Space" + NL + //
-                        "        if: ${{ true }}"));
-    }
-
-    @Test
     void ciBuildContainsRunnerOs() {
         assertThat(ciBuildContent(BuildOptions.builder().runnerOs("my-runner-os")),
                 containsString("runs-on: my-runner-os"));
@@ -89,16 +69,6 @@ class CiBuildWorkflowGeneratorTest {
                 containsString("- name: Sonar analysis" + NL
                         + "        if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}") //
         ));
-    }
-
-    private String releaseDroidOriginalChecksumContent(final BuildOptions.Builder optionsBuilder) {
-        final FileTemplate template = testee(optionsBuilder).createReleaseDroidPrepareOriginalChecksumWorkflow();
-        final String content = template.getContent();
-        assertAll(() -> assertThat(template.getValidation(), equalTo(Validation.REQUIRE_EXACT)),
-                () -> assertThat(template.getPathInProject(),
-                        equalTo(Path.of(".github/workflows/release_droid_prepare_original_checksum.yml"))),
-                () -> validateYamlSyntax(content));
-        return content;
     }
 
     private String ciBuildContent(final BuildOptions.Builder optionsBuilder) {

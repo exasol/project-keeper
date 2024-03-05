@@ -12,13 +12,6 @@ class CiBuildWorkflowGenerator {
         this.buildOptions = buildOptions;
     }
 
-    FileTemplate createReleaseDroidPrepareOriginalChecksumWorkflow() {
-        return new FileTemplateFromResource(".github/workflows/release_droid_prepare_original_checksum.yml",
-                REQUIRE_EXACT) //
-                .replacing("ciBuildRunnerOS", buildOptions.getRunnerOs())
-                .replacing("freeDiskSpace", String.valueOf(buildOptions.shouldFreeDiskSpace()));
-    }
-
     FileTemplateFromResource createCiBuildWorkflow() {
         final FileTemplateFromResource template = new FileTemplateFromResource(
                 "templates/.github/workflows/" + getCiBuildTemplate(), ".github/workflows/ci-build.yml", REQUIRE_EXACT)

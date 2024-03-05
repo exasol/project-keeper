@@ -18,15 +18,13 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 // [impl->dsn~deleted-files-validator~1]
 public class DeletedFilesValidator implements Validator {
+    private static final String RELEASE_DROID_WORKFLOW_WARNING = "Release-droid workflows are replaced by release.yml";
     private static final String GITHUB_WORKFLOWS = ".github/workflows";
     private static final Map<Path, String> FILES_THAT_MUST_NOT_EXIST = Map.of(//
-            Path.of(GITHUB_WORKFLOWS, "maven.yml"), "We renamed maven.yml to dependencies_check.yml", //
-            Path.of("assembly", "all-dependencies.xml"),
-            "We moved assembly/all-dependencies.xml to src/assembly/all-dependencies.xml",
-            Path.of(GITHUB_WORKFLOWS, "maven_central_release.yml"),
-            "We renamed maven.yml to release_droid_release_on_maven_central.yml",
-            Path.of(GITHUB_WORKFLOWS, "github_release.yml"),
-            "We renamed maven.yml to release_droid_upload_github_release_assets.yml");
+            Path.of(GITHUB_WORKFLOWS, "release_droid_print_quick_checksum.yml"), RELEASE_DROID_WORKFLOW_WARNING,
+            Path.of(GITHUB_WORKFLOWS, "release_droid_release_on_maven_central.yml"), RELEASE_DROID_WORKFLOW_WARNING,
+            Path.of(GITHUB_WORKFLOWS, "release_droid_upload_github_release_assets.yml"), RELEASE_DROID_WORKFLOW_WARNING,
+            Path.of(GITHUB_WORKFLOWS, "release_droid_prepare_original_checksum.yml"), RELEASE_DROID_WORKFLOW_WARNING);
     private final Path projectDirectory;
 
     /**

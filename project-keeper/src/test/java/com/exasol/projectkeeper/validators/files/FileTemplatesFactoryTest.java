@@ -82,10 +82,10 @@ class FileTemplatesFactoryTest {
     }
 
     @Test
-    void testGetMavenCentralCiBuildTemplatesForMavenProject() {
-        final List<AnalyzedSource> sources = getMavenSourceWithModules(Set.of(MAVEN_CENTRAL));
+    void testReleaseWorkflow() {
+        final List<AnalyzedSource> sources = getMavenSourceWithModules(Set.of());
         final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
-        assertContainsTemplate(templates, ".github/workflows/release_droid_release_on_maven_central.yml");
+        assertContainsTemplate(templates, ".github/workflows/release.yml");
     }
 
     @ParameterizedTest

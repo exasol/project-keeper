@@ -173,7 +173,7 @@ build:
   runnerOs: ubuntu-20.04
 ```
 
-PK will use this setting for GitHub workflows `ci-build.yml` and `release_droid_prepare_original_checksum.yml` which run integration tests. The other workflows don't run integration tests and will stick to the default `ubuntu-latest`.
+PK will use this setting for GitHub workflow `ci-build.yml` which runs integration tests. The other workflows don't run integration tests and will stick to the default `ubuntu-latest`.
 
 #### Free Disk Space
 

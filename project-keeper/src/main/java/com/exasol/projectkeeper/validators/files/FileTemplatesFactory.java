@@ -44,10 +44,6 @@ class FileTemplatesFactory {
                 .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(sources, mvnRoot.get().getModules()));
-            if (mvnRoot.get().getModules().contains(MAVEN_CENTRAL)) {
-                templates.add(new FileTemplateFromResource(
-                        ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
-            }
         } else {
             templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
@@ -68,16 +64,11 @@ class FileTemplatesFactory {
         // [impl->dsn~dependency-updater.workflow.generate~1]
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_update.yml", REQUIRE_EXACT));
         templates.add(getReleaseWorkflow(sources));
-        templates.add(workflowGenerator.createReleaseDroidPrepareOriginalChecksumWorkflow());
-        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
-                REQUIRE_EXACT));
-        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_upload_github_release_assets.yml",
-                REQUIRE_EXACT));
         return templates;
     }
 
     // [impl->dsn~release-workflow.deploy-maven-central~1]
-    private FileTemplateFromResource getReleaseWorkflow(final List<AnalyzedSource> sources) {
+    FileTemplateFromResource getReleaseWorkflow(final List<AnalyzedSource> sources) {
         return new FileTemplateFromResource(".github/workflows/release.yml", REQUIRE_EXACT)
                 .replacing("mavenCentralDeployment", mavenCentralDeploymentRequired(sources) ? "true" : "false");
     }
