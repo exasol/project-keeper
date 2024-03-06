@@ -1,12 +1,12 @@
 # Project Keeper 4.2.0, released 2024-??-??
 
-Code name: Automatic Release Process
+Code name: Automated Release Process
 
 ## Summary
 
 ## Features
 
-* #516: Added automatic release workflow
+* #516: Added automated release workflow
 
 ## Dependency Updates
 

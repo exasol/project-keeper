@@ -638,7 +638,7 @@ Needs: impl
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
-#### `dependencies_update.yml` Workflow Starts PK `update-dependencies` Mode
+#### Workflow `dependencies_update.yml` Starts PK Mode `update-dependencies` 
 `dsn~dependency-updater.workflow.start-pk-update~1`
 
 PK generates the `dependencies_update.yml` workflow so that it starts PK's [`update-dependencies` mode](#update-dependencies-mode), passing information about vulnerabilities.
@@ -696,7 +696,7 @@ Needs: impl
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
-#### `dependencies_update.yml` Workflow Trigger Pull Request CI Build Manually
+#### Workflow `dependencies_update.yml` Requires to Trigger Pull Request CI Build Manually
 `dsn~dependency-updater.workflow.pull-request-trigger-ci-build~1`
 
 PK generates the `dependencies_update.yml` workflow so that it adds a note to the [created Pull Request](#dependencies_updateyml-workflow-creates-a-pull-request) that instructs the user how to trigger the CI build for the Pull Request.
@@ -713,9 +713,9 @@ Rationale:
 
 Needs: impl
 
-## Automatic Release Process
+## Automated Release Process
 
-### Generate `release.yml` workflow
+### Generate Workflow `release.yml` 
 `dsn~release-workflow.generate~1`
 
 PK generates the `release.yml` GitHub workflow for Maven projects. This workflow runs the build, releases to Maven Central and on GitHub.
@@ -778,7 +778,7 @@ Needs: impl
 PK generates the `release.yml` workflow so that it verifies that workflow `ci-build.yml` ran successfully on `main` branch for the current commit.
 
 Rationale:
-* This ensures that tests succeeded before creating the release when the user started `release.yml` manually.
+* This ensures that tests succeeded before creating the release when the user started the workflow `release.yml` manually.
 
 Covers:
 * [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
@@ -938,7 +938,7 @@ Needs: dsn
 ##### `verify-release` Mode Outputs Project Version
 `dsn~verify-release-mode.output-parameters.project-version~1`
 
-PK's `verify-release` mode outputs project version as GitHub Output Parameters.
+PK mode `verify-release` publishes the project version as GitHub Output Parameter.
 
 Rationale:
 * The project version is required for creating the GitHub release tag.
@@ -951,7 +951,7 @@ Covers:
 ##### `verify-release` Mode Outputs Code Name
 `dsn~verify-release-mode.output-parameters.code-name~1`
 
-PK's `verify-release` mode outputs the code name from the changes file as GitHub Output Parameters.
+PK mode `verify-release` adds the code name from the changes file to the GitHub Output Parameters.
 
 Rationale:
 * The code name is used as title for the GitHub release.
