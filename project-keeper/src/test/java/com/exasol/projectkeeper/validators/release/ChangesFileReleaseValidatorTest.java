@@ -51,7 +51,6 @@ class ChangesFileReleaseValidatorTest {
 
     @Test
     void closedIssuesNoIssuesMentioned() {
-        when(gitHubAdapterMock.getClosedIssues()).thenReturn(emptySet());
         final List<String> findings = findings(ChangesFile.builder().releaseDate(TODAY));
         assertThat(findings, empty());
     }
