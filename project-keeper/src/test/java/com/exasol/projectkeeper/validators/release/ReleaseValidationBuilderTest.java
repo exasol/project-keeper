@@ -22,6 +22,7 @@ import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 class ReleaseValidationBuilderTest {
     private static final Path PROJECT_DIR = Path.of("project-dir");
     private static final String PROJECT_VERSION = "1.2.3";
+    private static final String REPO_NAME = "repo-name";
 
     @Mock
     ChangesFileIO changesFileIOMock;
@@ -58,6 +59,6 @@ class ReleaseValidationBuilderTest {
     }
 
     private ReleaseValidationBuilder testee() {
-        return new ReleaseValidationBuilder(PROJECT_VERSION, PROJECT_DIR, changesFileIOMock);
+        return new ReleaseValidationBuilder(REPO_NAME, PROJECT_VERSION, PROJECT_DIR, changesFileIOMock);
     }
 }

@@ -1,32 +1,37 @@
 package com.exasol.projectkeeper.validators.release;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toSet;
 
 import java.nio.file.Path;
 import java.time.*;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
+import com.exasol.projectkeeper.validators.changesfile.FixedIssue;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
+import com.exasol.projectkeeper.validators.release.github.GitHubAdapter;
 
 class ChangesFileReleaseValidator implements Validator {
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
     private final ChangesFile changesFile;
     private final Path changesFilePath;
     private final Clock clock;
+    private final GitHubAdapter gitHubAdapter;
 
-    ChangesFileReleaseValidator(final Path changesFilePath, final ChangesFile changesFile) {
-        this(changesFilePath, changesFile, Clock.systemUTC());
+    ChangesFileReleaseValidator(final String repoName, final Path changesFilePath, final ChangesFile changesFile) {
+        this(changesFilePath, changesFile, GitHubAdapter.connect(repoName), Clock.systemUTC());
     }
 
-    ChangesFileReleaseValidator(final Path changesFilePath, final ChangesFile changesFile, final Clock clock) {
+    ChangesFileReleaseValidator(final Path changesFilePath, final ChangesFile changesFile,
+            final GitHubAdapter gitHubAdapter, final Clock clock) {
         this.changesFilePath = changesFilePath;
         this.changesFile = changesFile;
+        this.gitHubAdapter = gitHubAdapter;
         this.clock = clock;
     }
 
@@ -57,7 +62,27 @@ class ChangesFileReleaseValidator implements Validator {
 
     // [impl->dsn~verify-release-mode.verify-issues-closed~1]
     private List<ValidationFinding> validateIssuesClosed() {
+        final List<Integer> wrongIssues = getIssuesWronglyMarkedAsClosed();
+        if (!wrongIssues.isEmpty()) {
+            return finding(ExaError.messageBuilder("E-PK-CORE-186").message(
+                    "The following GitHub issues are marked as fixed in {{changes file}} but are not closed in GitHub: {{issue numbers}}",
+                    changesFilePath, wrongIssues).toString());
+        }
         return noFindings();
+    }
+
+    private List<Integer> getIssuesWronglyMarkedAsClosed() {
+        final Set<Integer> mentionedTickets = changesFile.getFixedIssues().stream().map(FixedIssue::issueNumber)
+                .collect(toSet());
+        final Set<Integer> wrongIssues = new HashSet<>(mentionedTickets);
+        wrongIssues.removeAll(gitHubAdapter.getClosedIssues());
+        return sort(wrongIssues);
+    }
+
+    private List<Integer> sort(final Set<Integer> numbers) {
+        final ArrayList<Integer> list = new ArrayList<>(numbers);
+        list.sort(Comparator.naturalOrder());
+        return list;
     }
 
     private LocalDate today() {

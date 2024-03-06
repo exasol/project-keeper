@@ -42,6 +42,7 @@ public class SimpleProcess {
      *
      * @param command the command to execute
      * @return a new {@link SimpleProcess} you can use to wait for the process to finish and retrieve its output
+     * @throws IllegalStateException if execution fails
      */
     public static SimpleProcess start(final List<String> command) {
         return start(null, command);

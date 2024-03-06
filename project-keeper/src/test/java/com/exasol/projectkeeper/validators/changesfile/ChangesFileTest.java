@@ -60,6 +60,12 @@ class ChangesFileTest {
     }
 
     @Test
+    void getFixedIssuesNoSummarySection() {
+        final ChangesFile changesFile = ChangesFile.builder().build();
+        assertThat(changesFile.getFixedIssues(), hasSize(0));
+    }
+
+    @Test
     void getFixedIssues() {
         final ChangesFile changesFile = ChangesFile.builder()
                 .dependencyChangeSection(

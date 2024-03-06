@@ -169,7 +169,8 @@ public class ProjectKeeper {
     }
 
     private ValidationPhase releaseValidationPhase(final ValidationPhase.Provision provision) {
-        final ReleaseValidationBuilder builder = new ReleaseValidationBuilder(provision.projectVersion(), projectDir);
+        final ReleaseValidationBuilder builder = new ReleaseValidationBuilder(this.repoName, provision.projectVersion(),
+                projectDir);
         return new ValidationPhase(provision, builder.validators());
     }
 
