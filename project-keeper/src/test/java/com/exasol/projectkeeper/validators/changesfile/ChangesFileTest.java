@@ -1,8 +1,8 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -57,5 +57,23 @@ class ChangesFileTest {
     @Test
     void getParsedReleaseDateInvalid() {
         assertThat(builder().releaseDate("invalid").build().getParsedReleaseDate().isPresent(), is(false));
+    }
+
+    @Test
+    void getFixedIssues() {
+        final ChangesFile changesFile = ChangesFile.builder()
+                .dependencyChangeSection(
+                        ChangesFileSection.builder("## Dependency Updates").addLine("- #123: Ignored").build())
+                .summary(ChangesFileSection.builder("## Summary").addLine("* #42: Fixed in summary section").build())
+                .addSection(
+                        ChangesFileSection.builder("## Feature").addLine("* #1337: Fixed in feature section").build())
+                .addSection(ChangesFileSection.builder("## Bugfixes").addLine("* #17: Fixed in bugfix section").build())
+                .build();
+
+        assertAll(() -> assertThat(changesFile.getFixedIssues(), hasSize(3)),
+                () -> assertThat(changesFile.getFixedIssues(),
+                        contains(new FixedIssue(42, "Fixed in summary section"),
+                                new FixedIssue(1337, "Fixed in feature section"),
+                                new FixedIssue(17, "Fixed in bugfix section"))));
     }
 }

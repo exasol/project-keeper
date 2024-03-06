@@ -32,7 +32,7 @@ class ChangesFileReleaseValidator implements Validator {
 
     @Override
     public List<ValidationFinding> validate() {
-        return Stream.of(validateReleaseDate()) //
+        return Stream.of(validateReleaseDate(), validateIssuesClosed()) //
                 .flatMap(List::stream).toList();
     }
 
@@ -52,6 +52,11 @@ class ChangesFileReleaseValidator implements Validator {
                             releaseDate.get(), today, changesFilePath)
                     .toString());
         }
+        return noFindings();
+    }
+
+    // [impl->dsn~verify-release-mode.verify-issues-closed~1]
+    private List<ValidationFinding> validateIssuesClosed() {
         return noFindings();
     }
 

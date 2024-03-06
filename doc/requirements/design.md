@@ -918,7 +918,7 @@ Rationale:
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
--Needs: impl, utest, itest
+Needs: impl, utest, itest
 
 #### `verify-release` Mode Sets GitHub Action Output Parameters
 `dsn~verify-release-mode.output-parameters~1`
