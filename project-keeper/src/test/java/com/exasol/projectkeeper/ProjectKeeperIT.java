@@ -14,8 +14,6 @@ import java.util.List;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 import com.exasol.projectkeeper.test.TestMavenModel;
@@ -141,11 +139,10 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         assertVerifySucceeds();
     }
 
-    @ParameterizedTest
-    @ValueSource(booleans = { true, false })
+    @Test
     // [itest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
-    void testChangesFileGeneration(final boolean released) throws IOException, GitAPIException {
-        setupDemoProjectWithDependencyChange(released);
+    void testChangesFileGeneration() throws IOException, GitAPIException {
+        setupDemoProjectWithDependencyChange(false);
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
@@ -160,11 +157,25 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     @Test
     // [itest->dsn~verify-changelog-file~1]
     void testChangelogFileGeneration() throws IOException, GitAPIException {
-        setupDemoProjectWithDependencyChange(true);
+        setupDemoProjectWithDependencyChange(false);
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
-        final String generatedChangelog = Files.readString(this.projectDir.resolve("doc/changes/changelog.md"));
+        final Path path = this.projectDir.resolve("doc/changes/changelog.md");
+        assertThat("File " + path + " exists", Files.exists(path), is(true));
+        final String generatedChangelog = Files.readString(path);
         assertThat(generatedChangelog, containsString("[0.2.0](changes_0.2.0.md)"));
+    }
+
+    // [itest->dsn~verify-release-mode.verify-version-increment~1]
+    @Test
+    void testValidSuccessorVersion() throws IOException, GitAPIException {
+        setupDemoProjectWithDependencyChange(false);
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
+        runFix();
+        createTag("0.2.0");
+        final String validationOutput = assertInvalidAndGetOutput();
+        assertThat(validationOutput, containsString(
+                "E-PK-CORE-184: Project version '0.2.0' is not a valid successor of '0.2.0'. Only increment one of major, minor or patch version."));
     }
 
     @Test
@@ -184,6 +195,12 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
             if (released) {
                 commitAndMakeTag(git, "0.2.0");
             }
+        }
+    }
+
+    private void createTag(final String tag) throws IOException, GitAPIException {
+        try (final Git git = Git.open(this.projectDir.toFile())) {
+            commitAndMakeTag(git, tag);
         }
     }
 

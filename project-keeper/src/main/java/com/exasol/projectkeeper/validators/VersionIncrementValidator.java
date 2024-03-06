@@ -22,7 +22,6 @@ import com.vdurmont.semver4j.Semver;
 public class VersionIncrementValidator implements Validator {
     private static final Logger LOG = Logger.getLogger(VersionIncrementValidator.class.getName());
     private final String projectVersion;
-    private final Path projectDir;
     private final GitRepository gitRepository;
 
     /**
@@ -32,15 +31,15 @@ public class VersionIncrementValidator implements Validator {
      * @param projectDir     the project's directory
      */
     public VersionIncrementValidator(final String projectVersion, final Path projectDir) {
-        this(projectVersion, projectDir, GitRepository.open(projectDir));
+        this(projectVersion, GitRepository.open(projectDir));
     }
 
-    VersionIncrementValidator(final String projectVersion, final Path projectDir, final GitRepository gitRepository) {
+    VersionIncrementValidator(final String projectVersion, final GitRepository gitRepository) {
         this.projectVersion = projectVersion;
-        this.projectDir = projectDir;
         this.gitRepository = gitRepository;
     }
 
+    // [impl->dsn~verify-release-mode.verify-version-increment~1]
     @Override
     public List<ValidationFinding> validate() {
         final Optional<TaggedCommit> latestReleaseCommit = gitRepository.findLatestReleaseCommit(null);

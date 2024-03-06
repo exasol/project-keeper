@@ -5,7 +5,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.Mockito.when;
 
-import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,11 +21,10 @@ import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 @ExtendWith(MockitoExtension.class)
 class VersionIncrementValidatorTest {
 
-    private static final Path PROJECT_DIR = Path.of("project-dir");
-
     @Mock
     private GitRepository gitRepoMock;
 
+    // [utest->dsn~verify-release-mode.verify-version-increment~1]
     @ParameterizedTest(name = "Incrementing {0} to {1} returns finding {2}")
     @CsvSource(nullValues = "NULL", value = { //
             "NULL, 1.2.3, NULL", //
@@ -73,6 +71,6 @@ class VersionIncrementValidatorTest {
     }
 
     private VersionIncrementValidator testee(final String projectVersion) {
-        return new VersionIncrementValidator(projectVersion, PROJECT_DIR, gitRepoMock);
+        return new VersionIncrementValidator(projectVersion, gitRepoMock);
     }
 }
