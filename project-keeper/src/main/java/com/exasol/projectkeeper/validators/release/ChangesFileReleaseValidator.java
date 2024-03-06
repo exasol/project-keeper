@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import com.exasol.errorreporting.ErrorMessageBuilder;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
@@ -41,15 +40,17 @@ class ChangesFileReleaseValidator implements Validator {
     private List<ValidationFinding> validateReleaseDate() {
         final Optional<LocalDate> releaseDate = changesFile.getParsedReleaseDate();
         if (releaseDate.isEmpty()) {
-            return finding(ExaError.messageBuilder("E-PK-CORE-182").message(
-                    "Release date {{release date}} has invalid format in {{changes file path}}",
-                    changesFile.getReleaseDate(), changesFilePath));
+            return finding(ExaError.messageBuilder("E-PK-CORE-182")
+                    .message("Release date {{release date}} has invalid format in {{changes file path}}",
+                            changesFile.getReleaseDate(), changesFilePath)
+                    .toString());
         }
         final LocalDate today = today();
         if (!releaseDate.get().equals(today)) {
-            return finding(ExaError.messageBuilder("E-PK-CORE-183").message(
-                    "Release date {{actual date}} must be today {{today}} in {{changes file path}}", releaseDate.get(),
-                    today, changesFilePath));
+            return finding(ExaError.messageBuilder("E-PK-CORE-183")
+                    .message("Release date {{actual date}} must be today {{today}} in {{changes file path}}",
+                            releaseDate.get(), today, changesFilePath)
+                    .toString());
         }
         return noFindings();
     }
@@ -62,7 +63,7 @@ class ChangesFileReleaseValidator implements Validator {
         return emptyList();
     }
 
-    private List<ValidationFinding> finding(final ErrorMessageBuilder message) {
-        return List.of(SimpleValidationFinding.withMessage(message.toString()).build());
+    private List<ValidationFinding> finding(final String message) {
+        return List.of(SimpleValidationFinding.withMessage(message).build());
     }
 }
