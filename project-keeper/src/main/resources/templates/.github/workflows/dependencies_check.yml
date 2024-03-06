@@ -9,6 +9,9 @@ on:
 jobs:
   report_security_issues:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
     permissions:
       contents: read
       issues: write
@@ -50,10 +53,11 @@ jobs:
 
   start_dependency_udpate:
     needs: report_security_issues
+    # [impl->dsn~trigger-dependency-updates~1]
     if: ${{ needs.report_security_issues.outputs.created-issues }}
     concurrency:
       cancel-in-progress: true
-      group: "dependency_update"
+      group: "dependencies_update"
     # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
     secrets: inherit
     permissions:

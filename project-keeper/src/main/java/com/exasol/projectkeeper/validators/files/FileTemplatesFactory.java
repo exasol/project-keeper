@@ -43,11 +43,7 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
                 .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
         if (mvnRoot.isPresent()) {
-            templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
-            if (mvnRoot.get().getModules().contains(MAVEN_CENTRAL)) {
-                templates.add(new FileTemplateFromResource(
-                        ".github/workflows/release_droid_release_on_maven_central.yml", REQUIRE_EXACT));
-            }
+            templates.addAll(getGenericMavenTemplates(sources, mvnRoot.get().getModules()));
         } else {
             templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
@@ -57,7 +53,8 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {
+    private List<FileTemplate> getGenericMavenTemplates(final List<AnalyzedSource> sources,
+            final Set<ProjectKeeperModule> modules) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(getCiBuildTemplate(modules));
         templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT) //
@@ -66,12 +63,21 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         // [impl->dsn~dependency-updater.workflow.generate~1]
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_update.yml", REQUIRE_EXACT));
-        templates.add(workflowGenerator.createReleaseDroidPrepareOriginalChecksumWorkflow());
-        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_print_quick_checksum.yml",
-                REQUIRE_EXACT));
-        templates.add(new FileTemplateFromResource(".github/workflows/release_droid_upload_github_release_assets.yml",
-                REQUIRE_EXACT));
+        templates.add(getReleaseWorkflow(sources));
         return templates;
+    }
+
+    // [impl->dsn~release-workflow.deploy-maven-central~1]
+    FileTemplateFromResource getReleaseWorkflow(final List<AnalyzedSource> sources) {
+        return new FileTemplateFromResource(".github/workflows/release.yml", REQUIRE_EXACT)
+                .replacing("mavenCentralDeployment", mavenCentralDeploymentRequired(sources) ? "true" : "false");
+    }
+
+    private boolean mavenCentralDeploymentRequired(final List<AnalyzedSource> sources) {
+        return sources.stream() //
+                .map(AnalyzedSource::getModules) //
+                .flatMap(Set::stream) //
+                .anyMatch(ProjectKeeperModule.MAVEN_CENTRAL::equals);
     }
 
     private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {

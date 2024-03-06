@@ -138,14 +138,9 @@ class ProjectFilesValidatorTest {
                         .isRootProject(true).build());
         fixAllFindings(testee(sources));
         final Path ciBuildWorkflow = this.tempDir.resolve(".github/workflows/ci-build.yml");
-        final Path releaseDroidOriginalChecksumWorkflow = this.tempDir
-                .resolve(".github/workflows/release_droid_prepare_original_checksum.yml");
         assertAll(//
                 () -> assertThat(ciBuildWorkflow.toFile(), anExistingFile()),
-                () -> assertThat(Files.readString(ciBuildWorkflow), containsString("    runs-on: ci-runner-os")),
-                () -> assertThat(releaseDroidOriginalChecksumWorkflow.toFile(), anExistingFile()),
-                () -> assertThat(Files.readString(releaseDroidOriginalChecksumWorkflow),
-                        containsString("    runs-on: ci-runner-os")));
+                () -> assertThat(Files.readString(ciBuildWorkflow), containsString("    runs-on: ci-runner-os")));
     }
 
     private ProjectFilesValidator testee() {

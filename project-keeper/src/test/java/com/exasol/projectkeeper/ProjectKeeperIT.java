@@ -89,12 +89,13 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         writeDefaultPom();
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
-        final Path fileThatMustNotExist = this.projectDir.resolve(".github/workflows/maven.yml");
+        final Path fileThatMustNotExist = this.projectDir
+                .resolve(".github/workflows/release_droid_upload_github_release_assets.yml");
         Files.createDirectories(fileThatMustNotExist.getParent());
         Files.writeString(fileThatMustNotExist, "some content");
         final String output = assertInvalidAndGetOutput();
         assertThat(output, containsString("E-PK-CORE-26: '.github" + File.separator + "workflows" + File.separator
-                + "maven.yml' exists but must not exist."));
+                + "release_droid_upload_github_release_assets.yml' exists but must not exist."));
     }
 
     @Test

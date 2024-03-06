@@ -26,7 +26,7 @@ class DeletedFilesValidatorTest {
         createdIllegalFile(tempDir);
         assertThat(new DeletedFilesValidator(tempDir), hasValidationFindingWithMessage("E-PK-CORE-26: '.github"
                 + File.separator + "workflows" + File.separator
-                + "maven.yml' exists but must not exist. Reason: We renamed maven.yml to dependencies_check.yml"));
+                + "release_droid_prepare_original_checksum.yml' exists but must not exist. Reason: Release-droid workflows are replaced by release.yml"));
     }
 
     @Test
@@ -36,7 +36,7 @@ class DeletedFilesValidatorTest {
     }
 
     private void createdIllegalFile(final Path tempDir) throws IOException {
-        final Path file = tempDir.resolve(Path.of(".github", "workflows", "maven.yml"));
+        final Path file = tempDir.resolve(Path.of(".github/workflows/release_droid_prepare_original_checksum.yml"));
         Files.createDirectories(file.getParent());
         Files.createFile(file);
     }

@@ -204,7 +204,7 @@ Covers:
 
 * [`req~verify-license-file~1`](system_requirements.md#verify-license-file)
 
-## Gitignore Validator
+### Gitignore Validator
 
 `dsn~gitignore-validator~1`
 
@@ -510,7 +510,7 @@ This consists of the following steps:
 
 ![Activity Diagram for the dependencies update process](images/dependencies_update_process.svg)
 
-#### Triggering the Dependency Update Process
+### Triggering the Dependency Update Process
 `dsn~trigger-dependency-updates~1`
 
 PK generates the `dependencies_check.yml` GitHub workflow so that it launches the `dependencies_update.yml` workflow when it detects new vulnerabilities.
@@ -522,9 +522,9 @@ Rationale:
 Covers:
 * [`req~auto-update-dependencies~1`](system_requirements.md#auto-update-dependencies)
 
--Needs: impl, utest, itest
+Needs: impl
 
-#### Update Dependencies Mode
+### Update Dependencies Mode
 `dsn~update-dependencies-mode~1`
 
 PK provides an `update-dependencies` mode in addition to `fix` and `verify`. This mode performs the following steps:
@@ -549,7 +549,7 @@ Covers:
 
 Needs: dsn
 
-##### Incrementing the Project Version
+#### Incrementing the Project Version
 `dsn~dependency-updater.increment-version~1`
 
 PK increments the project's patch version. PK does not modify the version if the current version was not yet released (i.e. there is not release in the latest changelog file).
@@ -563,7 +563,7 @@ Covers:
 
 Needs: impl, utest, itest
 
-##### Update Dependencies
+#### Update Dependencies
 `dsn~dependency-updater.update-dependencies~1`
 
 PK updates dependencies using the [versions-maven-plugin](https://www.mojohaus.org/versions/versions-maven-plugin/index.html):
@@ -582,7 +582,7 @@ Covers:
 
 Needs: impl, utest, itest
 
-##### Retrieve Vulnerability Information
+#### Retrieve Vulnerability Information
 `dsn~dependency-updater.read-vulnerability-info~1`
 
 PK reads the information about potentially fixed vulnerabilities in dependencies from Java System Property `project-keeper:vulnerabilities` in JSONL format.
@@ -598,7 +598,7 @@ Covers:
 
 Needs: impl, utest, itest
 
-##### Generate Changelog
+#### Generate Changelog
 `dsn~dependency-updater.update-changelog~1`
 
 PK generates the changelog for the fixed vulnerabilities if the required information is available. The changelog contains the following information:
@@ -616,7 +616,7 @@ Covers:
 
 Needs: impl, utest, itest
 
-#### Generate `dependencies_update.yml` workflow
+### Generate `dependencies_update.yml` workflow
 `dsn~dependency-updater.workflow.generate~1`
 
 PK generates the `dependencies_update.yml` GitHub workflow.
@@ -628,17 +628,17 @@ Covers:
 
 Needs: dsn, impl, utest
 
-##### `dependencies_update.yml` Workflow Receives Vulnerability Info
+#### `dependencies_update.yml` Workflow Receives Vulnerability Info
 `dsn~dependency-updater.workflow.vulnerability-info~1`
 
 PK generates the `dependencies_update.yml` workflow so that it receives information about vulnerabilities and issues as optional parameter.
 
--Needs: impl, utest, itest
+Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
-##### `dependencies_update.yml` Workflow Starts PK `update-dependencies` Mode
+#### Workflow `dependencies_update.yml` Starts PK Mode `update-dependencies` 
 `dsn~dependency-updater.workflow.start-pk-update~1`
 
 PK generates the `dependencies_update.yml` workflow so that it starts PK's [`update-dependencies` mode](#update-dependencies-mode), passing information about vulnerabilities.
@@ -647,12 +647,12 @@ Rationale:
 
 PK needs the vulnerability info for generating the changelog.
 
--Needs: impl, utest, itest
+Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
-##### `dependencies_update.yml` Workflow Starts PK `fix` Mode Twice
+#### `dependencies_update.yml` Workflow Starts PK `fix` Mode Twice
 `dsn~dependency-updater.workflow.start-pk-fix~1`
 
 PK generates the `dependencies_update.yml` workflow so that it starts PK's `fix` mode twice after updating dependencies.
@@ -667,7 +667,7 @@ Needs: impl
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
-##### `dependencies_update.yml` Workflow Creates a Pull Request
+#### `dependencies_update.yml` Workflow Creates a Pull Request
 `dsn~dependency-updater.workflow.create-pull-request~1`
 
 PK generates the `dependencies_update.yml` workflow so that it creates a Pull Request in GitHub. This requires the following steps:
@@ -691,12 +691,12 @@ We implement this in a workflow and not in PK because
 
 Note: Implementing this in a workflow makes it hard to do integration tests. We accept that there are no integration tests for running the workflow.
 
--Needs: impl, utest, itest
+Needs: impl
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
-##### `dependencies_update.yml` Workflow Trigger Pull Request CI Build Manually
+#### Workflow `dependencies_update.yml` Requires to Trigger Pull Request CI Build Manually
 `dsn~dependency-updater.workflow.pull-request-trigger-ci-build~1`
 
 PK generates the `dependencies_update.yml` workflow so that it adds a note to the [created Pull Request](#dependencies_updateyml-workflow-creates-a-pull-request) that instructs the user how to trigger the CI build for the Pull Request.
@@ -713,10 +713,12 @@ Rationale:
 
 Needs: impl
 
-#### Generate `release.yml` workflow
+## Automated Release Process
+
+### Generate Workflow `release.yml` 
 `dsn~release-workflow.generate~1`
 
-PK generates the `release.yml` GitHub workflow for Maven projects. This workflow runs the build including tests, integration tests, releases to Maven Central and on GitHub.
+PK generates the `release.yml` GitHub workflow for Maven projects. This workflow runs the build, releases to Maven Central and on GitHub.
 
 Rationale:
 * The release process is limited to Maven projects. Support for other projects may be added later.
@@ -731,6 +733,7 @@ Rationale:
     * Long generated workflow file
     * Not easily testable, one option would be [nektos/act](https://github.com/nektos/act)
   * We accept the disadvantages for now. However the architecture allows changing this in the future.
+* Tests are excluded, see [rationale](#workflow-releaseyml-does-not-run-tests).
 
 ![Activity diagram of the release process](images/release_process.svg)
 
@@ -739,60 +742,95 @@ Covers:
 
 Needs: dsn
 
-##### `release.yml` Workflow Triggers
+#### Workflow `ci-build.yml` Starts Release Build After Succeeding on `main`
+`dsn~release-workflow.ci-build-starts-release~1`
+
+PK generates the `ci-build.yml` workflow so that it starts the `release.yml` workflow when all tests succeeded on the `main` branch.
+
+Rationale:
+* Starting the release automatically avoids manual work.
+* In case no release is planned, developers enter an invalid date into the changes file. This will cause `release.yml` to cancel the release.
+* Hard-coding the `main` branch is OK because we assume that all repositories use the same development workflow.
+* This feature is implemented as GitHub workflow without tests. Hence, there is no requirement-tracing to tests.
+
+Covers:
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
+
+Needs: impl
+
+#### Triggers for Workflow `release.yml`
 `dsn~release-workflow.triggers~1`
 
 PK generates the `release.yml` workflow so that it is triggered by the following events:
+* when the `ci-build.yml` workflow succeeded on branch `main` (`workflow_call`)
 * manual triggering (`workflow_dispatch`)
-* push to `main` branch (`push: branches: - main`)
 
 Rationale:
-* Manually triggering simplifies debugging in case of problems
-* Hard-coding the `main` branch for the `push` trigger is OK because we assume that all repositories use the same development workflow
+* Triggering the release from `ci-build.yml` will automatically build a release after a Pull Request is merged to `main`, avoiding manual steps.
+* Manually triggering allows debugging in case of problems (e.g. unstable Maven Central deployment).
+* This feature is implemented as GitHub workflow without tests. Hence, there is no requirement-tracing to tests.
 
 Covers:
-* [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
 
--Needs: impl, utest, itest
+Needs: impl
 
-##### `release.yml` Workflow Release Verification
+#### Workflow `release.yml` Verifies Successful CI Build
+`dsn~release-workflow.verify-ci-build-success~1`
+
+PK generates the `release.yml` workflow so that it verifies that workflow `ci-build.yml` ran successfully on `main` branch for the current commit.
+
+Rationale:
+* This ensures that tests succeeded before creating the release when the user started the workflow `release.yml` manually.
+* This feature is implemented as GitHub workflow without tests. Hence, there is no requirement-tracing to tests.
+
+Covers:
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
+
+Needs: impl
+
+#### Workflow `release.yml` Does Not Run Tests
+`dsn~release-workflow.verify-skip-tests~1`
+
+PK generates the `release.yml` workflow so that it **does not** run unit or integration tests.
+
+Rationale:
+* Tests already run automatically in `ci-build.yml` on `main` branch after a Pull Request is merged.
+* `release.yml` verifies that `ci-build.yml` did run successfully for the current Git commit. This ensures that tests succeeded when starting `release.yml` manually.
+* Skipping tests speeds up the release process in case it must be re-started, e.g. for unstable Maven Central deployment.
+* This feature is implemented as GitHub workflow without tests. Hence, there is no requirement-tracing to tests.
+
+Covers:
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
+
+Needs: impl
+
+#### Workflow `release.yml` Release Verification
 `dsn~release-workflow.run-verify-release~1`
 
-PK generates the `release.yml` workflow so that it runs PK in `verify-release` mode, see [`dsn~verify-release-mode~1`](#verify-release-mode).
+PK generates the `release.yml` workflow so that it runs PK in `verify-release` mode, see [`dsn~verify-release-mode~1`](#pk-mode-verify-release).
 
 Rationale:
-* This ensures that all preconditions for the release are met (e.g. current release date). In the previous process this was checked by release-droid.
+* This ensures that all preconditions for the release are met (e.g. changes file is complete). In the previous process this was checked by release-droid.
 * Checking the release date allows skipping a release. I.e. when no release is planned when updating the `main` branch, the user can leave the release date undefined, e.g. `2024-??-??`. This will let `verify-release` fail and the release is cancelled.
+* This feature is implemented as GitHub workflow without tests. Hence, there is no requirement-tracing to tests.
 
 Covers:
-* [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
 
--Needs: impl, utest, itest
+Needs: impl
 
-##### `release.yml` Workflow Runs Build
-`dsn~release-workflow.run-build~1`
-
-PK generates the `release.yml` workflow so that it runs the build including tests, integration tests and verifications (`mvn verify`).
-
-Rationale:
-* Supporting other build tools is not necessary for now because building and testing of other components (e.g. JavaScript extensions using `npm`) can be included into the Maven build process using the `exec-maven-plugin` plugin.
-
-Covers:
-* [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
-
--Needs: impl, utest, itest
-
-##### `release.yml` Workflow Deploys to Maven Central
+#### Workflow `release.yml` Deploys to Maven Central
 `dsn~release-workflow.deploy-maven-central~1`
 
-If at least one source in `.project-keeper.yml` uses the `maven_central` module, PK generates the `release.yml` workflow so that it runs deploys the project to Maven Central (`mvn deploy`).
+If at least one source in `.project-keeper.yml` uses the `maven_central` module, PK generates the `release.yml` workflow so that it deploys the project to Maven Central (`mvn deploy`).
 
 Covers:
-* [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
-##### `release.yml` Workflow Creates GitHub Release
+#### Workflow `release.yml` Creates GitHub Release
 `dsn~release-workflow.create-github-release~1`
 
 PK generates the `release.yml` workflow so that it creates a new GitHub release for the new version.
@@ -800,13 +838,14 @@ PK generates the `release.yml` workflow so that it creates a new GitHub release 
 Rationale:
 * In the old release process this was implemented in release-droid (`GitHubReleaseMaker.createReleaseModel()`).
 * The GitHub workflow has permissions to use the GitHub API.
+* This feature is implemented as GitHub workflow without tests. Hence, there is no requirement-tracing to tests.
 
 Covers:
-* [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
 
--Needs: impl, utest, itest
+Needs: impl
 
-##### `release.yml` Workflow Creates Tags for Golang Modules
+#### Workflow `release.yml` Creates Tags for Golang Modules
 `dsn~release-workflow.create-golang-tags~1`
 
 PK generates the `release.yml` workflow so that it creates the correct tags for Golang modules.
@@ -815,11 +854,11 @@ Rationale:
 * In the old release process this was implemented in release-droid (`Revision.getTags()`).
 
 Covers:
-* [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
 
 -Needs: impl, utest, itest
 
-#### `verify-release` Mode
+### PK Mode `verify-release`
 `dsn~verify-release-mode~1`
 
 PK provides an `verify-release` mode in addition to `fix`, `verify` and `update-dependencies`.
@@ -827,24 +866,24 @@ PK provides an `verify-release` mode in addition to `fix`, `verify` and `update-
 If any of the checks fails, PK fails with an exit code > 0 to signal a build failure.
 
 Covers:
-* [`dsn~release-workflow.generate~1`](#generate-releaseyml-workflow)
+* [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
 
 Needs: dsn
 
-##### `verify-release` Mode Runs PK Verify
+#### PK Mode `verify-release` Runs PK Verify
 `dsn~verify-release-mode.verify~1`
 
 PK's `verify-release` mode runs the same validations as the `verify` mode.
 
 Rationale:
-This simplifies usage because it's not necessary to start PK twice.
+* This simplifies usage because it's not necessary to start PK twice.
 
 Covers:
-* [`dsn~verify-release-mode~1`](#verify-release-mode)
+* [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
 
 -Needs: impl, utest, itest
 
-##### `verify-release` Mode Checks Release Date
+#### PK Mode `verify-release` Checks Release Date
 `dsn~verify-release-mode.verify-release-date~1`
 
 PK's `verify-release` mode verifies that the release date in the current version's changelog is the current date.
@@ -858,11 +897,11 @@ Rationale:
   * To avoid creating a PR just for updating the release date we could add an optional parameter to the `release.yml` workflow that updates the release date and commits this change directly to `main`.
 
 Covers:
-* [`dsn~verify-release-mode~1`](#verify-release-mode)
+* [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
 
 -Needs: impl, utest, itest
 
-##### `verify-release` Mode Checks All Issues are Closed
+#### PK Mode `verify-release` Checks All Issues are Closed
 `dsn~verify-release-mode.verify-issues-closed~1`
 
 PK's `verify-release` mode verifies that all GitHub issues mentioned in the current version's changelog are closed.
@@ -871,11 +910,11 @@ Rationale:
 * In the previous release process this was checked by release-droid.
 
 Covers:
-* [`dsn~verify-release-mode~1`](#verify-release-mode)
+* [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
 
 -Needs: impl, utest, itest
 
-##### `verify-release` Mode Checks Version Increment
+#### PK Mode `verify-release` Checks Version Increment
 `dsn~verify-release-mode.verify-version-increment~1`
 
 PK's `verify-release` mode verifies that current version was incremented correctly based on the previous version.
@@ -884,23 +923,87 @@ Rationale:
 * In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`
 
 Covers:
-* [`dsn~verify-release-mode~1`](#verify-release-mode)
+* [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
 
 -Needs: impl, utest, itest
 
-##### `verify-release` Mode Sets GitHub Action Output Parameters
+#### PK Mode `verify-release` Sets GitHub Action Output Parameters
 `dsn~verify-release-mode.output-parameters~1`
 
-PK's `verify-release` mode outputs the following information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter):
-* Project version
-* Code name from changelog
-* Remaining content of changelog
+PK's `verify-release` mode outputs information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter) using environment variable `GITHUB_OUTPUT`, see the following sub-sections.
 
 Rationale:
 * The `release.yml` workflow needs this information for creating the GitHub release.
+* Project Keeper already has access to this information, so implementation effort is low.
 * Steps in a GitHub workflow can read the output parameters of other steps.
 
 Covers:
-* [`dsn~verify-release-mode~1`](#verify-release-mode)
+* [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
+
+Needs: dsn
+
+##### PK Mode `verify-release` Outputs Project Version
+`dsn~verify-release-mode.output-parameters.project-version~1`
+
+PK mode `verify-release` publishes the project version as GitHub Output Parameter.
+
+Rationale:
+* The project version is required for creating the GitHub release tag.
+
+Covers:
+* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+
+-Needs: impl, utest, itest
+
+##### PK Mode `verify-release` Outputs Code Name
+`dsn~verify-release-mode.output-parameters.code-name~1`
+
+PK mode `verify-release` publishes the code name from the changes file as GitHub Output Parameter.
+
+Rationale:
+* The code name is used as title for the GitHub release.
+
+Covers:
+* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+
+-Needs: impl, utest, itest
+
+##### PK Mode `verify-release` Outputs Changes File Content
+`dsn~verify-release-mode.output-parameters.release-notes~1`
+
+PK mode `verify-release` publishes the remaining changes file content as GitHub Output Parameter.
+
+Rationale:
+* The content is used as note for the GitHub release.
+
+Covers:
+* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+
+-Needs: impl, utest, itest
+
+##### PK Mode `verify-release` Outputs List of Release Artifacts
+`dsn~verify-release-mode.output-parameters.release-artifacts~1`
+
+PK mode `verify-release` publishes the list of release artifacts as GitHub Output Parameter.
+
+Rationale:
+* The list is used for calculating checksums for each artifact.
+* The list is used to attach all artifacts to the GitHub release.
+
+Covers:
+* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+
+-Needs: impl, utest, itest
+
+##### PK Mode `verify-release` Outputs List of Additional Git Tags
+`dsn~verify-release-mode.output-parameters.additional-git-tags~1`
+
+PK mode `verify-release` publishes the list of additional Git tags as GitHub Output Parameter.
+
+Rationale:
+* Golang projects require additional Git tags for releases.
+
+Covers:
+* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
 
 -Needs: impl, utest, itest

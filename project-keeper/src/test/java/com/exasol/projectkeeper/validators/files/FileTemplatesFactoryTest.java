@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_CENTRAL;
+import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -27,6 +28,7 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 @ExtendWith(MockitoExtension.class)
 class FileTemplatesFactoryTest {
     private static final String OWN_VERSION = "version";
+    private static final String NEWLINE = System.lineSeparator();
     @Mock
     Logger loggerMock;
 
@@ -81,10 +83,10 @@ class FileTemplatesFactoryTest {
     }
 
     @Test
-    void testGetMavenCentralCiBuildTemplatesForMavenProject() {
-        final List<AnalyzedSource> sources = getMavenSourceWithModules(Set.of(MAVEN_CENTRAL));
+    void testReleaseWorkflow() {
+        final List<AnalyzedSource> sources = getMavenSourceWithModules(Set.of());
         final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
-        assertContainsTemplate(templates, ".github/workflows/release_droid_release_on_maven_central.yml");
+        assertContainsTemplate(templates, ".github/workflows/release.yml");
     }
 
     @ParameterizedTest
@@ -113,6 +115,24 @@ class FileTemplatesFactoryTest {
         final AnalyzedMavenSource source = AnalyzedMavenSource.builder().modules(Set.of(module)).build();
         final List<FileTemplate> templates = testee().getTemplatesForSource(source);
         assertContainsTemplate(templates, expectedTemplate);
+    }
+
+    // [utest->dsn~release-workflow.deploy-maven-central~1]
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void testReleaseWorkflowWithMavenCentral(final boolean mavenCentral) {
+        final AnalyzedMavenSource rootSource = AnalyzedMavenSource.builder().isRootProject(true).modules(emptySet())
+                .build();
+        final Set<ProjectKeeperModule> modules = mavenCentral ? Set.of(MAVEN_CENTRAL) : emptySet();
+        final AnalyzedMavenSource childSource = AnalyzedMavenSource.builder().isRootProject(false).modules(modules)
+                .build();
+        final List<FileTemplate> templates = testee().getGlobalTemplates(List.of(rootSource, childSource));
+        final Optional<FileTemplate> template = findTemplate(templates, ".github/workflows/release.yml");
+        assertThat(template.get().getContent(), allOf(not(containsString("mavenCentralDeployment")),
+                containsString("- name: Publish to Central Repository" + NEWLINE + //
+                        "        if: ${{ " + mavenCentral + " && (! inputs.skip-maven-central) }}" + NEWLINE + //
+                        "        run: |" + NEWLINE + //
+                        "          mvn --batch-mode -Dgpg.skip=false -DskipTests deploy" + NEWLINE)));
     }
 
     private void assertContainsTemplate(final List<FileTemplate> templates, final String pathInProject) {
