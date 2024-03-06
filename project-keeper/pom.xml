@@ -15,6 +15,12 @@
         <!-- Workaround for https://github.com/exasol/project-keeper/issues/530 -->
         <java.version>17</java.version>
     </properties>
+    <repositories>
+        <repository>
+            <id>atlassian-public</id>
+            <url>https://packages.atlassian.com/maven/repository/public</url>
+        </repository>
+    </repositories>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -52,6 +58,20 @@
         <dependency>
             <groupId>org.kohsuke</groupId>
             <artifactId>github-api</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Required to fix compiler warning
+                "~/.m2/repository/org/kohsuke/github-api/1.316/github-api-1.316.jar(/org/kohsuke/github/GHIssue.class): warning: Cannot find annotation method 'value()' in type 'SuppressFBWarnings'"
+                Caused by missing optional dependency of org.kohsuke:github-api -->
+            <groupId>com.google.code.findbugs</groupId>
+            <artifactId>annotations</artifactId>
+        </dependency>
+        <dependency>
+            <!-- Required to fix compiler warning
+                "~/.m2/repository/org/kohsuke/github-api/1.316/github-api-1.316.jar(/org/kohsuke/github/GHIssue.class): warning: Cannot find annotation method 'value()' in type 'WithBridgeMethods'"
+                Caused by missing optional dependency of org.kohsuke:github-api -->
+            <groupId>com.infradna.tool</groupId>
+            <artifactId>bridge-method-annotation</artifactId>
         </dependency>
         <!-- test -->
         <dependency>
