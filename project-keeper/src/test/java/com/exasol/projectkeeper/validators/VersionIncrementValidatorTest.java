@@ -24,7 +24,7 @@ class VersionIncrementValidatorTest {
     @Mock
     private GitRepository gitRepoMock;
 
-    // [utest->dsn~verify-release-mode.verify-version-increment~1]
+    // [utest->dsn~version-increment-validator~1]
     @ParameterizedTest(name = "Incrementing {0} to {1} returns finding {2}")
     @CsvSource(nullValues = "NULL", value = { //
             "NULL, 1.2.3, NULL", //

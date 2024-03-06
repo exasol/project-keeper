@@ -39,7 +39,7 @@ public class VersionIncrementValidator implements Validator {
         this.gitRepository = gitRepository;
     }
 
-    // [impl->dsn~verify-release-mode.verify-version-increment~1]
+    // [impl->dsn~version-increment-validator~1]
     @Override
     public List<ValidationFinding> validate() {
         final Optional<TaggedCommit> latestReleaseCommit = gitRepository.findLatestReleaseCommit(null);

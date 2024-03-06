@@ -224,6 +224,19 @@ Unit testing is not possible since `ProjectBuilder` needs to be injected by mave
 
 Needs: impl, itest
 
+### Project Version Increment Validator
+`dsn~version-increment-validator~1`
+
+PK's `verify` mode checks that the current project version was incremented correctly based on the previous version.
+
+Rationale:
+* In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#verify-release-mode)
+
+Needs: impl, utest, itest
+
 ## Maven Integration
 
 ### Maven Verify Goal
@@ -906,19 +919,6 @@ Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
 -Needs: impl, utest, itest
-
-#### `verify-release` Mode Checks Version Increment
-`dsn~verify-release-mode.verify-version-increment~1`
-
-PK's `verify-release` mode verifies that current version was incremented correctly based on the previous version.
-
-Rationale:
-* In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`
-
-Covers:
-* [`dsn~verify-release-mode~1`](#verify-release-mode)
-
-Needs: impl, utest, itest
 
 #### `verify-release` Mode Sets GitHub Action Output Parameters
 `dsn~verify-release-mode.output-parameters~1`

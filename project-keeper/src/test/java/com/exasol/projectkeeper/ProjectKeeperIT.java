@@ -166,7 +166,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         assertThat(generatedChangelog, containsString("[0.2.0](changes_0.2.0.md)"));
     }
 
-    // [itest->dsn~verify-release-mode.verify-version-increment~1]
+    // [itest->dsn~version-increment-validator~1]
     @Test
     void testValidSuccessorVersion() throws IOException, GitAPIException {
         setupDemoProjectWithDependencyChange(false);
