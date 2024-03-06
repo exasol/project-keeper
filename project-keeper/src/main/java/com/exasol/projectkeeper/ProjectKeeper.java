@@ -143,11 +143,13 @@ public class ProjectKeeper {
                 .ciBuildOptions(config.getCiBuildConfig()) //
                 .build();
         final List<Validator> validators = List.of( //
-                projectFilesValidator,
+                projectFilesValidator, //
+                new VersionIncrementValidator(projectVersion, projectDir), //
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
-                new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
+                new DeletedFilesValidator(this.projectDir), //
+                new GitignoreFileValidator(this.projectDir));
         return new ValidationPhase(new ValidationPhase.Provision(projectVersion), validators);
     }
 

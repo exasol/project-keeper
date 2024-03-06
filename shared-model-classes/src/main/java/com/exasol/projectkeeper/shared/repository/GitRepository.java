@@ -71,11 +71,11 @@ public class GitRepository implements AutoCloseable {
      *
      * @return descending ordered list of tags
      */
-    public List<TaggedCommit> getTagsInCurrentBranch() {
+    List<TaggedCommit> getTagsInCurrentBranch() {
         try {
             final String currentBranch = this.git.getRepository().getFullBranch();
             validateBranchExists(currentBranch);
-            return getTagsInBranch(this.git.getRepository(), currentBranch);
+            return getTagsInBranch(currentBranch);
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-SMC-33")
@@ -92,11 +92,11 @@ public class GitRepository implements AutoCloseable {
         }
     }
 
-    private List<TaggedCommit> getTagsInBranch(final Repository repository, final String branchName)
-            throws IOException {
-        final ObjectId branch = repository.resolve(branchName);
-        final Map<ObjectId, List<String>> tags = getTagsByTheIdOfTheCommitTheyPointTo(repository);
-        try (final var commitWalker = new RevWalk(repository)) {
+    private List<TaggedCommit> getTagsInBranch(final String branchName) throws IOException {
+        final Repository repo = this.git.getRepository();
+        final ObjectId branch = repo.resolve(branchName);
+        final Map<ObjectId, List<String>> tags = getTagsByTheIdOfTheCommitTheyPointTo(repo);
+        try (final var commitWalker = new RevWalk(repo)) {
             try {
                 commitWalker.markStart(commitWalker.parseCommit(branch));
             } catch (final NullPointerException exception) {
