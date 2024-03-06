@@ -95,6 +95,7 @@ public class ProjectKeeper {
         return List.of(this::phase0, this::phase1, this::phase2, this::phase3);
     }
 
+    // [impl->dsn~verify-release-mode.verify~1]
     private List<Function<ValidationPhase.Provision, ValidationPhase>> getReleaseValidationPhases() {
         return List.of(this::phase0, this::phase1, this::phase2, this::phase3, this::releaseValidationPhase);
     }

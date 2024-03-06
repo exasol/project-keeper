@@ -97,6 +97,7 @@ class ProjectKeeperMojoIT {
     }
 
     // [itest->dsn~verify-release-mode.verify-release-date~1]
+    // [itest->dsn~verify-release-mode.verify~1]
     @Test
     void testVerifyRelease() throws VerificationException, IOException {
         writeProjectKeeperConfig("sources:\n" + //

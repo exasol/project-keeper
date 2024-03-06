@@ -18,8 +18,7 @@ public class ProjectKeeperVerifyReleaseMojo extends AbstractProjectKeeperMojo {
     protected void runProjectKeeper(final ProjectKeeper projectKeeper) throws MojoFailureException {
         final boolean success = projectKeeper.verifyRelease();
         if (!success) {
-            throw new MojoFailureException(
-                    "project-keeper:update-dependencies failed. See log messages above for details");
+            throw new MojoFailureException("project-keeper:verify-release failed. See log messages above for details");
         }
     }
 }

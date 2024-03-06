@@ -887,7 +887,7 @@ Rationale:
 Covers:
 * [`dsn~verify-release-mode~1`](#verify-release-mode)
 
--Needs: impl, utest, itest
+Needs: impl, itest
 
 #### `verify-release` Mode Checks Release Date
 `dsn~verify-release-mode.verify-release-date~1`
