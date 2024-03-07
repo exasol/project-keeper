@@ -14,6 +14,7 @@ import java.util.stream.Stream;
  * </p>
  */
 public final class ChangesFileSection {
+    @SuppressWarnings("java:S5852") // Risk of vulnerability to polynomial runtime is accepted.
     private static final Pattern FIXED_ISSUE_LINE_REGEXP = Pattern.compile("[-*]\\s*#(\\d+)\\s*:?\\s*(.+)?");
     private final String heading;
     private final List<String> content;
