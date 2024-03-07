@@ -134,6 +134,13 @@
                 <artifactId>jcabi-github</artifactId>
                 <version>1.8.0</version>
             </dependency>
+            <dependency>
+                <!-- Fix CVE-2014-3643 in transitive dependency of com.jcabi:jcabi-github -->
+                <groupId>com.sun.jersey</groupId>
+                <artifactId>jersey-client</artifactId>
+                <version>1.19.4</version>
+                <scope>runtime</scope>
+            </dependency>
             <!-- test -->
             <dependency>
                 <groupId>org.apache.maven</groupId>
