@@ -25,12 +25,23 @@ public class GitHubWorkflowOutputPublisher {
         this.publisherFactory = publisherFactory;
     }
 
+    /**
+     * Create a new publisher.
+     * 
+     * @param config         Project Keeper configuration
+     * @param projectDir     project directory
+     * @param projectVersion project version
+     * @return a new publisher
+     */
     public static GitHubWorkflowOutputPublisher create(final ProjectKeeperConfig config, final Path projectDir,
             final String projectVersion) {
         return new GitHubWorkflowOutputPublisher(config, projectDir, projectVersion,
                 new OutputPublisherFactory(System.getenv()), new ChangesFileIO());
     }
 
+    /**
+     * Publish all values.
+     */
     public void publish() {
         try (OutputPublisher publisher = publisherFactory.create()) {
             publisher.publish("version", projectVersion);
