@@ -69,3 +69,17 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Run project-keeper itself
         run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
+
+  start_release:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      cancel-in-progress: false
+      group: "release"
+    secrets: inherit
+    permissions:
+      contents: write
+      actions: read
+    uses: ./.github/workflows/release.yml
+    with:
+      started-from-ci: true
