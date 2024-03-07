@@ -1,16 +1,14 @@
 package com.exasol.projectkeeper.validators.release.github;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.time.Duration;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import org.kohsuke.github.GitHub;
-
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.sources.analyze.generic.SimpleProcess;
+import com.jcabi.github.Github;
+import com.jcabi.github.RtGithub;
 
 class GitHubConnectionProvider {
     private static final Logger LOG = Logger.getLogger(GitHubConnectionProvider.class.getName());
@@ -25,31 +23,16 @@ class GitHubConnectionProvider {
         this.environmentVariables = environmentVariables;
     }
 
-    GitHub connect() {
+    Github connect() {
         return getToken().map(this::connectWithToken) //
-                .or(this::connectWithoutToken) //
                 .orElseThrow(() -> new IllegalStateException(
                         ExaError.messageBuilder("E-PK-CORE-185").message("Failed to get GitHub credentials.")
                                 .mitigation("Set environment variable GH_TOKEN or GITHUB_TOKEN")
                                 .mitigation("Configure 'gh' command line tool using 'gh auth login'").toString()));
     }
 
-    private GitHub connectWithToken(final String token) {
-        try {
-            return GitHub.connectUsingOAuth(token);
-        } catch (final IOException exception) {
-            throw new UncheckedIOException(exception);
-        }
-    }
-
-    private Optional<GitHub> connectWithoutToken() {
-        try {
-            return Optional.of(GitHub.connect());
-        } catch (final IOException exception) {
-            LOG.log(Level.WARNING, exception,
-                    () -> "Failed to connect using default credentials: " + exception.getMessage());
-            return Optional.empty();
-        }
+    private Github connectWithToken(final String token) {
+        return new RtGithub(token);
     }
 
     Optional<String> getToken() {

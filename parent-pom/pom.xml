@@ -27,13 +27,6 @@
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
     </distributionManagement>
-    <repositories>
-        <repository>
-            <!-- Transitive dependencies of org.kohsuke:github-api are not available on Maven Central -->
-            <id>atlassian-public</id>
-            <url>https://packages.atlassian.com/maven/repository/public</url>
-        </repository>
-    </repositories>
     <properties>
         <revision>4.2.0</revision>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
@@ -124,7 +117,7 @@
             <dependency>
                 <groupId>net.steppschuh.markdowngenerator</groupId>
                 <artifactId>markdowngenerator</artifactId>
-                <version>1.3.2</version>
+                <version>1.3.1.1</version>
             </dependency>
             <dependency>
                 <groupId>com.vdurmont</groupId>
@@ -137,31 +130,9 @@
                 <version>2.2</version>
             </dependency>
             <dependency>
-                <groupId>org.kohsuke</groupId>
-                <artifactId>github-api</artifactId>
-                <version>1.319</version>
-            </dependency>
-            <dependency>
-                <groupId>com.google.code.findbugs</groupId>
-                <artifactId>annotations</artifactId>
-                <version>3.0.1u2</version>
-                <exclusions>
-                    <exclusion>
-                        <!-- Contains duplicate classes as com.google.code.findbugs:annotations -->
-                        <groupId>com.google.code.findbugs</groupId>
-                        <artifactId>jsr305</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <!-- Contains duplicate classes as com.google.code.findbugs:annotations -->
-                        <groupId>net.jcip</groupId>
-                        <artifactId>jcip-annotations</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
-            <dependency>
-                <groupId>com.infradna.tool</groupId>
-                <artifactId>bridge-method-annotation</artifactId>
-                <version>1.29</version>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-github</artifactId>
+                <version>1.8.0</version>
             </dependency>
             <!-- test -->
             <dependency>

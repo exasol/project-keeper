@@ -1020,3 +1020,42 @@ Covers:
 * [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
 
 -Needs: impl, utest, itest
+
+## Design Decisions
+
+### GitHub Client Library
+
+PK needs to [list closed GitHub issues for a repository](#pk-mode-verify-release-checks-all-issues-are-closed). We evaluated the following alternatives:
+
+#### Use a Library
+* [org.kohsuke:github-api](https://github.com/hub4j/github-api)
+  * Requires additional dependencies `com.google.code.findbugs:annotations` and `com.infradna.tool:bridge-method-annotation` to avoid compiler warning
+    ```
+    "~/.m2/repository/org/kohsuke/github-api/1.316/github-api-1.316.jar(/org/kohsuke/github/GHIssue.class): warning: Cannot find annotation method 'value()' in type 'SuppressFBWarnings'"
+    ```
+  * Disabling compiler warnings completely is not acceptable.
+  * These dependencies are not available in Maven Central, only in `https://packages.atlassian.com/maven/repository/public`.
+* [com.spotify:github-client](https://github.com/spotify/github-java-client)
+  * Does not support listing issues
+* [com.jcabi:jcabi-github](https://github.com/jcabi/jcabi-github)
+  * Supports listing issues
+  * Seems to be regularly maintained and released
+
+##### Common for all libraries:
+
+* ➖ Require transitive dependencies
+* ➕ Support pagination
+
+#### Implement Client for GitHub API
+
+* GitHub API allows [listing issues](https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#list-repository-issues)
+* ➕ Minimal dependencies
+* ➖ Effort for implementing pagination
+
+#### Decision
+
+We decided to use `com.jcabi:jcabi-github` for the following reasons:
+* Supports listing issues
+* Supports pagination
+* Low implementation effort
+* No workarounds required to fix compiler warnings

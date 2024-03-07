@@ -22,10 +22,7 @@ Code name: Automated Release Process
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:4.1.0` to `4.2.0`
-* Added `com.google.code.findbugs:annotations:3.0.1u2`
-* Added `com.infradna.tool:bridge-method-annotation:1.29`
-* Updated `net.steppschuh.markdowngenerator:markdowngenerator:1.3.1.1` to `1.3.2`
-* Added `org.kohsuke:github-api:1.319`
+* Added `com.jcabi:jcabi-github:1.8.0`
 
 #### Runtime Dependency Updates
 
