@@ -20,6 +20,7 @@ class GitHubAdapterIT {
         adapter = GitHubAdapter.connect("project-keeper");
     }
 
+    // [itest->dsn~verify-release-mode.verify-issues-closed~1]
     @Test
     void getClosedIssues() {
         final Set<Integer> closedIssues = adapter.getClosedIssues();

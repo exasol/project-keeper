@@ -55,6 +55,7 @@ class ChangesFileReleaseValidatorTest {
         assertThat(findings, empty());
     }
 
+    // [utest->dsn~verify-release-mode.verify-issues-closed~1]
     @Test
     void closedIssuesIssueNotClosed() {
         when(gitHubAdapterMock.getClosedIssues()).thenReturn(emptySet());

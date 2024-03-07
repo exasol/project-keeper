@@ -47,6 +47,7 @@ public class GitHubAdapter {
      *
      * @return issue numbers
      */
+    // [impl->dsn~verify-release-mode.verify-issues-closed~1]
     public Set<Integer> getClosedIssues() {
         LOG.fine(() -> "Fetching closed issues for repo " + owner + "/" + repoName + "...");
         final Instant start = Instant.now();
