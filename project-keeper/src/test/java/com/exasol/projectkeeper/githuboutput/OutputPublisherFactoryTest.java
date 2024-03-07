@@ -4,9 +4,11 @@ import static java.util.Collections.emptyMap;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
 
+import java.nio.file.Path;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 class OutputPublisherFactoryTest {
 
@@ -17,8 +19,8 @@ class OutputPublisherFactoryTest {
 
     // [utest->dsn~verify-modes.output-parameters~1]
     @Test
-    void fileOutputPublisher() {
-        assertThat(new OutputPublisherFactory(Map.of("GITHUB_OUTPUT", "file")).create(),
+    void fileOutputPublisher(@TempDir final Path tempDir) {
+        assertThat(new OutputPublisherFactory(Map.of("GITHUB_OUTPUT", tempDir.resolve("file").toString())).create(),
                 instanceOf(FileOutputPublisher.class));
     }
 }
