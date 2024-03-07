@@ -308,6 +308,8 @@ This goal verifies that the project is ready to release.
 mvn project-keeper:verify-release
 ```
 
+This goal requires reading issues from the GitHub API. To allow running this locally you need to install the [GitHub CLI](https://cli.github.com/) and configure your GitHub credentials by executing `gh auth login`.
+
 #### Fix
 
 In addition this plugin can also fix the project structure. For that use:
