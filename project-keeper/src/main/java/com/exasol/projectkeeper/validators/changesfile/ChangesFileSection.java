@@ -14,7 +14,7 @@ import java.util.stream.Stream;
  * </p>
  */
 public final class ChangesFileSection {
-    private static final Pattern FIXED_ISSUE_LINE_REGEXP = Pattern.compile("\\s*[-*]\\s*#(\\d+)\\s*:?\\s*(.+?)?\\s*");
+    private static final Pattern FIXED_ISSUE_LINE_REGEXP = Pattern.compile("[-*]\\s*#(\\d+)\\s*:?\\s*(.+)?");
     private final String heading;
     private final List<String> content;
 
@@ -42,7 +42,7 @@ public final class ChangesFileSection {
     }
 
     Stream<FixedIssue> getFixedIssues() {
-        return this.content.stream().flatMap(this::findFixedIssues);
+        return this.content.stream().map(String::trim).flatMap(this::findFixedIssues);
     }
 
     private Stream<FixedIssue> findFixedIssues(final String line) {
