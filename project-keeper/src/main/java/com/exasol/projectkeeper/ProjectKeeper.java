@@ -92,12 +92,13 @@ public class ProjectKeeper {
     }
 
     private List<Function<ValidationPhase.Provision, ValidationPhase>> getValidationPhases() {
-        return List.of(this::phase0, this::phase1, this::phase2, this::phase3);
+        return List.of(this::phase0, this::phase1BuildFiles, this::phase2AnalyzeSources, this::phase3Changelog);
     }
 
     // [impl->dsn~verify-release-mode.verify~1]
     private List<Function<ValidationPhase.Provision, ValidationPhase>> getReleaseValidationPhases() {
-        return List.of(this::phase0, this::phase1, this::phase2, this::phase3, this::releaseValidationPhase);
+        return List.of(this::phase0, this::phase1BuildFiles, this::phase2AnalyzeSources, this::phase3Changelog,
+                this::releaseValidationPhase);
     }
 
     /*
@@ -111,7 +112,7 @@ public class ProjectKeeper {
      * Phase 1 validates the build files like for example the pom.xml. In that phase analyzedSources is not yet
      * available.
      */
-    private ValidationPhase phase1(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase1BuildFiles(final ValidationPhase.Provision provision) {
         final String licenseName = new LicenseNameReader().readLicenseName(this.projectDir);
         final List<Validator> validators = new ArrayList<>();
         for (final Source source : this.config.getSources()) {
@@ -128,7 +129,7 @@ public class ProjectKeeper {
     /*
      * Phase 2 finally analyzes the sources and detects the version of the current project.
      */
-    private ValidationPhase phase2(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase2AnalyzeSources(final ValidationPhase.Provision provision) {
         final List<Source> sources = this.config.getSources();
         final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.config, this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, sources);
@@ -159,15 +160,19 @@ public class ProjectKeeper {
     }
 
     /*
-     * ChangelogFileValidator needs to be in phase 3 since it depends on the result of the ChangesFileValidator.
+     * {@link ChangelogFileValidator} needs to be in phase 3 since it depends on the result of the {@link
+     * ChangesFileValidator}.
      */
-    private ValidationPhase phase3(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase3Changelog(final ValidationPhase.Provision provision) {
         final List<Validator> validators = List.of(
                 new LatestChangesFileValidator(this.projectDir, provision.projectVersion()),
                 new ChangelogFileValidator(this.projectDir));
         return new ValidationPhase(provision, validators);
     }
 
+    /*
+     * This phase performs additional checks for releases.
+     */
     private ValidationPhase releaseValidationPhase(final ValidationPhase.Provision provision) {
         final ReleaseInspector inspector = new ReleaseInspector(this.repoName, provision.projectVersion(), projectDir);
         return new ValidationPhase(provision, inspector.validators());
