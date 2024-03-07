@@ -227,7 +227,7 @@ Needs: impl, itest
 ### Project Version Increment Validator
 `dsn~version-increment-validator~1`
 
-PK's `verify` mode checks that the current project version was incremented correctly based on the previous version.
+PK mode `verify` checks that the current project version was incremented correctly based on the previous version.
 
 Rationale:
 * In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`.
@@ -1026,6 +1026,10 @@ Covers:
 ### GitHub Client Library
 
 PK needs to [list closed GitHub issues for a repository](#pk-mode-verify-release-checks-all-issues-are-closed). We evaluated the following alternatives:
+* Use a Library
+* Implement Client for GitHub API
+
+See details in the following sections.
 
 #### Use a Library
 * [org.kohsuke:github-api](https://github.com/hub4j/github-api)
@@ -1041,7 +1045,7 @@ PK needs to [list closed GitHub issues for a repository](#pk-mode-verify-release
   * Supports listing issues
   * Seems to be regularly maintained and released
 
-##### Common for all libraries:
+Common for all libraries:
 
 * ➖ Require transitive dependencies
 * ➕ Support pagination
