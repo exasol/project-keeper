@@ -37,7 +37,7 @@ public class ReleaseInspector {
     }
 
     /**
-     * Create a list of validators that check the release preconditions.
+     * Create a list of validators for checking the preconditions for a release.
      * 
      * @return validators
      */
