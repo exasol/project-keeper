@@ -954,7 +954,7 @@ Rationale:
 Covers:
 * [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 #### PK Modes `verify` and `verify-release` Publish Code Name
 `dsn~verify-release-mode.output-parameters.code-name~1`
@@ -967,7 +967,7 @@ Rationale:
 Covers:
 * [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 #### PK Modes `verify` and `verify-release` Publish Changes File Content
 `dsn~verify-release-mode.output-parameters.release-notes~1`
@@ -980,7 +980,7 @@ Rationale:
 Covers:
 * [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 #### PK Modes `verify` and `verify-release` Publish List of Release Artifacts
 `dsn~verify-release-mode.output-parameters.release-artifacts~1`
@@ -995,7 +995,7 @@ Rationale:
 Covers:
 * [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 #### PK Modes `verify` and `verify-release` Publish List of Additional Git Tags
 `dsn~verify-release-mode.output-parameters.additional-git-tags~1`

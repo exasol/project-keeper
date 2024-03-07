@@ -12,10 +12,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 class KeyValuePairFormatterTest {
 
     @ParameterizedTest(name = "Key ''{0}'' / value ''{1}'' formatted to ''{2}''")
-    @CsvSource({ //
+    @CsvSource(nullValues = "NULL", value = { //
             "key, value, key=value", //
             "Key, Value, Key=Value", //
             "KEY, VALUE, KEY=VALUE", //
+            "KEY, NULL, KEY=", //
             "key space, value, key space=value", //
             "key, ' value ', 'key= value '", //
             "key, '', 'key='", //

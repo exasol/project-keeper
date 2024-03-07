@@ -12,6 +12,9 @@ class KeyValuePairFormatter {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-190")
                     .message("Key {{key}} is empty or contains leading or trailing whitespace.", key).toString());
         }
+        if (value == null) {
+            return key + "=";
+        }
         if (value.contains("\n")) {
             return key + "<<" + EOF_MARKER + "\n" //
                     + value + "\n" //
