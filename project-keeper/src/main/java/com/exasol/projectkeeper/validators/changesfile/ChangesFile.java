@@ -4,6 +4,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.*;
+import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
 import com.vdurmont.semver4j.Semver;
@@ -145,6 +146,18 @@ public final class ChangesFile {
      */
     public Optional<ChangesFileSection> getSummarySection() {
         return Optional.ofNullable(this.summarySection);
+    }
+
+    /**
+     * Get all issues marked as fixed in this changes file.
+     * 
+     * @return all fixed issues
+     */
+    public List<FixedIssue> getFixedIssues() {
+        final Stream<ChangesFileSection> summary = getSummarySection().map(Stream::of).orElse(Stream.empty());
+        return Stream.concat(summary, sections.stream()) //
+                .flatMap(ChangesFileSection::getFixedIssues) //
+                .toList();
     }
 
     @Override

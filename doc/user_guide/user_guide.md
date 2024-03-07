@@ -290,15 +290,25 @@ Project Keeper will read the version of your project from file `package.json`.
 
 Use the `project-keeper-maven-plugin` for analyzing Maven projects.
 
-#### Verification
+#### Verify Your Project
 
-The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.
+PK allows verifying the structure and configuration of your project. For Maven projects, Maven will automatically execute this verification when running `mvn verify`, i.e. within the maven package lifecycle phase.
 
 You can also run the checks manually using:
 
-```sh
+```shell
 mvn project-keeper:verify
 ```
+
+#### Release Verification
+
+PK's Maven-Goal `verify-release` helps you to verify if your project is ready to release:
+
+```shell
+mvn project-keeper:verify-release
+```
+
+This goal requires reading issues from the GitHub API. To allow running this locally you need to install the [GitHub CLI](https://cli.github.com/) and configure your GitHub credentials by executing `gh auth login`.
 
 #### Fix
 
@@ -330,6 +340,7 @@ In this case add command line option `--projects .`:
 
 ```sh
 mvn project-keeper:verify --projects .
+mvn project-keeper:verify-release --projects .
 mvn project-keeper:fix --projects .
 mvn project-keeper:update-dependencies --projects .
 ```
@@ -362,6 +373,16 @@ Scheduled daily, checks the Maven project for vulnerable dependencies, creates n
 ### [`dependencies_update.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml)
 
 This workflow is triggered manually or by workflow [`dependencies_check.yml`](#dependencies_checkyml). It updates dependencies, creates a changelog with fixed vulnerabilities and creates a new Pull Requests.
+
+In order to send notifications, this workflow requires GitHub secret `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK`.
+
+### [`ci-build.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/ci-build.yml)
+
+This workflow runs for each change of a Pull Request and whenever a Pull Request is merged to `main`. It runs all tests and verification steps.
+
+### [`release.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/release.yml)
+
+This workflow is triggered manually or by workflow [`ci-build.yml`](). It verifies that all preconditions for a release are met and performs the release.
 
 In order to send notifications, this workflow requires GitHub secret `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK`.
 

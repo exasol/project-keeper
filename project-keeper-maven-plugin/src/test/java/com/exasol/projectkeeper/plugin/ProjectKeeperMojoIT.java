@@ -96,6 +96,22 @@ class ProjectKeeperMojoIT {
         assertThat(projectDir.resolve("target/jacoco-agent/org.jacoco.agent-runtime.jar").toFile(), anExistingFile());
     }
 
+    // [itest->dsn~verify-release-mode.verify-release-date~1]
+    // [itest->dsn~verify-release-mode.verify~1]
+    @Test
+    void testVerifyRelease() throws VerificationException, IOException {
+        writeProjectKeeperConfig("sources:\n" + //
+                "  - type: maven\n" + //
+                "    path: pom.xml\n");
+        verifier.executeGoal("project-keeper:fix");
+        final VerificationException exception = assertThrows(VerificationException.class,
+                () -> verifier.executeGoal("project-keeper:verify-release"));
+        final String output = exception.getMessage();
+        final int thisYear = LocalDate.now().getYear();
+        assertThat(output,
+                containsString("E-PK-CORE-182: Release date '" + thisYear + "-??-??' has invalid format in "));
+    }
+
     // [itest->dsn~dependency-updater.increment-version~1]
     // [itest->dsn~dependency-updater.update-dependencies~1]
     // [itest->dsn~dependency-updater.read-vulnerability-info~1]
@@ -180,13 +196,13 @@ class ProjectKeeperMojoIT {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "verify", "fix", "update-dependencies" })
-    void testSkip(final String phase) throws IOException, VerificationException {
+    @ValueSource(strings = { "verify", "fix", "update-dependencies", "verify-release" })
+    void testSkip(final String goal) throws IOException, VerificationException {
         writeProjectKeeperConfig("sources:\n" + //
                 "  - type: maven\n" + //
                 "    path: pom.xml\n");
         verifier.setSystemProperty("project-keeper.skip", "true");
-        verifier.executeGoal("project-keeper:" + phase);
+        verifier.executeGoal("project-keeper:" + goal);
         verifier.verifyTextInLog("Skipping project-keeper.");
     }
 

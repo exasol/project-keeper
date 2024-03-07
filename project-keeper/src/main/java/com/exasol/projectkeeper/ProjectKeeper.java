@@ -7,7 +7,6 @@ import static com.exasol.projectkeeper.validators.finding.SimpleValidationFindin
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
@@ -26,6 +25,7 @@ import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
+import com.exasol.projectkeeper.validators.release.ReleaseInspector;
 
 /**
  * This is the entry-point class of project-keeper-core.
@@ -90,14 +90,22 @@ public class ProjectKeeper {
         return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), ownVersion);
     }
 
-    private List<Function<ValidationPhase.Provision, ValidationPhase>> getValidationPhases() {
-        return List.of(this::phase0, this::phase1, this::phase2, this::phase3);
+    private List<PhaseValidator> getValidationPhases() {
+        return List.of(this::phase0LicenseFile, this::phase1BuildFiles, this::phase2AnalyzeSources,
+                this::phase3Changelog);
+    }
+
+    // [impl->dsn~verify-release-mode.verify~1]
+    private List<PhaseValidator> getReleaseValidationPhases() {
+        final List<PhaseValidator> phases = new ArrayList<>(getValidationPhases());
+        phases.add(this::validateRelease);
+        return phases;
     }
 
     /*
      * Phase 0 must run before the project file validation, because the project file validation depends on them.
      */
-    private ValidationPhase phase0(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase0LicenseFile(final ValidationPhase.Provision provision) {
         return ValidationPhase.from(new LicenseFileValidator(this.projectDir));
     }
 
@@ -105,7 +113,7 @@ public class ProjectKeeper {
      * Phase 1 validates the build files like for example the pom.xml. In that phase analyzedSources is not yet
      * available.
      */
-    private ValidationPhase phase1(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase1BuildFiles(final ValidationPhase.Provision provision) {
         final String licenseName = new LicenseNameReader().readLicenseName(this.projectDir);
         final List<Validator> validators = new ArrayList<>();
         for (final Source source : this.config.getSources()) {
@@ -122,7 +130,7 @@ public class ProjectKeeper {
     /*
      * Phase 2 finally analyzes the sources and detects the version of the current project.
      */
-    private ValidationPhase phase2(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase2AnalyzeSources(final ValidationPhase.Provision provision) {
         final List<Source> sources = this.config.getSources();
         final List<AnalyzedSource> analyzedSources = SourceAnalyzer.create(this.config, this.mvnRepo, this.ownVersion)
                 .analyze(this.projectDir, sources);
@@ -138,11 +146,13 @@ public class ProjectKeeper {
                 .ciBuildOptions(config.getCiBuildConfig()) //
                 .build();
         final List<Validator> validators = List.of( //
-                projectFilesValidator,
+                projectFilesValidator, //
+                new VersionIncrementValidator(projectVersion, projectDir), //
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
-                new DeletedFilesValidator(this.projectDir), new GitignoreFileValidator(this.projectDir));
+                new DeletedFilesValidator(this.projectDir), //
+                new GitignoreFileValidator(this.projectDir));
         return new ValidationPhase(new ValidationPhase.Provision(projectVersion), validators);
     }
 
@@ -151,13 +161,22 @@ public class ProjectKeeper {
     }
 
     /*
-     * ChangelogFileValidator needs to be in phase 3 since it depends on the result of the ChangesFileValidator.
+     * {@link ChangelogFileValidator} needs to be in phase 3 since it depends on the result of the {@link
+     * ChangesFileValidator}.
      */
-    private ValidationPhase phase3(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase3Changelog(final ValidationPhase.Provision provision) {
         final List<Validator> validators = List.of(
                 new LatestChangesFileValidator(this.projectDir, provision.projectVersion()),
                 new ChangelogFileValidator(this.projectDir));
         return new ValidationPhase(provision, validators);
+    }
+
+    /*
+     * This phase performs additional checks for releases.
+     */
+    private ValidationPhase validateRelease(final ValidationPhase.Provision provision) {
+        final ReleaseInspector inspector = new ReleaseInspector(this.repoName, provision.projectVersion(), projectDir);
+        return new ValidationPhase(provision, inspector.validators());
     }
 
     private String getProjectName(final List<AnalyzedSource> analyzedSources) {
@@ -181,7 +200,7 @@ public class ProjectKeeper {
      * @return {@code true} if project is valid
      */
     public boolean verify() {
-        return runValidationPhases(this::handleVerifyFindings);
+        return runValidationPhases(getValidationPhases(), this::handleVerifyFindings);
     }
 
     private boolean handleVerifyFindings(final List<ValidationFinding> findings) {
@@ -217,25 +236,40 @@ public class ProjectKeeper {
     }
 
     /**
+     * Verify the project structure for a release.
+     * <p>
+     * PK interprets the validation as "successful" if there are no mandatory findings. Optional findings are ignored in
+     * this place.
+     * </p>
+     *
+     * @return {@code true} if project is valid
+     */
+    public boolean verifyRelease() {
+        return runValidationPhases(getReleaseValidationPhases(), this::handleVerifyFindings);
+    }
+
+    /**
      * Fix all project findings.
      *
      * @return {@code true} if all mandatory findings could be fixed
      */
     public boolean fix() {
-        return runValidationPhases(this::fixFindings);
+        return runValidationPhases(getValidationPhases(), this::fixFindings);
     }
 
     /**
      * Run the validation phase handler.
      *
+     * @param phases             validation phases to run
      * @param phaseResultHandler function List<ValidationFinding> -> boolean that is called after each phase. If the
      *                           function returns {@code false} this method aborts the execution and returns
      *                           {@code false}.
      * @return {@code true} if all {@link PhaseResultHandler} returned {@code true}. {@code false otherwise}
      */
-    private boolean runValidationPhases(final PhaseResultHandler phaseResultHandler) {
+    private boolean runValidationPhases(final List<PhaseValidator> phases,
+            final PhaseResultHandler phaseResultHandler) {
         Provision provision = null;
-        for (final Function<Provision, ValidationPhase> phaseSupplier : getValidationPhases()) {
+        for (final PhaseValidator phaseSupplier : phases) {
             final ValidationPhase phase = phaseSupplier.apply(provision);
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());
@@ -290,8 +324,8 @@ public class ProjectKeeper {
      */
     private Provision getValidationProvision() {
         Provision provision = null;
-        for (final Function<Provision, ValidationPhase> phaseSupplier : getValidationPhases()) {
-            final ValidationPhase phase = phaseSupplier.apply(provision);
+        for (final PhaseValidator phaseValidator : getValidationPhases()) {
+            final ValidationPhase phase = phaseValidator.apply(provision);
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());
             if (!handleVerifyFindings(findings)) {
@@ -316,5 +350,10 @@ public class ProjectKeeper {
         final Provision provision = getValidationProvision();
         return DependencyUpdater.create(this, config, logger, projectDir, provision.projectVersion())
                 .updateDependencies();
+    }
+
+    @FunctionalInterface
+    private interface PhaseValidator {
+        ValidationPhase apply(ValidationPhase.Provision provision);
     }
 }

@@ -3,6 +3,7 @@ package com.exasol.projectkeeper;
 import static com.exasol.projectkeeper.TestEnvBuilder.CURRENT_VERSION;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.mockito.Mockito.mock;
 
 import java.nio.file.Path;
@@ -19,14 +20,16 @@ public class ProjectKeeperAbstractIT {
     }
 
     protected void runFix() {
-        getProjectKeeper(mock(Logger.class)).fix();
+        final ToStringLogger logger = new ToStringLogger();
+        final boolean result = getProjectKeeper(logger).fix();
+        assertThat("Fix succeeded. Log output: " + logger.toString(), result, is(true));
     }
 
     protected String assertInvalidAndGetOutput() {
         final ToStringLogger logger = new ToStringLogger();
         final ProjectKeeper projectKeeper = getProjectKeeper(logger);
         final boolean isValid = projectKeeper.verify();
-        assertThat(isValid, equalTo(false));
+        assertThat("Expected verify to fail", isValid, equalTo(false));
         return logger.toString();
     }
 

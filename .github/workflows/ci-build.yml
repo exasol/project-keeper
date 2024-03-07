@@ -8,6 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
+    permissions:
+      contents: read
+      checks: write # Allow scacap/action-surefire-report
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -42,6 +48,8 @@ jobs:
           mvn --batch-mode clean verify install \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
+        env:
+          GITHUB_TOKEN: ${{ github.token }} # Required for integration tests of GitHub access
       - name: Publish Test Report
         uses: scacap/action-surefire-report@v1
         if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
@@ -61,3 +69,17 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Run project-keeper itself
         run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
+
+  start_release:
+    needs: build
+    if: ${{ github.ref == 'refs/heads/main' }}
+    concurrency:
+      cancel-in-progress: false
+      group: "release"
+    secrets: inherit
+    permissions:
+      contents: write
+      actions: read
+    uses: ./.github/workflows/release.yml
+    with:
+      started-from-ci: true

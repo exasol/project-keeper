@@ -22,6 +22,7 @@ Code name: Automated Release Process
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:4.1.0` to `4.2.0`
+* Added `com.jcabi:jcabi-github:1.8.0`
 
 #### Runtime Dependency Updates
 

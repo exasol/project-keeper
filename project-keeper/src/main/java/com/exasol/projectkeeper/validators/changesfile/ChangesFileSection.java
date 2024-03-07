@@ -3,6 +3,9 @@ package com.exasol.projectkeeper.validators.changesfile;
 import static java.util.Arrays.asList;
 
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Stream;
 
 /**
  * Section of a {@link ChangesFile}.
@@ -11,7 +14,9 @@ import java.util.*;
  * </p>
  */
 public final class ChangesFileSection {
-
+    @SuppressWarnings("java:S5852") // Risk of vulnerability to polynomial runtime is accepted.
+    private static final Pattern FIXED_ISSUE_LINE_REGEXP = Pattern
+            .compile("[-*] #(\\d+) :? (.+)?".replace(" ", "\\s*"));
     private final String heading;
     private final List<String> content;
 
@@ -36,6 +41,24 @@ public final class ChangesFileSection {
      */
     public List<String> getContent() {
         return this.content;
+    }
+
+    Stream<FixedIssue> getFixedIssues() {
+        return this.content.stream() //
+                .map(String::trim) //
+                .map(this::findFixedIssue) //
+                .filter(Optional::isPresent) //
+                .map(Optional::get);
+    }
+
+    private Optional<FixedIssue> findFixedIssue(final String line) {
+        final Matcher matcher = FIXED_ISSUE_LINE_REGEXP.matcher(line);
+        if (!matcher.matches()) {
+            return Optional.empty();
+        }
+        final int issueNumber = Integer.parseInt(matcher.group(1));
+        final String description = matcher.group(2);
+        return Optional.of(new FixedIssue(issueNumber, description));
     }
 
     @Override
