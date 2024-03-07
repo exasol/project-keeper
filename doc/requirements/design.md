@@ -927,22 +927,23 @@ Covers:
 
 Needs: impl, utest, itest
 
-#### PK Mode `verify-release` Sets GitHub Action Output Parameters
-`dsn~verify-release-mode.output-parameters~1`
+### PK Modes `verify` and `verify-release` Sets GitHub Action Output Parameters
+`dsn~verify-modes.output-parameters~1`
 
-PK's `verify-release` mode outputs information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter) using environment variable `GITHUB_OUTPUT`, see the following sub-sections.
+PK modes `verify` and `verify-release` both output information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter) using environment variable `GITHUB_OUTPUT` (see the following sub-sections for details).
 
 Rationale:
-* The `release.yml` workflow needs this information for creating the GitHub release.
+* Workflow `release.yml` needs this information for creating the GitHub release, so `verify-release` must generate the output.
+* Workflow `ci-build.yml` needs this information for verifying release artifacts, so `verify` must generate the output.
 * Project Keeper already has access to this information, so implementation effort is low.
 * Steps in a GitHub workflow can read the output parameters of other steps.
 
 Covers:
 * [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
 
-Needs: dsn
+Needs: dsn, impl, utest
 
-##### PK Mode `verify-release` Outputs Project Version
+#### PK Mode `verify-release` Outputs Project Version
 `dsn~verify-release-mode.output-parameters.project-version~1`
 
 PK mode `verify-release` publishes the project version as GitHub Output Parameter.
@@ -951,11 +952,11 @@ Rationale:
 * The project version is required for creating the GitHub release tag.
 
 Covers:
-* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
 -Needs: impl, utest, itest
 
-##### PK Mode `verify-release` Outputs Code Name
+#### PK Modes `verify` and `verify-release` Publish Code Name
 `dsn~verify-release-mode.output-parameters.code-name~1`
 
 PK mode `verify-release` publishes the code name from the changes file as GitHub Output Parameter.
@@ -964,11 +965,11 @@ Rationale:
 * The code name is used as title for the GitHub release.
 
 Covers:
-* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
 -Needs: impl, utest, itest
 
-##### PK Mode `verify-release` Outputs Changes File Content
+#### PK Modes `verify` and `verify-release` Publish Changes File Content
 `dsn~verify-release-mode.output-parameters.release-notes~1`
 
 PK mode `verify-release` publishes the remaining changes file content as GitHub Output Parameter.
@@ -977,11 +978,11 @@ Rationale:
 * The content is used as note for the GitHub release.
 
 Covers:
-* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
 -Needs: impl, utest, itest
 
-##### PK Mode `verify-release` Outputs List of Release Artifacts
+#### PK Modes `verify` and `verify-release` Publish List of Release Artifacts
 `dsn~verify-release-mode.output-parameters.release-artifacts~1`
 
 PK mode `verify-release` publishes the list of release artifacts as GitHub Output Parameter.
@@ -989,13 +990,14 @@ PK mode `verify-release` publishes the list of release artifacts as GitHub Outpu
 Rationale:
 * The list is used for calculating checksums for each artifact.
 * The list is used to attach all artifacts to the GitHub release.
+* The list is used for verifying all required artifacts are built during workflow `ci-build.yml`.
 
 Covers:
-* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
 -Needs: impl, utest, itest
 
-##### PK Mode `verify-release` Outputs List of Additional Git Tags
+#### PK Modes `verify` and `verify-release` Publish List of Additional Git Tags
 `dsn~verify-release-mode.output-parameters.additional-git-tags~1`
 
 PK mode `verify-release` publishes the list of additional Git tags as GitHub Output Parameter.
@@ -1004,7 +1006,7 @@ Rationale:
 * Golang projects require additional Git tags for releases.
 
 Covers:
-* [`dsn~verify-release-mode.output-parameters~1`](#pk-mode-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
 
 -Needs: impl, utest, itest
 
