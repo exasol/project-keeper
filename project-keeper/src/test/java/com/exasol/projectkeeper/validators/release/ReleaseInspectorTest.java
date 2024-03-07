@@ -19,7 +19,7 @@ import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 
 @ExtendWith(MockitoExtension.class)
-class ReleaseValidationBuilderTest {
+class ReleaseInspectorTest {
     private static final Path PROJECT_DIR = Path.of("project-dir");
     private static final String PROJECT_VERSION = "1.2.3";
     private static final String REPO_NAME = "repo-name";
@@ -58,7 +58,7 @@ class ReleaseValidationBuilderTest {
                 .toList();
     }
 
-    private ReleaseValidationBuilder testee() {
-        return new ReleaseValidationBuilder(REPO_NAME, PROJECT_VERSION, PROJECT_DIR, changesFileIOMock);
+    private ReleaseInspector testee() {
+        return new ReleaseInspector(REPO_NAME, PROJECT_VERSION, PROJECT_DIR, changesFileIOMock);
     }
 }

@@ -154,7 +154,8 @@ public final class ChangesFile {
      * @return all fixed issues
      */
     public List<FixedIssue> getFixedIssues() {
-        return Stream.concat(summarySection != null ? Stream.of(summarySection) : Stream.empty(), sections.stream()) //
+        final Stream<ChangesFileSection> summary = getSummarySection().map(Stream::of).orElse(Stream.empty());
+        return Stream.concat(summary, sections.stream()) //
                 .flatMap(ChangesFileSection::getFixedIssues) //
                 .toList();
     }

@@ -290,21 +290,21 @@ Project Keeper will read the version of your project from file `package.json`.
 
 Use the `project-keeper-maven-plugin` for analyzing Maven projects.
 
-#### Verification
+#### Verify Your Project
 
-The verification is bound to the maven `package` lifecycle phase. So it is automatically executed if you run `mvn package` or `mvn verify`.
+PK allows verifying the structure and configuration of your project. For Maven projects, Maven will automatically execute this verification when running `mvn verify`, i.e. within the maven package lifecycle phase.
 
 You can also run the checks manually using:
 
-```sh
+```shell
 mvn project-keeper:verify
 ```
 
 #### Release Verification
 
-This goal verifies that the project is ready to release.
+PK's Maven-Goal `verify-release` helps you to verify if your project is ready to release:
 
-```sh
+```shell
 mvn project-keeper:verify-release
 ```
 

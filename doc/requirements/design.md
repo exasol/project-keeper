@@ -927,19 +927,6 @@ Covers:
 
 Needs: impl, utest, itest
 
-#### PK Mode `verify-release` Checks Version Increment
-`dsn~verify-release-mode.verify-version-increment~1`
-
-PK's `verify-release` mode verifies that current version was incremented correctly based on the previous version.
-
-Rationale:
-* In the previous release process this was checked by release-droid in `CommonRepositoryValidator.validateSuccessor()`
-
-Covers:
-* [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
-
--Needs: impl, utest, itest
-
 #### PK Mode `verify-release` Sets GitHub Action Output Parameters
 `dsn~verify-release-mode.output-parameters~1`
 

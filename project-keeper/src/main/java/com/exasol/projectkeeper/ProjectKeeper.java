@@ -26,7 +26,7 @@ import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
-import com.exasol.projectkeeper.validators.release.ReleaseValidationBuilder;
+import com.exasol.projectkeeper.validators.release.ReleaseInspector;
 
 /**
  * This is the entry-point class of project-keeper-core.
@@ -169,9 +169,8 @@ public class ProjectKeeper {
     }
 
     private ValidationPhase releaseValidationPhase(final ValidationPhase.Provision provision) {
-        final ReleaseValidationBuilder builder = new ReleaseValidationBuilder(this.repoName, provision.projectVersion(),
-                projectDir);
-        return new ValidationPhase(provision, builder.validators());
+        final ReleaseInspector inspector = new ReleaseInspector(this.repoName, provision.projectVersion(), projectDir);
+        return new ValidationPhase(provision, inspector.validators());
     }
 
     private String getProjectName(final List<AnalyzedSource> analyzedSources) {
@@ -255,16 +254,16 @@ public class ProjectKeeper {
     /**
      * Run the validation phase handler.
      *
-     * @param validationPhases   validation phases to run
+     * @param phases             validation phases to run
      * @param phaseResultHandler function List<ValidationFinding> -> boolean that is called after each phase. If the
      *                           function returns {@code false} this method aborts the execution and returns
      *                           {@code false}.
      * @return {@code true} if all {@link PhaseResultHandler} returned {@code true}. {@code false otherwise}
      */
-    private boolean runValidationPhases(final List<Function<Provision, ValidationPhase>> validationPhases,
+    private boolean runValidationPhases(final List<Function<Provision, ValidationPhase>> phases,
             final PhaseResultHandler phaseResultHandler) {
         Provision provision = null;
-        for (final Function<Provision, ValidationPhase> phaseSupplier : validationPhases) {
+        for (final Function<Provision, ValidationPhase> phaseSupplier : phases) {
             final ValidationPhase phase = phaseSupplier.apply(provision);
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());

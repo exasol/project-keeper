@@ -10,7 +10,7 @@ import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 /**
  * This class creates {@link Validator}s that check if the project satisfies all preconditions for a release.
  */
-public class ReleaseValidationBuilder {
+public class ReleaseInspector {
 
     private final String projectVersion;
     private final Path projectDirectory;
@@ -24,11 +24,11 @@ public class ReleaseValidationBuilder {
      * @param projectVersion   the project's version
      * @param projectDirectory the project's directory
      */
-    public ReleaseValidationBuilder(final String repoName, final String projectVersion, final Path projectDirectory) {
+    public ReleaseInspector(final String repoName, final String projectVersion, final Path projectDirectory) {
         this(repoName, projectVersion, projectDirectory, new ChangesFileIO());
     }
 
-    ReleaseValidationBuilder(final String repoName, final String projectVersion, final Path projectDirectory,
+    ReleaseInspector(final String repoName, final String projectVersion, final Path projectDirectory,
             final ChangesFileIO changesFileIO) {
         this.repoName = repoName;
         this.projectVersion = projectVersion;
