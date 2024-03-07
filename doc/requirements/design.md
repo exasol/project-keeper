@@ -1008,10 +1008,10 @@ Covers:
 
 -Needs: impl, utest, itest
 
-##### `verify-release` Mode Outputs List of Additional Git Tags
+##### PK Mode `verify-release` Outputs List of Additional Git Tags
 `dsn~verify-release-mode.output-parameters.additional-git-tags~1`
 
-PK's `verify-release` mode outputs a list of additional Git tags as GitHub Output Parameter.
+PK mode `verify-release` publishes the list of additional Git tags as GitHub Output Parameter.
 
 Rationale:
 * Golang projects require additional Git tags for releases.
