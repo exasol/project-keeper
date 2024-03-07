@@ -7,7 +7,6 @@ import static com.exasol.projectkeeper.validators.finding.SimpleValidationFindin
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
@@ -91,20 +90,22 @@ public class ProjectKeeper {
         return new ProjectKeeper(logger, projectDir, mvnRepo, readConfig(projectDir), ownVersion);
     }
 
-    private List<Function<ValidationPhase.Provision, ValidationPhase>> getValidationPhases() {
-        return List.of(this::phase0, this::phase1BuildFiles, this::phase2AnalyzeSources, this::phase3Changelog);
+    private List<PhaseValidator> getValidationPhases() {
+        return List.of(this::phase0LicenseFile, this::phase1BuildFiles, this::phase2AnalyzeSources,
+                this::phase3Changelog);
     }
 
     // [impl->dsn~verify-release-mode.verify~1]
-    private List<Function<ValidationPhase.Provision, ValidationPhase>> getReleaseValidationPhases() {
-        return List.of(this::phase0, this::phase1BuildFiles, this::phase2AnalyzeSources, this::phase3Changelog,
-                this::releaseValidationPhase);
+    private List<PhaseValidator> getReleaseValidationPhases() {
+        final List<PhaseValidator> phases = new ArrayList<>(getValidationPhases());
+        phases.add(this::validateRelease);
+        return phases;
     }
 
     /*
      * Phase 0 must run before the project file validation, because the project file validation depends on them.
      */
-    private ValidationPhase phase0(final ValidationPhase.Provision provision) {
+    private ValidationPhase phase0LicenseFile(final ValidationPhase.Provision provision) {
         return ValidationPhase.from(new LicenseFileValidator(this.projectDir));
     }
 
@@ -173,7 +174,7 @@ public class ProjectKeeper {
     /*
      * This phase performs additional checks for releases.
      */
-    private ValidationPhase releaseValidationPhase(final ValidationPhase.Provision provision) {
+    private ValidationPhase validateRelease(final ValidationPhase.Provision provision) {
         final ReleaseInspector inspector = new ReleaseInspector(this.repoName, provision.projectVersion(), projectDir);
         return new ValidationPhase(provision, inspector.validators());
     }
@@ -265,10 +266,10 @@ public class ProjectKeeper {
      *                           {@code false}.
      * @return {@code true} if all {@link PhaseResultHandler} returned {@code true}. {@code false otherwise}
      */
-    private boolean runValidationPhases(final List<Function<Provision, ValidationPhase>> phases,
+    private boolean runValidationPhases(final List<PhaseValidator> phases,
             final PhaseResultHandler phaseResultHandler) {
         Provision provision = null;
-        for (final Function<Provision, ValidationPhase> phaseSupplier : phases) {
+        for (final PhaseValidator phaseSupplier : phases) {
             final ValidationPhase phase = phaseSupplier.apply(provision);
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());
@@ -323,8 +324,8 @@ public class ProjectKeeper {
      */
     private Provision getValidationProvision() {
         Provision provision = null;
-        for (final Function<Provision, ValidationPhase> phaseSupplier : getValidationPhases()) {
-            final ValidationPhase phase = phaseSupplier.apply(provision);
+        for (final PhaseValidator phaseValidator : getValidationPhases()) {
+            final ValidationPhase phase = phaseValidator.apply(provision);
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());
             if (!handleVerifyFindings(findings)) {
@@ -349,5 +350,10 @@ public class ProjectKeeper {
         final Provision provision = getValidationProvision();
         return DependencyUpdater.create(this, config, logger, projectDir, provision.projectVersion())
                 .updateDependencies();
+    }
+
+    @FunctionalInterface
+    private interface PhaseValidator {
+        ValidationPhase apply(ValidationPhase.Provision provision);
     }
 }
