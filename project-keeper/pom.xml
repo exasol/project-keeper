@@ -136,8 +136,9 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <compilerArgs>
-                        <!-- Fail on warnings -->
-                        <arg>-Xlint:all,-processing</arg>
+                        <!-- Excluding path to suppress warning when compiling tests:
+                        "[path] bad path element "~/.m2/repository/com/sun/xml/bind/jaxb-core/4.0.3/jakarta.activation-api.jar": no such file or directory" -->
+                        <arg>-Xlint:all,-processing,-path</arg>
                         <arg>-Werror</arg>
                     </compilerArgs>
                 </configuration>
