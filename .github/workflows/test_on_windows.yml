@@ -65,12 +65,12 @@ jobs:
           do  
               echo "Checking if file $file exists..."
               if ! [[ -f "$file" ]]; then
-                  print_message "* ⚠️ Release artifact $file does not exist ⚠️"
-                  echo "Content of $(dirname "$file"):"
+                  print_message "* ⚠️ \`$file\` does not exist ⚠️"
+                  echo "Content of directory $(dirname "$file"):"
                   ls "$(dirname "$file")"
                   missing_files+=("$file")
               else
-                  print_message "* Release artifact $file exists" 
+                  print_message "* \`$file\` ✅" 
               fi
           done
           print_message ""
