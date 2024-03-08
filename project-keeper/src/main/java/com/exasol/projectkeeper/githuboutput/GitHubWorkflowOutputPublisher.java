@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.githuboutput;
 
 import static java.util.stream.Collectors.joining;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.function.Function;
@@ -56,14 +57,16 @@ public class GitHubWorkflowOutputPublisher {
      * Publish all values.
      */
     public void publish() {
-        final ChangesFile changesFile = readChangesFile();
+        final Optional<ChangesFile> changesFile = readChangesFile();
         try (OutputPublisher publisher = publisherFactory.create()) {
             // [impl->dsn~verify-release-mode.output-parameters.project-version~1]
             publisher.publish("version", projectVersion);
-            // [impl->dsn~verify-release-mode.output-parameters.code-name~1]
-            publisher.publish("release-title", changesFile.getCodeName());
-            // [impl->dsn~verify-release-mode.output-parameters.release-notes~1]
-            publisher.publish("release-notes", extractReleaseNotes(changesFile));
+            if (changesFile.isPresent()) {
+                // [impl->dsn~verify-release-mode.output-parameters.code-name~1]
+                publisher.publish("release-title", changesFile.get().getCodeName());
+                // [impl->dsn~verify-release-mode.output-parameters.release-notes~1]
+                publisher.publish("release-notes", extractReleaseNotes(changesFile.get()));
+            }
             // [impl->dsn~verify-release-mode.output-parameters.release-artifacts~1]
             publisher.publish("release-artifacts", getReleaseArtifacts());
         }
@@ -112,7 +115,12 @@ public class GitHubWorkflowOutputPublisher {
         lines.addAll(section.getContent());
     }
 
-    private ChangesFile readChangesFile() {
-        return changesFileIO.read(projectDir.resolve(ChangesFile.getPathForVersion(projectVersion)));
+    private Optional<ChangesFile> readChangesFile() {
+        final Path file = projectDir.resolve(ChangesFile.getPathForVersion(projectVersion));
+        if (Files.exists(file)) {
+            return Optional.of(changesFileIO.read(file));
+        } else {
+            return Optional.empty();
+        }
     }
 }

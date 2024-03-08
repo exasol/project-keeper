@@ -247,8 +247,9 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         public String toString() {
             return "AnalyzedMavenSourceBuilder [path=" + path + ", modules=" + modules + ", advertise=" + advertise
                     + ", artifactId=" + artifactId + ", projectName=" + projectName + ", version=" + version
-                    + ", artifactName=" + releaseArtifactName + ", javaVersion=" + javaVersion + ", dependencyChanges="
-                    + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject=" + isRootProject + "]";
+                    + ", releaseArtifactName=" + releaseArtifactName + ", javaVersion=" + javaVersion
+                    + ", dependencyChanges=" + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject="
+                    + isRootProject + "]";
         }
     }
 
@@ -256,8 +257,9 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
     public String toString() {
         return "AnalyzedMavenSource [path=" + path + ", modules=" + modules + ", advertise=" + advertise
                 + ", artifactId=" + artifactId + ", projectName=" + projectName + ", version=" + version
-                + ", artifactName=" + releaseArtifactName + ", javaVersion=" + javaVersion + ", dependencyChanges="
-                + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject=" + isRootProject + "]";
+                + ", releaseArtifactName=" + releaseArtifactName + ", javaVersion=" + javaVersion
+                + ", dependencyChanges=" + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject="
+                + isRootProject + "]";
     }
 
     @Override
