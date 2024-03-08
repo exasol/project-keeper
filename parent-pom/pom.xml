@@ -201,6 +201,13 @@
                 <artifactId>maven-plugin-integration-testing</artifactId>
                 <version>1.1.2</version>
                 <scope>test</scope>
+                <exclusions>
+                    <exclusion>
+                        <!-- Avoid importing the wrong @Test annotation -->
+                        <groupId>junit</groupId>
+                        <artifactId>junit</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>
