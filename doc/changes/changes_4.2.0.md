@@ -1,8 +1,10 @@
-# Project Keeper 4.2.0, released 2024-??-??
+# Project Keeper 4.2.0, released 2024-03-08
 
 Code name: Automated Release Process
 
 ## Summary
+
+This release replaces Release Droid workflows `release_droid_.yml` with workflow `release.yml`. This will automatically release the project when `ci-build.yml` succeeded on `main` branch and the changes file contains an up-to-date release date. In case of problems you can start the workflow manually and skip the release to Maven Central or GitHub if necessary.
 
 ## Features
 
