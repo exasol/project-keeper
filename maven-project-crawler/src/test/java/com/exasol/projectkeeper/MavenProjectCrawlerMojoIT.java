@@ -54,6 +54,7 @@ class MavenProjectCrawlerMojoIT {
         final TestMavenModel testProject = new TestMavenModel();
         testProject.addDependency("error-reporting-java", "com.exasol", "compile", "0.4.1");
         testProject.setJavaVersionProperty("17");
+        testProject.configureAssemblyPluginFinalName("java-version-${java.version}-project-version-${project.version}");
         testProject.writeAsPomToProject(subfolder);
         final CrawledMavenProject crawledProject = runCrawler(subfolder);
         final ProjectDependency expectedDependency = ProjectDependency.builder() //
@@ -63,12 +64,16 @@ class MavenProjectCrawlerMojoIT {
                 .licenses(List.of(new License("MIT", "https://opensource.org/licenses/MIT"))) //
                 .build();
         assertAll(//
-                () -> assertThat(crawledProject.getProjectVersion(), equalTo(TestMavenModel.PROJECT_VERSION)),
-                () -> assertThat(crawledProject.getProjectDependencies().getDependencies(),
+                () -> assertThat("version", crawledProject.getProjectVersion(),
+                        equalTo(TestMavenModel.PROJECT_VERSION)),
+                () -> assertThat("dependencies", crawledProject.getProjectDependencies().getDependencies(),
                         Matchers.hasItem(expectedDependency)),
-                () -> assertThat(crawledProject.getDependencyChangeReport().getChanges(COMPILE),
+                () -> assertThat("dependency change report",
+                        crawledProject.getDependencyChangeReport().getChanges(COMPILE),
                         Matchers.contains(new NewDependency("com.exasol", "error-reporting-java", "0.4.1"))),
-                () -> assertThat(crawledProject.getJavaVersion(), equalTo("17")) //
+                () -> assertThat("java version", crawledProject.getJavaVersion(), equalTo("17")), //
+                () -> assertThat("artifact name", crawledProject.getArtifactName(),
+                        equalTo("java-version-17-project-version-0.1.0.jar")) //
         );
     }
 
@@ -84,6 +89,17 @@ class MavenProjectCrawlerMojoIT {
         assertThat(crawledProject.getJavaVersion(), nullValue());
     }
 
+    @Test
+    void testCrawlProjectWithoutAssemblyPlugin() throws GitAPIException, IOException, VerificationException {
+        final Path subfolder = this.tempDir.resolve("subfolder").toAbsolutePath();
+        Files.createDirectory(subfolder);
+        Git.init().setDirectory(subfolder.toFile()).call().close();
+        final TestMavenModel testProject = new TestMavenModel();
+        testProject.writeAsPomToProject(subfolder);
+        final CrawledMavenProject crawledProject = runCrawler(subfolder);
+        assertThat(crawledProject.getArtifactName(), nullValue());
+    }
+
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {
         final Verifier verifier = TEST_ENV.getVerifier(this.tempDir);
         verifier.setAutoclean(false);
@@ -92,6 +108,7 @@ class MavenProjectCrawlerMojoIT {
         verifier.executeGoal("com.exasol:project-keeper-java-project-crawler:" + CURRENT_VERSION + ":crawl");
         final String output = Files.readString(Path.of(verifier.getBasedir()).resolve(verifier.getLogFileName()));
         final String response = new ResponseCoder().decodeResponse(output);
+        verifier.resetStreams();
         return MavenProjectCrawlResult.fromJson(response).getCrawledProjects().get(path);
     }
 }
