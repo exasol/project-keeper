@@ -12,6 +12,12 @@ This release replaces Release Droid workflows `release_droid_.yml` with workflow
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.0` to `2.0.1`
+
 ### Project Keeper Shared Model Classes
 
 #### Test Dependency Updates

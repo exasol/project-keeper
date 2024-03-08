@@ -1,5 +1,7 @@
 sources:
   - type: maven
+    path: pom.xml
+  - type: maven
     path: shared-model-classes/pom.xml
     modules:
       - maven_central
@@ -65,8 +67,19 @@ sources:
 version:
   fromSource: project-keeper/pom.xml
 excludes:
+  # PK can't use itself as a Maven plugin
   - regex: "W-PK-CORE-151: Pom file .* contains no reference to project-keeper-maven-plugin."
-  - "E-PK-CORE-17: Missing required file: '.github/workflows/project-keeper-verify.yml'"
-  - "E-PK-CORE-17: Missing required file: '.github/workflows/project-keeper.sh'"
+  # PK already uses Java 17 for building
+  - "E-PK-CORE-17: Missing required file: '.github/workflows/ci-build-next-java.yml'"
+  # Workflows must install PK itself before using it in the build
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_check.yml'"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_update.yml'"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
+  - "E-PK-CORE-18: Outdated content: '.github/workflows/release.yml'"
+  # No configuration necessary for aggregator POM
+  - "E-PK-CORE-103: Missing parent declaration in 'pom.xml'"
+  - "E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'"
+  - regex: "E-PK-CORE-17: Missing required file: 'src/test/resources/.*'"
+  - regex: "E-PK-CORE-17: Missing required file: '.settings/.*'"
 linkReplacements:
   - https://eclipse-ee4j.github.io/jsonb-api|https://projects.eclipse.org/projects/ee4j.jsonp
