@@ -95,7 +95,7 @@ jobs:
                   print_message "* Release artifact $file exists" 
               fi
           done
-
+          print_message ""
           number_of_missing_files=${#missing_files[@]}
           if [[ $number_of_missing_files -gt 0 ]]; then
               print_message "⚠️ $number_of_missing_files release artifact(s) missing ⚠️"
