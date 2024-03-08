@@ -17,6 +17,10 @@ Code name: Automated Release Process
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.7` to `3.15.8`
 * Updated `org.mockito:mockito-core:5.10.0` to `5.11.0`
 
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.0` to `2.0.1`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -34,6 +38,10 @@ Code name: Automated Release Process
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.15.7` to `3.15.8`
 * Updated `org.mockito:mockito-junit-jupiter:5.10.0` to `5.11.0`
 
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.0` to `2.0.1`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
@@ -44,6 +52,10 @@ Code name: Automated Release Process
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.1.0` to `4.2.0`
 
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.0` to `2.0.1`
+
 ### Project Keeper Maven Plugin
 
 #### Compile Dependency Updates
@@ -53,6 +65,10 @@ Code name: Automated Release Process
 #### Test Dependency Updates
 
 * Updated `org.mockito:mockito-core:5.10.0` to `5.11.0`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.0` to `2.0.1`
 
 ### Project Keeper Java Project Crawler
 
@@ -65,8 +81,16 @@ Code name: Automated Release Process
 * Updated `org.mockito:mockito-core:5.10.0` to `5.11.0`
 * Updated `org.mockito:mockito-junit-jupiter:5.10.0` to `5.11.0`
 
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.0` to `2.0.1`
+
 ### Project Keeper Shared Test Setup
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:4.1.0` to `4.2.0`
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.0` to `2.0.1`
