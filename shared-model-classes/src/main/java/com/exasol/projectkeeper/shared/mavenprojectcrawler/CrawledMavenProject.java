@@ -15,7 +15,7 @@ public final class CrawledMavenProject {
     private ProjectDependencies projectDependencies;
     private String projectVersion;
     private String javaVersion;
-    private String artifactName;
+    private String releaseArtifactName;
 
     /** Default constructor required for JSON serialization. */
     public CrawledMavenProject() {
@@ -30,17 +30,17 @@ public final class CrawledMavenProject {
      * @param projectVersion         project version
      * @param javaVersion            Java version from the {@code java.version} property or {@code null} if property is
      *                               not defined
-     * @param artifactName           file name of the artifact in the {@code target} directory or {@code null} if no
+     * @param releaseArtifactName    file name of the artifact in the {@code target} directory or {@code null} if no
      *                               artifact is created
      */
     public CrawledMavenProject(final DependencyChangeReport dependencyChangeReport,
             final ProjectDependencies projectDependencies, final String projectVersion, final String javaVersion,
-            final String artifactName) {
+            final String releaseArtifactName) {
         this.dependencyChangeReport = dependencyChangeReport;
         this.projectDependencies = projectDependencies;
         this.projectVersion = projectVersion;
         this.javaVersion = javaVersion;
-        this.artifactName = artifactName;
+        this.releaseArtifactName = releaseArtifactName;
     }
 
     /** @return dependency change report */
@@ -88,29 +88,30 @@ public final class CrawledMavenProject {
     }
 
     /** @return file name of the artifact in the {@code target} directory or {@code null} if no artifact is created */
-    public String getArtifactName() {
-        return artifactName;
+    public String getReleaseArtifactName() {
+        return releaseArtifactName;
     }
 
     /**
-     * @param artifactName file name of the artifact in the {@code target} directory or {@code null} if no artifact is
-     *                     created
+     * @param releaseArtifactName file name of the artifact in the {@code target} directory or {@code null} if no
+     *                            artifact is created
      */
-    public void setArtifactName(final String artifactName) {
-        this.artifactName = artifactName;
+    public void setReleaseArtifactName(final String releaseArtifactName) {
+        this.releaseArtifactName = releaseArtifactName;
     }
 
     @Override
     public String toString() {
         return "CrawledMavenProject [dependencyChangeReport=" + dependencyChangeReport + ", projectDependencies="
                 + projectDependencies + ", projectVersion=" + projectVersion + ", javaVersion=" + javaVersion
-                + ", artifactName=" + artifactName + "]";
+                + ", releaseArtifactName=" + releaseArtifactName + "]";
     }
 
     @Override
     @Generated("vscode")
     public int hashCode() {
-        return Objects.hash(dependencyChangeReport, projectDependencies, projectVersion, javaVersion, artifactName);
+        return Objects.hash(dependencyChangeReport, projectDependencies, projectVersion, javaVersion,
+                releaseArtifactName);
     }
 
     @Override
@@ -129,6 +130,7 @@ public final class CrawledMavenProject {
         return Objects.equals(dependencyChangeReport, other.dependencyChangeReport)
                 && Objects.equals(projectDependencies, other.projectDependencies)
                 && Objects.equals(projectVersion, other.projectVersion)
-                && Objects.equals(javaVersion, other.javaVersion) && Objects.equals(artifactName, other.artifactName);
+                && Objects.equals(javaVersion, other.javaVersion)
+                && Objects.equals(releaseArtifactName, other.releaseArtifactName);
     }
 }

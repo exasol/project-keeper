@@ -45,7 +45,8 @@ class MavenProjectCrawlerMojoIT {
                 Path.of("./.flattened-pom.xml").toFile());
     }
 
-    // [itest -> dsn~eclipse-prefs-java-version~1]
+    // [itest->dsn~eclipse-prefs-java-version~1]
+    // [itest->dsn~customize-release-artifacts-jar~0]
     @Test
     void testCrawlProject() throws GitAPIException, IOException, VerificationException {
         final Path subfolder = this.tempDir.resolve("subfolder").toAbsolutePath();
@@ -72,7 +73,7 @@ class MavenProjectCrawlerMojoIT {
                         crawledProject.getDependencyChangeReport().getChanges(COMPILE),
                         Matchers.contains(new NewDependency("com.exasol", "error-reporting-java", "0.4.1"))),
                 () -> assertThat("java version", crawledProject.getJavaVersion(), equalTo("17")), //
-                () -> assertThat("artifact name", crawledProject.getArtifactName(),
+                () -> assertThat("artifact name", crawledProject.getReleaseArtifactName(),
                         equalTo("java-version-17-project-version-0.1.0.jar")) //
         );
     }
@@ -97,7 +98,7 @@ class MavenProjectCrawlerMojoIT {
         final TestMavenModel testProject = new TestMavenModel();
         testProject.writeAsPomToProject(subfolder);
         final CrawledMavenProject crawledProject = runCrawler(subfolder);
-        assertThat(crawledProject.getArtifactName(), nullValue());
+        assertThat(crawledProject.getReleaseArtifactName(), nullValue());
     }
 
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {

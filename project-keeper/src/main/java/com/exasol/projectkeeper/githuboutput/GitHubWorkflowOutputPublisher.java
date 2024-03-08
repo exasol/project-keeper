@@ -4,8 +4,12 @@ import static java.util.stream.Collectors.joining;
 
 import java.nio.file.Path;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.changesfile.*;
 
 /**
@@ -18,14 +22,17 @@ public class GitHubWorkflowOutputPublisher {
     private final ProjectKeeperConfig config;
     private final Path projectDir;
     private final String projectVersion;
+    private final List<AnalyzedSource> analyzedSources;
     private final OutputPublisherFactory publisherFactory;
     private final ChangesFileIO changesFileIO;
 
     GitHubWorkflowOutputPublisher(final ProjectKeeperConfig config, final Path projectDir, final String projectVersion,
-            final OutputPublisherFactory publisherFactory, final ChangesFileIO changesFileIO) {
+            final List<AnalyzedSource> analyzedSources, final OutputPublisherFactory publisherFactory,
+            final ChangesFileIO changesFileIO) {
         this.config = config;
         this.projectDir = projectDir;
         this.projectVersion = projectVersion;
+        this.analyzedSources = analyzedSources;
         this.publisherFactory = publisherFactory;
         this.changesFileIO = changesFileIO;
     }
@@ -33,14 +40,15 @@ public class GitHubWorkflowOutputPublisher {
     /**
      * Create a new publisher.
      * 
-     * @param config         Project Keeper configuration
-     * @param projectDir     project directory
-     * @param projectVersion project version
+     * @param config          Project Keeper configuration
+     * @param projectDir      project directory
+     * @param projectVersion  project version
+     * @param analyzedSources analyzed sources
      * @return a new publisher
      */
     public static GitHubWorkflowOutputPublisher create(final ProjectKeeperConfig config, final Path projectDir,
-            final String projectVersion) {
-        return new GitHubWorkflowOutputPublisher(config, projectDir, projectVersion,
+            final String projectVersion, final List<AnalyzedSource> analyzedSources) {
+        return new GitHubWorkflowOutputPublisher(config, projectDir, projectVersion, analyzedSources,
                 new OutputPublisherFactory(System.getenv()), new ChangesFileIO());
     }
 
@@ -62,8 +70,27 @@ public class GitHubWorkflowOutputPublisher {
     }
 
     private String getReleaseArtifacts() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getReleaseArtifacts'");
+        return Stream.of(sourceReleaseArtifacts(), errorCodeReports()) //
+                .flatMap(Function.identity()) //
+                .map(Path::toString).collect(joining("\n"));
+    }
+
+    // [impl->dsn~customize-release-artifacts-jar~0]
+    private Stream<Path> sourceReleaseArtifacts() {
+        return analyzedSources.stream() //
+                .filter(AnalyzedMavenSource.class::isInstance) //
+                .map(AnalyzedMavenSource.class::cast) //
+                .filter(source -> source.getReleaseArtifactName() != null) //
+                .map(source -> projectDir.resolve("target").resolve(source.getReleaseArtifactName()));
+    }
+
+    // [impl->dsn~customize-release-artifacts-hard-coded~0]
+    private Stream<Path> errorCodeReports() {
+        return analyzedSources.stream() //
+                .filter(AnalyzedMavenSource.class::isInstance) //
+                .map(AnalyzedMavenSource.class::cast) //
+                .filter(AnalyzedMavenSource::isRootProject) //
+                .map(source -> projectDir.resolve("target/error_code_report.json"));
     }
 
     private String extractReleaseNotes(final ChangesFile changesFile) {

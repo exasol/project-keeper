@@ -139,7 +139,7 @@ public class ProjectKeeper {
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
         // [impl->dsn~verify-modes.output-parameters~1]
-        GitHubWorkflowOutputPublisher.create(this.config, projectDir, projectVersion).publish();
+        GitHubWorkflowOutputPublisher.create(this.config, projectDir, projectVersion, analyzedSources).publish();
         final ProjectFilesValidator projectFilesValidator = ProjectFilesValidator.builder() //
                 .projectDirectory(this.projectDir) //
                 .analyzedSources(analyzedSources) //

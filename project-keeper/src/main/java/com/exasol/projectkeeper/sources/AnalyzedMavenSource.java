@@ -21,6 +21,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
     private final String artifactId;
     private final String projectName;
     private final String version;
+    private final String releaseArtifactName;
     private final String javaVersion;
     private final DependencyChangeReport dependencyChanges;
     private final ProjectDependencies dependencies;
@@ -33,6 +34,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         this.artifactId = builder.artifactId;
         this.projectName = builder.projectName;
         this.version = builder.version;
+        this.releaseArtifactName = builder.releaseArtifactName;
         this.javaVersion = builder.javaVersion;
         this.dependencyChanges = builder.dependencyChanges;
         this.dependencies = builder.dependencies;
@@ -79,6 +81,11 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         return this.version;
     }
 
+    /** @return artifact file name or {@code null} if no artifact is built */
+    public String getReleaseArtifactName() {
+        return this.releaseArtifactName;
+    }
+
     /**
      * @return Java version used for compiling and testing the project. Read from the {@code properties/java.version}
      *         element of the {@code pom.xml} file. Defaults to {@link PomFileGenerator#DEFAULT_JAVA_VERSION}.
@@ -116,6 +123,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         private String artifactId;
         private String projectName;
         private String version;
+        private String releaseArtifactName;
         private String javaVersion = PomFileGenerator.DEFAULT_JAVA_VERSION;
         private DependencyChangeReport dependencyChanges;
         private ProjectDependencies dependencies;
@@ -180,6 +188,15 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * @param releaseArtifactName Artifact file name or {@code null} if no artifact is built
+         * @return {@code this}.
+         */
+        public AnalyzedMavenSource.AnalyzedMavenSourceBuilder releaseArtifactName(final String releaseArtifactName) {
+            this.releaseArtifactName = releaseArtifactName;
+            return this;
+        }
+
+        /**
          * @param javaVersion Java version used for compiling and testing the project. Read from the
          *                    {@code properties/java.version} element of the {@code pom.xml} file. Defaults to
          *                    {@link PomFileGenerator#DEFAULT_JAVA_VERSION}.
@@ -230,8 +247,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         public String toString() {
             return "AnalyzedMavenSourceBuilder [path=" + path + ", modules=" + modules + ", advertise=" + advertise
                     + ", artifactId=" + artifactId + ", projectName=" + projectName + ", version=" + version
-                    + ", dependencyChanges=" + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject="
-                    + isRootProject + "]";
+                    + ", artifactName=" + releaseArtifactName + ", javaVersion=" + javaVersion + ", dependencyChanges="
+                    + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject=" + isRootProject + "]";
         }
     }
 
@@ -239,14 +256,14 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
     public String toString() {
         return "AnalyzedMavenSource [path=" + path + ", modules=" + modules + ", advertise=" + advertise
                 + ", artifactId=" + artifactId + ", projectName=" + projectName + ", version=" + version
-                + ", javaVersion=" + javaVersion + ", dependencyChanges=" + dependencyChanges + ", dependencies="
-                + dependencies + ", isRootProject=" + isRootProject + "]";
+                + ", artifactName=" + releaseArtifactName + ", javaVersion=" + javaVersion + ", dependencyChanges="
+                + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject=" + isRootProject + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(path, modules, advertise, artifactId, projectName, version, javaVersion, dependencyChanges,
-                dependencies, isRootProject);
+        return Objects.hash(path, modules, advertise, artifactId, projectName, version, releaseArtifactName,
+                javaVersion, dependencyChanges, dependencies, isRootProject);
     }
 
     @Override
@@ -264,6 +281,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         return Objects.equals(path, other.path) && Objects.equals(modules, other.modules)
                 && advertise == other.advertise && Objects.equals(artifactId, other.artifactId)
                 && Objects.equals(projectName, other.projectName) && Objects.equals(version, other.version)
+                && Objects.equals(releaseArtifactName, other.releaseArtifactName)
                 && Objects.equals(javaVersion, other.javaVersion)
                 && Objects.equals(dependencyChanges, other.dependencyChanges)
                 && Objects.equals(dependencies, other.dependencies) && isRootProject == other.isRootProject;

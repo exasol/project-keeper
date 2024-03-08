@@ -9,6 +9,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 /**
  * This class reads the file name of the release artifact produced by this pom.
  */
+// [impl->dsn~customize-release-artifacts-jar~0]
 public class ArtifactNameReader {
 
     private static final String ASSEMBLY_PLUGIN_QUALIFIED_NAME = "org.apache.maven.plugins:maven-assembly-plugin";

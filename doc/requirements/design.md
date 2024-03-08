@@ -379,7 +379,7 @@ Rationale:
 Covers:
 * [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
 
--Needs: impl, utest, itest
+Needs: impl, utest, itest
 
 #### Common List of Release Artifacts
 `dsn~customize-release-artifacts-hard-coded~0`
@@ -394,7 +394,7 @@ Rationale:
 Covers:
 * [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 #### Custom Release Artifacts
 `dsn~customize-release-artifacts-custom~0`
@@ -985,7 +985,7 @@ Needs: impl, utest
 #### PK Modes `verify` and `verify-release` Publish List of Release Artifacts
 `dsn~verify-release-mode.output-parameters.release-artifacts~1`
 
-PK mode `verify-release` publishes the list of release artifacts as GitHub Output Parameter.
+PK mode `verify-release` publishes the list of release artifacts as GitHub Output Parameter, see [`dsn~customize-release-artifacts-jar~0`](#customize-release-artifacts)
 
 Rationale:
 * The list is used for calculating checksums for each artifact.

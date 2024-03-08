@@ -21,6 +21,11 @@ class AnalyzedMavenSourceTest {
     }
 
     @Test
+    void testBuilderToString() {
+        ToStringVerifier.forClass(AnalyzedMavenSource.AnalyzedMavenSourceBuilder.class).verify();
+    }
+
+    @Test
     void testDefaultJavaVersion() {
         final AnalyzedMavenSource source = AnalyzedMavenSource.builder().build();
         assertThat(source.getJavaVersion(), equalTo("11"));

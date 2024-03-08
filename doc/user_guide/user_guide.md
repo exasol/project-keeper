@@ -160,6 +160,48 @@ The syntax for a replacement is `broken-url|replacement`.
 
 PK will then use the replacement in the `dependencies.md` file instead of the original URL.
 
+### Release Artifacts
+
+PK generates GitHub workflows `ci-build.yml` and `release.yml` to verify that build artifacts are present and attached to the GitHub release. The following artifacts are automatically verified and attached to the release:
+
+#### JAR Artifacts for Maven Projects
+
+When you enable module `jar_artifact` for a source, PK will configure `maven-assembly-plugin` in the generated parent POM. You only need to configure the actual artifact name in `pom.xml`:
+
+```xml
+<plugin>
+    <artifactId>maven-assembly-plugin</artifactId>
+    <groupId>org.apache.maven.plugins</groupId>
+    <configuration>
+        <finalName>NAME_OF_YOUR_JAR</finalName>
+    </configuration>
+</plugin>
+```
+
+You can use `${project.version}` as well as all configured properties from `pom.xml` as placeholders in the `finalName`.
+
+PK will automatically register the configured `finalName` as release artifact.
+
+#### Error Code Report `error_code_report.json`
+
+If the project contains a Maven source in the project root directory, i.e. if `.project-keeper.yml` contains the following entry:
+
+```yml
+sources:
+  - type: maven
+    path: pom.xml
+```
+
+Then PK will automatically register the error-code-crawler-maven-plugin report `target/error_code_report.json` as release artifact.
+
+If your Maven project is not in the project root directory, you can add the error report explicitly in `.project-keeper.yml`, see [below](#custom-release-artifacts) for details.
+
+#### Custom Release Artifacts
+
+You can register custom release artifacts by listing them in `.project-keeper.yml`:
+
+**TODO** This will be implemented in [#517](https://github.com/exasol/project-keeper/issues/517)
+
 ### CI Build Configuration
 
 PK allows customizing the generated CI-Build workflow scripts using the `build` section in file `.project-keeper.yml` using the following options:

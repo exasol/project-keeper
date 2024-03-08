@@ -16,6 +16,7 @@ class ArtifactNameReaderTest {
         assertThat(readArtifactName(new MavenProject()), nullValue());
     }
 
+    // [utest->dsn~customize-release-artifacts-jar~0]
     @Test
     void readArtifactName() {
         final MavenProject project = new MavenProject();
