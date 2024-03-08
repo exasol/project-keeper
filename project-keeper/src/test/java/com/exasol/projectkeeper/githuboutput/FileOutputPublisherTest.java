@@ -3,16 +3,21 @@ package com.exasol.projectkeeper.githuboutput;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doThrow;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 // [utest->dsn~verify-modes.output-parameters~1]
+@ExtendWith(MockitoExtension.class)
 class FileOutputPublisherTest {
 
     @TempDir
@@ -73,6 +78,25 @@ class FileOutputPublisherTest {
             publisher.publish("key", "value");
         }
         assertThat(Files.readString(file), equalTo("existing\ncontent\nkey=value\n"));
+    }
+
+    @Test
+    @SuppressWarnings("resource") // AutoClosable not closed by intention
+    void writeFails(@Mock final Writer writerMock) throws IOException {
+        final FileOutputPublisher publisher = new FileOutputPublisher(writerMock, Path.of("file"));
+        doThrow(new IOException("expected")).when(writerMock).write(ArgumentMatchers.any(String.class));
+        final UncheckedIOException exception = assertThrows(UncheckedIOException.class,
+                () -> publisher.publish("key", "value"));
+        assertThat(exception.getMessage(),
+                equalTo("E-PK-CORE-189: Failed to write content 'key=value\n' to file 'file': 'expected'"));
+    }
+
+    @Test
+    void closeFails(@Mock final Writer writerMock) throws IOException {
+        final FileOutputPublisher publisher = new FileOutputPublisher(writerMock, Path.of("file"));
+        doThrow(new IOException("expected")).when(writerMock).close();
+        final UncheckedIOException exception = assertThrows(UncheckedIOException.class, publisher::close);
+        assertThat(exception.getMessage(), equalTo("E-PK-CORE-187: Failed to close 'file' after writing: 'expected'"));
     }
 
     OutputPublisher testee(final Path file) {
