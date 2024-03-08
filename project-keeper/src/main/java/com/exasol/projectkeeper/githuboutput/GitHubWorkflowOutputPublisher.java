@@ -84,7 +84,7 @@ public class GitHubWorkflowOutputPublisher {
                 .filter(AnalyzedMavenSource.class::isInstance) //
                 .map(AnalyzedMavenSource.class::cast) //
                 .filter(source -> source.getReleaseArtifactName() != null) //
-                .map(source -> projectDir.resolve("target").resolve(source.getReleaseArtifactName()));
+                .map(source -> source.getPath().getParent().resolve("target").resolve(source.getReleaseArtifactName()));
     }
 
     // [impl->dsn~customize-release-artifacts-hard-coded~0]

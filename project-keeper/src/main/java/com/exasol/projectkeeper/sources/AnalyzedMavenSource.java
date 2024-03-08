@@ -46,7 +46,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         return new AnalyzedMavenSource.AnalyzedMavenSourceBuilder();
     }
 
-    /** @return source path */
+    /** @return source path, e.g. {@code project-dir/module/pom.xml} */
     @Override
     public Path getPath() {
         return this.path;
@@ -134,7 +134,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
-         * @param path source path
+         * @param path source path e.g. {@code project-dir/module/pom.xml}
          * @return {@code this}.
          */
         public AnalyzedMavenSource.AnalyzedMavenSourceBuilder path(final Path path) {

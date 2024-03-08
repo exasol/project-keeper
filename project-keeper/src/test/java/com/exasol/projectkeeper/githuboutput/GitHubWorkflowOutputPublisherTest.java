@@ -95,19 +95,22 @@ class GitHubWorkflowOutputPublisherTest {
 
     @Test
     void releaseArtifactsMavenSourceWithArtifact() {
-        publish(ProjectKeeperConfig.builder(), ChangesFile.builder(),
-                AnalyzedMavenSource.builder().releaseArtifactName("my-project.jar").build());
-        verify(publisherMock).publish("release-artifacts", projectDir.resolve("target/my-project.jar").toString());
+        publish(ProjectKeeperConfig.builder(), ChangesFile.builder(), AnalyzedMavenSource.builder()
+                .path(projectDir.resolve("project-dir/pom.xml")).releaseArtifactName("my-project.jar").build());
+        verify(publisherMock).publish("release-artifacts",
+                projectDir.resolve("project-dir/target/my-project.jar").toString());
     }
 
     @Test
     void releaseArtifactsMultipleArtifact() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(),
-                AnalyzedMavenSource.builder().releaseArtifactName("my-project1.jar").isRootProject(true).build(),
-                AnalyzedMavenSource.builder().releaseArtifactName("my-project2.jar").build());
+                AnalyzedMavenSource.builder().path(projectDir.resolve("pom.xml")).releaseArtifactName("my-project1.jar")
+                        .isRootProject(true).build(),
+                AnalyzedMavenSource.builder().path(projectDir.resolve("module1/pom.xml"))
+                        .releaseArtifactName("my-project2.jar").build());
         verify(publisherMock).publish("release-artifacts",
                 projectDir.resolve("target/my-project1.jar").toString() + "\n"
-                        + projectDir.resolve("target/my-project2.jar").toString() + "\n"
+                        + projectDir.resolve("module1/target/my-project2.jar").toString() + "\n"
                         + projectDir.resolve("target/error_code_report.json").toString());
     }
 
