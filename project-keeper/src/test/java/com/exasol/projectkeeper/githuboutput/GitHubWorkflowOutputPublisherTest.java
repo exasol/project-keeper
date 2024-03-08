@@ -105,10 +105,10 @@ class GitHubWorkflowOutputPublisherTest {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(),
                 AnalyzedMavenSource.builder().releaseArtifactName("my-project1.jar").isRootProject(true).build(),
                 AnalyzedMavenSource.builder().releaseArtifactName("my-project2.jar").build());
-        verify(publisherMock).publish("release-artifacts", """
-                $project-dir/target/my-project1.jar
-                $project-dir/target/my-project2.jar
-                $project-dir/target/error_code_report.json""".replace("$project-dir", projectDir.toString()));
+        verify(publisherMock).publish("release-artifacts",
+                projectDir.resolve("target/my-project1.jar").toString() + "\n"
+                        + projectDir.resolve("target/my-project2.jar").toString() + "\n"
+                        + projectDir.resolve("target/error_code_report.json").toString());
     }
 
     @Test
