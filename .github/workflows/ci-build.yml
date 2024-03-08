@@ -47,7 +47,7 @@ jobs:
         run: |
           mvn --batch-mode clean verify install \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
-              -DtrimStackTrace=false
+              -DtrimStackTrace=false -DskipTests
         env:
           GITHUB_TOKEN: ${{ github.token }} # Required for integration tests of GitHub access
       - name: Publish Test Report
@@ -68,7 +68,42 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Run project-keeper itself
+        id: pk-verify
         run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
+
+      - name: Verify Release Artifacts
+        run: |
+          print_message() {
+              local -r message=$1
+              echo "$message"
+              echo "$message" >> "$GITHUB_STEP_SUMMARY"
+          }
+
+          print_message "# Release Artifacts" >> "$GITHUB_STEP_SUMMARY"
+
+          IFS=$'\n' artifacts_array=($ARTIFACTS)
+          missing_files=()
+          for file in "${artifacts_array[@]}";
+          do  
+              echo "Checking if file $file exists..."
+              if ! [[ -f "$file" ]]; then
+                  print_message "* ⚠️ Release artifact $file does not exist ⚠️"
+                  missing_files+=("$file")
+              else
+                  print_message "* Release artifact $file exists" 
+              fi
+          done
+
+          number_of_missing_files=${#missing_files[@]}
+          if [[ $number_of_missing_files -gt 0 ]]; then
+              print_message "⚠️ $number_of_missing_files release artifact(s) missing ⚠️"
+              exit 1
+          else
+              print_message "All ${#artifacts_array[@]} artifact(s) present ✅"
+          fi
+
+        env:
+          ARTIFACTS: ${{ steps.pk-verify.outputs.release-artifacts }}
 
   start_release:
     needs: build
