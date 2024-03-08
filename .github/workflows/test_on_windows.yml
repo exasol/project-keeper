@@ -9,6 +9,9 @@ on:
 jobs:
   test:
     runs-on: windows-latest
+    defaults:
+      run:
+        shell: "bash"
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -78,6 +81,5 @@ jobs:
           else
               print_message "All ${#artifacts_array[@]} artifact(s) present ✅"
           fi
-
         env:
           ARTIFACTS: ${{ steps.pk-verify.outputs.release-artifacts }}
