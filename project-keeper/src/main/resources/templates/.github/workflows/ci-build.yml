@@ -74,7 +74,7 @@ jobs:
               echo "$message" >> "$GITHUB_STEP_SUMMARY"
           }
 
-          print_message "# Release Artifacts" >> "$GITHUB_STEP_SUMMARY"
+          print_message "# Release Artifacts"
 
           IFS=$'\n' artifacts_array=($ARTIFACTS)
           missing_files=()
