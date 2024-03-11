@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.githuboutput;
+package com.exasol.projectkeeper.github;
 
 import static java.util.Collections.emptyMap;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -9,6 +9,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+
+import com.exasol.projectkeeper.github.*;
 
 class OutputPublisherFactoryTest {
 

@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.githuboutput;
+package com.exasol.projectkeeper.github;
 
 import static java.util.stream.Collectors.joining;
 

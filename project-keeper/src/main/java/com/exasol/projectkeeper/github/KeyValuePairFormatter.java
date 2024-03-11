@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.githuboutput;
+package com.exasol.projectkeeper.github;
 
 import com.exasol.errorreporting.ExaError;
 

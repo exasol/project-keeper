@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.githuboutput;
+package com.exasol.projectkeeper.github;
 
 interface WorkflowOutput extends AutoCloseable {
     void publish(String key, String value);

@@ -13,7 +13,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.dependencyupdate.DependencyUpdater;
-import com.exasol.projectkeeper.githuboutput.GitHubWorkflowOutput;
+import com.exasol.projectkeeper.github.GitHubWorkflowOutput;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;

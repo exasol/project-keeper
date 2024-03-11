@@ -1,8 +1,10 @@
-package com.exasol.projectkeeper.githuboutput;
+package com.exasol.projectkeeper.github;
 
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.Test;
+
+import com.exasol.projectkeeper.github.NullContentProvider;
 
 class NullContentProviderTest {
     @Test

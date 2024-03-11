@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.githuboutput;
+package com.exasol.projectkeeper.github;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -15,6 +15,9 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import com.exasol.projectkeeper.github.FileContentProvider;
+import com.exasol.projectkeeper.github.WorkflowOutput;
 
 // [utest->dsn~verify-modes.output-parameters~1]
 @ExtendWith(MockitoExtension.class)
