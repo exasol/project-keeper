@@ -184,15 +184,13 @@ PK will automatically register the configured `finalName` as release artifact.
 
 #### Error Code Report `error_code_report.json`
 
-If the project contains a Maven source in the project root directory, i.e. if `.project-keeper.yml` contains the following entry:
+If the project contains a Maven source in the project root directory, i.e. if `.project-keeper.yml` contains the following entry, then PK will automatically register the error-code-crawler-maven-plugin report `target/error_code_report.json` as release artifact:
 
 ```yml
 sources:
   - type: maven
     path: pom.xml
 ```
-
-Then PK will automatically register the error-code-crawler-maven-plugin report `target/error_code_report.json` as release artifact.
 
 If your Maven project is not in the project root directory, you can add the error report explicitly in `.project-keeper.yml`, see [below](#custom-release-artifacts) for details.
 
