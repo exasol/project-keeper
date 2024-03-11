@@ -13,6 +13,7 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.dependencyupdate.DependencyUpdater;
+import com.exasol.projectkeeper.github.GitHubWorkflowOutput;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.sources.SourceAnalyzer;
@@ -137,6 +138,8 @@ public class ProjectKeeper {
         final String projectName = getProjectName(analyzedSources);
         final var brokenLinkReplacer = new BrokenLinkReplacer(this.config.getLinkReplacements());
         final String projectVersion = new ProjectVersionDetector().detectVersion(this.config, analyzedSources);
+        // [impl->dsn~verify-modes.output-parameters~1]
+        GitHubWorkflowOutput.create(this.config, projectDir, projectVersion, analyzedSources).provide();
         final ProjectFilesValidator projectFilesValidator = ProjectFilesValidator.builder() //
                 .projectDirectory(this.projectDir) //
                 .analyzedSources(analyzedSources) //

@@ -78,12 +78,18 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     : rawProjectName;
             final CrawledMavenProject crawledMavenProject = getCrawlResultForProject(source, crawledMvnSources);
             final boolean isRoot = projectDir.relativize(source.getPath()).equals(Path.of("pom.xml"));
-            return AnalyzedMavenSource.builder().path(source.getPath()).modules(source.getModules())
-                    .advertise(source.isAdvertised()).artifactId(artifactId).projectName(projectName)
-                    .dependencies(crawledMavenProject.getProjectDependencies())
+            return AnalyzedMavenSource.builder() //
+                    .path(source.getPath()) //
+                    .modules(source.getModules()).advertise(source.isAdvertised()) //
+                    .artifactId(artifactId) //
+                    .projectName(projectName) //
+                    .dependencies(crawledMavenProject.getProjectDependencies()) //
                     .dependencyChanges(crawledMavenProject.getDependencyChangeReport())
-                    .version(crawledMavenProject.getProjectVersion()).isRootProject(isRoot)
-                    .javaVersion(crawledMavenProject.getJavaVersion()).build();
+                    .version(crawledMavenProject.getProjectVersion()) //
+                    .isRootProject(isRoot) //
+                    .javaVersion(crawledMavenProject.getJavaVersion()) //
+                    .releaseArtifactName(crawledMavenProject.getReleaseArtifactName()) //
+                    .build();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-93")
                     .message("Analyzing of {{type}} is not supported by MavenSourceAnalyzer", source.getType())

@@ -95,23 +95,7 @@ jobs:
       - name: Verify release preconditions
         id: verify-release
         run: |
-          #mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .
-          echo "version=1.2.3" >> "$GITHUB_OUTPUT"
-          echo "release-title=1.2.3: My first automatic release" >> "$GITHUB_OUTPUT"
-
-          echo "release-notes<<EOF" >> "$GITHUB_OUTPUT"
-          echo "Release notes line 1" >> "$GITHUB_OUTPUT"
-          echo "Release notes line 2" >> "$GITHUB_OUTPUT"
-          echo "Release notes line 3" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
-          echo "release-artifacts<<EOF" >> "$GITHUB_OUTPUT"
-          echo "target/dummy-jar-name.jar" >> "$GITHUB_OUTPUT"
-          echo "target/testing-release-robot-0.3.3-sources.jar" >> "$GITHUB_OUTPUT"
-          echo "doc/changes/changes_0.3.3.md" >> "$GITHUB_OUTPUT"
-          echo "target/testing-release-robot-0.3.3-javadoc.jar" >> "$GITHUB_OUTPUT"
-          echo "EOF" >> "$GITHUB_OUTPUT"
-
+          mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .
           echo "$GITHUB_OUTPUT"
         env:
           GITHUB_TOKEN: ${{ github.token }}

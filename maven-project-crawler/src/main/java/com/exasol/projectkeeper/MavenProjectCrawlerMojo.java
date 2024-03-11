@@ -16,6 +16,7 @@ import com.exasol.projectkeeper.pom.*;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.*;
+import com.exasol.projectkeeper.validators.ArtifactNameReader;
 import com.exasol.projectkeeper.validators.changesfile.DependencyUpdateReader;
 import com.exasol.projectkeeper.validators.dependencies.ProjectDependencyReader;
 
@@ -57,8 +58,9 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
             final ProjectDependencies dependencies = new ProjectDependencyReader(modelFromRepositoryReader, project)
                     .readDependencies();
             final String javaVersion = project.getProperties().getProperty("java.version", null);
+            final String artifactName = new ArtifactNameReader(project).readFinalArtifactName();
             final CrawledMavenProject crawledMavenProject = new CrawledMavenProject(dependencyChangeReport,
-                    dependencies, project.getVersion(), javaVersion);
+                    dependencies, project.getVersion(), javaVersion, artifactName);
             crawledProjects.put(path, crawledMavenProject);
         }
         final MavenProjectCrawlResult report = new MavenProjectCrawlResult(crawledProjects);

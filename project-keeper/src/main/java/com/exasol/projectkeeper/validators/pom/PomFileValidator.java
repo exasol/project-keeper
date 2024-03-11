@@ -220,16 +220,15 @@ public class PomFileValidator implements Validator {
         if ((finalNameProperty == null) || finalNameProperty.getTextContent().isBlank()) {
             return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-105").message(
                     "Invalid pom file {{file}}: Missing required property finalName property in maven-assembly-plugin.",
-                    relativePomPath).mitigation(
-                            "Use the following template and set finalName:\n" //
-                                    + "<plugin>\n" //
-                                    + "    <artifactId>maven-assembly-plugin</artifactId>\n"
-                                    + "    <groupId>org.apache.maven.plugins</groupId>\n" //
-                                    + "    <configuration>\n" //
-                                    + "        <finalName>NAME_OF_YOUR_JAR</finalName>\n" //
-                                    + "    </configuration>\n" //
-                                    + "</plugin>")
-                    .toString()).build());
+                    relativePomPath).mitigation("""
+                            Use the following template and set finalName:
+                            <plugin>
+                                <artifactId>maven-assembly-plugin</artifactId>
+                                <groupId>org.apache.maven.plugins</groupId>
+                                <configuration>
+                                    <finalName>NAME_OF_YOUR_JAR</finalName>
+                                </configuration>
+                            </plugin>""").toString()).build());
         } else {
             return Collections.emptyList();
         }
