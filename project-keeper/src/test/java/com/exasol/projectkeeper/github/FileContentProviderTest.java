@@ -16,9 +16,6 @@ import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exasol.projectkeeper.github.FileContentProvider;
-import com.exasol.projectkeeper.github.WorkflowOutput;
-
 // [utest->dsn~verify-modes.output-parameters~1]
 @ExtendWith(MockitoExtension.class)
 class FileContentProviderTest {
@@ -99,7 +96,8 @@ class FileContentProviderTest {
         final FileContentProvider publisher = new FileContentProvider(writerMock, Path.of("file"));
         doThrow(new IOException("expected")).when(writerMock).close();
         final UncheckedIOException exception = assertThrows(UncheckedIOException.class, publisher::close);
-        assertThat(exception.getMessage(), equalTo("E-PK-CORE-187: Failed to close 'file' after writing: 'expected'"));
+        assertThat(exception.getMessage(),
+                equalTo("E-PK-CORE-187: Failed to close file 'file' after writing: 'expected'"));
     }
 
     WorkflowOutput testee(final Path file) {
