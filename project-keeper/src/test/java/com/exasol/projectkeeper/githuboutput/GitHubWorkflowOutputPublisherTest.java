@@ -28,7 +28,7 @@ class GitHubWorkflowOutputPublisherTest {
     @Mock
     OutputPublisherFactory publisherFactoryMock;
     @Mock
-    OutputPublisher publisherMock;
+    WorkflowOutput publisherMock;
     @Mock
     ChangesFileIO changesFileIOMock;
     @TempDir

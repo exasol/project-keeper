@@ -7,8 +7,13 @@ import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 
+/**
+ * This class provides output parameters for a GitHub workflow step by appending the parameters to a file. See <a href=
+ * "https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter">GitHub
+ * workflow documentation</a> for details.
+ */
 // [impl->dsn~verify-modes.output-parameters~1]
-class FileContentProvider implements OutputPublisher {
+class FileContentProvider implements WorkflowOutput {
     private static final Logger LOG = Logger.getLogger(FileContentProvider.class.getName());
     private final KeyValuePairFormatter formatter = new KeyValuePairFormatter();
     private final Writer writer;
@@ -19,7 +24,7 @@ class FileContentProvider implements OutputPublisher {
         this.outputPath = outputPath;
     }
 
-    static OutputPublisher create(final Path outputPath) {
+    static WorkflowOutput create(final Path outputPath) {
         LOG.info(() -> "Creating new file output publisher for path '" + outputPath + "'");
         try {
             return new FileContentProvider(Files.newBufferedWriter(outputPath, StandardCharsets.UTF_8,

@@ -58,7 +58,7 @@ public class GitHubWorkflowOutputPublisher {
      */
     public void publish() {
         final Optional<ChangesFile> changesFile = readChangesFile();
-        try (OutputPublisher publisher = publisherFactory.create()) {
+        try (WorkflowOutput publisher = publisherFactory.create()) {
             // [impl->dsn~verify-release-mode.output-parameters.project-version~1]
             publisher.publish("version", projectVersion);
             if (changesFile.isPresent()) {

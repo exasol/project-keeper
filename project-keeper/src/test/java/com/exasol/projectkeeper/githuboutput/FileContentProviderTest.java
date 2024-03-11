@@ -35,7 +35,7 @@ class FileContentProviderTest {
                              // statement
     void fileDoesNotYetExistCreatesFile() throws IOException {
         final Path file = tempDir.resolve("file");
-        try (OutputPublisher publisher = testee(file)) {
+        try (WorkflowOutput publisher = testee(file)) {
             // Don't write to file
         }
         assertThat(Files.size(file), is(0L));
@@ -44,7 +44,7 @@ class FileContentProviderTest {
     @Test
     void writeSingleEntry() throws IOException {
         final Path file = tempDir.resolve("file");
-        try (OutputPublisher publisher = testee(file)) {
+        try (WorkflowOutput publisher = testee(file)) {
             publisher.publish("key1", "value1");
         }
         assertThat(Files.readString(file), equalTo("key1=value1\n"));
@@ -53,7 +53,7 @@ class FileContentProviderTest {
     @Test
     void writeMultipleEntries() throws IOException {
         final Path file = tempDir.resolve("file");
-        try (OutputPublisher publisher = testee(file)) {
+        try (WorkflowOutput publisher = testee(file)) {
             publisher.publish("key1", "value1");
             publisher.publish("key2", "value2");
         }
@@ -63,7 +63,7 @@ class FileContentProviderTest {
     @Test
     void writeMultilineEntry() throws IOException {
         final Path file = tempDir.resolve("file");
-        try (OutputPublisher publisher = testee(file)) {
+        try (WorkflowOutput publisher = testee(file)) {
             publisher.publish("key1", "value1\nmore");
             publisher.publish("key2", "value2");
         }
@@ -74,7 +74,7 @@ class FileContentProviderTest {
     void appendExistingFile() throws IOException {
         final Path file = tempDir.resolve("file");
         Files.writeString(file, "existing\ncontent\n");
-        try (OutputPublisher publisher = testee(file)) {
+        try (WorkflowOutput publisher = testee(file)) {
             publisher.publish("key", "value");
         }
         assertThat(Files.readString(file), equalTo("existing\ncontent\nkey=value\n"));
@@ -99,7 +99,7 @@ class FileContentProviderTest {
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-187: Failed to close 'file' after writing: 'expected'"));
     }
 
-    OutputPublisher testee(final Path file) {
+    WorkflowOutput testee(final Path file) {
         return FileContentProvider.create(file);
     }
 }
