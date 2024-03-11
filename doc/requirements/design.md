@@ -927,10 +927,10 @@ Covers:
 
 Needs: impl, utest, itest
 
-### PK Modes `verify` and `verify-release` Sets GitHub Action Output Parameters
+### PK Modes `verify` and `verify-release` Publish GitHub Action Output Parameters
 `dsn~verify-modes.output-parameters~1`
 
-PK modes `verify` and `verify-release` both output information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter) using environment variable `GITHUB_OUTPUT` (see the following sub-sections for details).
+PK modes `verify` and `verify-release` both publish information as [GitHub Output Parameters](https://docs.github.com/en/actions/using-workflows/workflow-commands-for-github-actions#setting-an-output-parameter) using environment variable `GITHUB_OUTPUT` (see the following sub-sections for details).
 
 Rationale:
 * Workflow `release.yml` needs this information for creating the GitHub release, so `verify-release` must generate the output.
@@ -943,7 +943,7 @@ Covers:
 
 Needs: dsn, impl, utest
 
-#### PK Mode `verify-release` Outputs Project Version
+#### PK Mode `verify-release` Publishes Project Version
 `dsn~verify-release-mode.output-parameters.project-version~1`
 
 PK mode `verify-release` publishes the project version as GitHub Output Parameter.
