@@ -162,11 +162,14 @@ PK will then use the replacement in the `dependencies.md` file instead of the or
 
 ### Release Artifacts
 
-PK generates GitHub workflows `ci-build.yml` and `release.yml` to verify that build artifacts are present and attached to the GitHub release. The following artifacts are automatically verified and attached to the release:
+PK generates GitHub workflows `ci-build.yml` and `release.yml` to verify that build artifacts are present and attached to the GitHub release. The following artifacts are automatically verified and attached to the release as described in the following sections:
+* JAR Artifacts for Maven Projects
+* Error Code Report `error_code_report.json`
+
 
 #### JAR Artifacts for Maven Projects
 
-When you enable module `jar_artifact` for a source, PK will configure `maven-assembly-plugin` in the generated parent POM. You only need to configure the actual artifact name in `pom.xml`:
+When you enable module `jar_artifact` for a source, PK will configure `maven-assembly-plugin` in the generated parent POM. You only need to configure the actual artifact name in file `pom.xml`:
 
 ```xml
 <plugin>

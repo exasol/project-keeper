@@ -56,7 +56,7 @@ class FileContentProvider implements OutputPublisher {
             writer.close();
         } catch (final IOException exception) {
             throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-187")
-                    .message("Failed to close {{output file}} after writing: {{error message}}", outputPath,
+                    .message("Failed to close file {{output file}} after writing: {{error message}}", outputPath,
                             exception.getMessage())
                     .toString(), exception);
         }
