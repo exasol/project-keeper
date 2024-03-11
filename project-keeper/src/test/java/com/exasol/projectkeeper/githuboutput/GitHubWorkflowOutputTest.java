@@ -22,7 +22,7 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.changesfile.*;
 
 @ExtendWith(MockitoExtension.class)
-class GitHubWorkflowOutputPublisherTest {
+class GitHubWorkflowOutputTest {
 
     private static final String PROJECT_VERSION = "1.2.3";
     @Mock
@@ -43,7 +43,7 @@ class GitHubWorkflowOutputPublisherTest {
 
     @Test
     void changesFileMissing() {
-        testee(ProjectKeeperConfig.builder()).publish();
+        testee(ProjectKeeperConfig.builder()).provide();
         verify(publisherMock, never()).publish(eq("release-title"), any());
         verify(publisherMock, never()).publish(eq("release-notes"), any());
     }
@@ -123,7 +123,7 @@ class GitHubWorkflowOutputPublisherTest {
     private void publish(final ProjectKeeperConfig.Builder configBuilder, final ChangesFile.Builder changesFileBuilder,
             final AnalyzedSource... sources) {
         simulateChangesFile(changesFileBuilder);
-        testee(configBuilder, sources).publish();
+        testee(configBuilder, sources).provide();
     }
 
     private void simulateChangesFile(final ChangesFile.Builder changesFileBuilder) {
@@ -137,10 +137,10 @@ class GitHubWorkflowOutputPublisherTest {
         when(changesFileIOMock.read(path)).thenReturn(changesFileBuilder.build());
     }
 
-    private GitHubWorkflowOutputPublisher testee(final ProjectKeeperConfig.Builder configBuilder,
+    private GitHubWorkflowOutput testee(final ProjectKeeperConfig.Builder configBuilder,
             final AnalyzedSource... sources) {
         when(publisherFactoryMock.create()).thenReturn(publisherMock);
-        return new GitHubWorkflowOutputPublisher(configBuilder.build(), projectDir, PROJECT_VERSION, asList(sources),
+        return new GitHubWorkflowOutput(configBuilder.build(), projectDir, PROJECT_VERSION, asList(sources),
                 publisherFactoryMock, changesFileIOMock);
     }
 }

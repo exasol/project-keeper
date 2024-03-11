@@ -18,7 +18,7 @@ import com.exasol.projectkeeper.validators.changesfile.*;
  * defined. If the variable is not defined, this will log the output parameters.
  */
 // [impl->dsn~verify-modes.output-parameters~1]
-public class GitHubWorkflowOutputPublisher {
+public class GitHubWorkflowOutput {
 
     private final ProjectKeeperConfig config;
     private final Path projectDir;
@@ -27,7 +27,7 @@ public class GitHubWorkflowOutputPublisher {
     private final OutputPublisherFactory publisherFactory;
     private final ChangesFileIO changesFileIO;
 
-    GitHubWorkflowOutputPublisher(final ProjectKeeperConfig config, final Path projectDir, final String projectVersion,
+    GitHubWorkflowOutput(final ProjectKeeperConfig config, final Path projectDir, final String projectVersion,
             final List<AnalyzedSource> analyzedSources, final OutputPublisherFactory publisherFactory,
             final ChangesFileIO changesFileIO) {
         this.config = config;
@@ -47,16 +47,16 @@ public class GitHubWorkflowOutputPublisher {
      * @param analyzedSources analyzed sources
      * @return a new publisher
      */
-    public static GitHubWorkflowOutputPublisher create(final ProjectKeeperConfig config, final Path projectDir,
+    public static GitHubWorkflowOutput create(final ProjectKeeperConfig config, final Path projectDir,
             final String projectVersion, final List<AnalyzedSource> analyzedSources) {
-        return new GitHubWorkflowOutputPublisher(config, projectDir, projectVersion, analyzedSources,
+        return new GitHubWorkflowOutput(config, projectDir, projectVersion, analyzedSources,
                 new OutputPublisherFactory(System.getenv()), new ChangesFileIO());
     }
 
     /**
      * Publish all values.
      */
-    public void publish() {
+    public void provide() {
         final Optional<ChangesFile> changesFile = readChangesFile();
         try (WorkflowOutput publisher = publisherFactory.create()) {
             // [impl->dsn~verify-release-mode.output-parameters.project-version~1]
