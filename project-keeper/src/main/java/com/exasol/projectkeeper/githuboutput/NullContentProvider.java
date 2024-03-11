@@ -2,8 +2,8 @@ package com.exasol.projectkeeper.githuboutput;
 
 import java.util.logging.Logger;
 
-class NullOutputPublisher implements OutputPublisher {
-    private static final Logger LOG = Logger.getLogger(NullOutputPublisher.class.getName());
+class NullContentProvider implements OutputPublisher {
+    private static final Logger LOG = Logger.getLogger(NullContentProvider.class.getName());
 
     @Override
     public void publish(final String key, final String value) {

@@ -14,13 +14,13 @@ class OutputPublisherFactoryTest {
 
     @Test
     void nullOutputPublisher() {
-        assertThat(new OutputPublisherFactory(emptyMap()).create(), instanceOf(NullOutputPublisher.class));
+        assertThat(new OutputPublisherFactory(emptyMap()).create(), instanceOf(NullContentProvider.class));
     }
 
     // [utest->dsn~verify-modes.output-parameters~1]
     @Test
     void fileOutputPublisher(@TempDir final Path tempDir) {
         assertThat(new OutputPublisherFactory(Map.of("GITHUB_OUTPUT", tempDir.resolve("file").toString())).create(),
-                instanceOf(FileOutputPublisher.class));
+                instanceOf(FileContentProvider.class));
     }
 }

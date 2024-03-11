@@ -14,7 +14,7 @@ class OutputPublisherFactory {
     OutputPublisher create() {
         return Optional.ofNullable(environment.get("GITHUB_OUTPUT")) //
                 .map(Path::of) //
-                .map(FileOutputPublisher::create) //
-                .orElseGet(NullOutputPublisher::new);
+                .map(FileContentProvider::create) //
+                .orElseGet(NullContentProvider::new);
     }
 }

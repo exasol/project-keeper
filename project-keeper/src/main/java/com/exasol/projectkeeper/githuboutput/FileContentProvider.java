@@ -8,13 +8,13 @@ import java.util.logging.Logger;
 import com.exasol.errorreporting.ExaError;
 
 // [impl->dsn~verify-modes.output-parameters~1]
-class FileOutputPublisher implements OutputPublisher {
-    private static final Logger LOG = Logger.getLogger(FileOutputPublisher.class.getName());
+class FileContentProvider implements OutputPublisher {
+    private static final Logger LOG = Logger.getLogger(FileContentProvider.class.getName());
     private final KeyValuePairFormatter formatter = new KeyValuePairFormatter();
     private final Writer writer;
     private final Path outputPath;
 
-    public FileOutputPublisher(final Writer writer, final Path outputPath) {
+    public FileContentProvider(final Writer writer, final Path outputPath) {
         this.writer = writer;
         this.outputPath = outputPath;
     }
@@ -22,7 +22,7 @@ class FileOutputPublisher implements OutputPublisher {
     static OutputPublisher create(final Path outputPath) {
         LOG.info(() -> "Creating new file output publisher for path '" + outputPath + "'");
         try {
-            return new FileOutputPublisher(Files.newBufferedWriter(outputPath, StandardCharsets.UTF_8,
+            return new FileContentProvider(Files.newBufferedWriter(outputPath, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE, StandardOpenOption.APPEND), outputPath);
         } catch (final IOException exception) {
             throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-188")

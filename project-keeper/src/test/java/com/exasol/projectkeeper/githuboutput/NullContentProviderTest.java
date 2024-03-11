@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 import org.junit.jupiter.api.Test;
 
-class NullOutputPublisherTest {
+class NullContentProviderTest {
     @Test
     void publish() {
-        assertDoesNotThrow(() -> new NullOutputPublisher().publish("key", "value"));
+        assertDoesNotThrow(() -> new NullContentProvider().publish("key", "value"));
     }
 
     @Test
     void close() {
-        assertDoesNotThrow(new NullOutputPublisher()::close);
+        assertDoesNotThrow(new NullContentProvider()::close);
     }
 }
