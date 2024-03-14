@@ -112,7 +112,7 @@ class FileTemplatesFactory {
         if (enabledModules.contains(DEFAULT)) {
             templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.ui.prefs", REQUIRE_EXACT));
             templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.core.prefs", REQUIRE_EXACT)
-                    .replacing("javaVersion", prefixWithOneDot(source.getJavaVersion())));
+                    .replacing("javaVersion", canonicalize(source.getJavaVersion())));
             templates.add(new FileTemplateFromResource("src/test/resources/logging.properties", REQUIRE_EXACT));
             templates.add(new FileTemplateFromResource("versionsMavenPluginRules.xml", REQUIRE_EXACT));
         }
@@ -128,13 +128,8 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private String prefixWithOneDot(final String javaVersionFromSource) {
-        Objects.requireNonNull(javaVersionFromSource);
-        if (javaVersionFromSource.contains(".")) {
-            return javaVersionFromSource;
-        }
-        return "1." + javaVersionFromSource;
-
+    private String canonicalize(final String javaVersionFromSource) {
+        return "8".equals(javaVersionFromSource) ? "1.8" : javaVersionFromSource;
     }
 
     // [impl -> dsn~pk-verify-workflow~1]
