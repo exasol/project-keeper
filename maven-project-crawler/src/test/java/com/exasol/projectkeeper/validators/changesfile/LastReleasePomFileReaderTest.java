@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 import java.util.Optional;
 
 import org.apache.maven.model.Parent;
@@ -83,6 +84,8 @@ class LastReleasePomFileReaderTest {
     @Test
     void testReadingWithNoCommits() throws GitAPIException {
         try (final TestRepo gitRepo = new TestRepo(this.tempRepo)) {
+            // avoid warning auto-closeable resource gitRepo is never referenced in body of corresponding try statement
+            Objects.requireNonNull(gitRepo);
             final Optional<Path> result = runLatestReleasePomFileReader(this.tempRepo);
             assertTrue(result.isEmpty());
         }
