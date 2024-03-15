@@ -29,6 +29,8 @@ class VersionIncrementValidatorTest {
     @CsvSource(nullValues = "NULL", value = { //
             "NULL, 1.2.3, NULL", //
             "1.2.3, 1.2.4, NULL", //
+            "1.2.3, v1.2.4, NULL", //
+            "v1.2.3, 1.2.4, NULL", //
             "1.2.3, 1.3.0, NULL", //
             "1.2.3, 2.0.0, NULL", //
             "0.0.0, 0.0.1, NULL", //
@@ -44,14 +46,16 @@ class VersionIncrementValidatorTest {
             "1.0.0, 1.1.0, NULL", //
             "1.0.0, 2.0.0, NULL", //
             "1.2.3, 1.2.3, E-PK-CORE-184: Project version '1.2.3' is not a valid successor of '1.2.3'.",
+            "1.2.3, v1.2.3, E-PK-CORE-184: Project version 'v1.2.3' is not a valid successor of '1.2.3'.",
+            "v1.2.3, 1.2.3, E-PK-CORE-184: Project version '1.2.3' is not a valid successor of 'v1.2.3'.",
             "1.2.3, 1.2.2, E-PK-CORE-184: Project version '1.2.2' is not a valid successor of '1.2.3'.",
             "1.2.3, 1.2.5, E-PK-CORE-184: Project version '1.2.5' is not a valid successor of '1.2.3'.",
             "1.2.3, 1.1.0, E-PK-CORE-184: Project version '1.1.0' is not a valid successor of '1.2.3'.",
             "1.2.3, 1.4.0, E-PK-CORE-184: Project version '1.4.0' is not a valid successor of '1.2.3'.",
             "1.2.3, 0.0.0, E-PK-CORE-184: Project version '0.0.0' is not a valid successor of '1.2.3'.",
             "1.2.3, 3.0.0, E-PK-CORE-184: Project version '3.0.0' is not a valid successor of '1.2.3'.", })
-    void validation(final String previousVersion, final String currentVersion, final String expectedFinding) {
-        final List<String> findings = getFindings(previousVersion, currentVersion);
+    void validation(final String previousGitTag, final String currentVersion, final String expectedFinding) {
+        final List<String> findings = getFindings(previousGitTag, currentVersion);
         if (expectedFinding == null) {
             assertThat(findings, emptyIterable());
         } else {
@@ -60,9 +64,9 @@ class VersionIncrementValidatorTest {
         }
     }
 
-    private List<String> getFindings(final String previousVersion, final String currentVersion) {
+    private List<String> getFindings(final String previousGitTag, final String currentVersion) {
         when(gitRepoMock.findLatestReleaseCommit(null)) //
-                .thenReturn(Optional.ofNullable(previousVersion) //
+                .thenReturn(Optional.ofNullable(previousGitTag) //
                         .map(v -> new TaggedCommit(null, v)));
         return testee(currentVersion).validate().stream() //
                 .map(SimpleValidationFinding.class::cast) //
