@@ -1,4 +1,5 @@
 /target/
+/TAGS
 
 # Eclipse and Maven
 .classpath

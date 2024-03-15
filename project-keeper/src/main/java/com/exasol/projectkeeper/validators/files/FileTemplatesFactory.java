@@ -85,7 +85,7 @@ class FileTemplatesFactory {
             return new FileTemplateFromResource("templates/.github/workflows/ci-build-native-build.yml",
                     ".github/workflows/ci-build.yml", REQUIRE_EXACT);
         } else {
-            return workflowGenerator.createCiBuildWorkflow();
+            return this.workflowGenerator.createCiBuildWorkflow();
         }
     }
 
@@ -112,7 +112,7 @@ class FileTemplatesFactory {
         if (enabledModules.contains(DEFAULT)) {
             templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.ui.prefs", REQUIRE_EXACT));
             templates.add(new FileTemplateFromResource(".settings/org.eclipse.jdt.core.prefs", REQUIRE_EXACT)
-                    .replacing("javaVersion", source.getJavaVersion()));
+                    .replacing("javaVersion", canonicalize(source.getJavaVersion())));
             templates.add(new FileTemplateFromResource("src/test/resources/logging.properties", REQUIRE_EXACT));
             templates.add(new FileTemplateFromResource("versionsMavenPluginRules.xml", REQUIRE_EXACT));
         }
@@ -128,14 +128,19 @@ class FileTemplatesFactory {
         return templates;
     }
 
+    private String canonicalize(final String version) {
+        return "8".equals(version) ? "1.8" : version;
+    }
+
     // [impl -> dsn~pk-verify-workflow~1]
     private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates() {
-        final ArrayList<FileTemplate> templates = new ArrayList<>();
-        final String pathInProject = ".github/workflows/project-keeper-verify.yml";
-        templates.add(new FileTemplateFromResource("non_maven_templates/" + pathInProject, //
-                pathInProject, REQUIRE_EXACT) //
-                .replacing("installNode", String.valueOf(this.hasNpmModule)));
-        templates.add(new ProjectKeeperShellScript(this.ownVersion));
-        return templates;
+        return List.of(projectKeeperVerifyTemplate(), new ProjectKeeperShellScript(this.ownVersion));
+    }
+
+    private FileTemplate projectKeeperVerifyTemplate() {
+        final String path = ".github/workflows/project-keeper-verify.yml";
+        final FileTemplateFromResource template = new FileTemplateFromResource( //
+                "non_maven_templates/" + path, path, REQUIRE_EXACT);
+        return template.replacing("installNode", String.valueOf(this.hasNpmModule));
     }
 }
