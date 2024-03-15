@@ -134,12 +134,13 @@ class FileTemplatesFactory {
 
     // [impl -> dsn~pk-verify-workflow~1]
     private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates() {
-        final ArrayList<FileTemplate> templates = new ArrayList<>();
-        final String pathInProject = ".github/workflows/project-keeper-verify.yml";
-        templates.add(new FileTemplateFromResource("non_maven_templates/" + pathInProject, //
-                pathInProject, REQUIRE_EXACT) //
-                        .replacing("installNode", String.valueOf(this.hasNpmModule)));
-        templates.add(new ProjectKeeperShellScript(this.ownVersion));
-        return templates;
+        return List.of(projectKeeperVerifyTemplate(), new ProjectKeeperShellScript(this.ownVersion));
+    }
+
+    private FileTemplate projectKeeperVerifyTemplate() {
+        final String path = ".github/workflows/project-keeper-verify.yml";
+        final FileTemplateFromResource template = new FileTemplateFromResource( //
+                "non_maven_templates/" + path, path, REQUIRE_EXACT);
+        return template.replacing("installNode", String.valueOf(this.hasNpmModule));
     }
 }
