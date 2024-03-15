@@ -63,7 +63,7 @@ public class GitHubWorkflowOutput {
             // [impl->dsn~verify-release-mode.output-parameters.project-version~1]
             publisher.publish("version", this.projectVersion);
             if (changesFile.isPresent()) {
-                // [impl->dsn~verify-release-mode.output-parameters.relase-title~1]
+                // [impl->dsn~verify-release-mode.output-parameters.release-title~1]
                 publisher.publish("release-title", this.projectVersion + " " + changesFile.get().getCodeName());
                 // [impl->dsn~verify-release-mode.output-parameters.release-notes~1]
                 publisher.publish("release-notes", extractReleaseNotes(changesFile.get()));
