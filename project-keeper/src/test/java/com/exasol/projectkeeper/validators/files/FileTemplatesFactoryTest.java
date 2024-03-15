@@ -117,6 +117,18 @@ class FileTemplatesFactoryTest {
         assertContainsTemplate(templates, expectedTemplate);
     }
 
+    @ParameterizedTest
+    @CsvSource({ "8, 1.8", "11, 11" })
+    void testSettingsOrgEclipseJdtUiPrefs(final String javaVersion, final String expected) {
+        final AnalyzedMavenSource source = AnalyzedMavenSource.builder() //
+                .modules(Set.of(ProjectKeeperModule.DEFAULT)) //
+                .javaVersion(javaVersion) //
+                .build();
+        final List<FileTemplate> templates = testee().getTemplatesForSource(source);
+        final FileTemplate template = findTemplate(templates, ".settings/org.eclipse.jdt.ui.prefs").get();
+        template.getContent().contains("org.eclipse.jdt.core.compiler.codegen.targetPlatform=" + expected);
+    }
+
     // [utest->dsn~release-workflow.deploy-maven-central~1]
     @ParameterizedTest
     @ValueSource(booleans = { true, false })

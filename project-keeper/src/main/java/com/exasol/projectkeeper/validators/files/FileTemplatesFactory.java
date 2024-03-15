@@ -128,8 +128,8 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private String canonicalize(final String javaVersionFromSource) {
-        return "8".equals(javaVersionFromSource) ? "1.8" : javaVersionFromSource;
+    private String canonicalize(final String version) {
+        return "8".equals(version) ? "1.8" : version;
     }
 
     // [impl -> dsn~pk-verify-workflow~1]
