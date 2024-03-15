@@ -7,6 +7,7 @@ Code name:
 ## Bugfixes
 
 * #546: Updated template for file `.settings/org.eclipse.jdt.core.prefs`
+* #542: Prefixed release letter on GitHub with version number
 
 ## Dependency Updates
 
