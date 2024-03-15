@@ -47,21 +47,28 @@ public class VersionIncrementValidator implements Validator {
             LOG.info(() -> "No git tag exists, accepting " + this.projectVersion + " as valid.");
             return emptyList();
         }
-        final String previousVersion = latestReleaseCommit.get().getTag();
-        if (isValidSuccessor(previousVersion)) {
+        final String previousGitTag = latestReleaseCommit.get().getTag();
+        if (isValidSuccessor(previousGitTag)) {
             return emptyList();
         }
         return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-184")
                 .message("Project version {{current version}} is not a valid successor of {{previous version}}.",
-                        this.projectVersion, previousVersion)
+                        this.projectVersion, previousGitTag)
                 .mitigation("Only increment one of major, minor or patch version.").toString()).build());
     }
 
-    private boolean isValidSuccessor(final String previousVersion) {
-        final Semver current = new Semver(this.projectVersion).toStrict();
-        final Semver previous = new Semver(previousVersion).toStrict();
+    private boolean isValidSuccessor(final String previousGitTag) {
+        final Semver current = parseVersion(this.projectVersion);
+        final Semver previous = parseVersion(previousGitTag);
         return previous.nextMajor().equals(current) //
                 || previous.nextMinor().equals(current) //
                 || previous.nextPatch().equals(current);
+    }
+
+    private Semver parseVersion(String version) {
+        if (version.startsWith("v")) {
+            version = version.substring(1);
+        }
+        return new Semver(version);
     }
 }
