@@ -8,6 +8,7 @@ Code name:
 
 * #546: Updated template for file `.settings/org.eclipse.jdt.core.prefs`
 * #542: Prefixed release letter on GitHub with version number
+* #545: Fix parsing of Go version numbers with a `v` prefix
 
 ## Dependency Updates
 
