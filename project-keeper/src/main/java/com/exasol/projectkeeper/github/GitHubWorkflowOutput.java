@@ -41,7 +41,7 @@ public class GitHubWorkflowOutput {
 
     /**
      * Create a new publisher.
-     * 
+     *
      * @param config          Project Keeper configuration
      * @param projectDir      project directory
      * @param projectVersion  project version
@@ -59,12 +59,12 @@ public class GitHubWorkflowOutput {
      */
     public void provide() {
         final Optional<ChangesFile> changesFile = readChangesFile();
-        try (WorkflowOutput publisher = publisherFactory.create()) {
+        try (WorkflowOutput publisher = this.publisherFactory.create()) {
             // [impl->dsn~verify-release-mode.output-parameters.project-version~1]
-            publisher.publish("version", projectVersion);
+            publisher.publish("version", this.projectVersion);
             if (changesFile.isPresent()) {
-                // [impl->dsn~verify-release-mode.output-parameters.code-name~1]
-                publisher.publish("release-title", changesFile.get().getCodeName());
+                // [impl->dsn~verify-release-mode.output-parameters.relase-title~1]
+                publisher.publish("release-title", this.projectVersion + " " + changesFile.get().getCodeName());
                 // [impl->dsn~verify-release-mode.output-parameters.release-notes~1]
                 publisher.publish("release-notes", extractReleaseNotes(changesFile.get()));
             }
@@ -81,7 +81,7 @@ public class GitHubWorkflowOutput {
 
     // [impl->dsn~customize-release-artifacts-jar~0]
     private Stream<Path> sourceReleaseArtifacts() {
-        return analyzedSources.stream() //
+        return this.analyzedSources.stream() //
                 .filter(AnalyzedMavenSource.class::isInstance) //
                 .map(AnalyzedMavenSource.class::cast) //
                 .filter(source -> source.getReleaseArtifactName() != null) //
@@ -90,11 +90,11 @@ public class GitHubWorkflowOutput {
 
     // [impl->dsn~customize-release-artifacts-hard-coded~0]
     private Stream<Path> errorCodeReports() {
-        return analyzedSources.stream() //
+        return this.analyzedSources.stream() //
                 .filter(AnalyzedMavenSource.class::isInstance) //
                 .map(AnalyzedMavenSource.class::cast) //
                 .filter(AnalyzedMavenSource::isRootProject) //
-                .map(source -> projectDir.resolve("target/error_code_report.json"));
+                .map(source -> this.projectDir.resolve("target/error_code_report.json"));
     }
 
     private String extractReleaseNotes(final ChangesFile changesFile) {
@@ -117,9 +117,9 @@ public class GitHubWorkflowOutput {
     }
 
     private Optional<ChangesFile> readChangesFile() {
-        final Path file = projectDir.resolve(ChangesFile.getPathForVersion(projectVersion));
+        final Path file = this.projectDir.resolve(ChangesFile.getPathForVersion(this.projectVersion));
         if (Files.exists(file)) {
-            return Optional.of(changesFileIO.read(file));
+            return Optional.of(this.changesFileIO.read(file));
         } else {
             return Optional.empty();
         }

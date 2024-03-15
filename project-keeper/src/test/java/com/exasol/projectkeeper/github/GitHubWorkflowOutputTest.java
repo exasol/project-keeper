@@ -38,21 +38,21 @@ class GitHubWorkflowOutputTest {
     @Test
     void outputVersion() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder());
-        verify(publisherMock).publish("version", PROJECT_VERSION);
+        verify(this.publisherMock).publish("version", PROJECT_VERSION);
     }
 
     @Test
     void changesFileMissing() {
         testee(ProjectKeeperConfig.builder()).provide();
-        verify(publisherMock, never()).publish(eq("release-title"), any());
-        verify(publisherMock, never()).publish(eq("release-notes"), any());
+        verify(this.publisherMock, never()).publish(eq("release-title"), any());
+        verify(this.publisherMock, never()).publish(eq("release-notes"), any());
     }
 
-    // [utest->dsn~verify-release-mode.output-parameters.code-name~1]
+    // [utest->dsn~verify-release-mode.output-parameters.release-title~1]
     @Test
     void releaseTitle() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder().codeName("code name"));
-        verify(publisherMock).publish("release-title", "code name");
+        verify(this.publisherMock).publish("release-title", PROJECT_VERSION + " code name");
     }
 
     // [utest->dsn~verify-release-mode.output-parameters.release-notes~1]
@@ -63,7 +63,7 @@ class GitHubWorkflowOutputTest {
                 .addSection(ChangesFileSection.builder("## Features").addLine("feature content").build())
                 .dependencyChangeSection(
                         ChangesFileSection.builder("## Dependency Updates").addLine("dependency content").build()));
-        verify(publisherMock).publish("release-notes", """
+        verify(this.publisherMock).publish("release-notes", """
                 summary content
                 ## Features
                 feature content
@@ -75,13 +75,13 @@ class GitHubWorkflowOutputTest {
     @Test
     void releaseArtifactsNoMavenSource() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder());
-        verify(publisherMock).publish("release-artifacts", "");
+        verify(this.publisherMock).publish("release-artifacts", "");
     }
 
     @Test
     void releaseArtifactsMavenSourceWithoutArtifact() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(), AnalyzedMavenSource.builder().build());
-        verify(publisherMock).publish("release-artifacts", "");
+        verify(this.publisherMock).publish("release-artifacts", "");
     }
 
     // [utest->dsn~customize-release-artifacts-hard-coded~0]
@@ -89,35 +89,35 @@ class GitHubWorkflowOutputTest {
     void releaseArtifactsErrorCodeReport() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(),
                 AnalyzedMavenSource.builder().isRootProject(true).build());
-        verify(publisherMock).publish("release-artifacts",
-                projectDir.resolve("target/error_code_report.json").toString());
+        verify(this.publisherMock).publish("release-artifacts",
+                this.projectDir.resolve("target/error_code_report.json").toString());
     }
 
     @Test
     void releaseArtifactsMavenSourceWithArtifact() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(), AnalyzedMavenSource.builder()
-                .path(projectDir.resolve("project-dir/pom.xml")).releaseArtifactName("my-project.jar").build());
-        verify(publisherMock).publish("release-artifacts",
-                projectDir.resolve("project-dir/target/my-project.jar").toString());
+                .path(this.projectDir.resolve("project-dir/pom.xml")).releaseArtifactName("my-project.jar").build());
+        verify(this.publisherMock).publish("release-artifacts",
+                this.projectDir.resolve("project-dir/target/my-project.jar").toString());
     }
 
     @Test
     void releaseArtifactsMultipleArtifact() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(),
-                AnalyzedMavenSource.builder().path(projectDir.resolve("pom.xml")).releaseArtifactName("my-project1.jar")
-                        .isRootProject(true).build(),
-                AnalyzedMavenSource.builder().path(projectDir.resolve("module1/pom.xml"))
+                AnalyzedMavenSource.builder().path(this.projectDir.resolve("pom.xml"))
+                        .releaseArtifactName("my-project1.jar").isRootProject(true).build(),
+                AnalyzedMavenSource.builder().path(this.projectDir.resolve("module1/pom.xml"))
                         .releaseArtifactName("my-project2.jar").build());
-        verify(publisherMock).publish("release-artifacts",
-                projectDir.resolve("target/my-project1.jar").toString() + "\n"
-                        + projectDir.resolve("module1/target/my-project2.jar").toString() + "\n"
-                        + projectDir.resolve("target/error_code_report.json").toString());
+        verify(this.publisherMock).publish("release-artifacts",
+                this.projectDir.resolve("target/my-project1.jar").toString() + "\n"
+                        + this.projectDir.resolve("module1/target/my-project2.jar").toString() + "\n"
+                        + this.projectDir.resolve("target/error_code_report.json").toString());
     }
 
     @Test
     void closePublisher() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder());
-        verify(publisherMock).close();
+        verify(this.publisherMock).close();
     }
 
     private void publish(final ProjectKeeperConfig.Builder configBuilder, final ChangesFile.Builder changesFileBuilder,
@@ -127,20 +127,20 @@ class GitHubWorkflowOutputTest {
     }
 
     private void simulateChangesFile(final ChangesFile.Builder changesFileBuilder) {
-        final Path path = projectDir.resolve("doc/changes/changes_1.2.3.md");
+        final Path path = this.projectDir.resolve("doc/changes/changes_1.2.3.md");
         try {
             Files.createDirectories(path.getParent());
             Files.createFile(path);
         } catch (final IOException exception) {
             throw new UncheckedException(exception);
         }
-        when(changesFileIOMock.read(path)).thenReturn(changesFileBuilder.build());
+        when(this.changesFileIOMock.read(path)).thenReturn(changesFileBuilder.build());
     }
 
     private GitHubWorkflowOutput testee(final ProjectKeeperConfig.Builder configBuilder,
             final AnalyzedSource... sources) {
-        when(publisherFactoryMock.create()).thenReturn(publisherMock);
-        return new GitHubWorkflowOutput(configBuilder.build(), projectDir, PROJECT_VERSION, asList(sources),
-                publisherFactoryMock, changesFileIOMock);
+        when(this.publisherFactoryMock.create()).thenReturn(this.publisherMock);
+        return new GitHubWorkflowOutput(configBuilder.build(), this.projectDir, PROJECT_VERSION, asList(sources),
+                this.publisherFactoryMock, this.changesFileIOMock);
     }
 }

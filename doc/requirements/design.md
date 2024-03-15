@@ -146,7 +146,7 @@ For validating the `changelog.md` file we first generate the expected content an
 
 Covers:
 
-* [`req~verify-changelog-file~1`](system_requirements.md#verify-changelog.md-file)
+* [`req~verify-changelog-file~1`](system_requirements.md#verify-changelogmd-file)
 
 Needs: impl, utest, itest
 
@@ -162,7 +162,7 @@ We separated the crawling of the dependency information from the rendering of th
 
 Covers:
 
-* [`req~verify-dependencies-file~1`](system_requirements.md#verify-dependencies.md-file)
+* [`req~verify-dependencies-file~1`](system_requirements.md#verify-dependenciesmd-file)
 
 Needs: impl, itest
 
@@ -190,7 +190,7 @@ Needs: impl, utest, itest
 
 Covers:
 
-* [`req~verify-readme~1`](system_requirements.md#verify-readme.md-file)
+* [`req~verify-readme~1`](system_requirements.md#verify-readmemd-file)
 
 ### License File Validator
 
@@ -617,7 +617,7 @@ Needs: impl, utest, itest
 PK generates the changelog for the fixed vulnerabilities if the required information is available. The changelog contains the following information:
 * Issues that fix the vulnerabilities
 * CVE-number, description and severity of each vulnerability
-* The vulnerable dependency, its version and scope 
+* The vulnerable dependency, its version and scope
 
 PK does not update the changes file if no information is available.
 
@@ -651,7 +651,7 @@ Needs: impl
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
-#### Workflow `dependencies_update.yml` Starts PK Mode `update-dependencies` 
+#### Workflow `dependencies_update.yml` Starts PK Mode `update-dependencies`
 `dsn~dependency-updater.workflow.start-pk-update~1`
 
 PK generates the `dependencies_update.yml` workflow so that it starts PK's [`update-dependencies` mode](#update-dependencies-mode), passing information about vulnerabilities.
@@ -728,7 +728,7 @@ Needs: impl
 
 ## Automated Release Process
 
-### Generate Workflow `release.yml` 
+### Generate Workflow `release.yml`
 `dsn~release-workflow.generate~1`
 
 PK generates the `release.yml` GitHub workflow for Maven projects. This workflow runs the build, releases to Maven Central and on GitHub.
@@ -946,26 +946,23 @@ Needs: dsn, impl, utest
 #### PK Mode `verify-release` Publishes Project Version
 `dsn~verify-release-mode.output-parameters.project-version~1`
 
-PK mode `verify-release` publishes the project version as GitHub Output Parameter.
+PK mode `verify-release` adds the project version to the GitHub Output Parameters.
 
 Rationale:
 * The project version is required for creating the GitHub release tag.
 
 Covers:
-* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)
 
 Needs: impl, utest
 
-#### PK Modes `verify` and `verify-release` Publish Code Name
-`dsn~verify-release-mode.output-parameters.code-name~1`
+#### PK Modes `verify` and `verify-release` Publish Release Title as GitHub Output Parameter
+`dsn~verify-release-mode.output-parameters.release-title~1`
 
-PK mode `verify-release` publishes the code name from the changes file as GitHub Output Parameter.
-
-Rationale:
-* The code name is used as title for the GitHub release.
+PK mode `verify-release` adds the release title to the GitHub Output Parameters. The release title contains the project version and the code name from the changes file.
 
 Covers:
-* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)
 
 Needs: impl, utest
 
@@ -978,7 +975,7 @@ Rationale:
 * The content is used as note for the GitHub release.
 
 Covers:
-* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)
 
 Needs: impl, utest
 
@@ -993,7 +990,7 @@ Rationale:
 * The list is used for verifying all required artifacts are built during workflow `ci-build.yml`.
 
 Covers:
-* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)
 
 Needs: impl, utest
 
@@ -1006,7 +1003,7 @@ Rationale:
 * Golang projects require additional Git tags for releases.
 
 Covers:
-* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-sets-github-action-output-parameters)
+* [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)
 
 -Needs: impl, utest, itest
 
