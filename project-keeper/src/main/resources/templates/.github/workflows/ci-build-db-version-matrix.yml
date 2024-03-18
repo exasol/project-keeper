@@ -118,6 +118,7 @@ jobs:
         shell: "bash"
     permissions:
       contents: read
+      issues: read # Required for PK verify-release
     outputs:
       release-required: ${{ steps.check-release.outputs.release-required }}
     steps:
@@ -143,6 +144,8 @@ jobs:
               echo "## 🛑 Release precondition not met, not starting release" >> "$GITHUB_STEP_SUMMARY"
               echo "release-required=false" >> "$GITHUB_OUTPUT"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # [impl->dsn~release-workflow.ci-build-starts-release~2]
   start_release:

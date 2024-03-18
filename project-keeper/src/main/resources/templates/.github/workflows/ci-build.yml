@@ -16,6 +16,7 @@ jobs:
     permissions:
       contents: read
       checks: write # Allow scacap/action-surefire-report
+      issues: read # Required for PK verify-release
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
@@ -112,6 +113,8 @@ jobs:
               echo "## 🛑 Release precondition not met, not starting release" >> "$GITHUB_STEP_SUMMARY"
               echo "release-required=false" >> "$GITHUB_OUTPUT"
           fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # [impl->dsn~release-workflow.ci-build-starts-release~2]
   start_release:
