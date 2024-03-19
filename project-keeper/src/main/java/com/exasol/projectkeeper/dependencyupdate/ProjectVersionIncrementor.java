@@ -6,7 +6,8 @@ import java.nio.file.Path;
 import java.time.*;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Pattern;
+
+import org.apache.maven.model.Model;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
@@ -14,6 +15,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.analyze.generic.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
+import com.exasol.projectkeeper.validators.pom.PomFileIO;
 import com.vdurmont.semver4j.Semver;
 
 /**
@@ -28,23 +30,23 @@ class ProjectVersionIncrementor {
     private final Clock clock;
     private final Path projectDir;
     private final Logger logger;
-    private final TextFileIO textFileIO;
+    private final PomFileIO pomFileIO;
     private final CommandExecutor commandExecutor;
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
             final String currentProjectVersion) {
-        this(config, logger, projectDir, currentProjectVersion, new ChangesFileIO(), new TextFileIO(),
+        this(config, logger, projectDir, currentProjectVersion, new ChangesFileIO(), new PomFileIO(),
                 new CommandExecutor(), Clock.systemUTC());
     }
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
-            final String currentProjectVersion, final ChangesFileIO changesFileIO, final TextFileIO textFileIO,
+            final String currentProjectVersion, final ChangesFileIO changesFileIO, final PomFileIO pomFileIO,
             final CommandExecutor commandExecutor, final Clock clock) {
         this.config = config;
         this.logger = logger;
         this.projectDir = projectDir;
         this.changesFileIO = changesFileIO;
-        this.textFileIO = textFileIO;
+        this.pomFileIO = pomFileIO;
         this.commandExecutor = commandExecutor;
         this.clock = clock;
         this.currentProjectVersion = Objects.requireNonNull(currentProjectVersion, "currentProjectVersion");
@@ -84,8 +86,14 @@ class ProjectVersionIncrementor {
      * @return the new, incremented version
      */
     String incrementProjectVersion() {
-        final String nextVersion = getIncrementedVersion(currentProjectVersion);
-        incrementVersionInPom(nextVersion);
+        final Path path = getPomPath();
+        final Model pom = pomFileIO.readPom(path);
+        if (!this.currentProjectVersion.equals(pom.getVersion())) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-174").message(
+                    "Inconsistent project version {{version in pom file}} found in pom {{pom file path}}, expected {{expected version}}.",
+                    pom.getVersion(), path, currentProjectVersion).ticketMitigation().toString());
+        }
+        final String nextVersion = incrementVersion(pom);
         if (usesReferenceCheckerPlugin()) {
             updateReferences();
         }
@@ -103,36 +111,23 @@ class ProjectVersionIncrementor {
         commandExecutor.execute(command);
     }
 
-    private void incrementVersionInPom(final String nextVersion) {
-        final Path path = getPomPath();
-        final String pomContent = textFileIO.readTextFile(path);
-        logger.info("Incrementing version from " + currentProjectVersion + " to " + nextVersion + " in POM " + path);
-        textFileIO.writeTextFile(path, updateVersionInPom(path, pomContent, nextVersion));
-    }
-
-    private String updateVersionInPom(final Path path, final String pomContent, final String nextVersion) {
-        String updatedPom = pomContent;
-        updatedPom = replaceTagContent(updatedPom, "version", currentProjectVersion, nextVersion);
-        updatedPom = replaceTagContent(updatedPom, "revision", currentProjectVersion, nextVersion);
-        if (updatedPom.equals(pomContent)) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-195")
-                    .message("Failed to update version in POM {{path}}. No version tag found.", path).toString());
-        }
-        return updatedPom;
-    }
-
-    private static String replaceTagContent(final String content, final String tagName, final String oldTagContent,
-            final String newTagContent) {
-        final String startTag = "<" + tagName + ">";
-        final String endTag = "</" + tagName + ">";
-        final String oldContent = startTag + oldTagContent + endTag;
-        final String newContent = startTag + newTagContent + endTag;
-        return content.replaceFirst(Pattern.quote(oldContent), newContent);
+    private String incrementVersion(final Model pom) {
+        final String nextVersion = getIncrementedVersion(currentProjectVersion);
+        logger.info("Incrementing version from " + currentProjectVersion + " to " + nextVersion + " in POM "
+                + pom.getPomFile());
+        pom.setVersion(nextVersion);
+        writePom(pom);
+        return nextVersion;
     }
 
     static String getIncrementedVersion(final String version) {
         final Semver current = new Semver(version);
         return current.nextPatch().toString();
+    }
+
+    private void writePom(final Model pom) {
+        final Path path = getPomPath();
+        pomFileIO.writePom(pom, path);
     }
 
     private Path getPomPath() {
