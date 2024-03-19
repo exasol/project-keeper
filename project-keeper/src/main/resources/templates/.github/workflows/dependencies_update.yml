@@ -18,8 +18,8 @@ jobs:
       run:
         shell: "bash"
     permissions:
-      contents: write
-      pull-requests: write
+      contents: write # Required for creating new branch
+      pull-requests: write # Required for creating new pull request
 
     steps:
       - uses: actions/checkout@v4

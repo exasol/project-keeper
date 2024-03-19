@@ -756,15 +756,20 @@ Covers:
 Needs: dsn
 
 #### Workflow `ci-build.yml` Starts Release Build After Succeeding on `main`
-`dsn~release-workflow.ci-build-starts-release~1`
+`dsn~release-workflow.ci-build-starts-release~2`
 
-PK generates the `ci-build.yml` workflow so that it starts the `release.yml` workflow when all tests succeeded on the `main` branch.
+PK generates workflow `ci-build.yml` so that it starts workflow `release.yml` when all of the following conditions apply:
+
+* The build and tests were successful.
+* Workflow is running on branch `main`.
+* PK mode [`verify-release`](#pk-mode-verify-release) succeeded.
 
 Rationale:
 * Starting the release automatically avoids manual work.
 * In case no release is planned, developers enter an invalid date into the changes file. This will cause `release.yml` to cancel the release.
 * Hard-coding the `main` branch is OK because we assume that all repositories use the same development workflow.
 * This feature is implemented as GitHub workflow without tests. Hence, there is no requirement-tracing to tests.
+* Checking that `verify-release` is successful in `ci-build.yml` is required. Without this, the complete workflow would be marked as failed when `release.yml` run `verify-release`.
 
 Covers:
 * [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
