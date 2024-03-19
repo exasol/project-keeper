@@ -64,7 +64,7 @@ class ProjectVersionIncrementorTest {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 testee::incrementProjectVersion);
         assertThat(exception.getMessage(),
-                startsWith("E-PK-CORE-194: Failed to update version in POM '" + POM_PATH + "'. No version tag found."));
+                startsWith("E-PK-CORE-195: Failed to update version in POM '" + POM_PATH + "'. No version tag found."));
     }
 
     @ParameterizedTest

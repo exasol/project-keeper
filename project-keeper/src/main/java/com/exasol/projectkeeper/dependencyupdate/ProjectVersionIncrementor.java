@@ -116,7 +116,7 @@ class ProjectVersionIncrementor {
         updatedPom = replaceTagContent(updatedPom, "version", currentProjectVersion, nextVersion);
         updatedPom = replaceTagContent(updatedPom, "revision", currentProjectVersion, nextVersion);
         if (updatedPom.equals(pomContent)) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-194")
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-195")
                     .message("Failed to update version in POM {{path}}. No version tag found.", path).toString());
         }
         return updatedPom;
