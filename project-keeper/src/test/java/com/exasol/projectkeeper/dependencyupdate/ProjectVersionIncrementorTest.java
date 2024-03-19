@@ -4,8 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -14,7 +12,6 @@ import java.time.*;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,7 +26,6 @@ import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
 import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
-import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 // [utest->dsn~dependency-updater.increment-version~1]
 @ExtendWith(MockitoExtension.class)
@@ -46,9 +42,9 @@ class ProjectVersionIncrementorTest {
     @Mock
     private ChangesFileIO changesFileIOMock;
     @Mock
-    private PomFileIO pomFileIOMock;
-    @Mock
     private CommandExecutor commandExecutorMock;
+    @Mock
+    private TextFileIO textFileIOMock;
 
     @ParameterizedTest
     @CsvSource(nullValues = "NULL", value = { "NULL, false", "invalid data, false", "2007-??-??, false",
@@ -62,43 +58,67 @@ class ProjectVersionIncrementorTest {
     }
 
     @Test
-    void incrementProjectVersionFailsForInconsistentVersionInPom() {
-        final Model pomModel = new Model();
-        pomModel.setVersion("1.2.2");
-        when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
+    void incrementProjectVersionFailsForMissingVersionTag() {
+        when(textFileIOMock.readTextFile(POM_PATH)).thenReturn("pom content without version tag");
         final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
-
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 testee::incrementProjectVersion);
         assertThat(exception.getMessage(),
-                startsWith("E-PK-CORE-174: Inconsistent project version '1.2.2' found in pom '" + POM_PATH
-                        + "', expected '1.2.3'."));
+                startsWith("E-PK-CORE-194: Failed to update version in POM '" + POM_PATH + "'. No version tag found."));
     }
 
     @ParameterizedTest
     @CsvSource({ "0.0.0, 0.0.1", "0.1.1, 0.1.2", "1.2.1, 1.2.2", "9.9.9, 9.9.10", "1.2.99, 1.2.100",
             "99.34.12345, 99.34.12346" })
-    void incrementProjectVersion(final String currentVersion, final String expectedNextVersion) {
-        final Model pomModel = new Model();
-        pomModel.setVersion(currentVersion);
-        when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
+    void incrementProjectVersionInVersionTag(final String currentVersion, final String expectedNextVersion) {
+        when(textFileIOMock.readTextFile(POM_PATH))
+                .thenReturn("pom content <version>" + currentVersion + "</version> more text");
         final String newVersion = testee(configWithoutJarArtifact(), currentVersion).incrementProjectVersion();
-        assertAll(() -> assertThat(newVersion, equalTo(expectedNextVersion)),
-                () -> assertThat(pomModel.getVersion(), equalTo(newVersion)));
-        verify(pomFileIOMock).writePom(same(pomModel), eq(POM_PATH));
+        assertThat(newVersion, equalTo(expectedNextVersion));
+        verify(textFileIOMock).writeTextFile(POM_PATH,
+                "pom content <version>" + expectedNextVersion + "</version> more text");
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "0.0.0, 0.0.1", "0.1.1, 0.1.2", "1.2.1, 1.2.2", "9.9.9, 9.9.10", "1.2.99, 1.2.100",
+            "99.34.12345, 99.34.12346" })
+    void incrementProjectVersionInRevisionTag(final String currentVersion, final String expectedNextVersion) {
+        when(textFileIOMock.readTextFile(POM_PATH))
+                .thenReturn("pom content <revision>" + currentVersion + "</revision> more text");
+        final String newVersion = testee(configWithoutJarArtifact(), currentVersion).incrementProjectVersion();
+        assertThat(newVersion, equalTo(expectedNextVersion));
+        verify(textFileIOMock).writeTextFile(POM_PATH,
+                "pom content <revision>" + expectedNextVersion + "</revision> more text");
+    }
+
+    @Test
+    void incrementOnlyFirstMatchingVersionTag() {
+        when(textFileIOMock.readTextFile(POM_PATH))
+                .thenReturn("pom content <version>1.2.3</version> <version>1.2.3</version> more text");
+        testee(configWithoutJarArtifact(), "1.2.3").incrementProjectVersion();
+        verify(textFileIOMock).writeTextFile(POM_PATH,
+                "pom content <version>1.2.4</version> <version>1.2.3</version> more text");
+    }
+
+    @Test
+    void incrementOnlyFirstMatchingRevisionTag() {
+        when(textFileIOMock.readTextFile(POM_PATH))
+                .thenReturn("pom content <revision>1.2.3</revision> <revision>1.2.3</revision> more text");
+        testee(configWithoutJarArtifact(), "1.2.3").incrementProjectVersion();
+        verify(textFileIOMock).writeTextFile(POM_PATH,
+                "pom content <revision>1.2.4</revision> <revision>1.2.3</revision> more text");
     }
 
     @Test
     void incrementProjectVersionWithJarArtifactUpdatesReferences() {
-        final Model pomModel = new Model();
-        pomModel.setVersion(CURRENT_PROJECT_VERSION);
-        when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
+        when(textFileIOMock.readTextFile(POM_PATH))
+                .thenReturn("pom content <version>" + CURRENT_PROJECT_VERSION + "</version> more text");
         final String newVersion = testee(configWithJarArtifact(), CURRENT_PROJECT_VERSION).incrementProjectVersion();
-        assertAll(() -> assertThat(newVersion, equalTo("1.2.4")),
-                () -> assertThat(pomModel.getVersion(), equalTo(newVersion)), () -> assertMavenExecuted());
+        assertAll(() -> assertThat(newVersion, equalTo("1.2.4")), //
+                this::assertMavenExecuted);
     }
 
-    private void assertMavenExecuted(final String... mavenArguments) {
+    private void assertMavenExecuted() {
         final ShellCommand command = getExecutedCommand();
         assertThat(command.workingDir().get(), equalTo(PROJECT_DIR));
         assertThat(command.commandline(),
@@ -121,7 +141,7 @@ class ProjectVersionIncrementorTest {
 
     private ProjectVersionIncrementor testee(final ProjectKeeperConfig config, final String currentProjectVersion) {
         return new ProjectVersionIncrementor(config, loggerMock, PROJECT_DIR, currentProjectVersion, changesFileIOMock,
-                pomFileIOMock, commandExecutorMock, fixedClock);
+                textFileIOMock, commandExecutorMock, fixedClock);
     }
 
     private ProjectKeeperConfig configWithJarArtifact() {
