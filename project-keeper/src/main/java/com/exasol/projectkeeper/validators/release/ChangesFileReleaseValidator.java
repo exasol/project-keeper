@@ -75,14 +75,14 @@ class ChangesFileReleaseValidator implements Validator {
     private List<Integer> getIssuesWronglyMarkedAsClosed() {
         final Set<Integer> mentionedTickets = changesFile.getFixedIssues().stream().map(FixedIssue::issueNumber)
                 .collect(toSet());
-        final Set<Integer> wrongIssues = new HashSet<>();
+        final Set<Integer> stillOpenIssues = new HashSet<>();
         for (final Integer issue : mentionedTickets) {
             final IssueState state = gitHubAdapter.getIssueState(issue);
             if (state != IssueState.CLOSED) {
-                wrongIssues.add(issue);
+                stillOpenIssues.add(issue);
             }
         }
-        return sort(wrongIssues);
+        return sort(stillOpenIssues);
     }
 
     private List<Integer> sort(final Set<Integer> numbers) {
