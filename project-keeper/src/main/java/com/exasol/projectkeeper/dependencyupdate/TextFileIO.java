@@ -23,7 +23,7 @@ class TextFileIO {
             return Files.readString(path, StandardCharsets.UTF_8);
         } catch (final IOException exception) {
             throw new UncheckedIOException(
-                    ExaError.messageBuilder("E-PK-CORE-192").message("Failed to read file {{path}}", path).toString(),
+                    ExaError.messageBuilder("E-PK-CORE-194").message("Failed to read file {{path}}", path).toString(),
                     exception);
         }
     }

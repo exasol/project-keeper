@@ -25,7 +25,7 @@ class TextFileIOTest {
         final Path path = tempDir.resolve("non-existing-file");
         final UncheckedIOException exception = assertThrows(UncheckedIOException.class,
                 () -> testee.readTextFile(path));
-        assertThat(exception.getMessage(), equalTo("E-PK-CORE-192: Failed to read file '" + path + "'"));
+        assertThat(exception.getMessage(), equalTo("E-PK-CORE-194: Failed to read file '" + path + "'"));
     }
 
     @ParameterizedTest
