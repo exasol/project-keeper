@@ -15,6 +15,7 @@ import com.exasol.projectkeeper.validators.changesfile.FixedIssue;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 import com.exasol.projectkeeper.validators.release.github.GitHubAdapter;
+import com.exasol.projectkeeper.validators.release.github.IssueState;
 
 class ChangesFileReleaseValidator implements Validator {
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
@@ -74,11 +75,13 @@ class ChangesFileReleaseValidator implements Validator {
     private List<Integer> getIssuesWronglyMarkedAsClosed() {
         final Set<Integer> mentionedTickets = changesFile.getFixedIssues().stream().map(FixedIssue::issueNumber)
                 .collect(toSet());
-        if (mentionedTickets.isEmpty()) {
-            return emptyList();
+        final Set<Integer> wrongIssues = new HashSet<>();
+        for (final Integer issue : mentionedTickets) {
+            final IssueState state = gitHubAdapter.getIssueState(issue);
+            if (state != IssueState.CLOSED) {
+                wrongIssues.add(issue);
+            }
         }
-        final Set<Integer> wrongIssues = new HashSet<>(mentionedTickets);
-        wrongIssues.removeAll(gitHubAdapter.getClosedIssues());
         return sort(wrongIssues);
     }
 
