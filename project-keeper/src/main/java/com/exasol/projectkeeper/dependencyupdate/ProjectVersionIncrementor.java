@@ -103,12 +103,11 @@ class ProjectVersionIncrementor {
         commandExecutor.execute(command);
     }
 
-    private String incrementVersionInPom(final String nextVersion) {
+    private void incrementVersionInPom(final String nextVersion) {
         final Path path = getPomPath();
         final String pomContent = textFileIO.readTextFile(path);
         logger.info("Incrementing version from " + currentProjectVersion + " to " + nextVersion + " in POM " + path);
         textFileIO.writeTextFile(path, updateVersionInPom(path, pomContent, nextVersion));
-        return nextVersion;
     }
 
     private String updateVersionInPom(final Path path, final String pomContent, final String nextVersion) {
