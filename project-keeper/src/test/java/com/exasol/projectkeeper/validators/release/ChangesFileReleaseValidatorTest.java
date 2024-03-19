@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.validators.release;
 
-import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
@@ -8,7 +7,6 @@ import static org.mockito.Mockito.when;
 import java.nio.file.Path;
 import java.time.*;
 import java.util.List;
-import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,6 +19,7 @@ import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileSection;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.release.github.GitHubAdapter;
+import com.exasol.projectkeeper.validators.release.github.IssueState;
 
 @ExtendWith(MockitoExtension.class)
 class ChangesFileReleaseValidatorTest {
@@ -56,9 +55,10 @@ class ChangesFileReleaseValidatorTest {
     }
 
     // [utest->dsn~verify-release-mode.verify-issues-closed~1]
-    @Test
-    void closedIssuesIssueNotClosed() {
-        when(gitHubAdapterMock.getClosedIssues()).thenReturn(emptySet());
+    @ParameterizedTest
+    @CsvSource({ "OPEN", "MISSING" })
+    void closedIssuesIssueNotClosed(final IssueState state) {
+        when(gitHubAdapterMock.getIssueState(42)).thenReturn(state);
         final List<String> findings = findings(ChangesFile.builder()
                 .addSection(ChangesFileSection.builder("## Bugfixes").addLine("- #42: Fixed a bug").build())
                 .releaseDate(TODAY));
@@ -68,7 +68,7 @@ class ChangesFileReleaseValidatorTest {
 
     @Test
     void closedIssuesIssueClosed() {
-        when(gitHubAdapterMock.getClosedIssues()).thenReturn(Set.of(17, 42));
+        when(gitHubAdapterMock.getIssueState(42)).thenReturn(IssueState.CLOSED);
         final List<String> findings = findings(ChangesFile.builder()
                 .addSection(ChangesFileSection.builder("## Bugfixes").addLine("- #42: Fixed a bug").build())
                 .releaseDate(TODAY));

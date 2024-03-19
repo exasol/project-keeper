@@ -10,6 +10,7 @@ Code name:
 * #542: Prefixed release letter on GitHub with version number
 * #545: Fix parsing of Go version numbers with a `v` prefix
 * #548: Skip release build when preconditions are not fulfilled
+* #540: Improved speed of validating mentioned issues in changes file
 
 ## Dependency Updates
 
