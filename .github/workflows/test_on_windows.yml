@@ -44,7 +44,7 @@ jobs:
       - name: Install Go tools
         run: go install github.com/google/go-licenses@v1.6.0
       - name: Build and install
-        run: mvn --batch-mode -DtrimStackTrace=false clean install
+        run: mvn --batch-mode -T 1C -DtrimStackTrace=false clean install
       - name: Run project-keeper itself
         id: pk-verify
         run: mvn --batch-mode -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
@@ -57,7 +57,7 @@ jobs:
               echo "$message" >> "$GITHUB_STEP_SUMMARY"
           }
 
-          print_message "# Release Artifacts"
+          print_message "### Release Artifacts"
 
           IFS=$'\n' artifacts_array=($ARTIFACTS)
           missing_files=()
@@ -78,8 +78,6 @@ jobs:
           if [[ $number_of_missing_files -gt 0 ]]; then
               print_message "⚠️ $number_of_missing_files release artifact(s) missing ⚠️"
               exit 1
-          else
-              print_message "All ${#artifacts_array[@]} artifact(s) present ✅"
           fi
         env:
           ARTIFACTS: ${{ steps.pk-verify.outputs.release-artifacts }}

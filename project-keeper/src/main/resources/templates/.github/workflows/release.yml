@@ -33,9 +33,9 @@ jobs:
       group: ${{ github.workflow }}
       cancel-in-progress: false
     permissions:
-      contents: write
-      actions: read
-      issues: read
+      contents: write # Required for creating GitHub release
+      actions: read # Required for checking build status
+      issues: read # Required for PK verify-release
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4

@@ -16,10 +16,12 @@ jobs:
     permissions:
       contents: read
       checks: write # Allow scacap/action-surefire-report
-      issues: read # required for PK verify-release
+      issues: read # Required for PK verify-release
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
+    outputs:
+      release-required: ${{ steps.check-release.outputs.release-required }}
     steps:
       - name: Free Disk Space
         if: ${{ $freeDiskSpace }}
@@ -76,7 +78,7 @@ jobs:
               echo "$message" >> "$GITHUB_STEP_SUMMARY"
           }
 
-          print_message "# Release Artifacts"
+          print_message "### Release Artifacts"
 
           IFS=$'\n' artifacts_array=($ARTIFACTS)
           missing_files=()
@@ -97,16 +99,27 @@ jobs:
           if [[ $number_of_missing_files -gt 0 ]]; then
               print_message "⚠️ $number_of_missing_files release artifact(s) missing ⚠️"
               exit 1
-          else
-              print_message "All ${#artifacts_array[@]} artifact(s) present ✅"
           fi
         env:
           ARTIFACTS: ${{ steps.pk-verify.outputs.release-artifacts }}
 
-  # [impl->dsn~release-workflow.ci-build-starts-release~1]
+      - name: Check if release is needed
+        id: check-release
+        run: |
+          if mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .; then
+              echo "## ✅ Release preconditions met, start release" >> "$GITHUB_STEP_SUMMARY"
+              echo "release-required=true" >> "$GITHUB_OUTPUT"
+          else
+              echo "## 🛑 Release precondition not met, not starting release" >> "$GITHUB_STEP_SUMMARY"
+              echo "release-required=false" >> "$GITHUB_OUTPUT"
+          fi
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # [impl->dsn~release-workflow.ci-build-starts-release~2]
   start_release:
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' }}
+    if: ${{ github.ref == 'refs/heads/main' && needs.build.outputs.release-required == 'true' }}
     concurrency:
       cancel-in-progress: false
       group: "release"
