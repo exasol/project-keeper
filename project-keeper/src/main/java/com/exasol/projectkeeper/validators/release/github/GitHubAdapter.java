@@ -2,6 +2,8 @@ package com.exasol.projectkeeper.validators.release.github;
 
 import static java.util.stream.Collectors.toSet;
 
+import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.EnumMap;
@@ -9,6 +11,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 import java.util.stream.StreamSupport;
 
+import com.exasol.errorreporting.ExaError;
 import com.jcabi.github.Coordinates;
 import com.jcabi.github.Issue;
 import com.jcabi.github.Issues.Qualifier;
@@ -60,6 +63,33 @@ public class GitHubAdapter {
         LOG.fine(() -> "Found " + issues.size() + " issues for repo " + owner + "/" + repoName + " in "
                 + Duration.between(start, Instant.now()));
         return issues;
+    }
+
+    /**
+     * Get the state of an issue.
+     * 
+     * @param issueNumber issue number
+     * @return state of the issue
+     */
+    public IssueState getIssueState(final int issueNumber) {
+        final Issue issue = gitHubConnectionProvider.connect().repos().get(new Coordinates.Simple(owner, repoName))
+                .issues().get(issueNumber);
+        final Issue.Smart smartIssue = new Issue.Smart(issue);
+        try {
+            if (!smartIssue.exists()) {
+                return IssueState.MISSING;
+            }
+            if (smartIssue.isOpen()) {
+                return IssueState.OPEN;
+            } else {
+                return IssueState.CLOSED;
+            }
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-192")
+                    .message("Failed to get status of GitHub issue #{{issue number}}: {{cause}}", issueNumber,
+                            exception.getMessage())
+                    .toString(), exception);
+        }
     }
 
     private EnumMap<Qualifier, String> stateClosed() {

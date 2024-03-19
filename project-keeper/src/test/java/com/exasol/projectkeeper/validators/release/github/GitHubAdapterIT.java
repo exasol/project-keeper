@@ -27,4 +27,24 @@ class GitHubAdapterIT {
         assertAll(() -> assertThat(closedIssues, hasSize(allOf(greaterThan(520), lessThan(10000000)))),
                 () -> assertThat(closedIssues, allOf(hasItem(1), hasItem(2), hasItem(3))));
     }
+
+    @Test
+    void getIssueStateMissingNegative() {
+        assertThat(adapter.getIssueState(-1), equalTo(IssueState.MISSING));
+    }
+
+    @Test
+    void getIssueStateMissing() {
+        assertThat(adapter.getIssueState(0), equalTo(IssueState.MISSING));
+    }
+
+    @Test
+    void getIssueStateMissingLargeIssueNumber() {
+        assertThat(adapter.getIssueState(10000000), equalTo(IssueState.MISSING));
+    }
+
+    @Test
+    void getIssueStateExists() {
+        assertThat(adapter.getIssueState(1), equalTo(IssueState.CLOSED));
+    }
 }
