@@ -119,11 +119,13 @@ class ProjectKeeperMojoIT {
     @Test
     @DisabledOnOs(OS.WINDOWS) // Passing vulnerability JSONL via system property fails on Windows
     void testUpgradeDependencies() throws VerificationException, IOException {
-        writeProjectKeeperConfig("sources:\n" + //
-                "  - type: maven\n" + //
-                "    path: pom.xml\n" + //
-                "    modules:\n" + //
-                "      - jar_artifact\n");
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                    modules:
+                      - jar_artifact
+                """);
         final Path userGuidePath = projectDir.resolve("user_guide.md");
         writeFile(userGuidePath, "artifact reference: dummy-0.1.0.jar");
 
