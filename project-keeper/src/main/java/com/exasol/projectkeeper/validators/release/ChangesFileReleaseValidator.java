@@ -49,12 +49,19 @@ class ChangesFileReleaseValidator implements Validator {
         if (summarySection.isEmpty()) {
             return noFindings(); // Already checked in ChangesFileValidator
         }
-        if (summarySection.get().getContent().stream().filter(not(String::isBlank)).findAny().isEmpty()) {
+        if (hasEmptyContent(summarySection)) {
             return finding(ExaError.messageBuilder("E-PK-CORE-194")
                     .message("Section '## Summary' is empty in {{path}}.", changesFilePath)
                     .mitigation("Add content to section.").toString());
         }
         return noFindings();
+    }
+
+    private boolean hasEmptyContent(final Optional<ChangesFileSection> summarySection) {
+        return summarySection.orElseThrow().getContent().stream() //
+                .filter(not(String::isBlank)) //
+                .findAny() //
+                .isEmpty();
     }
 
     private Optional<ValidationFinding> validateCodeName() {
