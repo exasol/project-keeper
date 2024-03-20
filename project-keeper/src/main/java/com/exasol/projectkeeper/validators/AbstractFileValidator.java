@@ -17,7 +17,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 public abstract class AbstractFileValidator implements Validator {
     private final Path absoluteFilePath;
-    private final Path relativeFilePath;
+    protected final Path relativeFilePath;
 
     /**
      * Create a new instance of {@link AbstractFileValidator}.
@@ -60,7 +60,7 @@ public abstract class AbstractFileValidator implements Validator {
      * @return method (closure)
      */
     protected SimpleValidationFinding.Fix getCreateFileFix() {
-        return (Logger log) -> {
+        return (final Logger log) -> {
             try {
                 Files.createDirectories(this.absoluteFilePath.getParent());
                 writeTemplateFile(this.absoluteFilePath);

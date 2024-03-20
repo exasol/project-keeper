@@ -1,6 +1,6 @@
 package com.exasol.projectkeeper.validators.release;
 
-import static java.util.Collections.emptyList;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.toSet;
 
 import java.nio.file.Path;
@@ -10,8 +10,7 @@ import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
-import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
-import com.exasol.projectkeeper.validators.changesfile.FixedIssue;
+import com.exasol.projectkeeper.validators.changesfile.*;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 import com.exasol.projectkeeper.validators.release.github.GitHubAdapter;
@@ -36,14 +35,39 @@ class ChangesFileReleaseValidator implements Validator {
         this.clock = clock;
     }
 
+    // [impl->dsn~verify-release-mode.verify-changes-file~1]
     @Override
     public List<ValidationFinding> validate() {
-        return Stream.of(validateReleaseDate(), validateIssuesClosed()) //
-                .flatMap(List::stream).toList();
+        return Stream.of(validateReleaseDate(), validateIssuesClosed(), validateSummary(), validateCodeName()) //
+                .filter(Optional::isPresent) //
+                .map(Optional::get) //
+                .toList();
+    }
+
+    private Optional<ValidationFinding> validateSummary() {
+        final Optional<ChangesFileSection> summarySection = changesFile.getSummarySection();
+        if (summarySection.isEmpty()) {
+            return noFindings(); // Already checked in ChangesFileValidator
+        }
+        if (summarySection.get().getContent().stream().filter(not(String::isBlank)).findAny().isEmpty()) {
+            return finding(ExaError.messageBuilder("E-PK-CORE-194")
+                    .message("Section '## Summary' is empty in {{path}}.", changesFilePath)
+                    .mitigation("Add content to section.").toString());
+        }
+        return noFindings();
+    }
+
+    private Optional<ValidationFinding> validateCodeName() {
+        if (changesFile.getCodeName() == null || changesFile.getCodeName().isBlank()) {
+            return finding(ExaError.messageBuilder("E-PK-CORE-196")
+                    .message("Code name in {{path}} is missing.", changesFilePath).mitigation("Add a code name.")
+                    .toString());
+        }
+        return noFindings();
     }
 
     // [impl->dsn~verify-release-mode.verify-release-date~1]
-    private List<ValidationFinding> validateReleaseDate() {
+    private Optional<ValidationFinding> validateReleaseDate() {
         final Optional<LocalDate> releaseDate = changesFile.getParsedReleaseDate();
         if (releaseDate.isEmpty()) {
             return finding(ExaError.messageBuilder("E-PK-CORE-182")
@@ -62,7 +86,7 @@ class ChangesFileReleaseValidator implements Validator {
     }
 
     // [impl->dsn~verify-release-mode.verify-issues-closed~1]
-    private List<ValidationFinding> validateIssuesClosed() {
+    private Optional<ValidationFinding> validateIssuesClosed() {
         final List<Integer> wrongIssues = getIssuesWronglyMarkedAsClosed();
         if (!wrongIssues.isEmpty()) {
             return finding(ExaError.messageBuilder("E-PK-CORE-186").message(
@@ -95,11 +119,11 @@ class ChangesFileReleaseValidator implements Validator {
         return LocalDate.ofInstant(clock.instant(), UTC_ZONE);
     }
 
-    private List<ValidationFinding> noFindings() {
-        return emptyList();
+    private Optional<ValidationFinding> noFindings() {
+        return Optional.empty();
     }
 
-    private List<ValidationFinding> finding(final String message) {
-        return List.of(SimpleValidationFinding.withMessage(message).build());
+    private Optional<ValidationFinding> finding(final String message) {
+        return Optional.of(SimpleValidationFinding.withMessage(message).build());
     }
 }
