@@ -117,7 +117,7 @@ class ProjectKeeperMojoIT {
     // [itest->dsn~dependency-updater.read-vulnerability-info~1]
     // [itest->dsn~dependency-updater.update-changelog~1]
     @Test
-    @DisabledOnOs(OS.WINDOWS) // Passing vulnerability JSONL via system property fails on Windows
+    @DisabledOnOs(OS.WINDOWS) // Passing multi-line vulnerability JSONL via system property fails on Windows
     void testUpgradeDependencies() throws VerificationException, IOException {
         writeProjectKeeperConfig("""
                 sources:

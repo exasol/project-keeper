@@ -124,7 +124,13 @@ class ProjectVersionIncrementor {
     }
 
     private Node findVersionNode(final Document pom) {
-        return xmlFileIO.runXPath(pom, "/project/version");
+        final Optional<Node> versionNode = xmlFileIO.runXPath(pom, "/project/version");
+        if (versionNode.isEmpty()) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-196")
+                    .message("Could not find version node in pom file {{pom file path}}.", getPomPath())
+                    .ticketMitigation().toString());
+        }
+        return versionNode.get();
     }
 
     static String getIncrementedVersion(final String version) {

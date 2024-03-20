@@ -11,8 +11,7 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 import java.time.*;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -69,9 +68,7 @@ class ProjectVersionIncrementorTest {
     @Test
     void incrementProjectVersionFailsForInconsistentVersionInPom() {
         simulatePomVersion("1.2.2");
-
         final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
-
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 testee::incrementProjectVersion);
         assertThat(exception.getMessage(),
@@ -79,10 +76,26 @@ class ProjectVersionIncrementorTest {
                         + "', expected '1.2.3'."));
     }
 
+    @Test
+    void incrementProjectVersionFailsForMissingVersionElement() {
+        simulatePomVersion(null);
+        final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                testee::incrementProjectVersion);
+        assertThat(exception.getMessage(), startsWith("E-PK-CORE-196: Could not find version node in pom file '"
+                + POM_PATH
+                + "'. This is an internal error that should not happen. Please report it by opening a GitHub issue."));
+    }
+
     private void simulatePomVersion(final String version) {
         when(xmlDocumentIOMock.read(POM_PATH)).thenReturn(pomModel);
-        when(versionNode.getTextContent()).thenReturn(version);
-        when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version"))).thenReturn(versionNode);
+        if (version != null) {
+            when(versionNode.getTextContent()).thenReturn(version);
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version")))
+                    .thenReturn(Optional.of(versionNode));
+        } else {
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version"))).thenReturn(Optional.empty());
+        }
     }
 
     @ParameterizedTest
