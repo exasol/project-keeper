@@ -7,7 +7,8 @@ import java.time.*;
 import java.util.Objects;
 import java.util.Optional;
 
-import org.apache.maven.model.Model;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
@@ -15,13 +16,12 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.sources.analyze.generic.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
-import com.exasol.projectkeeper.validators.pom.PomFileIO;
 import com.vdurmont.semver4j.Semver;
 
 /**
  * This class can increment the project's version.
  */
-// [impl->dsn~dependency-updater.increment-version~1]
+// [impl->dsn~dependency-updater.increment-version~2]
 class ProjectVersionIncrementor {
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
     private final ProjectKeeperConfig config;
@@ -30,23 +30,23 @@ class ProjectVersionIncrementor {
     private final Clock clock;
     private final Path projectDir;
     private final Logger logger;
-    private final PomFileIO pomFileIO;
+    private final XmlDocumentIO xmlFileIO;
     private final CommandExecutor commandExecutor;
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
             final String currentProjectVersion) {
-        this(config, logger, projectDir, currentProjectVersion, new ChangesFileIO(), new PomFileIO(),
+        this(config, logger, projectDir, currentProjectVersion, new ChangesFileIO(), new XmlDocumentIO(),
                 new CommandExecutor(), Clock.systemUTC());
     }
 
     ProjectVersionIncrementor(final ProjectKeeperConfig config, final Logger logger, final Path projectDir,
-            final String currentProjectVersion, final ChangesFileIO changesFileIO, final PomFileIO pomFileIO,
+            final String currentProjectVersion, final ChangesFileIO changesFileIO, final XmlDocumentIO xmlFileIO,
             final CommandExecutor commandExecutor, final Clock clock) {
         this.config = config;
         this.logger = logger;
         this.projectDir = projectDir;
         this.changesFileIO = changesFileIO;
-        this.pomFileIO = pomFileIO;
+        this.xmlFileIO = xmlFileIO;
         this.commandExecutor = commandExecutor;
         this.clock = clock;
         this.currentProjectVersion = Objects.requireNonNull(currentProjectVersion, "currentProjectVersion");
@@ -86,18 +86,20 @@ class ProjectVersionIncrementor {
      * @return the new, incremented version
      */
     String incrementProjectVersion() {
-        final Path path = getPomPath();
-        final Model pom = pomFileIO.readPom(path);
-        if (!this.currentProjectVersion.equals(pom.getVersion())) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-174").message(
-                    "Inconsistent project version {{version in pom file}} found in pom {{pom file path}}, expected {{expected version}}.",
-                    pom.getVersion(), path, currentProjectVersion).ticketMitigation().toString());
-        }
-        final String nextVersion = incrementVersion(pom);
+        final String nextVersion = getIncrementedVersion(currentProjectVersion);
+        updatePomVersion(nextVersion);
         if (usesReferenceCheckerPlugin()) {
             updateReferences();
         }
         return nextVersion;
+    }
+
+    private void updatePomVersion(final String nextVersion) {
+        final Path path = getPomPath();
+        logger.info("Incrementing version from " + currentProjectVersion + " to " + nextVersion + " in POM " + path);
+        final Document pom = xmlFileIO.read(path);
+        incrementVersion(path, pom, nextVersion);
+        xmlFileIO.write(pom, path);
     }
 
     private boolean usesReferenceCheckerPlugin() {
@@ -111,23 +113,29 @@ class ProjectVersionIncrementor {
         commandExecutor.execute(command);
     }
 
-    private String incrementVersion(final Model pom) {
-        final String nextVersion = getIncrementedVersion(currentProjectVersion);
-        logger.info("Incrementing version from " + currentProjectVersion + " to " + nextVersion + " in POM "
-                + pom.getPomFile());
-        pom.setVersion(nextVersion);
-        writePom(pom);
-        return nextVersion;
+    private void incrementVersion(final Path path, final Document pom, final String nextVersion) {
+        final Optional<Node> versionNode = findVersionNode(pom);
+        if (versionNode.isEmpty()) {
+            logger.warn(ExaError.messageBuilder("W-PK-CORE-196")
+                    .message("No version node found in pom file {{pom file path}}.", path)
+                    .mitigation("Please update the version to {{next version}} manually.", nextVersion).toString());
+            return;
+        }
+        if (!this.currentProjectVersion.equals(versionNode.get().getTextContent())) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-174").message(
+                    "Inconsistent project version {{version in pom file}} found in pom {{pom file path}}, expected {{expected version}}.",
+                    versionNode.get().getTextContent(), path, currentProjectVersion).ticketMitigation().toString());
+        }
+        versionNode.get().setTextContent(nextVersion);
+    }
+
+    private Optional<Node> findVersionNode(final Document pom) {
+        return xmlFileIO.runXPath(pom, "/project/version");
     }
 
     static String getIncrementedVersion(final String version) {
         final Semver current = new Semver(version);
         return current.nextPatch().toString();
-    }
-
-    private void writePom(final Model pom) {
-        final Path path = getPomPath();
-        pomFileIO.writePom(pom, path);
     }
 
     private Path getPomPath() {

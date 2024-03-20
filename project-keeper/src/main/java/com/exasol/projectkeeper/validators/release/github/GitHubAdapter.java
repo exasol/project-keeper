@@ -46,16 +46,19 @@ public class GitHubAdapter {
         final Issue issue = gitHubConnectionProvider.connect().repos().get(new Coordinates.Simple(owner, repoName))
                 .issues().get(issueNumber);
         final Issue.Smart smartIssue = new Issue.Smart(issue);
+        final IssueState state = getIssueState(issueNumber, smartIssue);
+        LOG.fine(() -> "GitHub issue #" + issueNumber + " has state " + state);
+        return state;
+    }
+
+    private IssueState getIssueState(final int issueNumber, final Issue.Smart smartIssue) {
         try {
             if (!smartIssue.exists()) {
-                LOG.fine(() -> "GitHub issue #" + issueNumber + " does not exist.");
                 return IssueState.MISSING;
             }
             if (smartIssue.isOpen()) {
-                LOG.fine(() -> "GitHub issue #" + issueNumber + " is still open.");
                 return IssueState.OPEN;
             } else {
-                LOG.fine(() -> "GitHub issue #" + issueNumber + " is closed.");
                 return IssueState.CLOSED;
             }
         } catch (final IOException exception) {

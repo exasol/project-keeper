@@ -563,13 +563,14 @@ Covers:
 Needs: dsn
 
 #### Incrementing the Project Version
-`dsn~dependency-updater.increment-version~1`
+`dsn~dependency-updater.increment-version~2`
 
-PK increments the project's patch version. PK does not modify the version if the current version was not yet released (i.e. there is not release in the latest changelog file).
+PK increments the project's patch version. PK does not modify the version if the current version was not yet released (i.e. there is not release in the latest changelog file). If PK fails to increment the version it will log a warning and continue with the process.
 
 Rationale:
 
-Leaving the version unchanged when it was not yet released avoids surprises when running this locally.
+* Leaving the version unchanged when it was not yet released avoids surprises when running this locally.
+* PK could fail to increment the version in multi-module projects, because it's not located in the root `pom.xml`. Instead of failing, PK should continue with the update. It's more helpful if the user can manually increment the version in an existing pull request than to do the complete process themselves.
 
 Covers:
 * [`dsn~update-dependencies-mode~1`](#update-dependencies-mode)

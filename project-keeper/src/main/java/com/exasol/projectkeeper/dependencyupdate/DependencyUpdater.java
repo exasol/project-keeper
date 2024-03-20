@@ -65,7 +65,7 @@ public class DependencyUpdater {
      * 
      * @return {@code true} if the process succeeded.
      */
-    // [impl->dsn~dependency-updater.increment-version~1]
+    // [impl->dsn~dependency-updater.increment-version~2]
     // [impl->dsn~dependency-updater.update-changelog~1]
     public boolean updateDependencies() {
         final String version = incrementProjectVersion();

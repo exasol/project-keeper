@@ -15,6 +15,7 @@ Code name:
 * #545: Fix parsing of Go version numbers with a `v` prefix
 * #548: Skip release build when preconditions are not fulfilled
 * #540: Improved speed of validating mentioned issues in changes file
+* #553: Reduced diff in `pom.xml` for mode `update-dependencies`
 
 ## Dependency Updates
 
