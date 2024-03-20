@@ -17,6 +17,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  */
 public abstract class AbstractFileValidator implements Validator {
     private final Path absoluteFilePath;
+    /** Project-directory relative path to the validated file. This is useful for displaying in error messages. */
     protected final Path relativeFilePath;
 
     /**
