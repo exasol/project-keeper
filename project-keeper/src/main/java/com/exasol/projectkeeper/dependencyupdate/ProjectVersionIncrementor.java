@@ -21,7 +21,7 @@ import com.vdurmont.semver4j.Semver;
 /**
  * This class can increment the project's version.
  */
-// [impl->dsn~dependency-updater.increment-version~1]
+// [impl->dsn~dependency-updater.increment-version~2]
 class ProjectVersionIncrementor {
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
     private final ProjectKeeperConfig config;
@@ -114,23 +114,23 @@ class ProjectVersionIncrementor {
     }
 
     private void incrementVersion(final Path path, final Document pom, final String nextVersion) {
-        final Node versionNode = findVersionNode(pom);
-        if (!this.currentProjectVersion.equals(versionNode.getTextContent())) {
+        final Optional<Node> versionNode = findVersionNode(pom);
+        if (versionNode.isEmpty()) {
+            logger.warn(ExaError.messageBuilder("W-PK-CORE-196")
+                    .message("No version node found in pom file {{pom file path}}.", path)
+                    .mitigation("Please update the version to {{next version}} manually.", nextVersion).toString());
+            return;
+        }
+        if (!this.currentProjectVersion.equals(versionNode.get().getTextContent())) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-174").message(
                     "Inconsistent project version {{version in pom file}} found in pom {{pom file path}}, expected {{expected version}}.",
-                    versionNode.getTextContent(), path, currentProjectVersion).ticketMitigation().toString());
+                    versionNode.get().getTextContent(), path, currentProjectVersion).ticketMitigation().toString());
         }
-        versionNode.setTextContent(nextVersion);
+        versionNode.get().setTextContent(nextVersion);
     }
 
-    private Node findVersionNode(final Document pom) {
-        final Optional<Node> versionNode = xmlFileIO.runXPath(pom, "/project/version");
-        if (versionNode.isEmpty()) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-196")
-                    .message("Could not find version node in pom file {{pom file path}}.", getPomPath())
-                    .ticketMitigation().toString());
-        }
-        return versionNode.get();
+    private Optional<Node> findVersionNode(final Document pom) {
+        return xmlFileIO.runXPath(pom, "/project/version");
     }
 
     static String getIncrementedVersion(final String version) {

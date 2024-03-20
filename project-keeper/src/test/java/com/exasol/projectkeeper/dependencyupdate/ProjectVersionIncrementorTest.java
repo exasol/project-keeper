@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.dependencyupdate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
@@ -30,7 +29,7 @@ import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
 
-// [utest->dsn~dependency-updater.increment-version~1]
+// [utest->dsn~dependency-updater.increment-version~2]
 @ExtendWith(MockitoExtension.class)
 class ProjectVersionIncrementorTest {
 
@@ -77,14 +76,12 @@ class ProjectVersionIncrementorTest {
     }
 
     @Test
-    void incrementProjectVersionFailsForMissingVersionElement() {
+    void incrementProjectVersionLogsWarningForMissingVersionElement() {
         simulatePomVersion(null);
         final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                testee::incrementProjectVersion);
-        assertThat(exception.getMessage(), startsWith("E-PK-CORE-196: Could not find version node in pom file '"
-                + POM_PATH
-                + "'. This is an internal error that should not happen. Please report it by opening a GitHub issue."));
+        assertDoesNotThrow(testee::incrementProjectVersion);
+        verify(loggerMock).warn("W-PK-CORE-196: No version node found in pom file '" + POM_PATH
+                + "'. Please update the version to '1.2.4' manually.");
     }
 
     private void simulatePomVersion(final String version) {

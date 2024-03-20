@@ -112,7 +112,7 @@ class ProjectKeeperMojoIT {
                 containsString("E-PK-CORE-182: Release date '" + thisYear + "-??-??' has invalid format in "));
     }
 
-    // [itest->dsn~dependency-updater.increment-version~1]
+    // [itest->dsn~dependency-updater.increment-version~2]
     // [itest->dsn~dependency-updater.update-dependencies~1]
     // [itest->dsn~dependency-updater.read-vulnerability-info~1]
     // [itest->dsn~dependency-updater.update-changelog~1]
