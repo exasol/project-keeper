@@ -65,8 +65,8 @@ class ChangesFileReleaseValidatorTest {
         final List<String> findings = findings(ChangesFile.builder().codeName(CODE_NAME)
                 .addSection(ChangesFileSection.builder("## Bugfixes").addLine("- #42: Fixed a bug").build())
                 .releaseDate(TODAY));
-        assertThat(findings, contains(
-                "E-PK-CORE-186: The following GitHub issues are marked as fixed in 'changes.md' but are not closed in GitHub: [42]"));
+        assertThat(findings, contains("E-PK-CORE-186: The following GitHub issues are marked as fixed in '" + PATH
+                + "' but are not closed in GitHub: [42]"));
     }
 
     @Test
@@ -83,7 +83,7 @@ class ChangesFileReleaseValidatorTest {
         final List<String> findings = findings(ChangesFile.builder().codeName(CODE_NAME)
                 .summary(ChangesFileSection.builder("## Summary").build()).releaseDate(TODAY));
         assertThat(findings,
-                contains("E-PK-CORE-194: Section '## Summary' is empty in 'changes.md'. Add content to section."));
+                contains("E-PK-CORE-194: Section '## Summary' is empty in '" + PATH + "'. Add content to section."));
     }
 
     @Test
@@ -91,7 +91,7 @@ class ChangesFileReleaseValidatorTest {
         final List<String> findings = findings(ChangesFile.builder().codeName(CODE_NAME)
                 .summary(ChangesFileSection.builder("## Summary").addLine("  ").build()).releaseDate(TODAY));
         assertThat(findings,
-                contains("E-PK-CORE-194: Section '## Summary' is empty in 'changes.md'. Add content to section."));
+                contains("E-PK-CORE-194: Section '## Summary' is empty in '" + PATH + "'. Add content to section."));
     }
 
     @Test

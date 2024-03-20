@@ -43,6 +43,7 @@ class ChangesFileValidatorTest {
     private static final String A_VERSION = "1.2.3";
     private static final String A_PROJECT_NAME = "my-project";
     private static final String LINE_SEPARATOR = "\n";
+    private static final Path CHANGES_FILE_PATH = Path.of("doc", "changes", "changes_" + A_VERSION + ".md");
 
     @TempDir
     Path tempDir;
@@ -52,9 +53,8 @@ class ChangesFileValidatorTest {
     @Test
     void testValidation() throws IOException {
         final AnalyzedMavenSource source = createTestSetup();
-        assertThat(createValidator(source),
-                hasValidationFindingWithMessage("E-PK-CORE-56: Could not find required file 'doc" + File.separator
-                        + "changes" + File.separator + "changes_1.2.3.md'."));
+        assertThat(createValidator(source), hasValidationFindingWithMessage(
+                "E-PK-CORE-56: Could not find required file '" + CHANGES_FILE_PATH + "'."));
     }
 
     @Test
@@ -68,7 +68,7 @@ class ChangesFileValidatorTest {
     void noDependencyUpdates(@Mock final Logger log) throws IOException {
         final AnalyzedMavenSource source = createTestSetup(new TestMavenModel(), Collections.emptyList());
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
-        final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
+        final Path changesFile = this.tempDir.resolve(CHANGES_FILE_PATH);
         assertThat(changesFile,
                 hasContent(equalTo("# my-project 1.2.3, released 2024-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "Code name:" + LINE_SEPARATOR + LINE_SEPARATOR //
@@ -86,7 +86,7 @@ class ChangesFileValidatorTest {
     void testFixCreatedTemplate(@Mock final Logger log) throws IOException {
         final AnalyzedMavenSource source = createTestSetup();
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
-        final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
+        final Path changesFile = this.tempDir.resolve(CHANGES_FILE_PATH);
         assertThat(changesFile,
                 hasContent(equalTo("# my-project 1.2.3, released 2024-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "Code name:" + LINE_SEPARATOR + LINE_SEPARATOR //
@@ -106,7 +106,7 @@ class ChangesFileValidatorTest {
         model.addDependency();
         final AnalyzedMavenSource source = createTestSetup(model);
         createValidator(source).validate().forEach(FindingFixHelper::fix);
-        final Path changesFile = this.tempDir.resolve(Path.of("doc", "changes", "changes_1.2.3.md"));
+        final Path changesFile = this.tempDir.resolve(CHANGES_FILE_PATH);
         assertThat(changesFile, hasContent(endsWith("## Dependency Updates" + LINE_SEPARATOR + LINE_SEPARATOR //
                 + "### Compile Dependency Updates" + LINE_SEPARATOR + LINE_SEPARATOR //
                 + "* Added `com.example:my-lib:1.2.3`" + LINE_SEPARATOR)));
@@ -125,7 +125,7 @@ class ChangesFileValidatorTest {
     void testValidateChangesFileMissing() {
         final List<ValidationFinding> findings = createValidatorWithChangesFileMock(
                 AnalyzedMavenSource.builder().projectName("name").build()).validate();
-        assertFinding(findings, "E-PK-CORE-56: Could not find required file 'doc/changes/changes_1.2.3.md'.");
+        assertFinding(findings, "E-PK-CORE-56: Could not find required file '" + CHANGES_FILE_PATH + "'.");
     }
 
     @Test
@@ -133,7 +133,7 @@ class ChangesFileValidatorTest {
         simulateChangesFile(ChangesFile.builder().projectName("name"));
         final List<ValidationFinding> findings = createValidatorWithChangesFileMock(defaultSource().build()).validate();
         assertFinding(findings,
-                "E-PK-CORE-193: Section '## Summary' is missing in 'doc/changes/changes_1.2.3.md'. Add section.");
+                "E-PK-CORE-193: Section '## Summary' is missing in '" + CHANGES_FILE_PATH + "'. Add section.");
     }
 
     @Test
@@ -158,7 +158,7 @@ class ChangesFileValidatorTest {
                 ChangesFile.builder().summary(ChangesFileSection.builder("## Summary").addLine("content").build()));
         final List<ValidationFinding> findings = createValidatorWithChangesFileMock(defaultSource().build()).validate();
         assertFinding(findings,
-                "E-PK-CORE-195: Project name in 'doc/changes/changes_1.2.3.md' is missing. Add a project name.");
+                "E-PK-CORE-195: Project name in '" + CHANGES_FILE_PATH + "' is missing. Add a project name.");
     }
 
     @Test
@@ -167,7 +167,7 @@ class ChangesFileValidatorTest {
                 .summary(ChangesFileSection.builder("## Summary").addLine("content").build()));
         final List<ValidationFinding> findings = createValidatorWithChangesFileMock(defaultSource().build()).validate();
         assertFinding(findings,
-                "E-PK-CORE-195: Project name in 'doc/changes/changes_1.2.3.md' is missing. Add a project name.");
+                "E-PK-CORE-195: Project name in '" + CHANGES_FILE_PATH + "' is missing. Add a project name.");
     }
 
     private AnalyzedMavenSourceBuilder defaultSource() {
@@ -175,7 +175,7 @@ class ChangesFileValidatorTest {
     }
 
     private void simulateChangesFile(final Builder builder) throws IOException {
-        final Path path = tempDir.resolve("doc/changes/changes_" + A_VERSION + ".md");
+        final Path path = tempDir.resolve(CHANGES_FILE_PATH);
         Files.createDirectories(path.getParent());
         Files.createFile(path);
         when(changesFileIOMock.read(path)).thenReturn(builder.build());
