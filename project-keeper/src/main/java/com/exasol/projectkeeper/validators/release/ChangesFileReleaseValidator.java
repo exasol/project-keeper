@@ -59,7 +59,7 @@ class ChangesFileReleaseValidator implements Validator {
 
     private Optional<ValidationFinding> validateCodeName() {
         if (changesFile.getCodeName() == null || changesFile.getCodeName().isBlank()) {
-            return finding(ExaError.messageBuilder("E-PK-CORE-196")
+            return finding(ExaError.messageBuilder("E-PK-CORE-197")
                     .message("Code name in {{path}} is missing.", changesFilePath).mitigation("Add a code name.")
                     .toString());
         }

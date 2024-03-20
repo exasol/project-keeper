@@ -107,7 +107,7 @@ class ChangesFileReleaseValidatorTest {
         final List<String> findings = findings(ChangesFile.builder()
                 .summary(ChangesFileSection.builder("## Summary").addLine("non-blank content").build())
                 .releaseDate(TODAY));
-        assertThat(findings, contains("E-PK-CORE-196: Code name in '" + PATH + "' is missing. Add a code name."));
+        assertThat(findings, contains("E-PK-CORE-197: Code name in '" + PATH + "' is missing. Add a code name."));
     }
 
     @Test
@@ -115,7 +115,7 @@ class ChangesFileReleaseValidatorTest {
         final List<String> findings = findings(ChangesFile.builder()
                 .summary(ChangesFileSection.builder("## Summary").addLine("non-blank content").build())
                 .releaseDate(TODAY));
-        assertThat(findings, contains("E-PK-CORE-196: Code name in '" + PATH + "' is missing. Add a code name."));
+        assertThat(findings, contains("E-PK-CORE-197: Code name in '" + PATH + "' is missing. Add a code name."));
     }
 
     private List<String> findings(final ChangesFile.Builder changesFile) {
