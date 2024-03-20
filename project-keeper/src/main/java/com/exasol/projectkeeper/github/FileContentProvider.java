@@ -40,7 +40,7 @@ class FileContentProvider implements WorkflowOutput {
     @Override
     public void publish(final String key, final String value) {
         final String content = formatter.format(key, value);
-        LOG.info(() -> "Publishing content '" + content + "'");
+        LOG.finest(() -> "Publishing content '" + content + "'");
         write(content + "\n");
     }
 

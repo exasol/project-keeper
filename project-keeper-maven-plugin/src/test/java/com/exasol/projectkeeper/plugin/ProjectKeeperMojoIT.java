@@ -112,18 +112,20 @@ class ProjectKeeperMojoIT {
                 containsString("E-PK-CORE-182: Release date '" + thisYear + "-??-??' has invalid format in "));
     }
 
-    // [itest->dsn~dependency-updater.increment-version~1]
+    // [itest->dsn~dependency-updater.increment-version~2]
     // [itest->dsn~dependency-updater.update-dependencies~1]
     // [itest->dsn~dependency-updater.read-vulnerability-info~1]
     // [itest->dsn~dependency-updater.update-changelog~1]
     @Test
-    @DisabledOnOs(OS.WINDOWS) // Passing vulnerability JSONL via system property fails on Windows
+    @DisabledOnOs(OS.WINDOWS) // Passing multi-line vulnerability JSONL via system property fails on Windows
     void testUpgradeDependencies() throws VerificationException, IOException {
-        writeProjectKeeperConfig("sources:\n" + //
-                "  - type: maven\n" + //
-                "    path: pom.xml\n" + //
-                "    modules:\n" + //
-                "      - jar_artifact\n");
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                    modules:
+                      - jar_artifact
+                """);
         final Path userGuidePath = projectDir.resolve("user_guide.md");
         writeFile(userGuidePath, "artifact reference: dummy-0.1.0.jar");
 

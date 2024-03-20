@@ -62,7 +62,7 @@ public class PomFileValidator implements Validator {
     }
 
     private final Path projectDirectory;
-    final Collection<ProjectKeeperModule> enabledModules;
+    private final Collection<ProjectKeeperModule> enabledModules;
     private final Path pomFilePath;
     private final ParentPomRef parentPomRef;
     private final RepoInfo repoInfo;

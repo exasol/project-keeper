@@ -2,8 +2,7 @@ package com.exasol.projectkeeper.dependencyupdate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
 import static org.mockito.Mockito.verify;
@@ -11,10 +10,8 @@ import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 import java.time.*;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import org.apache.maven.model.Model;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -22,6 +19,8 @@ import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
 
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.config.*;
@@ -29,9 +28,8 @@ import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
 import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
-import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
-// [utest->dsn~dependency-updater.increment-version~1]
+// [utest->dsn~dependency-updater.increment-version~2]
 @ExtendWith(MockitoExtension.class)
 class ProjectVersionIncrementorTest {
 
@@ -46,9 +44,14 @@ class ProjectVersionIncrementorTest {
     @Mock
     private ChangesFileIO changesFileIOMock;
     @Mock
-    private PomFileIO pomFileIOMock;
+    private XmlDocumentIO xmlDocumentIOMock;
     @Mock
     private CommandExecutor commandExecutorMock;
+
+    @Mock
+    Document pomModel;
+    @Mock
+    Node versionNode;
 
     @ParameterizedTest
     @CsvSource(nullValues = "NULL", value = { "NULL, false", "invalid data, false", "2007-??-??, false",
@@ -63,11 +66,8 @@ class ProjectVersionIncrementorTest {
 
     @Test
     void incrementProjectVersionFailsForInconsistentVersionInPom() {
-        final Model pomModel = new Model();
-        pomModel.setVersion("1.2.2");
-        when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
+        simulatePomVersion("1.2.2");
         final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
-
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 testee::incrementProjectVersion);
         assertThat(exception.getMessage(),
@@ -75,27 +75,48 @@ class ProjectVersionIncrementorTest {
                         + "', expected '1.2.3'."));
     }
 
+    @Test
+    void incrementProjectVersionLogsWarningForMissingVersionElement() {
+        simulatePomVersion(null);
+        final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
+        assertDoesNotThrow(testee::incrementProjectVersion);
+        verify(loggerMock).warn("W-PK-CORE-196: No version node found in pom file '" + POM_PATH
+                + "'. Please update the version to '1.2.4' manually.");
+    }
+
+    private void simulatePomVersion(final String version) {
+        when(xmlDocumentIOMock.read(POM_PATH)).thenReturn(pomModel);
+        if (version != null) {
+            when(versionNode.getTextContent()).thenReturn(version);
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version")))
+                    .thenReturn(Optional.of(versionNode));
+        } else {
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version"))).thenReturn(Optional.empty());
+        }
+    }
+
     @ParameterizedTest
     @CsvSource({ "0.0.0, 0.0.1", "0.1.1, 0.1.2", "1.2.1, 1.2.2", "9.9.9, 9.9.10", "1.2.99, 1.2.100",
             "99.34.12345, 99.34.12346" })
     void incrementProjectVersion(final String currentVersion, final String expectedNextVersion) {
-        final Model pomModel = new Model();
-        pomModel.setVersion(currentVersion);
-        when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
+        simulatePomVersion(currentVersion);
         final String newVersion = testee(configWithoutJarArtifact(), currentVersion).incrementProjectVersion();
-        assertAll(() -> assertThat(newVersion, equalTo(expectedNextVersion)),
-                () -> assertThat(pomModel.getVersion(), equalTo(newVersion)));
-        verify(pomFileIOMock).writePom(same(pomModel), eq(POM_PATH));
+        assertThat(newVersion, equalTo(expectedNextVersion));
+        verifyPomVersionUpdated(expectedNextVersion);
+    }
+
+    private void verifyPomVersionUpdated(final String expectedNextVersion) {
+        verify(versionNode).setTextContent(expectedNextVersion);
+        verify(xmlDocumentIOMock).write(same(pomModel), eq(POM_PATH));
     }
 
     @Test
     void incrementProjectVersionWithJarArtifactUpdatesReferences() {
-        final Model pomModel = new Model();
-        pomModel.setVersion(CURRENT_PROJECT_VERSION);
-        when(pomFileIOMock.readPom(POM_PATH)).thenReturn(pomModel);
+        simulatePomVersion(CURRENT_PROJECT_VERSION);
         final String newVersion = testee(configWithJarArtifact(), CURRENT_PROJECT_VERSION).incrementProjectVersion();
-        assertAll(() -> assertThat(newVersion, equalTo("1.2.4")),
-                () -> assertThat(pomModel.getVersion(), equalTo(newVersion)), () -> assertMavenExecuted());
+        assertAll(() -> assertThat(newVersion, equalTo("1.2.4")), //
+                () -> assertMavenExecuted());
+        verifyPomVersionUpdated("1.2.4");
     }
 
     private void assertMavenExecuted(final String... mavenArguments) {
@@ -121,7 +142,7 @@ class ProjectVersionIncrementorTest {
 
     private ProjectVersionIncrementor testee(final ProjectKeeperConfig config, final String currentProjectVersion) {
         return new ProjectVersionIncrementor(config, loggerMock, PROJECT_DIR, currentProjectVersion, changesFileIOMock,
-                pomFileIOMock, commandExecutorMock, fixedClock);
+                xmlDocumentIOMock, commandExecutorMock, fixedClock);
     }
 
     private ProjectKeeperConfig configWithJarArtifact() {
