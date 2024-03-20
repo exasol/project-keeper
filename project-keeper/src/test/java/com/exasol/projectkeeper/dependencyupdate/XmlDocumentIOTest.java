@@ -34,22 +34,27 @@ class XmlDocumentIOTest {
         doc.appendChild(doc.createElement("root"));
         final Path file = tempDir.resolve("file.xml");
         new XmlDocumentIO().write(doc, file);
-        assertThat(Files.readString(file),
-                equalTo("<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<root/>\n"));
+        assertThat(Files.readString(file), equalTo(normalizeLineEndings("""
+                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <root/>
+                """)));
     }
 
     @Test
     void readWritePreservesComments() throws IOException {
         final Path file = tempDir.resolve("file.xml");
-        final String xmlContent = "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n" + //
-                "<!-- comment --><root attr=\"value\">content</root>\n";
+        final String xmlContent = normalizeLineEndings("""
+                <?xml version="1.0" encoding="UTF-8" standalone="no"?>
+                <!-- comment --><root attr="value">content</root>
+                """);
         Files.writeString(file, xmlContent);
-
         final XmlDocumentIO io = new XmlDocumentIO();
         io.write(io.read(file), file);
-
-        System.out.println(Files.readString(file));
         assertThat(Files.readString(file), equalTo(xmlContent));
+    }
+
+    private String normalizeLineEndings(final String content) {
+        return content.replace("\n", System.lineSeparator());
     }
 
     @Test
