@@ -12,6 +12,7 @@ import com.exasol.projectkeeper.shared.ExasolVersionMatcher;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.AbstractFileValidator;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.Fix;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
@@ -72,12 +73,21 @@ public class ChangesFileValidator extends AbstractFileValidator {
     }
 
     private Optional<ValidationFinding> validateDependencySection(final Path file, final ChangesFile changesFile) {
-        final ChangesFile fixedSections = fixSections(changesFile);
-        if (changesFile.equals(fixedSections)) {
+        final ChangesFile fixed = fixDependencyUpdateSection(changesFile);
+        if (changesFile.equals(fixed)) {
             return noFinding();
         } else {
-            return Optional.of(getWrongDependencySection(fixedSections, file));
+            return outdatedDependencySectionFinding(fixed, file);
         }
+    }
+
+    private Optional<ValidationFinding> outdatedDependencySectionFinding(final ChangesFile fixedSections,
+            final Path file) {
+        final String errorMessage = ExaError.messageBuilder("E-PK-CORE-40")
+                .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
+                .parameter("expected content", fixedSections.toString()).toString();
+        final Fix fix = (final Logger log) -> changesFileIO.write(fixedSections, file);
+        return Optional.of(SimpleValidationFinding.withMessage(errorMessage).andFix(fix).build());
     }
 
     private Optional<ValidationFinding> validateSummarySection(final ChangesFile changesFile) {
@@ -101,14 +111,6 @@ public class ChangesFileValidator extends AbstractFileValidator {
         }
     }
 
-    private ValidationFinding getWrongDependencySection(final ChangesFile fixedSections, final Path file) {
-        return SimpleValidationFinding
-                .withMessage(ExaError.messageBuilder("E-PK-CORE-40")
-                        .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
-                        .parameter("expected content", fixedSections.toString()).toString())
-                .andFix(((final Logger log) -> changesFileIO.write(fixedSections, file))).build();
-    }
-
     private Optional<ValidationFinding> finding(final String message) {
         return Optional.of(SimpleValidationFinding.withMessage(message).build());
     }
@@ -117,7 +119,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
         return Optional.empty();
     }
 
-    private ChangesFile fixSections(final ChangesFile changesFile) {
+    private ChangesFile fixDependencyUpdateSection(final ChangesFile changesFile) {
         final var dependencySectionFixer = new DependencySectionFixer(this.sources);
         return dependencySectionFixer.fix(changesFile);
     }
@@ -130,6 +132,6 @@ public class ChangesFileValidator extends AbstractFileValidator {
                 .summary(ChangesFileSection.builder("## Summary").build())
                 .addSection(ChangesFileSection.builder(FEATURES_SECTION).addLines("", FIXED_ISSUE_TEMPLATE, "").build()) //
                 .build();
-        return fixSections(changesFile);
+        return fixDependencyUpdateSection(changesFile);
     }
 }
