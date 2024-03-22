@@ -920,6 +920,23 @@ Covers:
 
 Needs: impl, utest, itest
 
+#### PK Mode `verify-release` Verifies Changes File
+`dsn~verify-release-mode.verify-changes-file~1`
+
+PK's `verify-release` mode verifies that the following parts of the current changes file (e.g. `doc/changes/changes_4.2.1.md`) are present:
+* Project name
+* Version
+* Code name (= release title)
+* Summary
+
+Rationale:
+This ensures that the required information for the GitHub release notes are available.
+
+Covers:
+* [`dsn~verify-release-mode~1`](#pk-mode-verify-release)
+
+Needs: impl, utest
+
 #### PK Mode `verify-release` Checks All Issues are Closed
 `dsn~verify-release-mode.verify-issues-closed~1`
 

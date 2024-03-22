@@ -4,6 +4,10 @@ Code name:
 
 ## Summary
 
+## Features
+
+* #523: Added validation steps for changes file
+
 ## Bugfixes
 
 * #546: Updated template for file `.settings/org.eclipse.jdt.core.prefs`

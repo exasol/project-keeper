@@ -35,7 +35,7 @@ class ReleaseInspectorTest {
     // [utest->dsn~verify-release-mode.verify-release-date~1]
     @Test
     void verifyReleaseDate() {
-        simulateChangesFile(ChangesFile.builder().releaseDate("invalid"));
+        simulateChangesFile(ChangesFile.builder().codeName("code name").releaseDate("invalid"));
         final List<String> findings = getFindings();
         assertThat(findings,
                 contains("E-PK-CORE-182: Release date 'invalid' has invalid format in '" + getChangesFilePath() + "'"));

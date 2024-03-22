@@ -2,8 +2,9 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
@@ -11,6 +12,7 @@ import com.exasol.projectkeeper.shared.ExasolVersionMatcher;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.AbstractFileValidator;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
+import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.Fix;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /**
@@ -24,6 +26,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
     private final String projectName;
     private final List<AnalyzedSource> sources;
     private final String projectVersion;
+    private final ChangesFileIO changesFileIO;
 
     /**
      * Create a new instance of {@link ChangesFileValidator}
@@ -35,15 +38,21 @@ public class ChangesFileValidator extends AbstractFileValidator {
      */
     public ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
             final List<AnalyzedSource> sources) {
+        this(projectVersion, projectName, projectDirectory, sources, new ChangesFileIO());
+    }
+
+    ChangesFileValidator(final String projectVersion, final String projectName, final Path projectDirectory,
+            final List<AnalyzedSource> sources, final ChangesFileIO changesFileIO) {
         super(projectDirectory, ChangesFile.getPathForVersion(projectVersion));
         this.projectVersion = projectVersion;
         this.projectName = projectName;
         this.sources = sources;
+        this.changesFileIO = changesFileIO;
     }
 
     @Override
     protected void writeTemplateFile(final Path target) {
-        new ChangesFileIO().write(getTemplate(), target);
+        changesFileIO.write(getTemplate(), target);
     }
 
     @Override
@@ -51,26 +60,66 @@ public class ChangesFileValidator extends AbstractFileValidator {
         return !new ExasolVersionMatcher().isSnapshotVersion(this.projectVersion);
     }
 
+    // [impl->dsn~verify-release-mode.verify-changes-file~1]
     @Override
     protected List<ValidationFinding> validateContent(final Path file) {
-        final var changesFile = new ChangesFileIO().read(file);
-        final var fixedSections = fixSections(changesFile);
-        if (!changesFile.equals(fixedSections)) {
-            return List.of(getWrongContentFinding(fixedSections, file));
+        final ChangesFile changesFile = changesFileIO.read(file);
+        return Stream
+                .of(validateDependencySection(file, changesFile), validateSummarySection(changesFile),
+                        validateProjectName(changesFile))
+                .filter(Optional::isPresent) //
+                .map(Optional::get) //
+                .toList();
+    }
+
+    private Optional<ValidationFinding> validateDependencySection(final Path file, final ChangesFile changesFile) {
+        final ChangesFile fixed = fixDependencyUpdateSection(changesFile);
+        if (changesFile.equals(fixed)) {
+            return noFinding();
         } else {
-            return Collections.emptyList();
+            return outdatedDependencySectionFinding(fixed, file);
         }
     }
 
-    private ValidationFinding getWrongContentFinding(final ChangesFile fixedSections, final Path file) {
-        return SimpleValidationFinding
-                .withMessage(ExaError.messageBuilder("E-PK-CORE-40")
-                        .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
-                        .parameter("expected content", fixedSections.toString()).toString())
-                .andFix(((final Logger log) -> new ChangesFileIO().write(fixedSections, file))).build();
+    private Optional<ValidationFinding> outdatedDependencySectionFinding(final ChangesFile fixedSections,
+            final Path file) {
+        final String errorMessage = ExaError.messageBuilder("E-PK-CORE-40")
+                .message("Changes file is invalid.\nExpected content:\n{{expected content}}")
+                .parameter("expected content", fixedSections.toString()).toString();
+        final Fix fix = (final Logger log) -> changesFileIO.write(fixedSections, file);
+        return Optional.of(SimpleValidationFinding.withMessage(errorMessage).andFix(fix).build());
     }
 
-    private ChangesFile fixSections(final ChangesFile changesFile) {
+    private Optional<ValidationFinding> validateSummarySection(final ChangesFile changesFile) {
+        final Optional<ChangesFileSection> summary = changesFile.getSummarySection();
+        if (summary.isEmpty()) {
+            return finding(ExaError.messageBuilder("E-PK-CORE-193")
+                    .message("Section '## Summary' is missing in {{path}}.", relativeFilePath)
+                    .mitigation("Add section.").toString());
+        } else {
+            return noFinding();
+        }
+    }
+
+    private Optional<ValidationFinding> validateProjectName(final ChangesFile changesFile) {
+        if (changesFile.getProjectName() == null || changesFile.getProjectName().isBlank()) {
+            return finding(ExaError.messageBuilder("E-PK-CORE-195")
+                    .message("Project name in {{path}} is missing.", relativeFilePath).mitigation("Add a project name.")
+                    .toString());
+        } else {
+            return noFinding();
+        }
+    }
+
+    private Optional<ValidationFinding> finding(final String message) {
+        return Optional.of(SimpleValidationFinding.withMessage(message).build());
+    }
+
+    private Optional<ValidationFinding> noFinding() {
+        return Optional.empty();
+    }
+
+    private ChangesFile fixDependencyUpdateSection(final ChangesFile changesFile) {
         final var dependencySectionFixer = new DependencySectionFixer(this.sources);
         return dependencySectionFixer.fix(changesFile);
     }
@@ -83,6 +132,6 @@ public class ChangesFileValidator extends AbstractFileValidator {
                 .summary(ChangesFileSection.builder("## Summary").build())
                 .addSection(ChangesFileSection.builder(FEATURES_SECTION).addLines("", FIXED_ISSUE_TEMPLATE, "").build()) //
                 .build();
-        return fixSections(changesFile);
+        return fixDependencyUpdateSection(changesFile);
     }
 }
