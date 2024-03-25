@@ -11,6 +11,9 @@ sources:
       version: "${revision}"
       relativePath: "../parent-pom/pom.xml"
     advertise: false
+    artifacts:
+      # [itest->dsn~customize-release-artifacts-custom~0]
+      - target/project-keeper-shared-model-classes-${version}.jar
   - type: maven
     path: project-keeper/pom.xml
     modules:

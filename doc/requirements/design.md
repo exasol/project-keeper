@@ -407,7 +407,7 @@ This allows adding project-specific release artifacts like `.js` extensions.
 Covers:
 * [`dsn~customize-release-artifacts~0`](#customize-release-artifacts)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 ### Customize Build Process
 `dsn~customize-build-process~0`
