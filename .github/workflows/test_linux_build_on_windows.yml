@@ -63,6 +63,7 @@ jobs:
         with:
           name: project-keeper-jar
           path: artifact
+          retention-days: 1
   run-on-windows:
     runs-on: windows-latest
     needs: build-on-linux

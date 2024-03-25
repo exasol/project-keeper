@@ -67,3 +67,4 @@ jobs:
         with:
           name: executable-${{ matrix.os }}
           path: target/${{ github.event.repository.name }}
+          retention-days: 5
