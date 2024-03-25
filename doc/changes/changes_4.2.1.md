@@ -1,8 +1,10 @@
 # Project Keeper 4.2.1, released 2024-??-??
 
-Code name:
+Code name: Bugfixes for validation and `update-dependencies`
 
 ## Summary
+
+This release contains many bugfixes for the new modes `update-dependencies` and `verify-release`.
 
 ## Features
 
@@ -17,8 +19,15 @@ Code name:
 * #548: Skip release build when preconditions are not fulfilled
 * #540: Improved speed of validating mentioned issues in changes file
 * #553: Reduced diff in `pom.xml` for mode `update-dependencies`
+* #558: Fixed `update-dependencies` running with a released version
 
 ## Dependency Updates
+
+### Project Keeper Shared Model Classes
+
+#### Test Dependency Updates
+
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.15.8` to `3.16`
 
 ### Project Keeper Core
 
@@ -33,6 +42,7 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.2.0` to `4.2.1`
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.15.8` to `3.16`
 
 ### Project Keeper Command Line Interface
 

@@ -143,6 +143,7 @@ class ProjectKeeperMojoIT {
 
         updateReleaseDate("0.1.0", "2023-01-01");
         verifier.verify(true);
+        createGitTag("0.1.0");
 
         verifier.executeGoal("project-keeper:update-dependencies");
         verifier.verify(true);
@@ -168,6 +169,16 @@ class ProjectKeeperMojoIT {
                                         ## Security
 
                                         * #709: Fixed vulnerability CVE-2017-10355 in dependency `xerces:xercesImpl:jar:2.12.2:test`"""))));
+    }
+
+    private void createGitTag(final String tagName) {
+        try (Git git = Git.open(projectDir.toFile())) {
+            git.add().addFilepattern(".").call();
+            git.commit().setMessage("Release " + tagName).call();
+            git.tag().setName(tagName).call();
+        } catch (GitAPIException | IOException exception) {
+            throw new IllegalStateException("Failed to create Git tag " + tagName, exception);
+        }
     }
 
     private void setVulnerabilityInfo(final String... vulnerabilityInfoJson) {
