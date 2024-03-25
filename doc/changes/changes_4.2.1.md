@@ -49,10 +49,6 @@ This release contains many bugfixes for the new modes `update-dependencies` and 
 
 * Updated `com.exasol:project-keeper-core:4.2.0` to `4.2.1`
 
-#### Runtime Dependency Updates
-
-* Removed `org.slf4j:slf4j-jdk14:1.7.36`
-
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.2.0` to `4.2.1`

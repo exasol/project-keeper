@@ -141,6 +141,12 @@
 | [Hamcrest][19]                         | [BSD License 3][20]               |
 | [Maven Project Version Getter][56]     | [MIT License][57]                 |
 
+### Runtime Dependencies
+
+| Dependency                | License           |
+| ------------------------- | ----------------- |
+| [SLF4J JDK14 Binding][27] | [MIT License][24] |
+
 ### Plugin Dependencies
 
 | Dependency                                              | License                          |
