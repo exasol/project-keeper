@@ -84,6 +84,7 @@ jobs:
       - name: Verify release preconditions
         id: verify-release
         run: |
+          mvn --batch-mode -T 1C install -DskipTests
           mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .
           echo "$GITHUB_OUTPUT"
         env:
