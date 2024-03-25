@@ -59,8 +59,9 @@ class SimpleProcessIT {
                 .start(List.of("bash", "-c", "echo output && >&2 echo error && sleep 1"));
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> process.waitUntilFinished(TIMEOUT));
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-128: Timeout while waiting 20ms for command 'bash -c echo output && >&2 echo error && sleep 1'. Output was 'output'\n"
+        assertThat(exception.getMessage(),
+                equalTo("E-PK-CORE-128: Timeout while waiting " + TIMEOUT.toMillis()
+                        + "ms for command 'bash -c echo output && >&2 echo error && sleep 1'. Output was 'output'\n"
                         + "Error output: 'error'"));
     }
 
