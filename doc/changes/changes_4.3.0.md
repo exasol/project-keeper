@@ -10,6 +10,7 @@ This release contains many bugfixes for the new modes `update-dependencies` and 
 
 * #523: Added validation steps for changes file
 * #556: Updated release process to create tags for Go projects
+* #517: Added configuration of custom release artifacts
 
 ## Bugfixes
 
