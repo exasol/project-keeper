@@ -144,6 +144,7 @@ class FileTemplatesFactoryTest {
                 containsString("- name: Publish to Central Repository" + NEWLINE + //
                         "        if: ${{ " + mavenCentral + " && (! inputs.skip-maven-central) }}" + NEWLINE + //
                         "        run: |" + NEWLINE + //
+                        "          echo \"#### Maven Central Release\" >> \"$GITHUB_STEP_SUMMARY\"" + NEWLINE + //
                         "          mvn --batch-mode -Dgpg.skip=false -DskipTests deploy" + NEWLINE)));
     }
 
