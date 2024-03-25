@@ -112,8 +112,9 @@ jobs:
       - name: Publish to Central Repository
         if: ${{ $mavenCentralDeployment && (! inputs.skip-maven-central) }}
         run: |
+          echo "#### Maven Central Release" >> "$GITHUB_STEP_SUMMARY"
           mvn --batch-mode -Dgpg.skip=false -DskipTests deploy
-          echo "Published to Maven Central" >> "$GITHUB_STEP_SUMMARY"
+          echo "Published to Maven Central ✅" >> "$GITHUB_STEP_SUMMARY"
         env:
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_PASSWORD }}
@@ -125,7 +126,6 @@ jobs:
         id: artifact-checksum
         if: ${{ ! inputs.skip-github-release }}
         run: |
-          ls target/
           echo "Calculating sha256 checksum for artifact files"
           echo "artifacts<<EOF" >> "$GITHUB_OUTPUT"
           IFS=$'\n' artifacts_array=($ARTIFACTS)
@@ -153,19 +153,34 @@ jobs:
         id: create-github-release
         if: ${{ ! inputs.skip-github-release }}
         run: |
+          echo "### GitHub Release" >> "$GITHUB_STEP_SUMMARY"
           IFS=$'\n' artifacts_array=($ARTIFACTS)
+          echo "#### Attaching Release Artifacts" >> "$GITHUB_STEP_SUMMARY"
           for file in "${artifacts_array[@]}";
           do
-              echo "Attaching file '$file'"
+              echo "Attaching artifact '$file'"
+              echo "* \`$file\`" >> "$GITHUB_STEP_SUMMARY"
           done
-          release_url=$(gh release create --draft --latest --title "$TITLE" --notes "$NOTES" --target main $TAG "${artifacts_array[@]}")
-          echo "Created release $TAG with title '$TITLE' at $release_url" >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          release_url=$(gh release create --latest --title "$TITLE" --notes "$NOTES" --target main $TAG "${artifacts_array[@]}")
+          echo "Created release $TAG with title '$TITLE' at $release_url ✅" >> "$GITHUB_STEP_SUMMARY"
           echo "release-url=$release_url" >> "$GITHUB_OUTPUT"
+
+          echo "#### Creating Additional Tags" >> "$GITHUB_STEP_SUMMARY"
+          IFS=$'\n' tags_array=($ADDITIONAL_TAGS)
+          for tag in "${tags_array[@]}";
+          do
+              echo "Creating tag '$tag'"
+              git tag "$tag"
+              git push origin "$tag"
+              echo "* \`$tag\`" >> "$GITHUB_STEP_SUMMARY"
+          done
+
           git fetch --tags origin
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ steps.verify-release.outputs.release-tag }}
-          ADDITIONAL_TAG: ${{ steps.verify-release.outputs.additional-release-tags }}
+          ADDITIONAL_TAGS: ${{ steps.verify-release.outputs.additional-release-tags }}
           NOTES: ${{ steps.verify-release.outputs.release-notes }}
           TITLE: ${{ steps.verify-release.outputs.release-title }}
           ARTIFACTS: ${{ steps.artifact-checksum.outputs.artifacts }}
