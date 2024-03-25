@@ -3,8 +3,6 @@ package com.exasol.projectkeeper.shared.config;
 import java.nio.file.Path;
 import java.util.*;
 
-import javax.annotation.processing.Generated;
-
 /**
  * Project sources, e.g. a maven project.
  * <p>
@@ -140,13 +138,11 @@ public final class Source {
     }
 
     @Override
-    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(path, type, modules, advertise, parentPom);
     }
 
     @Override
-    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

@@ -2,8 +2,6 @@ package com.exasol.projectkeeper.shared.dependencies;
 
 import java.util.Objects;
 
-import javax.annotation.processing.Generated;
-
 /**
  * License.
  */
@@ -79,13 +77,11 @@ public final class License {
     }
 
     @Override
-    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(name, url);
     }
 
     @Override
-    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
