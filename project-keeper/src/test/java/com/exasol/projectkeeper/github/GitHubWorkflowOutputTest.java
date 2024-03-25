@@ -38,7 +38,7 @@ class GitHubWorkflowOutputTest {
     @Test
     void outputVersion() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder());
-        verify(this.publisherMock).publish("version", PROJECT_VERSION);
+        verify(this.publisherMock).publish("release-tag", PROJECT_VERSION);
     }
 
     @Test

@@ -153,7 +153,8 @@ jobs:
           git fetch --tags origin
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ steps.verify-release.outputs.version }}
+          TAG: ${{ steps.verify-release.outputs.release-tag }}
+          ADDITIONAL_TAG: ${{ steps.verify-release.outputs.additional-release-tags }}
           NOTES: ${{ steps.verify-release.outputs.release-notes }}
           TITLE: ${{ steps.verify-release.outputs.release-title }}
           ARTIFACTS: ${{ steps.artifact-checksum.outputs.artifacts }}

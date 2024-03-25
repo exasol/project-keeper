@@ -7,6 +7,7 @@ Code name:
 ## Features
 
 * #523: Added validation steps for changes file
+* #556: Updated release process to create tags for Go projects
 
 ## Bugfixes
 
