@@ -166,6 +166,7 @@ jobs:
           echo "Created release $TAG with title '$TITLE' at $release_url ✅" >> "$GITHUB_STEP_SUMMARY"
           echo "release-url=$release_url" >> "$GITHUB_OUTPUT"
 
+          # [impl->dsn~release-workflow.create-golang-tags~1]
           echo "#### Creating Additional Tags" >> "$GITHUB_STEP_SUMMARY"
           IFS=$'\n' tags_array=($ADDITIONAL_TAGS)
           for tag in "${tags_array[@]}";

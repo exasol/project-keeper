@@ -35,6 +35,16 @@ public final class Source {
         return path;
     }
 
+    /**
+     * Check if this sources represents the root project, i.e. the path is the root of the project. A path of
+     * {@code my-project/pom.xml} will return {@code false}, while a path of {@code pom.xml} will return {@code true}.
+     * 
+     * @return {@code true} if this source represents the root project
+     */
+    public boolean isRoot() {
+        return this.getPath().getParent() == null;
+    }
+
     /** @return Type if the source-project Example: {@code MAVEN} */
     public SourceType getType() {
         return type;

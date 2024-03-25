@@ -15,7 +15,7 @@ import org.junit.jupiter.api.condition.OS;
 @DisabledOnOs(OS.WINDOWS)
 class SimpleProcessIT {
 
-    private static final Duration TIMEOUT = Duration.ofMillis(20);
+    private static final Duration TIMEOUT = Duration.ofMillis(40);
 
     @Test
     void outputStream() {

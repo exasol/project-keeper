@@ -44,7 +44,7 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                 absoluteSourceDir, moduleInfo);
         return AnalyzedSourceImpl.builder() //
                 .version(this.golangServices.getProjectVersion()) //
-                .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
+                .isRootProject(source.isRoot()) //
                 .advertise(source.isAdvertised()) //
                 .modules(source.getModules()) //
                 .path(source.getPath()) //
@@ -57,11 +57,10 @@ public class GolangSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     }
 
     private Path getAbsoluteSourceDir(final Path projectDir, final Source source) {
-        final Path sourceDir = source.getPath().getParent();
-        if (sourceDir != null) {
-            return projectDir.resolve(sourceDir);
-        } else {
+        if (source.isRoot()) {
             return projectDir;
+        } else {
+            return projectDir.resolve(source.getPath().getParent());
         }
     }
 

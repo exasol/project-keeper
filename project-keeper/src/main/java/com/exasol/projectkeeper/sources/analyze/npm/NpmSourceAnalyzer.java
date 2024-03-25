@@ -43,7 +43,7 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
         final Optional<PackageJson> previous = this.npmServices.retrievePrevious(projectDir, current);
         return AnalyzedSourceImpl.builder() //
                 .version(current.getVersion()) //
-                .isRootProject(AnalyzedSourceImpl.isRoot(source)) //
+                .isRootProject(source.isRoot()) //
                 .advertise(source.isAdvertised()) //
                 .modules(source.getModules()) //
                 .path(path) //

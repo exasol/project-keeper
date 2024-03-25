@@ -974,13 +974,13 @@ Covers:
 
 Needs: dsn, impl, utest
 
-#### PK Mode `verify-release` Publishes Project Version
-`dsn~verify-release-mode.output-parameters.project-version~1`
+#### PK Mode `verify-release` Publishes Release Tag
+`dsn~verify-release-mode.output-parameters.release-tag~1`
 
-PK mode `verify-release` adds the project version to the GitHub Output Parameters.
+PK mode `verify-release` adds the name of the release tag to the GitHub Output Parameters.
 
 Rationale:
-* The project version is required for creating the GitHub release tag.
+* The release tag is required for creating the GitHub release tag.
 
 Covers:
 * [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)
