@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.shared.config;
 
+import static java.util.Collections.emptyList;
+
 import java.nio.file.Path;
 import java.util.*;
 
@@ -14,6 +16,7 @@ public final class Source {
     // [impl->dsn~modules~1]
     private final Set<ProjectKeeperModule> modules;
     private final boolean advertise;
+    private final List<Path> releaseArtifacts;
 
     /**
      * Reference to the parent pom. For maven sources only. {@code null} if not provided.
@@ -26,6 +29,7 @@ public final class Source {
         this.modules = builder.modules;
         this.advertise = builder.advertise;
         this.parentPom = builder.parentPom;
+        this.releaseArtifacts = builder.releaseArtifacts;
     }
 
     /** @return Path to the source-project root or build file. Example: {@code my-project/pom.xml} */
@@ -63,6 +67,11 @@ public final class Source {
         return parentPom;
     }
 
+    /** @return list release artifact paths, relative to to {@link #getPath()} */
+    public List<Path> getReleaseArtifacts() {
+        return releaseArtifacts;
+    }
+
     /** @return a builder for creating new {@link Source} instances */
     public static Source.SourceBuilder builder() {
         return new Source.SourceBuilder();
@@ -75,6 +84,7 @@ public final class Source {
         private Set<ProjectKeeperModule> modules = Collections.emptySet();
         private boolean advertise = true;
         private ParentPomRef parentPom;
+        private List<Path> releaseArtifacts = emptyList();
 
         private SourceBuilder() {
             // empty by intention
@@ -125,6 +135,15 @@ public final class Source {
             return this;
         }
 
+        /**
+         * @param releaseArtifacts list of release artifact paths, relative to to {@link #path(Path)}
+         * @return {@code this}.
+         */
+        public Source.SourceBuilder releaseArtifacts(final List<Path> releaseArtifacts) {
+            this.releaseArtifacts = releaseArtifacts;
+            return this;
+        }
+
         /** @return a new instance */
         public Source build() {
             return new Source(this);
@@ -134,12 +153,12 @@ public final class Source {
     @Override
     public String toString() {
         return "Source [path=" + path + ", type=" + type + ", modules=" + modules + ", advertise=" + advertise
-                + ", parentPom=" + parentPom + "]";
+                + ", parentPom=" + parentPom + ", releaseArtifacts=" + releaseArtifacts + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(path, type, modules, advertise, parentPom);
+        return Objects.hash(path, type, modules, advertise, parentPom, releaseArtifacts);
     }
 
     @Override
@@ -155,6 +174,7 @@ public final class Source {
         }
         final Source other = (Source) obj;
         return Objects.equals(path, other.path) && type == other.type && Objects.equals(modules, other.modules)
-                && advertise == other.advertise && Objects.equals(parentPom, other.parentPom);
+                && advertise == other.advertise && Objects.equals(parentPom, other.parentPom)
+                && Objects.equals(releaseArtifacts, other.releaseArtifacts);
     }
 }

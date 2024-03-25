@@ -53,6 +53,9 @@ class ProjectKeeperConfigReaderTest {
                       artifactId: "my-parent"
                       version: "1.2.3"
                       relativePath: "./my-parent.xml"
+                    artifacts:
+                      - "target/file1.jar"
+                      - "target/file-${version}.jar"
                 build:
                   runnerOs: custom-runner-os
                   freeDiskSpace: true
@@ -74,11 +77,13 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(MAVEN_CENTRAL, DEFAULT)),
                 () -> assertThat(source.getParentPom(),
                         equalTo(new ParentPomRef("com.example", "my-parent", "1.2.3", "./my-parent.xml"))),
+                () -> assertThat(source.getReleaseArtifacts(),
+                        contains(Path.of("target/file1.jar"), Path.of("target/file-${version}.jar"))),
                 () -> assertThat(config.getExcludes(), containsInAnyOrder(
                         "\\QE-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\\E",
                         "E-PK-CORE-18: .*")),
                 () -> assertThat(config.getLinkReplacements(),
-                        Matchers.contains("http://wrong-url.com|my-dependency.de"))//
+                        Matchers.contains("http://wrong-url.com|my-dependency.de")) //
         );
     }
 
@@ -99,11 +104,12 @@ class ProjectKeeperConfigReaderTest {
                 () -> assertThat(source.getPath(), equalTo(this.tempDir.resolve("my-sub-project/pom.xml"))),
                 () -> assertThat(source.getModules(), Matchers.containsInAnyOrder(DEFAULT)),
                 () -> assertThat(source.getParentPom(), nullValue()),
+                () -> assertThat(source.getReleaseArtifacts(), empty()),
                 () -> assertThat(config.getExcludes(), equalTo(Collections.emptyList())),
                 () -> assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("ubuntu-latest")),
                 () -> assertThat(config.getCiBuildConfig().shouldFreeDiskSpace(), equalTo(false)),
                 () -> assertThat(config.getCiBuildConfig().getExasolDbVersions(), empty()),
-                () -> assertThat(config.getLinkReplacements(), equalTo(Collections.emptyList()))//
+                () -> assertThat(config.getLinkReplacements(), equalTo(Collections.emptyList())) //
         );
     }
 
