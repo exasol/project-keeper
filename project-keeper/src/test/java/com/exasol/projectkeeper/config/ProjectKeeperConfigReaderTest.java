@@ -38,29 +38,30 @@ class ProjectKeeperConfigReaderTest {
     void read() throws IOException {
         Files.createDirectory(this.tempDir.resolve("my-sub-project"));
         Files.writeString(this.tempDir.resolve("my-sub-project/pom.xml"), "");
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
-                "excludes:\n" + //
-                        " - \"E-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'.\"\n" + //
-                        " - regex: \"E-PK-CORE-18: .*\"\n" + //
-                        "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "    path: my-sub-project/pom.xml\n" + //
-                        "    modules:\n" + //
-                        "      - maven_central\n" + //
-                        "    advertise: false\n" + //
-                        "    parentPom: \n" + //
-                        "      groupId: \"com.example\"\n" + //
-                        "      artifactId: \"my-parent\"\n" + //
-                        "      version: \"1.2.3\"\n" + //
-                        "      relativePath: \"./my-parent.xml\"\n" + //
-                        "build:\n" + //
-                        "  runnerOs: custom-runner-os\n" + //
-                        "  freeDiskSpace: true\n" + //
-                        "  exasolDbVersions:\n" + //
-                        "    - v1\n" + //
-                        "    - v2\n" + //
-                        "linkReplacements:\n" + //
-                        "  - \"http://wrong-url.com|my-dependency.de\"\n");
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+                excludes:
+                 - "E-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'."
+                 - regex: "E-PK-CORE-18: .*"
+                sources:
+                  - type: maven
+                    path: my-sub-project/pom.xml
+                    modules:
+                      - maven_central
+                    advertise: false
+                    parentPom:
+                      groupId: "com.example"
+                      artifactId: "my-parent"
+                      version: "1.2.3"
+                      relativePath: "./my-parent.xml"
+                build:
+                  runnerOs: custom-runner-os
+                  freeDiskSpace: true
+                  exasolDbVersions:
+                    - v1
+                    - v2
+                linkReplacements:
+                  - "http://wrong-url.com|my-dependency.de"
+                """);
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
         final Source source = config.getSources().get(0);
         assertAll(//
@@ -85,10 +86,11 @@ class ProjectKeeperConfigReaderTest {
     void readDefaults() throws IOException {
         Files.createDirectory(this.tempDir.resolve("my-sub-project"));
         Files.writeString(this.tempDir.resolve("my-sub-project/pom.xml"), "");
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "    path: my-sub-project/pom.xml\n");
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+                sources:
+                  - type: maven
+                    path: my-sub-project/pom.xml
+                """);
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
         final Source source = config.getSources().get(0);
         assertAll(//
@@ -107,14 +109,15 @@ class ProjectKeeperConfigReaderTest {
 
     @Test
     void invalidSubprojectPath() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "    path: unknown-project/pom.xml\n" + //
-                        "    modules:\n" + //
-                        "      - maven_central\n" + //
-                        "linkReplacements:\n" + //
-                        "  - \"http://wrong-url.com|my-dependency.de\"");
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+                sources:
+                  - type: maven
+                    path: unknown-project/pom.xml
+                    modules:
+                      - maven_central
+                linkReplacements:
+                  - "http://wrong-url.com|my-dependency.de"
+                """);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> this.reader.readConfig(this.tempDir));
         assertThat(exception.getMessage(),
@@ -132,11 +135,12 @@ class ProjectKeeperConfigReaderTest {
 
     @Test
     void incompleteConfig() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: maven\n" + //
-                        "linkReplacements:\n" + //
-                        "  - \"http://wrong-url.com|my-dependency.de\"");
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+                    sources:
+                      - type: maven
+                    linkReplacements:
+                      - "http://wrong-url.com|my-dependency.de"
+                """);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> this.reader.readConfig(this.tempDir));
         assertThat(exception.getMessage(),
@@ -147,14 +151,15 @@ class ProjectKeeperConfigReaderTest {
     void unknownType() throws IOException {
         Files.createDirectory(this.tempDir.resolve("my-sub-project"));
         Files.writeString(this.tempDir.resolve("my-sub-project/pom.xml"), "");
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
-                "sources:\n" + //
-                        "  - type: unknown\n" + //
-                        "    path: my-sub-project/pom.xml\n" + //
-                        "    modules:\n" + //
-                        "      - maven_central\n" + //
-                        "linkReplacements:\n" + //
-                        "  - \"http://wrong-url.com|my-dependency.de\"");
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+                    sources:
+                      - type: unknown
+                        path: my-sub-project/pom.xml
+                        modules:
+                          - maven_central
+                    linkReplacements:
+                      - "http://wrong-url.com|my-dependency.de"
+                """);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> this.reader.readConfig(this.tempDir));
         assertThat(exception.getMessage(),
@@ -172,8 +177,10 @@ class ProjectKeeperConfigReaderTest {
 
     @Test
     void readVersionFromSource() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
-                "version: \n  fromSource: \"./pom.xml\"");
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+                version:
+                  fromSource: "./pom.xml"
+                """);
         final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
         assertThat(config.getVersionConfig(), equalTo(new VersionFromSource(this.tempDir.resolve("./pom.xml"))));
     }
