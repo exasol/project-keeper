@@ -150,7 +150,6 @@ public class ProjectKeeper {
                 .build();
         final List<Validator> validators = List.of( //
                 projectFilesValidator, //
-                new VersionIncrementValidator(projectVersion, projectDir), //
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
@@ -169,6 +168,7 @@ public class ProjectKeeper {
      */
     private ValidationPhase phase3Changelog(final ValidationPhase.Provision provision) {
         final List<Validator> validators = List.of(
+                new VersionIncrementValidator(provision.projectVersion(), projectDir), //
                 new LatestChangesFileValidator(this.projectDir, provision.projectVersion()),
                 new ChangelogFileValidator(this.projectDir));
         return new ValidationPhase(provision, validators);
@@ -327,7 +327,9 @@ public class ProjectKeeper {
      */
     private Provision getValidationProvision() {
         Provision provision = null;
-        for (final PhaseValidator phaseValidator : getValidationPhases()) {
+        final List<PhaseValidator> phases = List.of(this::phase0LicenseFile, this::phase1BuildFiles,
+                this::phase2AnalyzeSources);
+        for (final PhaseValidator phaseValidator : phases) {
             final ValidationPhase phase = phaseValidator.apply(provision);
             provision = phase.provision();
             final List<ValidationFinding> findings = runValidation(phase.validators());
