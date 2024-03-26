@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.github;
 
+import static com.exasol.projectkeeper.shared.config.SourceType.GOLANG;
+import static java.util.function.Predicate.not;
 import static java.util.stream.Collectors.joining;
 
 import java.nio.file.Files;
@@ -9,6 +11,7 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.changesfile.*;
@@ -60,8 +63,10 @@ public class GitHubWorkflowOutput {
     public void provide() {
         final Optional<ChangesFile> changesFile = readChangesFile();
         try (WorkflowOutput publisher = this.publisherFactory.create()) {
-            // [impl->dsn~verify-release-mode.output-parameters.project-version~1]
-            publisher.publish("version", this.projectVersion);
+            // [impl->dsn~verify-release-mode.output-parameters.release-tag~1]
+            publisher.publish("release-tag", getReleaseTag());
+            // [impl->dsn~release-workflow.create-golang-tags~1]
+            publisher.publish("additional-release-tags", getAdditionalReleaseTags());
             if (changesFile.isPresent()) {
                 // [impl->dsn~verify-release-mode.output-parameters.release-title~1]
                 publisher.publish("release-title", this.projectVersion + " " + changesFile.get().getCodeName());
@@ -71,6 +76,29 @@ public class GitHubWorkflowOutput {
             // [impl->dsn~verify-release-mode.output-parameters.release-artifacts~1]
             publisher.publish("release-artifacts", getReleaseArtifacts());
         }
+    }
+
+    private String getReleaseTag() {
+        final String prefix = hasRootGoModule() ? "v" : "";
+        return prefix + this.projectVersion;
+    }
+
+    private boolean hasRootGoModule() {
+        return goModules().anyMatch(Source::isRoot);
+    }
+
+    private Stream<Source> goModules() {
+        return config.getSources().stream() //
+                .filter(source -> source.getType() == GOLANG);
+    }
+
+    private String getAdditionalReleaseTags() {
+        return goModules().filter(not(Source::isRoot)) //
+                .map(Source::getPath) //
+                .map(Path::getParent) //
+                .map(Path::toString) //
+                .map(path -> path + "/v" + this.projectVersion) //
+                .collect(joining("\n"));
     }
 
     private String getReleaseArtifacts() {

@@ -12,7 +12,7 @@
   "java.test.config": {
     "vmArgs": [
       "-Djava.util.logging.config.file=src/test/resources/logging.properties",
-      "-Dcom.exasol.projectkeeper.ownVersion=4.2.0"
+      "-Dcom.exasol.projectkeeper.ownVersion=4.3.0"
     ]
   },
   "sonarlint.connectedMode.project": {

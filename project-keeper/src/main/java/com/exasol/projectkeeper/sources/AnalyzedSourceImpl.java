@@ -20,20 +20,12 @@ import com.exasol.projectkeeper.sources.analyze.generic.RepoNameReader;
 public final class AnalyzedSourceImpl implements AnalyzedSource {
 
     /**
-     * @param source source of main or sub module within the current project
-     * @return {@code true} if source represents the root project
-     */
-    public static boolean isRoot(final Source source) {
-        return source.getPath().getParent() == null;
-    }
-
-    /**
      * @param projectDir root folder of the project
      * @param source     source of main or sub module within the current project
      * @return name of the repository hosting the current project.
      */
     public static String projectName(final Path projectDir, final Source source) {
-        if (isRoot(source)) {
+        if (source.isRoot()) {
             return RepoNameReader.getRepoName(projectDir);
         } else {
             return RepoNameReader.getRepoName(source.getPath().getParent());

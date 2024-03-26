@@ -16,7 +16,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.changesfile.*;
@@ -34,11 +34,11 @@ class GitHubWorkflowOutputTest {
     @TempDir
     Path projectDir;
 
-    // [utest->dsn~verify-release-mode.output-parameters.project-version~1]
+    // [utest->dsn~verify-release-mode.output-parameters.release-tag~1]
     @Test
     void outputVersion() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder());
-        verify(this.publisherMock).publish("version", PROJECT_VERSION);
+        verify(this.publisherMock).publish("release-tag", PROJECT_VERSION);
     }
 
     @Test
@@ -112,6 +112,75 @@ class GitHubWorkflowOutputTest {
                 this.projectDir.resolve("target/my-project1.jar").toString() + "\n"
                         + this.projectDir.resolve("module1/target/my-project2.jar").toString() + "\n"
                         + this.projectDir.resolve("target/error_code_report.json").toString());
+    }
+
+    @Test
+    void additionalReleaseTagsEmptyForMissingProject() {
+        assertAdditionalReleaseTags(PROJECT_VERSION, "");
+    }
+
+    @Test
+    void additionalReleaseTagsEmptyForJavaProject() {
+        assertAdditionalReleaseTags(PROJECT_VERSION, "", mavenSource("pom.xml"));
+    }
+
+    @Test
+    void additionalReleaseTagsEmptyForMultiModuleJavaProject() {
+        assertAdditionalReleaseTags(PROJECT_VERSION, "", mavenSource("pom.xml"), mavenSource("subModule/pom.xml"));
+    }
+
+    @Test
+    void additionalReleaseTagsEmptyForNonRootJavaProject() {
+        assertAdditionalReleaseTags(PROJECT_VERSION, "", mavenSource("subDir/pom.xml"));
+    }
+
+    @Test
+    void additionalReleaseTagsEmptyForRootGoProject() {
+        assertAdditionalReleaseTags("v" + PROJECT_VERSION, "", goSource("go.mod"));
+    }
+
+    @Test
+    void additionalReleaseTagsEmptyForRootGoProjectWithMavenModule() {
+        assertAdditionalReleaseTags("v" + PROJECT_VERSION, "", goSource("go.mod"), mavenSource("pom.xml"));
+    }
+
+    @Test
+    void additionalReleaseTagsEmptyForRootGoProjectWithMavenSubModule() {
+        assertAdditionalReleaseTags("v" + PROJECT_VERSION, "", goSource("go.mod"), mavenSource("subModule/pom.xml"));
+    }
+
+    // [utest->dsn~release-workflow.create-golang-tags~1]
+    @Test
+    void additionalReleaseTagsEmptyForRootGoProjectWithGoSubModule() {
+        assertAdditionalReleaseTags("v" + PROJECT_VERSION, "subModule/v1.2.3", goSource("go.mod"),
+                goSource("subModule/go.mod"));
+    }
+
+    @Test
+    void additionalReleaseTagsForNonRootGoProjectWithMaven() {
+        assertAdditionalReleaseTags(PROJECT_VERSION, "subModule/v1.2.3", goSource("subModule/go.mod"),
+                mavenSource("pom.xml"));
+    }
+
+    @Test
+    void multipleAdditionalReleaseTags() {
+        assertAdditionalReleaseTags(PROJECT_VERSION, "subModuleA/v1.2.3\nsubModuleB/v1.2.3",
+                goSource("subModuleA/go.mod"), mavenSource("pom.xml"), goSource("subModuleB/go.mod"));
+    }
+
+    private void assertAdditionalReleaseTags(final String expectedTag, final String expectedAdditionalTags,
+            final Source... sources) {
+        publish(ProjectKeeperConfig.builder().sources(asList(sources)), ChangesFile.builder());
+        verify(this.publisherMock).publish("release-tag", expectedTag);
+        verify(this.publisherMock).publish("additional-release-tags", expectedAdditionalTags);
+    }
+
+    private Source mavenSource(final String path) {
+        return Source.builder().type(SourceType.MAVEN).path(Path.of(path)).build();
+    }
+
+    private Source goSource(final String path) {
+        return Source.builder().type(SourceType.GOLANG).path(Path.of(path)).build();
     }
 
     @Test

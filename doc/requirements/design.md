@@ -869,13 +869,21 @@ Needs: impl
 
 PK generates the `release.yml` workflow so that it creates the correct tags for Golang modules.
 
+* If file `.project-keeper.yml` contains a Go module in root folder (`path: go.mod`)
+  * PK creates a Git tag with prefix `v`, e.g. `v1.2.3`
+  * PK ignores other source modules
+* Otherwise PK simply falls back to regular Git tags, e.g. `1.2.3`.
+
+Additionally for each Go module in a subfolder contained in file `.project-keeper.yml` (e.g. `path: subfolder/go.mod`)
+* PK creates an *additional* Git tag with a prefix containing the name of the subfolder, a slash `/` and the letter `v`, e.g. `subfolder/v1.2.3`
+
 Rationale:
 * In the old release process this was implemented in release-droid (`Revision.getTags()`).
 
 Covers:
 * [`dsn~release-workflow.generate~1`](#generate-workflow-releaseyml)
 
--Needs: impl, utest, itest
+Needs: impl, utest
 
 ### PK Mode `verify-release`
 `dsn~verify-release-mode~1`
@@ -966,13 +974,13 @@ Covers:
 
 Needs: dsn, impl, utest
 
-#### PK Mode `verify-release` Publishes Project Version
-`dsn~verify-release-mode.output-parameters.project-version~1`
+#### PK Mode `verify-release` Publishes Release Tag
+`dsn~verify-release-mode.output-parameters.release-tag~1`
 
-PK mode `verify-release` adds the project version to the GitHub Output Parameters.
+PK mode `verify-release` adds the name of the release tag to the GitHub Output Parameters.
 
 Rationale:
-* The project version is required for creating the GitHub release tag.
+* The name of the release tag is required for creating the GitHub release tag.
 
 Covers:
 * [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)

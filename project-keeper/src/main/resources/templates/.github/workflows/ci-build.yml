@@ -107,10 +107,11 @@ jobs:
         id: check-release
         run: |
           if mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .; then
-              echo "## ✅ Release preconditions met, start release" >> "$GITHUB_STEP_SUMMARY"
+              echo "### ✅ Release preconditions met, start release" >> "$GITHUB_STEP_SUMMARY"
               echo "release-required=true" >> "$GITHUB_OUTPUT"
           else
-              echo "## 🛑 Release precondition not met, not starting release" >> "$GITHUB_STEP_SUMMARY"
+              echo "### 🛑 Release precondition not met, skipping release" >> "$GITHUB_STEP_SUMMARY"
+              echo "See log output for details." >> "$GITHUB_STEP_SUMMARY"
               echo "release-required=false" >> "$GITHUB_OUTPUT"
           fi
         env:
