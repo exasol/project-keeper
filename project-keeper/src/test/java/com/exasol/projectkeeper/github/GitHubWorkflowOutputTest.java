@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.github;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -8,11 +9,15 @@ import static org.mockito.Mockito.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.lang3.exception.UncheckedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -75,13 +80,13 @@ class GitHubWorkflowOutputTest {
     @Test
     void releaseArtifactsNoMavenSource() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder());
-        verify(this.publisherMock).publish("release-artifacts", "");
+        verifyReleaseArtifacts();
     }
 
     @Test
     void releaseArtifactsMavenSourceWithoutArtifact() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(), AnalyzedMavenSource.builder().build());
-        verify(this.publisherMock).publish("release-artifacts", "");
+        verifyReleaseArtifacts();
     }
 
     // [utest->dsn~customize-release-artifacts-hard-coded~0]
@@ -89,29 +94,56 @@ class GitHubWorkflowOutputTest {
     void releaseArtifactsErrorCodeReport() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(),
                 AnalyzedMavenSource.builder().isRootProject(true).build());
-        verify(this.publisherMock).publish("release-artifacts",
-                this.projectDir.resolve("target/error_code_report.json").toString());
+        verifyReleaseArtifacts("target/error_code_report.json");
     }
 
     @Test
     void releaseArtifactsMavenSourceWithArtifact() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(), AnalyzedMavenSource.builder()
                 .path(this.projectDir.resolve("project-dir/pom.xml")).releaseArtifactName("my-project.jar").build());
-        verify(this.publisherMock).publish("release-artifacts",
-                this.projectDir.resolve("project-dir/target/my-project.jar").toString());
+        verifyReleaseArtifacts("project-dir/target/my-project.jar");
+    }
+
+    // [utest->dsn~customize-release-artifacts-custom~0]
+    @ParameterizedTest
+    @CsvSource({ "pom.xml, target/custom.jar, target/custom.jar", //
+            "go.mod, build/executable, build/executable", //
+            "package.json, build/ext.js, build/ext.js", //
+            "subModule/go.mod, build/executable, subModule/build/executable", //
+            "pom.xml, target/custom-$version.jar, target/custom-$version.jar",
+            "pom.xml, target/custom-${version}.jar, target/custom-1.2.3.jar",
+            "subModule/pom.xml, target/custom-${version}.jar, subModule/target/custom-1.2.3.jar" })
+    void releaseArtifactCustom(final String sourcePath, final String artifactPath, final String expectedPath) {
+        publish(ProjectKeeperConfig.builder().sources(List.of(
+                Source.builder().path(Path.of(sourcePath)).releaseArtifacts(List.of(Path.of(artifactPath))).build())),
+                ChangesFile.builder());
+        verifyReleaseArtifacts(expectedPath);
     }
 
     @Test
     void releaseArtifactsMultipleArtifact() {
-        publish(ProjectKeeperConfig.builder(), ChangesFile.builder(),
+        publish(ProjectKeeperConfig.builder()
+                .sources(List.of(
+                        Source.builder().path(Path.of("pom.xml"))
+                                .releaseArtifacts(List.of(Path.of("target/custom-${version}.jar"))).build(),
+                        Source.builder().path(Path.of("subModule/package.json"))
+                                .releaseArtifacts(List.of(Path.of("build/custom-extension.js"))).build())),
+                ChangesFile.builder(),
                 AnalyzedMavenSource.builder().path(this.projectDir.resolve("pom.xml"))
                         .releaseArtifactName("my-project1.jar").isRootProject(true).build(),
                 AnalyzedMavenSource.builder().path(this.projectDir.resolve("module1/pom.xml"))
                         .releaseArtifactName("my-project2.jar").build());
-        verify(this.publisherMock).publish("release-artifacts",
-                this.projectDir.resolve("target/my-project1.jar").toString() + "\n"
-                        + this.projectDir.resolve("module1/target/my-project2.jar").toString() + "\n"
-                        + this.projectDir.resolve("target/error_code_report.json").toString());
+        verifyReleaseArtifacts("target/my-project1.jar", "module1/target/my-project2.jar",
+                "target/error_code_report.json", "target/custom-" + PROJECT_VERSION + ".jar",
+                "subModule/build/custom-extension.js");
+    }
+
+    private void verifyReleaseArtifacts(final String... expectedPaths) {
+        final String expected = Arrays.stream(expectedPaths) //
+                .map(path -> this.projectDir.resolve(path)) //
+                .map(Path::toString) //
+                .collect(joining("\n"));
+        verify(this.publisherMock).publish("release-artifacts", expected);
     }
 
     @Test

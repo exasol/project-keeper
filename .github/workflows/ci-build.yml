@@ -105,6 +105,13 @@ jobs:
         env:
           ARTIFACTS: ${{ steps.pk-verify.outputs.release-artifacts }}
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts
+          path: ${{ steps.pk-verify.outputs.release-artifacts }}
+          retention-days: 5
+
       - name: Check if release is needed
         id: check-release
         run: |

@@ -3,8 +3,6 @@ package com.exasol.projectkeeper.shared.dependencies;
 import java.util.List;
 import java.util.Objects;
 
-import javax.annotation.processing.Generated;
-
 /**
  * The dependencies of a project.
  */
@@ -55,13 +53,11 @@ public final class ProjectDependencies {
     }
 
     @Override
-    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(dependencies);
     }
 
     @Override
-    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;

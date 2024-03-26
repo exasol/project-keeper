@@ -154,25 +154,33 @@ public class ProjectKeeperConfigReader {
     }
 
     private List<Source> convertSources(final Path projectDir, final List<ProjectKeeperRawConfig.Source> rawSources) {
-        if (rawSources == null) {
-            return Collections.emptyList();
-        } else {
-            final List<Source> sources = new ArrayList<>(rawSources.size());
-            for (final ProjectKeeperRawConfig.Source rawSource : rawSources) {
-                final Source source = convertSource(projectDir, rawSource);
-                sources.add(source);
-            }
-            return sources;
-        }
+        return Optional.ofNullable(rawSources) //
+                .orElseGet(Collections::emptyList) //
+                .stream() //
+                .map(source -> convertSource(projectDir, source)) //
+                .toList();
     }
 
     private Source convertSource(final Path projectDir, final ProjectKeeperRawConfig.Source rawSource) {
         final String rawType = rawSource.getType();
         final Set<ProjectKeeperModule> modules = convertModules(rawSource.getModules());
         final Path path = convertPath(projectDir, rawSource.getPath());
-        return Source.builder().path(path).type(convertType(rawType)).modules(modules)
-                .advertise(rawSource.isAdvertised()).parentPom(parseParentPomProperty(rawSource.getParentPom()))
+        return Source.builder() //
+                .path(path) //
+                .type(convertType(rawType)) //
+                .modules(modules) //
+                .advertise(rawSource.isAdvertised()) //
+                .parentPom(parseParentPomProperty(rawSource.getParentPom())) //
+                .releaseArtifacts(convertArtifacts(rawSource)) //
                 .build();
+    }
+
+    private List<Path> convertArtifacts(final ProjectKeeperRawConfig.Source rawSource) {
+        return Optional.ofNullable(rawSource.getArtifacts()) //
+                .orElseGet(Collections::emptyList) //
+                .stream() //
+                .map(Path::of) //
+                .toList();
     }
 
     private ParentPomRef parseParentPomProperty(final ProjectKeeperRawConfig.ParentPomRef rawParentPomRef) {

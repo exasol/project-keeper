@@ -133,6 +133,7 @@ public class ProjectKeeperRawConfig {
         private List<String> modules;
         private boolean advertise = true;
         private ProjectKeeperRawConfig.ParentPomRef parentPom;
+        private List<String> artifacts;
 
         /**
          * Get the source path, e.g. {@code project-keeper/pom.xml}.
@@ -180,6 +181,16 @@ public class ProjectKeeperRawConfig {
         }
 
         /**
+         * Set the list of release artifact paths, relative to to {@link #getPath()}, example:
+         * {@code target/my-artifact.jar}
+         * 
+         * @return release artifact paths
+         */
+        public List<String> getArtifacts() {
+            return artifacts;
+        }
+
+        /**
          * Set the path.
          * 
          * @param path path
@@ -222,6 +233,16 @@ public class ProjectKeeperRawConfig {
          */
         public void setAdvertise(final boolean advertise) {
             this.advertise = advertise;
+        }
+
+        /**
+         * Set the list of release artifact paths, relative to to {@link #getPath()}, example:
+         * {@code target/my-artifact.jar}
+         * 
+         * @param artifacts release artifact paths
+         */
+        public void setArtifacts(final List<String> artifacts) {
+            this.artifacts = artifacts;
         }
     }
 

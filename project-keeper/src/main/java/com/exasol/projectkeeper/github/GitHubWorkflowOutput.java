@@ -102,7 +102,7 @@ public class GitHubWorkflowOutput {
     }
 
     private String getReleaseArtifacts() {
-        return Stream.of(sourceReleaseArtifacts(), errorCodeReports()) //
+        return Stream.of(sourceReleaseArtifacts(), errorCodeReports(), customArtifacts()) //
                 .flatMap(Function.identity()) //
                 .map(Path::toString).collect(joining("\n"));
     }
@@ -123,6 +123,22 @@ public class GitHubWorkflowOutput {
                 .map(AnalyzedMavenSource.class::cast) //
                 .filter(AnalyzedMavenSource::isRootProject) //
                 .map(source -> this.projectDir.resolve("target/error_code_report.json"));
+    }
+
+    // [impl->dsn~customize-release-artifacts-custom~0]
+    private Stream<Path> customArtifacts() {
+        return config.getSources().stream().flatMap(this::customArtifacts);
+    }
+
+    private Stream<Path> customArtifacts(final Source source) {
+        final Path sourcePath = projectDir.resolve(source.getPath()).getParent();
+        return source.getReleaseArtifacts().stream() //
+                .map(this::replaceVersionPlaceholder) //
+                .map(sourcePath::resolve);
+    }
+
+    private Path replaceVersionPlaceholder(final Path path) {
+        return Path.of(path.toString().replace("${version}", this.projectVersion));
     }
 
     private String extractReleaseNotes(final ChangesFile changesFile) {

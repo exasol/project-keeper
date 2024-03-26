@@ -4,8 +4,6 @@ import java.nio.file.Path;
 import java.util.Objects;
 import java.util.Set;
 
-import javax.annotation.processing.Generated;
-
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
@@ -230,14 +228,12 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
     }
 
     @Override
-    @Generated("vscode")
     public int hashCode() {
         return Objects.hash(path, modules, advertise, moduleName, projectName, version, dependencyChanges, dependencies,
                 isRootProject);
     }
 
     @Override
-    @Generated("vscode")
     public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
