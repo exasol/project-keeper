@@ -162,10 +162,13 @@ PK will then use the replacement in the `dependencies.md` file instead of the or
 
 ### Release Artifacts
 
-PK generates GitHub workflows `ci-build.yml` and `release.yml` to verify that build artifacts are present and attached to the GitHub release. The following artifacts are automatically verified and attached to the release as described in the following sections:
-* JAR Artifacts for Maven Projects
-* Error Code Report `error_code_report.json`
+PK generates GitHub workflows `ci-build.yml` and `release.yml` to verify that build artifacts are present and attached to the GitHub release. Workflow `ci-build.yml` will also upload all artifacts to the GitHub action summary with a retention period of five days.
 
+The following artifacts are automatically verified and attached to the release as described in the following sections:
+
+* [JAR Artifacts for Maven Projects](#jar-artifacts-for-maven-projects)
+* [Error Code Report `error_code_report.json`](#error-code-report-error_code_reportjson)
+* [Custom release artifacts](#custom-release-artifacts)
 
 #### JAR Artifacts for Maven Projects
 
@@ -195,13 +198,22 @@ sources:
     path: pom.xml
 ```
 
-If your Maven project is not in the project root directory, you can add the error report explicitly in `.project-keeper.yml`, see [below](#custom-release-artifacts) for details.
+If your Maven project is not in the project root directory, you can add the error report explicitly as a [custom release artifact](#custom-release-artifacts).
 
 #### Custom Release Artifacts
 
 You can register custom release artifacts by listing them in `.project-keeper.yml`:
 
-**TODO** This will be implemented in [#517](https://github.com/exasol/project-keeper/issues/517)
+```yml
+sources:
+  - type: npm
+    path: extension/package.json
+    artifacts:
+      - build/my-extension.js
+```
+
+* The artifact path is relative to the source path. The above configuration will archive file `$PROJECT_DIR/extension/build/my-extension.js`.
+* The artifact path may contain placeholder `${version}`. PK will replace it with the current project version.
 
 ### CI Build Configuration
 

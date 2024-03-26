@@ -1,10 +1,13 @@
 # Project Keeper 4.3.0, released 2024-??-??
 
-Code name: Bugfixes for validation and `update-dependencies`
+Code name: Custom Release Artifacts
 
 ## Summary
 
-This release contains many bugfixes for the new modes `update-dependencies` and `verify-release`.
+This release contains many new features and improvements:
+* It allows specifying custom release artifacts like extension files. See the [user guide](https://github.com/exasol/project-keeper/blob/main/doc/user_guide/user_guide.md#custom-release-artifacts) for details.
+* PK now automatically creates the required Git tags for Go projects.
+* The release also contains many bugfixes for the new modes `update-dependencies` and `verify-release`.
 
 ## Features
 
