@@ -21,6 +21,15 @@ class CiBuildWorkflowGeneratorTest {
     private static String NL = System.lineSeparator();
 
     @Test
+    void doesNotModifyOnTrigger() {
+        assertThat(ciBuildContent(BuildOptions.builder().runnerOs("my-runner-os")), containsString("""
+                'on':
+                  push:
+                    branches: [main]
+                """));
+    }
+
+    @Test
     void ciBuildContainsRunnerOs() {
         assertThat(ciBuildContent(BuildOptions.builder().runnerOs("my-runner-os")),
                 containsString("runs-on: my-runner-os"));

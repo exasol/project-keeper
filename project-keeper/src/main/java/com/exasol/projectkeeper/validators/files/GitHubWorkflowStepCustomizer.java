@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.validators.files;
 
 import org.yaml.snakeyaml.*;
 import org.yaml.snakeyaml.DumperOptions.LineBreak;
+import org.yaml.snakeyaml.DumperOptions.NonPrintableStyle;
 import org.yaml.snakeyaml.constructor.Constructor;
 import org.yaml.snakeyaml.representer.Representer;
 
@@ -14,26 +15,6 @@ class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.Content
 
     GitHubWorkflowStepCustomizer(final BuildOptions buildOptions) {
         this(configureYaml(), buildOptions);
-    }
-
-    private static Yaml configureYaml() {
-        final DumperOptions dumperOptions = new DumperOptions();
-        dumperOptions.setIndent(2);
-        dumperOptions.setCanonical(false);
-        dumperOptions.setExplicitEnd(false);
-        dumperOptions.setExplicitStart(false);
-        dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.AUTO); // Remove quotes
-        dumperOptions.setPrettyFlow(true); // Remove curly brackets
-        dumperOptions.setLineBreak(LineBreak.UNIX);
-        dumperOptions.setSplitLines(false); // Remove line breaks
-        dumperOptions.setWidth(400);
-        dumperOptions.setProcessComments(true);
-        final LoaderOptions loaderConfig = new LoaderOptions();
-        loaderConfig.setProcessComments(true);
-        loaderConfig.setAllowDuplicateKeys(false);
-        loaderConfig.setAllowRecursiveKeys(false);
-        loaderConfig.setWrappedToRootException(true);
-        return new Yaml(new Constructor(loaderConfig), new Representer(dumperOptions));
     }
 
     GitHubWorkflowStepCustomizer(final Yaml yaml, final BuildOptions buildOptions) {
@@ -49,5 +30,31 @@ class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.Content
 
     private Object customizeWorkflow(final Object object) {
         return object;
+    }
+
+    private static Yaml configureYaml() {
+        final DumperOptions dumperOptions = new DumperOptions();
+        dumperOptions.setIndent(2);
+        dumperOptions.setCanonical(false);
+        dumperOptions.setExplicitEnd(false);
+        dumperOptions.setExplicitStart(false);
+        dumperOptions.setDefaultFlowStyle(DumperOptions.FlowStyle.AUTO); // Remove quotes
+        dumperOptions.setPrettyFlow(true); // Remove curly brackets
+        dumperOptions.setLineBreak(LineBreak.UNIX);
+        dumperOptions.setSplitLines(false); // Remove line breaks
+        dumperOptions.setWidth(400);
+        dumperOptions.setProcessComments(true);
+        dumperOptions.setAllowUnicode(true);
+        dumperOptions.setIndentWithIndicator(false);
+        dumperOptions.setIndicatorIndent(2);
+        dumperOptions.setMaxSimpleKeyLength(128);
+        dumperOptions.setNonPrintableStyle(NonPrintableStyle.ESCAPE);
+
+        final LoaderOptions loaderConfig = new LoaderOptions();
+        loaderConfig.setProcessComments(true);
+        loaderConfig.setAllowDuplicateKeys(false);
+        loaderConfig.setAllowRecursiveKeys(false);
+        loaderConfig.setWrappedToRootException(true);
+        return new Yaml(new Constructor(loaderConfig), new Representer(dumperOptions));
     }
 }
