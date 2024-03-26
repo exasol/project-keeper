@@ -383,10 +383,7 @@ public class ProjectKeeperRawConfig {
             this.exasolDbVersions = exasolDbVersions;
         }
 
-        public boolean isFreeDiskSpace() {
-            return freeDiskSpace;
-        }
-
+        /** @return list of setup steps */
         public List<Map<String, Object>> getSetupSteps() {
             if (setupSteps == null) {
                 return emptyList();
@@ -394,18 +391,22 @@ public class ProjectKeeperRawConfig {
             return setupSteps;
         }
 
+        /** @param setupSteps list of setup steps */
         public void setSetupSteps(final List<Map<String, Object>> setupSteps) {
             this.setupSteps = setupSteps;
         }
 
+        /** @return build step */
         public Map<String, Object> getBuildStep() {
             return buildStep;
         }
 
+        /** @param buildStep build step */
         public void setBuildStep(final Map<String, Object> buildStep) {
             this.buildStep = buildStep;
         }
 
+        /** @return list of cleanup steps */
         public List<Map<String, Object>> getCleanupSteps() {
             if (cleanupSteps == null) {
                 return emptyList();
@@ -413,6 +414,7 @@ public class ProjectKeeperRawConfig {
             return cleanupSteps;
         }
 
+        /** @param cleanupSteps list of cleanup steps */
         public void setCleanupSteps(final List<Map<String, Object>> cleanupSteps) {
             this.cleanupSteps = cleanupSteps;
         }

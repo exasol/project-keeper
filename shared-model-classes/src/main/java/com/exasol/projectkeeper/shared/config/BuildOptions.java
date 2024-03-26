@@ -46,14 +46,29 @@ public final class BuildOptions {
         return exasolDbVersions;
     }
 
+    /**
+     * Get the optional custom setup steps that should be executed before the build in the GitHub workflow.
+     * 
+     * @return custom setup steps
+     */
     public List<WorkflowStep> getSetupSteps() {
         return setupSteps;
     }
 
+    /**
+     * Get the optional custom build step that should be executed instead of the default step in the GitHub workflow.
+     * 
+     * @return custom build step
+     */
     public Optional<WorkflowStep> getBuildStep() {
         return Optional.ofNullable(buildStep);
     }
 
+    /**
+     * Get the optional custom cleanup steps that should be executed after the build in the GitHub workflow.
+     * 
+     * @return custom cleanup steps
+     */
     public List<WorkflowStep> getCleanupSteps() {
         return cleanupSteps;
     }
@@ -120,6 +135,12 @@ public final class BuildOptions {
             return this;
         }
 
+        /**
+         * Add custom setup steps that should be executed before the build in the GitHub workflow.
+         * 
+         * @param setupSteps custom setup steps
+         * @return {@code this} for fluent programming
+         */
         public Builder setupSteps(final List<WorkflowStep> setupSteps) {
             if (setupSteps != null) {
                 this.setupSteps = setupSteps;
@@ -127,11 +148,23 @@ public final class BuildOptions {
             return this;
         }
 
+        /**
+         * Add a custom build step that should be executed instead of the default step in the GitHub workflow.
+         * 
+         * @param buildStep custom build step
+         * @return {@code this} for fluent programming
+         */
         public Builder buildStep(final WorkflowStep buildStep) {
             this.buildStep = buildStep;
             return this;
         }
 
+        /**
+         * Add custom cleanup steps that should be executed after the build in the GitHub workflow.
+         * 
+         * @param cleanupSteps custom cleanup steps
+         * @return {@code this} for fluent programming
+         */
         public Builder cleanupSteps(final List<WorkflowStep> cleanupSteps) {
             if (cleanupSteps != null) {
                 this.cleanupSteps = cleanupSteps;

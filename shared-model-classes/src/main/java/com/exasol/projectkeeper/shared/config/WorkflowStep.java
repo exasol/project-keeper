@@ -2,6 +2,9 @@ package com.exasol.projectkeeper.shared.config;
 
 import java.util.*;
 
+/**
+ * A build step in a GitHub workflow.
+ */
 public final class WorkflowStep {
 
     private final Map<String, Object> rawStep;
@@ -10,10 +13,22 @@ public final class WorkflowStep {
         this.rawStep = Objects.requireNonNull(rawStep, "rawStep");
     }
 
+    /**
+     * Create a list of workflow steps from a list of raw steps parsed from a YAML file.
+     * 
+     * @param setupSteps list of raw steps
+     * @return list of workflow steps
+     */
     public static List<WorkflowStep> createSteps(final List<Map<String, Object>> setupSteps) {
         return setupSteps.stream().map(WorkflowStep::createStep).toList();
     }
 
+    /**
+     * Create a workflow step from a raw step parsed from a YAML file.
+     * 
+     * @param buildStep raw step
+     * @return workflow step
+     */
     public static WorkflowStep createStep(final Map<String, Object> buildStep) {
         return new WorkflowStep(buildStep);
     }
