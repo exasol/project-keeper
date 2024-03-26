@@ -9,6 +9,8 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.yaml.snakeyaml.Yaml;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
@@ -24,24 +26,19 @@ class CiBuildWorkflowGeneratorTest {
                 containsString("runs-on: my-runner-os"));
     }
 
-    @Test
-    void ciBuildDoesNotFreeDiskSpace() {
-        assertThat(ciBuildContent(BuildOptions.builder().freeDiskSpace(false)),
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void ciBuildFreeDiskSpace(final boolean freeDiskSpace) {
+        assertThat(ciBuildContent(BuildOptions.builder().freeDiskSpace(freeDiskSpace)),
                 containsString("- name: Free Disk Space" + NL + //
-                        "        if: ${{ false }}"));
-    }
-
-    @Test
-    void ciBuildDoesFreeDiskSpace() {
-        assertThat(ciBuildContent(BuildOptions.builder().freeDiskSpace(true)),
-                containsString("- name: Free Disk Space" + NL + //
-                        "        if: ${{ true }}"));
+                        "      if: ${{ " + freeDiskSpace + " }}"));
     }
 
     @Test
     void ciBuildNonMatrixBuild() {
         assertThat(ciBuildContent(BuildOptions.builder()), allOf( //
-                containsString("group: ${{ github.workflow }}-${{ github.ref }}" + NL), //
+                containsString(
+                        "concurrency: {group: '${{ github.workflow }}-${{ github.ref }}', cancel-in-progress: true}"), //
                 not(containsString("matrix")), //
                 not(containsString("com.exasol.dockerdb.image")) //
         ));
@@ -50,33 +47,45 @@ class CiBuildWorkflowGeneratorTest {
     @Test
     void ciBuildMatrixBuild() {
         assertThat(ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1", "v2"))), allOf( //
-                containsString("group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}" + NL), //
-                containsString("matrix:" + NL + "        exasol_db_version: [\"v1\", \"v2\"]"), //
-                containsString("env:" + NL + "      DEFAULT_EXASOL_DB_VERSION: \"v1\""),
+                containsString(
+                        "concurrency: {group: '${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version\n"
+                                + "        }}', cancel-in-progress: true}"), //
+                containsString("matrix:\n" + //
+                        "        exasol_db_version: [v1, v2]\n"), //
+                containsString("env: {DEFAULT_EXASOL_DB_VERSION: v1}"),
                 containsString("-Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}"), //
-                containsString("- name: Sonar analysis" + NL
-                        + "        if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}") //
+                containsString("    - name: Sonar analysis\n"
+                        + "      if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION\n"
+                        + "        }}") //
         ));
     }
 
     @Test
     void ciBuildMatrixBuildSingleVersion() {
         assertThat(ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1"))), allOf( //
-                containsString("group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}" + NL), //
-                containsString("matrix:" + NL + "        exasol_db_version: [\"v1\"]"), //
-                containsString("env:" + NL + "      DEFAULT_EXASOL_DB_VERSION: \"v1\""),
+                containsString(
+                        "concurrency: {group: '${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version\n"
+                                + "        }}', cancel-in-progress: true}"), //
+                containsString("matrix:\n        exasol_db_version: [v1]\n"), //
+                containsString("env: {DEFAULT_EXASOL_DB_VERSION: v1}"),
                 containsString("-Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}"), //
-                containsString("- name: Sonar analysis" + NL
-                        + "        if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}") //
+                containsString("- name: Sonar analysis\n"
+                        + "      if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION\n"
+                        + "        }}") //
         ));
     }
 
     private String ciBuildContent(final BuildOptions.Builder optionsBuilder) {
-        final FileTemplateFromResource template = testee(optionsBuilder).createCiBuildWorkflow();
+        return ciBuildContent(optionsBuilder.build());
+    }
+
+    private String ciBuildContent(final BuildOptions options) {
+        final FileTemplate template = testee(options).createCiBuildWorkflow();
         final String content = template.getContent();
         assertAll(() -> assertThat(template.getPathInProject(), equalTo(Path.of(".github/workflows/ci-build.yml"))),
                 () -> assertThat(template.getValidation(), equalTo(Validation.REQUIRE_EXACT)),
                 () -> validateYamlSyntax(content));
+        System.out.println(content);
         return content;
     }
 
@@ -85,7 +94,7 @@ class CiBuildWorkflowGeneratorTest {
         assertDoesNotThrow(() -> yaml.load(content));
     }
 
-    private CiBuildWorkflowGenerator testee(final BuildOptions.Builder optionsBuilder) {
-        return new CiBuildWorkflowGenerator(optionsBuilder.build());
+    private CiBuildWorkflowGenerator testee(final BuildOptions options) {
+        return new CiBuildWorkflowGenerator(options);
     }
 }

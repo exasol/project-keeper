@@ -12,7 +12,7 @@ class CiBuildWorkflowGenerator {
         this.buildOptions = buildOptions;
     }
 
-    FileTemplateFromResource createCiBuildWorkflow() {
+    FileTemplate createCiBuildWorkflow() {
         final FileTemplateFromResource template = new FileTemplateFromResource(
                 "templates/.github/workflows/" + getCiBuildTemplate(), ".github/workflows/ci-build.yml", REQUIRE_EXACT)
                 .replacing("ciBuildRunnerOS", buildOptions.getRunnerOs())
@@ -23,7 +23,7 @@ class CiBuildWorkflowGenerator {
                     buildOptions.getExasolDbVersions().stream().map(this::quote).collect(joining(", ")));
             template.replacing("defaultExasolDbVersion", quote(buildOptions.getExasolDbVersions().get(0)));
         }
-        return template;
+        return new ContentCustomizingTemplate(template, new GitHubWorkflowStepCustomizer(buildOptions));
     }
 
     private String quote(final String value) {
