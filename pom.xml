@@ -21,6 +21,12 @@
         <module>parent-pom</module>
     </modules>
     <build>
+        <resources>
+            <resource>
+                <!-- Trace requirement coverage in PK configuration -->
+                <directory>.project-keeper.yml</directory>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
