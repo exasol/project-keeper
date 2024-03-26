@@ -117,6 +117,9 @@ public class ProjectKeeperConfigReader {
                 .runnerOs(build.getRunnerOs()) //
                 .freeDiskSpace(build.shouldFreeDiskSpace()) //
                 .exasolDbVersions(build.getExasolDbVersions()) //
+                .setupSteps(WorkflowStep.createSteps(build.getSetupSteps())) //
+                .buildStep(build.getBuildStep() != null ? WorkflowStep.createStep(build.getBuildStep()) : null) //
+                .cleanupSteps(WorkflowStep.createSteps(build.getCleanupSteps())) //
                 .build();
     }
 

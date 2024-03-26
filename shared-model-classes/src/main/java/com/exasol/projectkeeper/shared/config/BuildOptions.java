@@ -3,8 +3,7 @@ package com.exasol.projectkeeper.shared.config;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * CI build configuration.
@@ -15,11 +14,17 @@ public final class BuildOptions {
     private final String runnerOs;
     private final boolean freeDiskSpace;
     private final List<String> exasolDbVersions;
+    private final List<WorkflowStep> setupSteps;
+    private final WorkflowStep buildStep;
+    private final List<WorkflowStep> cleanupSteps;
 
     private BuildOptions(final Builder builder) {
         this.runnerOs = Objects.requireNonNull(builder.runnerOs, "runnerOs");
         this.freeDiskSpace = builder.freeDiskSpace;
         this.exasolDbVersions = unmodifiableList(Objects.requireNonNull(builder.exasolDbVersions, "exasolDbVersions"));
+        this.setupSteps = unmodifiableList(Objects.requireNonNull(builder.setupSteps, "setupSteps"));
+        this.buildStep = builder.buildStep;
+        this.cleanupSteps = unmodifiableList(Objects.requireNonNull(builder.cleanupSteps, "cleanupSteps"));
     }
 
     /** @return CI build runner operating system */
@@ -41,6 +46,18 @@ public final class BuildOptions {
         return exasolDbVersions;
     }
 
+    public List<WorkflowStep> getSetupSteps() {
+        return setupSteps;
+    }
+
+    public Optional<WorkflowStep> getBuildStep() {
+        return Optional.ofNullable(buildStep);
+    }
+
+    public List<WorkflowStep> getCleanupSteps() {
+        return cleanupSteps;
+    }
+
     /**
      * Creates builder to build {@link BuildOptions}.
      *
@@ -57,6 +74,9 @@ public final class BuildOptions {
         private List<String> exasolDbVersions = emptyList();
         private boolean freeDiskSpace = false;
         private String runnerOs = DEFAULT_RUNNER_OS;
+        private List<WorkflowStep> setupSteps = emptyList();
+        private WorkflowStep buildStep = null;
+        private List<WorkflowStep> cleanupSteps = emptyList();
 
         private Builder() {
         }
@@ -100,6 +120,25 @@ public final class BuildOptions {
             return this;
         }
 
+        public Builder setupSteps(final List<WorkflowStep> setupSteps) {
+            if (setupSteps != null) {
+                this.setupSteps = setupSteps;
+            }
+            return this;
+        }
+
+        public Builder buildStep(final WorkflowStep buildStep) {
+            this.buildStep = buildStep;
+            return this;
+        }
+
+        public Builder cleanupSteps(final List<WorkflowStep> cleanupSteps) {
+            if (cleanupSteps != null) {
+                this.cleanupSteps = cleanupSteps;
+            }
+            return this;
+        }
+
         /**
          * Build a new {@link BuildOptions}.
          *
@@ -112,13 +151,14 @@ public final class BuildOptions {
 
     @Override
     public String toString() {
-        return "BuildConfig [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + ",exasolDbVersions="
-                + exasolDbVersions + "]";
+        return "BuildOptions [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + ", exasolDbVersions="
+                + exasolDbVersions + ", setupSteps=" + setupSteps + ", buildStep=" + buildStep + ", cleanupSteps="
+                + cleanupSteps + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(runnerOs, freeDiskSpace, exasolDbVersions);
+        return Objects.hash(runnerOs, freeDiskSpace, exasolDbVersions, setupSteps, buildStep, cleanupSteps);
     }
 
     @Override
@@ -134,6 +174,8 @@ public final class BuildOptions {
         }
         final BuildOptions other = (BuildOptions) obj;
         return Objects.equals(runnerOs, other.runnerOs) && freeDiskSpace == other.freeDiskSpace
-                && Objects.equals(exasolDbVersions, other.exasolDbVersions);
+                && Objects.equals(exasolDbVersions, other.exasolDbVersions)
+                && Objects.equals(setupSteps, other.setupSteps) && Objects.equals(buildStep, other.buildStep)
+                && Objects.equals(cleanupSteps, other.cleanupSteps);
     }
 }

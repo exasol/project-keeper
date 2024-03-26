@@ -341,6 +341,9 @@ public class ProjectKeeperRawConfig {
         private String runnerOs;
         private boolean freeDiskSpace = false;
         private List<String> exasolDbVersions = emptyList();
+        private List<Map<String, Object>> setupSteps = emptyList();
+        private Map<String, Object> buildStep = null;
+        private List<Map<String, Object>> cleanupSteps = emptyList();
 
         /**
          * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
@@ -378,6 +381,40 @@ public class ProjectKeeperRawConfig {
         /** @param exasolDbVersions Exasol DB versions for which to run the CI build */
         public void setExasolDbVersions(final List<String> exasolDbVersions) {
             this.exasolDbVersions = exasolDbVersions;
+        }
+
+        public boolean isFreeDiskSpace() {
+            return freeDiskSpace;
+        }
+
+        public List<Map<String, Object>> getSetupSteps() {
+            if (setupSteps == null) {
+                return emptyList();
+            }
+            return setupSteps;
+        }
+
+        public void setSetupSteps(final List<Map<String, Object>> setupSteps) {
+            this.setupSteps = setupSteps;
+        }
+
+        public Map<String, Object> getBuildStep() {
+            return buildStep;
+        }
+
+        public void setBuildStep(final Map<String, Object> buildStep) {
+            this.buildStep = buildStep;
+        }
+
+        public List<Map<String, Object>> getCleanupSteps() {
+            if (cleanupSteps == null) {
+                return emptyList();
+            }
+            return cleanupSteps;
+        }
+
+        public void setCleanupSteps(final List<Map<String, Object>> cleanupSteps) {
+            this.cleanupSteps = cleanupSteps;
         }
     }
 }

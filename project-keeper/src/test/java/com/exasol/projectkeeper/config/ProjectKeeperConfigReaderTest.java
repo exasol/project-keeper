@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
+import java.util.*;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,7 +24,6 @@ import com.exasol.projectkeeper.shared.config.*;
 
 // [utest->dsn~modules~1]
 class ProjectKeeperConfigReaderTest {
-    private final ProjectKeeperConfigReader reader = new ProjectKeeperConfigReader();
     @TempDir
     Path tempDir;
 
@@ -38,7 +37,7 @@ class ProjectKeeperConfigReaderTest {
     void read() throws IOException {
         Files.createDirectory(this.tempDir.resolve("my-sub-project"));
         Files.writeString(this.tempDir.resolve("my-sub-project/pom.xml"), "");
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+        writeProjectKeeperConfig("""
                 excludes:
                  - "E-PK-CORE-17: Missing required file: '.github/workflows/broken_links_checker.yml'."
                  - regex: "E-PK-CORE-18: .*"
@@ -65,7 +64,7 @@ class ProjectKeeperConfigReaderTest {
                 linkReplacements:
                   - "http://wrong-url.com|my-dependency.de"
                 """);
-        final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
+        final ProjectKeeperConfig config = readConfig();
         final Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(config.getCiBuildConfig().getRunnerOs(), equalTo("custom-runner-os")),
@@ -91,12 +90,12 @@ class ProjectKeeperConfigReaderTest {
     void readDefaults() throws IOException {
         Files.createDirectory(this.tempDir.resolve("my-sub-project"));
         Files.writeString(this.tempDir.resolve("my-sub-project/pom.xml"), "");
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+        writeProjectKeeperConfig("""
                 sources:
                   - type: maven
                     path: my-sub-project/pom.xml
                 """);
-        final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
+        final ProjectKeeperConfig config = readConfig();
         final Source source = config.getSources().get(0);
         assertAll(//
                 () -> assertThat(source.getType(), equalTo(MAVEN)),
@@ -115,7 +114,7 @@ class ProjectKeeperConfigReaderTest {
 
     @Test
     void invalidSubprojectPath() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+        writeProjectKeeperConfig("""
                 sources:
                   - type: maven
                     path: unknown-project/pom.xml
@@ -124,8 +123,7 @@ class ProjectKeeperConfigReaderTest {
                 linkReplacements:
                   - "http://wrong-url.com|my-dependency.de"
                 """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> this.reader.readConfig(this.tempDir));
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
         assertThat(exception.getMessage(),
                 startsWith("E-PK-CORE-83: Invalid .project-keeper.yml. The specified path "));
     }
@@ -133,22 +131,20 @@ class ProjectKeeperConfigReaderTest {
     @ParameterizedTest
     @ValueSource(strings = { "excludes:\n - 1: 3", "excludes:\n - 2", "excludes:\n - regex: 2" })
     void testInvalidExcludes(final String invalidExcludes) throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), invalidExcludes);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> this.reader.readConfig(this.tempDir));
+        writeProjectKeeperConfig(invalidExcludes);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
         assertThat(exception.getMessage(), startsWith("E-PK-CORE-87: Invalid .project-keeper.yml. Invalid value "));
     }
 
     @Test
     void incompleteConfig() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+        writeProjectKeeperConfig("""
                     sources:
                       - type: maven
                     linkReplacements:
                       - "http://wrong-url.com|my-dependency.de"
                 """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> this.reader.readConfig(this.tempDir));
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
         assertThat(exception.getMessage(),
                 equalTo("E-PK-CORE-86: Invalid .project-keeper.yml. Missing required property 'sources/path'."));
     }
@@ -157,7 +153,7 @@ class ProjectKeeperConfigReaderTest {
     void unknownType() throws IOException {
         Files.createDirectory(this.tempDir.resolve("my-sub-project"));
         Files.writeString(this.tempDir.resolve("my-sub-project/pom.xml"), "");
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+        writeProjectKeeperConfig("""
                     sources:
                       - type: unknown
                         path: my-sub-project/pom.xml
@@ -166,8 +162,7 @@ class ProjectKeeperConfigReaderTest {
                     linkReplacements:
                       - "http://wrong-url.com|my-dependency.de"
                 """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> this.reader.readConfig(this.tempDir));
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
         assertThat(exception.getMessage(),
                 equalTo("E-PK-CORE-84: Invalid .project-keeper.yml. Unsupported source type 'unknown'."
                         + " Please use one of the supported types: maven, golang, npm."));
@@ -175,20 +170,104 @@ class ProjectKeeperConfigReaderTest {
 
     @Test
     void readFixedVersion() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), //
-                "version: \"1.2.3\"");
-        final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
+        writeProjectKeeperConfig("version: \"1.2.3\"");
+        final ProjectKeeperConfig config = readConfig();
         assertThat(config.getVersionConfig(), equalTo(new FixedVersion("1.2.3")));
     }
 
     @Test
     void readVersionFromSource() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), """
+        writeProjectKeeperConfig("""
                 version:
                   fromSource: "./pom.xml"
                 """);
-        final ProjectKeeperConfig config = this.reader.readConfig(this.tempDir);
+        final ProjectKeeperConfig config = readConfig();
         assertThat(config.getVersionConfig(), equalTo(new VersionFromSource(this.tempDir.resolve("./pom.xml"))));
+    }
+
+    @Test
+    void readNoCustomBuildConfiguration() throws IOException {
+        writeProjectKeeperConfig("build:");
+        final ProjectKeeperConfig config = readConfig();
+        final BuildOptions buildConfig = config.getCiBuildConfig();
+        assertAll(() -> assertThat(buildConfig.getSetupSteps(), empty()),
+                () -> assertThat(buildConfig.getBuildStep().isEmpty(), is(true)),
+                () -> assertThat(buildConfig.getCleanupSteps(), empty()));
+    }
+
+    @Test
+    void readEmptyCustomBuildConfiguration() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  setupSteps:
+                  buildStep:
+                  cleanupSteps:
+                """);
+        final ProjectKeeperConfig config = readConfig();
+        final BuildOptions buildConfig = config.getCiBuildConfig();
+        assertAll(() -> assertThat(buildConfig.getSetupSteps(), empty()),
+                () -> assertThat(buildConfig.getBuildStep().isEmpty(), is(true)),
+                () -> assertThat(buildConfig.getCleanupSteps(), empty()));
+    }
+
+    @Test
+    void readCustomBuildStepMultiLine() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  buildStep:
+                    name: Build
+                    run: |
+                      echo 'build1'
+                      echo 'build2'
+                """);
+        final ProjectKeeperConfig config = readConfig();
+        final BuildOptions buildConfig = config.getCiBuildConfig();
+        assertThat(buildConfig.getBuildStep().get(),
+                equalTo(WorkflowStep.createStep(Map.of("name", "Build", "run", "echo 'build1'\necho 'build2'\n"))));
+    }
+
+    @Test
+    void readSingleCustomSetupStep() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  setupSteps:
+                    - name: Setup
+                      run: echo 'setup'
+                      env:
+                        MY_ENV: 'my-value1'
+                        SECRET: ${{ secrets.SECRET }}
+                  buildStep:
+                    name: Build
+                    run: echo 'build'
+                    env:
+                      MY_ENV: 'my-value2'
+                      SECRET: ${{ secrets.SECRET }}
+                  cleanupSteps:
+                    - name: Cleanup
+                      run: echo 'cleanup'
+                      env:
+                        MY_ENV: 'my-value3'
+                        SECRET: ${{ secrets.SECRET }}
+                """);
+        final ProjectKeeperConfig config = readConfig();
+        final List<WorkflowStep> setupSteps = config.getCiBuildConfig().getSetupSteps();
+        final Optional<WorkflowStep> buildStep = config.getCiBuildConfig().getBuildStep();
+        final List<WorkflowStep> cleanupSteps = config.getCiBuildConfig().getCleanupSteps();
+        assertAll(() -> assertThat("setupSteps", setupSteps, hasSize(1)),
+                () -> assertThat("setupSteps", setupSteps.get(0),
+                        equalTo(WorkflowStep.createStep(Map.of("name", "Setup", "run", "echo 'setup'", "env",
+                                Map.of("MY_ENV", "my-value1", "SECRET", "${{ secrets.SECRET }}"))))),
+                //
+                () -> assertThat("buildStep", buildStep.isPresent(), is(true)),
+                () -> assertThat("buildStep", buildStep.get(),
+                        equalTo(WorkflowStep.createStep(Map.of("name", "Build", "run", "echo 'build'", "env",
+                                Map.of("MY_ENV", "my-value2", "SECRET", "${{ secrets.SECRET }}"))))),
+                //
+                () -> assertThat("cleanupSteps", cleanupSteps, hasSize(1)),
+                () -> assertThat("cleanupSteps", cleanupSteps.get(0),
+                        equalTo(WorkflowStep.createStep(Map.of("name", "Cleanup", "run", "echo 'cleanup'", "env",
+                                Map.of("MY_ENV", "my-value3", "SECRET", "${{ secrets.SECRET }}"))))) //
+        );
     }
 
     @Test
@@ -202,20 +281,26 @@ class ProjectKeeperConfigReaderTest {
 
     @Test
     void invalidYamlSyntax() throws IOException {
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), "{ -");
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> this.reader.readConfig(this.tempDir));
+        writeProjectKeeperConfig("{ -");
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
         assertThat(exception.getMessage(), startsWith("E-PK-CORE-85: Invalid .project-keeper.yml."));
     }
 
     @Test
     void notInProjectRoot() throws IOException {
         Files.delete(this.tempDir.resolve(".git"));
-        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), "");
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> this.reader.readConfig(this.tempDir));
+        writeProjectKeeperConfig("");
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-90: Could not find .git directory in project-root '"
                 + this.tempDir
                 + "'. Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'."));
+    }
+
+    private void writeProjectKeeperConfig(final String content) throws IOException {
+        Files.writeString(this.tempDir.resolve(".project-keeper.yml"), content);
+    }
+
+    private ProjectKeeperConfig readConfig() {
+        return new ProjectKeeperConfigReader().readConfig(this.tempDir);
     }
 }
