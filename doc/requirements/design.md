@@ -980,7 +980,7 @@ Needs: dsn, impl, utest
 PK mode `verify-release` adds the name of the release tag to the GitHub Output Parameters.
 
 Rationale:
-* The release tag is required for creating the GitHub release tag.
+* The name of the release tag is required for creating the GitHub release tag.
 
 Covers:
 * [`dsn~verify-modes.output-parameters~1`](#pk-modes-verify-and-verify-release-publish-github-action-output-parameters)
