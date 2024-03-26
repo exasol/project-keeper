@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.generic;
 
+import static java.util.stream.Collectors.joining;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -55,14 +56,13 @@ class SimpleProcessIT {
 
     @Test
     void processTimeout() {
-        final SimpleProcess process = SimpleProcess
-                .start(List.of("bash", "-c", "echo output && >&2 echo error && sleep 1"));
+        final List<String> commandParts = List.of("bash", "-c", "echo output && >&2 echo error && sleep 1");
+        final SimpleProcess process = SimpleProcess.start(commandParts);
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> process.waitUntilFinished(TIMEOUT));
-        assertThat(exception.getMessage(),
-                equalTo("E-PK-CORE-128: Timeout while waiting " + TIMEOUT.toMillis()
-                        + "ms for command 'bash -c echo output && >&2 echo error && sleep 1'. Output was 'output'\n"
-                        + "Error output: 'error'"));
+        final String command = commandParts.stream().collect(joining(" "));
+        assertThat(exception.getMessage(), equalTo("E-PK-CORE-128: Timeout while waiting " + TIMEOUT.toMillis()
+                + "ms for command '" + command + "'. Output was 'output'\n" + "Error output: 'error'"));
     }
 
     @Test
