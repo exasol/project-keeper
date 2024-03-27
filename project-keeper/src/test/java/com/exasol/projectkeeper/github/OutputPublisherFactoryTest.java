@@ -10,8 +10,6 @@ import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.github.*;
-
 class OutputPublisherFactoryTest {
 
     @Test
