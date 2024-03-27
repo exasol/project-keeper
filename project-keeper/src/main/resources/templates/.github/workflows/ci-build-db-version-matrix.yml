@@ -119,6 +119,13 @@ jobs:
           path: ${{ steps.build-pk-verify.outputs.release-artifacts }}
           retention-days: 5
 
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: artifacts-exasol-${{ matrix.exasol_db_version }}
+          path: ${{ steps.pk-verify.outputs.release-artifacts }}
+          retention-days: 5
+
   build:
     needs: matrix-build
     runs-on: ubuntu-latest
