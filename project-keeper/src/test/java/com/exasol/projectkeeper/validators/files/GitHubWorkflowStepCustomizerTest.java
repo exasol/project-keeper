@@ -127,7 +127,7 @@ class GitHubWorkflowStepCustomizerTest {
                         id: build-pk-verify
                         run: echo step1
                       - name: Sonar
-                        id: sonar
+                        id: sonar-analysis
                         run: echo sonar
                       - name: Some other cleanup step
                         id: more-cleanup
@@ -137,7 +137,8 @@ class GitHubWorkflowStepCustomizerTest {
         final List<Step> steps = job.getSteps();
         assertAll(() -> assertThat(steps, hasSize(4)),
                 () -> assertThat(job.getStep("custom-step").getName(), equalTo("Custom Step")),
-                () -> assertThat(getStepIds(job), contains("build-pk-verify", "sonar", "custom-step", "more-cleanup")));
+                () -> assertThat(getStepIds(job),
+                        contains("build-pk-verify", "sonar-analysis", "custom-step", "more-cleanup")));
     }
 
     @Test
@@ -156,7 +157,7 @@ class GitHubWorkflowStepCustomizerTest {
                                 id: build-pk-verify
                                 run: echo step1
                               - name: Sonar
-                                id: sonar
+                                id: sonar-analysis
                                 run: echo sonar
                               - name: Some other cleanup step
                                 id: more-cleanup
@@ -165,8 +166,8 @@ class GitHubWorkflowStepCustomizerTest {
         final Job job = workflow.getJob("build");
         final List<Step> steps = job.getSteps();
         assertAll(() -> assertThat(steps, hasSize(7)), //
-                () -> assertThat(getStepIds(job), contains("custom-setup1", "custom-setup2", "custom-build", "sonar",
-                        "custom-cleanup1", "custom-cleanup2", "more-cleanup")));
+                () -> assertThat(getStepIds(job), contains("custom-setup1", "custom-setup2", "custom-build",
+                        "sonar-analysis", "custom-cleanup1", "custom-cleanup2", "more-cleanup")));
     }
 
     private List<String> getStepIds(final Job job) {
