@@ -22,6 +22,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - name: Free Disk Space
+        id: free-disk-space
         run: |
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /usr/share/dotnet
@@ -53,6 +54,7 @@ jobs:
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Sonar analysis
+        id: sonar-analysis
         if: ${{ env.SONAR_TOKEN != null && matrix.os == 'ubuntu-latest' }}
         run: |
           mvn --batch-mode sonar:sonar \

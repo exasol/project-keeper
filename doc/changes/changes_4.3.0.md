@@ -38,6 +38,7 @@ This release contains many new features and improvements:
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:4.2.0` to `4.3.0`
+* Added `org.snakeyaml:snakeyaml-engine:2.7`
 
 #### Runtime Dependency Updates
 

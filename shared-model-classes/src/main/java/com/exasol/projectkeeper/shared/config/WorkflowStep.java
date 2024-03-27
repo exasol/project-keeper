@@ -33,6 +33,10 @@ public final class WorkflowStep {
         return new WorkflowStep(buildStep);
     }
 
+    public Map<String, Object> getRawStep() {
+        return rawStep;
+    }
+
     @Override
     public String toString() {
         return "WorkflowStep [rawStep=" + rawStep + "]";
