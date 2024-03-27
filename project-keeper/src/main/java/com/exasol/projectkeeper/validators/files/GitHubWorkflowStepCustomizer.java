@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.WorkflowStep;
+import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
 class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.ContentCustomizer {
 
@@ -29,9 +30,14 @@ class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.Content
     }
 
     private void customizeWorkflow(final GitHubWorkflow workflow) {
+
+        final Job job = workflow.getJob(jobId);
+        job.insertStepsBefore("build-pk-verify", buildOptions.getSetupSteps());
+        job.insertStepsAfter("sonar-analysis", buildOptions.getCleanupSteps());
+
         final Optional<WorkflowStep> customStep = buildOptions.getBuildStep();
         if (customStep.isPresent()) {
-            workflow.getJob(jobId).replaceStep("build-pk-verify", customStep.get().getRawStep());
+            job.replaceStep("build-pk-verify", customStep.get().getRawStep());
         }
     }
 }

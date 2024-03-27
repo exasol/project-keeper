@@ -45,7 +45,7 @@ class GitHubWorkflowIOTest {
                             11
                             17
                           cache: "maven"
-                    """);
+                """);
         final Job job = workflow.getJob("build");
         assertAll(() -> assertThat(workflow.getOnTrigger(), hasEntry("pull_request", null)),
                 () -> assertThat(job.getRunnerOS(), equalTo("ubuntu-latest")),

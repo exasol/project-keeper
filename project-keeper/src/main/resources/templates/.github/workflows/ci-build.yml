@@ -30,10 +30,12 @@ jobs:
           sudo rm -rf /usr/local/lib/android
           sudo rm -rf /usr/share/dotnet
       - name: Checkout the repository
+        id: checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Set up JDKs
+        id: setup-java
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
@@ -42,12 +44,14 @@ jobs:
             17
           cache: "maven"
       - name: Cache SonarCloud packages
+        id: cache-sonar
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
       - name: Enable testcontainer reuse
+        id: enable-testcontainer-reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       - name: Run tests and build with Maven
         id: build-pk-verify
@@ -55,11 +59,6 @@ jobs:
           mvn --batch-mode clean verify \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
-      - name: Publish Test Report
-        uses: scacap/action-surefire-report@v1
-        if: ${{ always() && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Sonar analysis
         id: sonar-analysis
         if: ${{ env.SONAR_TOKEN != null }}
@@ -73,6 +72,7 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
       - name: Verify Release Artifacts
+        id: verify-release-artifacts
         run: |
           print_message() {
               local -r message=$1
@@ -106,17 +106,11 @@ jobs:
           ARTIFACTS: ${{ steps.build-pk-verify.outputs.release-artifacts }}
 
       - name: Upload artifacts
+        id: upload-artifacts
         uses: actions/upload-artifact@v4
         with:
           name: artifacts
           path: ${{ steps.build-pk-verify.outputs.release-artifacts }}
-          retention-days: 5
-
-      - name: Upload artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts
-          path: ${{ steps.pk-verify.outputs.release-artifacts }}
           retention-days: 5
 
       - name: Check if release is needed

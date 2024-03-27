@@ -77,7 +77,6 @@ excludes:
   # Workflows must install PK itself before using it in the build
   - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_check.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_update.yml'"
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release.yml'"
   # No configuration necessary for aggregator POM
   - "E-PK-CORE-103: Missing parent declaration in 'pom.xml'"
@@ -86,3 +85,26 @@ excludes:
   - regex: "E-PK-CORE-17: Missing required file: '.settings/.*'"
 linkReplacements:
   - https://eclipse-ee4j.github.io/jsonb-api|https://projects.eclipse.org/projects/ee4j.jsonp
+build:
+  setupSteps:
+    - name: Set up Go
+      id: setup-go
+      uses: actions/setup-go@v5
+      with:
+        go-version: "1.22"
+        cache-dependency-path: .project-keeper.yml
+    - name: Install Go tools
+      id: install-go-tools
+      run: go install github.com/google/go-licenses@v1.6.0
+  buildStep:
+    name: Run tests and build with Maven
+    id: maven-build
+    run: mvn -T 1C --batch-mode clean verify
+    env:
+      GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
+  cleanupSteps:
+    - name: Install project-keeper for self-verification
+      run: mvn -T 1C --batch-mode install
+    - name: Run project-keeper itself
+      id: build-pk-verify
+      run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
