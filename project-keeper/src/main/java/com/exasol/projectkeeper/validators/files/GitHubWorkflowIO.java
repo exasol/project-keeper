@@ -39,7 +39,7 @@ public class GitHubWorkflowIO {
      * @param content YAML string
      * @return GitHub workflow
      */
-    public GitHubWorkflow loadGitHubWorkflow(final String content) {
+    public GitHubWorkflow loadWorkflow(final String content) {
         return GitHubWorkflow.create(load(content));
     }
 

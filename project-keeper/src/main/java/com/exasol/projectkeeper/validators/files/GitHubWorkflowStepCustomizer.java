@@ -23,7 +23,7 @@ class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.Content
 
     @Override
     public String customizeContent(final String content) {
-        final GitHubWorkflow workflow = yaml.loadGitHubWorkflow(content);
+        final GitHubWorkflow workflow = yaml.loadWorkflow(content);
         customizeWorkflow(workflow);
         return yaml.dumpWorkflow(workflow);
     }

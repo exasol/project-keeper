@@ -1,19 +1,82 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
+
 class GitHubWorkflowIOTest {
+
+    @Test
+    void loadWorkflow() {
+        final GitHubWorkflow workflow = testee().loadWorkflow("""
+                name: CI Build
+                on:
+                  pull_request:
+                jobs:
+                  build:
+                    runs-on: ubuntu-latest
+                    concurrency:
+                      group: ${{ github.workflow }}-${{ github.ref }}
+                      cancel-in-progress: true
+                    outputs:
+                      release-required: ${{ steps.check-release.outputs.release-required }}
+                    steps:
+                      - name: Checkout the repository
+                        uses: actions/checkout@v4
+                        with:
+                          fetch-depth: 0
+                      - name: Set up JDKs
+                        id: setup-jdks
+                        uses: actions/setup-java@v4
+                        with:
+                          distribution: "temurin"
+                          java-version: |
+                            11
+                            17
+                          cache: "maven"
+                    """);
+        final Job job = workflow.getJob("build");
+        assertAll(() -> assertThat(workflow.getOnTrigger(), hasEntry("pull_request", null)),
+                () -> assertThat(job.getRunnerOS(), equalTo("ubuntu-latest")),
+                () -> assertThat(job.getConcurrency(), hasEntry("group", "${{ github.workflow }}-${{ github.ref }}")),
+                () -> assertThat(job.getConcurrency(), hasEntry("cancel-in-progress", true)),
+                () -> assertThat(job.getSteps(), hasSize(2)),
+                () -> assertThat(job.getStep("setup-jdks").getWith(), allOf(hasEntry("distribution", "temurin"), //
+                        hasEntry("java-version", "11\n17\n"), //
+                        hasEntry("cache", "maven"))),
+                () -> assertThat(job.getStep("setup-jdks").getUsesAction(), equalTo("actions/setup-java@v4")));
+    }
+
+    @Test
+    void dumpWorkflow() {
+        final String yaml = testee().dumpWorkflow(GitHubWorkflow.create(
+                Map.of("jobs", Map.of("build", Map.of("steps", List.of(Map.of("name", "Step 1", "id", "step1")))))));
+        assertThat(yaml, equalTo("""
+                jobs:
+                  build:
+                    steps:
+                      - {
+                        name: Step 1,
+                        id: step1
+                      }
+                """));
+    }
+
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCases")
     void dumpLoad(final String testDescription, final String inputYaml, final String expectedFormattedYaml) {
-        final GitHubWorkflowIO yamlIO = GitHubWorkflowIO.create();
+        final GitHubWorkflowIO yamlIO = testee();
         final String dumped = yamlIO.dump(yamlIO.load(inputYaml));
         assertThat(testDescription, dumped, equalTo(expectedFormattedYaml));
     }
@@ -73,6 +136,10 @@ class GitHubWorkflowIOTest {
                                 """)
 
         );
+    }
+
+    private GitHubWorkflowIO testee() {
+        return GitHubWorkflowIO.create();
     }
 
     private static Arguments testCaseUnchanged(final String description, final String yaml) {

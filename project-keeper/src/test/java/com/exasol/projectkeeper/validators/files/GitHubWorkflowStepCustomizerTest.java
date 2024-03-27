@@ -71,6 +71,6 @@ class GitHubWorkflowStepCustomizerTest {
     private GitHubWorkflow validate(final BuildOptions.Builder optionsBuilder, final String workflowTemplate) {
         final String customizedContent = new GitHubWorkflowStepCustomizer(optionsBuilder.build(), "build")
                 .customizeContent(workflowTemplate);
-        return GitHubWorkflowIO.create().loadGitHubWorkflow(customizedContent);
+        return GitHubWorkflowIO.create().loadWorkflow(customizedContent);
     }
 }

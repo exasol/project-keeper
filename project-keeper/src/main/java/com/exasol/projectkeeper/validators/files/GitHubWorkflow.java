@@ -130,5 +130,13 @@ class GitHubWorkflow {
         String getIfCondition() {
             return getString("if");
         }
+
+        String getUsesAction() {
+            return getString("uses");
+        }
+
+        public Map<String, Object> getWith() {
+            return asMap(rawStep.get("with"));
+        }
     }
 }
