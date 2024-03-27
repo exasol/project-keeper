@@ -123,7 +123,7 @@ class ProjectKeeperConfigReaderTest {
                 linkReplacements:
                   - "http://wrong-url.com|my-dependency.de"
                 """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(),
                 startsWith("E-PK-CORE-83: Invalid .project-keeper.yml. The specified path "));
     }
@@ -132,7 +132,7 @@ class ProjectKeeperConfigReaderTest {
     @ValueSource(strings = { "excludes:\n - 1: 3", "excludes:\n - 2", "excludes:\n - regex: 2" })
     void testInvalidExcludes(final String invalidExcludes) throws IOException {
         writeProjectKeeperConfig(invalidExcludes);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(), startsWith("E-PK-CORE-87: Invalid .project-keeper.yml. Invalid value "));
     }
 
@@ -144,7 +144,7 @@ class ProjectKeeperConfigReaderTest {
                     linkReplacements:
                       - "http://wrong-url.com|my-dependency.de"
                 """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(),
                 equalTo("E-PK-CORE-86: Invalid .project-keeper.yml. Missing required property 'sources/path'."));
     }
@@ -162,7 +162,7 @@ class ProjectKeeperConfigReaderTest {
                     linkReplacements:
                       - "http://wrong-url.com|my-dependency.de"
                 """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(),
                 equalTo("E-PK-CORE-84: Invalid .project-keeper.yml. Unsupported source type 'unknown'."
                         + " Please use one of the supported types: maven, golang, npm."));
@@ -282,7 +282,7 @@ class ProjectKeeperConfigReaderTest {
     @Test
     void invalidYamlSyntax() throws IOException {
         writeProjectKeeperConfig("{ -");
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(), startsWith("E-PK-CORE-85: Invalid .project-keeper.yml."));
     }
 
@@ -290,7 +290,7 @@ class ProjectKeeperConfigReaderTest {
     void notInProjectRoot() throws IOException {
         Files.delete(this.tempDir.resolve(".git"));
         writeProjectKeeperConfig("");
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> readConfig());
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-90: Could not find .git directory in project-root '"
                 + this.tempDir
                 + "'. Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'."));
