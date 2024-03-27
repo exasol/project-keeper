@@ -33,6 +33,7 @@ class GitHubWorkflowIOTest {
                       release-required: ${{ steps.check-release.outputs.release-required }}
                     steps:
                       - name: Checkout the repository
+                        id: checkout
                         uses: actions/checkout@v4
                         with:
                           fetch-depth: 0
@@ -60,14 +61,13 @@ class GitHubWorkflowIOTest {
 
     @Test
     void dumpWorkflow() {
-        final String yaml = testee().dumpWorkflow(GitHubWorkflow.create(
-                Map.of("jobs", Map.of("build", Map.of("steps", List.of(Map.of("name", "Step 1", "id", "step1")))))));
+        final String yaml = testee().dumpWorkflow(GitHubWorkflow
+                .create(Map.of("jobs", Map.of("build", Map.of("steps", List.of(Map.of("id", "step1")))))));
         assertThat(yaml, equalTo("""
                 jobs:
                   build:
                     steps:
                       - {
-                        name: Step 1,
                         id: step1
                       }
                 """));
