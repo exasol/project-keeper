@@ -33,6 +33,11 @@ public final class WorkflowStep {
         return new WorkflowStep(buildStep);
     }
 
+    /**
+     * Get the original raw content of the step.
+     * 
+     * @return original raw content
+     */
     public Map<String, Object> getRawStep() {
         return rawStep;
     }
