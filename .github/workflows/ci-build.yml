@@ -93,7 +93,7 @@ jobs:
         }
       - {
         name: Install project-keeper for self-verification,
-        run: mvn -T 1C --batch-mode install
+        run: mvn -T 1C --batch-mode install -DskipTests
       }
       - {
         name: Run project-keeper itself,
