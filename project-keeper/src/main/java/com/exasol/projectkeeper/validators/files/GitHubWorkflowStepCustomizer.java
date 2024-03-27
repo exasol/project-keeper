@@ -8,14 +8,14 @@ import com.exasol.projectkeeper.shared.config.WorkflowStep;
 class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.ContentCustomizer {
 
     private final BuildOptions buildOptions;
-    private final YamlIO yaml;
+    private final GitHubWorkflowIO yaml;
     private final String jobId;
 
     GitHubWorkflowStepCustomizer(final BuildOptions buildOptions, final String jobId) {
-        this(YamlIO.create(), buildOptions, jobId);
+        this(GitHubWorkflowIO.create(), buildOptions, jobId);
     }
 
-    GitHubWorkflowStepCustomizer(final YamlIO yaml, final BuildOptions buildOptions, final String jobId) {
+    GitHubWorkflowStepCustomizer(final GitHubWorkflowIO yaml, final BuildOptions buildOptions, final String jobId) {
         this.yaml = yaml;
         this.buildOptions = buildOptions;
         this.jobId = jobId;

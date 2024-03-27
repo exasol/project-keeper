@@ -116,6 +116,6 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     private GitHubWorkflow parse(final String yaml) {
-        return YamlIO.create().loadGitHubWorkflow(yaml);
+        return GitHubWorkflowIO.create().loadGitHubWorkflow(yaml);
     }
 }

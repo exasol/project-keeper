@@ -9,11 +9,11 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-class YamlIOTest {
+class GitHubWorkflowIOTest {
     @ParameterizedTest(name = "{0}")
     @MethodSource("testCases")
     void dumpLoad(final String testDescription, final String inputYaml, final String expectedFormattedYaml) {
-        final YamlIO yamlIO = YamlIO.create();
+        final GitHubWorkflowIO yamlIO = GitHubWorkflowIO.create();
         final String dumped = yamlIO.dump(yamlIO.load(inputYaml));
         assertThat(testDescription, dumped, equalTo(expectedFormattedYaml));
     }
