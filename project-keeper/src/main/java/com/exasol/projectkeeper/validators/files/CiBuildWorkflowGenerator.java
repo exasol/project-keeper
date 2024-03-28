@@ -3,7 +3,12 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXACT;
 import static java.util.stream.Collectors.joining;
 
+import java.util.Collections;
+import java.util.List;
+
 import com.exasol.projectkeeper.shared.config.BuildOptions;
+import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
+import com.exasol.projectkeeper.shared.config.workflow.WorkflowOptions;
 
 class CiBuildWorkflowGenerator {
     private static final String PATH_IN_PROJECT = ".github/workflows/ci-build.yml";
@@ -27,7 +32,13 @@ class CiBuildWorkflowGenerator {
             template.replacing("defaultExasolDbVersion", quote(buildOptions.getExasolDbVersions().get(0)));
         }
         return new ContentCustomizingTemplate(template,
-                new GitHubWorkflowStepCustomizer(buildOptions, buildType.buildJobId));
+                new GitHubWorkflowStepCustomizer(findCustomizations(), buildType.buildJobId));
+    }
+
+    private List<StepCustomization> findCustomizations() {
+        return buildOptions.getWorkflow("ci-build.yml") //
+                .map(WorkflowOptions::getCustomizations) //
+                .orElseGet(Collections::emptyList);
     }
 
     private String quote(final String value) {

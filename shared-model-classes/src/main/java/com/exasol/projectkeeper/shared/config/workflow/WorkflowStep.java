@@ -1,4 +1,4 @@
-package com.exasol.projectkeeper.shared.config;
+package com.exasol.projectkeeper.shared.config.workflow;
 
 import java.util.*;
 
@@ -31,6 +31,15 @@ public final class WorkflowStep {
      */
     public static WorkflowStep createStep(final Map<String, Object> buildStep) {
         return new WorkflowStep(buildStep);
+    }
+
+    /**
+     * Get the ID of the step or {@code null} if no ID is set.
+     * 
+     * @return step ID
+     */
+    public String getId() {
+        return (String) this.rawStep.get("id");
     }
 
     /**

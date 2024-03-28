@@ -5,6 +5,8 @@ import static java.util.Collections.unmodifiableList;
 
 import java.util.*;
 
+import com.exasol.projectkeeper.shared.config.workflow.WorkflowOptions;
+
 /**
  * CI build configuration.
  */
@@ -14,17 +16,13 @@ public final class BuildOptions {
     private final String runnerOs;
     private final boolean freeDiskSpace;
     private final List<String> exasolDbVersions;
-    private final List<WorkflowStep> setupSteps;
-    private final WorkflowStep buildStep;
-    private final List<WorkflowStep> cleanupSteps;
+    private final List<WorkflowOptions> workflows;
 
     private BuildOptions(final Builder builder) {
         this.runnerOs = Objects.requireNonNull(builder.runnerOs, "runnerOs");
         this.freeDiskSpace = builder.freeDiskSpace;
         this.exasolDbVersions = unmodifiableList(Objects.requireNonNull(builder.exasolDbVersions, "exasolDbVersions"));
-        this.setupSteps = unmodifiableList(Objects.requireNonNull(builder.setupSteps, "setupSteps"));
-        this.buildStep = builder.buildStep;
-        this.cleanupSteps = unmodifiableList(Objects.requireNonNull(builder.cleanupSteps, "cleanupSteps"));
+        this.workflows = builder.workflows;
     }
 
     /** @return CI build runner operating system */
@@ -47,30 +45,24 @@ public final class BuildOptions {
     }
 
     /**
-     * Get the optional custom setup steps that should be executed before the build in the GitHub workflow.
-     * 
-     * @return custom setup steps
+     * Configuration options for the generated GitHub workflows.
+     *
+     * @return options for workflows
      */
-    public List<WorkflowStep> getSetupSteps() {
-        return setupSteps;
+    public List<WorkflowOptions> getWorkflows() {
+        return workflows;
     }
 
     /**
-     * Get the optional custom build step that should be executed instead of the default step in the GitHub workflow.
+     * Get workflow options by name.
      * 
-     * @return custom build step
+     * @param workflowName name of the workflow
+     * @return workflow options
      */
-    public Optional<WorkflowStep> getBuildStep() {
-        return Optional.ofNullable(buildStep);
-    }
-
-    /**
-     * Get the optional custom cleanup steps that should be executed after the build in the GitHub workflow.
-     * 
-     * @return custom cleanup steps
-     */
-    public List<WorkflowStep> getCleanupSteps() {
-        return cleanupSteps;
+    public Optional<WorkflowOptions> getWorkflow(final String workflowName) {
+        return workflows.stream() //
+                .filter(workflow -> workflow.getWorkflowName().equals(workflowName)) //
+                .findFirst();
     }
 
     /**
@@ -89,9 +81,7 @@ public final class BuildOptions {
         private List<String> exasolDbVersions = emptyList();
         private boolean freeDiskSpace = false;
         private String runnerOs = DEFAULT_RUNNER_OS;
-        private List<WorkflowStep> setupSteps = emptyList();
-        private WorkflowStep buildStep = null;
-        private List<WorkflowStep> cleanupSteps = emptyList();
+        private List<WorkflowOptions> workflows = emptyList();
 
         private Builder() {
         }
@@ -136,38 +126,14 @@ public final class BuildOptions {
         }
 
         /**
-         * Add custom setup steps that should be executed before the build in the GitHub workflow.
-         * 
-         * @param setupSteps custom setup steps
+         * Set configuration options for generated GitHub workflows.
+         *
+         * @param workflows options for workflows
          * @return {@code this} for fluent programming
          */
-        public Builder setupSteps(final List<WorkflowStep> setupSteps) {
-            if (setupSteps != null) {
-                this.setupSteps = setupSteps;
-            }
-            return this;
-        }
-
-        /**
-         * Add a custom build step that should be executed instead of the default step in the GitHub workflow.
-         * 
-         * @param buildStep custom build step
-         * @return {@code this} for fluent programming
-         */
-        public Builder buildStep(final WorkflowStep buildStep) {
-            this.buildStep = buildStep;
-            return this;
-        }
-
-        /**
-         * Add custom cleanup steps that should be executed after the build in the GitHub workflow.
-         * 
-         * @param cleanupSteps custom cleanup steps
-         * @return {@code this} for fluent programming
-         */
-        public Builder cleanupSteps(final List<WorkflowStep> cleanupSteps) {
-            if (cleanupSteps != null) {
-                this.cleanupSteps = cleanupSteps;
+        public Builder workflows(final List<WorkflowOptions> workflows) {
+            if (workflows != null) {
+                this.workflows = workflows;
             }
             return this;
         }
@@ -185,13 +151,12 @@ public final class BuildOptions {
     @Override
     public String toString() {
         return "BuildOptions [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + ", exasolDbVersions="
-                + exasolDbVersions + ", setupSteps=" + setupSteps + ", buildStep=" + buildStep + ", cleanupSteps="
-                + cleanupSteps + "]";
+                + exasolDbVersions + ", buildWorkflow=" + workflows + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(runnerOs, freeDiskSpace, exasolDbVersions, setupSteps, buildStep, cleanupSteps);
+        return Objects.hash(runnerOs, freeDiskSpace, exasolDbVersions, workflows);
     }
 
     @Override
@@ -208,7 +173,6 @@ public final class BuildOptions {
         final BuildOptions other = (BuildOptions) obj;
         return Objects.equals(runnerOs, other.runnerOs) && freeDiskSpace == other.freeDiskSpace
                 && Objects.equals(exasolDbVersions, other.exasolDbVersions)
-                && Objects.equals(setupSteps, other.setupSteps) && Objects.equals(buildStep, other.buildStep)
-                && Objects.equals(cleanupSteps, other.cleanupSteps);
+                && Objects.equals(workflows, other.workflows);
     }
 }

@@ -7,7 +7,7 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
-import com.exasol.projectkeeper.shared.config.WorkflowStep;
+import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 
 class GitHubWorkflow {
     private static final Logger LOG = Logger.getLogger(GitHubWorkflow.class.getName());
@@ -87,36 +87,19 @@ class GitHubWorkflow {
             return step -> step.getId().equals(id);
         }
 
-        public void replaceStep(final String stepId, final Map<String, Object> rawStep) {
+        public void replaceStep(final String stepId, final WorkflowStep step) {
             final List<Map<String, Object>> allSteps = getRawSteps();
             final int index = findStepIndex(stepId);
-            allSteps.set(index, rawStep);
+            LOG.fine(() -> "Replacing step '" + stepId + "' at index " + index + " with step '" + step.getId() + "'");
+            allSteps.set(index, step.getRawStep());
         }
 
-        public void insertStepsBefore(final String stepId, final List<WorkflowStep> steps) {
-            if (steps.isEmpty()) {
-                return;
-            }
+        public void insertStepAfter(final String stepId, final WorkflowStep step) {
             final List<Map<String, Object>> allSteps = getRawSteps();
             final int index = findStepIndex(stepId);
-            LOG.fine(() -> "Inserting " + steps.size() + " setup steps at index " + index + " before step '" + stepId
+            LOG.fine(() -> "Inserting step '" + step.getId() + "' at index " + (index + 1) + " after step '" + stepId
                     + "'");
-            allSteps.addAll(index, getRawSteps(steps));
-        }
-
-        public void insertStepsAfter(final String stepId, final List<WorkflowStep> steps) {
-            if (steps.isEmpty()) {
-                return;
-            }
-            final List<Map<String, Object>> allSteps = getRawSteps();
-            final int index = findStepIndex(stepId);
-            LOG.fine(() -> "Inserting " + steps.size() + " cleanup steps at index " + (index + 1) + " after step '"
-                    + stepId + "'");
-            allSteps.addAll(index + 1, getRawSteps(steps));
-        }
-
-        private List<Map<String, Object>> getRawSteps(final List<WorkflowStep> setupSteps) {
-            return setupSteps.stream().map(WorkflowStep::getRawStep).toList();
+            allSteps.add(index + 1, step.getRawStep());
         }
 
         private int findStepIndex(final String stepId) {

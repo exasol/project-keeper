@@ -5,6 +5,8 @@ import static java.util.Collections.emptyList;
 import java.util.List;
 import java.util.Map;
 
+import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
+
 /**
  * Intermediate class for reading the config. This is used by {@link ProjectKeeperConfigReader}.
  * <p>
@@ -337,13 +339,13 @@ public class ProjectKeeperRawConfig {
      * <p>
      * SnakeYML requires this class to be public.
      */
+    @SuppressWarnings("java:S1104") // Only used for serialization, getter/setters not needed
     public static class Build {
         private String runnerOs;
         private boolean freeDiskSpace = false;
         private List<String> exasolDbVersions = emptyList();
-        private List<Map<String, Object>> setupSteps = emptyList();
-        private Map<String, Object> buildStep = null;
-        private List<Map<String, Object>> cleanupSteps = emptyList();
+        /** Build workflow customizations allow adding and replacing steps in the default build workflow */
+        public List<Workflow> workflows = emptyList();
 
         /**
          * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
@@ -382,41 +384,33 @@ public class ProjectKeeperRawConfig {
         public void setExasolDbVersions(final List<String> exasolDbVersions) {
             this.exasolDbVersions = exasolDbVersions;
         }
+    }
 
-        /** @return list of setup steps */
-        public List<Map<String, Object>> getSetupSteps() {
-            if (setupSteps == null) {
-                return emptyList();
-            }
-            return setupSteps;
-        }
+    /**
+     * Intermediate class for de-serializing workflow customizations from PK's YAML configuration file.
+     * <p>
+     * SnakeYML requires this class to be public.
+     */
+    @SuppressWarnings("java:S1104") // Only used for serialization, getter/setters not needed
+    public static class Workflow {
+        /** Workflow name, e.g. {@code ci-build.yml} or {@code release.yml}. */
+        public String name;
+        /** List of customizations for the workflow. */
+        public List<RawStepCustomization> stepCustomizations;
+    }
 
-        /** @param setupSteps list of setup steps */
-        public void setSetupSteps(final List<Map<String, Object>> setupSteps) {
-            this.setupSteps = setupSteps;
-        }
-
-        /** @return build step */
-        public Map<String, Object> getBuildStep() {
-            return buildStep;
-        }
-
-        /** @param buildStep build step */
-        public void setBuildStep(final Map<String, Object> buildStep) {
-            this.buildStep = buildStep;
-        }
-
-        /** @return list of cleanup steps */
-        public List<Map<String, Object>> getCleanupSteps() {
-            if (cleanupSteps == null) {
-                return emptyList();
-            }
-            return cleanupSteps;
-        }
-
-        /** @param cleanupSteps list of cleanup steps */
-        public void setCleanupSteps(final List<Map<String, Object>> cleanupSteps) {
-            this.cleanupSteps = cleanupSteps;
-        }
+    /**
+     * Intermediate class for de-serializing workflow customizations from PK's YAML configuration file.
+     * <p>
+     * SnakeYML requires this class to be public.
+     */
+    @SuppressWarnings("java:S1104") // Only used for serialization, getter/setters not needed
+    public static class RawStepCustomization {
+        /** Customization type (insert/replace). */
+        public StepCustomization.Type action;
+        /** ID of the step to replace or after which to insert. */
+        public String stepId;
+        /** The step content to insert/replace. */
+        public Map<String, Object> content;
     }
 }

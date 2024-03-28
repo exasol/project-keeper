@@ -11,7 +11,7 @@ class NullContentProvider implements WorkflowOutput {
 
     @Override
     public void publish(final String key, final String value) {
-        LOG.finest(() -> "Publishing key/value pair '" + key + "' = '" + value + "'");
+        // Ignore
     }
 
     @Override

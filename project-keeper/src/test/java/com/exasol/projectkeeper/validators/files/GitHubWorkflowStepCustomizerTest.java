@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
+import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -12,7 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.BuildOptions.Builder;
-import com.exasol.projectkeeper.shared.config.WorkflowStep;
+import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
+import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 
@@ -20,7 +22,7 @@ class GitHubWorkflowStepCustomizerTest {
 
     @Test
     void noChangesWithEmptyBuildStepList() {
-        final GitHubWorkflow workflow = validate(BuildOptions.builder(), """
+        final GitHubWorkflow workflow = validate("""
                 jobs:
                   build:
                     steps:
@@ -30,7 +32,7 @@ class GitHubWorkflowStepCustomizerTest {
 
     @Test
     void noChangesWithSingleBuildSteps() {
-        final GitHubWorkflow workflow = validate(BuildOptions.builder(), """
+        final GitHubWorkflow workflow = validate("""
                 jobs:
                   build:
                     steps:
@@ -42,7 +44,7 @@ class GitHubWorkflowStepCustomizerTest {
 
     @Test
     void noChangesWithBuild() {
-        final GitHubWorkflow workflow = validate(BuildOptions.builder(), """
+        final GitHubWorkflow workflow = validate("""
                 jobs:
                   build:
                     steps:
@@ -174,8 +176,8 @@ class GitHubWorkflowStepCustomizerTest {
         return job.getSteps().stream().map(Step::getId).toList();
     }
 
-    private GitHubWorkflow validate(final BuildOptions.Builder optionsBuilder, final String workflowTemplate) {
-        final String customizedContent = new GitHubWorkflowStepCustomizer(optionsBuilder.build(), "build")
+    private GitHubWorkflow validate(final String workflowTemplate, final StepCustomization... customizations) {
+        final String customizedContent = new GitHubWorkflowStepCustomizer(asList(customizations), "build")
                 .customizeContent(workflowTemplate);
         return GitHubWorkflowIO.create().loadWorkflow(customizedContent);
     }

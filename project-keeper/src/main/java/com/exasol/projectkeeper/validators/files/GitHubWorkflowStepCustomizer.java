@@ -1,24 +1,23 @@
 package com.exasol.projectkeeper.validators.files;
 
-import java.util.Optional;
+import java.util.List;
 
-import com.exasol.projectkeeper.shared.config.BuildOptions;
-import com.exasol.projectkeeper.shared.config.WorkflowStep;
+import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
 class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.ContentCustomizer {
-
-    private final BuildOptions buildOptions;
+    private final List<StepCustomization> customizations;
     private final GitHubWorkflowIO yaml;
     private final String jobId;
 
-    GitHubWorkflowStepCustomizer(final BuildOptions buildOptions, final String jobId) {
-        this(GitHubWorkflowIO.create(), buildOptions, jobId);
+    GitHubWorkflowStepCustomizer(final List<StepCustomization> customizations, final String jobId) {
+        this(GitHubWorkflowIO.create(), customizations, jobId);
     }
 
-    GitHubWorkflowStepCustomizer(final GitHubWorkflowIO yaml, final BuildOptions buildOptions, final String jobId) {
+    GitHubWorkflowStepCustomizer(final GitHubWorkflowIO yaml, final List<StepCustomization> customizations,
+            final String jobId) {
         this.yaml = yaml;
-        this.buildOptions = buildOptions;
+        this.customizations = customizations;
         this.jobId = jobId;
     }
 
@@ -30,14 +29,22 @@ class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.Content
     }
 
     private void customizeWorkflow(final GitHubWorkflow workflow) {
-
         final Job job = workflow.getJob(jobId);
-        job.insertStepsBefore("build-pk-verify", buildOptions.getSetupSteps());
-        job.insertStepsAfter("sonar-analysis", buildOptions.getCleanupSteps());
+        for (final StepCustomization customization : customizations) {
+            applyCustomization(job, customization);
+        }
+    }
 
-        final Optional<WorkflowStep> customStep = buildOptions.getBuildStep();
-        if (customStep.isPresent()) {
-            job.replaceStep("build-pk-verify", customStep.get().getRawStep());
+    private void applyCustomization(final Job job, final StepCustomization customization) {
+        switch (customization.getType()) {
+        case REPLACE:
+            job.replaceStep(customization.getStepId(), customization.getStep());
+            break;
+        case INSERT_AFTER:
+            job.insertStepAfter(customization.getStepId(), customization.getStep());
+            break;
+        default:
+            throw new IllegalStateException("Unknown customization type: " + customization.getType());
         }
     }
 }

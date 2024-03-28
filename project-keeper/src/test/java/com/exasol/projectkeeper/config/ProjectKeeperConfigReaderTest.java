@@ -11,16 +11,19 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.projectkeeper.shared.config.*;
+import com.exasol.projectkeeper.shared.config.workflow.*;
 
 // [utest->dsn~modules~1]
 class ProjectKeeperConfigReaderTest {
@@ -186,88 +189,151 @@ class ProjectKeeperConfigReaderTest {
     }
 
     @Test
-    void readNoCustomBuildConfiguration() throws IOException {
+    void readMissingWorkflows() throws IOException {
         writeProjectKeeperConfig("build:");
-        final ProjectKeeperConfig config = readConfig();
-        final BuildOptions buildConfig = config.getCiBuildConfig();
-        assertAll(() -> assertThat(buildConfig.getSetupSteps(), empty()),
-                () -> assertThat(buildConfig.getBuildStep().isEmpty(), is(true)),
-                () -> assertThat(buildConfig.getCleanupSteps(), empty()));
+        assertThat(readConfig().getCiBuildConfig().getWorkflows(), empty());
     }
 
     @Test
-    void readEmptyCustomBuildConfiguration() throws IOException {
+    void readEmptyWorkflows() throws IOException {
         writeProjectKeeperConfig("""
                 build:
-                  setupSteps:
-                  buildStep:
-                  cleanupSteps:
+                  workflows:
                 """);
-        final ProjectKeeperConfig config = readConfig();
-        final BuildOptions buildConfig = config.getCiBuildConfig();
-        assertAll(() -> assertThat(buildConfig.getSetupSteps(), empty()),
-                () -> assertThat(buildConfig.getBuildStep().isEmpty(), is(true)),
-                () -> assertThat(buildConfig.getCleanupSteps(), empty()));
+        assertThat(readConfig().getCiBuildConfig().getWorkflows(), empty());
     }
 
     @Test
-    void readCustomBuildStepMultiLine() throws IOException {
+    void readUnsupportedWorkflowNameFails() throws IOException {
         writeProjectKeeperConfig("""
                 build:
-                  buildStep:
-                    name: Build
-                    run: |
-                      echo 'build1'
-                      echo 'build2'
+                  workflows:
+                    - name: unsupported.yml
                 """);
-        final ProjectKeeperConfig config = readConfig();
-        final BuildOptions buildConfig = config.getCiBuildConfig();
-        assertThat(buildConfig.getBuildStep().get(),
-                equalTo(WorkflowStep.createStep(Map.of("name", "Build", "run", "echo 'build1'\necho 'build2'\n"))));
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in '.project-keeper.yml'. Use one of the supported workflow ['ci-build.yml']"));
     }
 
     @Test
-    void readSingleCustomSetupStep() throws IOException {
+    void readWorkflowCustomization() throws IOException {
         writeProjectKeeperConfig("""
                 build:
-                  setupSteps:
-                    - name: Setup
-                      run: echo 'setup'
-                      env:
-                        MY_ENV: 'my-value1'
-                        SECRET: ${{ secrets.SECRET }}
-                  buildStep:
-                    name: Build
-                    run: echo 'build'
-                    env:
-                      MY_ENV: 'my-value2'
-                      SECRET: ${{ secrets.SECRET }}
-                  cleanupSteps:
-                    - name: Cleanup
-                      run: echo 'cleanup'
-                      env:
-                        MY_ENV: 'my-value3'
-                        SECRET: ${{ secrets.SECRET }}
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
+                        - action: REPLACE
+                          stepId: step-id-to-replace
+                          content:
+                            name: New Step
+                            id: new-step
+                            run: echo 'new step'
+                            env:
+                              ENV_VARIABLE: 'value'
                 """);
-        final ProjectKeeperConfig config = readConfig();
-        final List<WorkflowStep> setupSteps = config.getCiBuildConfig().getSetupSteps();
-        final Optional<WorkflowStep> buildStep = config.getCiBuildConfig().getBuildStep();
-        final List<WorkflowStep> cleanupSteps = config.getCiBuildConfig().getCleanupSteps();
-        assertAll(() -> assertThat("setupSteps", setupSteps, hasSize(1)),
-                () -> assertThat("setupSteps", setupSteps.get(0),
-                        equalTo(WorkflowStep.createStep(Map.of("name", "Setup", "run", "echo 'setup'", "env",
-                                Map.of("MY_ENV", "my-value1", "SECRET", "${{ secrets.SECRET }}"))))),
-                //
-                () -> assertThat("buildStep", buildStep.isPresent(), is(true)),
-                () -> assertThat("buildStep", buildStep.get(),
-                        equalTo(WorkflowStep.createStep(Map.of("name", "Build", "run", "echo 'build'", "env",
-                                Map.of("MY_ENV", "my-value2", "SECRET", "${{ secrets.SECRET }}"))))),
-                //
-                () -> assertThat("cleanupSteps", cleanupSteps, hasSize(1)),
-                () -> assertThat("cleanupSteps", cleanupSteps.get(0),
-                        equalTo(WorkflowStep.createStep(Map.of("name", "Cleanup", "run", "echo 'cleanup'", "env",
-                                Map.of("MY_ENV", "my-value3", "SECRET", "${{ secrets.SECRET }}"))))) //
-        );
+        assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(WorkflowOptions.builder() //
+                .workflowName("ci-build.yml") //
+                .addCustomization(StepCustomization.builder() //
+                        .type(StepCustomization.Type.REPLACE) //
+                        .stepId("step-id-to-replace") //
+                        .step(WorkflowStep.createStep(Map.of("name", "New Step", "id", "new-step", "run",
+                                "echo 'new step'", "env", Map.of("ENV_VARIABLE", "value")))) //
+                        .build()) //
+                .build()));
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "REPLACE, REPLACE", "INSERT_AFTER, INSERT_AFTER" })
+    void readWorkflowStepAction(final String action, final StepCustomization.Type expected) throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
+                        - action: ${action}
+                          stepId: step-id-to-replace
+                          content:
+                            id: new-step
+                """.replace("${action}", action));
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations().get(0).getType(),
+                equalTo(expected));
+    }
+
+    @Test
+    void readWorkflowMissingWorkflowName() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - stepCustomizations:
+                """);
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-199: Missing workflow name in '.project-keeper.yml'. Add a workflow name to the workflow configuration."));
+    }
+
+    @Test
+    void readWorkflowMissingCustomizations() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations(), empty());
+    }
+
+    @Test
+    void readWorkflowEmptyCustomizations() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations(), empty());
+    }
+
+    @Test
+    void readWorkflowMissingAction() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
+                        - stepId: step-id-to-replace
+                          content:
+                            id: new-step
+                """);
+        final NullPointerException exception = assertThrows(NullPointerException.class, this::readConfig);
+        assertThat(exception.getMessage(), equalTo("type"));
+    }
+
+    @Test
+    void readWorkflowMissingStepId() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
+                        - action: REPLACE
+                          content:
+                            id: new-step
+                """);
+        final NullPointerException exception = assertThrows(NullPointerException.class, this::readConfig);
+        assertThat(exception.getMessage(), equalTo("stepId"));
+    }
+
+    @Test
+    void readWorkflowMissingContent() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
+                        - action: REPLACE
+                          stepId: step-id-to-replace
+                """);
+        final NullPointerException exception = assertThrows(NullPointerException.class, this::readConfig);
+        assertThat(exception.getMessage(), equalTo("rawStep"));
     }
 
     @Test
