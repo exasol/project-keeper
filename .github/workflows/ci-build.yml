@@ -76,7 +76,7 @@ jobs:
       - name: Run tests and build with Maven
         id: maven-build
         run: |
-          mvn -T 1C --batch-mode clean verify \
+          mvn -T 1C --batch-mode clean install verify \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
         env: {
@@ -94,10 +94,6 @@ jobs:
           GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
           SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
         }
-      - {
-        name: Install project-keeper for self-verification,
-        run: mvn -T 1C --batch-mode install -DskipTests
-      }
       - {
         name: Run project-keeper itself,
         id: build-pk-verify,
