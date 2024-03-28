@@ -99,7 +99,10 @@ build:
   buildStep:
     name: Run tests and build with Maven
     id: maven-build
-    run: mvn -T 1C --batch-mode clean verify
+    run: |
+      mvn --batch-mode clean verify \
+          -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+          -DtrimStackTrace=false
     env:
       GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
   cleanupSteps:
