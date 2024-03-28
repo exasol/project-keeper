@@ -46,7 +46,7 @@ jobs:
       - name: Build and install
         run: mvn --batch-mode -T 1C -DtrimStackTrace=false clean install
       - name: Run project-keeper itself
-        id: pk-verify
+        id: build-pk-verify
         run: mvn --batch-mode -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
 
       - name: Verify Release Artifacts
@@ -80,4 +80,4 @@ jobs:
               exit 1
           fi
         env:
-          ARTIFACTS: ${{ steps.pk-verify.outputs.release-artifacts }}
+          ARTIFACTS: ${{ steps.build-pk-verify.outputs.release-artifacts }}

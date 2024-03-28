@@ -80,7 +80,7 @@ class FileTemplatesFactory {
                 .anyMatch(ProjectKeeperModule.MAVEN_CENTRAL::equals);
     }
 
-    private FileTemplateFromResource getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
+    private FileTemplate getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
         if (modules.contains(NATIVE_IMAGE)) {
             return new FileTemplateFromResource("templates/.github/workflows/ci-build-native-build.yml",
                     ".github/workflows/ci-build.yml", REQUIRE_EXACT);
