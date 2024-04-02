@@ -120,7 +120,7 @@ class GitHubWorkflowStepCustomizerTest {
                         id: wrong-id
                 """, customization));
         assertThat(exception.getMessage(),
-                equalTo("No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
+                equalTo("E-PK-CORE-205: No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
     }
 
     @Test
@@ -137,7 +137,7 @@ class GitHubWorkflowStepCustomizerTest {
                         id: wrong-id
                 """, customization));
         assertThat(exception.getMessage(),
-                equalTo("No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
+                equalTo("E-PK-CORE-205: No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
     }
 
     // [utest->dsn~customize-build-process.insert-step-after~0]
