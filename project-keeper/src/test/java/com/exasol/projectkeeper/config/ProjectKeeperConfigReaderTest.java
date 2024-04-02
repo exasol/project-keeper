@@ -13,14 +13,15 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
+import java.util.stream.Stream;
 
+import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.workflow.*;
@@ -115,41 +116,12 @@ class ProjectKeeperConfigReaderTest {
         );
     }
 
-    @Test
-    void invalidSubprojectPath() throws IOException {
-        writeProjectKeeperConfig("""
-                sources:
-                  - type: maven
-                    path: unknown-project/pom.xml
-                    modules:
-                      - maven_central
-                linkReplacements:
-                  - "http://wrong-url.com|my-dependency.de"
-                """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
-        assertThat(exception.getMessage(),
-                startsWith("E-PK-CORE-83: Invalid .project-keeper.yml. The specified path "));
-    }
-
     @ParameterizedTest
     @ValueSource(strings = { "excludes:\n - 1: 3", "excludes:\n - 2", "excludes:\n - regex: 2" })
     void testInvalidExcludes(final String invalidExcludes) throws IOException {
         writeProjectKeeperConfig(invalidExcludes);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(), startsWith("E-PK-CORE-87: Invalid .project-keeper.yml. Invalid value "));
-    }
-
-    @Test
-    void incompleteConfig() throws IOException {
-        writeProjectKeeperConfig("""
-                    sources:
-                      - type: maven
-                    linkReplacements:
-                      - "http://wrong-url.com|my-dependency.de"
-                """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
-        assertThat(exception.getMessage(),
-                equalTo("E-PK-CORE-86: Invalid .project-keeper.yml. Missing required property 'sources/path'."));
     }
 
     @Test
@@ -203,16 +175,45 @@ class ProjectKeeperConfigReaderTest {
         assertThat(readConfig().getCiBuildConfig().getWorkflows(), empty());
     }
 
-    @Test
-    void readUnsupportedWorkflowNameFails() throws IOException {
-        writeProjectKeeperConfig("""
-                build:
-                  workflows:
-                    - name: unsupported.yml
-                """);
+    static Stream<Arguments> invalidConfig() {
+        return Stream.of(Arguments.of("missing config file", null, equalTo(
+                "E-PK-CORE-89: Could not find '.project-keeper.yml'. Please create this configuration according to the user-guide https://github.com/exasol/project-keeper-maven-plugin.")),
+                Arguments.of("unsupported workflow name", """
+                        build:
+                          workflows:
+                            - name: unsupported.yml
+                        """, equalTo(
+                        "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in '.project-keeper.yml'. Use one of the supported workflow ['ci-build.yml']")),
+                Arguments.of("missing source path", """
+                            sources:
+                              - type: maven
+                            linkReplacements:
+                              - "http://wrong-url.com|my-dependency.de"
+                        """, equalTo(
+                        "E-PK-CORE-86: Invalid .project-keeper.yml. Missing required property 'sources/path'.")),
+                Arguments.of("missing workflow name", """
+                        build:
+                          workflows:
+                            - stepCustomizations:
+                        """, equalTo(
+                        "E-PK-CORE-199: Missing workflow name in '.project-keeper.yml'. Add a workflow name to the workflow configuration.")),
+                Arguments.of("invalid yaml syntax", "{ -", startsWith("E-PK-CORE-85: Invalid .project-keeper.yml.")),
+                Arguments.of("invalid source path", """
+                        sources:
+                          - type: maven
+                            path: unknown-project/pom.xml
+                        """, startsWith("E-PK-CORE-83: Invalid .project-keeper.yml. The specified path ")));
+    }
+
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("invalidConfig")
+    void testReadingFails(final String testName, final String content, final Matcher<String> expectedErrorMessage)
+            throws IOException {
+        if (content != null) {
+            writeProjectKeeperConfig(content);
+        }
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in '.project-keeper.yml'. Use one of the supported workflow ['ci-build.yml']"));
+        assertThat(testName, exception.getMessage(), expectedErrorMessage);
     }
 
     @Test
@@ -257,18 +258,6 @@ class ProjectKeeperConfigReaderTest {
                 """.replace("${action}", action));
         assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations().get(0).getType(),
                 equalTo(expected));
-    }
-
-    @Test
-    void readWorkflowMissingWorkflowName() throws IOException {
-        writeProjectKeeperConfig("""
-                build:
-                  workflows:
-                    - stepCustomizations:
-                """);
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-199: Missing workflow name in '.project-keeper.yml'. Add a workflow name to the workflow configuration."));
     }
 
     @Test
@@ -334,22 +323,6 @@ class ProjectKeeperConfigReaderTest {
                 """);
         final NullPointerException exception = assertThrows(NullPointerException.class, this::readConfig);
         assertThat(exception.getMessage(), equalTo("rawStep"));
-    }
-
-    @Test
-    void configFileMissing() {
-        final ProjectKeeperConfigReader reader = new ProjectKeeperConfigReader();
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
-                () -> reader.readConfig(this.tempDir));
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-89: Could not find '.project-keeper.yml'. Please create this configuration according to the user-guide https://github.com/exasol/project-keeper-maven-plugin."));
-    }
-
-    @Test
-    void invalidYamlSyntax() throws IOException {
-        writeProjectKeeperConfig("{ -");
-        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
-        assertThat(exception.getMessage(), startsWith("E-PK-CORE-85: Invalid .project-keeper.yml."));
     }
 
     @Test
