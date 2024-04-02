@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.config;
 
+import static java.util.Arrays.asList;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -7,13 +9,17 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.error.YAMLException;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.config.ProjectKeeperRawConfig.Build;
+import com.exasol.projectkeeper.config.ProjectKeeperRawConfig.*;
 import com.exasol.projectkeeper.shared.config.*;
+import com.exasol.projectkeeper.shared.config.ParentPomRef;
+import com.exasol.projectkeeper.shared.config.Source;
+import com.exasol.projectkeeper.shared.config.workflow.*;
 
 /**
  * This class reads {@link ProjectKeeperConfig} from file.
@@ -117,6 +123,68 @@ public class ProjectKeeperConfigReader {
                 .runnerOs(build.getRunnerOs()) //
                 .freeDiskSpace(build.shouldFreeDiskSpace()) //
                 .exasolDbVersions(build.getExasolDbVersions()) //
+                .workflows(convertWorkflows(build.workflows)) //
+                .build();
+    }
+
+    private List<WorkflowOptions> convertWorkflows(final List<Workflow> workflows) {
+        return Optional.ofNullable(workflows).map(List::stream) //
+                .orElseGet(Stream::empty) //
+                .map(this::convertWorkflow) //
+                .toList();
+    }
+
+    private WorkflowOptions convertWorkflow(final Workflow workflow) {
+        final List<String> supportedWorkflowNames = List.of("ci-build.yml");
+        if (workflow.name == null) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-199")
+                    .message("Missing workflow name in {{config file name}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add a workflow name to the workflow configuration.").toString());
+        }
+        if (!supportedWorkflowNames.contains(workflow.name)) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-198")
+                    .message("Unsupported workflow name {{workflow name}} found in {{config file name}}.",
+                            workflow.name, CONFIG_FILE_NAME, supportedWorkflowNames)
+                    .mitigation("Use one of the supported workflow {{supported workflow names}}",
+                            supportedWorkflowNames)
+                    .toString());
+        }
+        return WorkflowOptions.builder() //
+                .workflowName(workflow.name) //
+                .customizations(convertSteps(workflow.stepCustomizations)) //
+                .build();
+    }
+
+    private List<StepCustomization> convertSteps(final List<RawStepCustomization> stepCustomizations) {
+        return Optional.ofNullable(stepCustomizations) //
+                .map(List::stream) //
+                .orElseGet(Stream::empty) //
+                .map(this::convertStep) //
+                .toList();
+    }
+
+    private StepCustomization convertStep(final RawStepCustomization step) {
+        if (step.action == null) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-200")
+                    .message("Missing action in step customization of {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add action with one of values {{available actions}}.",
+                            asList(StepCustomization.Type.values()))
+                    .toString());
+        }
+        if (step.stepId == null || step.stepId.isBlank()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-201")
+                    .message("Missing stepId in step customization of {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add stepId to the step customization.").toString());
+        }
+        if (step.content == null || step.content.isEmpty()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-202")
+                    .message("Missing content in step customization of {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add content to the step customization.").toString());
+        }
+        return StepCustomization.builder() //
+                .type(step.action) //
+                .stepId(step.stepId) //
+                .step(WorkflowStep.createStep(step.content)) //
                 .build();
     }
 
