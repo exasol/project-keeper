@@ -2,6 +2,9 @@ package com.exasol.projectkeeper.validators.files;
 
 import java.nio.file.Path;
 
+/**
+ * This {@link FileTemplate} allows to customize the content of a file template.
+ */
 class ContentCustomizingTemplate implements FileTemplate {
 
     private final FileTemplate delegate;
@@ -27,6 +30,9 @@ class ContentCustomizingTemplate implements FileTemplate {
         return delegate.getValidation();
     }
 
+    /**
+     * This interface allows to customize the content of a file template.
+     */
     interface ContentCustomizer {
         String customizeContent(String content);
     }

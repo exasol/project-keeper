@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.validators.files;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 
@@ -259,6 +261,65 @@ class GitHubWorkflowTest {
         final Step step = workflow.getJob("build").getStep("step1");
         assertThat(step.getWith(),
                 equalTo(Map.of("go-version", "1.22", "cache-dependency-path", ".project-keeper.yml")));
+    }
+
+    @Test
+    void replaceStep() {
+        final Job job = read("""
+                jobs:
+                  build:
+                    steps:
+                      - id: step-to-replace
+                        name: Old Step
+                """).getJob("build");
+        job.replaceStep("step-to-replace", WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step")));
+        assertAll(() -> assertThat(job.getSteps(), hasSize(1)),
+                () -> assertThat(job.getStep("new-step").getName(), equalTo("New Step")));
+    }
+
+    @Test
+    void replaceStepMissing() {
+        final Job job = read("""
+                jobs:
+                  build:
+                    steps:
+                      - id: step-to-replace
+                        name: Old Step
+                """).getJob("build");
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> job.replaceStep("missing", null));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-205: No step found for id 'missing' in {steps=[{id=step-to-replace, name=Old Step}]}"));
+    }
+
+    @Test
+    void insertStep() {
+        final Job job = read("""
+                jobs:
+                  build:
+                    steps:
+                      - id: step0
+                        name: Step 0
+                """).getJob("build");
+        job.insertStepAfter("step0", WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step")));
+        assertAll(() -> assertThat(job.getSteps(), hasSize(2)),
+                () -> assertThat(job.getStep("step0").getName(), equalTo("Step 0")),
+                () -> assertThat(job.getStep("new-step").getName(), equalTo("New Step")));
+    }
+
+    @Test
+    void insertStepMissing() {
+        final Job job = read("""
+                jobs:
+                  build:
+                    steps:
+                      - id: step-to-replace
+                        name: Old Step
+                """).getJob("build");
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> job.insertStepAfter("missing", null));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-205: No step found for id 'missing' in {steps=[{id=step-to-replace, name=Old Step}]}"));
     }
 
     private GitHubWorkflow read(final String yaml) {

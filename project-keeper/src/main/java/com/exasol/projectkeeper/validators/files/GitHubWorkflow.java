@@ -124,7 +124,8 @@ class GitHubWorkflow {
             return IntStream.range(0, steps.size()) //
                     .filter(index -> steps.get(index).getId().equals(stepId)) //
                     .findFirst() //
-                    .orElseThrow(() -> new IllegalStateException("No step found for id '" + stepId + "' in " + rawJob));
+                    .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-205")
+                            .message("No step found for id {{step id}} in {{raw job}}", stepId, rawJob).toString()));
         }
     }
 
