@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.shared.config.workflow;
 
+import static java.util.Collections.emptyList;
+
 import java.util.*;
 
 /**
@@ -12,7 +14,7 @@ public final class WorkflowOptions {
 
     private WorkflowOptions(final Builder builder) {
         this.workflowName = Objects.requireNonNull(builder.workflowName, "workflowName");
-        this.customizations = Objects.requireNonNull(builder.customizations, "customizations");
+        this.customizations = builder.customizations == null ? emptyList() : builder.customizations;
     }
 
     /**
