@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.config;
 
+import static java.util.Arrays.asList;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -162,6 +164,23 @@ public class ProjectKeeperConfigReader {
     }
 
     private StepCustomization convertStep(final RawStepCustomization step) {
+        if (step.action == null) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-200")
+                    .message("Missing action in step customization of {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add action with one of values {{available actions}}.",
+                            asList(StepCustomization.Type.values()))
+                    .toString());
+        }
+        if (step.stepId == null || step.stepId.isBlank()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-201")
+                    .message("Missing stepId in step customization of {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add stepId to the step customization.").toString());
+        }
+        if (step.content == null || step.content.isEmpty()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-202")
+                    .message("Missing content in step customization of {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add content to the step customization.").toString());
+        }
         return StepCustomization.builder() //
                 .type(step.action) //
                 .stepId(step.stepId) //
