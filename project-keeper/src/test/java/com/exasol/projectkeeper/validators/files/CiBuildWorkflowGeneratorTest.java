@@ -15,8 +15,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.yaml.snakeyaml.Yaml;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
+import com.exasol.projectkeeper.shared.config.workflow.*;
+import com.exasol.projectkeeper.shared.config.workflow.StepCustomization.Type;
 import com.exasol.projectkeeper.validators.files.FileTemplate.Validation;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
+import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 
 class CiBuildWorkflowGeneratorTest {
 
@@ -44,6 +47,23 @@ class CiBuildWorkflowGeneratorTest {
         final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder().freeDiskSpace(freeDiskSpace));
         assertThat(workflow.getJob("build").getStep("free-disk-space").getString("if"),
                 equalTo("${{ " + freeDiskSpace + " }}"));
+    }
+
+    @Test
+    void customizeBuildSteps() {
+        final Job job = ciBuildContent(BuildOptions.builder().workflows(List.of(WorkflowOptions.builder()
+                .workflowName("ci-build.yml")
+                .addCustomization(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
+                        .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step"))).build())
+                .build()))).getJob("build");
+        final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
+        System.out.println(stepIds);
+        assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
+                () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
+                () -> assertThat(stepIds,
+                        contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
+                                "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
+                                "verify-release-artifacts", "upload-artifacts", "check-release")));
     }
 
     @Test
@@ -92,6 +112,20 @@ class CiBuildWorkflowGeneratorTest {
                         "${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}")));
     }
 
+    @Test
+    void ciBuildMatrixBuildAllStepsHaveId() {
+        final Job job = ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1"))).getJob("matrix-build");
+        assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(9)));
+        job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
+    }
+
+    @Test
+    void ciBuildBuildAllStepsHaveId() {
+        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
+        assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10)));
+        job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
+    }
+
     private GitHubWorkflow ciBuildContent(final BuildOptions.Builder optionsBuilder) {
         return ciBuildContent(optionsBuilder.build());
     }
@@ -102,7 +136,6 @@ class CiBuildWorkflowGeneratorTest {
         assertAll(() -> assertThat(template.getPathInProject(), equalTo(Path.of(".github/workflows/ci-build.yml"))),
                 () -> assertThat(template.getValidation(), equalTo(Validation.REQUIRE_EXACT)),
                 () -> validateYamlSyntax(content));
-        System.out.println(content);
         return parse(content);
     }
 

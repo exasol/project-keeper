@@ -11,9 +11,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.shared.config.BuildOptions;
-import com.exasol.projectkeeper.shared.config.BuildOptions.Builder;
 import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
+import com.exasol.projectkeeper.shared.config.workflow.StepCustomization.Type;
 import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
@@ -43,6 +42,20 @@ class GitHubWorkflowStepCustomizerTest {
     }
 
     @Test
+    void missingStepId() {
+        final GitHubWorkflow workflow = validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: step1
+                        run: echo step1
+                """);
+        final Job job = workflow.getJob("build");
+        assertAll(() -> assertThat(job.getSteps(), hasSize(1)),
+                () -> assertThat(job.getSteps().get(0).getName(), equalTo("step1")));
+    }
+
+    @Test
     void noChangesWithBuild() {
         final GitHubWorkflow workflow = validate("""
                 jobs:
@@ -58,122 +71,129 @@ class GitHubWorkflowStepCustomizerTest {
     }
 
     @Test
-    void replacesBuildStep() {
+    void replaceStep() {
+        final WorkflowStep newStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final GitHubWorkflow workflow = validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: step0
+                        id: step0
+                      - name: step1
+                        id: replaced-step
+                      - name: step2
+                        id: step2
+                """, StepCustomization.builder().type(Type.REPLACE).stepId("replaced-step").step(newStep).build());
+        assertThat(getStepIds(workflow.getJob("build")), contains("step0", "custom-step", "step2"));
+    }
+
+    @Test
+    void replaceStepOtherStepHasMissingId() {
+        final WorkflowStep newStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final GitHubWorkflow workflow = validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: step0
+                        id: step0
+                      - name: step1
+                        id: replaced-step
+                      - name: step2
+                """, StepCustomization.builder().type(Type.REPLACE).stepId("replaced-step").step(newStep).build());
+        assertThat(getStepNames(workflow.getJob("build")), contains("step0", "Custom Step", "step2"));
+    }
+
+    @Test
+    void replaceStepWrongBuildStepId() {
         final WorkflowStep customBuildStep = WorkflowStep
                 .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
-        final GitHubWorkflow workflow = validate(BuildOptions.builder().buildStep(customBuildStep), """
+        final StepCustomization customization = StepCustomization.builder().type(Type.REPLACE).stepId("missing-step")
+                .step(customBuildStep).build();
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
                 jobs:
                   build:
                     steps:
                       - name: step1
-                        id: build-pk-verify
-                        run: echo step1
-                """);
-        final Job job = workflow.getJob("build");
-        assertAll(() -> assertThat(job.getSteps(), hasSize(1)),
-                () -> assertThat(job.getStep("custom-step").getName(), equalTo("Custom Step")));
+                        id: wrong-id
+                """, customization));
+        assertThat(exception.getMessage(),
+                equalTo("No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
     }
 
     @Test
-    void wrongBuildStepId() {
+    void insertStepWrongBuildStepId() {
         final WorkflowStep customBuildStep = WorkflowStep
                 .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
-        final Builder optionsBuilder = BuildOptions.builder().buildStep(customBuildStep);
-        final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> validate(optionsBuilder, """
-                        jobs:
-                          build:
-                            steps:
-                              - name: step1
-                                id: wrong-id
-                                run: echo step1
-                        """));
-        assertThat(exception.getMessage(), equalTo(
-                "No step found for id 'build-pk-verify' in {steps=[{name=step1, id=wrong-id, run=echo step1}]}"));
-    }
-
-    @Test
-    void insertSetupStep() {
-        final WorkflowStep customBuildStep = WorkflowStep
-                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
-        final GitHubWorkflow workflow = validate(BuildOptions.builder().setupSteps(List.of(customBuildStep)), """
+        final StepCustomization customization = StepCustomization.builder().type(Type.INSERT_AFTER)
+                .stepId("missing-step").step(customBuildStep).build();
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
                 jobs:
                   build:
                     steps:
                       - name: step1
-                        id: build-pk-verify
-                        run: echo step1
-                      - name: Sonar
-                        id: sonar
-                        run: echo sonar
-                      - name: Some other cleanup step
-                        id: more-cleanup
-                        run: echo More cleanup
-                """);
-        final Job job = workflow.getJob("build");
-        final List<Step> steps = job.getSteps();
-        assertAll(() -> assertThat(steps, hasSize(4)),
-                () -> assertThat(job.getStep("custom-step").getName(), equalTo("Custom Step")),
-                () -> assertThat(getStepIds(job), contains("custom-step", "build-pk-verify", "sonar", "more-cleanup")));
+                        id: wrong-id
+                """, customization));
+        assertThat(exception.getMessage(),
+                equalTo("No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
     }
 
     @Test
-    void insertCleanupStep() {
+    void insertStepInTheMiddle() {
         final WorkflowStep customBuildStep = WorkflowStep
                 .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
-        final GitHubWorkflow workflow = validate(BuildOptions.builder().cleanupSteps(List.of(customBuildStep)), """
+        final GitHubWorkflow workflow = validate("""
                 jobs:
                   build:
                     steps:
-                      - name: step1
-                        id: build-pk-verify
-                        run: echo step1
-                      - name: Sonar
-                        id: sonar-analysis
-                        run: echo sonar
-                      - name: Some other cleanup step
-                        id: more-cleanup
-                        run: echo More cleanup
-                """);
-        final Job job = workflow.getJob("build");
-        final List<Step> steps = job.getSteps();
-        assertAll(() -> assertThat(steps, hasSize(4)),
-                () -> assertThat(job.getStep("custom-step").getName(), equalTo("Custom Step")),
-                () -> assertThat(getStepIds(job),
-                        contains("build-pk-verify", "sonar-analysis", "custom-step", "more-cleanup")));
+                      - name: Step 0
+                        id: step0
+                      - name: Step 1
+                        id: step1
+                """, StepCustomization.builder().type(Type.INSERT_AFTER).stepId("step0").step(customBuildStep).build());
+        assertThat(getStepIds(workflow.getJob("build")), contains("step0", "custom-step", "step1"));
     }
 
     @Test
-    void insertSetupBuildCleanupSteps() {
-        final WorkflowStep setupStep1 = WorkflowStep.createStep(Map.of("id", "custom-setup1"));
-        final WorkflowStep setupStep2 = WorkflowStep.createStep(Map.of("id", "custom-setup2"));
-        final WorkflowStep buildStep = WorkflowStep.createStep(Map.of("id", "custom-build"));
-        final WorkflowStep cleanupStep1 = WorkflowStep.createStep(Map.of("id", "custom-cleanup1"));
-        final WorkflowStep cleanupStep2 = WorkflowStep.createStep(Map.of("id", "custom-cleanup2"));
-        final GitHubWorkflow workflow = validate(BuildOptions.builder().setupSteps(List.of(setupStep1, setupStep2))
-                .buildStep(buildStep).cleanupSteps(List.of(cleanupStep1, cleanupStep2)), """
-                        jobs:
-                          build:
-                            steps:
-                              - name: step1
-                                id: build-pk-verify
-                                run: echo step1
-                              - name: Sonar
-                                id: sonar-analysis
-                                run: echo sonar
-                              - name: Some other cleanup step
-                                id: more-cleanup
-                                run: echo More cleanup
-                        """);
-        final Job job = workflow.getJob("build");
-        final List<Step> steps = job.getSteps();
-        assertAll(() -> assertThat(steps, hasSize(7)), //
-                () -> assertThat(getStepIds(job), contains("custom-setup1", "custom-setup2", "custom-build",
-                        "sonar-analysis", "custom-cleanup1", "custom-cleanup2", "more-cleanup")));
+    void insertStepAtTheEnd() {
+        final WorkflowStep customBuildStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final GitHubWorkflow workflow = validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: Step 0
+                        id: step0
+                      - name: Step 1
+                        id: step1
+                """, StepCustomization.builder().type(Type.INSERT_AFTER).stepId("step1").step(customBuildStep).build());
+        assertThat(getStepIds(workflow.getJob("build")), contains("step0", "step1", "custom-step"));
+    }
+
+    @Test
+    void insertStepAfterReplacedStep() {
+        final WorkflowStep replacedStep = WorkflowStep.createStep(Map.of("id", "replaced-step"));
+        final WorkflowStep insertedStep = WorkflowStep.createStep(Map.of("id", "inserted-step"));
+        final GitHubWorkflow workflow = validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: Step 0
+                        id: step0
+                      - name: Step 1
+                        id: step1
+                """, StepCustomization.builder().type(Type.REPLACE).stepId("step0").step(replacedStep).build(),
+                StepCustomization.builder().type(Type.INSERT_AFTER).stepId("replaced-step").step(insertedStep).build());
+        assertThat(getStepIds(workflow.getJob("build")), contains("replaced-step", "inserted-step", "step1"));
     }
 
     private List<String> getStepIds(final Job job) {
         return job.getSteps().stream().map(Step::getId).toList();
+    }
+
+    private List<String> getStepNames(final Job job) {
+        return job.getSteps().stream().map(Step::getName).toList();
     }
 
     private GitHubWorkflow validate(final String workflowTemplate, final StepCustomization... customizations) {

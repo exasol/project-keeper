@@ -151,7 +151,7 @@ public final class BuildOptions {
     @Override
     public String toString() {
         return "BuildOptions [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + ", exasolDbVersions="
-                + exasolDbVersions + ", buildWorkflow=" + workflows + "]";
+                + exasolDbVersions + ", workflows=" + workflows + "]";
     }
 
     @Override
