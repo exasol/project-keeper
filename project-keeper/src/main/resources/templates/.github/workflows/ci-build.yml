@@ -115,6 +115,7 @@ jobs:
 
       - name: Check if release is needed
         id: check-release
+        if: ${{ github.ref == 'refs/heads/main' }}
         run: |
           if mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .; then
               echo "### ✅ Release preconditions met, start release" >> "$GITHUB_STEP_SUMMARY"
