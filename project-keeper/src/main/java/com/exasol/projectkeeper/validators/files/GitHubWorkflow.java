@@ -7,13 +7,17 @@ import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 
+/**
+ * This class represents a GitHub workflow and provides methods to access its content via getter methods.
+ */
 class GitHubWorkflow {
     private static final Logger LOG = Logger.getLogger(GitHubWorkflow.class.getName());
     private final Map<String, Object> rawWorkflow;
 
-    GitHubWorkflow(final Map<String, Object> rawWorkflow) {
+    private GitHubWorkflow(final Map<String, Object> rawWorkflow) {
         this.rawWorkflow = rawWorkflow;
     }
 
@@ -21,9 +25,21 @@ class GitHubWorkflow {
         return new GitHubWorkflow(asMap(rawWorkflow));
     }
 
+    @SuppressWarnings("unchecked")
+    private static Map<String, Object> asMap(final Object rawYaml) {
+        return (Map<String, Object>) rawYaml;
+    }
+
     Job getJob(final String jobId) {
-        final Map<String, Object> jobs = asMap(rawWorkflow.get("jobs"));
-        return new Job(asMap(jobs.get(jobId)));
+        final Object rawJob = getJobs().get(jobId);
+        if (rawJob == null) {
+            return null;
+        }
+        return new Job(asMap(rawJob));
+    }
+
+    private Map<String, Object> getJobs() {
+        return asMap(rawWorkflow.get("jobs"));
     }
 
     Map<String, Object> getOnTrigger() {
@@ -34,15 +50,14 @@ class GitHubWorkflow {
         return this.rawWorkflow;
     }
 
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> asMap(final Object rawYaml) {
-        return (Map<String, Object>) rawYaml;
-    }
-
+    /**
+     * This class represents a job in a GitHub workflow and provides methods to access its content via getter methods as
+     * well as insert and replace steps.
+     */
     static class Job {
         private final Map<String, Object> rawJob;
 
-        Job(final Map<String, Object> rawJob) {
+        private Job(final Map<String, Object> rawJob) {
             this.rawJob = rawJob;
         }
 
@@ -50,8 +65,8 @@ class GitHubWorkflow {
             return getSteps().stream() //
                     .filter(hasId(id)) //
                     .findFirst() //
-                    .orElseThrow(
-                            () -> new IllegalStateException("Job has no step with ID '" + id + "': " + getRawSteps()));
+                    .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-203")
+                            .message("Job has no step with ID {{step id}}: {{raw job}}", id, rawJob).toString()));
         }
 
         List<Step> getSteps() {
@@ -113,10 +128,13 @@ class GitHubWorkflow {
         }
     }
 
+    /**
+     * This class represents a step in a GitHub workflow and provides methods to access its content via getter methods.
+     */
     static class Step {
         private final Map<String, Object> rawStep;
 
-        Step(final Map<String, Object> rawStep) {
+        private Step(final Map<String, Object> rawStep) {
             this.rawStep = rawStep;
         }
 
@@ -144,12 +162,13 @@ class GitHubWorkflow {
             return asMap(rawStep.get("with"));
         }
 
-        String getString(final String key) {
+        private String getString(final String key) {
             return getOptionalString(key)
-                    .orElseThrow(() -> new IllegalStateException("Step has no field '" + key + "': " + rawStep));
+                    .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-204")
+                            .message("Step has no field {{field name}}: {{raw step}}", key, rawStep).toString()));
         }
 
-        Optional<String> getOptionalString(final String key) {
+        private Optional<String> getOptionalString(final String key) {
             return Optional.ofNullable((String) rawStep.get(key));
         }
     }

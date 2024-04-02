@@ -45,7 +45,7 @@ class CiBuildWorkflowGeneratorTest {
     @ValueSource(booleans = { true, false })
     void ciBuildFreeDiskSpace(final boolean freeDiskSpace) {
         final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder().freeDiskSpace(freeDiskSpace));
-        assertThat(workflow.getJob("build").getStep("free-disk-space").getString("if"),
+        assertThat(workflow.getJob("build").getStep("free-disk-space").getIfCondition(),
                 equalTo("${{ " + freeDiskSpace + " }}"));
     }
 
