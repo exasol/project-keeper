@@ -31,6 +31,7 @@ class CiBuildWorkflowGenerator {
                     buildOptions.getExasolDbVersions().stream().map(this::quote).collect(joining(", ")));
             template.replacing("defaultExasolDbVersion", quote(buildOptions.getExasolDbVersions().get(0)));
         }
+        // [impl->dsn~customize-build-process.ci-build~0]
         return new ContentCustomizingTemplate(template,
                 new GitHubWorkflowStepCustomizer(findCustomizations(), buildType.buildJobId));
     }

@@ -35,6 +35,8 @@ class GitHubWorkflowStepCustomizer implements ContentCustomizingTemplate.Content
         }
     }
 
+    // [impl->dsn~customize-build-process.insert-step-after~0]
+    // [impl->dsn~customize-build-process.replace-step~0]
     private void applyCustomization(final Job job, final StepCustomization customization) {
         switch (customization.getType()) {
         case REPLACE:

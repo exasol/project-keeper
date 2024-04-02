@@ -410,11 +410,47 @@ Covers:
 Needs: impl, utest, itest
 
 ### Customize Build Process
-`dsn~customize-build-process~0`
+
+#### Customize GitHub Workflow `ci-build.yml`
+`dsn~customize-build-process.ci-build~0`
+
+PK allows customizing workflow steps in GitHub workflow `ci-build.yml`.
+
+Rationale:
+* `ci-build.yml` is the main build workflow.
+* Other workflows (e.g. `release.yml`) will be supported later if required.
 
 Covers:
-
 * [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest, itest
+
+#### Insert Workflow Steps
+`dsn~customize-build-process.insert-step-after~0`
+
+PK allows inserting an additional workflow step after a specified step in a GitHub Workflow.
+
+Rationale:
+* This allows adding additional setup or cleanup steps.
+* Inserting a step is the most flexible solution as it allows inserting steps anywhere in the workflow.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest, itest
+
+#### Replace Workflow Steps
+`dsn~customize-build-process.replace-step~0`
+
+PK allows replacing an existing workflow step with a new step in a GitHub Workflow.
+
+Rationale:
+* This allows replacing existing steps that must be customized for the project, e.g. the main build step.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest, itest
 
 ## Golang Support
 
@@ -1080,3 +1116,13 @@ We decided to use `com.jcabi:jcabi-github` for the following reasons:
 * Supports pagination
 * Low implementation effort
 * No workarounds required to fix compiler warnings
+
+### YAML Library for Reading/Writing GitHub Workflows
+
+In order to implement [`req~customize-build-process~0`](system_requirements.md#customize-build-process) we need to read and write GitHub workflow YAML files. We currently use [`org.yaml:snakeyaml:2.x`](https://bitbucket.org/snakeyaml/snakeyaml/src/master/) for reading `.project-keeper.yml`.
+
+This library supports YAML 1.1. It returns generic Java types like `List`, `Map` and `String` reading generic YAML data. This works well but the library replaces the string `"on"` with the boolean value `true`. GitHub workflows use `on` for specifying triggers. We did not find a [configuration option](https://bitbucket.org/snakeyaml/snakeyaml/wiki/Documentation) that deactivates this behavior.
+
+That's why we added [`org.snakeyaml:snakeyaml-engine:2.x`](https://bitbucket.org/snakeyaml/snakeyaml-engine/src/master/) as an additional XAML library. This supports YAML 1.2 and does not replace `"on"` with `true`. However it does not support serializing/deserializing custom Java classes. This is required for reading `.project-keeper.yml`.
+
+For this reason we decided to include two different YAML libraries in PK.

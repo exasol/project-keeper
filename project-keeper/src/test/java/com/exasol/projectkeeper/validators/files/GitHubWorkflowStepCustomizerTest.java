@@ -70,6 +70,7 @@ class GitHubWorkflowStepCustomizerTest {
                 () -> assertThat(job.getStep("build-pk-verify").getName(), equalTo("step1")));
     }
 
+    // [utest->dsn~customize-build-process.replace-step~0]
     @Test
     void replaceStep() {
         final WorkflowStep newStep = WorkflowStep
@@ -139,6 +140,7 @@ class GitHubWorkflowStepCustomizerTest {
                 equalTo("No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
     }
 
+    // [utest->dsn~customize-build-process.insert-step-after~0]
     @Test
     void insertStepInTheMiddle() {
         final WorkflowStep customBuildStep = WorkflowStep

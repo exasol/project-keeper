@@ -87,6 +87,7 @@ class GitHubWorkflow {
             return step -> step.getId().equals(id);
         }
 
+        // [impl->dsn~customize-build-process.replace-step~0]
         public void replaceStep(final String stepId, final WorkflowStep step) {
             final List<Map<String, Object>> allSteps = getRawSteps();
             final int index = findStepIndex(stepId);
@@ -94,6 +95,7 @@ class GitHubWorkflow {
             allSteps.set(index, step.getRawStep());
         }
 
+        // [impl->dsn~customize-build-process.insert-step-after~0]
         public void insertStepAfter(final String stepId, final WorkflowStep step) {
             final List<Map<String, Object>> allSteps = getRawSteps();
             final int index = findStepIndex(stepId);

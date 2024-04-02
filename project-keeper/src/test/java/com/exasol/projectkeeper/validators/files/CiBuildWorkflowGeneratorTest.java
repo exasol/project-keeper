@@ -49,6 +49,7 @@ class CiBuildWorkflowGeneratorTest {
                 equalTo("${{ " + freeDiskSpace + " }}"));
     }
 
+    // [utest->dsn~customize-build-process.ci-build~0]
     @Test
     void customizeBuildSteps() {
         final Job job = ciBuildContent(BuildOptions.builder().workflows(List.of(WorkflowOptions.builder()
@@ -57,13 +58,31 @@ class CiBuildWorkflowGeneratorTest {
                         .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step"))).build())
                 .build()))).getJob("build");
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
-        System.out.println(stepIds);
         assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
                 () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
                 () -> assertThat(stepIds,
                         contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
                                 "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
                                 "verify-release-artifacts", "upload-artifacts", "check-release")));
+    }
+
+    // [utest->dsn~customize-build-process.ci-build~0]
+    @Test
+    void customizeBuildStepsMatrixBuild() {
+        final Job job = ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1", "v2"))
+                .workflows(List.of(WorkflowOptions.builder().workflowName("ci-build.yml")
+                        .addCustomization(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
+                                .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step")))
+                                .build())
+                        .build())))
+                .getJob("matrix-build");
+        final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
+        assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
+                () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
+                () -> assertThat(stepIds,
+                        contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
+                                "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
+                                "verify-release-artifacts", "upload-artifacts")));
     }
 
     @Test

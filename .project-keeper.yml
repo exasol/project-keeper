@@ -87,6 +87,9 @@ linkReplacements:
   - https://eclipse-ee4j.github.io/jsonb-api|https://projects.eclipse.org/projects/ee4j.jsonp
 build:
   workflows:
+    # [itest->dsn~customize-build-process.ci-build~0]
+    # [itest->dsn~customize-build-process.insert-step-after~0]
+    # [itest->dsn~customize-build-process.replace-step~0]
     - name: "ci-build.yml"
       stepCustomizations:
         - action: INSERT_AFTER
