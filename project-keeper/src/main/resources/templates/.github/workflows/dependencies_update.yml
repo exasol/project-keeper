@@ -20,6 +20,9 @@ jobs:
     permissions:
       contents: write # Required for creating new branch
       pull-requests: write # Required for creating new pull request
+    concurrency:
+      group: ${{ github.workflow }}
+      cancel-in-progress: false
 
     steps:
       - uses: actions/checkout@v4
