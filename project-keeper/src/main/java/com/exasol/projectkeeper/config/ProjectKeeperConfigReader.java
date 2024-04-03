@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.config;
 
+import static java.util.Arrays.asList;
+
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,8 +19,7 @@ import com.exasol.projectkeeper.config.ProjectKeeperRawConfig.*;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ParentPomRef;
 import com.exasol.projectkeeper.shared.config.Source;
-import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
-import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
+import com.exasol.projectkeeper.shared.config.workflow.*;
 
 /**
  * This class reads {@link ProjectKeeperConfig} from file.
@@ -165,24 +166,28 @@ public class ProjectKeeperConfigReader {
     }
 
     private StepCustomization convertStep(final RawStepCustomization step) {
+        if (step.action == null) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-200")
+                    .message("Missing action in step customization of file {{config file}}.", CONFIG_FILE_NAME)
                     .mitigation("Add action with one of values {{available actions}}.",
+                            asList(StepCustomization.Type.values()))
                     .toString());
-        }if(step.stepId==null||step.stepId.isBlank())
-
-    {
-        throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-201")
-                .message("Missing stepId in step customization of file {{config file}}.", CONFIG_FILE_NAME)
-                .mitigation("Add stepId to the step customization.").toString());
-    }if(step.content==null||step.content.isEmpty())
-    {
-        throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-202")
-                .message("Missing content in step customization of file {{config file}}.", CONFIG_FILE_NAME)
-                .mitigation("Add content to the step customization.").toString());
-    }return StepCustomization.builder() //
-    .type(step.action) //
-    .stepId(step.stepId) //
-    .step(WorkflowStep.createStep(step.content)) //
-    .build();
+        }
+        if (step.stepId == null || step.stepId.isBlank()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-201")
+                    .message("Missing stepId in step customization of file {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add stepId to the step customization.").toString());
+        }
+        if (step.content == null || step.content.isEmpty()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-202")
+                    .message("Missing content in step customization of file {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Add content to the step customization.").toString());
+        }
+        return StepCustomization.builder() //
+                .type(step.action) //
+                .stepId(step.stepId) //
+                .step(WorkflowStep.createStep(step.content)) //
+                .build();
     }
 
     private List<String> convertExcludes(final List<Object> rawExcludes) {

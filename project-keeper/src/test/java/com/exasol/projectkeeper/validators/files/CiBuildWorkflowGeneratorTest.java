@@ -52,9 +52,9 @@ class CiBuildWorkflowGeneratorTest {
     // [utest->dsn~customize-build-process.ci-build~0]
     @Test
     void customizeBuildSteps() {
-        final Job job = ciBuildContent(BuildOptions.builder().workflows(List.of(WorkflowOptions.builder()
+        final Job job = ciBuildContent(BuildOptions.builder().workflows(List.of(CustomWorkflow.builder()
                 .workflowName("ci-build.yml")
-                .addCustomization(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
+                .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
                         .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step"))).build())
                 .build()))).getJob("build");
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
@@ -70,8 +70,8 @@ class CiBuildWorkflowGeneratorTest {
     @Test
     void customizeBuildStepsMatrixBuild() {
         final Job job = ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1", "v2"))
-                .workflows(List.of(WorkflowOptions.builder().workflowName("ci-build.yml")
-                        .addCustomization(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
+                        .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
                                 .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step")))
                                 .build())
                         .build())))

@@ -7,8 +7,8 @@ import java.util.*;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
+import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
 import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
-import com.exasol.projectkeeper.shared.config.workflow.WorkflowOptions;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class CiBuildWorkflowGenerator {
@@ -39,7 +39,7 @@ class CiBuildWorkflowGenerator {
 
     private List<StepCustomization> findCustomizations() {
         return buildOptions.getWorkflow("ci-build.yml") //
-                .map(WorkflowOptions::getCustomizations) //
+                .map(CustomWorkflow::getSteps) //
                 .orElseGet(Collections::emptyList);
     }
 
