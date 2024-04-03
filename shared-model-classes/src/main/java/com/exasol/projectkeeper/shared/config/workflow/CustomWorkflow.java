@@ -46,7 +46,7 @@ public final class CustomWorkflow {
 
     @Override
     public String toString() {
-        return "WorkflowOptions [workflowName=" + workflowName + ", customizations=" + steps + "]";
+        return "WorkflowOptions [workflowName=" + workflowName + ", steps=" + steps + "]";
     }
 
     @Override
