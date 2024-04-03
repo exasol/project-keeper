@@ -258,7 +258,20 @@ class ProjectKeeperConfigReaderTest {
                                   stepId: step-id-to-replace
                                   content:
                         """, equalTo(
-                        "E-PK-CORE-202: Missing content in step customization of '.project-keeper.yml'. Add content to the step customization.")));
+                        "E-PK-CORE-202: Missing content in step customization of '.project-keeper.yml'. Add content to the step customization.")),
+                Arguments.of("workflow: missing step customization list", """
+                        build:
+                          workflows:
+                            - name: ci-build.yml
+                        """, equalTo(
+                        "E-PK-CORE-: Missing customized steps for workflow 'ci-build.yml' in '.project-keeper.yml'. Add at least one step or remove the workflow.")),
+                Arguments.of("workflow: empty step customization list", """
+                        build:
+                          workflows:
+                            - name: ci-build.yml
+                              stepCustomizations:
+                        """, equalTo(
+                        "E-PK-CORE-: Missing customized steps for workflow 'ci-build.yml' in '.project-keeper.yml'. Add at least one step or remove the workflow.")));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -314,27 +327,6 @@ class ProjectKeeperConfigReaderTest {
                 """.replace("${action}", action));
         assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps().get(0).getType(),
                 equalTo(expected));
-    }
-
-    @Test
-    void readWorkflowMissingCustomizations() throws IOException {
-        writeProjectKeeperConfig("""
-                build:
-                  workflows:
-                    - name: ci-build.yml
-                """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps(), empty());
-    }
-
-    @Test
-    void readWorkflowEmptyCustomizations() throws IOException {
-        writeProjectKeeperConfig("""
-                build:
-                  workflows:
-                    - name: ci-build.yml
-                      stepCustomizations:
-                """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps(), empty());
     }
 
     @Test
