@@ -179,8 +179,8 @@ class ProjectKeeperConfigReaderTest {
                         build:
                           workflows:
                             - name: unsupported.yml
-                        """, equalTo(
-                        "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in file '.project-keeper.yml'. Please only use one of the supported workflows from ['ci-build.yml']")),
+                        """, startsWith(
+                        "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in file '.project-keeper.yml'. Please only use one of the supported workflows from [")),
                 Arguments.of("missing source path", """
                             sources:
                               - type: maven

@@ -133,6 +133,7 @@ class CiBuildWorkflowGeneratorTest {
                         "${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}")));
     }
 
+    // [utest->dsn~release-workflow.deploy-maven-central~1]
     @Test
     void releaseBuildWithMavenRelease() {
         final Job job = releaseBuildContent(BuildOptions.builder().build(),
