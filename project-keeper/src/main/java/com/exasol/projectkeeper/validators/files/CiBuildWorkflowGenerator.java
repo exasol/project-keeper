@@ -4,6 +4,7 @@ import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.
 import static java.util.stream.Collectors.joining;
 
 import java.util.*;
+import java.util.function.Consumer;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
@@ -12,8 +13,9 @@ import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class CiBuildWorkflowGenerator {
+    private static final String WORKFLOW_PATH = ".github/workflows/";
     private static final String CI_BUILD_WORKFLOW_NAME = "ci-build.yml";
-    private static final String CI_BUILD_PATH_IN_PROJECT = ".github/workflows/" + CI_BUILD_WORKFLOW_NAME;
+    private static final String CI_BUILD_PATH_IN_PROJECT = WORKFLOW_PATH + CI_BUILD_WORKFLOW_NAME;
     private final BuildOptions buildOptions;
 
     CiBuildWorkflowGenerator(final BuildOptions buildOptions) {
@@ -22,7 +24,7 @@ class CiBuildWorkflowGenerator {
 
     FileTemplate createCiBuildWorkflow() {
         final CiTemplateType buildType = getCiBuildType();
-        final String templateResource = "templates/.github/workflows/" + buildType.templateName;
+        final String templateResource = "templates/" + WORKFLOW_PATH + buildType.templateName;
         final FileTemplateFromResource template = new FileTemplateFromResource(templateResource,
                 CI_BUILD_PATH_IN_PROJECT, REQUIRE_EXACT);
         template.replacing("ciBuildRunnerOS", buildOptions.getRunnerOs());
@@ -58,11 +60,9 @@ class CiBuildWorkflowGenerator {
     // [impl->dsn~release-workflow.deploy-maven-central~1]
     // [impl->dsn~customize-build-process.release~0]
     FileTemplate createReleaseWorkflow(final List<AnalyzedSource> sources) {
-        final String workflowName = "release.yml";
-        final FileTemplate template = new FileTemplateFromResource(".github/workflows/" + workflowName, REQUIRE_EXACT)
+        final Consumer<FileTemplateFromResource> templateCustomizer = template -> template
                 .replacing("mavenCentralDeployment", mavenCentralDeploymentRequired(sources) ? "true" : "false");
-        return new ContentCustomizingTemplate(template,
-                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), "release"));
+        return createCustomizedWorkflow("release.yml", "release", templateCustomizer);
     }
 
     private boolean mavenCentralDeploymentRequired(final List<AnalyzedSource> sources) {
@@ -75,19 +75,27 @@ class CiBuildWorkflowGenerator {
 
     // [impl->dsn~customize-build-process.dependency-check~0]
     FileTemplate createDependenciesCheckWorkflow() {
-        final String workflowName = "dependencies_check.yml";
-        return new ContentCustomizingTemplate(
-                new FileTemplateFromResource(".github/workflows/" + workflowName, REQUIRE_EXACT),
-                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), "report_security_issues"));
+        return createCustomizedWorkflow("dependencies_check.yml", "report_security_issues");
     }
 
     // [impl->dsn~dependency-updater.workflow.generate~1]
     // [impl->dsn~customize-build-process.dependency-update~0]
     FileTemplate createDependenciesUpdateWorkflow() {
-        final String workflowName = "dependencies_update.yml";
-        return new ContentCustomizingTemplate(
-                new FileTemplateFromResource(".github/workflows/" + workflowName, REQUIRE_EXACT),
-                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), "update_dependencies"));
+        return createCustomizedWorkflow("dependencies_update.yml", "update_dependencies");
+    }
+
+    private FileTemplate createCustomizedWorkflow(final String workflowName, final String jobName) {
+        return createCustomizedWorkflow(workflowName, jobName, template -> {
+        });
+    }
+
+    private FileTemplate createCustomizedWorkflow(final String workflowName, final String jobName,
+            final Consumer<FileTemplateFromResource> templateCustomizer) {
+        final FileTemplateFromResource template = new FileTemplateFromResource(WORKFLOW_PATH + workflowName,
+                REQUIRE_EXACT);
+        templateCustomizer.accept(template);
+        return new ContentCustomizingTemplate(template,
+                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), jobName));
     }
 
     enum CiTemplateType {
