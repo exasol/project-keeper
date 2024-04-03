@@ -273,7 +273,11 @@ build:
               ...
 ```
 
-* `name`: Name of the GitHub workflow to customize. PK currently only supports `ci-build.yml` and `release.yml`.
+* `name`: Name of the GitHub workflow to customize. PK supports the following workflows:
+  * `ci-build.yml`
+  * `release.yml`
+  * `dependencies_check.yml`
+  * `dependencies_update.yml`
 * `stepCustomizations`: List of customizations:
   * `action`: Type of customization
     * `REPLACE`: Replace an existing step with the new content

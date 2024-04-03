@@ -135,7 +135,8 @@ public class ProjectKeeperConfigReader {
     }
 
     private CustomWorkflow convertWorkflow(final Workflow workflow) {
-        final List<String> supportedWorkflowNames = List.of("ci-build.yml");
+        final List<String> supportedWorkflowNames = List.of("ci-build.yml", "release.yml", "dependencies_check.yml",
+                "dependencies_update.yml");
         if (workflow.name == null) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-199")
                     .message("Missing workflow name in file {{config file name}}.", CONFIG_FILE_NAME)

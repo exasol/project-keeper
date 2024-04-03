@@ -60,9 +60,8 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT) //
                 .replacing("skipNativeImage", //
                         modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : ""));
-        templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
-        // [impl->dsn~dependency-updater.workflow.generate~1]
-        templates.add(new FileTemplateFromResource(".github/workflows/dependencies_update.yml", REQUIRE_EXACT));
+        templates.add(this.workflowGenerator.createDependenciesCheckWorkflow());
+        templates.add(this.workflowGenerator.createDependenciesUpdateWorkflow());
         templates.add(this.workflowGenerator.createReleaseWorkflow(sources));
         return templates;
     }

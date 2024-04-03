@@ -56,6 +56,7 @@ class CiBuildWorkflowGenerator {
     }
 
     // [impl->dsn~release-workflow.deploy-maven-central~1]
+    // [impl->dsn~customize-build-process.release~0]
     FileTemplate createReleaseWorkflow(final List<AnalyzedSource> sources) {
         final String workflowName = "release.yml";
         final FileTemplate template = new FileTemplateFromResource(".github/workflows/" + workflowName, REQUIRE_EXACT)
@@ -70,6 +71,23 @@ class CiBuildWorkflowGenerator {
                 .filter(Objects::nonNull) //
                 .flatMap(Set::stream) //
                 .anyMatch(ProjectKeeperModule.MAVEN_CENTRAL::equals);
+    }
+
+    // [impl->dsn~customize-build-process.dependency-check~0]
+    FileTemplate createDependenciesCheckWorkflow() {
+        final String workflowName = "dependencies_check.yml";
+        return new ContentCustomizingTemplate(
+                new FileTemplateFromResource(".github/workflows/" + workflowName, REQUIRE_EXACT),
+                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), "report_security_issues"));
+    }
+
+    // [impl->dsn~dependency-updater.workflow.generate~1]
+    // [impl->dsn~customize-build-process.dependency-update~0]
+    FileTemplate createDependenciesUpdateWorkflow() {
+        final String workflowName = "dependencies_update.yml";
+        return new ContentCustomizingTemplate(
+                new FileTemplateFromResource(".github/workflows/" + workflowName, REQUIRE_EXACT),
+                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), "update_dependencies"));
     }
 
     enum CiTemplateType {
