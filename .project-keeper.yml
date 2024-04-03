@@ -77,7 +77,6 @@ excludes:
   # Workflows must install PK itself before using it in the build
   - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_check.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_update.yml'"
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/release.yml'"
   # No configuration necessary for aggregator POM
   - "E-PK-CORE-103: Missing parent declaration in 'pom.xml'"
   - "E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'"

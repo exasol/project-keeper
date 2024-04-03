@@ -418,7 +418,14 @@ PK allows customizing workflow steps in GitHub workflow `ci-build.yml`.
 
 Rationale:
 * `ci-build.yml` is the main build workflow.
-* Other workflows (e.g. `release.yml`) will be supported later if required.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+#### Customize GitHub Workflow `release.yml`
+`dsn~customize-build-process.release~0`
+
+PK allows customizing workflow steps in GitHub workflow `release.yml`.
 
 Covers:
 * [`req~customize-build-process~0`](system_requirements.md#customize-build-process)

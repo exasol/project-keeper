@@ -11,3 +11,4 @@ doc/images/.svg                      linguist-generated=true
 
 .github/workflows/broken_links_checker.yml linguist-generated=true
 .github/workflows/ci-build.yml             linguist-generated=true
+.github/workflows/release.yml              linguist-generated=true
