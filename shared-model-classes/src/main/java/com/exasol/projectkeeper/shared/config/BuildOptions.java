@@ -3,8 +3,9 @@ package com.exasol.projectkeeper.shared.config;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
 
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
+
+import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
 
 /**
  * CI build configuration.
@@ -15,11 +16,13 @@ public final class BuildOptions {
     private final String runnerOs;
     private final boolean freeDiskSpace;
     private final List<String> exasolDbVersions;
+    private final List<CustomWorkflow> workflows;
 
     private BuildOptions(final Builder builder) {
         this.runnerOs = Objects.requireNonNull(builder.runnerOs, "runnerOs");
         this.freeDiskSpace = builder.freeDiskSpace;
         this.exasolDbVersions = unmodifiableList(Objects.requireNonNull(builder.exasolDbVersions, "exasolDbVersions"));
+        this.workflows = builder.workflows;
     }
 
     /** @return CI build runner operating system */
@@ -42,6 +45,27 @@ public final class BuildOptions {
     }
 
     /**
+     * Configuration options for the generated GitHub workflows.
+     *
+     * @return options for workflows
+     */
+    public List<CustomWorkflow> getWorkflows() {
+        return workflows;
+    }
+
+    /**
+     * Get workflow options by name.
+     * 
+     * @param workflowName name of the workflow
+     * @return workflow options
+     */
+    public Optional<CustomWorkflow> getWorkflow(final String workflowName) {
+        return workflows.stream() //
+                .filter(workflow -> workflow.getWorkflowName().equals(workflowName)) //
+                .findFirst();
+    }
+
+    /**
      * Creates builder to build {@link BuildOptions}.
      *
      * @return created builder
@@ -57,6 +81,7 @@ public final class BuildOptions {
         private List<String> exasolDbVersions = emptyList();
         private boolean freeDiskSpace = false;
         private String runnerOs = DEFAULT_RUNNER_OS;
+        private List<CustomWorkflow> workflows = emptyList();
 
         private Builder() {
         }
@@ -101,6 +126,19 @@ public final class BuildOptions {
         }
 
         /**
+         * Set configuration options for generated GitHub workflows.
+         *
+         * @param workflows options for workflows
+         * @return {@code this} for fluent programming
+         */
+        public Builder workflows(final List<CustomWorkflow> workflows) {
+            if (workflows != null) {
+                this.workflows = workflows;
+            }
+            return this;
+        }
+
+        /**
          * Build a new {@link BuildOptions}.
          *
          * @return built class
@@ -112,13 +150,13 @@ public final class BuildOptions {
 
     @Override
     public String toString() {
-        return "BuildConfig [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + ",exasolDbVersions="
-                + exasolDbVersions + "]";
+        return "BuildOptions [runnerOs=" + runnerOs + ", freeDiskSpace=" + freeDiskSpace + ", exasolDbVersions="
+                + exasolDbVersions + ", workflows=" + workflows + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(runnerOs, freeDiskSpace, exasolDbVersions);
+        return Objects.hash(runnerOs, freeDiskSpace, exasolDbVersions, workflows);
     }
 
     @Override
@@ -134,6 +172,7 @@ public final class BuildOptions {
         }
         final BuildOptions other = (BuildOptions) obj;
         return Objects.equals(runnerOs, other.runnerOs) && freeDiskSpace == other.freeDiskSpace
-                && Objects.equals(exasolDbVersions, other.exasolDbVersions);
+                && Objects.equals(exasolDbVersions, other.exasolDbVersions)
+                && Objects.equals(workflows, other.workflows);
     }
 }
