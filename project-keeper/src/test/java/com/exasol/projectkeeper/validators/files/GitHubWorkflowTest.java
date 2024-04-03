@@ -138,7 +138,7 @@ class GitHubWorkflowTest {
         final Job job = workflow.getJob("build");
         final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> job.getStep("missing"));
         assertThat(exception.getMessage(),
-                equalTo("E-PK-CORE-203: Job has no step with ID 'missing': {steps=[{id=step1}]}"));
+                equalTo("E-PK-CORE-206: Job has no step with ID 'missing': {steps=[{id=step1}]}"));
     }
 
     @Test

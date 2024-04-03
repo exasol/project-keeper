@@ -65,7 +65,7 @@ class GitHubWorkflow {
             return getSteps().stream() //
                     .filter(hasId(id)) //
                     .findFirst() //
-                    .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-203")
+                    .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-206")
                             .message("Job has no step with ID {{step id}}: {{raw job}}", id, rawJob).toString()));
         }
 
