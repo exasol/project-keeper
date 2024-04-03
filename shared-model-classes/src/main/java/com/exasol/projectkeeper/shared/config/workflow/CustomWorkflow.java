@@ -7,14 +7,14 @@ import java.util.*;
 /**
  * This configuration class allows customizing a GitHub workflow.
  */
-public final class WorkflowOptions {
+public final class CustomWorkflow {
 
     private final String workflowName;
-    private final List<StepCustomization> customizations;
+    private final List<StepCustomization> steps;
 
-    private WorkflowOptions(final Builder builder) {
+    private CustomWorkflow(final Builder builder) {
         this.workflowName = Objects.requireNonNull(builder.workflowName, "workflowName");
-        this.customizations = builder.customizations == null ? emptyList() : builder.customizations;
+        this.steps = builder.steps == null ? emptyList() : builder.steps;
     }
 
     /**
@@ -31,12 +31,12 @@ public final class WorkflowOptions {
      *
      * @return the list of step customizations
      */
-    public List<StepCustomization> getCustomizations() {
-        return customizations;
+    public List<StepCustomization> getSteps() {
+        return steps;
     }
 
     /**
-     * Create a new builder for the {@link WorkflowOptions}.
+     * Create a new builder for the {@link CustomWorkflow}.
      * 
      * @return builder instance
      */
@@ -46,12 +46,12 @@ public final class WorkflowOptions {
 
     @Override
     public String toString() {
-        return "WorkflowOptions [workflowName=" + workflowName + ", customizations=" + customizations + "]";
+        return "WorkflowOptions [workflowName=" + workflowName + ", customizations=" + steps + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workflowName, customizations);
+        return Objects.hash(workflowName, steps);
     }
 
     @Override
@@ -65,8 +65,8 @@ public final class WorkflowOptions {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final WorkflowOptions other = (WorkflowOptions) obj;
-        return Objects.equals(workflowName, other.workflowName) && Objects.equals(customizations, other.customizations);
+        final CustomWorkflow other = (CustomWorkflow) obj;
+        return Objects.equals(workflowName, other.workflowName) && Objects.equals(steps, other.steps);
     }
 
     /**
@@ -74,7 +74,7 @@ public final class WorkflowOptions {
      */
     public static class Builder {
         private String workflowName;
-        private List<StepCustomization> customizations = null;
+        private List<StepCustomization> steps = null;
 
         private Builder() {
         }
@@ -93,25 +93,25 @@ public final class WorkflowOptions {
         /**
          * Add step customization.
          *
-         * @param customization step customization
+         * @param step step customization
          * @return the builder instance
          */
-        public Builder addCustomization(final StepCustomization customization) {
-            if (customizations == null) {
-                customizations = new ArrayList<>();
+        public Builder addStep(final StepCustomization step) {
+            if (steps == null) {
+                steps = new ArrayList<>();
             }
-            this.customizations.add(Objects.requireNonNull(customization, "customization"));
+            this.steps.add(Objects.requireNonNull(step, "step"));
             return this;
         }
 
         /**
          * Set step customization.
          *
-         * @param customizations step customizations
+         * @param steps step customizations
          * @return the builder instance
          */
-        public Builder customizations(final List<StepCustomization> customizations) {
-            this.customizations = Objects.requireNonNull(customizations, "customizations");
+        public Builder steps(final List<StepCustomization> steps) {
+            this.steps = Objects.requireNonNull(steps, "steps");
             return this;
         }
 
@@ -120,8 +120,8 @@ public final class WorkflowOptions {
          *
          * @return the BuildWorkflow instance
          */
-        public WorkflowOptions build() {
-            return new WorkflowOptions(this);
+        public CustomWorkflow build() {
+            return new CustomWorkflow(this);
         }
     }
 }

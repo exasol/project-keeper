@@ -127,14 +127,14 @@ public class ProjectKeeperConfigReader {
                 .build();
     }
 
-    private List<WorkflowOptions> convertWorkflows(final List<Workflow> workflows) {
+    private List<CustomWorkflow> convertWorkflows(final List<Workflow> workflows) {
         return Optional.ofNullable(workflows).map(List::stream) //
                 .orElseGet(Stream::empty) //
                 .map(this::convertWorkflow) //
                 .toList();
     }
 
-    private WorkflowOptions convertWorkflow(final Workflow workflow) {
+    private CustomWorkflow convertWorkflow(final Workflow workflow) {
         final List<String> supportedWorkflowNames = List.of("ci-build.yml");
         if (workflow.name == null) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-199")
@@ -149,9 +149,9 @@ public class ProjectKeeperConfigReader {
                             supportedWorkflowNames)
                     .toString());
         }
-        return WorkflowOptions.builder() //
+        return CustomWorkflow.builder() //
                 .workflowName(workflow.name) //
-                .customizations(convertSteps(workflow.stepCustomizations)) //
+                .steps(convertSteps(workflow.stepCustomizations)) //
                 .build();
     }
 

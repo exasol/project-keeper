@@ -5,7 +5,7 @@ import static java.util.Collections.unmodifiableList;
 
 import java.util.*;
 
-import com.exasol.projectkeeper.shared.config.workflow.WorkflowOptions;
+import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
 
 /**
  * CI build configuration.
@@ -16,7 +16,7 @@ public final class BuildOptions {
     private final String runnerOs;
     private final boolean freeDiskSpace;
     private final List<String> exasolDbVersions;
-    private final List<WorkflowOptions> workflows;
+    private final List<CustomWorkflow> workflows;
 
     private BuildOptions(final Builder builder) {
         this.runnerOs = Objects.requireNonNull(builder.runnerOs, "runnerOs");
@@ -49,7 +49,7 @@ public final class BuildOptions {
      *
      * @return options for workflows
      */
-    public List<WorkflowOptions> getWorkflows() {
+    public List<CustomWorkflow> getWorkflows() {
         return workflows;
     }
 
@@ -59,7 +59,7 @@ public final class BuildOptions {
      * @param workflowName name of the workflow
      * @return workflow options
      */
-    public Optional<WorkflowOptions> getWorkflow(final String workflowName) {
+    public Optional<CustomWorkflow> getWorkflow(final String workflowName) {
         return workflows.stream() //
                 .filter(workflow -> workflow.getWorkflowName().equals(workflowName)) //
                 .findFirst();
@@ -81,7 +81,7 @@ public final class BuildOptions {
         private List<String> exasolDbVersions = emptyList();
         private boolean freeDiskSpace = false;
         private String runnerOs = DEFAULT_RUNNER_OS;
-        private List<WorkflowOptions> workflows = emptyList();
+        private List<CustomWorkflow> workflows = emptyList();
 
         private Builder() {
         }
@@ -131,7 +131,7 @@ public final class BuildOptions {
          * @param workflows options for workflows
          * @return {@code this} for fluent programming
          */
-        public Builder workflows(final List<WorkflowOptions> workflows) {
+        public Builder workflows(final List<CustomWorkflow> workflows) {
             if (workflows != null) {
                 this.workflows = workflows;
             }

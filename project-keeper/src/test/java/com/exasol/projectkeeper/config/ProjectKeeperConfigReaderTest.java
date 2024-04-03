@@ -288,9 +288,9 @@ class ProjectKeeperConfigReaderTest {
                             env:
                               ENV_VARIABLE: 'value'
                 """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(WorkflowOptions.builder() //
+        assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(CustomWorkflow.builder() //
                 .workflowName("ci-build.yml") //
-                .addCustomization(StepCustomization.builder() //
+                .addStep(StepCustomization.builder() //
                         .type(StepCustomization.Type.REPLACE) //
                         .stepId("step-id-to-replace") //
                         .step(WorkflowStep.createStep(Map.of("name", "New Step", "id", "new-step", "run",
@@ -312,7 +312,7 @@ class ProjectKeeperConfigReaderTest {
                           content:
                             id: new-step
                 """.replace("${action}", action));
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations().get(0).getType(),
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps().get(0).getType(),
                 equalTo(expected));
     }
 
@@ -323,7 +323,7 @@ class ProjectKeeperConfigReaderTest {
                   workflows:
                     - name: ci-build.yml
                 """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations(), empty());
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps(), empty());
     }
 
     @Test
@@ -334,7 +334,7 @@ class ProjectKeeperConfigReaderTest {
                     - name: ci-build.yml
                       stepCustomizations:
                 """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations(), empty());
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps(), empty());
     }
 
     @Test
