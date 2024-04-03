@@ -136,7 +136,7 @@ public class PomFileValidator implements Validator {
         if (node == null) {
             return Optional.of(SimpleValidationFinding
                     .withMessage(ExaError.messageBuilder("E-PK-CORE-123")
-                            .message("Invalid pom file {{file}}: Missing required property {{xpath}}.",
+                            .message("Invalid pom file {{file}}: Required property {{xpath}} is missing.",
                                     this.projectDirectory.relativize(this.pomFilePath), parentXPath + "/" + tagName)
                             .mitigation("The expected value is {{expected value}}.", expectedValue).toString())
                     .andFix(log -> addTextElement(parent, tagName, expectedValue)).build());
@@ -168,7 +168,7 @@ public class PomFileValidator implements Validator {
     private Optional<ValidationFinding> validationDescriptionExists(final Document document) {
         if (runXPath(document, XPath.DESCRIPTION) == null) {
             return Optional.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-120")
-                    .message("Invalid pom file {{file}}: Missing required property {{property|u}}.",
+                    .message("Invalid pom file {{file}}: Required property {{property|u}} is missing.",
                             this.projectDirectory.relativize(this.pomFilePath), XPath.DESCRIPTION)
                     .mitigation("Please manually add a description.").toString()).build());
         } else {
@@ -219,7 +219,7 @@ public class PomFileValidator implements Validator {
         final Node finalNameProperty = runXPath(pom, XPath.FINAL_NAME);
         if ((finalNameProperty == null) || finalNameProperty.getTextContent().isBlank()) {
             return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-105").message(
-                    "Invalid pom file {{file}}: Missing required property finalName property in maven-assembly-plugin.",
+                    "Invalid pom file {{file}}: Required property 'finalName' is missing in maven-assembly-plugin.",
                     relativePomPath).mitigation("""
                             Use the following template and set finalName:
                             <plugin>
@@ -359,7 +359,7 @@ public class PomFileValidator implements Validator {
                 return parentGroupIdNode.getTextContent();
             } else {
                 throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-102")
-                        .message("Invalid pom file {{file}}: Missing required property 'groupId'.",
+                        .message("Invalid pom file {{file}}: Required property 'groupId' is missing.",
                                 this.projectDirectory.relativize(this.pomFilePath))
                         .mitigation("Please either set {{groupId|u}} or {{parent groupId|u}}.", XPath.GROUP_ID,
                                 XPath.PARENT_GROUP_ID)
@@ -372,7 +372,7 @@ public class PomFileValidator implements Validator {
         final Node node = XPathErrorHandlingWrapper.runXPath(pom, xPath);
         if (node == null) {
             throw new InvalidPomException(ExaError.messageBuilder("E-PK-CORE-101")
-                    .message("Invalid pom file {{file}}: Missing required property {{property|u}}.",
+                    .message("Invalid pom file {{file}}: Required property {{property|u}} is missing.",
                             this.projectDirectory.relativize(this.pomFilePath), xPath)
                     .mitigation("Please set the property manually.").toString());
         }

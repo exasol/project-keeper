@@ -121,7 +121,8 @@ class ProjectKeeperConfigReaderTest {
     void testInvalidExcludes(final String invalidExcludes) throws IOException {
         writeProjectKeeperConfig(invalidExcludes);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
-        assertThat(exception.getMessage(), startsWith("E-PK-CORE-87: Invalid .project-keeper.yml. Invalid value "));
+        assertThat(exception.getMessage(),
+                startsWith("E-PK-CORE-87: Invalid file .project-keeper.yml. Invalid value "));
     }
 
     @Test
@@ -135,7 +136,7 @@ class ProjectKeeperConfigReaderTest {
                 """);
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(),
-                equalTo("E-PK-CORE-84: Invalid .project-keeper.yml. Unsupported source type 'unknown'."
+                equalTo("E-PK-CORE-84: Invalid file .project-keeper.yml. Unsupported source type 'unknown'."
                         + " Please use one of the supported types: maven, golang, npm."));
     }
 
@@ -173,32 +174,33 @@ class ProjectKeeperConfigReaderTest {
 
     static Stream<Arguments> invalidConfig() {
         return Stream.of(Arguments.of("missing config file", null, equalTo(
-                "E-PK-CORE-89: Could not find '.project-keeper.yml'. Please create this configuration according to the user-guide https://github.com/exasol/project-keeper-maven-plugin.")),
+                "E-PK-CORE-89: Could not find file '.project-keeper.yml'. Please create this file according to the user-guide https://github.com/exasol/project-keeper-maven-plugin.")),
                 Arguments.of("unsupported workflow name", """
                         build:
                           workflows:
                             - name: unsupported.yml
                         """, equalTo(
-                        "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in '.project-keeper.yml'. Use one of the supported workflow ['ci-build.yml']")),
+                        "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in file '.project-keeper.yml'. Please only use one of the supported workflows from ['ci-build.yml']")),
                 Arguments.of("missing source path", """
                             sources:
                               - type: maven
                             linkReplacements:
                               - "http://wrong-url.com|my-dependency.de"
                         """, equalTo(
-                        "E-PK-CORE-86: Invalid .project-keeper.yml. Missing required property 'sources/path'.")),
-                Arguments.of("invalid yaml syntax", "{ -", startsWith("E-PK-CORE-85: Invalid .project-keeper.yml.")),
+                        "E-PK-CORE-86: Invalid file .project-keeper.yml. Required property 'sources/path' is missing.")),
+                Arguments.of("invalid yaml syntax", "{ -",
+                        startsWith("E-PK-CORE-85: Invalid file .project-keeper.yml.")),
                 Arguments.of("invalid source path", """
                         sources:
                           - type: maven
                             path: unknown-project/pom.xml
-                        """, startsWith("E-PK-CORE-83: Invalid .project-keeper.yml. The specified path ")),
+                        """, startsWith("E-PK-CORE-83: Invalid file .project-keeper.yml. The specified path ")),
                 Arguments.of("workflow: missing workflow name", """
                         build:
                           workflows:
                             - stepCustomizations:
                         """, equalTo(
-                        "E-PK-CORE-199: Missing workflow name in '.project-keeper.yml'. Add a workflow name to the workflow configuration.")),
+                        "E-PK-CORE-199: Missing workflow name in file '.project-keeper.yml'. Add a workflow name to the workflow configuration.")),
                 Arguments.of("workflow: missing step id", """
                         build:
                           workflows:
@@ -208,7 +210,7 @@ class ProjectKeeperConfigReaderTest {
                                   content:
                                     id: new-step
                         """, equalTo(
-                        "E-PK-CORE-201: Missing stepId in step customization of '.project-keeper.yml'. Add stepId to the step customization.")),
+                        "E-PK-CORE-201: Missing stepId in step customization of file '.project-keeper.yml'. Add stepId to the step customization.")),
                 Arguments.of("workflow: empty step id", """
                         build:
                           workflows:
@@ -219,7 +221,7 @@ class ProjectKeeperConfigReaderTest {
                                   content:
                                     id: new-step
                         """, equalTo(
-                        "E-PK-CORE-201: Missing stepId in step customization of '.project-keeper.yml'. Add stepId to the step customization.")),
+                        "E-PK-CORE-201: Missing stepId in step customization of file '.project-keeper.yml'. Add stepId to the step customization.")),
                 Arguments.of("workflow: missing action", """
                         build:
                           workflows:
@@ -229,7 +231,7 @@ class ProjectKeeperConfigReaderTest {
                                   content:
                                     id: new-step
                         """, equalTo(
-                        "E-PK-CORE-200: Missing action in step customization of '.project-keeper.yml'. Add action with one of values [INSERT_AFTER, REPLACE].")),
+                        "E-PK-CORE-200: Missing action in step customization of file '.project-keeper.yml'. Add action with one of values [INSERT_AFTER, REPLACE].")),
                 Arguments.of("workflow: invalid action", """
                         build:
                           workflows:
@@ -239,7 +241,7 @@ class ProjectKeeperConfigReaderTest {
                                   stepId: step-id-to-replace
                                   content:
                                     id: new-step
-                        """, startsWith("E-PK-CORE-85: Invalid .project-keeper.yml. Path:")),
+                        """, startsWith("E-PK-CORE-85: Invalid file .project-keeper.yml. Path:")),
                 Arguments.of("workflow: missing content", """
                         build:
                           workflows:
@@ -248,7 +250,7 @@ class ProjectKeeperConfigReaderTest {
                                 - action: REPLACE
                                   stepId: step-id-to-replace
                         """, equalTo(
-                        "E-PK-CORE-202: Missing content in step customization of '.project-keeper.yml'. Add content to the step customization.")),
+                        "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")),
                 Arguments.of("workflow: empty content", """
                         build:
                           workflows:
@@ -258,7 +260,20 @@ class ProjectKeeperConfigReaderTest {
                                   stepId: step-id-to-replace
                                   content:
                         """, equalTo(
-                        "E-PK-CORE-202: Missing content in step customization of '.project-keeper.yml'. Add content to the step customization.")));
+                        "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")),
+                Arguments.of("workflow: missing step customization list", """
+                        build:
+                          workflows:
+                            - name: ci-build.yml
+                        """, equalTo(
+                        "E-PK-CORE-203: Missing customized steps for workflow 'ci-build.yml' in file '.project-keeper.yml'. Add at least one step or remove the workflow.")),
+                Arguments.of("workflow: empty step customization list", """
+                        build:
+                          workflows:
+                            - name: ci-build.yml
+                              stepCustomizations:
+                        """, equalTo(
+                        "E-PK-CORE-203: Missing customized steps for workflow 'ci-build.yml' in file '.project-keeper.yml'. Add at least one step or remove the workflow.")));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -288,9 +303,9 @@ class ProjectKeeperConfigReaderTest {
                             env:
                               ENV_VARIABLE: 'value'
                 """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(WorkflowOptions.builder() //
+        assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(CustomWorkflow.builder() //
                 .workflowName("ci-build.yml") //
-                .addCustomization(StepCustomization.builder() //
+                .addStep(StepCustomization.builder() //
                         .type(StepCustomization.Type.REPLACE) //
                         .stepId("step-id-to-replace") //
                         .step(WorkflowStep.createStep(Map.of("name", "New Step", "id", "new-step", "run",
@@ -312,29 +327,8 @@ class ProjectKeeperConfigReaderTest {
                           content:
                             id: new-step
                 """.replace("${action}", action));
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations().get(0).getType(),
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps().get(0).getType(),
                 equalTo(expected));
-    }
-
-    @Test
-    void readWorkflowMissingCustomizations() throws IOException {
-        writeProjectKeeperConfig("""
-                build:
-                  workflows:
-                    - name: ci-build.yml
-                """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations(), empty());
-    }
-
-    @Test
-    void readWorkflowEmptyCustomizations() throws IOException {
-        writeProjectKeeperConfig("""
-                build:
-                  workflows:
-                    - name: ci-build.yml
-                      stepCustomizations:
-                """);
-        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getCustomizations(), empty());
     }
 
     @Test
@@ -344,7 +338,7 @@ class ProjectKeeperConfigReaderTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-90: Could not find .git directory in project-root '"
                 + this.tempDir
-                + "'. Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'."));
+                + "'. Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in file '.project-keeper.yml'."));
     }
 
     private void writeProjectKeeperConfig(final String content) throws IOException {

@@ -1,7 +1,5 @@
 package com.exasol.projectkeeper.config;
 
-import static java.util.Arrays.asList;
-
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -19,7 +17,8 @@ import com.exasol.projectkeeper.config.ProjectKeeperRawConfig.*;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ParentPomRef;
 import com.exasol.projectkeeper.shared.config.Source;
-import com.exasol.projectkeeper.shared.config.workflow.*;
+import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
+import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
 
 /**
  * This class reads {@link ProjectKeeperConfig} from file.
@@ -29,7 +28,7 @@ public class ProjectKeeperConfigReader {
     public static final String CONFIG_FILE_NAME = ".project-keeper.yml";
     private static final String USER_GUIDE_URL = "https://github.com/exasol/project-keeper-maven-plugin";
     private static final String CHECK_THE_USER_GUIDE = "Please check the user-guide " + USER_GUIDE_URL + ".";
-    private static final String INVALID_CONFIG_FILE = "Invalid " + CONFIG_FILE_NAME + ".";
+    private static final String INVALID_CONFIG_FILE = "Invalid file " + CONFIG_FILE_NAME + ".";
 
     /**
      * Read a {@link ProjectKeeperConfig} from file.
@@ -46,7 +45,7 @@ public class ProjectKeeperConfigReader {
             return parseRawConfig(rawConfig, projectDirectory);
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-82")
-                    .message("Failed to read '" + CONFIG_FILE_NAME + "'.").toString(), exception);
+                    .message("Failed to read file {{config file}}.", CONFIG_FILE_NAME).toString(), exception);
         }
     }
 
@@ -56,7 +55,7 @@ public class ProjectKeeperConfigReader {
                     .message("Could not find .git directory in project-root {{root path}}.", projectDirectory)
                     .mitigation("Run 'git init'.")
                     .mitigation(
-                            "Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in the '.project-keeper.yml'.")
+                            "Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in file '.project-keeper.yml'.")
                     .toString());
         }
     }
@@ -74,8 +73,8 @@ public class ProjectKeeperConfigReader {
     private void validateConfigFileExists(final Path configFile) {
         if (!Files.exists(configFile)) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-89")
-                    .message("Could not find '" + CONFIG_FILE_NAME + "'.")
-                    .mitigation("Please create this configuration according to the user-guide " + USER_GUIDE_URL + ".")
+                    .message("Could not find file {{config file}}.", CONFIG_FILE_NAME)
+                    .mitigation("Please create this file according to the user-guide " + USER_GUIDE_URL + ".")
                     .toString());//
         }
     }
@@ -127,65 +126,63 @@ public class ProjectKeeperConfigReader {
                 .build();
     }
 
-    private List<WorkflowOptions> convertWorkflows(final List<Workflow> workflows) {
+    private List<CustomWorkflow> convertWorkflows(final List<Workflow> workflows) {
         return Optional.ofNullable(workflows).map(List::stream) //
                 .orElseGet(Stream::empty) //
                 .map(this::convertWorkflow) //
                 .toList();
     }
 
-    private WorkflowOptions convertWorkflow(final Workflow workflow) {
+    private CustomWorkflow convertWorkflow(final Workflow workflow) {
         final List<String> supportedWorkflowNames = List.of("ci-build.yml");
         if (workflow.name == null) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-199")
-                    .message("Missing workflow name in {{config file name}}.", CONFIG_FILE_NAME)
+                    .message("Missing workflow name in file {{config file name}}.", CONFIG_FILE_NAME)
                     .mitigation("Add a workflow name to the workflow configuration.").toString());
         }
         if (!supportedWorkflowNames.contains(workflow.name)) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-198")
-                    .message("Unsupported workflow name {{workflow name}} found in {{config file name}}.",
+                    .message("Unsupported workflow name {{workflow name}} found in file {{config file name}}.",
                             workflow.name, CONFIG_FILE_NAME, supportedWorkflowNames)
-                    .mitigation("Use one of the supported workflow {{supported workflow names}}",
+                    .mitigation("Please only use one of the supported workflows from {{supported workflow names}}",
                             supportedWorkflowNames)
                     .toString());
         }
-        return WorkflowOptions.builder() //
+        if (workflow.stepCustomizations == null || workflow.stepCustomizations.isEmpty()) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-203")
+                    .message("Missing customized steps for workflow {{workflow name}} in file {{config file name}}.",
+                            workflow.name, CONFIG_FILE_NAME)
+                    .mitigation("Add at least one step or remove the workflow.").toString());
+        }
+        return CustomWorkflow.builder() //
                 .workflowName(workflow.name) //
-                .customizations(convertSteps(workflow.stepCustomizations)) //
+                .steps(convertSteps(workflow.stepCustomizations)) //
                 .build();
     }
 
     private List<StepCustomization> convertSteps(final List<RawStepCustomization> stepCustomizations) {
-        return Optional.ofNullable(stepCustomizations) //
-                .map(List::stream) //
-                .orElseGet(Stream::empty) //
-                .map(this::convertStep) //
-                .toList();
+        return stepCustomizations.stream().map(this::convertStep).toList();
     }
 
     private StepCustomization convertStep(final RawStepCustomization step) {
-        if (step.action == null) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-200")
-                    .message("Missing action in step customization of {{config file}}.", CONFIG_FILE_NAME)
                     .mitigation("Add action with one of values {{available actions}}.",
-                            asList(StepCustomization.Type.values()))
                     .toString());
-        }
-        if (step.stepId == null || step.stepId.isBlank()) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-201")
-                    .message("Missing stepId in step customization of {{config file}}.", CONFIG_FILE_NAME)
-                    .mitigation("Add stepId to the step customization.").toString());
-        }
-        if (step.content == null || step.content.isEmpty()) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-202")
-                    .message("Missing content in step customization of {{config file}}.", CONFIG_FILE_NAME)
-                    .mitigation("Add content to the step customization.").toString());
-        }
-        return StepCustomization.builder() //
-                .type(step.action) //
-                .stepId(step.stepId) //
-                .step(WorkflowStep.createStep(step.content)) //
-                .build();
+        }if(step.stepId==null||step.stepId.isBlank())
+
+    {
+        throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-201")
+                .message("Missing stepId in step customization of file {{config file}}.", CONFIG_FILE_NAME)
+                .mitigation("Add stepId to the step customization.").toString());
+    }if(step.content==null||step.content.isEmpty())
+    {
+        throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-202")
+                .message("Missing content in step customization of file {{config file}}.", CONFIG_FILE_NAME)
+                .mitigation("Add content to the step customization.").toString());
+    }return StepCustomization.builder() //
+    .type(step.action) //
+    .stepId(step.stepId) //
+    .step(WorkflowStep.createStep(step.content)) //
+    .build();
     }
 
     private List<String> convertExcludes(final List<Object> rawExcludes) {
@@ -282,7 +279,7 @@ public class ProjectKeeperConfigReader {
     private void requireProperty(final Object propertyValue, final String propertyName) {
         if (propertyValue == null) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-86")
-                    .message(INVALID_CONFIG_FILE + " Missing required property {{property name}}.", propertyName)
+                    .message(INVALID_CONFIG_FILE + " Required property {{property name}} is missing.", propertyName)
                     .toString());
         }
     }

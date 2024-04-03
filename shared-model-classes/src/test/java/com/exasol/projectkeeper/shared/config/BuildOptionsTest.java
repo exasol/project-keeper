@@ -9,7 +9,7 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 
-import com.exasol.projectkeeper.shared.config.workflow.WorkflowOptions;
+import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
 import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
@@ -40,9 +40,9 @@ class BuildOptionsTest {
 
     @Test
     void getWorkflowByNamePresent() {
-        final WorkflowOptions workflow = WorkflowOptions.builder().workflowName("name").build();
+        final CustomWorkflow workflow = CustomWorkflow.builder().workflowName("name").build();
         final BuildOptions options = BuildOptions.builder().workflows(List.of(workflow)).build();
-        final Optional<WorkflowOptions> foundWorkflow = options.getWorkflow("name");
+        final Optional<CustomWorkflow> foundWorkflow = options.getWorkflow("name");
         assertAll(() -> assertThat(foundWorkflow.isPresent(), is(true)),
                 () -> assertThat(foundWorkflow.get(), sameInstance(workflow)));
     }

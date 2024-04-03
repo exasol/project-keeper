@@ -47,9 +47,9 @@ class PomFileValidatorTest {
                 () -> assertThat(result,
                         hasFindingWithMessage("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
                 () -> assertThat(result, hasFindingWithMessage(
-                        "E-PK-CORE-123: Invalid pom file 'pom.xml': Missing required property '/project/url'. The expected value is 'https://github.com/exasol/my-repo/'.")),
+                        "E-PK-CORE-123: Invalid pom file 'pom.xml': Required property '/project/url' is missing. The expected value is 'https://github.com/exasol/my-repo/'.")),
                 () -> assertThat(result, hasFindingWithMessage(
-                        "E-PK-CORE-105: Invalid pom file 'pom.xml': Missing required property finalName property in maven-assembly-plugin. Use the following template and set finalName:\n<plugin>\n"
+                        "E-PK-CORE-105: Invalid pom file 'pom.xml': Required property 'finalName' is missing in maven-assembly-plugin. Use the following template and set finalName:\n<plugin>\n"
                                 + "    <artifactId>maven-assembly-plugin</artifactId>\n"
                                 + "    <groupId>org.apache.maven.plugins</groupId>\n" //
                                 + "    <configuration>\n" //
@@ -66,7 +66,7 @@ class PomFileValidatorTest {
         model.writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result, hasFindingWithMessage(
-                "E-PK-CORE-120: Invalid pom file 'pom.xml': Missing required property /project/description. Please manually add a description."));
+                "E-PK-CORE-120: Invalid pom file 'pom.xml': Required property /project/description is missing. Please manually add a description."));
     }
 
     @Test
@@ -145,7 +145,7 @@ class PomFileValidatorTest {
         testMavenModel.writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result, hasFindingWithMessage("E-PK-CORE-102: Invalid pom file 'pom.xml':" //
-                + " Missing required property 'groupId'." //
+                + " Required property 'groupId' is missing." //
                 + " Please either set /project/groupId or /project/parent/groupId."));
     }
 
