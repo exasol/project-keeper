@@ -63,21 +63,8 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_check.yml", REQUIRE_EXACT));
         // [impl->dsn~dependency-updater.workflow.generate~1]
         templates.add(new FileTemplateFromResource(".github/workflows/dependencies_update.yml", REQUIRE_EXACT));
-        templates.add(getReleaseWorkflow(sources));
+        templates.add(this.workflowGenerator.getReleaseWorkflow(sources));
         return templates;
-    }
-
-    // [impl->dsn~release-workflow.deploy-maven-central~1]
-    FileTemplateFromResource getReleaseWorkflow(final List<AnalyzedSource> sources) {
-        return new FileTemplateFromResource(".github/workflows/release.yml", REQUIRE_EXACT)
-                .replacing("mavenCentralDeployment", mavenCentralDeploymentRequired(sources) ? "true" : "false");
-    }
-
-    private boolean mavenCentralDeploymentRequired(final List<AnalyzedSource> sources) {
-        return sources.stream() //
-                .map(AnalyzedSource::getModules) //
-                .flatMap(Set::stream) //
-                .anyMatch(ProjectKeeperModule.MAVEN_CENTRAL::equals);
     }
 
     private FileTemplate getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {

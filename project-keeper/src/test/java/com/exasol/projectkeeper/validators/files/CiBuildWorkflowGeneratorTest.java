@@ -145,6 +145,11 @@ class CiBuildWorkflowGeneratorTest {
         job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
     }
 
+    @Test
+    void releaseAllStepsHaveId() {
+
+    }
+
     private GitHubWorkflow ciBuildContent(final BuildOptions.Builder optionsBuilder) {
         return ciBuildContent(optionsBuilder.build());
     }

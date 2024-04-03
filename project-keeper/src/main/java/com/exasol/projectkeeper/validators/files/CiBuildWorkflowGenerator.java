@@ -3,12 +3,13 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXACT;
 import static java.util.stream.Collectors.joining;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
 import com.exasol.projectkeeper.shared.config.workflow.WorkflowOptions;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class CiBuildWorkflowGenerator {
     private static final String PATH_IN_PROJECT = ".github/workflows/ci-build.yml";
@@ -44,6 +45,22 @@ class CiBuildWorkflowGenerator {
 
     private String quote(final String value) {
         return '"' + value + '"';
+    }
+
+    // [impl->dsn~release-workflow.deploy-maven-central~1]
+    FileTemplate getReleaseWorkflow(final List<AnalyzedSource> sources) {
+        final FileTemplateFromResource template = new FileTemplateFromResource(".github/workflows/release.yml",
+                REQUIRE_EXACT)
+                .replacing("mavenCentralDeployment", mavenCentralDeploymentRequired(sources) ? "true" : "false");
+
+        return template;
+    }
+
+    private boolean mavenCentralDeploymentRequired(final List<AnalyzedSource> sources) {
+        return sources.stream() //
+                .map(AnalyzedSource::getModules) //
+                .flatMap(Set::stream) //
+                .anyMatch(ProjectKeeperModule.MAVEN_CENTRAL::equals);
     }
 
     private CiTemplateType getCiBuildType() {
