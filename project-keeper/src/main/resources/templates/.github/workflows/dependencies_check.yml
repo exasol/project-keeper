@@ -59,7 +59,7 @@ jobs:
     # [impl->dsn~trigger-dependency-updates~1]
     if: ${{ needs.report_security_issues.outputs.created-issues }}
     concurrency:
-      group: ${{ github.workflow }}-start_dependency_udpate
+      group: ${{ github.workflow }}-start_dependency_update
       cancel-in-progress: false
     # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
     secrets: inherit

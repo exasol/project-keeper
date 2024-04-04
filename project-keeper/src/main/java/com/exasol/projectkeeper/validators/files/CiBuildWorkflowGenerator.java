@@ -37,7 +37,7 @@ class CiBuildWorkflowGenerator {
     }
 
     private List<StepCustomization> findCustomizations() {
-        return buildOptions.getWorkflow("ci-build.yml") //
+        return customWorkflow.getWorkflow("ci-build.yml") //
                 .map(CustomWorkflow::getSteps) //
                 .orElseGet(Collections::emptyList);
     }

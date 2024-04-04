@@ -100,7 +100,7 @@ class GitHubWorkflowStepCustomizerTest {
     }
 
     @Test
-    void replaceStepOtherStepHasMissingId() {
+    void replaceStepNextStepHasMissingId() {
         final WorkflowStep newStep = WorkflowStep
                 .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
         final GitHubWorkflow workflow = validate("""
