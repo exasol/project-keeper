@@ -86,7 +86,7 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     @Test
-    void ciBuildNonMatrixBuild() {
+    void ciBuildContentNonMatrixBuild() {
         final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
         assertAll(
                 () -> assertThat(job.getConcurrency(),
