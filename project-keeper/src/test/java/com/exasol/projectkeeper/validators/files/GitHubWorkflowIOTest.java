@@ -95,6 +95,8 @@ class GitHubWorkflowIOTest {
                 testCase("single-line list", "list: [itemA, itemB]", "list: [\n  itemA,\n  itemB\n]\n"), //
                 testCase("single-line list with quotes", "list: ['itemA', \"itemB\"]",
                         "list: [\n  itemA,\n  itemB\n]\n"),
+                testCase("single-line list with quotes and trailing whitespace", "list: ['itemA ', \" itemB\"]",
+                        "list: [\n  'itemA ',\n  ' itemB'\n]\n"),
                 testCaseUnchanged("ci-build step setup JDK", """
                         jobs:
                           build:
