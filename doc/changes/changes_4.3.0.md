@@ -31,9 +31,13 @@ This release contains many new features and improvements:
 
 ### Project Keeper Shared Model Classes
 
+#### Compile Dependency Updates
+
+* Updated `jakarta.json.bind:jakarta.json.bind-api:3.0.0` to `3.0.1`
+
 #### Test Dependency Updates
 
-* Updated `nl.jqno.equalsverifier:equalsverifier:3.15.8` to `3.16`
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.15.8` to `3.16.1`
 
 #### Plugin Dependency Updates
 
@@ -57,7 +61,7 @@ This release contains many new features and improvements:
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.2.0` to `4.3.0`
-* Updated `nl.jqno.equalsverifier:equalsverifier:3.15.8` to `3.16`
+* Updated `nl.jqno.equalsverifier:equalsverifier:3.15.8` to `3.16.1`
 
 #### Plugin Dependency Updates
 

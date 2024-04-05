@@ -318,7 +318,7 @@
 [7]: https://github.com/eclipse-ee4j/jsonp
 [8]: https://projects.eclipse.org/license/epl-2.0
 [9]: https://projects.eclipse.org/license/secondary-gpl-2.0-cp
-[10]: https://projects.eclipse.org/projects/ee4j.jsonp
+[10]: https://jakartaee.github.io/jsonb-api
 [11]: https://projects.eclipse.org/projects/ee4j.yasson
 [12]: http://www.eclipse.org/legal/epl-v20.html
 [13]: http://www.eclipse.org/org/documents/edl-v10.php
