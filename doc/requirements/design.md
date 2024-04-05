@@ -418,7 +418,36 @@ PK allows customizing workflow steps in GitHub workflow `ci-build.yml`.
 
 Rationale:
 * `ci-build.yml` is the main build workflow.
-* Other workflows (e.g. `release.yml`) will be supported later if required.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest, itest
+
+#### Customize GitHub Workflow `release.yml`
+`dsn~customize-build-process.release~0`
+
+PK allows customizing workflow steps in GitHub workflow `release.yml`.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest
+
+#### Customize GitHub Workflow `dependencies_check.yml`
+`dsn~customize-build-process.dependency-check~0`
+
+PK allows customizing workflow steps in GitHub workflow `dependencies_check.yml`.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest, itest
+
+#### Customize GitHub Workflow `dependencies_update.yml`
+`dsn~customize-build-process.dependency-update~0`
+
+PK allows customizing workflow steps in GitHub workflow `dependencies_update.yml`.
 
 Covers:
 * [`req~customize-build-process~0`](system_requirements.md#customize-build-process)

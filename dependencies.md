@@ -55,7 +55,7 @@
 | [Apache Maven Source Plugin][40]                        | [Apache License, Version 2.0][1] |
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
-| [JaCoCo :: Maven Plugin][44]                            | [Eclipse Public License 2.0][45] |
+| [JaCoCo :: Maven Plugin][44]                            | [EPL-2.0][45]                    |
 | [error-code-crawler-maven-plugin][5]                    | [MIT License][6]                 |
 | [Reproducible Build Maven Plugin][46]                   | [Apache 2.0][34]                 |
 
@@ -118,7 +118,7 @@
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Maven Failsafe Plugin][63]                             | [Apache-2.0][1]                  |
-| [JaCoCo :: Maven Plugin][44]                            | [Eclipse Public License 2.0][45] |
+| [JaCoCo :: Maven Plugin][44]                            | [EPL-2.0][45]                    |
 | [error-code-crawler-maven-plugin][5]                    | [MIT License][6]                 |
 | [Reproducible Build Maven Plugin][46]                   | [Apache 2.0][34]                 |
 
@@ -170,7 +170,7 @@
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Maven Failsafe Plugin][63]                             | [Apache-2.0][1]                  |
-| [JaCoCo :: Maven Plugin][44]                            | [Eclipse Public License 2.0][45] |
+| [JaCoCo :: Maven Plugin][44]                            | [EPL-2.0][45]                    |
 | [error-code-crawler-maven-plugin][5]                    | [MIT License][6]                 |
 | [Reproducible Build Maven Plugin][46]                   | [Apache 2.0][34]                 |
 
@@ -222,7 +222,7 @@
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Apache Maven Dependency Plugin][72]                    | [Apache-2.0][1]                  |
 | [Maven Failsafe Plugin][63]                             | [Apache-2.0][1]                  |
-| [JaCoCo :: Maven Plugin][44]                            | [Eclipse Public License 2.0][45] |
+| [JaCoCo :: Maven Plugin][44]                            | [EPL-2.0][45]                    |
 | [error-code-crawler-maven-plugin][5]                    | [MIT License][6]                 |
 | [Reproducible Build Maven Plugin][46]                   | [Apache 2.0][34]                 |
 
@@ -276,7 +276,7 @@
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Apache Maven Dependency Plugin][72]                    | [Apache-2.0][1]                  |
 | [Maven Failsafe Plugin][63]                             | [Apache-2.0][1]                  |
-| [JaCoCo :: Maven Plugin][44]                            | [Eclipse Public License 2.0][45] |
+| [JaCoCo :: Maven Plugin][44]                            | [EPL-2.0][45]                    |
 | [error-code-crawler-maven-plugin][5]                    | [MIT License][6]                 |
 | [Reproducible Build Maven Plugin][46]                   | [Apache 2.0][34]                 |
 
@@ -304,7 +304,7 @@
 | [Maven Surefire Plugin][35]                             | [Apache-2.0][1]                  |
 | [Versions Maven Plugin][36]                             | [Apache License, Version 2.0][1] |
 | [duplicate-finder-maven-plugin Maven Mojo][37]          | [Apache License 2.0][38]         |
-| [JaCoCo :: Maven Plugin][44]                            | [Eclipse Public License 2.0][45] |
+| [JaCoCo :: Maven Plugin][44]                            | [EPL-2.0][45]                    |
 | [error-code-crawler-maven-plugin][5]                    | [MIT License][6]                 |
 | [Reproducible Build Maven Plugin][46]                   | [Apache 2.0][34]                 |
 
@@ -318,7 +318,7 @@
 [7]: https://github.com/eclipse-ee4j/jsonp
 [8]: https://projects.eclipse.org/license/epl-2.0
 [9]: https://projects.eclipse.org/license/secondary-gpl-2.0-cp
-[10]: https://projects.eclipse.org/projects/ee4j.jsonp
+[10]: https://jakartaee.github.io/jsonb-api
 [11]: https://projects.eclipse.org/projects/ee4j.yasson
 [12]: http://www.eclipse.org/legal/epl-v20.html
 [13]: http://www.eclipse.org/org/documents/edl-v10.php

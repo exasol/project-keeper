@@ -45,6 +45,7 @@ public class MavenModelFromRepositoryReader {
      * @return read maven model
      * @throws ProjectBuildingException if reading fails
      */
+    @SuppressWarnings("deprecation") // Maven class ArtifactRepository is deprecated
     public Model readModel(final String artifactId, final String groupId, final String version,
             final List<ArtifactRepository> remoteRepositories) throws ProjectBuildingException {
         final Artifact artifactDescription = this.repositorySystem.createProjectArtifact(groupId, artifactId, version);

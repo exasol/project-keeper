@@ -10,6 +10,14 @@
       "args": "fix",
       "vmArgs": ["-Dcom.exasol.projectkeeper.ownVersion=4.3.0"],
       "cwd": "${workspaceFolder}"
+    },
+    {
+      "type": "java",
+      "name": "Update Maven plugin versions in templates",
+      "request": "launch",
+      "mainClass": "com.exasol.projectkeeper.validators.pom.io.TemplateUpdater",
+      "projectName": "project-keeper-core",
+      "cwd": "${workspaceFolder}/project-keeper"
     }
   ]
 }

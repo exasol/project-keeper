@@ -3,15 +3,19 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXACT;
 import static java.util.stream.Collectors.joining;
 
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
+import java.util.function.Consumer;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
 import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
+import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class CiBuildWorkflowGenerator {
-    private static final String PATH_IN_PROJECT = ".github/workflows/ci-build.yml";
+    private static final String WORKFLOW_PATH = ".github/workflows/";
+    private static final String CI_BUILD_WORKFLOW_NAME = "ci-build.yml";
+    private static final String CI_BUILD_PATH_IN_PROJECT = WORKFLOW_PATH + CI_BUILD_WORKFLOW_NAME;
     private final BuildOptions buildOptions;
 
     CiBuildWorkflowGenerator(final BuildOptions buildOptions) {
@@ -20,9 +24,9 @@ class CiBuildWorkflowGenerator {
 
     FileTemplate createCiBuildWorkflow() {
         final CiTemplateType buildType = getCiBuildType();
-        final String templateResource = "templates/.github/workflows/" + buildType.templateName;
-        final FileTemplateFromResource template = new FileTemplateFromResource(templateResource, PATH_IN_PROJECT,
-                REQUIRE_EXACT);
+        final String templateResource = "templates/" + WORKFLOW_PATH + buildType.templateName;
+        final FileTemplateFromResource template = new FileTemplateFromResource(templateResource,
+                CI_BUILD_PATH_IN_PROJECT, REQUIRE_EXACT);
         template.replacing("ciBuildRunnerOS", buildOptions.getRunnerOs());
         template.replacing("freeDiskSpace", String.valueOf(buildOptions.shouldFreeDiskSpace()));
 
@@ -33,11 +37,11 @@ class CiBuildWorkflowGenerator {
         }
         // [impl->dsn~customize-build-process.ci-build~0]
         return new ContentCustomizingTemplate(template,
-                new GitHubWorkflowStepCustomizer(findCustomizations(), buildType.buildJobId));
+                new GitHubWorkflowStepCustomizer(findCustomizations(CI_BUILD_WORKFLOW_NAME), buildType.buildJobId));
     }
 
-    private List<StepCustomization> findCustomizations() {
-        return buildOptions.getWorkflow("ci-build.yml") //
+    private List<StepCustomization> findCustomizations(final String workflowName) {
+        return buildOptions.getWorkflow(workflowName) //
                 .map(CustomWorkflow::getSteps) //
                 .orElseGet(Collections::emptyList);
     }
@@ -53,8 +57,50 @@ class CiBuildWorkflowGenerator {
         return CiTemplateType.DEFAULT;
     }
 
+    // [impl->dsn~release-workflow.deploy-maven-central~1]
+    // [impl->dsn~customize-build-process.release~0]
+    FileTemplate createReleaseWorkflow(final List<AnalyzedSource> sources) {
+        final Consumer<FileTemplateFromResource> templateCustomizer = template -> template
+                .replacing("mavenCentralDeployment", mavenCentralDeploymentRequired(sources) ? "true" : "false");
+        return createCustomizedWorkflow("release.yml", "release", templateCustomizer);
+    }
+
+    private boolean mavenCentralDeploymentRequired(final List<AnalyzedSource> sources) {
+        return sources.stream() //
+                .map(AnalyzedSource::getModules) //
+                .filter(Objects::nonNull) //
+                .flatMap(Set::stream) //
+                .anyMatch(ProjectKeeperModule.MAVEN_CENTRAL::equals);
+    }
+
+    // [impl->dsn~customize-build-process.dependency-check~0]
+    FileTemplate createDependenciesCheckWorkflow() {
+        return createCustomizedWorkflow("dependencies_check.yml", "report_security_issues");
+    }
+
+    // [impl->dsn~dependency-updater.workflow.generate~1]
+    // [impl->dsn~customize-build-process.dependency-update~0]
+    FileTemplate createDependenciesUpdateWorkflow() {
+        return createCustomizedWorkflow("dependencies_update.yml", "update_dependencies");
+    }
+
+    private FileTemplate createCustomizedWorkflow(final String workflowName, final String jobName) {
+        return createCustomizedWorkflow(workflowName, jobName, template -> {
+        });
+    }
+
+    private FileTemplate createCustomizedWorkflow(final String workflowName, final String jobName,
+            final Consumer<FileTemplateFromResource> templateCustomizer) {
+        final FileTemplateFromResource template = new FileTemplateFromResource(WORKFLOW_PATH + workflowName,
+                REQUIRE_EXACT);
+        templateCustomizer.accept(template);
+        return new ContentCustomizingTemplate(template,
+                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), jobName));
+    }
+
     enum CiTemplateType {
-        DEFAULT("ci-build.yml", "build"), EXASOL_VERSION_MATRIX("ci-build-db-version-matrix.yml", "matrix-build");
+        DEFAULT(CI_BUILD_WORKFLOW_NAME, "build"),
+        EXASOL_VERSION_MATRIX("ci-build-db-version-matrix.yml", "matrix-build");
 
         private final String templateName;
         private final String buildJobId;
