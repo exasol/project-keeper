@@ -53,7 +53,7 @@ class CiBuildWorkflowGeneratorTest {
 
     // [utest->dsn~customize-build-process.ci-build~0]
     @Test
-    void customizeBuildSteps() {
+    void customizeBuildStepsNonMatrixBuild() {
         final Job job = ciBuildContent(BuildOptions.builder().workflows(List.of(CustomWorkflow.builder()
                 .workflowName("ci-build.yml")
                 .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
@@ -88,7 +88,7 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     @Test
-    void ciBuildNonMatrixBuild() {
+    void ciBuildContentNonMatrixBuild() {
         final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
         assertAll(
                 () -> assertThat(job.getConcurrency(),
@@ -102,7 +102,7 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     @Test
-    void ciBuildMatrixBuild() {
+    void ciBuildContentMatrixBuild() {
         final Job matrixJob = ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1", "v2")))
                 .getJob("matrix-build");
         assertAll(() -> assertThat(matrixJob.getConcurrency(),
@@ -211,7 +211,7 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     @Test
-    void ciBuildBuildAllStepsHaveId() {
+    void ciBuildNonMatrixAllStepsHaveId() {
         final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
         assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10)));
         job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
