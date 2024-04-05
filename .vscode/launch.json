@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "java",
+      "name": "Project Keeper Fix",
+      "request": "launch",
+      "mainClass": "com.exasol.projectkeeper.cli.ProjectKeeperLauncher",
+      "projectName": "project-keeper-cli",
+      "args": "fix",
+      "vmArgs": ["-Dcom.exasol.projectkeeper.ownVersion=4.3.0"],
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

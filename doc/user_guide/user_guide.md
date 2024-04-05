@@ -254,6 +254,69 @@ build:
 
 Sonar will only run for the first version in the list.
 
+#### Customize Workflow Steps
+
+If your project requires additional or modified steps in the generated GitHub workflow `ci-build.yml` you can replace existing steps or insert additional steps:
+
+```yml
+build:
+  workflows:
+    - name: "ci-build.yml"
+      stepCustomizations:
+        - action: REPLACE | INSERT_AFTER
+          stepId: <step-id>
+          content:
+            name: <Step name>
+            id: <step-id>
+            uses: ...
+            with:
+              ...
+```
+
+* `name`: Name of the GitHub workflow to customize. PK currently only supports `ci-build.yml`.
+* `stepCustomizations`: List of customizations:
+  * `action`: Type of customization
+    * `REPLACE`: Replace an existing step with the new content
+    * `INSERT_AFTER`: Insert the content **after** the specified step
+  * `stepId`: ID of the step to replace or after which to insert the new step
+  * `content`: Content of the new step. PK does not validate this. You can use any valid GitHub action using `run` or `uses`, see examples below.
+
+
+Examples (see also [`.project-keeper.yml`](../../.project-keeper.yml)):
+
+```yml
+build:
+  workflows:
+    - name: "ci-build.yml"
+      stepCustomizations:
+        - action: INSERT_AFTER
+          stepId: setup-java
+          content:
+            name: Set up Go
+            id: setup-go
+            uses: actions/setup-go@v5
+            with:
+              go-version: "1.22"
+              cache-dependency-path: .project-keeper.yml
+        - action: INSERT_AFTER
+          stepId: setup-go
+          content:
+            name: Install Go tools
+            id: install-go-tools
+            run: go install github.com/google/go-licenses@v1.6.0
+        - action: REPLACE
+          stepId: build-pk-verify
+          content:
+            name: Run tests and build with Maven
+            id: maven-build
+            run: |
+              mvn -T 1C --batch-mode clean install verify \
+                  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                  -DtrimStackTrace=false
+            env:
+              GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
+```
+
 ## Maven Projects
 
 For Maven projects, PK generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.

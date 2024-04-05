@@ -5,6 +5,7 @@ Code name: Custom Release Artifacts
 ## Summary
 
 This release contains many new features and improvements:
+* It allows customizing the workflow steps in `ci-build.yml`, see the [user guide](https://github.com/exasol/project-keeper/blob/main/doc/user_guide/user_guide.md#customize-workflow-steps) for details.
 * It allows specifying custom release artifacts like extension files. See the [user guide](https://github.com/exasol/project-keeper/blob/main/doc/user_guide/user_guide.md#custom-release-artifacts) for details.
 * PK now automatically creates the required Git tags for Go projects.
 * The release also contains many bugfixes for the new modes `update-dependencies` and `verify-release`.
@@ -14,6 +15,7 @@ This release contains many new features and improvements:
 * #523: Added validation steps for changes file
 * #556: Updated release process to create tags for Go projects
 * #517: Added configuration of custom release artifacts
+* #519: Added configuration of custom build steps in `ci-build-yml`
 
 ## Bugfixes
 
@@ -38,6 +40,7 @@ This release contains many new features and improvements:
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:4.2.0` to `4.3.0`
+* Added `org.snakeyaml:snakeyaml-engine:2.7`
 
 #### Runtime Dependency Updates
 

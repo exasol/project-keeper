@@ -77,7 +77,6 @@ excludes:
   # Workflows must install PK itself before using it in the build
   - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_check.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/dependencies_update.yml'"
-  - "E-PK-CORE-18: Outdated content: '.github/workflows/ci-build.yml'"
   - "E-PK-CORE-18: Outdated content: '.github/workflows/release.yml'"
   # No configuration necessary for aggregator POM
   - "E-PK-CORE-103: Missing parent declaration in 'pom.xml'"
@@ -86,3 +85,42 @@ excludes:
   - regex: "E-PK-CORE-17: Missing required file: '.settings/.*'"
 linkReplacements:
   - https://eclipse-ee4j.github.io/jsonb-api|https://projects.eclipse.org/projects/ee4j.jsonp
+build:
+  workflows:
+    # [itest->dsn~customize-build-process.ci-build~0]
+    # [itest->dsn~customize-build-process.insert-step-after~0]
+    # [itest->dsn~customize-build-process.replace-step~0]
+    - name: "ci-build.yml"
+      stepCustomizations:
+        - action: INSERT_AFTER
+          stepId: setup-java
+          content:
+            name: Set up Go
+            id: setup-go
+            uses: actions/setup-go@v5
+            with:
+              go-version: "1.22"
+              cache-dependency-path: .project-keeper.yml
+        - action: INSERT_AFTER
+          stepId: setup-go
+          content:
+            name: Install Go tools
+            id: install-go-tools
+            run: go install github.com/google/go-licenses@v1.6.0
+        - action: REPLACE
+          stepId: build-pk-verify
+          content:
+            name: Run tests and build with Maven
+            id: maven-build
+            run: |
+              mvn -T 1C --batch-mode clean install verify \
+                  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                  -DtrimStackTrace=false
+            env:
+              GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
+        - action: INSERT_AFTER
+          stepId: sonar-analysis
+          content:
+            name: Run project-keeper itself
+            id: build-pk-verify
+            run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .

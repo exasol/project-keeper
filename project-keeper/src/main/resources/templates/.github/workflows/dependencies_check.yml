@@ -17,6 +17,9 @@ jobs:
       issues: write
     outputs:
       created-issues: ${{ steps.security-issues.outputs.created-issues }}
+    concurrency:
+      group: ${{ github.workflow }}-report_security_issues
+      cancel-in-progress: true
     steps:
       - uses: actions/checkout@v4
 
@@ -56,8 +59,8 @@ jobs:
     # [impl->dsn~trigger-dependency-updates~1]
     if: ${{ needs.report_security_issues.outputs.created-issues }}
     concurrency:
-      cancel-in-progress: true
-      group: "dependencies_update"
+      group: ${{ github.workflow }}-start_dependency_update
+      cancel-in-progress: false
     # Workflow needs secret INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK
     secrets: inherit
     permissions:
