@@ -432,7 +432,7 @@ PK allows customizing workflow steps in GitHub workflow `release.yml`.
 Covers:
 * [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
 
-Needs: impl, utest
+Needs: impl, utest, itest
 
 #### Customize GitHub Workflow `dependencies_check.yml`
 `dsn~customize-build-process.dependency-check~0`

@@ -131,9 +131,10 @@ build:
             id: install-project-keeper
             # This fixes https://github.com/exasol/project-keeper/issues/330
             run: |
-              mvn --batch-mode --threads 1C install -DskipTests \
-                  -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true \
-                  -Djacoco.skip=true -Derror-code-crawler.skip=true -Dreproducible.skip=true
+              mvn --batch-mode --threads 1C install \
+                  -Dmaven.test.skip=true -Dproject-keeper.skip=true \
+                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
     # [itest->dsn~customize-build-process.dependency-update~0]
     - name: "dependencies_update.yml"
@@ -145,6 +146,22 @@ build:
             id: install-project-keeper
             # This fixes https://github.com/exasol/project-keeper/issues/330
             run: |
-              mvn --batch-mode --threads 1C install -DskipTests \
-                  -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true \
-                  -Djacoco.skip=true -Derror-code-crawler.skip=true -Dreproducible.skip=true
+              mvn --batch-mode --threads 1C install \
+                  -Dmaven.test.skip=true -Dproject-keeper.skip=true \
+                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -Derror-code-crawler.skip=true -Dreproducible.skip=true
+
+    # [itest->dsn~customize-build-process.release~0]
+    - name: "release.yml"
+      stepCustomizations:
+        - action: INSERT_AFTER
+          stepId: check-ci-build-status
+          content:
+            name: Install Project Keeper
+            id: install-project-keeper
+            # Required for running PK verify-release
+            run: |
+              mvn --batch-mode --threads 1C install \
+                  -Dmaven.test.skip=true -Dproject-keeper.skip=true \
+                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -Derror-code-crawler.skip=true -Dreproducible.skip=true
