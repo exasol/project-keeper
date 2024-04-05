@@ -1,6 +1,6 @@
-# Project Keeper 4.3.0, released 2024-??-??
+# Project Keeper 4.3.0, released 2024-04-05
 
-Code name: Custom Release Artifacts
+Code name: Customize Workflows & Release Artifacts
 
 ## Summary
 
