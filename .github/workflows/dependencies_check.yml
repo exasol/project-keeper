@@ -42,9 +42,10 @@ jobs:
       - name: Install Project Keeper
         id: install-project-keeper
         run: |
-          mvn --batch-mode --threads 1C install -DskipTests \
-              -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true \
-              -Djacoco.skip=true -Derror-code-crawler.skip=true -Dreproducible.skip=true
+          mvn --batch-mode --threads 1C install \
+              -Dmaven.test.skip=true -Dproject-keeper.skip=true \
+              -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+              -Derror-code-crawler.skip=true -Dreproducible.skip=true
       - name: Generate ossindex report
         id: ossindex-report
         run: |
