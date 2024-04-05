@@ -72,7 +72,7 @@ jobs:
     needs: report_security_issues
     if: ${{ needs.report_security_issues.outputs.created-issues }}
     concurrency: {
-      group: '${{ github.workflow }}-start_dependency_udpate',
+      group: '${{ github.workflow }}-start_dependency_update',
       cancel-in-progress: false
     }
     secrets: inherit
