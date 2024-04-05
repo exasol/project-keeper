@@ -15,6 +15,13 @@
       "-Dcom.exasol.projectkeeper.ownVersion=4.3.0"
     ]
   },
+  "workbench.editor.customLabels.enabled": true,
+  "workbench.editor.customLabels.patterns": {
+    ".github/workflows/*": ".github/${filename}.${extname}",
+    "project-keeper/src/main/resources/templates/.github/workflows/*": "template/${filename}.${extname}",
+    "pom.xml": "root/pom.xml",
+    "*/**/pom.xml": "${dirname(0)}/pom.xml"
+  },
   "sonarlint.connectedMode.project": {
     "connectionId": "exasol",
     "projectKey": "com.exasol:project-keeper-root"
