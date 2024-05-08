@@ -132,8 +132,10 @@ class ProjectVersionIncrementor {
 
     private Optional<Node> findVersionNode(final Document pom) {
         final Optional<Node> versionNode = xmlFileIO.runXPath(pom, "/project/version");
-        if (versionNode.isPresent() && versionNode.get().getTextContent().equals("${revision}")) {
-            return xmlFileIO.runXPath(pom, "/project/properties/revision");
+        if (versionNode.isEmpty() || versionNode.get().getTextContent().equals("${revision}")) {
+            final Optional<Node> revisionElement = xmlFileIO.runXPath(pom, "/project/properties/revision");
+            logger.info("Version element missing or refers to ${revision}, use revision property " + revisionElement);
+            return revisionElement;
         }
         return versionNode;
     }
