@@ -13,6 +13,7 @@ import org.w3c.dom.Node;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
+import com.exasol.projectkeeper.shared.config.VersionFromSource;
 import com.exasol.projectkeeper.sources.analyze.generic.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
@@ -139,6 +140,9 @@ class ProjectVersionIncrementor {
     }
 
     private Path getPomPath() {
+        if (config.getVersionConfig() instanceof final VersionFromSource versionFromSource) {
+            return versionFromSource.getPathToPom();
+        }
         return projectDir.resolve("pom.xml");
     }
 }

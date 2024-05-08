@@ -85,7 +85,11 @@ class ProjectVersionIncrementorTest {
     }
 
     private void simulatePomVersion(final String version) {
-        when(xmlDocumentIOMock.read(POM_PATH)).thenReturn(pomModel);
+        simulatePomVersion(POM_PATH, version);
+    }
+
+    private void simulatePomVersion(final Path pomPath, final String version) {
+        when(xmlDocumentIOMock.read(pomPath)).thenReturn(pomModel);
         if (version != null) {
             when(versionNode.getTextContent()).thenReturn(version);
             when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version")))
@@ -105,9 +109,25 @@ class ProjectVersionIncrementorTest {
         verifyPomVersionUpdated(expectedNextVersion);
     }
 
+    @Test
+    void incrementProjectVersionInNonDefaultPom() {
+        final String currentVersion = "1.2.3";
+        final String expectedNextVersion = "1.2.4";
+        final Path subModulePom = Path.of("module/pom.xml");
+        simulatePomVersion(subModulePom, currentVersion);
+        final String newVersion = testee(configWithVersionFromSource(subModulePom), currentVersion)
+                .incrementProjectVersion();
+        assertThat(newVersion, equalTo(expectedNextVersion));
+        verifyPomVersionUpdated(subModulePom, expectedNextVersion);
+    }
+
     private void verifyPomVersionUpdated(final String expectedNextVersion) {
+        verifyPomVersionUpdated(POM_PATH, expectedNextVersion);
+    }
+
+    private void verifyPomVersionUpdated(final Path pomPath, final String expectedNextVersion) {
         verify(versionNode).setTextContent(expectedNextVersion);
-        verify(xmlDocumentIOMock).write(same(pomModel), eq(POM_PATH));
+        verify(xmlDocumentIOMock).write(same(pomModel), eq(pomPath));
     }
 
     @Test
@@ -152,5 +172,10 @@ class ProjectVersionIncrementorTest {
 
     private ProjectKeeperConfig configWithoutJarArtifact() {
         return ProjectKeeperConfig.builder().sources(List.of(Source.builder().modules(Set.of()).build())).build();
+    }
+
+    private ProjectKeeperConfig configWithVersionFromSource(final Path pom) {
+        return ProjectKeeperConfig.builder().sources(List.of(Source.builder().build()))
+                .versionConfig(new VersionFromSource(pom)).build();
     }
 }
