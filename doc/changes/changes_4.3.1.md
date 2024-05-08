@@ -10,6 +10,10 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 
 * #570: Fixed CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar:2.9.1:test`
 
+## Bugfixes
+
+* #567: Increased timeout for installing go-licenses
+
 ## Dependency Updates
 
 ### Project Keeper Core
