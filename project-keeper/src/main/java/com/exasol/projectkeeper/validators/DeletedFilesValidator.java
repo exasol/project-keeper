@@ -24,7 +24,8 @@ public class DeletedFilesValidator implements Validator {
             Path.of(GITHUB_WORKFLOWS, "release_droid_print_quick_checksum.yml"), RELEASE_DROID_WORKFLOW_WARNING,
             Path.of(GITHUB_WORKFLOWS, "release_droid_release_on_maven_central.yml"), RELEASE_DROID_WORKFLOW_WARNING,
             Path.of(GITHUB_WORKFLOWS, "release_droid_upload_github_release_assets.yml"), RELEASE_DROID_WORKFLOW_WARNING,
-            Path.of(GITHUB_WORKFLOWS, "release_droid_prepare_original_checksum.yml"), RELEASE_DROID_WORKFLOW_WARNING);
+            Path.of(GITHUB_WORKFLOWS, "release_droid_prepare_original_checksum.yml"), RELEASE_DROID_WORKFLOW_WARNING,
+            Path.of("release_config.yml"), "Release-droid configuration is replaced by release.yml");
     private final Path projectDirectory;
 
     /**
