@@ -28,23 +28,29 @@ public class GoBinary {
     /**
      * {@link GoBinary} for tool {@code go-licenses}
      */
-    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google/go-licenses@v1.6.0", "go-licenses");
+    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google/go-licenses@v1.6.0", "go-licenses",
+            Duration.ofMinutes(6));
 
-    private static final Duration INSTALLATION_TIMEOUT = Duration.ofMinutes(2);
     private static final Logger LOGGER = Logger.getLogger(GoBinary.class.getName());
     private final CommandExecutor executor;
     private final String moduleName;
     private final String binaryName;
+    private final Duration timeout;
     private Path goPath;
 
     GoBinary(final String moduleName, final String name) {
-        this(new CommandExecutor(), moduleName, name);
+        this(moduleName, name, Duration.ofMinutes(2));
     }
 
-    GoBinary(final CommandExecutor executor, final String moduleName, final String binaryName) {
+    GoBinary(final String moduleName, final String name, final Duration timeout) {
+        this(new CommandExecutor(), moduleName, name, timeout);
+    }
+
+    GoBinary(final CommandExecutor executor, final String moduleName, final String binaryName, final Duration timeout) {
         this.moduleName = moduleName;
         this.binaryName = binaryName;
         this.executor = executor;
+        this.timeout = timeout;
     }
 
     /**
@@ -58,7 +64,7 @@ public class GoBinary {
         }
         LOGGER.info(() -> "Installing missing go binary " + nameWithSuffix());
         final ShellCommand shellCommand = ShellCommand.builder() //
-                .timeout(INSTALLATION_TIMEOUT) //
+                .timeout(timeout) //
                 .command(GO.command()) //
                 .args("install", this.moduleName) //
                 .build();
