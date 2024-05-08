@@ -1,4 +1,4 @@
-# Project Keeper 4.3.1, released 2024-05-??
+# Project Keeper 4.3.1, released 2024-05-07
 
 Code name: Fix CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar:2.9.1:test`
 

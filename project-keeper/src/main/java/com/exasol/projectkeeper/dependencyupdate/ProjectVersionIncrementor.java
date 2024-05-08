@@ -118,7 +118,7 @@ class ProjectVersionIncrementor {
         final Optional<Node> versionNode = findVersionNode(pom);
         if (versionNode.isEmpty()) {
             logger.warn(ExaError.messageBuilder("W-PK-CORE-196")
-                    .message("No version node found in pom file {{pom file path}}.", path)
+                    .message("No version element found in pom file {{pom file path}}.", path)
                     .mitigation("Please update the version to {{next version}} manually.", nextVersion).toString());
             return;
         }
@@ -131,7 +131,11 @@ class ProjectVersionIncrementor {
     }
 
     private Optional<Node> findVersionNode(final Document pom) {
-        return xmlFileIO.runXPath(pom, "/project/version");
+        final Optional<Node> versionNode = xmlFileIO.runXPath(pom, "/project/version");
+        if (versionNode.isPresent() && versionNode.get().getTextContent().equals("${revision}")) {
+            return xmlFileIO.runXPath(pom, "/project/properties/revision");
+        }
+        return versionNode;
     }
 
     static String getIncrementedVersion(final String version) {
