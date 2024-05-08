@@ -47,7 +47,7 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.2` to `2.0.3`
 * Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.1` to `3.1.2`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.2` to `3.2.4`
-* Updated `org.apache.maven.plugins:maven-jar-plugin:3.3.0` to `3.4.1`
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.3.0` to `2.4`
 * Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.1`
 * Updated `org.apache.maven.plugins:maven-toolchains-plugin:3.1.0` to `3.2.0`
 
