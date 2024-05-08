@@ -5,6 +5,7 @@
     <packaging>jar</packaging>
     <name>Project Keeper Core</name>
     <description>Project keeper is a tool that verifies and fixes project setups.</description>
+    <url>https://github.com/exasol/project-keeper/</url>
     <parent>
         <relativePath>./pk_generated_parent.pom</relativePath>
         <groupId>com.exasol</groupId>
@@ -125,7 +126,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.4.1</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -149,5 +150,4 @@
             </plugin>
         </plugins>
     </build>
-    <url>https://github.com/exasol/project-keeper/</url>
 </project>

@@ -8,6 +8,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
+import java.time.Duration;
 
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Tag;
@@ -67,6 +68,6 @@ class GoBinaryTest {
     }
 
     private GoBinary testee() {
-        return new GoBinary(this.executor, null, "non-existing-go-binary");
+        return new GoBinary(this.executor, null, "non-existing-go-binary", Duration.ofSeconds(5));
     }
 }
