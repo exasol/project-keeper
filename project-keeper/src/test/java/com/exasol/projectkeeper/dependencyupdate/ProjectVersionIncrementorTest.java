@@ -208,8 +208,9 @@ class ProjectVersionIncrementorTest {
     }
 
     private ProjectKeeperConfig configWithJarArtifact() {
-        return ProjectKeeperConfig.builder()
-                .sources(List.of(Source.builder().modules(Set.of(ProjectKeeperModule.JAR_ARTIFACT)).build())).build();
+        return ProjectKeeperConfig.builder().sources(List.of(
+                Source.builder().path(Path.of("pom.xml")).modules(Set.of(ProjectKeeperModule.JAR_ARTIFACT)).build()))
+                .build();
     }
 
     private ProjectKeeperConfig configWithoutJarArtifact() {

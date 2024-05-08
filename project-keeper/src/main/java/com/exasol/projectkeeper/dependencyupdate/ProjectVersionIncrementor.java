@@ -6,14 +6,14 @@ import java.nio.file.Path;
 import java.time.*;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
-import com.exasol.projectkeeper.shared.config.VersionFromSource;
+import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.analyze.generic.*;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileIO;
@@ -89,9 +89,7 @@ class ProjectVersionIncrementor {
     String incrementProjectVersion() {
         final String nextVersion = getIncrementedVersion(currentProjectVersion);
         updatePomVersion(nextVersion);
-        if (usesReferenceCheckerPlugin()) {
-            updateReferences();
-        }
+        sourcesUsingReferenceCheckerPlugin().forEach(this::updateReferences);
         return nextVersion;
     }
 
@@ -103,14 +101,15 @@ class ProjectVersionIncrementor {
         xmlFileIO.write(pom, path);
     }
 
-    private boolean usesReferenceCheckerPlugin() {
-        return config.getSources().stream().anyMatch(source -> source.getModules().contains(JAR_ARTIFACT));
+    private Stream<Source> sourcesUsingReferenceCheckerPlugin() {
+        return config.getSources().stream().filter(source -> source.getModules().contains(JAR_ARTIFACT));
     }
 
-    private void updateReferences() {
-        logger.info("Unify artifact references");
+    private void updateReferences(final Source source) {
+        final Path moduleDir = projectDir.resolve(source.getPath()).getParent();
+        logger.info("Unify artifact references in dir " + moduleDir + "...");
         final ShellCommand command = MavenProcessBuilder.create().addArgument("artifact-reference-checker:unify")
-                .workingDir(projectDir).timeout(Duration.ofSeconds(30)).buildCommand();
+                .workingDir(moduleDir).timeout(Duration.ofSeconds(30)).buildCommand();
         commandExecutor.execute(command);
     }
 
