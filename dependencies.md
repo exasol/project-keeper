@@ -42,7 +42,7 @@
 | Dependency                                              | License                          |
 | ------------------------------------------------------- | -------------------------------- |
 | [SonarQube Scanner for Maven][28]                       | [GNU LGPL 3][29]                 |
-| [Apache Maven Toolchains Plugin][30]                    | [Apache License, Version 2.0][1] |
+| [Apache Maven Toolchains Plugin][30]                    | [Apache-2.0][1]                  |
 | [Apache Maven Compiler Plugin][31]                      | [Apache-2.0][1]                  |
 | [Apache Maven Enforcer Plugin][0]                       | [Apache-2.0][1]                  |
 | [Maven Flatten Plugin][32]                              | [Apache Software Licenese][1]    |
@@ -52,7 +52,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][37]          | [Apache License 2.0][38]         |
 | [Apache Maven Deploy Plugin][4]                         | [Apache-2.0][1]                  |
 | [Apache Maven GPG Plugin][39]                           | [Apache-2.0][1]                  |
-| [Apache Maven Source Plugin][40]                        | [Apache License, Version 2.0][1] |
+| [Apache Maven Source Plugin][40]                        | [Apache-2.0][1]                  |
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [JaCoCo :: Maven Plugin][44]                            | [EPL-2.0][45]                    |
@@ -103,8 +103,8 @@
 | Dependency                                              | License                          |
 | ------------------------------------------------------- | -------------------------------- |
 | [SonarQube Scanner for Maven][28]                       | [GNU LGPL 3][29]                 |
-| [Apache Maven Toolchains Plugin][30]                    | [Apache License, Version 2.0][1] |
-| [Apache Maven JAR Plugin][62]                           | [Apache License, Version 2.0][1] |
+| [Apache Maven Toolchains Plugin][30]                    | [Apache-2.0][1]                  |
+| [Apache Maven JAR Plugin][62]                           | [Apache-2.0][1]                  |
 | [Apache Maven Compiler Plugin][31]                      | [Apache-2.0][1]                  |
 | [Apache Maven Enforcer Plugin][0]                       | [Apache-2.0][1]                  |
 | [Maven Flatten Plugin][32]                              | [Apache Software Licenese][1]    |
@@ -114,7 +114,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][37]          | [Apache License 2.0][38]         |
 | [Apache Maven Deploy Plugin][4]                         | [Apache-2.0][1]                  |
 | [Apache Maven GPG Plugin][39]                           | [Apache-2.0][1]                  |
-| [Apache Maven Source Plugin][40]                        | [Apache License, Version 2.0][1] |
+| [Apache Maven Source Plugin][40]                        | [Apache-2.0][1]                  |
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Maven Failsafe Plugin][63]                             | [Apache-2.0][1]                  |
@@ -153,7 +153,7 @@
 | Dependency                                              | License                          |
 | ------------------------------------------------------- | -------------------------------- |
 | [SonarQube Scanner for Maven][28]                       | [GNU LGPL 3][29]                 |
-| [Apache Maven Toolchains Plugin][30]                    | [Apache License, Version 2.0][1] |
+| [Apache Maven Toolchains Plugin][30]                    | [Apache-2.0][1]                  |
 | [Apache Maven Compiler Plugin][31]                      | [Apache-2.0][1]                  |
 | [Apache Maven Enforcer Plugin][0]                       | [Apache-2.0][1]                  |
 | [Maven Flatten Plugin][32]                              | [Apache Software Licenese][1]    |
@@ -162,11 +162,11 @@
 | [Versions Maven Plugin][36]                             | [Apache License, Version 2.0][1] |
 | [duplicate-finder-maven-plugin Maven Mojo][37]          | [Apache License 2.0][38]         |
 | [Apache Maven Assembly Plugin][64]                      | [Apache-2.0][1]                  |
-| [Apache Maven JAR Plugin][62]                           | [Apache License, Version 2.0][1] |
+| [Apache Maven JAR Plugin][62]                           | [Apache-2.0][1]                  |
 | [Artifact reference checker and unifier][65]            | [MIT License][66]                |
 | [Apache Maven Deploy Plugin][4]                         | [Apache-2.0][1]                  |
 | [Apache Maven GPG Plugin][39]                           | [Apache-2.0][1]                  |
-| [Apache Maven Source Plugin][40]                        | [Apache License, Version 2.0][1] |
+| [Apache Maven Source Plugin][40]                        | [Apache-2.0][1]                  |
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Maven Failsafe Plugin][63]                             | [Apache-2.0][1]                  |
@@ -198,14 +198,14 @@
 | [mockito-core][25]                     | [MIT][26]                                      |
 | [Maven Plugin Integration Testing][59] | [MIT License][60]                              |
 | [SLF4J JDK14 Binding][27]              | [MIT License][24]                              |
-| [JaCoCo :: Agent][70]                  | [Eclipse Public License 2.0][45]               |
+| [JaCoCo :: Agent][70]                  | [EPL-2.0][45]                                  |
 
 ### Plugin Dependencies
 
 | Dependency                                              | License                          |
 | ------------------------------------------------------- | -------------------------------- |
 | [SonarQube Scanner for Maven][28]                       | [GNU LGPL 3][29]                 |
-| [Apache Maven Toolchains Plugin][30]                    | [Apache License, Version 2.0][1] |
+| [Apache Maven Toolchains Plugin][30]                    | [Apache-2.0][1]                  |
 | [Maven Plugin Plugin][71]                               | [Apache-2.0][1]                  |
 | [Apache Maven Compiler Plugin][31]                      | [Apache-2.0][1]                  |
 | [Apache Maven Enforcer Plugin][0]                       | [Apache-2.0][1]                  |
@@ -217,7 +217,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][37]          | [Apache License 2.0][38]         |
 | [Apache Maven Deploy Plugin][4]                         | [Apache-2.0][1]                  |
 | [Apache Maven GPG Plugin][39]                           | [Apache-2.0][1]                  |
-| [Apache Maven Source Plugin][40]                        | [Apache License, Version 2.0][1] |
+| [Apache Maven Source Plugin][40]                        | [Apache-2.0][1]                  |
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Apache Maven Dependency Plugin][72]                    | [Apache-2.0][1]                  |
@@ -253,14 +253,14 @@
 | [mockito-core][25]                     | [MIT][26]                                      |
 | [mockito-junit-jupiter][25]            | [MIT][26]                                      |
 | [Maven Plugin Integration Testing][59] | [MIT License][60]                              |
-| [JaCoCo :: Agent][70]                  | [Eclipse Public License 2.0][45]               |
+| [JaCoCo :: Agent][70]                  | [EPL-2.0][45]                                  |
 
 ### Plugin Dependencies
 
 | Dependency                                              | License                          |
 | ------------------------------------------------------- | -------------------------------- |
 | [SonarQube Scanner for Maven][28]                       | [GNU LGPL 3][29]                 |
-| [Apache Maven Toolchains Plugin][30]                    | [Apache License, Version 2.0][1] |
+| [Apache Maven Toolchains Plugin][30]                    | [Apache-2.0][1]                  |
 | [Apache Maven Compiler Plugin][31]                      | [Apache-2.0][1]                  |
 | [Apache Maven Enforcer Plugin][0]                       | [Apache-2.0][1]                  |
 | [Maven Flatten Plugin][32]                              | [Apache Software Licenese][1]    |
@@ -271,7 +271,7 @@
 | [duplicate-finder-maven-plugin Maven Mojo][37]          | [Apache License 2.0][38]         |
 | [Apache Maven Deploy Plugin][4]                         | [Apache-2.0][1]                  |
 | [Apache Maven GPG Plugin][39]                           | [Apache-2.0][1]                  |
-| [Apache Maven Source Plugin][40]                        | [Apache License, Version 2.0][1] |
+| [Apache Maven Source Plugin][40]                        | [Apache-2.0][1]                  |
 | [Apache Maven Javadoc Plugin][41]                       | [Apache-2.0][1]                  |
 | [Nexus Staging Maven Plugin][42]                        | [Eclipse Public License][43]     |
 | [Apache Maven Dependency Plugin][72]                    | [Apache-2.0][1]                  |
@@ -296,7 +296,7 @@
 | Dependency                                              | License                          |
 | ------------------------------------------------------- | -------------------------------- |
 | [SonarQube Scanner for Maven][28]                       | [GNU LGPL 3][29]                 |
-| [Apache Maven Toolchains Plugin][30]                    | [Apache License, Version 2.0][1] |
+| [Apache Maven Toolchains Plugin][30]                    | [Apache-2.0][1]                  |
 | [Apache Maven Compiler Plugin][31]                      | [Apache-2.0][1]                  |
 | [Apache Maven Enforcer Plugin][0]                       | [Apache-2.0][1]                  |
 | [Maven Flatten Plugin][32]                              | [Apache Software Licenese][1]    |
