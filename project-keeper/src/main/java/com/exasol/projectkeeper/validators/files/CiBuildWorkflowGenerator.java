@@ -35,9 +35,21 @@ class CiBuildWorkflowGenerator {
                     buildOptions.getExasolDbVersions().stream().map(this::quote).collect(joining(", ")));
             template.replacing("defaultExasolDbVersion", quote(buildOptions.getExasolDbVersions().get(0)));
         }
-        // [impl->dsn~customize-build-process.ci-build~0]
+        final String buildJobId = buildType.buildJobId;
+        return createTemplate(template, CI_BUILD_WORKFLOW_NAME, buildJobId);
+    }
+
+    private FileTemplate createTemplate(final FileTemplateFromResource template, final String workflowName,
+            final String buildJobId) {
+        final Optional<CustomWorkflow> workflow = buildOptions.getWorkflow(workflowName);
+        final List<StepCustomization> customizations = workflow.map(CustomWorkflow::getSteps)
+                .orElseGet(Collections::emptyList);
+        final String environmentName = workflow.map(CustomWorkflow::getEnvironment).orElse(null);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(
-                new GitHubWorkflowStepCustomizer(findCustomizations(CI_BUILD_WORKFLOW_NAME), buildType.buildJobId)));
+                // [impl->dsn~customize-build-process.ci-build~0]
+                new GitHubWorkflowStepCustomizer(customizations, buildJobId),
+                // [impl->dsn~customize-build-process.ci-build.environment~1]
+                new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName)));
     }
 
     private List<StepCustomization> findCustomizations(final String workflowName) {
@@ -94,8 +106,9 @@ class CiBuildWorkflowGenerator {
         final FileTemplateFromResource template = new FileTemplateFromResource(WORKFLOW_PATH + workflowName,
                 REQUIRE_EXACT);
         templateCustomizer.accept(template);
-        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(
-                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), jobName)));
+        final List<StepCustomization> customizations = findCustomizations(workflowName);
+        return new ContentCustomizingTemplate(template,
+                new GitHubWorkflowCustomizer(new GitHubWorkflowStepCustomizer(customizations, jobName)));
     }
 
     enum CiTemplateType {
