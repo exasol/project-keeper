@@ -12,6 +12,7 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 
 ## Bugfixes
 
+* #571: Fixed failing version increment during dependency update
 * #567: Increased timeout for installing go-licenses
 
 ## Dependency Updates
