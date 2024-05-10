@@ -395,6 +395,8 @@ public class ProjectKeeperRawConfig {
     public static class Workflow {
         /** Workflow name, e.g. {@code ci-build.yml} or {@code release.yml}. */
         public String name;
+        /** GitHub environment, e.g. {@code aws}. */
+        public String environment;
         /** List of customizations for the workflow. */
         public List<RawStepCustomization> stepCustomizations;
     }

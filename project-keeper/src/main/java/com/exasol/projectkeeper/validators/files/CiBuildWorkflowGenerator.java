@@ -36,8 +36,8 @@ class CiBuildWorkflowGenerator {
             template.replacing("defaultExasolDbVersion", quote(buildOptions.getExasolDbVersions().get(0)));
         }
         // [impl->dsn~customize-build-process.ci-build~0]
-        return new ContentCustomizingTemplate(template,
-                new GitHubWorkflowStepCustomizer(findCustomizations(CI_BUILD_WORKFLOW_NAME), buildType.buildJobId));
+        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(
+                new GitHubWorkflowStepCustomizer(findCustomizations(CI_BUILD_WORKFLOW_NAME), buildType.buildJobId)));
     }
 
     private List<StepCustomization> findCustomizations(final String workflowName) {
@@ -94,8 +94,8 @@ class CiBuildWorkflowGenerator {
         final FileTemplateFromResource template = new FileTemplateFromResource(WORKFLOW_PATH + workflowName,
                 REQUIRE_EXACT);
         templateCustomizer.accept(template);
-        return new ContentCustomizingTemplate(template,
-                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), jobName));
+        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(
+                new GitHubWorkflowStepCustomizer(findCustomizations(workflowName), jobName)));
     }
 
     enum CiTemplateType {
