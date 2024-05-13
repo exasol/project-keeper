@@ -1,6 +1,6 @@
-# Project Keeper 4.3.1, released 2024-05-??
+# Project Keeper 4.3.1, released 2024-05-13
 
-Code name: Fix CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar:2.9.1:test`
+Code name: Environment for GitHub workflow `ci-build.yml`
 
 ## Summary
 
@@ -9,6 +9,10 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 ## Security
 
 * #570: Fixed CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar:2.9.1:test`
+
+## Features
+
+* #566: Allowed specifying an environment for GitHub workflow `ci-build.yml`
 
 ## Bugfixes
 
