@@ -322,6 +322,17 @@ class GitHubWorkflowTest {
                 "E-PK-CORE-205: No step found for id 'missing' in {steps=[{id=step-to-replace, name=Old Step}]}"));
     }
 
+    @Test
+    void setEnvironment() {
+        final Job job = read("""
+                jobs:
+                  build:
+                    steps:
+                """).getJob("build");
+        job.setEnvironment("my-env");
+        assertThat(job.getEnvironment(), equalTo("my-env"));
+    }
+
     private GitHubWorkflow read(final String yaml) {
         return GitHubWorkflowIO.create().loadWorkflow(yaml);
     }
