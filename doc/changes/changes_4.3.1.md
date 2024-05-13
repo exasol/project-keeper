@@ -16,7 +16,17 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.1` to `2.0.3`
+
 ### Project Keeper Shared Model Classes
+
+#### Test Dependency Updates
+
+* Updated `org.mockito:mockito-core:5.11.0` to `5.12.0`
 
 #### Plugin Dependency Updates
 
@@ -39,6 +49,7 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.3.0` to `4.3.1`
+* Updated `org.mockito:mockito-junit-jupiter:5.11.0` to `5.12.0`
 * Updated `org.xmlunit:xmlunit-matchers:2.9.1` to `2.10.0`
 
 #### Plugin Dependency Updates
@@ -76,6 +87,7 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 #### Test Dependency Updates
 
 * Updated `org.jacoco:org.jacoco.agent:0.8.11` to `0.8.12`
+* Updated `org.mockito:mockito-core:5.11.0` to `5.12.0`
 * Updated `org.xmlunit:xmlunit-matchers:2.9.1` to `2.10.0`
 
 #### Plugin Dependency Updates
@@ -94,6 +106,8 @@ This release fixes vulnerability CVE-2024-31573 in `org.xmlunit:xmlunit-core:jar
 #### Test Dependency Updates
 
 * Updated `org.jacoco:org.jacoco.agent:0.8.11` to `0.8.12`
+* Updated `org.mockito:mockito-core:5.11.0` to `5.12.0`
+* Updated `org.mockito:mockito-junit-jupiter:5.11.0` to `5.12.0`
 * Updated `org.xmlunit:xmlunit-matchers:2.9.1` to `2.10.0`
 
 #### Plugin Dependency Updates
