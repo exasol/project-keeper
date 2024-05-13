@@ -1,7 +1,0 @@
-release-platforms:
-  - GitHub
-  - Maven
-language: Java
-maven-artifacts:
-  - exasol/project-keeper-cli
-  - exasol/project-keeper-maven-plugin

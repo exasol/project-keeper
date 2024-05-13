@@ -111,7 +111,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
+                <!-- Upgrading causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
                 <!-- Will be fixed in jgit 6.10.0, see https://github.com/eclipse-jgit/jgit/issues/36 -->
                 <version>6.7.0.202309050840-r</version>
             </dependency>
@@ -292,8 +292,8 @@
                     <excludes>
                         <!-- Dependencies use SLF4J 1.7 so we can't upgrade to 2 -->
                         <exclude>org.slf4j:slf4j-jdk14:jar:*:*</exclude>
-                        <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
-                        <exclude>org.eclipse.jgit:org.eclipse.jgit:jar:*:6.8.0.202311291450-r</exclude>
+                        <!-- Upgrading to 6.9.0.202403050737-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
+                        <exclude>org.eclipse.jgit:org.eclipse.jgit:jar:*:*</exclude>
                     </excludes>
                 </configuration>
             </plugin>
