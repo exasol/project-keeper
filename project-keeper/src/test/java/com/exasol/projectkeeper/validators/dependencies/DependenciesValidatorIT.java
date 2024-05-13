@@ -101,7 +101,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
 
     private void createExamplePomFile() throws IOException {
         final TestMavenModel pomModel = new TestMavenModel();
-        pomModel.addDependency("error-reporting-java", "com.exasol", "compile", "0.1.0");
+        pomModel.addDependency("error-reporting-java", "com.exasol", "compile", "1.0.1");
         pomModel.configureAssemblyPluginFinalName();
         pomModel.writeAsPomToProject(this.projectDir);
     }
@@ -113,7 +113,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         exasolRepo.setUrl("https://repo1.maven.org/maven2");
         exasolRepo.setId("maven.exasol.com");
         pomModel.addRepository(exasolRepo);
-        pomModel.addDependency("exasol-jdbc", "com.exasol", "compile", "7.0.4");
+        pomModel.addDependency("exasol-jdbc", "com.exasol", "compile", "24.1.0");
         pomModel.writeAsPomToProject(this.projectDir);
     }
 }

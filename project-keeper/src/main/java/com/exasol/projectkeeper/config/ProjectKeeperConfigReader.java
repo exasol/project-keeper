@@ -150,20 +150,16 @@ public class ProjectKeeperConfigReader {
                             supportedWorkflowNames)
                     .toString());
         }
-        if (workflow.stepCustomizations == null || workflow.stepCustomizations.isEmpty()) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-203")
-                    .message("Missing customized steps for workflow {{workflow name}} in file {{config file name}}.",
-                            workflow.name, CONFIG_FILE_NAME)
-                    .mitigation("Add at least one step or remove the workflow.").toString());
-        }
         return CustomWorkflow.builder() //
                 .workflowName(workflow.name) //
+                .environment(workflow.environment) //
                 .steps(convertSteps(workflow.stepCustomizations)) //
                 .build();
     }
 
     private List<StepCustomization> convertSteps(final List<RawStepCustomization> stepCustomizations) {
-        return stepCustomizations.stream().map(this::convertStep).toList();
+        return Optional.ofNullable(stepCustomizations).orElseGet(Collections::emptyList) //
+                .stream().map(this::convertStep).toList();
     }
 
     private StepCustomization convertStep(final RawStepCustomization step) {

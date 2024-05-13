@@ -14,7 +14,6 @@ jobs:
         shell: "bash"
     permissions:
       contents: read
-      checks: write # Allow scacap/action-surefire-report
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}-${{ matrix.exasol_db_version }}
       cancel-in-progress: true

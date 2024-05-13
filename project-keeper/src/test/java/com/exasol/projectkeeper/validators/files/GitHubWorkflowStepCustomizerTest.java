@@ -214,6 +214,7 @@ class GitHubWorkflowStepCustomizerTest {
     }
 
     private String getCustomizedContent(final String workflowTemplate, final StepCustomization... customizations) {
-        return new GitHubWorkflowStepCustomizer(asList(customizations), "build").customizeContent(workflowTemplate);
+        return new GitHubWorkflowCustomizer(new GitHubWorkflowStepCustomizer(asList(customizations), "build"))
+                .customizeContent(workflowTemplate);
     }
 }

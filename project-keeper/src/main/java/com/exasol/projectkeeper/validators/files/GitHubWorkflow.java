@@ -98,6 +98,14 @@ class GitHubWorkflow {
             return asMap(rawJob.get("env"));
         }
 
+        public String getEnvironment() {
+            return (String) rawJob.get("environment");
+        }
+
+        public void setEnvironment(final String environmentName) {
+            rawJob.put("environment", environmentName);
+        }
+
         private Predicate<? super Step> hasId(final String id) {
             return step -> step.getId().equals(id);
         }

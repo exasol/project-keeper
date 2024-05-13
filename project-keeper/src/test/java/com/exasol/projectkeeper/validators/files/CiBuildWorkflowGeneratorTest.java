@@ -133,6 +133,21 @@ class CiBuildWorkflowGeneratorTest {
                         "${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}")));
     }
 
+    // [utest->dsn~customize-build-process.ci-build.environment~1]
+    @Test
+    void ciBuildCustomEnvironment() {
+        final Job job = ciBuildContent(BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml").environment("aws").build())))
+                .getJob("build");
+        assertThat(job.getEnvironment(), equalTo("aws"));
+    }
+
+    @Test
+    void ciBuildDefaultHasNoEnvironment() {
+        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
+        assertThat(job.getEnvironment(), nullValue());
+    }
+
     // [utest->dsn~release-workflow.deploy-maven-central~1]
     @Test
     void releaseBuildWithMavenRelease() {

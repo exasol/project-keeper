@@ -260,20 +260,7 @@ class ProjectKeeperConfigReaderTest {
                                   stepId: step-id-to-replace
                                   content:
                         """, equalTo(
-                        "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")),
-                Arguments.of("workflow: missing step customization list", """
-                        build:
-                          workflows:
-                            - name: ci-build.yml
-                        """, equalTo(
-                        "E-PK-CORE-203: Missing customized steps for workflow 'ci-build.yml' in file '.project-keeper.yml'. Add at least one step or remove the workflow.")),
-                Arguments.of("workflow: empty step customization list", """
-                        build:
-                          workflows:
-                            - name: ci-build.yml
-                              stepCustomizations:
-                        """, equalTo(
-                        "E-PK-CORE-203: Missing customized steps for workflow 'ci-build.yml' in file '.project-keeper.yml'. Add at least one step or remove the workflow.")));
+                        "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")));
     }
 
     @ParameterizedTest(name = "{0}")
@@ -285,6 +272,16 @@ class ProjectKeeperConfigReaderTest {
         }
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, this::readConfig);
         assertThat(testName, exception.getMessage(), expectedErrorMessage);
+    }
+
+    @Test
+    void readWorkflowWithoutCustomization() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps(), empty());
     }
 
     @Test
@@ -329,6 +326,27 @@ class ProjectKeeperConfigReaderTest {
                 """.replace("${action}", action));
         assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps().get(0).getType(),
                 equalTo(expected));
+    }
+
+    @Test
+    void readWorkflowWithoutEnvironment() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getEnvironment(), nullValue());
+    }
+
+    @Test
+    void readWorkflowWithEnvironment() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      environment: aws
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getEnvironment(), equalTo("aws"));
     }
 
     @Test

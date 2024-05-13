@@ -26,7 +26,6 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 @ExtendWith(MockitoExtension.class)
 class FileTemplatesFactoryTest {
     private static final String OWN_VERSION = "version";
-    private static final String NEWLINE = System.lineSeparator();
     @Mock
     Logger loggerMock;
 

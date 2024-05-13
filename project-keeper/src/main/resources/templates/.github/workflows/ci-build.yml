@@ -13,7 +13,6 @@ jobs:
         shell: "bash"
     permissions:
       contents: read
-      checks: write # Allow scacap/action-surefire-report
       issues: read # Required for PK verify-release
     concurrency:
       group: ${{ github.workflow }}-${{ github.ref }}

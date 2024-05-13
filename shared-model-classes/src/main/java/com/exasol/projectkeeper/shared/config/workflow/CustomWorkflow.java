@@ -10,10 +10,12 @@ import java.util.*;
 public final class CustomWorkflow {
 
     private final String workflowName;
+    private final String environment;
     private final List<StepCustomization> steps;
 
     private CustomWorkflow(final Builder builder) {
         this.workflowName = Objects.requireNonNull(builder.workflowName, "workflowName");
+        this.environment = builder.environment;
         this.steps = builder.steps == null ? emptyList() : builder.steps;
     }
 
@@ -36,6 +38,16 @@ public final class CustomWorkflow {
     }
 
     /**
+     * Get the GitHub environment for the workflow, e.g. {@code aws}. If this is {@code null}, the workflow will not use
+     * an environment.
+     * 
+     * @return the GitHub environment
+     */
+    public String getEnvironment() {
+        return environment;
+    }
+
+    /**
      * Create a new builder for the {@link CustomWorkflow}.
      * 
      * @return builder instance
@@ -46,12 +58,13 @@ public final class CustomWorkflow {
 
     @Override
     public String toString() {
-        return "WorkflowOptions [workflowName=" + workflowName + ", steps=" + steps + "]";
+        return "WorkflowOptions [workflowName=" + workflowName + ", environment=" + environment + ", steps=" + steps
+                + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workflowName, steps);
+        return Objects.hash(workflowName, environment, steps);
     }
 
     @Override
@@ -66,7 +79,8 @@ public final class CustomWorkflow {
             return false;
         }
         final CustomWorkflow other = (CustomWorkflow) obj;
-        return Objects.equals(workflowName, other.workflowName) && Objects.equals(steps, other.steps);
+        return Objects.equals(workflowName, other.workflowName) && Objects.equals(environment, other.environment)
+                && Objects.equals(steps, other.steps);
     }
 
     /**
@@ -74,6 +88,7 @@ public final class CustomWorkflow {
      */
     public static class Builder {
         private String workflowName;
+        private String environment;
         private List<StepCustomization> steps = null;
 
         private Builder() {
@@ -112,6 +127,18 @@ public final class CustomWorkflow {
          */
         public Builder steps(final List<StepCustomization> steps) {
             this.steps = Objects.requireNonNull(steps, "steps");
+            return this;
+        }
+
+        /**
+         * Set GitHub environment for the workflow, e.g. {@code aws}. If this is {@code null}, the workflow will not use
+         * an environment.
+         *
+         * @param environment the GitHub environment
+         * @return the builder instance
+         */
+        public Builder environment(final String environment) {
+            this.environment = environment;
             return this;
         }
 

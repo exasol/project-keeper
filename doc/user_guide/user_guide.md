@@ -254,6 +254,17 @@ build:
 
 Sonar will only run for the first version in the list.
 
+#### Customize Workflow Environment
+
+If your project requires running workflow `ci-build.yml` in a certain GitHub environment, you can specify it like this:
+
+```yml
+build:
+  workflows:
+    - name: "ci-build.yml"
+      environment: aws
+```
+
 #### Customize Workflow Steps
 
 If your project requires additional or modified steps in the generated GitHub workflow `ci-build.yml` you can replace existing steps or insert additional steps:

@@ -424,6 +424,19 @@ Covers:
 
 Needs: impl, utest, itest
 
+#### Customize Environment for GitHub Workflow `ci-build.yml`
+`dsn~customize-build-process.ci-build.environment~1`
+
+PK allows configuring a custom GitHub environment for `ci-build.yml`.
+
+Rationale:
+* Some projects use GitHub Environments to manually approve running expensive builds.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest
+
 #### Customize GitHub Workflow `release.yml`
 `dsn~customize-build-process.release~0`
 

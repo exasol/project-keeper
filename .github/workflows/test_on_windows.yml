@@ -9,6 +9,8 @@ on:
 jobs:
   test:
     runs-on: windows-latest
+    permissions:
+      contents: read
     defaults:
       run:
         shell: "bash"
@@ -24,6 +26,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
+          # Java 11 required for test project "my-test-project"
           java-version: |
             11
             17
