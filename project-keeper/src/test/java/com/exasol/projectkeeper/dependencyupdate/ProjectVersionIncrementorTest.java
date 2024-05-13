@@ -5,13 +5,13 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.ArgumentMatchers.same;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 import java.nio.file.Path;
 import java.time.*;
 import java.util.*;
 
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -71,7 +71,7 @@ class ProjectVersionIncrementorTest {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 testee::incrementProjectVersion);
         assertThat(exception.getMessage(),
-                startsWith("E-PK-CORE-174: Inconsistent project version '1.2.2' found in pom '" + POM_PATH
+                Matchers.startsWith("E-PK-CORE-174: Inconsistent project version '1.2.2' found in pom '" + POM_PATH
                         + "', expected '1.2.3'."));
     }
 
@@ -80,12 +80,16 @@ class ProjectVersionIncrementorTest {
         simulatePomVersion(null);
         final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
         assertDoesNotThrow(testee::incrementProjectVersion);
-        verify(loggerMock).warn("W-PK-CORE-196: No version node found in pom file '" + POM_PATH
+        verify(loggerMock).warn("W-PK-CORE-196: No version element found in pom file '" + POM_PATH
                 + "'. Please update the version to '1.2.4' manually.");
     }
 
     private void simulatePomVersion(final String version) {
-        when(xmlDocumentIOMock.read(POM_PATH)).thenReturn(pomModel);
+        simulatePomVersion(POM_PATH, version);
+    }
+
+    private void simulatePomVersion(final Path pomPath, final String version) {
+        when(xmlDocumentIOMock.read(pomPath)).thenReturn(pomModel);
         if (version != null) {
             when(versionNode.getTextContent()).thenReturn(version);
             when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version")))
@@ -105,9 +109,67 @@ class ProjectVersionIncrementorTest {
         verifyPomVersionUpdated(expectedNextVersion);
     }
 
+    @Test
+    void incrementProjectVersionInNonDefaultPom() {
+        final String currentVersion = "1.2.3";
+        final String expectedNextVersion = "1.2.4";
+        final Path subModulePom = Path.of("module/pom.xml");
+        simulatePomVersion(subModulePom, currentVersion);
+        final String newVersion = testee(configWithVersionFromSource(subModulePom), currentVersion)
+                .incrementProjectVersion();
+        assertThat(newVersion, equalTo(expectedNextVersion));
+        verifyPomVersionUpdated(subModulePom, expectedNextVersion);
+    }
+
+    @Test
+    void incrementProjectVersionInRevisionProperty() {
+        final String currentVersion = "1.2.3";
+        final String expectedNextVersion = "1.2.4";
+        simulatePomRevisionProperty(currentVersion);
+        final String newVersion = testee(configWithoutJarArtifact(), currentVersion).incrementProjectVersion();
+        assertThat(newVersion, equalTo(expectedNextVersion));
+        verifyPomVersionUpdated(expectedNextVersion);
+    }
+
+    @Test
+    void incrementProjectVersionLogsWarningForMissingRevisionPropertyElement() {
+        simulatePomRevisionProperty(null);
+        final ProjectVersionIncrementor testee = testee(configWithoutJarArtifact());
+        assertDoesNotThrow(testee::incrementProjectVersion);
+        verify(loggerMock).warn("W-PK-CORE-196: No version element found in pom file '" + POM_PATH
+                + "'. Please update the version to '1.2.4' manually.");
+    }
+
+    private void simulatePomRevisionProperty(final String version) {
+        when(xmlDocumentIOMock.read(POM_PATH)).thenReturn(pomModel);
+        final Node projectVersionNode = createNode("${revision}");
+        if (version != null) {
+            when(versionNode.getTextContent()).thenReturn(version);
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version")))
+                    .thenReturn(Optional.of(projectVersionNode));
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/properties/revision")))
+                    .thenReturn(Optional.of(versionNode));
+        } else {
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/version")))
+                    .thenReturn(Optional.of(projectVersionNode));
+            when(xmlDocumentIOMock.runXPath(same(pomModel), eq("/project/properties/revision")))
+                    .thenReturn(Optional.empty());
+        }
+    }
+
+    private Node createNode(final String textContent) {
+        final Node revisionNode = mock(Node.class);
+        when(revisionNode.getTextContent()).thenReturn(textContent);
+        return revisionNode;
+    }
+
     private void verifyPomVersionUpdated(final String expectedNextVersion) {
+        verifyPomVersionUpdated(POM_PATH, expectedNextVersion);
+    }
+
+    private void verifyPomVersionUpdated(final Path pomPath, final String expectedNextVersion) {
         verify(versionNode).setTextContent(expectedNextVersion);
-        verify(xmlDocumentIOMock).write(same(pomModel), eq(POM_PATH));
+        verify(xmlDocumentIOMock).write(same(pomModel), eq(pomPath));
     }
 
     @Test
@@ -122,8 +184,8 @@ class ProjectVersionIncrementorTest {
     private void assertMavenExecuted(final String... mavenArguments) {
         final ShellCommand command = getExecutedCommand();
         assertThat(command.workingDir().get(), equalTo(PROJECT_DIR));
-        assertThat(command.commandline(),
-                contains(startsWith("mvn"), equalTo("--batch-mode"), equalTo("artifact-reference-checker:unify")));
+        assertThat(command.commandline(), contains(Matchers.startsWith("mvn"), equalTo("--batch-mode"),
+                equalTo("artifact-reference-checker:unify")));
     }
 
     private ShellCommand getExecutedCommand() {
@@ -146,11 +208,17 @@ class ProjectVersionIncrementorTest {
     }
 
     private ProjectKeeperConfig configWithJarArtifact() {
-        return ProjectKeeperConfig.builder()
-                .sources(List.of(Source.builder().modules(Set.of(ProjectKeeperModule.JAR_ARTIFACT)).build())).build();
+        return ProjectKeeperConfig.builder().sources(List.of(
+                Source.builder().path(Path.of("pom.xml")).modules(Set.of(ProjectKeeperModule.JAR_ARTIFACT)).build()))
+                .build();
     }
 
     private ProjectKeeperConfig configWithoutJarArtifact() {
         return ProjectKeeperConfig.builder().sources(List.of(Source.builder().modules(Set.of()).build())).build();
+    }
+
+    private ProjectKeeperConfig configWithVersionFromSource(final Path pom) {
+        return ProjectKeeperConfig.builder().sources(List.of(Source.builder().build()))
+                .versionConfig(new VersionFromSource(pom)).build();
     }
 }
