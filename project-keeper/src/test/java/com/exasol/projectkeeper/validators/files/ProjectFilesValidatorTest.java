@@ -29,6 +29,7 @@ import com.exasol.projectkeeper.validators.FindingFixHelper;
 
 //[utest->dsn~required-files-validator~1]
 class ProjectFilesValidatorTest {
+    private static final String VSCODE_SETTINGS_JSON = ".vscode/settings.json";
     private static final String OWN_VERSION = "version";
     private static final Set<ProjectKeeperModule> DEFAULT_MODULE = Set.of(ProjectKeeperModule.DEFAULT);
 
@@ -77,17 +78,17 @@ class ProjectFilesValidatorTest {
     void testMissingFileWithAnyContent() throws IOException {
         final ProjectFilesValidator validator = testee();
         fixAllFindings(validator);
-        final Path testFile = this.tempDir.resolve("release_config.yml");
+        final Path testFile = this.tempDir.resolve(VSCODE_SETTINGS_JSON);
         deleteFile(testFile);
         assertThat(validator, validationErrorMessages(
-                contains("E-PK-CORE-17: Missing required file: '" + testFile.getFileName() + "'")));
+                contains("E-PK-CORE-17: Missing required file: '" + VSCODE_SETTINGS_JSON + "'")));
     }
 
     @Test
     void testRequireExistsIgnoresContent() throws IOException {
         final ProjectFilesValidator validator = testee();
         fixAllFindings(validator);
-        final Path testFile = this.tempDir.resolve("release_config.yml");
+        final Path testFile = this.tempDir.resolve(VSCODE_SETTINGS_JSON);
         changeFile(testFile);
         assertThat(validator, hasNoValidationFindings());
     }
@@ -96,7 +97,7 @@ class ProjectFilesValidatorTest {
     void testRequireExistsDoesNotModifyContent() throws IOException {
         final ProjectFilesValidator validator = testee();
         fixAllFindings(validator);
-        final Path testFile = this.tempDir.resolve("release_config.yml");
+        final Path testFile = this.tempDir.resolve(VSCODE_SETTINGS_JSON);
         changeFile(testFile);
         assertAll(() -> assertThat(validator, hasNoMoreFindingsAfterApplyingFixes()),
                 () -> assertThat(new String(Files.readAllBytes(testFile), StandardCharsets.UTF_8),
@@ -107,7 +108,7 @@ class ProjectFilesValidatorTest {
     void testFixMissingFileWithAnyContent() throws IOException {
         final ProjectFilesValidator validator = testee();
         fixAllFindings(validator);
-        final Path testFile = this.tempDir.resolve("release_config.yml");
+        final Path testFile = this.tempDir.resolve(VSCODE_SETTINGS_JSON);
         deleteFile(testFile);
         assertAll(() -> assertThat(validator, hasNoMoreFindingsAfterApplyingFixes()),
                 () -> assertTrue(Files.exists(testFile),
