@@ -26,7 +26,10 @@ jobs:
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
-          java-version: 17
+          # Java 11 required for test project "my-test-project"
+          java-version: |
+            11
+            17
           cache: "maven"
       - name: Set up Go
         uses: actions/setup-go@v5
