@@ -39,6 +39,17 @@ class NpmDependenciesTest {
         ));
     }
 
+    @Test
+    void getDependenciesMissingUrl() {
+        when(this.npmServices.listDependencies(any())).thenReturn(json(TestData.DEPENDENCIES_MISSING_URL));
+        when(this.npmServices.getLicenses(any())).thenReturn(json(TestData.LICENSES));
+
+        final NpmDependencies testee = new NpmDependencies(this.npmServices, TestData.samplePackageJson());
+        assertThat(testee.getDependencies(), containsInAnyOrder( //
+                dependency(Type.COMPILE, "new-compile", "2.3.0", "NC") //
+        ));
+    }
+
     private ProjectDependency dependency(final Type type, final String name, final String version,
             final String license) {
         return ProjectDependency.builder() //

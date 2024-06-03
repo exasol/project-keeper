@@ -66,6 +66,8 @@ class NpmDependencies {
     }
 
     private String getUrl(final String moduleName) {
-        return this.additionalInfo.getJsonObject(moduleName).getString("resolved");
+        return Optional.ofNullable(this.additionalInfo.getJsonObject(moduleName)) //
+                .map(object -> object.getString("resolved")) //
+                .orElse(null);
     }
 }

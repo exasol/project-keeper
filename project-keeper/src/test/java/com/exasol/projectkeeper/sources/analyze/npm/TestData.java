@@ -77,6 +77,16 @@ class TestData {
             "  }", //
             "}");
 
+    static final String DEPENDENCIES_MISSING_URL = jsonString("{", //
+            "  'name': 'module-name',", //
+            "  'version': '2.0.0',", //
+            "  'dependencies': {", //
+            "    'new-compile': {", //
+            "      'version': '2.3.0'", //
+            "    }", //
+            "  }", //
+            "}");
+
     static String jsonString(final String... s) {
         return String.join("\n", s).replace('\'', '"');
     }
