@@ -12,6 +12,13 @@ This release fixes creation of the automatic dependency update Pull Request. Due
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.1` to `3.1.2`
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.1` to `3.5.0`
+
 ### Project Keeper Shared Model Classes
 
 #### Plugin Dependency Updates
@@ -55,6 +62,7 @@ This release fixes creation of the automatic dependency update Pull Request. Due
 
 #### Plugin Dependency Updates
 
+* Updated `org.apache.maven.plugins:maven-assembly-plugin:3.6.0` to `3.7.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.1` to `3.5.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.3` to `3.7.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922` to `4.0.0.4121`
@@ -69,7 +77,9 @@ This release fixes creation of the automatic dependency update Pull Request. Due
 #### Plugin Dependency Updates
 
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.1` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.3.0` to `3.4.1`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.3` to `3.7.0`
+* Updated `org.apache.maven.plugins:maven-plugin-plugin:3.11.0` to `3.13.1`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922` to `4.0.0.4121`
 * Updated `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.13` to `1.7.0`
 
@@ -83,6 +93,7 @@ This release fixes creation of the automatic dependency update Pull Request. Due
 
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.4.1` to `3.5.0`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.6.3` to `3.7.0`
+* Updated `org.apache.maven.plugins:maven-plugin-plugin:3.11.0` to `3.13.1`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:3.11.0.3922` to `4.0.0.4121`
 * Updated `org.sonatype.plugins:nexus-staging-maven-plugin:1.6.13` to `1.7.0`
 
