@@ -46,7 +46,15 @@ class NpmDependenciesTest {
 
         final NpmDependencies testee = new NpmDependencies(this.npmServices, TestData.samplePackageJson());
         assertThat(testee.getDependencies(), containsInAnyOrder( //
-                dependency(Type.COMPILE, "new-compile", "2.3.0", "NC") //
+                dependency(Type.DEV, "changed-plugin", "1.2.0", "CP"), //
+                dependency(Type.DEV, "new-plugin", "1.3.0", "NP"), //
+                dependency(Type.COMPILE, "changed-compile", "2.2.0", "CC"), //
+                ProjectDependency.builder() //
+                        .type(Type.COMPILE)//
+                        .name("new-compile") //
+                        .websiteUrl(null) //
+                        .licenses(List.of(new License("NC" + "-License", "https://" + "new-compile"))) //
+                        .build() //
         ));
     }
 
