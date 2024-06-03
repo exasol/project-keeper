@@ -745,7 +745,7 @@ Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
 #### `dependencies_update.yml` Workflow Starts PK `fix` Mode Twice
-`dsn~dependency-updater.workflow.start-pk-fix~1`
+`dsn~dependency-updater.workflow.start-pk-fix~2`
 
 PK generates the `dependencies_update.yml` workflow so that it starts PK's `fix` mode twice after updating dependencies.
 
@@ -754,7 +754,10 @@ Rationale:
 * After updating dependency versions, the workflow runs PK `fix` to update the dependencies section in the changes file.
 * PK `fix` will potentially update PK to a newer version in `pom.xml` (see [`dsn~self-update~1`](#project-keeper-self-update)). So the workflow runs PK `fix` a second time (using the updated PK version) to update all generated files.
 
-Needs: impl
+Note:
+Due to restrictions of GitHub permissions it is not possible for a workflow triggered by an event to modify GitHub workflows (see https://github.com/orgs/community/discussions/35410). That's why pushing the changes fail. A workaround would be to use a separate PAT, but this is too much effort.
+
+We decided to skip running PK fix. The user must checkout the branch locally and run PK fix manually.
 
 Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)

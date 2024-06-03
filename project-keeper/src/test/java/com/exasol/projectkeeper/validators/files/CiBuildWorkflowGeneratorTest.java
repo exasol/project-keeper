@@ -214,7 +214,7 @@ class CiBuildWorkflowGeneratorTest {
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("update_dependencies");
-        assertAll(() -> assertThat(job.getSteps(), hasSize(16)),
+        assertAll(() -> assertThat(job.getSteps(), hasSize(14)),
                 () -> assertThat(job.getStep("new-step").getName(), equalTo("New Step")));
     }
 
@@ -249,7 +249,7 @@ class CiBuildWorkflowGeneratorTest {
     @Test
     void dependencyUpdateBuildAllStepsHaveId() {
         final Job job = dependencyUpdateBuildContent(BuildOptions.builder().build()).getJob("update_dependencies");
-        assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(15)));
+        assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(13)));
         job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
     }
 

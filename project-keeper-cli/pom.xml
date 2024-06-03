@@ -75,7 +75,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-assembly-plugin</artifactId>
-                <version>3.6.0</version>
                 <configuration>
                     <finalName>project-keeper-cli-${project.version}</finalName>
                     <archive>
@@ -99,17 +98,10 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <configuration>
-                    <!-- Javadoc causes error "error: package java.util.logging is not visible
-                        import java.util.logging.*;
-                        (package java.util.logging is declared in module java.logging, but module jakarta.json does not read it)". -->
-                    <additionalOptions>
-                        <option>--add-modules</option>
-                        <option>java.logging</option>
-                        <option>--add-reads</option>
-                        <option>jakarta.json=java.logging</option>
-                    </additionalOptions>
-                    <!-- Ignore warning "warning: The code being documented uses modules but the packages defined in https://github.com/exasol/project-keeper/apidocs/ are in the unnamed module." with Java 17-->
-                    <failOnWarnings>false</failOnWarnings>
+                    <!-- Javadoc generation fails with error 'error: module not found: jakarta.xml.bind'.
+                        This option deactivates modules as we don't use modules anyway.
+                        See https://maven.apache.org/plugins/maven-javadoc-plugin/javadoc-mojo.html#legacymode -->
+                    <legacyMode>true</legacyMode>
                 </configuration>
             </plugin>
         </plugins>

@@ -213,7 +213,7 @@
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][33] | [ASL2][34]                       |
 | [Maven Surefire Plugin][35]                             | [Apache-2.0][1]                  |
 | [Versions Maven Plugin][36]                             | [Apache License, Version 2.0][1] |
-| [Apache Maven JAR Plugin][62]                           | [Apache License, Version 2.0][1] |
+| [Apache Maven JAR Plugin][62]                           | [Apache-2.0][1]                  |
 | [duplicate-finder-maven-plugin Maven Mojo][37]          | [Apache License 2.0][38]         |
 | [Apache Maven Deploy Plugin][4]                         | [Apache-2.0][1]                  |
 | [Apache Maven GPG Plugin][39]                           | [Apache-2.0][1]                  |
@@ -362,7 +362,7 @@
 [51]: https://github.com/vdurmont/semver4j
 [52]: https://bitbucket.org/snakeyaml/snakeyaml
 [53]: https://bitbucket.org/snakeyaml/snakeyaml-engine
-[54]: https://maven.apache.org/ref/3.9.6/maven-model/
+[54]: https://maven.apache.org/ref/3.9.7/maven-model/
 [55]: https://www.jcabi.com/jcabi-github
 [56]: https://www.jcabi.com/LICENSE.txt
 [57]: https://github.com/exasol/maven-project-version-getter/
@@ -376,8 +376,8 @@
 [65]: https://github.com/exasol/artifact-reference-checker-maven-plugin/
 [66]: https://github.com/exasol/artifact-reference-checker-maven-plugin/blob/main/LICENSE
 [67]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[68]: https://maven.apache.org/ref/3.9.6/maven-plugin-api/
-[69]: https://maven.apache.org/ref/3.9.6/maven-core/
+[68]: https://maven.apache.org/ref/3.9.7/maven-plugin-api/
+[69]: https://maven.apache.org/ref/3.9.7/maven-core/
 [70]: https://www.eclemma.org/jacoco/index.html
 [71]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
 [72]: https://maven.apache.org/plugins/maven-dependency-plugin/
