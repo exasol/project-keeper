@@ -77,6 +77,28 @@ class TestData {
             "  }", //
             "}");
 
+    static final String DEPENDENCIES_MISSING_URL = jsonString("{", //
+            "  'name': 'module-name',", //
+            "  'version': '2.0.0',", //
+            "  'dependencies': {", //
+            "    'changed-plugin': {", //
+            "      'version': '1.2.0',", //
+            "      'resolved': 'https://changed-plugin/-/1.2.0.tgz'", //
+            "    },", //
+            "    'new-plugin': {", //
+            "      'version': '1.3.0',", //
+            "      'resolved': 'https://new-plugin/-/1.3.0.tgz'", //
+            "    },", //
+            "    'changed-compile': {", //
+            "      'version': '2.2.0',", //
+            "      'resolved': 'https://changed-compile/-/2.2.0.tgz'", //
+            "    },", //
+            "    'new-compile': {", //
+            "      'version': '2.3.0'", //
+            "    }", //
+            "  }", //
+            "}");
+
     static String jsonString(final String... s) {
         return String.join("\n", s).replace('\'', '"');
     }
