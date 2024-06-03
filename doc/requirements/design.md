@@ -745,7 +745,7 @@ Covers:
 * [`dsn~dependency-updater.workflow.generate~1`](#generate-dependencies_updateyml-workflow)
 
 #### `dependencies_update.yml` Workflow Starts PK `fix` Mode Twice
-`dsn~dependency-updater.workflow.start-pk-fix~1`
+`dsn~dependency-updater.workflow.start-pk-fix~2`
 
 PK generates the `dependencies_update.yml` workflow so that it starts PK's `fix` mode twice after updating dependencies.
 
