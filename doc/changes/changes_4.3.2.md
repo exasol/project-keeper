@@ -9,6 +9,7 @@ This release fixes creation of the automatic dependency update Pull Request. Due
 ## Bugfixes
 
 * #578: Fixed automatic dependency update
+* #577: Fixed reading NPM dependencies with a missing project URL
 
 ## Dependency Updates
 
