@@ -21,7 +21,7 @@ This maven plugin checks and unifies the project's structure according to the Ex
 
 1. Create config file `~/.m2/toolchains.xml` for the Maven toolchains plugin, see [user guide](doc/user_guide/user_guide.md#configure-mavens-toolchainsxml) for details.
 
-2. Create config file
+2. Create config file `.project-keeper.yml`:
    ```yml
    sources:
      - type: maven
