@@ -9,6 +9,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
+import org.apache.maven.project.DefaultProjectBuilder; // new
 import org.apache.maven.repository.RepositorySystem;
 
 import com.exasol.errorreporting.ExaError;
@@ -26,14 +27,16 @@ import com.exasol.projectkeeper.validators.dependencies.ProjectDependencyReader;
 @Mojo(name = "crawl", requiresProject = false)
 public class MavenProjectCrawlerMojo extends AbstractMojo {
     private static final String PROPERTY_PROJECTS_TO_CRAWL = "projectsToCrawl";
-    @Parameter
+
+    @Parameter(property = "repositorySystem")
     RepositorySystem repositorySystem;
 
     @Parameter(property = PROPERTY_PROJECTS_TO_CRAWL, required = true)
     private String projectsToCrawl;
 
-    @Parameter
-    private ProjectBuilder mavenProjectBuilder;
+    // @Parameter(property = "projectBuilder", required = true)
+    private ProjectBuilder mavenProjectBuilder = new DefaultProjectBuilder();
+
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
 

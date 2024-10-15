@@ -13,6 +13,7 @@ This release fixes vulnerabilities
 * #586: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.11.0`
 * #587: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.13.0`
 * #588: Fixed vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
+
 ## Dependency Updates
 
 ### Project Keeper Shared Model Classes
