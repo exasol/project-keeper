@@ -26,13 +26,13 @@ import com.exasol.projectkeeper.validators.dependencies.ProjectDependencyReader;
 @Mojo(name = "crawl", requiresProject = false)
 public class MavenProjectCrawlerMojo extends AbstractMojo {
     private static final String PROPERTY_PROJECTS_TO_CRAWL = "projectsToCrawl";
-    @Component
+    @Parameter
     RepositorySystem repositorySystem;
 
     @Parameter(property = PROPERTY_PROJECTS_TO_CRAWL, required = true)
     private String projectsToCrawl;
 
-    @Component
+    @Parameter
     private ProjectBuilder mavenProjectBuilder;
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
