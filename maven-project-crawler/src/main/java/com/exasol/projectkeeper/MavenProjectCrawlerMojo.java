@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +10,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.*;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
-import org.apache.maven.project.DefaultProjectBuilder; // new
+// import org.apache.maven.project.DefaultProjectBuilder; // new
 import org.apache.maven.repository.RepositorySystem;
 
 import com.exasol.errorreporting.ExaError;
@@ -26,19 +27,29 @@ import com.exasol.projectkeeper.validators.dependencies.ProjectDependencyReader;
  */
 @Mojo(name = "crawl", requiresProject = false)
 public class MavenProjectCrawlerMojo extends AbstractMojo {
+
     private static final String PROPERTY_PROJECTS_TO_CRAWL = "projectsToCrawl";
 
-    @Parameter(property = "repositorySystem")
+    // @Component
+    // @Parameter(property = "repositorySystem")
     RepositorySystem repositorySystem;
 
     @Parameter(property = PROPERTY_PROJECTS_TO_CRAWL, required = true)
     private String projectsToCrawl;
 
+    // @Component
     // @Parameter(property = "projectBuilder", required = true)
-    private ProjectBuilder mavenProjectBuilder = new DefaultProjectBuilder();
+    // private ProjectBuilder mavenProjectBuilder = new DefaultProjectBuilder();
+    private ProjectBuilder mavenProjectBuilder;
 
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
+
+    @Inject
+    public MavenProjectCrawlerMojo(RepositorySystem repositorySystem, ProjectBuilder mavenProjectBuilder) {
+        this.repositorySystem = repositorySystem;
+        this.mavenProjectBuilder = mavenProjectBuilder;
+    }
 
     // [impl -> dsn~eclipse-prefs-java-version~1]
     @Override
