@@ -1,4 +1,4 @@
-# Project Keeper 4.3.4, released 2024-10-15
+# Project Keeper 4.3.4, released 2024-??-??
 
 Code name: Fix vulnerabilities
 
@@ -10,7 +10,6 @@ This release fixes vulnerabilities
 
 The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency `org.glassfish:javax.json:1.1.4` via `com.jcabi:jcabi-github:jar:1.9.1` as this is accepted for accessing exasol json documents on GitHub.
 
-
 ### Security
 
 * #586: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.11.0`
@@ -18,6 +17,12 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * #588: Fixed vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
 
 ## Dependency Updates
+
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Added `org.sonatype.ossindex.maven:ossindex-maven-plugin:3.2.0`
 
 ### Project Keeper Shared Model Classes
 
