@@ -125,9 +125,18 @@
                     <ignoredResourcePatterns>
                         <ignoredResourcePattern>about.html</ignoredResourcePattern>
                     </ignoredResourcePatterns>
-                    <ignoredClassPatterns>
-                        <ignoredClassPattern>^org\.codehaus\.plexus\.util\.xml\..*</ignoredClassPattern>
-                    </ignoredClassPatterns>
+                    <ignoredDependencies>
+                      <dependency>
+                        <!-- provided -->
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-utils</artifactId>
+                      </dependency>
+                      <dependency>
+                        <!-- provided -->
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-xml</artifactId>
+                      </dependency>
+                    </ignoredDependencies>
                 </configuration>
             </plugin>
             <plugin>

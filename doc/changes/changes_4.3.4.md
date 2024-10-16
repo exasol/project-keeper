@@ -4,9 +4,7 @@ Code name: Fix vulnerabilities
 
 ## Summary
 
-This release fixes vulnerabilities
-* CVE-2024-47554 in transitive test dependency `commons-io:commons-io` via `com.exasol:maven-plugin-integration-testing:1.1.2` and `com.jcabi:jcabi-github:1.8.0`
-* CVE-2023-7272 in transitive runtime dependency `org.glassfish:javax.json:1.1.4` via `com.jcabi:jcabi-github:1.8.0`
+This release fixes vulnerability CVE-2024-47554 in transitive test dependency `commons-io:commons-io` via `com.exasol:maven-plugin-integration-testing:1.1.2` and `com.jcabi:jcabi-github:1.8.0`
 
 The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency `org.glassfish:javax.json:1.1.4` via `com.jcabi:jcabi-github:jar:1.9.1` as this is accepted for accessing exasol json documents on GitHub.
 
@@ -14,7 +12,7 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 
 * #586: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.11.0`
 * #587: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.13.0`
-* #588: Fixed vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
+* #588: Ignore vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
 
 ## Dependency Updates
 

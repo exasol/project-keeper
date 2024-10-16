@@ -115,10 +115,12 @@
                     </ignoredResourcePatterns>
                     <ignoredDependencies>
                       <dependency>
+                        <!-- provided -->
                         <groupId>org.codehaus.plexus</groupId>
                         <artifactId>plexus-utils</artifactId>
                       </dependency>
                       <dependency>
+                        <!-- provided -->
                         <groupId>org.codehaus.plexus</groupId>
                         <artifactId>plexus-xml</artifactId>
                       </dependency>
