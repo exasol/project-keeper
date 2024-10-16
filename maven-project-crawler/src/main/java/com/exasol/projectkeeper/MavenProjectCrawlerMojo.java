@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,17 +26,24 @@ import com.exasol.projectkeeper.validators.dependencies.ProjectDependencyReader;
  */
 @Mojo(name = "crawl", requiresProject = false)
 public class MavenProjectCrawlerMojo extends AbstractMojo {
+
     private static final String PROPERTY_PROJECTS_TO_CRAWL = "projectsToCrawl";
-    @Component
+
     RepositorySystem repositorySystem;
 
     @Parameter(property = PROPERTY_PROJECTS_TO_CRAWL, required = true)
     private String projectsToCrawl;
 
-    @Component
     private ProjectBuilder mavenProjectBuilder;
+
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
+
+    @Inject
+    MavenProjectCrawlerMojo(RepositorySystem repositorySystem, ProjectBuilder mavenProjectBuilder) {
+        this.repositorySystem = repositorySystem;
+        this.mavenProjectBuilder = mavenProjectBuilder;
+    }
 
     // [impl -> dsn~eclipse-prefs-java-version~1]
     @Override
