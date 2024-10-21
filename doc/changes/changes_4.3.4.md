@@ -8,7 +8,7 @@ This release fixes vulnerability CVE-2024-47554 in transitive test dependency `c
 
 The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency `org.glassfish:javax.json:1.1.4` via `com.jcabi:jcabi-github:jar:1.9.1` as this is accepted for accessing exasol json documents on GitHub.
 
-The release also pins Maven plugin versions to avoid plugin versions depending on the Maven version.
+The release also pins Maven plugin versions to avoid verify findings caused by differences in plugin versions that only depend on the Maven version.
 
 The release also adds `quality-summarizer-maven-plugin` to the generated parent pom.
 
@@ -24,7 +24,7 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 
 ### Documentation
 
-* #582: Documented automatic release process in user guide
+* #582: Documented automated release process in user guide
 
 ## Dependency Updates
 
