@@ -14,6 +14,10 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * #587: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.13.0`
 * #588: Ignore vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
 
+### Documentation
+
+* #582: Documented automatic release process in user guide
+
 ## Dependency Updates
 
 ### Project Keeper Root Project

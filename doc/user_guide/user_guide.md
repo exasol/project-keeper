@@ -170,6 +170,8 @@ The following artifacts are automatically verified and attached to the release a
 * [Error Code Report `error_code_report.json`](#error-code-report-error_code_reportjson)
 * [Custom release artifacts](#custom-release-artifacts)
 
+See details about the [automatic release process](#automatic-release-process).
+
 #### JAR Artifacts for Maven Projects
 
 When you enable module `jar_artifact` for a source, PK will configure `maven-assembly-plugin` in the generated parent POM. You only need to configure the actual artifact name in file `pom.xml`:
@@ -491,6 +493,19 @@ cd path/to/project
 
 The standalone variant supports the same goals as the Maven plugin: `fix`, `verify` and `update-dependencies`.
 
+### Automatic Release Process
+
+GitHub Workflow [`release.yml`](#releaseyml) will automatically release the project when `ci-build.yml` succeeded on `main` branch and the changes file contains an up-to-date release date. In case of problems you can start the workflow manually on GitHub and skip the release to Maven Central or GitHub if necessary.
+
+To check if a project meets all preconditions for an automatic release, run PK goal `verify-release`:
+
+```sh
+# Maven
+mvn com.exasol:project-keeper-maven-plugin:verify-release
+# Standalone:
+./.github/workflows/project-keeper.sh verify-release
+```
+
 ## Generated GitHub Workflows
 
 PK generates the following GitHub scheduled Workflows:
@@ -515,7 +530,7 @@ This workflow runs for each change of a Pull Request and whenever a Pull Request
 
 ### [`release.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/release.yml)
 
-This workflow is triggered manually or by workflow [`ci-build.yml`](). It verifies that all preconditions for a release are met and performs the release.
+This workflow is triggered manually or by workflow [`ci-build.yml`](#ci-buildyml). It verifies that all preconditions for a release are met and performs the release.
 
 In order to send notifications, this workflow requires GitHub secret `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK`.
 
