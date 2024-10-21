@@ -133,7 +133,7 @@ class PomFileGeneratorTest {
 
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
-    void distributionManagement(final boolean hasDm) throws IOException, XmlPullParserException {
+    void distributionManagement(final boolean hasDm) {
         final Model pom = runGeneration(hasDm ? List.of(ProjectKeeperModule.MAVEN_CENTRAL) : List.of(), null);
         assertThat(pom.getDistributionManagement(), hasDm ? not(nullValue()) : nullValue());
     }
