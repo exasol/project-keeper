@@ -19,6 +19,7 @@ The release also pins Maven plugin versions to avoid plugin versions depending o
 ### Bugfixes
 
 * #585: Pinned Maven plugin versions in generated parent pom
+* #530: Omit `java.version` property when pom has a parent
 
 ### Documentation
 

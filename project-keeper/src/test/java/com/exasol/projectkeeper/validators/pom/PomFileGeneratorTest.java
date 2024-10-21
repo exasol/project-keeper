@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.pom;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -44,7 +45,7 @@ class PomFileGeneratorTest {
 
     // [utest -> dsn~mvn-toolchain~1]
     @Test
-    void testGenerateWithDefaultModule() throws XmlPullParserException, IOException {
+    void testGenerateWithDefaultModule() {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
         final List<String> pluginNames = getPluginNames(pom);
         final License license = pom.getLicenses().get(0);
@@ -88,7 +89,7 @@ class PomFileGeneratorTest {
     }
 
     @Test
-    void testProfilesForNativeImages() throws XmlPullParserException, IOException {
+    void testProfilesForNativeImages() {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.NATIVE_IMAGE), null);
         final List<Profile> profiles = pom.getProfiles();
         final Profile profile1 = profiles.get(0);
@@ -100,13 +101,26 @@ class PomFileGeneratorTest {
         );
     }
 
-    private Model runGeneration(final List<ProjectKeeperModule> modules, final ParentPomRef parentPomRef)
-            throws IOException, XmlPullParserException {
+    @Test
+    void testAddJavaVersionPropertyForRootPom() {
+        final Model pom = runGeneration(emptyList(), null);
+        assertThat(pom.getProperties().get("java.version"), equalTo("11"));
+    }
+
+    @Test
+    void testOmitJavaVersionPropertyForNonRootPom() {
+        final Model pom = runGeneration(emptyList(), new ParentPomRef("group", "parent-artifact", "version", "path"));
+        assertThat(pom.getProperties().get("java.version"), nullValue());
+    }
+
+    private Model runGeneration(final List<ProjectKeeperModule> modules, final ParentPomRef parentPomRef) {
         final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
                 "1.0.0", parentPomRef, new RepoInfo(TEST_REPO_NAME, TEST_REPO_LICENSE));
         try (final ByteArrayInputStream inputStream = new ByteArrayInputStream(
                 result.getBytes(StandardCharsets.UTF_8))) {
             return new MavenXpp3Reader().read(inputStream);
+        } catch (IOException | XmlPullParserException exception) {
+            throw new IllegalStateException("Failed to generate POM file: " + exception.getMessage(), exception);
         }
     }
 
@@ -126,24 +140,21 @@ class PomFileGeneratorTest {
 
     @ParameterizedTest
     @MethodSource("testPluginsAddedByModuleCases")
-    void testPluginsAddedByModule(final ProjectKeeperModule module, final List<String> expectedPlugins)
-            throws XmlPullParserException, IOException {
+    void testPluginsAddedByModule(final ProjectKeeperModule module, final List<String> expectedPlugins) {
         final Model pom = runGeneration(List.of(module), null);
         assertThat(getPluginNames(pom), hasItems(expectedPlugins.toArray(String[]::new)));
     }
 
     @ParameterizedTest
     @MethodSource("testDependenciesAddedByModuleCases")
-    void testDependenciesAddedByModule(final ProjectKeeperModule module, final List<String> expectedDependencies)
-            throws XmlPullParserException, IOException {
+    void testDependenciesAddedByModule(final ProjectKeeperModule module, final List<String> expectedDependencies) {
         final Model pom = runGeneration(List.of(module), null);
         assertThat(getDependencyNames(pom), hasItems(expectedDependencies.toArray(String[]::new)));
     }
 
     @ParameterizedTest
     @MethodSource("testGenerationWithParentPomCases")
-    void testGenerationWithParentPom(final String relativePath, final String expectedRelativePath)
-            throws XmlPullParserException, IOException {
+    void testGenerationWithParentPom(final String relativePath, final String expectedRelativePath) {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT),
                 new ParentPomRef("com.example", "my-parent", "1.2.3", relativePath));
         final Parent parent = pom.getParent();
@@ -156,7 +167,7 @@ class PomFileGeneratorTest {
     }
 
     @Test
-    void testReproducibleBuildPluginIsLast() throws XmlPullParserException, IOException {
+    void testReproducibleBuildPluginIsLast() {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
         final List<Plugin> plugins = pom.getBuild().getPlugins();
         final Plugin lastPlugin = plugins.get(plugins.size() - 1);
