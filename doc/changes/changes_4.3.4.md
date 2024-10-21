@@ -18,6 +18,10 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 * #587: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.13.0`
 * #588: Ignore vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
 
+### Features
+
+* #513: Added `quality-summarizer-maven-plugin` to the generated parent pom
+
 ### Bugfixes
 
 * #585: Pinned Maven plugin versions in generated parent pom
