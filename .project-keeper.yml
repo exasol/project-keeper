@@ -1,6 +1,8 @@
 sources:
   - type: maven
     path: pom.xml
+    artifacts:
+      - coverage-aggregator/target/metrics.json
   - type: maven
     path: shared-model-classes/pom.xml
     modules:
