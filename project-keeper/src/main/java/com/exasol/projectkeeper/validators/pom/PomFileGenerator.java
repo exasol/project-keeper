@@ -53,6 +53,7 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
             new FailsafePluginTemplateGenerator(), new JacocoPluginTemplateGenerator(),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
+            // Reproducible build plugin must be last
             new SimplePluginTemplateGenerator("maven_templates/reproducible-build-maven-plugin.xml", DEFAULT));
     private static final String VERSION = "version";
     private static final String ARTIFACT_ID = "artifactId";

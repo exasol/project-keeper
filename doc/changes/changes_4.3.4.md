@@ -8,11 +8,17 @@ This release fixes vulnerability CVE-2024-47554 in transitive test dependency `c
 
 The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency `org.glassfish:javax.json:1.1.4` via `com.jcabi:jcabi-github:jar:1.9.1` as this is accepted for accessing exasol json documents on GitHub.
 
+The release also pins Maven plugin versions to avoid plugin versions depending on the Maven version.
+
 ### Security
 
 * #586: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.11.0`
 * #587: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.13.0`
 * #588: Ignore vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
+
+### Bugfixes
+
+* #585: Pinned Maven plugin versions in generated parent pom
 
 ## Dependency Updates
 
@@ -36,6 +42,18 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.1`
+
+#### Plugin Dependency Updates
+
+* Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.4` to `3.2.7`
+* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.7.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
 
 ### Project Keeper Core
 
@@ -61,6 +79,19 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
 * Updated `org.mockito:mockito-junit-jupiter:5.12.0` to `5.14.1`
 
+#### Plugin Dependency Updates
+
+* Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
+* Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.4` to `3.2.7`
+* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.7.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
@@ -75,6 +106,20 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
 
+#### Plugin Dependency Updates
+
+* Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
+* Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.4` to `3.2.7`
+* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.4.1` to `3.4.2`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.7.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
+
 ### Project Keeper Maven Plugin
 
 #### Compile Dependency Updates
@@ -88,6 +133,20 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.1`
+
+#### Plugin Dependency Updates
+
+* Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.6.1` to `3.8.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
+* Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.4` to `3.2.7`
+* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.7.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
 
 ### Project Keeper Java Project Crawler
 
@@ -104,6 +163,20 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.1`
 * Updated `org.mockito:mockito-junit-jupiter:5.12.0` to `5.14.1`
 
+#### Plugin Dependency Updates
+
+* Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.6.1` to `3.8.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
+* Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.4` to `3.2.7`
+* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.7.0` to `3.10.1`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
+
 ### Project Keeper Shared Test Setup
 
 #### Compile Dependency Updates
@@ -111,3 +184,13 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 * Updated `com.exasol:project-keeper-shared-model-classes:4.3.3` to `4.3.4`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
 * Updated `org.yaml:snakeyaml:2.2` to `2.3`
+
+#### Plugin Dependency Updates
+
+* Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
+* Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
+* Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:2.6` to `3.3.1`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.3` to `3.9.1`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.2.5` to `3.5.1`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.16.2` to `2.17.1`
