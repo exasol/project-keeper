@@ -19,6 +19,7 @@
         <module>maven-project-crawler</module>
         <module>project-keeper-maven-plugin</module>
         <module>parent-pom</module>
+        <module>coverage-aggregator</module>
     </modules>
     <build>
         <resources>

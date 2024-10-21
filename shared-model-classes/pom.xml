@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <description>Classes that need to be shared between different modules of project-keeper.</description>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>project-keeper-shared-model-classes</artifactId>
+    <name>Project Keeper shared model classes</name>
     <parent>
         <relativePath>./pk_generated_parent.pom</relativePath>
         <groupId>com.exasol</groupId>
         <artifactId>project-keeper-shared-model-classes-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
-    <description>Classes that need to be shared between different modules of project-keeper.</description>
-    <modelVersion>4.0.0</modelVersion>
-    <artifactId>project-keeper-shared-model-classes</artifactId>
-    <name>Project Keeper shared model classes</name>
     <properties>
         <!-- Workaround for https://github.com/exasol/project-keeper/issues/530 -->
         <java.version>17</java.version>
