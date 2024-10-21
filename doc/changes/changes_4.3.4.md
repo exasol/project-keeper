@@ -20,6 +20,10 @@ The release also pins Maven plugin versions to avoid plugin versions depending o
 
 * #585: Pinned Maven plugin versions in generated parent pom
 
+### Documentation
+
+* #582: Documented automatic release process in user guide
+
 ## Dependency Updates
 
 ### Project Keeper Root Project
