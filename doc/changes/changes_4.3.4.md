@@ -22,6 +22,10 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 
 * #585: Pinned Maven plugin versions in generated parent pom
 
+### Documentation
+
+* #582: Documented automatic release process in user guide
+
 ## Dependency Updates
 
 ### Project Keeper Root Project
