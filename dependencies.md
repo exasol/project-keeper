@@ -155,6 +155,7 @@
 
 | Dependency                 | License           |
 | -------------------------- | ----------------- |
+| [SLF4J API Module][30]     | [MIT License][27] |
 | [SLF4J JDK14 Provider][30] | [MIT License][27] |
 
 ### Plugin Dependencies

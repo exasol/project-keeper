@@ -107,6 +107,7 @@ The release also pins Maven plugin versions to avoid plugin versions depending o
 
 #### Runtime Dependency Updates
 
+* Added `org.slf4j:slf4j-api:2.0.16`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.16`
 
 #### Test Dependency Updates

@@ -8,7 +8,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.fail;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
@@ -35,7 +34,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     Path projectDir;
 
     @Test
-    void fixingMavenProjectSucceeds() throws InterruptedException, IOException {
+    void fixingMavenProjectSucceeds() {
         prepareMavenProject();
         assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
                 containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
@@ -43,7 +42,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     }
 
     @Test
-    void fixingGolangProjectSucceeds() throws InterruptedException, IOException {
+    void fixingGolangProjectSucceeds() {
         prepareGolangProject();
         assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
                 containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
@@ -66,7 +65,7 @@ class ProjectKeeperLauncherExecutableJarIT {
         fixture.prepareProjectFiles(fixture.createDefaultConfig());
     }
 
-    private SimpleProcess run(final Path workingDir, final String... args) throws IOException {
+    private SimpleProcess run(final Path workingDir, final String... args) {
         final String artifactPrefix = "project-keeper-cli";// we need to split this in two lines so that it's not
                                                            // replaced by the artifact-reference-checker
         final Path jar = Path.of("target/" + artifactPrefix + "-" + CURRENT_VERSION + ".jar").toAbsolutePath();
