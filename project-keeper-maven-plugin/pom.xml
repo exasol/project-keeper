@@ -125,6 +125,29 @@
                     <ignoredResourcePatterns>
                         <ignoredResourcePattern>about.html</ignoredResourcePattern>
                     </ignoredResourcePatterns>
+                    <ignoredDependencies>
+                      <dependency>
+                        <!-- provided -->
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-utils</artifactId>
+                      </dependency>
+                      <dependency>
+                        <!-- provided -->
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-xml</artifactId>
+                      </dependency>
+                    </ignoredDependencies>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.sonatype.ossindex.maven</groupId>
+                <artifactId>ossindex-maven-plugin</artifactId>
+                <configuration>
+                    <excludeVulnerabilityIds>
+                      <!-- Ignore vulnerability in org.glassfish:javax.json:jar:1.1.4:runtime
+                      as this is accepted for accessing exasol json documents on GitHub -->
+                      <exclude>CVE-2023-7272</exclude>
+                    </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
         </plugins>
