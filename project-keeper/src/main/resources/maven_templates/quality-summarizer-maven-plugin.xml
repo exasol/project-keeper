@@ -1,0 +1,13 @@
+<plugin>
+    <groupId>com.exasol</groupId>
+    <artifactId>quality-summarizer-maven-plugin</artifactId>
+    <version>0.1.0</version>
+    <executions>
+        <execution>
+            <id>summarize-metrics</id>
+            <goals>
+                <goal>summarize</goal>
+            </goals>
+        </execution>
+    </executions>
+</plugin>
