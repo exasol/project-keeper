@@ -26,6 +26,11 @@
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
             <artifactId>slf4j-jdk14</artifactId>
             <scope>runtime</scope>
         </dependency>
@@ -109,9 +114,9 @@
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <configuration>
                     <excludeVulnerabilityIds>
-                      <!-- Ignore vulnerability in org.glassfish:javax.json:jar:1.1.4:runtime
+                        <!-- Ignore vulnerability in org.glassfish:javax.json:jar:1.1.4:runtime
                       as this is accepted for accessing exasol json documents on GitHub -->
-                      <exclude>CVE-2023-7272</exclude>
+                        <exclude>CVE-2023-7272</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>

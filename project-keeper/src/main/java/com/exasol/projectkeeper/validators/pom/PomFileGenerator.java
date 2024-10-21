@@ -24,6 +24,12 @@ public class PomFileGenerator {
     /** Default Java version if none is specified in {@code pom.xml} property {@code java.version}. */
     public static final String DEFAULT_JAVA_VERSION = "11";
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
+            // Pin version for the following plugins
+            new SimplePluginTemplateGenerator("maven_templates/maven-clean-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-install-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-resources-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-site-plugin.xml", DEFAULT),
+            // Plugins with configuration
             new SimplePluginTemplateGenerator("maven_templates/sonar-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-toolchains-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-compiler-plugin.xml", DEFAULT),
@@ -47,6 +53,7 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
             new FailsafePluginTemplateGenerator(), new JacocoPluginTemplateGenerator(),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
+            // Reproducible build plugin must be last
             new SimplePluginTemplateGenerator("maven_templates/reproducible-build-maven-plugin.xml", DEFAULT));
     private static final String VERSION = "version";
     private static final String ARTIFACT_ID = "artifactId";

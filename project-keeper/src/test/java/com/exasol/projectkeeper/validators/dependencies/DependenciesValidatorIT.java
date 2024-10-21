@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.validators.dependencies;
 import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-import static org.hamcrest.Matchers.not;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.io.IOException;
@@ -76,8 +75,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
         final String dependenciesFileContent = Files.readString(this.dependenciesFile);
         assertAll(//
                 () -> assertThat(dependenciesFileContent, containsString("error-reporting-java")),
-                () -> assertThat(dependenciesFileContent, containsString("SonarQube Scanner for Maven")),
-                () -> assertThat(dependenciesFileContent, not(containsString("Maven Clean Plugin")))//
+                () -> assertThat(dependenciesFileContent, containsString("SonarQube Scanner for Maven"))//
         );
     }
 

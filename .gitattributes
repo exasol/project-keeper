@@ -5,8 +5,6 @@ pk_generated_parent.pom  linguist-generated=true
 dependencies.md          linguist-generated=true
 doc/changes/changelog.md linguist-generated=true
 
-.settings/org.eclipse.jdt.core.prefs linguist-generated=true
-.settings/org.eclipse.jdt.ui.prefs   linguist-generated=true
 doc/images/.svg                      linguist-generated=true
 
 .github/workflows/broken_links_checker.yml linguist-generated=true
@@ -14,3 +12,16 @@ doc/images/.svg                      linguist-generated=true
 .github/workflows/release.yml              linguist-generated=true
 .github/workflows/dependencies_check.yml   linguist-generated=true
 .github/workflows/dependencies_update.yml  linguist-generated=true
+
+project-keeper-cli/.settings/org.eclipse.jdt.core.prefs                          linguist-generated=true
+project-keeper-cli/.settings/org.eclipse.jdt.ui.prefs                            linguist-generated=true
+project-keeper-maven-plugin/.settings/org.eclipse.jdt.core.prefs                 linguist-generated=true
+project-keeper-maven-plugin/.settings/org.eclipse.jdt.ui.prefs                   linguist-generated=true
+project-keeper/.settings/org.eclipse.jdt.core.prefs                              linguist-generated=true
+project-keeper/.settings/org.eclipse.jdt.ui.prefs                                linguist-generated=true
+project-keeper/src/main/resources/templates/.settings/org.eclipse.jdt.core.prefs linguist-generated=true
+project-keeper/src/main/resources/templates/.settings/org.eclipse.jdt.ui.prefs   linguist-generated=true
+shared-model-classes/.settings/org.eclipse.jdt.core.prefs                        linguist-generated=true
+shared-model-classes/.settings/org.eclipse.jdt.ui.prefs                          linguist-generated=true
+shared-test-setup/.settings/org.eclipse.jdt.core.prefs                           linguist-generated=true
+shared-test-setup/.settings/org.eclipse.jdt.ui.prefs                             linguist-generated=true

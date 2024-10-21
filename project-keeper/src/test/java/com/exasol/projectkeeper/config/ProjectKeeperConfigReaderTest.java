@@ -174,7 +174,7 @@ class ProjectKeeperConfigReaderTest {
 
     static Stream<Arguments> invalidConfig() {
         return Stream.of(Arguments.of("missing config file", null, equalTo(
-                "E-PK-CORE-89: Could not find file '.project-keeper.yml'. Please create this file according to the user-guide https://github.com/exasol/project-keeper-maven-plugin.")),
+                "E-PK-CORE-89: Could not find file '.project-keeper.yml'. Please create this file according to the user-guide https://github.com/exasol/project-keeper.")),
                 Arguments.of("unsupported workflow name", """
                         build:
                           workflows:
