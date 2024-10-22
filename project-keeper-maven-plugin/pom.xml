@@ -12,10 +12,6 @@
         <artifactId>project-keeper-maven-plugin-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
-    <properties>
-        <!-- Workaround for https://github.com/exasol/project-keeper/issues/530 -->
-        <java.version>17</java.version>
-    </properties>
     <prerequisites>
         <maven>${minimum.maven.version}</maven>
     </prerequisites>
