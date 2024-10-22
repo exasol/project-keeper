@@ -17,9 +17,11 @@ class CiBuildWorkflowGenerator {
     private static final String CI_BUILD_WORKFLOW_NAME = "ci-build.yml";
     private static final String CI_BUILD_PATH_IN_PROJECT = WORKFLOW_PATH + CI_BUILD_WORKFLOW_NAME;
     private final BuildOptions buildOptions;
+    private final List<String> javaVersions;
 
-    CiBuildWorkflowGenerator(final BuildOptions buildOptions) {
-        this.buildOptions = buildOptions;
+    CiBuildWorkflowGenerator(final BuildOptions buildOptions, final List<String> javaVersions) {
+        this.buildOptions = Objects.requireNonNull(buildOptions, "buildOptions");
+        this.javaVersions = Objects.requireNonNull(javaVersions, "javaVersions");
     }
 
     FileTemplate createCiBuildWorkflow() {
@@ -49,7 +51,11 @@ class CiBuildWorkflowGenerator {
                 // [impl->dsn~customize-build-process.ci-build~0]
                 new GitHubWorkflowStepCustomizer(customizations, buildJobId),
                 // [impl->dsn~customize-build-process.ci-build.environment~1]
-                new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName)));
+                new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName), javaVersionCustomizer()));
+    }
+
+    private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
+        return new GitHubWorkflowJavaVersionCustomizer(javaVersions);
     }
 
     private List<StepCustomization> findCustomizations(final String workflowName) {
@@ -107,8 +113,8 @@ class CiBuildWorkflowGenerator {
                 REQUIRE_EXACT);
         templateCustomizer.accept(template);
         final List<StepCustomization> customizations = findCustomizations(workflowName);
-        return new ContentCustomizingTemplate(template,
-                new GitHubWorkflowCustomizer(new GitHubWorkflowStepCustomizer(customizations, jobName)));
+        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(
+                new GitHubWorkflowStepCustomizer(customizations, jobName), javaVersionCustomizer()));
     }
 
     enum CiTemplateType {

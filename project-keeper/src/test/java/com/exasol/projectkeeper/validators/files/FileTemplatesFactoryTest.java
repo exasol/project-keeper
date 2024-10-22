@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
+import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -57,7 +58,7 @@ class FileTemplatesFactoryTest {
 
     private FileTemplatesFactory testee(final boolean hasNpmModule) {
         return new FileTemplatesFactory(this.loggerMock, OWN_VERSION, hasNpmModule,
-                BuildOptions.builder().runnerOs("ci-build-runner-os").build());
+                BuildOptions.builder().runnerOs("ci-build-runner-os").build(), emptyList());
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {

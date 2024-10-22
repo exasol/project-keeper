@@ -26,12 +26,13 @@ class FileTemplatesFactory {
     private final CiBuildWorkflowGenerator workflowGenerator;
 
     public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule,
-            final BuildOptions buildOptions) {
+            final BuildOptions buildOptions, final List<AnalyzedSource> sources) {
         this.logger = Objects.requireNonNull(logger, "logger");
         this.ownVersion = Objects.requireNonNull(ownVersion, "ownVersion");
         this.hasNpmModule = hasNpmModule;
         this.buildOptions = Objects.requireNonNull(buildOptions, "buildOptions");
-        this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildOptions);
+        this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildOptions,
+                new JavaVersionExtractor(sources).extractVersions());
     }
 
     List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
