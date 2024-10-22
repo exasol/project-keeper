@@ -11,6 +11,13 @@ public class ExasolVersionMatcher {
     private static final Pattern EXASOL_VERSION_PATTERN = Pattern.compile("v?\\d+\\.\\d+\\.\\d+");
 
     /**
+     * Create a new instance.
+     */
+    public ExasolVersionMatcher() {
+        // Required for specifying javadoc.
+    }
+
+    /**
      * Match version numbers in the format used for Exasol open-source projects (major.minor.fix). Version numbers with
      * a {@code v} prefix are also recognized.
      *

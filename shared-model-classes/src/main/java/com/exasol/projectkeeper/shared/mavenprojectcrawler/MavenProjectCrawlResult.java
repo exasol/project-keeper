@@ -85,12 +85,20 @@ public final class MavenProjectCrawlResult {
         return Objects.equals(crawledProjects, other.crawledProjects);
     }
 
-    /** @return crawled projects */
+    /**
+     * Get projects.
+     * 
+     * @return crawled projects
+     */
     public Map<String, CrawledMavenProject> getCrawledProjects() {
         return crawledProjects;
     }
 
-    /** @param crawledProjects crawled projects */
+    /**
+     * Set projects.
+     * 
+     * @param crawledProjects crawled projects
+     */
     public void setCrawledProjects(final Map<String, CrawledMavenProject> crawledProjects) {
         this.crawledProjects = crawledProjects;
     }

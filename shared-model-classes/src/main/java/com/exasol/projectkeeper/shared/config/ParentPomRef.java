@@ -27,22 +27,38 @@ public final class ParentPomRef {
         this.relativePath = relativePath;
     }
 
-    /** @return Maven group ID of the parent POM */
+    /**
+     * Get group ID.
+     * 
+     * @return Maven group ID of the parent POM
+     */
     public String getGroupId() {
         return groupId;
     }
 
-    /** @return Maven artifact ID of the parent POM */
+    /**
+     * Get artifact ID.
+     * 
+     * @return Maven artifact ID of the parent POM
+     */
     public String getArtifactId() {
         return artifactId;
     }
 
-    /** @return Maven version of the parent POM */
+    /**
+     * Get version.
+     * 
+     * @return Maven version of the parent POM
+     */
     public String getVersion() {
         return version;
     }
 
-    /** @return relative path to the parent POM file */
+    /**
+     * Get relative path.
+     * 
+     * @return relative path to the parent POM file
+     */
     public String getRelativePath() {
         return relativePath;
     }

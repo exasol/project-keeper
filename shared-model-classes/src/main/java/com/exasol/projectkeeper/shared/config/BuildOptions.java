@@ -25,12 +25,20 @@ public final class BuildOptions {
         this.workflows = builder.workflows;
     }
 
-    /** @return CI build runner operating system */
+    /**
+     * Get runner OS.
+     * 
+     * @return CI build runner operating system
+     */
     public String getRunnerOs() {
         return this.runnerOs;
     }
 
-    /** @return {@code true} if disk space should be freed before running the build */
+    /**
+     * Check if the build should free disk space.
+     * 
+     * @return {@code true} if disk space should be freed before running the build
+     */
     public boolean shouldFreeDiskSpace() {
         return freeDiskSpace;
     }

@@ -18,7 +18,11 @@ public final class VersionFromSource implements VersionConfig {
         this.pathToPom = pathToPom;
     }
 
-    /** @return path to POM file */
+    /**
+     * Get path to POM file.
+     * 
+     * @return path to POM file
+     */
     public Path getPathToPom() {
         return pathToPom;
     }

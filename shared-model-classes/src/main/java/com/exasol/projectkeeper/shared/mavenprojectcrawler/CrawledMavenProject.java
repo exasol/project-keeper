@@ -41,56 +41,90 @@ public final class CrawledMavenProject {
         this.releaseArtifactName = releaseArtifactName;
     }
 
-    /** @return dependency change report */
+    /**
+     * Get dependency change report.
+     * 
+     * @return dependency change report
+     */
     public DependencyChangeReport getDependencyChangeReport() {
         return dependencyChangeReport;
     }
 
-    /** @param dependencyChangeReport dependency change report */
+    /**
+     * Set dependency change report.
+     * 
+     * @param dependencyChangeReport dependency change report
+     */
     public void setDependencyChangeReport(final DependencyChangeReport dependencyChangeReport) {
         this.dependencyChangeReport = dependencyChangeReport;
     }
 
-    /** @return dependencies */
+    /**
+     * Get dependencies.
+     * 
+     * @return dependencies
+     */
     public ProjectDependencies getProjectDependencies() {
         return projectDependencies;
     }
 
-    /** @param projectDependencies dependencies */
+    /**
+     * Set dependencies.
+     * 
+     * @param projectDependencies dependencies
+     */
     public void setProjectDependencies(final ProjectDependencies projectDependencies) {
         this.projectDependencies = projectDependencies;
     }
 
-    /** @return project version */
+    /**
+     * Get project version.
+     * 
+     * @return project version
+     */
     public String getProjectVersion() {
         return projectVersion;
     }
 
     /**
+     * Get Java version.
+     * 
      * @return Java version from the {@code java.version} property or {@code null} if property is not defined
      */
     public String getJavaVersion() {
         return javaVersion;
     }
 
-    /** @param projectVersion version */
+    /**
+     * Set project version.
+     * 
+     * @param projectVersion version
+     */
     public void setProjectVersion(final String projectVersion) {
         this.projectVersion = projectVersion;
     }
 
     /**
+     * Set Java version.
+     * 
      * @param javaVersion Java version from the {@code java.version} property or {@code null} if property is not defined
      */
     public void setJavaVersion(final String javaVersion) {
         this.javaVersion = javaVersion;
     }
 
-    /** @return file name of the artifact in the {@code target} directory or {@code null} if no artifact is created */
+    /**
+     * Get release artifact name.
+     * 
+     * @return file name of the artifact in the {@code target} directory or {@code null} if no artifact is created
+     */
     public String getReleaseArtifactName() {
         return releaseArtifactName;
     }
 
     /**
+     * Set release artifact name.
+     * 
      * @param releaseArtifactName file name of the artifact in the {@code target} directory or {@code null} if no
      *                            artifact is created
      */

@@ -3,7 +3,11 @@ package com.exasol.projectkeeper.shared.dependencies;
 /** This class represents an abstract dependency enabling to create a report of dependency changes later on. */
 public class VersionedDependency implements BaseDependency {
 
-    /** @return a builder for new instances of {@link VersionedDependency} */
+    /**
+     * Create a new builder.
+     * 
+     * @return a builder for new instances of {@link VersionedDependency}
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -16,24 +20,40 @@ public class VersionedDependency implements BaseDependency {
     VersionedDependency() {
     }
 
-    /** @return type of the dependency */
+    /**
+     * Get the dependency's type.
+     * 
+     * @return type of the dependency
+     */
     @Override
     public Type getType() {
         return this.type;
     }
 
-    /** @return name of the module of the dependency */
+    /**
+     * Get the dependency's name.
+     * 
+     * @return name of the module of the dependency
+     */
     @Override
     public String getName() {
         return this.name;
     }
 
-    /** @return version of the dependency */
+    /**
+     * Get the dependency's version.
+     * 
+     * @return version of the dependency
+     */
     public String getVersion() {
         return this.version;
     }
 
-    /** @return {@code true} if the dependency is indirect, i.e. transitive */
+    /**
+     * Check if the dependency is indirect.
+     * 
+     * @return {@code true} if the dependency is indirect, i.e. transitive
+     */
     public boolean isIndirect() {
         return this.isIndirect;
     }
@@ -42,7 +62,12 @@ public class VersionedDependency implements BaseDependency {
     public static final class Builder {
         private final VersionedDependency dependency = new VersionedDependency();
 
+        private Builder() {
+        }
+
         /**
+         * Set the dependency type.
+         * 
          * @param type {@link Type} of the dependency
          * @return this for fluent programming
          */
@@ -52,6 +77,8 @@ public class VersionedDependency implements BaseDependency {
         }
 
         /**
+         * Set the dependency name.
+         * 
          * @param name name of the dependency's module
          * @return this for fluent programming
          */
@@ -61,6 +88,8 @@ public class VersionedDependency implements BaseDependency {
         }
 
         /**
+         * Set the dependency version.
+         * 
          * @param version version of the dependency's module
          * @return this for fluent programming
          */
@@ -70,6 +99,8 @@ public class VersionedDependency implements BaseDependency {
         }
 
         /**
+         * Set indirect flag.
+         * 
          * @param isIndirect {@code true} if the dependency is indirect, i.e. transitive
          * @return this for fluent programming
          */
@@ -78,7 +109,11 @@ public class VersionedDependency implements BaseDependency {
             return this;
         }
 
-        /** @return new instance of {@link VersionedDependency} */
+        /**
+         * Create a new instance.
+         * 
+         * @return new instance of {@link VersionedDependency}
+         */
         public VersionedDependency build() {
             return this.dependency;
         }
