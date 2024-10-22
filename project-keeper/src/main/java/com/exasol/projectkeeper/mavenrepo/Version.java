@@ -31,6 +31,8 @@ public final class Version implements Comparable<Version> {
     private final int[] items;
 
     /**
+     * Create a new instance.
+     * 
      * @param version string representation of version number.
      * @throws UnsupportedVersionFormatException if string does not match {@link #PATTERN}.
      */
@@ -63,6 +65,8 @@ public final class Version implements Comparable<Version> {
     }
 
     /**
+     * Check if this version is greater than another version.
+     * 
      * @param other other version to compare this version to
      * @return {@code true} if this version is greater or equal than the other one
      */
@@ -88,6 +92,8 @@ public final class Version implements Comparable<Version> {
         private static final long serialVersionUID = 1L;
 
         /**
+         * Create a new instance.
+         * 
          * @param message detailed message of the exception
          */
         public UnsupportedVersionFormatException(final String message) {

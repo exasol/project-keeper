@@ -25,6 +25,13 @@ import com.exasol.projectkeeper.shared.config.workflow.*;
  * This class reads {@link ProjectKeeperConfig} from file.
  */
 public class ProjectKeeperConfigReader {
+    /**
+     * Create a new instance.
+     */
+    public ProjectKeeperConfigReader() {
+        // Required for adding Javadoc.
+    }
+
     /** Filename of project keeper's configuration file */
     public static final String CONFIG_FILE_NAME = ".project-keeper.yml";
     private static final String USER_GUIDE_URL = "https://github.com/exasol/project-keeper";

@@ -16,7 +16,7 @@ class ShellCommandTest {
                 .args("-l", "abc") //
                 .build();
         assertThat(cmd.name(), equalTo("main"));
-        assertThat(cmd.commandline(), equalTo(List.of("main", "-l", "abc")));
+        assertThat(cmd.commandLine(), equalTo(List.of("main", "-l", "abc")));
     }
 
     @Test
@@ -29,6 +29,6 @@ class ShellCommandTest {
                 .build();
         assertThat(cmd.name(), equalTo("main sub"));
         assertThat(cmd.timeout(), equalTo(duration));
-        assertThat(cmd.commandline(), equalTo(List.of("main", "sub", "a", "b", "c")));
+        assertThat(cmd.commandLine(), equalTo(List.of("main", "sub", "a", "b", "c")));
     }
 }

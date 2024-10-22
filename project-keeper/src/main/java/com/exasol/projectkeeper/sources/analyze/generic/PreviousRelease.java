@@ -28,6 +28,8 @@ public class PreviousRelease {
     }
 
     /**
+     * Set project dir.
+     * 
      * @param projectDir root folder of the current project
      * @return this for fluent programming
      */
@@ -37,6 +39,8 @@ public class PreviousRelease {
     }
 
     /**
+     * Set current version.
+     * 
      * @param version current version of the current project
      * @return this for fluent programming
      */
@@ -46,6 +50,8 @@ public class PreviousRelease {
     }
 
     /**
+     * Set path.
+     * 
      * @param relative relative path of a file in the Git repository of the project.
      * @return this for fluent programming
      */
@@ -55,6 +61,8 @@ public class PreviousRelease {
     }
 
     /**
+     * Get content.
+     * 
      * @return content of the specified file in the previous version of the project or {@code Optional.empty()} if there
      *         is no previous version or the file does not exist in the previous version.
      */

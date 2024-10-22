@@ -20,6 +20,13 @@ import com.exasol.errorreporting.ExaError;
  */
 public class PomFileIO {
 
+    /**
+     * Create a new instance.
+     */
+    public PomFileIO() {
+        // Required for adding Javadoc.
+    }
+
     private static final MavenXpp3Writer WRITER = new MavenXpp3Writer();
     private static final MavenXpp3Reader READER = new MavenXpp3Reader();
 

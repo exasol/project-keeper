@@ -31,15 +31,19 @@ class GitHubWorkflow {
     }
 
     Job getJob(final String jobId) {
-        final Object rawJob = getJobs().get(jobId);
+        final Object rawJob = getJobMap().get(jobId);
         if (rawJob == null) {
             return null;
         }
         return new Job(asMap(rawJob));
     }
 
-    private Map<String, Object> getJobs() {
+    private Map<String, Object> getJobMap() {
         return asMap(rawWorkflow.get("jobs"));
+    }
+
+    List<Job> getJobs() {
+        return getJobMap().values().stream().map(GitHubWorkflow::asMap).map(Job::new).toList();
     }
 
     Map<String, Object> getOnTrigger() {
@@ -167,8 +171,12 @@ class GitHubWorkflow {
             return getString("uses");
         }
 
+        boolean isUsesAction() {
+            return getOptionalString("uses").isPresent();
+        }
+
         public Map<String, Object> getWith() {
-            return asMap(rawStep.get("with"));
+            return asMap(rawStep.computeIfAbsent("with", key -> new HashMap<>()));
         }
 
         private String getString(final String key) {

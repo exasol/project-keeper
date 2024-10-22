@@ -17,7 +17,11 @@ public final class FixedVersion implements VersionConfig {
         this.version = version;
     }
 
-    /** @return fixed version number */
+    /**
+     * Get version.
+     * 
+     * @return fixed version number
+     */
     public String getVersion() {
         return version;
     }

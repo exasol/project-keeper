@@ -93,6 +93,8 @@ public final class SimpleValidationFinding implements ValidationFinding {
     }
 
     /**
+     * Check if the finding is optional.
+     * 
      * @return whether the current finding is optional, i.e. can be left unfixed
      */
     public boolean isOptional() {

@@ -12,6 +12,10 @@ import java.util.Locale;
  * http://www.docjar.com/html/api/org/apache/commons/lang/SystemUtils.java.html
  */
 public class OsCheck {
+    OsCheck() {
+
+    }
+
     /**
      * Types of Operating Systems
      */
@@ -27,6 +31,8 @@ public class OsCheck {
     }
 
     /**
+     * Get command suffix.
+     * 
      * @param suffixForWindows suffix for command on operating system windows
      * @return if detected operating system is windows then return the provided command suffix otherwise return empty
      *         string.

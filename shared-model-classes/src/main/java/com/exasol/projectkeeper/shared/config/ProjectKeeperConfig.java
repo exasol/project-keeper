@@ -24,32 +24,56 @@ public final class ProjectKeeperConfig {
         this.buildOptions = Objects.requireNonNull(builder.buildOptions, "buildOptions");
     }
 
-    /** @return List with source-projects to crawl */
+    /**
+     * Get all sources.
+     * 
+     * @return List with source-projects to crawl
+     */
     public List<Source> getSources() {
         return this.sources;
     }
 
-    /** @return List of replacements for broken links */
+    /**
+     * Get link replacements.
+     * 
+     * @return List of replacements for broken links
+     */
     public List<String> getLinkReplacements() {
         return this.linkReplacements;
     }
 
-    /** @return List of regular expressions that match validation messages to exclude */
+    /**
+     * Get excludes.
+     * 
+     * @return List of regular expressions that match validation messages to exclude
+     */
     public List<String> getExcludes() {
         return this.excludes;
     }
 
-    /** @return project version configuration */
+    /**
+     * Get version config.
+     * 
+     * @return project version configuration
+     */
     public VersionConfig getVersionConfig() {
         return this.versionConfig;
     }
 
-    /** @return CI build options */
+    /**
+     * Get build options.
+     * 
+     * @return CI build options
+     */
     public BuildOptions getCiBuildConfig() {
         return this.buildOptions;
     }
 
-    /** @return a new builder for creating {@link ProjectKeeperConfig} instances */
+    /**
+     * Create a new builder.
+     * 
+     * @return a new builder for creating {@link ProjectKeeperConfig} instances
+     */
     public static ProjectKeeperConfig.Builder builder() {
         return new ProjectKeeperConfig.Builder();
     }
@@ -69,6 +93,8 @@ public final class ProjectKeeperConfig {
         }
 
         /**
+         * Set sources.
+         * 
          * @param sources List with source-projects to crawl
          * @return {@code this}.
          */
@@ -78,6 +104,8 @@ public final class ProjectKeeperConfig {
         }
 
         /**
+         * Set link replacements.
+         * 
          * @param linkReplacements List of replacements for broken links
          * @return {@code this}.
          */
@@ -87,6 +115,8 @@ public final class ProjectKeeperConfig {
         }
 
         /**
+         * Set excludes.
+         * 
          * @param excludes List of regular expressions that match validation messages to exclude
          * @return {@code this}.
          */
@@ -96,6 +126,8 @@ public final class ProjectKeeperConfig {
         }
 
         /**
+         * Set version config.
+         * 
          * @param versionConfig project version configuration
          * @return {@code this}.
          */
@@ -105,6 +137,8 @@ public final class ProjectKeeperConfig {
         }
 
         /**
+         * Set build options.
+         * 
          * @param buildOptions options for project build workflows
          * @return {@code this}.
          */
@@ -115,7 +149,11 @@ public final class ProjectKeeperConfig {
             return this;
         }
 
-        /** @return a new instance */
+        /**
+         * Build a new instance.
+         * 
+         * @return a new instance
+         */
         public ProjectKeeperConfig build() {
             return new ProjectKeeperConfig(this);
         }

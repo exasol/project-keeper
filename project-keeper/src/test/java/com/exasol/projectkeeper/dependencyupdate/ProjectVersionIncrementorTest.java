@@ -184,7 +184,7 @@ class ProjectVersionIncrementorTest {
     private void assertMavenExecuted(final String... mavenArguments) {
         final ShellCommand command = getExecutedCommand();
         assertThat(command.workingDir().get(), equalTo(PROJECT_DIR));
-        assertThat(command.commandline(), contains(Matchers.startsWith("mvn"), equalTo("--batch-mode"),
+        assertThat(command.commandLine(), contains(Matchers.startsWith("mvn"), equalTo("--batch-mode"),
                 equalTo("artifact-reference-checker:unify")));
     }
 

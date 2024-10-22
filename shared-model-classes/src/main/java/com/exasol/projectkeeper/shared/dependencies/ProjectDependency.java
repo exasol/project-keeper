@@ -6,7 +6,11 @@ import java.util.stream.Collectors;
 /** Generic dependency. */
 public final class ProjectDependency implements BaseDependency {
 
-    /** @return Builder for new instances of {@link ProjectDependency}. */
+    /**
+     * Create a new builder.
+     * 
+     * @return Builder for new instances of {@link ProjectDependency}.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -36,24 +40,40 @@ public final class ProjectDependency implements BaseDependency {
         this.licenses = licenses;
     }
 
-    /** @return type of the dependency */
+    /**
+     * Get type.
+     * 
+     * @return type of the dependency
+     */
     @Override
     public Type getType() {
         return this.type;
     }
 
-    /** @return name of the module of the dependency */
+    /**
+     * Get name.
+     * 
+     * @return name of the module of the dependency
+     */
     @Override
     public String getName() {
         return this.name;
     }
 
-    /** @return URL of the website associated with the current project dependency */
+    /**
+     * Get website URL.
+     * 
+     * @return URL of the website associated with the current project dependency
+     */
     public String getWebsiteUrl() {
         return this.websiteUrl;
     }
 
-    /** @return list of licenses associated with the current project dependency */
+    /**
+     * Get licenses.
+     * 
+     * @return list of licenses associated with the current project dependency
+     */
     public List<License> getLicenses() {
         return this.licenses;
     }
@@ -125,7 +145,13 @@ public final class ProjectDependency implements BaseDependency {
     public static final class Builder {
         private final ProjectDependency projectDependency = new ProjectDependency();
 
+        private Builder() {
+
+        }
+
         /**
+         * Set type.
+         * 
          * @param type type of the dependency to build
          * @return this for fluent programming
          */
@@ -135,6 +161,8 @@ public final class ProjectDependency implements BaseDependency {
         }
 
         /**
+         * Set name.
+         * 
          * @param name name of the dependency to build
          * @return this for fluent programming
          */
@@ -144,6 +172,8 @@ public final class ProjectDependency implements BaseDependency {
         }
 
         /**
+         * Set website URL.
+         * 
          * @param websiteUrl URL of the website for the dependency to build
          * @return this for fluent programming
          */
@@ -153,6 +183,8 @@ public final class ProjectDependency implements BaseDependency {
         }
 
         /**
+         * Set licenses.
+         * 
          * @param licenses list of licenses to associate with the dependency to build
          * @return this for fluent programming
          */
@@ -161,7 +193,11 @@ public final class ProjectDependency implements BaseDependency {
             return this;
         }
 
-        /** @return new instance of {@link ProjectDependency} */
+        /**
+         * Build a new instance.
+         * 
+         * @return new instance of {@link ProjectDependency}
+         */
         public ProjectDependency build() {
             return this.projectDependency;
         }

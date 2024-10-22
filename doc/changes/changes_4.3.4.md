@@ -12,6 +12,12 @@ The release also pins Maven plugin versions to avoid verify findings caused by d
 
 The release also adds `quality-summarizer-maven-plugin` to the generated parent pom.
 
+The release also installs the Java versions required by Maven sources during the CI builds. Just set property `java.version` in your `pom.xml` and the required JDK will be installed in all GitHub workflows. See the [user guide](../user_guide/user_guide.md#jdk-toolchain-version) for details.
+
+### Features
+
+* #594: Install required Java versions in GitHub workflows
+
 ### Security
 
 * #586: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.11.0`
@@ -25,6 +31,7 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 ### Bugfixes
 
 * #585: Pinned Maven plugin versions in generated parent pom
+* #530: Omit `java.version` property when pom has a parent
 
 ### Documentation
 
@@ -52,8 +59,8 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.16.1` to `3.17.1`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
 * Updated `org.itsallcode:junit5-system-extensions:1.2.0` to `1.2.2`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
-* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.3`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.2`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.16`
 
@@ -90,8 +97,8 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.16.1` to `3.17.1`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
 * Updated `org.junit-pioneer:junit-pioneer:2.2.0` to `2.3.0`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
-* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.3`
 * Updated `org.mockito:mockito-junit-jupiter:5.12.0` to `5.14.2`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.16`
 
@@ -126,8 +133,8 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.3.3` to `4.3.4`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
-* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.3`
 
 #### Plugin Dependency Updates
 
@@ -154,8 +161,8 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.2` to `1.1.3`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
-* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.3`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.2`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.16`
 
@@ -186,8 +193,8 @@ The release also adds `quality-summarizer-maven-plugin` to the generated parent 
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.2` to `1.1.3`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.2`
-* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.2`
+* Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.3`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.3`
 * Updated `org.mockito:mockito-core:5.12.0` to `5.14.2`
 * Updated `org.mockito:mockito-junit-jupiter:5.12.0` to `5.14.2`
 * Updated `org.slf4j:slf4j-jdk14:1.7.36` to `2.0.16`

@@ -21,12 +21,20 @@ public final class ValidationFindingGroup implements ValidationFinding {
         this.postFix = postFix;
     }
 
-    /** @return findings to group */
+    /**
+     * Get findings.
+     * 
+     * @return findings to group
+     */
     public List<ValidationFinding> getFindings() {
         return findings;
     }
 
-    /** @return callback to invoke after fixing the contained findings */
+    /**
+     * Get post fix callback.
+     * 
+     * @return callback to invoke after fixing the contained findings
+     */
     public Runnable getPostFix() {
         return postFix;
     }

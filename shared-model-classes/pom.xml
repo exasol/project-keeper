@@ -10,10 +10,6 @@
         <artifactId>project-keeper-shared-model-classes-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
-    <properties>
-        <!-- Workaround for https://github.com/exasol/project-keeper/issues/530 -->
-        <java.version>17</java.version>
-    </properties>
     <dependencies>
         <dependency>
             <groupId>jakarta.json</groupId>

@@ -22,6 +22,13 @@ public class ChangesFileIO {
     private static final String LINE_SEPARATOR = "\n";
 
     /**
+     * Create a new instance.
+     */
+    public ChangesFileIO() {
+        // Required for adding Javadoc.
+    }
+
+    /**
      * Read a {@link ChangesFile} from disk.
      * 
      * @param file file to read
