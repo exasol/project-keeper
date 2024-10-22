@@ -13,6 +13,8 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  * This class validates that a required file exists and checks its content.
  */
 public class RequiredFileValidator {
+    private RequiredFileValidator() {
+    }
 
     /**
      * Create a {@link ContentValidator} that expects exactly the given content.

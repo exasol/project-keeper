@@ -16,7 +16,7 @@ public class CommandExecutor {
      * @throws IllegalStateException if execution fails.
      */
     public ProcessResult execute(final ShellCommand sc, final Path workingDirectory) throws IllegalStateException {
-        final SimpleProcess process = SimpleProcess.start(workingDirectory, sc.commandline());
+        final SimpleProcess process = SimpleProcess.start(workingDirectory, sc.commandLine());
         process.waitUntilFinished(sc.timeout());
         return process.getResult();
     }

@@ -10,6 +10,8 @@ import java.util.List;
 public class ValidationPhase {
 
     /**
+     * Create a new validation phase.
+     * 
      * @param validators list of validators
      * @return new instance of {@link ValidationPhase} with provision {@code null}.
      */
@@ -32,6 +34,8 @@ public class ValidationPhase {
     }
 
     /**
+     * Get validators.
+     * 
      * @return list of validators
      */
     public List<Validator> validators() {
@@ -39,6 +43,8 @@ public class ValidationPhase {
     }
 
     /**
+     * Get provision.
+     * 
      * @return provision created during the current validation phase
      */
     public Provision provision() {
@@ -52,6 +58,8 @@ public class ValidationPhase {
         private final String projectVersion;
 
         /**
+         * Set project version.
+         * 
          * @param projectVersion version of the current project kept by project-keeper detected by
          *                       {@link ProjectVersionDetector}
          */
@@ -60,6 +68,8 @@ public class ValidationPhase {
         }
 
         /**
+         * Get project version.
+         * 
          * @return version of the current project
          */
         public String projectVersion() {

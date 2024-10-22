@@ -14,6 +14,9 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 public class ProjectVersionDetector {
     private static final String FAILED_TO_DETECT_VERSION = "Failed to detect overall project version.";
 
+    ProjectVersionDetector() {
+    }
+
     /**
      * Detect the version of the overall project.
      *
