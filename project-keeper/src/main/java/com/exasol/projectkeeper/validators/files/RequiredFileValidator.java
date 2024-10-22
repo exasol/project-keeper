@@ -13,7 +13,11 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  * This class validates that a required file exists and checks its content.
  */
 public class RequiredFileValidator {
-    private RequiredFileValidator() {
+    /**
+     * Create a new instance.
+     */
+    public RequiredFileValidator() {
+        // Required for adding Javadoc.
     }
 
     /**
