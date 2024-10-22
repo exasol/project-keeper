@@ -10,7 +10,7 @@ import org.junit.jupiter.api.Test;
 
 class GitHubWorkflowJavaVersionCustomizerTest {
     @Test
-    void singleJavaVersion() {
+    void testUpdateWithActionVersion4() {
         final GitHubWorkflow workflow = customize("""
                 jobs:
                   build:
@@ -29,7 +29,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
     }
 
     @Test
-    void updateNewerSetupJavaAction() {
+    void testUpdateWithActionVersion5() {
         final GitHubWorkflow workflow = customize("""
                 jobs:
                   build:
@@ -46,7 +46,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
     }
 
     @Test
-    void updateWhenWithIsEmpty() {
+    void testUpdateEmptyJavaVersion() {
         final GitHubWorkflow workflow = customize("""
                 jobs:
                   build:
@@ -60,7 +60,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
     }
 
     @Test
-    void multipleJavaVersion() {
+    void testUpdateToMultipleJavaVersions() {
         final GitHubWorkflow workflow = customize("""
                 jobs:
                   build:
@@ -79,7 +79,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
     }
 
     @Test
-    void multipleUnknownAction() {
+    void testNoUpdateOfUnknownAction() {
         final GitHubWorkflow workflow = customize("""
                 jobs:
                   build:
@@ -95,7 +95,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
     }
 
     @Test
-    void ignoreRunStep() {
+    void ignoreStepWithoutUsesDirective() {
         final GitHubWorkflow workflow = customize("""
                 jobs:
                   build:
