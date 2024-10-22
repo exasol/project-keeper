@@ -10,7 +10,7 @@ The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency
 
 The release also pins Maven plugin versions to avoid plugin versions depending on the Maven version.
 
-The release also installs the Java versions required by Maven sources during the CI builds. Just set property `java.version` in your `pom.xml` and the required JDK will be installed in all GitHub workflows.
+The release also installs the Java versions required by Maven sources during the CI builds. Just set property `java.version` in your `pom.xml` and the required JDK will be installed in all GitHub workflows. See the [user guide](../user_guide/user_guide.md#jdk-toolchain-version) for details.
 
 ### Features
 
