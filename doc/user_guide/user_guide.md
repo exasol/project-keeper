@@ -358,6 +358,8 @@ The specified Java version must be available on your local machine in [`toolchai
 
 When your project uses multiple Maven modules, each can specify it's own Java version. PK will collect all versions and use them in the GitHub workflows.
 
+PK will also calculate the maximum Java version used by all modules and use the next major Java version for generating `.github/workflows/ci-build-next-java.yml`.
+
 #### Exclude Dependencies From Automatic Version Update
 
 PK's [update-dependencies](#update-dependencies) mode updates the project's `pom.xml` files and updates the versions of all dependencies. In certain cases this could break the build. To exclude a dependency from the automatic update, add the following to your `pom.xml`:

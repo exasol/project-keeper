@@ -44,4 +44,29 @@ class JavaVersionExtractor {
                 .map(AnalyzedMavenSource::getJavaVersion) //
                 .collect(toSet());
     }
+
+    String getNextVersion() {
+        final double current = getCurrentLatestVersion();
+        if (current < 11) {
+            return "11";
+        }
+        if (current < 17) {
+            return "17";
+        }
+        if (current < 21) {
+            return "21";
+        }
+        return "23";
+    }
+
+    private double getCurrentLatestVersion() {
+        return getSourceJavaVersions().stream() //
+                .map(JavaVersionExtractor::parseVersion) //
+                .reduce(JavaVersionExtractor::takeLast) //
+                .orElseThrow();
+    }
+
+    private static double takeLast(final double first, final double second) {
+        return second;
+    }
 }

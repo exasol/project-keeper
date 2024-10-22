@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -102,6 +103,18 @@ class FileTemplatesFactoryTest {
                         "        if: ${{ " + hasNpmModule + " }}")));
     }
 
+    @Test
+    void testCiBuildNextJava() {
+        final List<AnalyzedSource> sources = List
+                .of(AnalyzedMavenSource.builder().javaVersion("17").isRootProject(true).modules(emptySet()).build());
+        final List<FileTemplate> actual = testee(false).getGlobalTemplates(sources);
+        final Optional<FileTemplate> template = findTemplate(actual, ".github/workflows/ci-build-next-java.yml");
+        assertTrue(template.isPresent());
+        final String content = template.get().getContent();
+        assertThat(content, allOf(not(containsString("skipNativeImage")), //
+                containsString("java-version: '21',"), containsString("-Djava.version=21")));
+    }
+
     @ParameterizedTest
     @CsvSource({ //
             "DEFAULT, .settings/org.eclipse.jdt.ui.prefs", //
@@ -116,7 +129,7 @@ class FileTemplatesFactoryTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "8, 1.8", "11, 11" })
+    @CsvSource({ "8, 1.8", "11, 11", "17, 17", "21, 21" })
     void testSettingsOrgEclipseJdtUiPrefs(final String javaVersion, final String expected) {
         final AnalyzedMavenSource source = AnalyzedMavenSource.builder() //
                 .modules(Set.of(ProjectKeeperModule.DEFAULT)) //

@@ -3,10 +3,13 @@ package com.exasol.projectkeeper.validators.files;
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.equalTo;
 
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import com.exasol.projectkeeper.sources.*;
 
@@ -43,11 +46,26 @@ class JavaVersionExtractorTest {
                 contains("1.8", "8", "17", "17.9"));
     }
 
+    @Test
+    void getNextVersionIgnoresOlderVersions() {
+        assertThat(nextVersion(mavenSource("17"), mavenSource("11")), equalTo("21"));
+    }
+
+    @ParameterizedTest
+    @CsvSource({ "8, 11", "9, 11", "11, 17", "12, 17", "17, 21", "17.1, 21", "21, 23" })
+    void getNextVersion(final String currentVersion, final String nextVersion) {
+        assertThat(nextVersion(mavenSource(currentVersion)), equalTo(nextVersion));
+    }
+
     AnalyzedMavenSource mavenSource(final String javaVersion) {
         return AnalyzedMavenSource.builder().javaVersion(javaVersion).build();
     }
 
     List<String> extract(final AnalyzedSource... sources) {
         return new JavaVersionExtractor(asList(sources)).extractVersions();
+    }
+
+    String nextVersion(final AnalyzedSource... sources) {
+        return new JavaVersionExtractor(asList(sources)).getNextVersion();
     }
 }

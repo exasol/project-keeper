@@ -57,13 +57,21 @@ class FileTemplatesFactory {
             final Set<ProjectKeeperModule> modules) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(getCiBuildTemplate(modules));
-        templates.add(new FileTemplateFromResource(".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT) //
-                .replacing("skipNativeImage", //
-                        modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : ""));
+        templates.add(getNextJavaWorkflow(modules, new JavaVersionExtractor(sources).getNextVersion()));
         templates.add(this.workflowGenerator.createDependenciesCheckWorkflow());
         templates.add(this.workflowGenerator.createDependenciesUpdateWorkflow());
         templates.add(this.workflowGenerator.createReleaseWorkflow(sources));
         return templates;
+    }
+
+    private FileTemplate getNextJavaWorkflow(final Set<ProjectKeeperModule> modules, final String nextJavaVersion) {
+        final FileTemplateFromResource template = new FileTemplateFromResource(
+                ".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT) //
+                .replacing("skipNativeImage",
+                        modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : "")
+                .replacing("nextJavaVersion", nextJavaVersion);
+        return new ContentCustomizingTemplate(template,
+                new GitHubWorkflowCustomizer(new GitHubWorkflowJavaVersionCustomizer(List.of(nextJavaVersion))));
     }
 
     private FileTemplate getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
