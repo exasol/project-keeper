@@ -104,7 +104,7 @@ class PomFileGeneratorTest {
     @Test
     void testAddJavaVersionPropertyForRootPom() {
         final Model pom = runGeneration(emptyList(), null);
-        assertThat(pom.getProperties().get("java.version"), equalTo("11"));
+        assertThat(pom.getProperties().get("java.version"), equalTo(PomFileGenerator.DEFAULT_JAVA_VERSION));
     }
 
     @Test
