@@ -25,6 +25,7 @@ The release also installs the Java versions required by Maven sources during the
 ### Bugfixes
 
 * #585: Pinned Maven plugin versions in generated parent pom
+* #530: Omit `java.version` property when pom has a parent
 
 ### Documentation
 
