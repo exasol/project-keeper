@@ -11,6 +11,8 @@ import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 public class DependencyChangeReport {
 
     /**
+     * Create a new builder.
+     * 
      * @return builder for {@link DependencyChangeReport}
      */
     public static Builder builder() {
@@ -30,6 +32,8 @@ public class DependencyChangeReport {
     }
 
     /**
+     * Get changes of the given type.
+     * 
      * @param type {@link Type} of dependencies to get changes for
      * @return list of changes for the specified type
      */
@@ -38,6 +42,8 @@ public class DependencyChangeReport {
     }
 
     /**
+     * Get all changes.
+     * 
      * @return map containing list changes for each {@link Type} of dependencies
      */
     // only for serialization and deserialization
@@ -46,6 +52,8 @@ public class DependencyChangeReport {
     }
 
     /**
+     * Set changes.
+     * 
      * @param changes map containing list changes for each {@link Type} of dependencies
      */
     // only for serialization and deserialization
@@ -60,6 +68,10 @@ public class DependencyChangeReport {
      */
     public static final class Builder {
         private final DependencyChangeReport report = new DependencyChangeReport();
+
+        private Builder() {
+
+        }
 
         /**
          * Adds a list of changes for the specified {@link Type} of the changed dependencies.
@@ -89,6 +101,8 @@ public class DependencyChangeReport {
         }
 
         /**
+         * Build a new instance.
+         * 
          * @return new instance of {@link DependencyChangeReport}.
          */
         public DependencyChangeReport build() {

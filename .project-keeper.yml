@@ -72,7 +72,7 @@ version:
 excludes:
   # PK can't use itself as a Maven plugin
   - regex: "W-PK-CORE-151: Pom file .* contains no reference to project-keeper-maven-plugin."
-  # PK already uses Java 17 for building
+  # Build with Java 21 fails due to missing JavaDoc comments, see https://github.com/exasol/project-keeper/issues/596
   - "E-PK-CORE-17: Missing required file: '.github/workflows/ci-build-next-java.yml'"
   # No configuration necessary for aggregator POM
   - "E-PK-CORE-103: Missing parent declaration in 'pom.xml'"

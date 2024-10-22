@@ -10,6 +10,13 @@ public class ResponseCoder {
     private static final String END_TOKEN = "###SerializedResponseEnd###";
 
     /**
+     * Create a new instance.
+     */
+    public ResponseCoder() {
+        // Required to specify javadoc comment.
+    }
+
+    /**
      * Prints the given response to standard out, enclosed with start and end tokens.
      * 
      * @param response the response to print.

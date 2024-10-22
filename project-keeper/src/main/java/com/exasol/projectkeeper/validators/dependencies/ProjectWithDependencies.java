@@ -33,12 +33,20 @@ public final class ProjectWithDependencies {
         return new ProjectWithDependencies(this.projectName, dependencies);
     }
 
-    /** @return project name */
+    /**
+     * Get project name.
+     * 
+     * @return project name
+     */
     public String getProjectName() {
         return projectName;
     }
 
-    /** @return dependencies */
+    /**
+     * Get dependencies.
+     * 
+     * @return dependencies
+     */
     public List<ProjectDependency> getDependencies() {
         return dependencies;
     }

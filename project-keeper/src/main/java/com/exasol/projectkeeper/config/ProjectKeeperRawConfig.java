@@ -21,6 +21,13 @@ public class ProjectKeeperRawConfig {
     private Build build;
 
     /**
+     * Create a new instance.
+     */
+    public ProjectKeeperRawConfig() {
+        // Required for adding Javadoc.
+    }
+
+    /**
      * Get the sources.
      * 
      * @return sources
@@ -136,6 +143,11 @@ public class ProjectKeeperRawConfig {
         private boolean advertise = true;
         private ProjectKeeperRawConfig.ParentPomRef parentPom;
         private List<String> artifacts;
+
+        /** Create a new instance. */
+        public Source() {
+            // Required for specifying Javadoc
+        }
 
         /**
          * Get the source path, e.g. {@code project-keeper/pom.xml}.
@@ -261,6 +273,13 @@ public class ProjectKeeperRawConfig {
         private String relativePath;
 
         /**
+         * Create a new instance.
+         */
+        public ParentPomRef() {
+            // Required for adding Javadoc.
+        }
+
+        /**
          * Get the group ID of the parent POM.
          * 
          * @return group ID
@@ -348,6 +367,13 @@ public class ProjectKeeperRawConfig {
         public List<Workflow> workflows = emptyList();
 
         /**
+         * Create a new instance.
+         */
+        public Build() {
+            // Required for adding Javadoc.
+        }
+
+        /**
          * Get CI build runner operating system, e.g. {@code ubuntu-20.04}.
          * 
          * @return CI build runner operating system
@@ -365,22 +391,38 @@ public class ProjectKeeperRawConfig {
             this.runnerOs = runnerOs;
         }
 
-        /** @return {@code true} if the CI build should free disk space before running the build */
+        /**
+         * Get free disk space flag.
+         * 
+         * @return {@code true} if the CI build should free disk space before running the build
+         */
         public boolean shouldFreeDiskSpace() {
             return freeDiskSpace;
         }
 
-        /** @param freeDiskSpace {@code true} if the CI build should free disk space before running the build */
+        /**
+         * Set free disk space flag.
+         * 
+         * @param freeDiskSpace {@code true} if the CI build should free disk space before running the build
+         */
         public void setFreeDiskSpace(final boolean freeDiskSpace) {
             this.freeDiskSpace = freeDiskSpace;
         }
 
-        /** @return Exasol DB versions for which to run the CI build */
+        /**
+         * Get Exasol DB version.
+         * 
+         * @return Exasol DB versions for which to run the CI build
+         */
         public List<String> getExasolDbVersions() {
             return exasolDbVersions;
         }
 
-        /** @param exasolDbVersions Exasol DB versions for which to run the CI build */
+        /**
+         * Set Exasol DB version.
+         * 
+         * @param exasolDbVersions Exasol DB versions for which to run the CI build
+         */
         public void setExasolDbVersions(final List<String> exasolDbVersions) {
             this.exasolDbVersions = exasolDbVersions;
         }
@@ -393,6 +435,11 @@ public class ProjectKeeperRawConfig {
      */
     @SuppressWarnings("java:S1104") // Only used for serialization, getter/setters not needed
     public static class Workflow {
+        /** Create a new instance. */
+        public Workflow() {
+            // Required for specifying Javadoc
+        }
+
         /** Workflow name, e.g. {@code ci-build.yml} or {@code release.yml}. */
         public String name;
         /** GitHub environment, e.g. {@code aws}. */
@@ -408,6 +455,11 @@ public class ProjectKeeperRawConfig {
      */
     @SuppressWarnings("java:S1104") // Only used for serialization, getter/setters not needed
     public static class RawStepCustomization {
+        /** Create a new instance. */
+        public RawStepCustomization() {
+            // Required for specifying Javadoc
+        }
+
         /** Customization type (insert/replace). */
         public StepCustomization.Type action;
         /** ID of the step to replace or after which to insert. */

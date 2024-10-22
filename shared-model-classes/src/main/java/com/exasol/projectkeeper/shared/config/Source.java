@@ -32,7 +32,11 @@ public final class Source {
         this.releaseArtifacts = builder.releaseArtifacts;
     }
 
-    /** @return Path to the source-project root or build file. Example: {@code my-project/pom.xml} */
+    /**
+     * Get source path.
+     * 
+     * @return Path to the source-project root or build file. Example: {@code my-project/pom.xml}
+     */
     public Path getPath() {
         return path;
     }
@@ -47,32 +51,56 @@ public final class Source {
         return this.getPath().getParent() == null;
     }
 
-    /** @return Type if the source-project Example: {@code MAVEN} */
+    /**
+     * Get source type.
+     * 
+     * @return Type if the source-project Example: {@link SourceType#MAVEN} or {@link SourceType#GOLANG}.
+     */
     public SourceType getType() {
         return type;
     }
 
-    /** @return List with project-keeper modules */
+    /**
+     * Get modules.
+     * 
+     * @return List with project-keeper modules
+     */
     public Set<ProjectKeeperModule> getModules() {
         return modules;
     }
 
-    /** @return {@code true} if this should be advertised */
+    /**
+     * Check if the source should be advertised.
+     * 
+     * @return {@code true} if this should be advertised
+     */
     public boolean isAdvertised() {
         return advertise;
     }
 
-    /** @return the Maven parent POM */
+    /**
+     * Get the parent POM.
+     * 
+     * @return the Maven parent POM
+     */
     public ParentPomRef getParentPom() {
         return parentPom;
     }
 
-    /** @return list release artifact paths, relative to to {@link #getPath()} */
+    /**
+     * Get release artifact paths.
+     * 
+     * @return list release artifact paths, relative to to {@link #getPath()}
+     */
     public List<Path> getReleaseArtifacts() {
         return releaseArtifacts;
     }
 
-    /** @return a builder for creating new {@link Source} instances */
+    /**
+     * Create a new builder.
+     * 
+     * @return a builder for creating new {@link Source} instances
+     */
     public static Source.SourceBuilder builder() {
         return new Source.SourceBuilder();
     }
@@ -91,6 +119,8 @@ public final class Source {
         }
 
         /**
+         * Set source path.
+         * 
          * @param path Path to the source-project root or build file. Example: {@code my-project/pom.xml}.
          * @return {@code this}.
          */
@@ -100,7 +130,9 @@ public final class Source {
         }
 
         /**
-         * @param type Type if the source-project Example: {@code MAVEN}.
+         * Set source type.
+         * 
+         * @param type Type if the source-project Example: {@link SourceType#MAVEN} or {@link SourceType#GOLANG}.
          * @return {@code this}.
          */
         public Source.SourceBuilder type(final SourceType type) {
@@ -109,6 +141,8 @@ public final class Source {
         }
 
         /**
+         * Set modules.
+         * 
          * @param modules List with project-keeper modules
          * @return {@code this}.
          */
@@ -118,6 +152,8 @@ public final class Source {
         }
 
         /**
+         * Set advertise mode.
+         * 
          * @param advertise {@code true} if this should be advertised
          * @return {@code this}.
          */
@@ -127,6 +163,8 @@ public final class Source {
         }
 
         /**
+         * Set parent POM.
+         * 
          * @param parentPom Reference to the parent pom. For maven sources only. {@code null} if not provided.
          * @return {@code this}.
          */
@@ -136,6 +174,8 @@ public final class Source {
         }
 
         /**
+         * Set release artifacts.
+         * 
          * @param releaseArtifacts list of release artifact paths, relative to to {@link #path(Path)}
          * @return {@code this}.
          */
@@ -144,7 +184,11 @@ public final class Source {
             return this;
         }
 
-        /** @return a new instance */
+        /**
+         * Build a new instance.
+         * 
+         * @return a new instance
+         */
         public Source build() {
             return new Source(this);
         }

@@ -10,7 +10,7 @@ import com.exasol.projectkeeper.shared.dependencychanges.*;
 /**
  * This class compares two lists of maven dependencies.
  */
-public class MavenDependencyComparator {
+class MavenDependencyComparator {
 
     /**
      * Compare two lists of maven dependencies.

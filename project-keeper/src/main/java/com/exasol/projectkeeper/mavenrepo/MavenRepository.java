@@ -16,10 +16,12 @@ import org.xml.sax.SAXException;
 /**
  * This class allows getting the latest version of project-keeper from Maven Central.
  */
-//[impl->dsn~verify-own-version~1]
+// [impl->dsn~verify-own-version~1]
 public class MavenRepository {
 
     /**
+     * Get repo for CLI artifacts.
+     * 
      * @return Maven repository using URL for cli artifacts of project-keeper.
      */
     public static MavenRepository projectKeeperCli() {
@@ -27,6 +29,8 @@ public class MavenRepository {
     }
 
     /**
+     * Get repo for Maven plugins.
+     * 
      * @return Maven repository using URL for project-keeper maven-plugin.
      */
     public static MavenRepository projectKeeperMavenPlugin() {
@@ -34,6 +38,8 @@ public class MavenRepository {
     }
 
     /**
+     * Get repo for the given URL infix.
+     * 
      * @param urlInfix infix for URL to maven artifact, e.g. "com/exasol/project-keeper-maven-plugin"
      * @return new instance of {@link MavenRepository} for this artifact
      */
@@ -82,12 +88,14 @@ public class MavenRepository {
     }
 
     /**
-     * @return latest version of project-keeper in the flavor addressed by the URL of this repository.
+     * Get latest project-keeper version.
+     * 
      * @throws ParserConfigurationException in configuring parser failed (implementation error)
      * @throws SAXException                 in case XML is invalid
      * @throws IOException                  if URL cannot be connected
      * @throws XmlContentException          in case Maven metadata XML document does not contains expected XML elements
      *                                      with latest version
+     * @return latest version of project-keeper in the flavor addressed by the URL of this repository.
      */
     public String getLatestVersion()
             throws ParserConfigurationException, SAXException, IOException, XmlContentException {
@@ -108,6 +116,8 @@ public class MavenRepository {
         private static final long serialVersionUID = 1L;
 
         /**
+         * Create a new instance.
+         * 
          * @param message the detail message.
          */
         public XmlContentException(final String message) {
@@ -116,6 +126,8 @@ public class MavenRepository {
     }
 
     /**
+     * Get the URL.
+     * 
      * @return URL of this Maven repository
      */
     public String getUrl() {

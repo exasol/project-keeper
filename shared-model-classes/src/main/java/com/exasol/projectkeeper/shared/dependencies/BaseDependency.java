@@ -2,10 +2,18 @@ package com.exasol.projectkeeper.shared.dependencies;
 
 /** Base for {@link ProjectDependency} and {@link VersionedDependency} */
 public interface BaseDependency {
-    /** @return type of the dependency */
+    /**
+     * Get the dependency type.
+     * 
+     * @return type of the dependency
+     */
     Type getType();
 
-    /** @return name of the module of the dependency */
+    /**
+     * Get the dependency name.
+     * 
+     * @return name of the module of the dependency
+     */
     String getName();
 
     /** Type of the dependency */
@@ -29,7 +37,11 @@ public interface BaseDependency {
             this.header = header;
         }
 
-        /** @return header for reporting dependencies of the current type. */
+        /**
+         * Get header.
+         * 
+         * @return header for reporting dependencies of the current type.
+         */
         public String getHeader() {
             return this.header;
         }

@@ -13,7 +13,12 @@ import com.exasol.projectkeeper.OsCheck;
 public class ShellCommand {
     static final Logger LOGGER = Logger.getLogger(ShellCommand.class.getName());
 
+    private ShellCommand() {
+    }
+
     /**
+     * Create a new builder.
+     * 
      * @return A builder for new instances of {@link ShellCommand}.
      */
     public static Builder builder() {
@@ -27,6 +32,8 @@ public class ShellCommand {
     private final List<String> options = new ArrayList<>();
 
     /**
+     * Get command name.
+     * 
      * @return name of the command mainly for messages to the user.
      */
     public String name() {
@@ -34,9 +41,11 @@ public class ShellCommand {
     }
 
     /**
+     * Get command line.
+     * 
      * @return Complete command line with command, optional sub command and all command line arguments and options.
      */
-    public List<String> commandline() {
+    public List<String> commandLine() {
         final List<String> result = new ArrayList<>();
         result.add(this.mainCommand);
         if (this.subCommand != null) {
@@ -47,6 +56,8 @@ public class ShellCommand {
     }
 
     /**
+     * Get timeout.
+     * 
      * @return Timeout for command execution. If command execution does not terminate after this duration then the
      *         executor will raise a time-out exception.
      */
@@ -69,7 +80,12 @@ public class ShellCommand {
     public static class Builder {
         private final ShellCommand shellCommand = new ShellCommand();
 
+        private Builder() {
+        }
+
         /**
+         * Set timeout.
+         * 
          * @param timeout duration to allow to wait for the command to terminate during execution.
          * @return this for fluent programming
          */
@@ -79,6 +95,8 @@ public class ShellCommand {
         }
 
         /**
+         * Set working dir.
+         * 
          * @param workingDir optional working directory for the process
          * @return this for fluent programming
          */
@@ -88,6 +106,8 @@ public class ShellCommand {
         }
 
         /**
+         * Set the command name.
+         * 
          * @param command name of the command to execute. On Windows platform probably with a suffix like ".exe" or
          *                ".cmd", see {@link OsCheck#suffix}
          * @return this for fluent programming
@@ -110,6 +130,8 @@ public class ShellCommand {
         }
 
         /**
+         * Add arguments.
+         * 
          * @param value additional options and arguments to the command
          * @return this for fluent programming
          */
@@ -118,6 +140,8 @@ public class ShellCommand {
         }
 
         /**
+         * Add arguments.
+         * 
          * @param value additional options and arguments to the command
          * @return this for fluent programming
          */
@@ -127,6 +151,8 @@ public class ShellCommand {
         }
 
         /**
+         * Build a new instance.
+         * 
          * @return new instance of {@link ShellCommand}.
          */
         public ShellCommand build() {

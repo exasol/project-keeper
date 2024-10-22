@@ -14,6 +14,8 @@ public class RepoNameReader {
     }
 
     /**
+     * Get repo name for the given folder.
+     * 
      * @param folder project's root folder
      * @return name of the repository or of the specified folder
      */

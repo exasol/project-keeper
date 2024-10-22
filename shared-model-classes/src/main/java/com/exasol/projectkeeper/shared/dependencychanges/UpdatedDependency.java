@@ -64,7 +64,11 @@ public final class UpdatedDependency implements DependencyChange {
         return version;
     }
 
-    /** @return new version */
+    /**
+     * Get new version.
+     * 
+     * @return new version
+     */
     public String getNewVersion() {
         return newVersion;
     }
