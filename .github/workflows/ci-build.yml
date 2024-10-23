@@ -99,6 +99,12 @@ jobs:
         id: build-pk-verify,
         run: 'mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .'
       }
+      - name: Verify that metrics.json was created
+        id: verify-metrics-json
+        run: |
+          # Ensure that file exists:
+          ls -lh coverage-aggregator/target/metrics.json
+          cat coverage-aggregator/target/metrics.json
       - name: Verify Release Artifacts
         id: verify-release-artifacts
         run: "print_message() {\n    local -r message=$1\n    echo \"$message\"\n    echo \"$message\" >> \"$GITHUB_STEP_SUMMARY\"\n}\n\nprint_message \"### Release Artifacts\"\n\nIFS=$'\\n' artifacts_array=($ARTIFACTS)\nmissing_files=()\nfor file in \"${artifacts_array[@]}\";\ndo  \n    echo \"Checking if file $file exists...\"\n    if ! [[ -f \"$file\" ]]; then\n        print_message \"* ⚠️ \\`$file\\` does not exist ⚠️\"\n        echo \"Content of directory $(dirname \"$file\"):\"\n        ls \"$(dirname \"$file\")\"\n        missing_files+=(\"$file\")\n    else\n        print_message \"* \\`$file\\` ✅\" \n    fi\ndone\nprint_message \"\"\nnumber_of_missing_files=${#missing_files[@]}\nif [[ $number_of_missing_files -gt 0 ]]; then\n    print_message \"⚠️ $number_of_missing_files release artifact(s) missing ⚠️\"\n    exit 1\nfi\n"
