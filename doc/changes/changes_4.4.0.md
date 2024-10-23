@@ -1,4 +1,4 @@
-# Project Keeper 4.3.4, released 2024-??-??
+# Project Keeper 4.4.0, released 2024-10-23
 
 Code name: Fix vulnerabilities
 
@@ -8,7 +8,9 @@ This release fixes vulnerability CVE-2024-47554 in transitive test dependency `c
 
 The release ignores vulnerability CVE-2023-7272 in transitive runtime dependency `org.glassfish:javax.json:1.1.4` via `com.jcabi:jcabi-github:jar:1.9.1` as this is accepted for accessing exasol json documents on GitHub.
 
-The release also pins Maven plugin versions to avoid plugin versions depending on the Maven version.
+The release also pins Maven plugin versions to avoid verify findings caused by differences in plugin versions that only depend on the Maven version.
+
+The release also adds `quality-summarizer-maven-plugin` to the generated parent pom.
 
 The release also installs the Java versions required by Maven sources during the CI builds. Just set property `java.version` in your `pom.xml` and the required JDK will be installed in all GitHub workflows. See the [user guide](../user_guide/user_guide.md#jdk-toolchain-version) for details.
 
@@ -22,6 +24,10 @@ The release also installs the Java versions required by Maven sources during the
 * #587: Fixed vulnerability CVE-2024-47554 in test dependency `commons-io:commons-io:2.13.0`
 * #588: Ignore vulnerability CVE-2023-7272 in runtime dependency `org.glassfish:javax.json:1.1.4`
 
+### Features
+
+* #513: Added `quality-summarizer-maven-plugin` to the generated parent POM
+
 ### Bugfixes
 
 * #585: Pinned Maven plugin versions in generated parent pom
@@ -29,7 +35,7 @@ The release also installs the Java versions required by Maven sources during the
 
 ### Documentation
 
-* #582: Documented automatic release process in user guide
+* #582: Documented automated release process in user guide
 
 ## Dependency Updates
 
@@ -60,6 +66,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.4` to `3.2.7`
@@ -74,19 +81,19 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-shared-model-classes:4.3.3` to `4.4.0`
 * Updated `com.jcabi:jcabi-github:1.8.0` to `1.9.1`
 * Updated `org.snakeyaml:snakeyaml-engine:2.7` to `2.8`
 * Updated `org.yaml:snakeyaml:2.2` to `2.3`
 
 #### Runtime Dependency Updates
 
-* Updated `com.exasol:project-keeper-java-project-crawler:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-java-project-crawler:4.3.3` to `4.4.0`
 
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.2` to `1.1.3`
-* Updated `com.exasol:project-keeper-shared-test-setup:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-shared-test-setup:4.3.3` to `4.4.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.16.1` to `3.17.1`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
 * Updated `org.junit-pioneer:junit-pioneer:2.2.0` to `2.3.0`
@@ -97,6 +104,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
@@ -113,7 +121,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-core:4.3.3` to `4.4.0`
 * Updated `org.apache.maven:maven-model:3.9.7` to `3.9.9`
 
 #### Runtime Dependency Updates
@@ -123,13 +131,14 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Test Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-test-setup:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-shared-test-setup:4.3.3` to `4.4.0`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
 * Updated `org.junit.jupiter:junit-jupiter-engine:5.10.2` to `5.11.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.10.2` to `5.11.3`
 
 #### Plugin Dependency Updates
 
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
@@ -146,7 +155,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-core:4.3.3` to `4.4.0`
 
 #### Test Dependency Updates
 
@@ -159,6 +168,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.6.1` to `3.8.0`
@@ -176,7 +186,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-shared-model-classes:4.3.3` to `4.4.0`
 * Updated `org.eclipse.jgit:org.eclipse.jgit:6.7.0.202309050840-r` to `7.0.0.202409031743-r`
 
 #### Test Dependency Updates
@@ -191,6 +201,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.6.1` to `3.8.0`
@@ -208,12 +219,13 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:4.3.3` to `4.3.4`
+* Updated `com.exasol:project-keeper-shared-model-classes:4.3.3` to `4.4.0`
 * Updated `org.hamcrest:hamcrest:2.2` to `3.0`
 * Updated `org.yaml:snakeyaml:2.2` to `2.3`
 
 #### Plugin Dependency Updates
 
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`

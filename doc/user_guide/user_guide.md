@@ -503,7 +503,7 @@ The standalone variant supports the same goals as the Maven plugin: `fix`, `veri
 
 GitHub Workflow [`release.yml`](#releaseyml) will automatically release the project when `ci-build.yml` succeeded on `main` branch and the changes file contains an up-to-date release date. In case of problems you can start the workflow manually on GitHub and skip the release to Maven Central or GitHub if necessary.
 
-To check if a project meets all preconditions for an automatic release, run PK goal `verify-release`:
+To check if a project meets all preconditions for an automated release, run PK goal `verify-release`:
 
 ```sh
 # Maven

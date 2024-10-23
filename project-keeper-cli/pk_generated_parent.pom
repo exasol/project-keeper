@@ -437,6 +437,19 @@
             </plugin>
             <plugin>
                 <groupId>com.exasol</groupId>
+                <artifactId>quality-summarizer-maven-plugin</artifactId>
+                <version>0.2.0</version>
+                <executions>
+                    <execution>
+                        <id>summarize-metrics</id>
+                        <goals>
+                            <goal>summarize</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
                 <version>2.0.3</version>
                 <executions>

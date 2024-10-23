@@ -120,6 +120,15 @@ build:
             name: Run project-keeper itself
             id: build-pk-verify
             run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
+        - action: INSERT_AFTER
+          stepId: build-pk-verify
+          content:
+            name: Verify that metrics.json was created
+            id: verify-metrics-json
+            run: |
+              # Ensure that file exists:
+              ls -lh coverage-aggregator/target/metrics.json
+              cat coverage-aggregator/target/metrics.json
 
     # [itest->dsn~customize-build-process.dependency-check~0]
     - name: "dependencies_check.yml"

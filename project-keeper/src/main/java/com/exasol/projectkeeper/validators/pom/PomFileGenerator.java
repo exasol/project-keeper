@@ -56,6 +56,8 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/native-image-maven-plugin.xml", NATIVE_IMAGE),
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
             new FailsafePluginTemplateGenerator(), new JacocoPluginTemplateGenerator(),
+            // quality-summarizer-maven-plugin must come after Jacoco
+            new SimplePluginTemplateGenerator("maven_templates/quality-summarizer-maven-plugin.xml", DEFAULT),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
             // Reproducible build plugin must be last
             new SimplePluginTemplateGenerator("maven_templates/reproducible-build-maven-plugin.xml", DEFAULT));
