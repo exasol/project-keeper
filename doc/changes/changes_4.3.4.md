@@ -66,7 +66,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
-* Added `com.exasol:quality-summarizer-maven-plugin:0.1.0`
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.4` to `3.2.7`
@@ -104,7 +104,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
-* Added `com.exasol:quality-summarizer-maven-plugin:0.1.0`
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
@@ -138,7 +138,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
-* Added `com.exasol:quality-summarizer-maven-plugin:0.1.0`
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.2.5` to `3.5.1`
@@ -168,7 +168,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
-* Added `com.exasol:quality-summarizer-maven-plugin:0.1.0`
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.6.1` to `3.8.0`
@@ -201,7 +201,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
-* Added `com.exasol:quality-summarizer-maven-plugin:0.1.0`
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.6.1` to `3.8.0`
@@ -225,7 +225,7 @@ The release also installs the Java versions required by Maven sources during the
 
 #### Plugin Dependency Updates
 
-* Added `com.exasol:quality-summarizer-maven-plugin:0.1.0`
+* Added `com.exasol:quality-summarizer-maven-plugin:0.2.0`
 * Updated `io.github.zlika:reproducible-build-maven-plugin:0.16` to `0.17`
 * Updated `org.apache.maven.plugins:maven-clean-plugin:2.5` to `3.4.0`
 * Updated `org.apache.maven.plugins:maven-install-plugin:2.4` to `3.1.3`

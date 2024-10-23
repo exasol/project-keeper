@@ -42,7 +42,6 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/ossindex-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-surefire-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/versions-maven-plugin.xml", DEFAULT),
-            new SimplePluginTemplateGenerator("maven_templates/quality-summarizer-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/duplicate-finder-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-assembly-plugin.xml", JAR_ARTIFACT),
             new SimplePluginTemplateGenerator("maven_templates/maven-jar-plugin-exclusion.xml", JAR_ARTIFACT),
@@ -57,6 +56,8 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/native-image-maven-plugin.xml", NATIVE_IMAGE),
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
             new FailsafePluginTemplateGenerator(), new JacocoPluginTemplateGenerator(),
+            // quality-summarizer-maven-plugin must come after Jacoco
+            new SimplePluginTemplateGenerator("maven_templates/quality-summarizer-maven-plugin.xml", DEFAULT),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
             // Reproducible build plugin must be last
             new SimplePluginTemplateGenerator("maven_templates/reproducible-build-maven-plugin.xml", DEFAULT));
