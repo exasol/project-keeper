@@ -26,7 +26,7 @@ The release also installs the Java versions required by Maven sources during the
 
 ### Features
 
-* #513: Added `quality-summarizer-maven-plugin` to the generated parent pom
+* #513: Added `quality-summarizer-maven-plugin` to the generated parent POM
 
 ### Bugfixes
 
