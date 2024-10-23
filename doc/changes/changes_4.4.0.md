@@ -1,4 +1,4 @@
-# Project Keeper 4.3.4, released 2024-??-??
+# Project Keeper 4.4.0, released 2024-10-23
 
 Code name: Fix vulnerabilities
 
