@@ -35,7 +35,7 @@ class FileTemplatesFactory {
         this.sources = sources;
         final JavaVersionExtractor javaVersionExtractor = new JavaVersionExtractor(sources);
         this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildOptions, javaVersionExtractor.extractVersions(),
-                javaVersionExtractor.getNextVersion());
+                javaVersionExtractor::getNextVersion);
     }
 
     List<FileTemplate> getGlobalTemplates() {

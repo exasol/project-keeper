@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
@@ -18,10 +19,10 @@ class CiBuildWorkflowGenerator {
     private static final String CI_BUILD_PATH_IN_PROJECT = WORKFLOW_PATH + CI_BUILD_WORKFLOW_NAME;
     private final BuildOptions buildOptions;
     private final List<String> javaVersions;
-    private final String nextJavaVersion;
+    private final Supplier<String> nextJavaVersion;
 
     CiBuildWorkflowGenerator(final BuildOptions buildOptions, final List<String> javaVersions,
-            final String nextJavaVersion) {
+            final Supplier<String> nextJavaVersion) {
         this.buildOptions = Objects.requireNonNull(buildOptions, "buildOptions");
         this.javaVersions = Objects.requireNonNull(javaVersions, "javaVersions");
         this.nextJavaVersion = Objects.requireNonNull(nextJavaVersion, "nextJavaVersion");
@@ -34,7 +35,7 @@ class CiBuildWorkflowGenerator {
                 CI_BUILD_PATH_IN_PROJECT, REQUIRE_EXACT);
         template.replacing("ciBuildRunnerOS", buildOptions.getRunnerOs());
         template.replacing("freeDiskSpace", String.valueOf(buildOptions.shouldFreeDiskSpace()));
-        template.replacing("nextJavaVersion", nextJavaVersion);
+        template.replacing("nextJavaVersion", nextJavaVersion.get());
 
         if (buildType == CiTemplateType.EXASOL_VERSION_MATRIX) {
             template.replacing("matrixExasolDbVersions",
@@ -60,7 +61,7 @@ class CiBuildWorkflowGenerator {
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
-        return new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion);
+        return new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion.get());
     }
 
     private List<StepCustomization> findCustomizations(final String workflowName) {

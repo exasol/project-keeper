@@ -350,7 +350,7 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     private CiBuildWorkflowGenerator testee(final BuildOptions options) {
-        return new CiBuildWorkflowGenerator(options, List.of("11", "17"), "21");
+        return new CiBuildWorkflowGenerator(options, List.of("11", "17"), () -> "21");
     }
 
     private GitHubWorkflow parse(final String yaml) {
