@@ -166,7 +166,8 @@ jobs:
         }
       - {
         name: Run tests and build with Maven 21,
-        run: mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=21
+        id: build-next-java,
+        run: mvn --batch-mode clean test -DtrimStackTrace=false -Djava.version=21
       }
   build:
     needs: [
