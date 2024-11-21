@@ -7,14 +7,25 @@ import java.util.Objects;
  */
 public final class StepCustomization {
 
+    private final String jobId;
     private final Type type;
     private final String stepId;
     private final WorkflowStep step;
 
     private StepCustomization(final Builder builder) {
+        this.jobId = Objects.requireNonNull(builder.jobId, "jobId");
         this.type = Objects.requireNonNull(builder.type, "type");
         this.stepId = Objects.requireNonNull(builder.stepId, "stepId");
         this.step = Objects.requireNonNull(builder.step, "step");
+    }
+
+    /**
+     * Get the job ID.
+     * 
+     * @return job ID
+     */
+    public String getJobId() {
+        return jobId;
     }
 
     /**
@@ -55,11 +66,23 @@ public final class StepCustomization {
 
     /** Builder class for {@link StepCustomization} instances. */
     public static class Builder {
+        private String jobId;
         private Type type;
         private String stepId;
         private WorkflowStep step;
 
         private Builder() {
+        }
+
+        /**
+         * Set the ID of the build job to customize.
+         * 
+         * @param jobId job ID
+         * @return {@code this} for fluent programming
+         */
+        public Builder jobId(final String jobId) {
+            this.jobId = jobId;
+            return this;
         }
 
         /**
@@ -107,12 +130,12 @@ public final class StepCustomization {
 
     @Override
     public String toString() {
-        return "StepCustomization [type=" + type + ", stepId=" + stepId + ", step=" + step + "]";
+        return "StepCustomization [jobId=" + jobId + ", type=" + type + ", stepId=" + stepId + ", step=" + step + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(type, stepId, step);
+        return Objects.hash(jobId, type, stepId, step);
     }
 
     @Override
@@ -127,7 +150,8 @@ public final class StepCustomization {
             return false;
         }
         final StepCustomization other = (StepCustomization) obj;
-        return type == other.type && Objects.equals(stepId, other.stepId) && Objects.equals(step, other.step);
+        return Objects.equals(jobId, other.jobId) && type == other.type && Objects.equals(stepId, other.stepId)
+                && Objects.equals(step, other.step);
     }
 
     /**

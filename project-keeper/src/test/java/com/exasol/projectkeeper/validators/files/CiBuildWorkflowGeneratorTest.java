@@ -34,62 +34,60 @@ class CiBuildWorkflowGeneratorTest {
     @Test
     void defaultRunnerOs() {
         final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder());
-        assertThat(workflow.getJob("build").getRunnerOS(), equalTo("ubuntu-latest"));
+        assertThat(workflow.getJob("build-and-test").getRunnerOS(), equalTo("ubuntu-latest"));
     }
 
     @Test
     void customRunnerOs() {
         final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder().runnerOs("my-runner-os"));
-        assertThat(workflow.getJob("build").getRunnerOS(), equalTo("my-runner-os"));
+        assertThat(workflow.getJob("build-and-test").getRunnerOS(), equalTo("my-runner-os"));
     }
 
     @ParameterizedTest
     @ValueSource(booleans = { true, false })
     void ciBuildFreeDiskSpace(final boolean freeDiskSpace) {
         final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder().freeDiskSpace(freeDiskSpace));
-        assertThat(workflow.getJob("build").getStep("free-disk-space").getIfCondition(),
+        assertThat(workflow.getJob("build-and-test").getStep("free-disk-space").getIfCondition(),
                 equalTo("${{ " + freeDiskSpace + " }}"));
     }
 
     // [utest->dsn~customize-build-process.ci-build~0]
     @Test
     void customizeBuildStepsNonMatrixBuild() {
-        final Job job = ciBuildContent(BuildOptions.builder().workflows(List.of(CustomWorkflow.builder()
-                .workflowName("ci-build.yml")
-                .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
+        final Job job = ciBuildContent(BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml").addStep(StepCustomization
+                        .builder().jobId("build-and-test").type(Type.INSERT_AFTER).stepId("sonar-analysis")
                         .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step"))).build())
-                .build()))).getJob("build");
+                        .build())))
+                .getJob("build-and-test");
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
         assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
                 () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
-                () -> assertThat(stepIds,
-                        contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
-                                "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
-                                "verify-release-artifacts", "upload-artifacts", "check-release")));
+                () -> assertThat(stepIds, contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
+                        "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
+                        "verify-release-artifacts", "upload-artifacts", "configure-link-check", "run-link-check")));
     }
 
     // [utest->dsn~customize-build-process.ci-build~0]
     @Test
     void customizeBuildStepsMatrixBuild() {
         final Job job = ciBuildContent(BuildOptions.builder().exasolDbVersions(List.of("v1", "v2"))
-                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
-                        .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("sonar-analysis")
-                                .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step")))
-                                .build())
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml").addStep(StepCustomization
+                        .builder().jobId("matrix-build").type(Type.INSERT_AFTER).stepId("sonar-analysis")
+                        .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step"))).build())
                         .build())))
                 .getJob("matrix-build");
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
         assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
                 () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
-                () -> assertThat(stepIds,
-                        contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
-                                "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
-                                "verify-release-artifacts", "upload-artifacts")));
+                () -> assertThat(stepIds, contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
+                        "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
+                        "verify-release-artifacts", "upload-artifacts", "configure-link-check", "run-link-check")));
     }
 
     @Test
     void ciBuildContentNonMatrixBuild() {
-        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
+        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build-and-test");
         assertAll(
                 () -> assertThat(job.getConcurrency(),
                         equalTo(Map.of("group", "${{ github.workflow }}-${{ github.ref }}", "cancel-in-progress",
@@ -138,13 +136,13 @@ class CiBuildWorkflowGeneratorTest {
     void ciBuildCustomEnvironment() {
         final Job job = ciBuildContent(BuildOptions.builder()
                 .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml").environment("aws").build())))
-                .getJob("build");
+                .getJob("build-and-test");
         assertThat(job.getEnvironment(), equalTo("aws"));
     }
 
     @Test
     void ciBuildDefaultHasNoEnvironment() {
-        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
+        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build-and-test");
         assertThat(job.getEnvironment(), nullValue());
     }
 
@@ -184,7 +182,7 @@ class CiBuildWorkflowGeneratorTest {
     void releaseBuildCustomized() {
         final Job job = releaseBuildContent(BuildOptions.builder()
                 .workflows(List.of(CustomWorkflow.builder().workflowName("release.yml")
-                        .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("build")
+                        .addStep(StepCustomization.builder().jobId("release").type(Type.INSERT_AFTER).stepId("build")
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("release");
@@ -197,7 +195,8 @@ class CiBuildWorkflowGeneratorTest {
     void dependencyCheckBuildCustomized() {
         final Job job = dependencyCheckBuildContent(BuildOptions.builder()
                 .workflows(List.of(CustomWorkflow.builder().workflowName("dependencies_check.yml")
-                        .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("setup-jdks")
+                        .addStep(StepCustomization.builder().jobId("report_security_issues").type(Type.INSERT_AFTER)
+                                .stepId("setup-jdks")
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("report_security_issues");
@@ -210,7 +209,8 @@ class CiBuildWorkflowGeneratorTest {
     void dependencyUpdateBuildCustomized() {
         final Job job = dependencyUpdateBuildContent(BuildOptions.builder()
                 .workflows(List.of(CustomWorkflow.builder().workflowName("dependencies_update.yml")
-                        .addStep(StepCustomization.builder().type(Type.INSERT_AFTER).stepId("setup-jdks")
+                        .addStep(StepCustomization.builder().jobId("update_dependencies").type(Type.INSERT_AFTER)
+                                .stepId("setup-jdks")
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("update_dependencies");
@@ -227,7 +227,7 @@ class CiBuildWorkflowGeneratorTest {
 
     @Test
     void ciBuildNonMatrixAllStepsHaveId() {
-        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build");
+        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build-and-test");
         assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10)));
         job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
     }
@@ -256,13 +256,12 @@ class CiBuildWorkflowGeneratorTest {
     @Test
     void customizeSetupJavaStepInCiBuild() {
         final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
-        final Job job = ciBuildContent(
-                BuildOptions.builder()
-                        .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
-                                .addStep(StepCustomization.builder().type(Type.REPLACE).stepId("setup-java")
-                                        .step(WorkflowStep.createStep(setupJavaStep)).build())
-                                .build())))
-                .getJob("build");
+        final Job job = ciBuildContent(BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
+                        .addStep(StepCustomization.builder().jobId("build-and-test").type(Type.REPLACE)
+                                .stepId("setup-java").step(WorkflowStep.createStep(setupJavaStep)).build())
+                        .build())))
+                .getJob("build-and-test");
         final String customJavaVersion = (String) job.getStep("setup-java").getWith().get("java-version");
         assertThat(customJavaVersion, equalTo("custom-version"));
     }
@@ -272,7 +271,7 @@ class CiBuildWorkflowGeneratorTest {
         final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
         final Job job = releaseBuildContent(BuildOptions.builder()
                 .workflows(List.of(CustomWorkflow.builder().workflowName("release.yml")
-                        .addStep(StepCustomization.builder().type(Type.REPLACE).stepId("setup-jdks")
+                        .addStep(StepCustomization.builder().jobId("release").type(Type.REPLACE).stepId("setup-jdks")
                                 .step(WorkflowStep.createStep(setupJavaStep)).build())
                         .build()))
                 .build()).getJob("release");
@@ -347,7 +346,7 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     private CiBuildWorkflowGenerator testee(final BuildOptions options) {
-        return new CiBuildWorkflowGenerator(options, List.of("11", "17"));
+        return new CiBuildWorkflowGenerator(options, List.of("11", "17"), "21");
     }
 
     private GitHubWorkflow parse(final String yaml) {

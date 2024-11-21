@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.validators.files;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
@@ -35,7 +34,7 @@ class FileTemplatesFactoryTest {
     void testGetCiBuildTemplatesForMavenProject() {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
-        final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
+        final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
         assertContainsTemplate(templates, ".github/workflows/ci-build.yml");
         assertContainsTemplate(templates, ".vscode/settings.json");
         final Optional<FileTemplate> gitattributes = findTemplate(templates, ".gitattributes");
@@ -48,22 +47,22 @@ class FileTemplatesFactoryTest {
     void testGenerateDependencyUpdateWorkflow() {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
-        final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
+        final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
         assertContainsTemplate(templates, ".github/workflows/dependencies_check.yml");
         assertContainsTemplate(templates, ".github/workflows/dependencies_update.yml");
     }
 
-    private FileTemplatesFactory testee() {
-        return testee(true);
+    private FileTemplatesFactory testee(final List<AnalyzedSource> sources) {
+        return testee(true, sources);
     }
 
-    private FileTemplatesFactory testee(final boolean hasNpmModule) {
+    private FileTemplatesFactory testee(final boolean hasNpmModule, final List<AnalyzedSource> sources) {
         return new FileTemplatesFactory(this.loggerMock, OWN_VERSION, hasNpmModule,
-                BuildOptions.builder().runnerOs("ci-build-runner-os").build(), emptyList());
+                BuildOptions.builder().runnerOs("ci-build-runner-os").build(), sources);
     }
 
     private List<AnalyzedSource> getMavenSourceWithModules(final Set<ProjectKeeperModule> modules) {
-        return List.of(AnalyzedMavenSource.builder().modules(modules).isRootProject(true).build());
+        return List.of(AnalyzedMavenSource.builder().modules(modules).isRootProject(true).javaVersion("11").build());
     }
 
     /*
@@ -74,7 +73,7 @@ class FileTemplatesFactoryTest {
     void testGetCiBuildTemplatesForNonAggregatedMvnProject() {
         final List<AnalyzedSource> sources = List
                 .of(AnalyzedMavenSource.builder().modules(Collections.emptySet()).isRootProject(false).build());
-        final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
+        final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
         assertFalse(() -> templates.stream()
                 .anyMatch(template -> template.getPathInProject().equals(Path.of(".github/workflows/ci-build.yml"))));
         verify(this.loggerMock).warn(
@@ -84,7 +83,7 @@ class FileTemplatesFactoryTest {
     @Test
     void testReleaseWorkflow() {
         final List<AnalyzedSource> sources = getMavenSourceWithModules(Set.of());
-        final List<FileTemplate> templates = testee().getGlobalTemplates(sources);
+        final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
         assertContainsTemplate(templates, ".github/workflows/release.yml");
     }
 
@@ -93,7 +92,7 @@ class FileTemplatesFactoryTest {
     void testProjectKeeperVerifyYml(final boolean hasNpmModule) {
         final List<AnalyzedSource> sources = List.of(AnalyzedMavenSource.builder() //
                 .modules(Collections.emptySet()).isRootProject(false).build());
-        final List<FileTemplate> actual = testee(hasNpmModule).getGlobalTemplates(sources);
+        final List<FileTemplate> actual = testee(hasNpmModule, sources).getGlobalTemplates();
         final Optional<FileTemplate> template = findTemplate(actual, ".github/workflows/project-keeper-verify.yml");
         assertTrue(template.isPresent());
         final String content = template.get().getContent();
@@ -107,12 +106,12 @@ class FileTemplatesFactoryTest {
     void testCiBuildNextJava() {
         final List<AnalyzedSource> sources = List
                 .of(AnalyzedMavenSource.builder().javaVersion("17").isRootProject(true).modules(emptySet()).build());
-        final List<FileTemplate> actual = testee(false).getGlobalTemplates(sources);
-        final Optional<FileTemplate> template = findTemplate(actual, ".github/workflows/ci-build-next-java.yml");
+        final List<FileTemplate> actual = testee(false, sources).getGlobalTemplates();
+        final Optional<FileTemplate> template = findTemplate(actual, ".github/workflows/ci-build.yml");
         assertTrue(template.isPresent());
         final String content = template.get().getContent();
-        assertThat(content, allOf(not(containsString("skipNativeImage")), //
-                containsString("java-version: '21',"), containsString("-Djava.version=21")));
+        System.out.println(content);
+        assertThat(content, allOf(containsString("java-version: '21',"), containsString("-Djava.version=21")));
     }
 
     @ParameterizedTest
@@ -124,7 +123,7 @@ class FileTemplatesFactoryTest {
     })
     void testGetTemplatesPerSource(final ProjectKeeperModule module, final String expectedTemplate) {
         final AnalyzedMavenSource source = AnalyzedMavenSource.builder().modules(Set.of(module)).build();
-        final List<FileTemplate> templates = testee().getTemplatesForSource(source);
+        final List<FileTemplate> templates = testee(List.of(source)).getTemplatesForSource(source);
         assertContainsTemplate(templates, expectedTemplate);
     }
 
@@ -135,7 +134,7 @@ class FileTemplatesFactoryTest {
                 .modules(Set.of(ProjectKeeperModule.DEFAULT)) //
                 .javaVersion(javaVersion) //
                 .build();
-        final List<FileTemplate> templates = testee().getTemplatesForSource(source);
+        final List<FileTemplate> templates = testee(List.of(source)).getTemplatesForSource(source);
         final FileTemplate template = findTemplate(templates, ".settings/org.eclipse.jdt.ui.prefs").get();
         template.getContent().contains("org.eclipse.jdt.core.compiler.codegen.targetPlatform=" + expected);
     }

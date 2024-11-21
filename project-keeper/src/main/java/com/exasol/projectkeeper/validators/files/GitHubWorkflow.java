@@ -35,7 +35,7 @@ class GitHubWorkflow {
         if (rawJob == null) {
             return null;
         }
-        return new Job(asMap(rawJob));
+        return new Job(jobId, asMap(rawJob));
     }
 
     private Map<String, Object> getJobMap() {
@@ -43,7 +43,7 @@ class GitHubWorkflow {
     }
 
     List<Job> getJobs() {
-        return getJobMap().values().stream().map(GitHubWorkflow::asMap).map(Job::new).toList();
+        return getJobMap().entrySet().stream().map(entry -> new Job(entry.getKey(), asMap(entry.getValue()))).toList();
     }
 
     Map<String, Object> getOnTrigger() {
@@ -59,10 +59,16 @@ class GitHubWorkflow {
      * well as insert and replace steps.
      */
     static class Job {
+        private final String id;
         private final Map<String, Object> rawJob;
 
-        private Job(final Map<String, Object> rawJob) {
+        private Job(final String id, final Map<String, Object> rawJob) {
+            this.id = id;
             this.rawJob = rawJob;
+        }
+
+        String getId() {
+            return id;
         }
 
         Step getStep(final String id) {
@@ -137,7 +143,9 @@ class GitHubWorkflow {
                     .filter(index -> steps.get(index).getId().equals(stepId)) //
                     .findFirst() //
                     .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-205")
-                            .message("No step found for id {{step id}} in {{raw job}}", stepId, rawJob).toString()));
+                            .message("No step found for id {{step id}} in {{available step ids}}", stepId,
+                                    steps.stream().map(Step::getId).toList())
+                            .toString()));
         }
     }
 

@@ -201,12 +201,34 @@ class ProjectKeeperConfigReaderTest {
                             - stepCustomizations:
                         """, equalTo(
                         "E-PK-CORE-199: Missing workflow name in file '.project-keeper.yml'. Add a workflow name to the workflow configuration.")),
-                Arguments.of("workflow: missing step id", """
+                Arguments.of("workflow: missing job id", """
                         build:
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
                                 - action: REPLACE
+                                  content:
+                                    id: new-step
+                        """, equalTo(
+                        "E-PK-CORE-208: Missing job in step customization of file '.project-keeper.yml'. Add job to the step customization.")),
+                Arguments.of("workflow: empty job id", """
+                        build:
+                          workflows:
+                            - name: ci-build.yml
+                              stepCustomizations:
+                                - job: ''
+                                  action: REPLACE
+                                  content:
+                                    id: new-step
+                        """, equalTo(
+                        "E-PK-CORE-208: Missing job in step customization of file '.project-keeper.yml'. Add job to the step customization.")),
+                Arguments.of("workflow: missing step id", """
+                        build:
+                          workflows:
+                            - name: ci-build.yml
+                              stepCustomizations:
+                                - job: myJob
+                                  action: REPLACE
                                   content:
                                     id: new-step
                         """, equalTo(
@@ -216,7 +238,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: REPLACE
+                                - job: myJob
+                                  action: REPLACE
                                   stepId: ''
                                   content:
                                     id: new-step
@@ -227,7 +250,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - stepId: step-id-to-replace
+                                - job: myJob
+                                  stepId: step-id-to-replace
                                   content:
                                     id: new-step
                         """, equalTo(
@@ -237,7 +261,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: INVALID
+                                - job: myJob
+                                  action: INVALID
                                   stepId: step-id-to-replace
                                   content:
                                     id: new-step
@@ -247,7 +272,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: REPLACE
+                                - job: myJob
+                                  action: REPLACE
                                   stepId: step-id-to-replace
                         """, equalTo(
                         "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")),
@@ -256,7 +282,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: REPLACE
+                                - job: myJob
+                                  action: REPLACE
                                   stepId: step-id-to-replace
                                   content:
                         """, equalTo(
@@ -291,7 +318,8 @@ class ProjectKeeperConfigReaderTest {
                   workflows:
                     - name: ci-build.yml
                       stepCustomizations:
-                        - action: REPLACE
+                        - job: myJob
+                          action: REPLACE
                           stepId: step-id-to-replace
                           content:
                             name: New Step
@@ -303,6 +331,7 @@ class ProjectKeeperConfigReaderTest {
         assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(CustomWorkflow.builder() //
                 .workflowName("ci-build.yml") //
                 .addStep(StepCustomization.builder() //
+                        .jobId("myJob") //
                         .type(StepCustomization.Type.REPLACE) //
                         .stepId("step-id-to-replace") //
                         .step(WorkflowStep.createStep(Map.of("name", "New Step", "id", "new-step", "run",
@@ -319,7 +348,8 @@ class ProjectKeeperConfigReaderTest {
                   workflows:
                     - name: ci-build.yml
                       stepCustomizations:
-                        - action: ${action}
+                        - job: job
+                          action: ${action}
                           stepId: step-id-to-replace
                           content:
                             id: new-step

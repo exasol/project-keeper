@@ -34,14 +34,16 @@ class CustomWorkflowTest {
     @Test
     void builderAddCustomization() {
         final CustomWorkflow options = CustomWorkflow.builder().workflowName("name").addStep(StepCustomization.builder()
-                .type(Type.REPLACE).stepId("stepId").step(WorkflowStep.createStep(emptyMap())).build()).build();
+                .jobId("myJob").type(Type.REPLACE).stepId("stepId").step(WorkflowStep.createStep(emptyMap())).build())
+                .build();
         assertThat(options.getSteps(), hasSize(1));
     }
 
     @Test
     void builderSetCustomizations() {
-        final CustomWorkflow options = CustomWorkflow.builder().workflowName("name").steps(List.of(StepCustomization
-                .builder().type(Type.REPLACE).stepId("stepId").step(WorkflowStep.createStep(emptyMap())).build()))
+        final CustomWorkflow options = CustomWorkflow
+                .builder().workflowName("name").steps(List.of(StepCustomization.builder().jobId("myJob")
+                        .type(Type.REPLACE).stepId("stepId").step(WorkflowStep.createStep(emptyMap())).build()))
                 .build();
         assertThat(options.getSteps(), hasSize(1));
     }

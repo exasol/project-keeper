@@ -7,17 +7,15 @@ import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
 class GitHubWorkflowStepCustomizer implements GitHubWorkflowCustomizer.WorkflowCustomizer {
     private final List<StepCustomization> customizations;
-    private final String jobId;
 
-    GitHubWorkflowStepCustomizer(final List<StepCustomization> customizations, final String jobId) {
+    GitHubWorkflowStepCustomizer(final List<StepCustomization> customizations) {
         this.customizations = customizations;
-        this.jobId = jobId;
     }
 
     @Override
     public void applyCustomization(final GitHubWorkflow workflow) {
-        final Job job = workflow.getJob(jobId);
         for (final StepCustomization customization : customizations) {
+            final Job job = workflow.getJob(customization.getJobId());
             applyCustomization(job, customization);
         }
     }

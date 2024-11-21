@@ -16,11 +16,6 @@ import com.exasol.projectkeeper.sources.*;
 class JavaVersionExtractorTest {
 
     @Test
-    void noSources() {
-        assertThat(extract(), contains("17"));
-    }
-
-    @Test
     void nonJavaSource() {
         assertThat(extract(AnalyzedSourceImpl.builder().build()), contains("17"));
     }
