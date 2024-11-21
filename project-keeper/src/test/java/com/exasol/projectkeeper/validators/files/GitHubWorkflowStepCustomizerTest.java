@@ -19,6 +19,8 @@ import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 
 class GitHubWorkflowStepCustomizerTest {
 
+    private static final String WORKFLOW_NAME = "workflow.yml";
+
     @Test
     void startsWithGeneratedComment() {
         final String yaml = getCustomizedContent("""
@@ -98,6 +100,46 @@ class GitHubWorkflowStepCustomizerTest {
                 """, StepCustomization.builder().jobId("build").type(Type.REPLACE).stepId("replaced-step").step(newStep)
                 .build());
         assertThat(getStepIds(workflow.getJob("build")), contains("step0", "custom-step", "step2"));
+    }
+
+    @Test
+    void missingJobConfigurationWithSingleJob() {
+        final WorkflowStep newStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final GitHubWorkflow workflow = validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: step0
+                        id: step0
+                      - name: step1
+                        id: replaced-step
+                      - name: step2
+                        id: step2
+                """, StepCustomization.builder().jobId(null).type(Type.REPLACE).stepId("replaced-step").step(newStep)
+                .build());
+        assertThat(getStepIds(workflow.getJob("build")), contains("step0", "custom-step", "step2"));
+    }
+
+    @Test
+    void missingJobConfigurationWithMultipleJobsFails() {
+        final WorkflowStep newStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
+                jobs:
+                  build1:
+                    steps:
+                      - name: step0
+                        id: step0
+                  build2:
+                    steps:
+                      - name: step0
+                        id: step0
+                """, StepCustomization.builder().jobId(null).type(Type.REPLACE).stepId("replaced-step").step(newStep)
+                .build()));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-208: Missing job in step customization of workflow 'workflow.yml' in file '.project-keeper.yml'. "
+                        + "Add job with one of the following values: ['build1', 'build2']."));
     }
 
     @Test
@@ -221,7 +263,7 @@ class GitHubWorkflowStepCustomizerTest {
     }
 
     private String getCustomizedContent(final String workflowTemplate, final StepCustomization... customizations) {
-        return new GitHubWorkflowCustomizer(new GitHubWorkflowStepCustomizer(asList(customizations)))
+        return new GitHubWorkflowCustomizer(new GitHubWorkflowStepCustomizer(WORKFLOW_NAME, asList(customizations)))
                 .customizeContent(workflowTemplate);
     }
 }

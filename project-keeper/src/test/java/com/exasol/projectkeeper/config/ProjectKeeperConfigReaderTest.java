@@ -201,27 +201,6 @@ class ProjectKeeperConfigReaderTest {
                             - stepCustomizations:
                         """, equalTo(
                         "E-PK-CORE-199: Missing workflow name in file '.project-keeper.yml'. Add a workflow name to the workflow configuration.")),
-                Arguments.of("workflow: missing job id", """
-                        build:
-                          workflows:
-                            - name: ci-build.yml
-                              stepCustomizations:
-                                - action: REPLACE
-                                  content:
-                                    id: new-step
-                        """, equalTo(
-                        "E-PK-CORE-208: Missing job in step customization of file '.project-keeper.yml'. Add job to the step customization.")),
-                Arguments.of("workflow: empty job id", """
-                        build:
-                          workflows:
-                            - name: ci-build.yml
-                              stepCustomizations:
-                                - job: ''
-                                  action: REPLACE
-                                  content:
-                                    id: new-step
-                        """, equalTo(
-                        "E-PK-CORE-208: Missing job in step customization of file '.project-keeper.yml'. Add job to the step customization.")),
                 Arguments.of("workflow: missing step id", """
                         build:
                           workflows:
@@ -332,6 +311,33 @@ class ProjectKeeperConfigReaderTest {
                 .workflowName("ci-build.yml") //
                 .addStep(StepCustomization.builder() //
                         .jobId("myJob") //
+                        .type(StepCustomization.Type.REPLACE) //
+                        .stepId("step-id-to-replace") //
+                        .step(WorkflowStep.createStep(Map.of("name", "New Step", "id", "new-step", "run",
+                                "echo 'new step'", "env", Map.of("ENV_VARIABLE", "value")))) //
+                        .build()) //
+                .build()));
+    }
+
+    @Test
+    void jobIdIsOptional() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
+                        - action: REPLACE
+                          stepId: step-id-to-replace
+                          content:
+                            name: New Step
+                            id: new-step
+                            run: echo 'new step'
+                            env:
+                              ENV_VARIABLE: 'value'
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(CustomWorkflow.builder() //
+                .workflowName("ci-build.yml") //
+                .addStep(StepCustomization.builder() //
                         .type(StepCustomization.Type.REPLACE) //
                         .stepId("step-id-to-replace") //
                         .step(WorkflowStep.createStep(Map.of("name", "New Step", "id", "new-step", "run",

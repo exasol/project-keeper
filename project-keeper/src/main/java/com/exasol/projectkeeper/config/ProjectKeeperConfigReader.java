@@ -170,11 +170,6 @@ public class ProjectKeeperConfigReader {
     }
 
     private StepCustomization convertStep(final RawStepCustomization step) {
-        if (step.job == null || step.job.isBlank()) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-208")
-                    .message("Missing job in step customization of file {{config file}}.", CONFIG_FILE_NAME)
-                    .mitigation("Add job to the step customization.").toString());
-        }
         if (step.action == null) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-200")
                     .message("Missing action in step customization of file {{config file}}.", CONFIG_FILE_NAME)

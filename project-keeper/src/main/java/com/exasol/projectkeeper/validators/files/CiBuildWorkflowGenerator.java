@@ -54,7 +54,7 @@ class CiBuildWorkflowGenerator {
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer( //
                 javaVersionCustomizer(),
                 // [impl->dsn~customize-build-process.ci-build~0]
-                new GitHubWorkflowStepCustomizer(customizations),
+                new GitHubWorkflowStepCustomizer(workflowName, customizations),
                 // [impl->dsn~customize-build-process.ci-build.environment~1]
                 new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName)));
     }
@@ -119,7 +119,7 @@ class CiBuildWorkflowGenerator {
         templateCustomizer.accept(template);
         final List<StepCustomization> customizations = findCustomizations(workflowName);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(javaVersionCustomizer(),
-                new GitHubWorkflowStepCustomizer(customizations)));
+                new GitHubWorkflowStepCustomizer(workflowName, customizations)));
     }
 
     enum CiTemplateType {

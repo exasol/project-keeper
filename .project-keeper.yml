@@ -89,6 +89,7 @@ build:
     - name: "ci-build.yml"
       stepCustomizations:
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: setup-java
           content:
             name: Set up Go
@@ -98,12 +99,14 @@ build:
               go-version: "1.22"
               cache-dependency-path: .project-keeper.yml
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: setup-go
           content:
             name: Install Go tools
             id: install-go-tools
             run: go install github.com/google/go-licenses@v1.6.0
         - action: REPLACE
+          job: build-and-test
           stepId: build-pk-verify
           content:
             name: Run tests and build with Maven
@@ -115,12 +118,14 @@ build:
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: sonar-analysis
           content:
             name: Run project-keeper itself
             id: build-pk-verify
             run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: build-pk-verify
           content:
             name: Verify that metrics.json was created
@@ -134,6 +139,7 @@ build:
     - name: "dependencies_check.yml"
       stepCustomizations:
         - action: INSERT_AFTER
+          job: report_security_issues
           stepId: setup-jdks
           content:
             name: Install Project Keeper

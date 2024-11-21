@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.shared.config.workflow;
 
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * This class defines how a GitHub workflow should be modified by inserting or replacing a step.
@@ -13,7 +14,7 @@ public final class StepCustomization {
     private final WorkflowStep step;
 
     private StepCustomization(final Builder builder) {
-        this.jobId = Objects.requireNonNull(builder.jobId, "jobId");
+        this.jobId = builder.jobId;
         this.type = Objects.requireNonNull(builder.type, "type");
         this.stepId = Objects.requireNonNull(builder.stepId, "stepId");
         this.step = Objects.requireNonNull(builder.step, "step");
@@ -24,8 +25,8 @@ public final class StepCustomization {
      * 
      * @return job ID
      */
-    public String getJobId() {
-        return jobId;
+    public Optional<String> getJobId() {
+        return Optional.ofNullable(jobId);
     }
 
     /**
