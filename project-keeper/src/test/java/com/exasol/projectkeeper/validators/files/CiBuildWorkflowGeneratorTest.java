@@ -87,15 +87,19 @@ class CiBuildWorkflowGeneratorTest {
 
     @Test
     void ciBuildContentNonMatrixBuild() {
-        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build-and-test");
+        final Job buildJob = ciBuildContent(BuildOptions.builder()).getJob("build-and-test");
+        final Job nextJavaJob = ciBuildContent(BuildOptions.builder()).getJob("next-java-compatibility");
         assertAll(
-                () -> assertThat(job.getConcurrency(),
-                        equalTo(Map.of("group", "${{ github.workflow }}-${{ github.ref }}", "cancel-in-progress",
-                                true))),
-                () -> assertThat(job.getStrategy(), nullValue()), () -> assertThat(job.getEnv(), nullValue()),
-                () -> assertThat(job.getStep("build-pk-verify").getRunCommand(),
+                () -> assertThat(buildJob.getConcurrency(),
+                        equalTo(Map.of("group", "${{ github.workflow }}-build-and-test-${{ github.ref }}",
+                                "cancel-in-progress", true))),
+                () -> assertThat(nextJavaJob.getConcurrency(),
+                        equalTo(Map.of("group", "${{ github.workflow }}-next-java-${{ github.ref }}",
+                                "cancel-in-progress", true))),
+                () -> assertThat(buildJob.getStrategy(), nullValue()), () -> assertThat(buildJob.getEnv(), nullValue()),
+                () -> assertThat(buildJob.getStep("build-pk-verify").getRunCommand(),
                         not(containsString("-Dcom.exasol.dockerdb.image"))),
-                () -> assertThat(job.getStep("sonar-analysis").getIfCondition(),
+                () -> assertThat(buildJob.getStep("sonar-analysis").getIfCondition(),
                         equalTo("${{ env.SONAR_TOKEN != null }}")));
     }
 
