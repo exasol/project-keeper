@@ -4,7 +4,7 @@ import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
+import java.net.URI;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
@@ -104,7 +104,7 @@ public class MavenRepository {
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
         final DocumentBuilder db = factory.newDocumentBuilder();
-        try (InputStream stream = new URL(this.url).openStream()) {
+        try (InputStream stream = URI.create(this.url).toURL().openStream()) {
             return getLatestVersion(db.parse(stream));
         }
     }

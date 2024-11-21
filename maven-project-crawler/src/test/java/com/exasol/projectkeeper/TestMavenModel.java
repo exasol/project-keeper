@@ -15,6 +15,7 @@ public class TestMavenModel extends Model {
     public static final String PROJECT_VERSION = "0.1.0";
     public static final String PROJECT_GROUP_ID = "com.example";
 
+    @SuppressWarnings("this-escape") // Required by 3rd party parent class
     public TestMavenModel() {
         this.setBuild(new Build());
         this.setVersion(PROJECT_VERSION);
