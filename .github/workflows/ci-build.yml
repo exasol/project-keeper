@@ -20,7 +20,7 @@ jobs:
       issues: read
     }
     concurrency: {
-      group: '${{ github.workflow }}-${{ github.ref }}',
+      group: '${{ github.workflow }}-build-and-test-${{ github.ref }}',
       cancel-in-progress: true
     }
     outputs: {
@@ -146,7 +146,7 @@ jobs:
       contents: read
     }
     concurrency: {
-      group: '${{ github.workflow }}-${{ github.ref }}',
+      group: '${{ github.workflow }}-next-java-${{ github.ref }}',
       cancel-in-progress: true
     }
     steps:

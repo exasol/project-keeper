@@ -15,7 +15,7 @@ jobs:
       contents: read
       issues: read # Required for PK verify-release
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-build-and-test-${{ github.ref }}
       cancel-in-progress: true
     outputs:
       release-required: ${{ steps.check-release.outputs.release-required }}
@@ -135,7 +135,7 @@ jobs:
     permissions:
       contents: read
     concurrency:
-      group: ${{ github.workflow }}-${{ github.ref }}
+      group: ${{ github.workflow }}-next-java-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - name: Checkout the repository
