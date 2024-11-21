@@ -10,6 +10,10 @@ This release allows customization of the java version in `actions/setup-java` st
 
 * #602: Fixed customization of java version in `actions/setup-java`
 
+## Bugfixes
+
+* #598: Reverted changes to PK's template for IDE Eclipse `javax.annotation.Nonnull`
+
 ## Dependency Updates
 
 ### Project Keeper Root Project
