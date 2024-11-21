@@ -47,11 +47,12 @@ class CiBuildWorkflowGenerator {
         final List<StepCustomization> customizations = workflow.map(CustomWorkflow::getSteps)
                 .orElseGet(Collections::emptyList);
         final String environmentName = workflow.map(CustomWorkflow::getEnvironment).orElse(null);
-        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(
+        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer( //
+                javaVersionCustomizer(),
                 // [impl->dsn~customize-build-process.ci-build~0]
                 new GitHubWorkflowStepCustomizer(customizations, buildJobId),
                 // [impl->dsn~customize-build-process.ci-build.environment~1]
-                new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName), javaVersionCustomizer()));
+                new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName)));
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
@@ -113,8 +114,8 @@ class CiBuildWorkflowGenerator {
                 REQUIRE_EXACT);
         templateCustomizer.accept(template);
         final List<StepCustomization> customizations = findCustomizations(workflowName);
-        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(
-                new GitHubWorkflowStepCustomizer(customizations, jobName), javaVersionCustomizer()));
+        return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(javaVersionCustomizer(),
+                new GitHubWorkflowStepCustomizer(customizations, jobName)));
     }
 
     enum CiTemplateType {

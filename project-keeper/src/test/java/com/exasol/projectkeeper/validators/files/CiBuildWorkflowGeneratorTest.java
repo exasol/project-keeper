@@ -253,6 +253,44 @@ class CiBuildWorkflowGeneratorTest {
         job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
     }
 
+    @Test
+    void customizeSetupJavaStepInCiBuild() {
+        final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
+        final Job job = ciBuildContent(
+                BuildOptions.builder()
+                        .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
+                                .addStep(StepCustomization.builder().type(Type.REPLACE).stepId("setup-java")
+                                        .step(WorkflowStep.createStep(setupJavaStep)).build())
+                                .build())))
+                .getJob("build");
+        final String customJavaVersion = (String) job.getStep("setup-java").getWith().get("java-version");
+        assertThat(customJavaVersion, equalTo("custom-version"));
+    }
+
+    @Test
+    void customizeSetupJavaStepInReleaseBuild() {
+        final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
+        final Job job = releaseBuildContent(BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("release.yml")
+                        .addStep(StepCustomization.builder().type(Type.REPLACE).stepId("setup-jdks")
+                                .step(WorkflowStep.createStep(setupJavaStep)).build())
+                        .build()))
+                .build()).getJob("release");
+        final String customJavaVersion = (String) job.getStep("setup-java").getWith().get("java-version");
+        assertThat(customJavaVersion, equalTo("custom-version"));
+    }
+
+    private Map<String, Object> setupJavaStep(final String javaVersion) {
+        final Map<String, Object> setupJavaStep = new HashMap<>();
+        setupJavaStep.put("id", "setup-java");
+        setupJavaStep.put("name", "New Java");
+        setupJavaStep.put("uses", "actions/setup-java@v4");
+        final Map<String, String> withElement = new HashMap<>();
+        withElement.put("java-version", javaVersion);
+        setupJavaStep.put("with", withElement);
+        return setupJavaStep;
+    }
+
     private GitHubWorkflow ciBuildContent(final BuildOptions.Builder optionsBuilder) {
         return ciBuildContent(optionsBuilder.build());
     }
