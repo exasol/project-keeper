@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
@@ -25,7 +26,8 @@ class GitHubWorkflowStepCustomizer implements GitHubWorkflowCustomizer.WorkflowC
     }
 
     private Job getJob(final GitHubWorkflow workflow, final StepCustomization customization) {
-        if (customization.getJobId().isPresent()) {
+        final Optional<String> jobId = customization.getJobId();
+        if (jobId.isPresent()) {
             return workflow.getJob(customization.getJobId().get());
         }
         final List<Job> allJobs = workflow.getJobs();

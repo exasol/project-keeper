@@ -125,6 +125,8 @@ class GitHubWorkflowStepCustomizerTest {
     void missingJobConfigurationWithMultipleJobsFails() {
         final WorkflowStep newStep = WorkflowStep
                 .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final StepCustomization stepCustomization = StepCustomization.builder().jobId(null).type(Type.REPLACE)
+                .stepId("replaced-step").step(newStep).build();
         final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
                 jobs:
                   build1:
@@ -135,8 +137,7 @@ class GitHubWorkflowStepCustomizerTest {
                     steps:
                       - name: step0
                         id: step0
-                """, StepCustomization.builder().jobId(null).type(Type.REPLACE).stepId("replaced-step").step(newStep)
-                .build()));
+                """, stepCustomization));
         assertThat(exception.getMessage(), equalTo(
                 "E-PK-CORE-208: Missing job in step customization of workflow 'workflow.yml' in file '.project-keeper.yml'. "
                         + "Add job with one of the following values: ['build1', 'build2']."));

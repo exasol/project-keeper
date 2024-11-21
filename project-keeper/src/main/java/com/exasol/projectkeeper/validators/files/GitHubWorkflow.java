@@ -197,9 +197,4 @@ class GitHubWorkflow {
             return Optional.ofNullable((String) rawStep.get(key));
         }
     }
-
-    public Job getJob(final Optional<String> jobId) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getJob'");
-    }
 }
