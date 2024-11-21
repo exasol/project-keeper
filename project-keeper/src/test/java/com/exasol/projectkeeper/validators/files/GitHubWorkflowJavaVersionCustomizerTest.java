@@ -60,6 +60,19 @@ class GitHubWorkflowJavaVersionCustomizerTest {
     }
 
     @Test
+    void testUpdateAnyJobs() {
+        final GitHubWorkflow workflow = customize("""
+                jobs:
+                  any-job-name:
+                    steps:
+                      - name: Set up JDKs
+                        id: setup-java
+                        uses: actions/setup-java@v4
+                """, List.of("v1"), "v2");
+        assertThat(workflow.getJob("any-job-name").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
+    }
+
+    @Test
     void testUpdateToMultipleJavaVersions() {
         final GitHubWorkflow workflow = customize("""
                 jobs:
@@ -76,6 +89,26 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                           cache: "maven"
                 """, List.of("11", "17", "21"), "23");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("11\n17\n21"));
+    }
+
+    @Test
+    void testUpdateNextJavaBuild() {
+        final GitHubWorkflow workflow = customize("""
+                jobs:
+                  next-java-compatibility:
+                    steps:
+                      - name: Set up JDKs
+                        id: setup-java
+                        uses: actions/setup-java@v4
+                        with:
+                          distribution: "temurin"
+                          java-version: |
+                            old
+                            version
+                          cache: "maven"
+                """, List.of("11", "17", "21"), "23");
+        assertThat(workflow.getJob("next-java-compatibility").getStep("setup-java").getWith().get("java-version"),
+                equalTo("23"));
     }
 
     @Test
