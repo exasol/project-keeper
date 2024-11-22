@@ -17,8 +17,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.TestMavenModel;
 import com.exasol.projectkeeper.TestRepo;
+import com.exasol.projectkeeper.test.TestMavenModel;
 
 class LastReleasePomFileReaderTest {
     private static final String CURRENT_VERSION = "1.0.0";

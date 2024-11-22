@@ -89,12 +89,16 @@ public class TestMavenModel extends Model {
     }
 
     public TestMavenModel configureAssemblyPluginFinalName() {
+        return configureAssemblyPluginFinalName("jar-name");
+    }
+
+    public TestMavenModel configureAssemblyPluginFinalName(final String finalName) {
         final Plugin plugin = new Plugin();
         plugin.setArtifactId("maven-assembly-plugin");
         final Xpp3Dom configuration = new Xpp3Dom("configuration");
-        final Xpp3Dom finalName = new Xpp3Dom("finalName");
-        finalName.setValue("my-jar");
-        configuration.addChild(finalName);
+        final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
+        finalNameElement.setValue(finalName);
+        configuration.addChild(finalNameElement);
         plugin.setConfiguration(configuration);
         return withPlugin(plugin);
     }
@@ -110,5 +114,9 @@ public class TestMavenModel extends Model {
     public TestMavenModel withPlugin(final Plugin plugin) {
         this.getBuild().addPlugin(plugin);
         return this;
+    }
+
+    public void setJavaVersionProperty(final String javaVersion) {
+        this.addProperty("java.version", javaVersion);
     }
 }

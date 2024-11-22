@@ -20,12 +20,12 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-import com.exasol.projectkeeper.TestMavenModel;
 import com.exasol.projectkeeper.TestRepo;
 import com.exasol.projectkeeper.pom.MavenProjectFromFileReader;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.dependencychanges.UpdatedDependency;
+import com.exasol.projectkeeper.test.TestMavenModel;
 
 class DependencyUpdateReaderTest {
 
