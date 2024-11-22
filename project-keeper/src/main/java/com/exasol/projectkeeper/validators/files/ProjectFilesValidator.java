@@ -57,7 +57,7 @@ public class ProjectFilesValidator implements Validator {
     }
 
     private List<ValidationFinding> validateTemplatesRelativeToRepo(final FileTemplatesFactory templatesFactory) {
-        final List<FileTemplate> templates = templatesFactory.getGlobalTemplates(this.sources);
+        final List<FileTemplate> templates = templatesFactory.getGlobalTemplates();
         return runValidation(templates, this.projectDirectory);
     }
 

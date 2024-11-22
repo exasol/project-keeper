@@ -188,6 +188,7 @@ public class ProjectKeeperConfigReader {
                     .mitigation("Add content to the step customization.").toString());
         }
         return StepCustomization.builder() //
+                .jobId(step.job) //
                 .type(step.action) //
                 .stepId(step.stepId) //
                 .step(WorkflowStep.createStep(step.content)) //

@@ -39,6 +39,9 @@ class JavaVersionExtractor {
     }
 
     private Set<String> getSourceJavaVersions() {
+        if (sources.isEmpty()) {
+            throw new IllegalStateException("No sources, can't get java versions");
+        }
         return sources.stream().filter(AnalyzedMavenSource.class::isInstance) //
                 .map(AnalyzedMavenSource.class::cast) //
                 .map(AnalyzedMavenSource::getJavaVersion) //
@@ -63,7 +66,8 @@ class JavaVersionExtractor {
         return getSourceJavaVersions().stream() //
                 .map(JavaVersionExtractor::parseVersion) //
                 .reduce(JavaVersionExtractor::takeLast) //
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalStateException(
+                        "No latest java version found in source java versions " + getSourceJavaVersions()));
     }
 
     private static double takeLast(final double first, final double second) {

@@ -10,22 +10,30 @@ import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 class GitHubWorkflowJavaVersionCustomizer implements GitHubWorkflowCustomizer.WorkflowCustomizer {
 
     private final List<String> javaVersions;
+    private final String nextJavaVersion;
 
-    GitHubWorkflowJavaVersionCustomizer(final List<String> javaVersions) {
+    GitHubWorkflowJavaVersionCustomizer(final List<String> javaVersions, final String nextJavaVersion) {
         this.javaVersions = javaVersions;
+        this.nextJavaVersion = nextJavaVersion;
     }
 
     @Override
     public void applyCustomization(final GitHubWorkflow workflow) {
-        workflow.getJobs().forEach(this::updateJavaVersion);
+        for (final Job job : workflow.getJobs()) {
+            if ("next-java-compatibility".equals(job.getId())) {
+                updateJavaVersion(job, nextJavaVersion);
+            } else {
+                updateJavaVersion(job, formatJavaVersions());
+            }
+        }
     }
 
-    private void updateJavaVersion(final Job job) {
-        job.getSteps().stream().filter(this::isSetupJavaStep).forEach(this::updateJavaVersion);
+    private void updateJavaVersion(final Job job, final String version) {
+        job.getSteps().stream().filter(this::isSetupJavaStep).forEach(step -> updateJavaVersion(step, version));
     }
 
-    private void updateJavaVersion(final Step step) {
-        step.getWith().put("java-version", formatJavaVersions());
+    private void updateJavaVersion(final Step step, final String version) {
+        step.getWith().put("java-version", version);
     }
 
     private String formatJavaVersions() {

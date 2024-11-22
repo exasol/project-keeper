@@ -72,8 +72,6 @@ version:
 excludes:
   # PK can't use itself as a Maven plugin
   - regex: "W-PK-CORE-151: Pom file .* contains no reference to project-keeper-maven-plugin."
-  # Build with Java 21 fails due to missing JavaDoc comments, see https://github.com/exasol/project-keeper/issues/596
-  - "E-PK-CORE-17: Missing required file: '.github/workflows/ci-build-next-java.yml'"
   # No configuration necessary for aggregator POM
   - "E-PK-CORE-103: Missing parent declaration in 'pom.xml'"
   - "E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'"
@@ -89,6 +87,7 @@ build:
     - name: "ci-build.yml"
       stepCustomizations:
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: setup-java
           content:
             name: Set up Go
@@ -98,12 +97,14 @@ build:
               go-version: "1.22"
               cache-dependency-path: .project-keeper.yml
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: setup-go
           content:
             name: Install Go tools
             id: install-go-tools
             run: go install github.com/google/go-licenses@v1.6.0
         - action: REPLACE
+          job: build-and-test
           stepId: build-pk-verify
           content:
             name: Run tests and build with Maven
@@ -115,12 +116,14 @@ build:
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: sonar-analysis
           content:
             name: Run project-keeper itself
             id: build-pk-verify
             run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: build-pk-verify
           content:
             name: Verify that metrics.json was created
@@ -130,10 +133,21 @@ build:
               ls -lh coverage-aggregator/target/metrics.json
               cat coverage-aggregator/target/metrics.json
 
+        # Build with Java 21 fails due to missing JavaDoc comments, see https://github.com/exasol/project-keeper/issues/596
+        - action: REPLACE
+          job: next-java-compatibility
+          stepId: build-next-java
+          content:
+            name: Run tests and build with Maven 21
+            id: build-next-java
+            # Only run tests as javadoc has warnings with Java 21
+            run: mvn --batch-mode clean test -DtrimStackTrace=false -Djava.version=21
+
     # [itest->dsn~customize-build-process.dependency-check~0]
     - name: "dependencies_check.yml"
       stepCustomizations:
         - action: INSERT_AFTER
+          job: report_security_issues
           stepId: setup-jdks
           content:
             name: Install Project Keeper

@@ -19,6 +19,8 @@ import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 
 class GitHubWorkflowStepCustomizerTest {
 
+    private static final String WORKFLOW_NAME = "workflow.yml";
+
     @Test
     void startsWithGeneratedComment() {
         final String yaml = getCustomizedContent("""
@@ -95,8 +97,50 @@ class GitHubWorkflowStepCustomizerTest {
                         id: replaced-step
                       - name: step2
                         id: step2
-                """, StepCustomization.builder().type(Type.REPLACE).stepId("replaced-step").step(newStep).build());
+                """, StepCustomization.builder().jobId("build").type(Type.REPLACE).stepId("replaced-step").step(newStep)
+                .build());
         assertThat(getStepIds(workflow.getJob("build")), contains("step0", "custom-step", "step2"));
+    }
+
+    @Test
+    void missingJobConfigurationWithSingleJob() {
+        final WorkflowStep newStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final GitHubWorkflow workflow = validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: step0
+                        id: step0
+                      - name: step1
+                        id: replaced-step
+                      - name: step2
+                        id: step2
+                """, StepCustomization.builder().jobId(null).type(Type.REPLACE).stepId("replaced-step").step(newStep)
+                .build());
+        assertThat(getStepIds(workflow.getJob("build")), contains("step0", "custom-step", "step2"));
+    }
+
+    @Test
+    void missingJobConfigurationWithMultipleJobsFails() {
+        final WorkflowStep newStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final StepCustomization stepCustomization = StepCustomization.builder().jobId(null).type(Type.REPLACE)
+                .stepId("replaced-step").step(newStep).build();
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
+                jobs:
+                  build1:
+                    steps:
+                      - name: step0
+                        id: step0
+                  build2:
+                    steps:
+                      - name: step0
+                        id: step0
+                """, stepCustomization));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-208: Missing job in step customization of workflow 'workflow.yml' in file '.project-keeper.yml'. "
+                        + "Add job with one of the following values: ['build1', 'build2']."));
     }
 
     @Test
@@ -112,7 +156,8 @@ class GitHubWorkflowStepCustomizerTest {
                       - name: step1
                         id: replaced-step
                       - name: step2
-                """, StepCustomization.builder().type(Type.REPLACE).stepId("replaced-step").step(newStep).build());
+                """, StepCustomization.builder().jobId("build").type(Type.REPLACE).stepId("replaced-step").step(newStep)
+                .build());
         assertThat(getStepNames(workflow.getJob("build")), contains("step0", "Custom Step", "step2"));
     }
 
@@ -120,24 +165,7 @@ class GitHubWorkflowStepCustomizerTest {
     void replaceStepWrongBuildStepId() {
         final WorkflowStep customBuildStep = WorkflowStep
                 .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
-        final StepCustomization customization = StepCustomization.builder().type(Type.REPLACE).stepId("missing-step")
-                .step(customBuildStep).build();
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
-                jobs:
-                  build:
-                    steps:
-                      - name: step1
-                        id: wrong-id
-                """, customization));
-        assertThat(exception.getMessage(),
-                equalTo("E-PK-CORE-205: No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
-    }
-
-    @Test
-    void insertStepWrongBuildStepId() {
-        final WorkflowStep customBuildStep = WorkflowStep
-                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
-        final StepCustomization customization = StepCustomization.builder().type(Type.INSERT_AFTER)
+        final StepCustomization customization = StepCustomization.builder().jobId("build").type(Type.REPLACE)
                 .stepId("missing-step").step(customBuildStep).build();
         final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
                 jobs:
@@ -147,7 +175,24 @@ class GitHubWorkflowStepCustomizerTest {
                         id: wrong-id
                 """, customization));
         assertThat(exception.getMessage(),
-                equalTo("E-PK-CORE-205: No step found for id 'missing-step' in {steps=[{name=step1, id=wrong-id}]}"));
+                equalTo("E-PK-CORE-205: No step found for id 'missing-step' in ['wrong-id']"));
+    }
+
+    @Test
+    void insertStepWrongBuildStepId() {
+        final WorkflowStep customBuildStep = WorkflowStep
+                .createStep(Map.of("name", "Custom Step", "id", "custom-step", "run", "echo custom-step"));
+        final StepCustomization customization = StepCustomization.builder().jobId("build").type(Type.INSERT_AFTER)
+                .stepId("missing-step").step(customBuildStep).build();
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> validate("""
+                jobs:
+                  build:
+                    steps:
+                      - name: step1
+                        id: wrong-id
+                """, customization));
+        assertThat(exception.getMessage(),
+                equalTo("E-PK-CORE-205: No step found for id 'missing-step' in ['wrong-id']"));
     }
 
     // [utest->dsn~customize-build-process.insert-step-after~0]
@@ -163,7 +208,8 @@ class GitHubWorkflowStepCustomizerTest {
                         id: step0
                       - name: Step 1
                         id: step1
-                """, StepCustomization.builder().type(Type.INSERT_AFTER).stepId("step0").step(customBuildStep).build());
+                """, StepCustomization.builder().jobId("build").type(Type.INSERT_AFTER).stepId("step0")
+                .step(customBuildStep).build());
         assertThat(getStepIds(workflow.getJob("build")), contains("step0", "custom-step", "step1"));
     }
 
@@ -179,7 +225,8 @@ class GitHubWorkflowStepCustomizerTest {
                         id: step0
                       - name: Step 1
                         id: step1
-                """, StepCustomization.builder().type(Type.INSERT_AFTER).stepId("step1").step(customBuildStep).build());
+                """, StepCustomization.builder().jobId("build").type(Type.INSERT_AFTER).stepId("step1")
+                .step(customBuildStep).build());
         assertThat(getStepIds(workflow.getJob("build")), contains("step0", "step1", "custom-step"));
     }
 
@@ -195,8 +242,11 @@ class GitHubWorkflowStepCustomizerTest {
                         id: step0
                       - name: Step 1
                         id: step1
-                """, StepCustomization.builder().type(Type.REPLACE).stepId("step0").step(replacedStep).build(),
-                StepCustomization.builder().type(Type.INSERT_AFTER).stepId("replaced-step").step(insertedStep).build());
+                """,
+                StepCustomization.builder().jobId("build").type(Type.REPLACE).stepId("step0").step(replacedStep)
+                        .build(),
+                StepCustomization.builder().jobId("build").type(Type.INSERT_AFTER).stepId("replaced-step")
+                        .step(insertedStep).build());
         assertThat(getStepIds(workflow.getJob("build")), contains("replaced-step", "inserted-step", "step1"));
     }
 
@@ -214,7 +264,7 @@ class GitHubWorkflowStepCustomizerTest {
     }
 
     private String getCustomizedContent(final String workflowTemplate, final StepCustomization... customizations) {
-        return new GitHubWorkflowCustomizer(new GitHubWorkflowStepCustomizer(asList(customizations), "build"))
+        return new GitHubWorkflowCustomizer(new GitHubWorkflowStepCustomizer(WORKFLOW_NAME, asList(customizations)))
                 .customizeContent(workflowTemplate);
     }
 }

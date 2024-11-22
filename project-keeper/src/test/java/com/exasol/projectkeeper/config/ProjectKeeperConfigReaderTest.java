@@ -206,7 +206,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: REPLACE
+                                - job: myJob
+                                  action: REPLACE
                                   content:
                                     id: new-step
                         """, equalTo(
@@ -216,7 +217,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: REPLACE
+                                - job: myJob
+                                  action: REPLACE
                                   stepId: ''
                                   content:
                                     id: new-step
@@ -227,7 +229,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - stepId: step-id-to-replace
+                                - job: myJob
+                                  stepId: step-id-to-replace
                                   content:
                                     id: new-step
                         """, equalTo(
@@ -237,7 +240,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: INVALID
+                                - job: myJob
+                                  action: INVALID
                                   stepId: step-id-to-replace
                                   content:
                                     id: new-step
@@ -247,7 +251,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: REPLACE
+                                - job: myJob
+                                  action: REPLACE
                                   stepId: step-id-to-replace
                         """, equalTo(
                         "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")),
@@ -256,7 +261,8 @@ class ProjectKeeperConfigReaderTest {
                           workflows:
                             - name: ci-build.yml
                               stepCustomizations:
-                                - action: REPLACE
+                                - job: myJob
+                                  action: REPLACE
                                   stepId: step-id-to-replace
                                   content:
                         """, equalTo(
@@ -291,6 +297,35 @@ class ProjectKeeperConfigReaderTest {
                   workflows:
                     - name: ci-build.yml
                       stepCustomizations:
+                        - job: myJob
+                          action: REPLACE
+                          stepId: step-id-to-replace
+                          content:
+                            name: New Step
+                            id: new-step
+                            run: echo 'new step'
+                            env:
+                              ENV_VARIABLE: 'value'
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows(), contains(CustomWorkflow.builder() //
+                .workflowName("ci-build.yml") //
+                .addStep(StepCustomization.builder() //
+                        .jobId("myJob") //
+                        .type(StepCustomization.Type.REPLACE) //
+                        .stepId("step-id-to-replace") //
+                        .step(WorkflowStep.createStep(Map.of("name", "New Step", "id", "new-step", "run",
+                                "echo 'new step'", "env", Map.of("ENV_VARIABLE", "value")))) //
+                        .build()) //
+                .build()));
+    }
+
+    @Test
+    void jobIdIsOptional() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      stepCustomizations:
                         - action: REPLACE
                           stepId: step-id-to-replace
                           content:
@@ -319,7 +354,8 @@ class ProjectKeeperConfigReaderTest {
                   workflows:
                     - name: ci-build.yml
                       stepCustomizations:
-                        - action: ${action}
+                        - job: job
+                          action: ${action}
                           stepId: step-id-to-replace
                           content:
                             id: new-step

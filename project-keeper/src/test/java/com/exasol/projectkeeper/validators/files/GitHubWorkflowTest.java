@@ -288,8 +288,8 @@ class GitHubWorkflowTest {
                 """).getJob("build");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> job.replaceStep("missing", null));
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-205: No step found for id 'missing' in {steps=[{id=step-to-replace, name=Old Step}]}"));
+        assertThat(exception.getMessage(),
+                equalTo("E-PK-CORE-205: No step found for id 'missing' in ['step-to-replace']"));
     }
 
     @Test
@@ -318,8 +318,8 @@ class GitHubWorkflowTest {
                 """).getJob("build");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> job.insertStepAfter("missing", null));
-        assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-205: No step found for id 'missing' in {steps=[{id=step-to-replace, name=Old Step}]}"));
+        assertThat(exception.getMessage(),
+                equalTo("E-PK-CORE-205: No step found for id 'missing' in ['step-to-replace']"));
     }
 
     @Test

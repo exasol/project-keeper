@@ -460,6 +460,8 @@ public class ProjectKeeperRawConfig {
             // Required for specifying Javadoc
         }
 
+        /** ID of the job to customize. */
+        public String job;
         /** Customization type (insert/replace). */
         public StepCustomization.Type action;
         /** ID of the step to replace or after which to insert. */

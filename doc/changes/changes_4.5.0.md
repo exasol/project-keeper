@@ -1,14 +1,15 @@
-# Project Keeper 4.4.1, released 2024-??-??
+# Project Keeper 4.5.0, released 2024-11-22
 
 Code name: Fix java customization
 
 ## Summary
 
-This release allows customization of the java version in `actions/setup-java` steps.
+This release allows customization of the java version in `actions/setup-java` steps. It also migrates generated workflows `broken_links_checker.yml` and `ci-build-next-java.yml` into `ci-build.yml`. This allows simplifying branch protection rules. Now only `build` is required, you can remove `next-java-compatibility` and `linkChecker`.
 
 ## Features
 
 * #602: Fixed customization of java version in `actions/setup-java`
+* #597: Migrate workflows `broken_links_checker.yml` and `ci-build-next-java.yml` into `ci-build.yml`
 
 ## Bugfixes
 
@@ -41,16 +42,16 @@ This release allows customization of the java version in `actions/setup-java` st
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-shared-model-classes:4.4.0` to `4.5.0`
 
 #### Runtime Dependency Updates
 
-* Updated `com.exasol:project-keeper-java-project-crawler:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-java-project-crawler:4.4.0` to `4.5.0`
 
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-project-version-getter:1.2.0` to `1.2.1`
-* Updated `com.exasol:project-keeper-shared-test-setup:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-shared-test-setup:4.4.0` to `4.5.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.17.1` to `3.17.3`
 
 #### Plugin Dependency Updates
@@ -67,12 +68,12 @@ This release allows customization of the java version in `actions/setup-java` st
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-core:4.4.0` to `4.5.0`
 
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-project-version-getter:1.2.0` to `1.2.1`
-* Updated `com.exasol:project-keeper-shared-test-setup:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-shared-test-setup:4.4.0` to `4.5.0`
 
 #### Plugin Dependency Updates
 
@@ -88,7 +89,7 @@ This release allows customization of the java version in `actions/setup-java` st
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-core:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-core:4.4.0` to `4.5.0`
 
 #### Test Dependency Updates
 
@@ -110,7 +111,7 @@ This release allows customization of the java version in `actions/setup-java` st
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-shared-model-classes:4.4.0` to `4.5.0`
 
 #### Test Dependency Updates
 
@@ -132,7 +133,7 @@ This release allows customization of the java version in `actions/setup-java` st
 
 #### Compile Dependency Updates
 
-* Updated `com.exasol:project-keeper-shared-model-classes:4.4.0` to `4.4.1`
+* Updated `com.exasol:project-keeper-shared-model-classes:4.4.0` to `4.5.0`
 
 #### Plugin Dependency Updates
 

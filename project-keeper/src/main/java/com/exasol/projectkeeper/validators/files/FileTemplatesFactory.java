@@ -24,6 +24,7 @@ class FileTemplatesFactory {
     private final boolean hasNpmModule;
     private final BuildOptions buildOptions;
     private final CiBuildWorkflowGenerator workflowGenerator;
+    private final List<AnalyzedSource> sources;
 
     public FileTemplatesFactory(final Logger logger, final String ownVersion, final boolean hasNpmModule,
             final BuildOptions buildOptions, final List<AnalyzedSource> sources) {
@@ -31,11 +32,13 @@ class FileTemplatesFactory {
         this.ownVersion = Objects.requireNonNull(ownVersion, "ownVersion");
         this.hasNpmModule = hasNpmModule;
         this.buildOptions = Objects.requireNonNull(buildOptions, "buildOptions");
-        this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildOptions,
-                new JavaVersionExtractor(sources).extractVersions());
+        this.sources = sources;
+        final JavaVersionExtractor javaVersionExtractor = new JavaVersionExtractor(sources);
+        this.workflowGenerator = new CiBuildWorkflowGenerator(this.buildOptions, javaVersionExtractor.extractVersions(),
+                javaVersionExtractor::getNextVersion);
     }
 
-    List<FileTemplate> getGlobalTemplates(final List<AnalyzedSource> sources) {
+    List<FileTemplate> getGlobalTemplates() {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(new FileTemplateFromResource(".github/workflows/broken_links_checker.yml", REQUIRE_EXACT));
         templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
@@ -43,7 +46,7 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
                 .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
         if (mvnRoot.isPresent()) {
-            templates.addAll(getGenericMavenTemplates(sources, mvnRoot.get().getModules()));
+            templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
         } else {
             templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
@@ -53,25 +56,13 @@ class FileTemplatesFactory {
         return templates;
     }
 
-    private List<FileTemplate> getGenericMavenTemplates(final List<AnalyzedSource> sources,
-            final Set<ProjectKeeperModule> modules) {
+    private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(getCiBuildTemplate(modules));
-        templates.add(getNextJavaWorkflow(modules, new JavaVersionExtractor(sources).getNextVersion()));
         templates.add(this.workflowGenerator.createDependenciesCheckWorkflow());
         templates.add(this.workflowGenerator.createDependenciesUpdateWorkflow());
         templates.add(this.workflowGenerator.createReleaseWorkflow(sources));
         return templates;
-    }
-
-    private FileTemplate getNextJavaWorkflow(final Set<ProjectKeeperModule> modules, final String nextJavaVersion) {
-        final FileTemplateFromResource template = new FileTemplateFromResource(
-                ".github/workflows/ci-build-next-java.yml", REQUIRE_EXACT) //
-                .replacing("skipNativeImage",
-                        modules.contains(ProjectKeeperModule.NATIVE_IMAGE) ? "-P skipNativeImage" : "")
-                .replacing("nextJavaVersion", nextJavaVersion);
-        return new ContentCustomizingTemplate(template,
-                new GitHubWorkflowCustomizer(new GitHubWorkflowJavaVersionCustomizer(List.of(nextJavaVersion))));
     }
 
     private FileTemplate getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {

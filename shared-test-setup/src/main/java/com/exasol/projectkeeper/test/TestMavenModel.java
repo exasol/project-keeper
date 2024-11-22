@@ -18,6 +18,7 @@ public class TestMavenModel extends Model {
     public static final String PROJECT_GROUP_ID = "com.exasol";
     private static final String PROJECT_DESCRIPTION = "My project description";
 
+    @SuppressWarnings("this-escape") // Required by 3rd party parent class
     public TestMavenModel() {
         this.setBuild(new Build());
         this.setVersion(PROJECT_VERSION);

@@ -24,7 +24,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                             old
                             version
                           cache: "maven"
-                """, List.of("v1"));
+                """, List.of("v1"), "v2");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
     }
 
@@ -41,7 +41,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                           distribution: "temurin"
                           java-version: old
                           cache: "maven"
-                """, List.of("v1"));
+                """, List.of("v1"), "v2");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
     }
 
@@ -55,8 +55,21 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                         id: setup-java
                         uses: actions/setup-java@v4
                         with:
-                """, List.of("v1"));
+                """, List.of("v1"), "v2");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
+    }
+
+    @Test
+    void testUpdateAnyJobs() {
+        final GitHubWorkflow workflow = customize("""
+                jobs:
+                  any-job-name:
+                    steps:
+                      - name: Set up JDKs
+                        id: setup-java
+                        uses: actions/setup-java@v4
+                """, List.of("v1"), "v2");
+        assertThat(workflow.getJob("any-job-name").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
     }
 
     @Test
@@ -74,8 +87,28 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                             old
                             version
                           cache: "maven"
-                """, List.of("11", "17", "21"));
+                """, List.of("11", "17", "21"), "23");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("11\n17\n21"));
+    }
+
+    @Test
+    void testUpdateNextJavaBuild() {
+        final GitHubWorkflow workflow = customize("""
+                jobs:
+                  next-java-compatibility:
+                    steps:
+                      - name: Set up JDKs
+                        id: setup-java
+                        uses: actions/setup-java@v4
+                        with:
+                          distribution: "temurin"
+                          java-version: |
+                            old
+                            version
+                          cache: "maven"
+                """, List.of("11", "17", "21"), "23");
+        assertThat(workflow.getJob("next-java-compatibility").getStep("setup-java").getWith().get("java-version"),
+                equalTo("23"));
     }
 
     @Test
@@ -89,7 +122,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                         uses: actions/unknown@v4
                         with:
                           java-version: old version
-                """, List.of("11", "17", "21"));
+                """, List.of("11", "17", "21"), "23");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"),
                 equalTo("old version"));
     }
@@ -103,13 +136,13 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                       - name: Set up JDKs
                         id: setup-java
                         run: echo Hello
-                """, List.of("11", "17", "21"));
+                """, List.of("11", "17", "21"), "23");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().size(), is(0));
     }
 
-    GitHubWorkflow customize(final String yaml, final List<String> javaVersions) {
+    GitHubWorkflow customize(final String yaml, final List<String> javaVersions, final String nextJavaVersion) {
         final GitHubWorkflow workflow = GitHubWorkflowIO.create().loadWorkflow(yaml);
-        new GitHubWorkflowJavaVersionCustomizer(javaVersions).applyCustomization(workflow);
+        new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion).applyCustomization(workflow);
         return workflow;
     }
 }

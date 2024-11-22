@@ -5,6 +5,7 @@ import static java.util.stream.Collectors.joining;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
@@ -18,10 +19,13 @@ class CiBuildWorkflowGenerator {
     private static final String CI_BUILD_PATH_IN_PROJECT = WORKFLOW_PATH + CI_BUILD_WORKFLOW_NAME;
     private final BuildOptions buildOptions;
     private final List<String> javaVersions;
+    private final Supplier<String> nextJavaVersion;
 
-    CiBuildWorkflowGenerator(final BuildOptions buildOptions, final List<String> javaVersions) {
+    CiBuildWorkflowGenerator(final BuildOptions buildOptions, final List<String> javaVersions,
+            final Supplier<String> nextJavaVersion) {
         this.buildOptions = Objects.requireNonNull(buildOptions, "buildOptions");
         this.javaVersions = Objects.requireNonNull(javaVersions, "javaVersions");
+        this.nextJavaVersion = Objects.requireNonNull(nextJavaVersion, "nextJavaVersion");
     }
 
     FileTemplate createCiBuildWorkflow() {
@@ -31,6 +35,7 @@ class CiBuildWorkflowGenerator {
                 CI_BUILD_PATH_IN_PROJECT, REQUIRE_EXACT);
         template.replacing("ciBuildRunnerOS", buildOptions.getRunnerOs());
         template.replacing("freeDiskSpace", String.valueOf(buildOptions.shouldFreeDiskSpace()));
+        template.replacing("nextJavaVersion", nextJavaVersion.get());
 
         if (buildType == CiTemplateType.EXASOL_VERSION_MATRIX) {
             template.replacing("matrixExasolDbVersions",
@@ -50,13 +55,13 @@ class CiBuildWorkflowGenerator {
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer( //
                 javaVersionCustomizer(),
                 // [impl->dsn~customize-build-process.ci-build~0]
-                new GitHubWorkflowStepCustomizer(customizations, buildJobId),
+                new GitHubWorkflowStepCustomizer(workflowName, customizations),
                 // [impl->dsn~customize-build-process.ci-build.environment~1]
                 new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName)));
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
-        return new GitHubWorkflowJavaVersionCustomizer(javaVersions);
+        return new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion.get());
     }
 
     private List<StepCustomization> findCustomizations(final String workflowName) {
@@ -81,7 +86,7 @@ class CiBuildWorkflowGenerator {
     FileTemplate createReleaseWorkflow(final List<AnalyzedSource> sources) {
         final Consumer<FileTemplateFromResource> templateCustomizer = template -> template
                 .replacing("mavenCentralDeployment", mavenCentralDeploymentRequired(sources) ? "true" : "false");
-        return createCustomizedWorkflow("release.yml", "release", templateCustomizer);
+        return createCustomizedWorkflow("release.yml", templateCustomizer);
     }
 
     private boolean mavenCentralDeploymentRequired(final List<AnalyzedSource> sources) {
@@ -94,32 +99,32 @@ class CiBuildWorkflowGenerator {
 
     // [impl->dsn~customize-build-process.dependency-check~0]
     FileTemplate createDependenciesCheckWorkflow() {
-        return createCustomizedWorkflow("dependencies_check.yml", "report_security_issues");
+        return createCustomizedWorkflow("dependencies_check.yml");
     }
 
     // [impl->dsn~dependency-updater.workflow.generate~1]
     // [impl->dsn~customize-build-process.dependency-update~0]
     FileTemplate createDependenciesUpdateWorkflow() {
-        return createCustomizedWorkflow("dependencies_update.yml", "update_dependencies");
+        return createCustomizedWorkflow("dependencies_update.yml");
     }
 
-    private FileTemplate createCustomizedWorkflow(final String workflowName, final String jobName) {
-        return createCustomizedWorkflow(workflowName, jobName, template -> {
+    private FileTemplate createCustomizedWorkflow(final String workflowName) {
+        return createCustomizedWorkflow(workflowName, template -> {
         });
     }
 
-    private FileTemplate createCustomizedWorkflow(final String workflowName, final String jobName,
+    private FileTemplate createCustomizedWorkflow(final String workflowName,
             final Consumer<FileTemplateFromResource> templateCustomizer) {
         final FileTemplateFromResource template = new FileTemplateFromResource(WORKFLOW_PATH + workflowName,
                 REQUIRE_EXACT);
         templateCustomizer.accept(template);
         final List<StepCustomization> customizations = findCustomizations(workflowName);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(javaVersionCustomizer(),
-                new GitHubWorkflowStepCustomizer(customizations, jobName)));
+                new GitHubWorkflowStepCustomizer(workflowName, customizations)));
     }
 
     enum CiTemplateType {
-        DEFAULT(CI_BUILD_WORKFLOW_NAME, "build"),
+        DEFAULT(CI_BUILD_WORKFLOW_NAME, "build-and-test"),
         EXASOL_VERSION_MATRIX("ci-build-db-version-matrix.yml", "matrix-build");
 
         private final String templateName;
