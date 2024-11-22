@@ -16,6 +16,8 @@ public class DocumentBuilder extends ChildrenBuilder<DocumentBuilder> {
     }
 
     /**
+     * Build a new document.
+     * 
      * @return new instance of {@link org.w3c.dom.Document}
      */
     public Document build() {

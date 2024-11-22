@@ -18,6 +18,8 @@ public final class ChangesFileName implements Comparable<ChangesFileName> {
     public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
 
     /**
+     * Get Changes file name for the given path.
+     * 
      * @param path path to create a {@link ChangesFileName} for
      * @return If path matches regular expression for valid changes filenames then an {@link Optional} containing a new
      *         instance of {@link ChangesFileName}, otherwise {@code Optional.empty()}.
@@ -43,6 +45,8 @@ public final class ChangesFileName implements Comparable<ChangesFileName> {
     }
 
     /**
+     * Get the filename.
+     * 
      * @return filename of the current {@link ChangesFileName} as string
      */
     public String filename() {
@@ -55,6 +59,8 @@ public final class ChangesFileName implements Comparable<ChangesFileName> {
     }
 
     /**
+     * Get the version number.
+     * 
      * @return version number contained in the filename of current {@link ChangesFileName}
      */
     public String version() {

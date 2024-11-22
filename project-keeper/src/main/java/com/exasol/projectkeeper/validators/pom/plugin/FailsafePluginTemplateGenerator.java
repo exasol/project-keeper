@@ -16,6 +16,11 @@ public class FailsafePluginTemplateGenerator implements PluginTemplateGenerator 
     private static final String TEST_COVERAGE_CONFIGURATION = "configuration/systemPropertyVariables/test.coverage";
     private static final String TEMPLATE = "maven_templates/maven-failsafe-plugin.xml";
 
+    /** Create a new instance */
+    public FailsafePluginTemplateGenerator() {
+        // Empty constructor required by javadoc
+    }
+
     @Override
     public Optional<Node> generateTemplate(final Collection<ProjectKeeperModule> enabledModules) {
         if (enabledModules.contains(ProjectKeeperModule.INTEGRATION_TESTS)) {

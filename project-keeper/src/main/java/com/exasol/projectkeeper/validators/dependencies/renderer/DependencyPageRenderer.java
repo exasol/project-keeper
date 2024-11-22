@@ -18,6 +18,11 @@ import net.steppschuh.markdowngenerator.table.Table;
 public class DependencyPageRenderer {
     private static final String NEWLINE = System.lineSeparator();
 
+    /** Create a new instance */
+    public DependencyPageRenderer() {
+        // Empty constructor required by javadoc
+    }
+
     /**
      * Convert a list of dependencies into a markdown dependency report.
      *

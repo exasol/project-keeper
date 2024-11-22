@@ -13,6 +13,11 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 public class ErrorCodeCrawlerPluginTemplateGenerator implements PluginTemplateGenerator {
     private static final String TEMPLATE = "maven_templates/error-code-crawler-maven-plugin.xml";
 
+    /** Create a new instance */
+    public ErrorCodeCrawlerPluginTemplateGenerator() {
+        // Empty constructor required by javadoc
+    }
+
     @Override
     public Optional<Node> generateTemplate(final Collection<ProjectKeeperModule> enabledModules) {
         final Node pluginTemplate = new PluginTemplateReader().readPluginTemplate(TEMPLATE);

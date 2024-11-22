@@ -18,6 +18,8 @@ import com.exasol.projectkeeper.sources.analyze.generic.RepoNameReader;
 public final class AnalyzedSourceImpl implements AnalyzedSource {
 
     /**
+     * Get the project name.
+     * 
      * @param projectDir root folder of the project
      * @param source     source of main or sub module within the current project
      * @return name of the repository hosting the current project.
@@ -52,54 +54,53 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         this.isRootProject = builder.isRootProject;
     }
 
-    /** @return path to the source */
     @Override
     public Path getPath() {
         return path;
     }
 
-    /** @return enabled modules for the source */
     @Override
     public Set<ProjectKeeperModule> getModules() {
         return modules;
     }
 
-    /** @return {@code true} if this source should be advertised */
     @Override
     public boolean isAdvertised() {
         return advertise;
     }
 
-    /** @return module name */
+    /**
+     * Get the module name.
+     * 
+     * @return module name
+     */
     public String getModuleName() {
         return moduleName;
     }
 
-    /** @return project name */
     @Override
     public String getProjectName() {
         return projectName;
     }
 
-    /** @return version */
     @Override
     public String getVersion() {
         return version;
     }
 
-    /** @return dependency changes */
     @Override
     public DependencyChangeReport getDependencyChanges() {
         return dependencyChanges;
     }
 
-    /** @return dependencies */
     @Override
     public ProjectDependencies getDependencies() {
         return dependencies;
     }
 
     /**
+     * Check if this is the root project.
+     * 
      * @return {@code true} if this is the main project in the repo, i.e. if build script (e.g. go.mod) lies directly in
      *         repo
      */
@@ -107,7 +108,11 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         return isRootProject;
     }
 
-    /** @return a new builder for {@link AnalyzedSourceImpl} */
+    /**
+     * Create a new builder.
+     * 
+     * @return a new builder for {@link AnalyzedSourceImpl}
+     */
     public static AnalyzedSourceImpl.AnalyzedSourceImplBuilder builder() {
         return new AnalyzedSourceImpl.AnalyzedSourceImplBuilder();
     }
@@ -131,6 +136,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Set source path.
+         * 
          * @param path source path
          * @return {@code this}.
          */
@@ -140,6 +147,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Set PK modules.
+         * 
          * @param modules enabled modules
          * @return {@code this}.
          */
@@ -149,6 +158,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Set if this should be advertised.
+         * 
          * @param advertise {@code true} if this source should be advertised
          * @return {@code this}.
          */
@@ -158,6 +169,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Set module name.
+         * 
          * @param moduleName module name
          * @return {@code this}.
          */
@@ -167,6 +180,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Set project name.
+         * 
          * @param projectName project name
          * @return {@code this}.
          */
@@ -176,6 +191,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Set project version.
+         * 
          * @param version version
          * @return {@code this}.
          */
@@ -185,6 +202,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Set dependency changes.
+         * 
          * @param dependencyChanges dependency changes
          * @return {@code this}.
          */
@@ -195,7 +214,9 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
-         * @param dependencies dependencies
+         * Set current dependencies.
+         * 
+         * @param dependencies current dependencies
          * @return {@code this}.
          */
         public AnalyzedSourceImpl.AnalyzedSourceImplBuilder dependencies(final ProjectDependencies dependencies) {
@@ -204,6 +225,8 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
         }
 
         /**
+         * Se tif this is the root project.
+         * 
          * @param isRootProject {@code true} if this is the main project in the repo, i.e. if build script (e.g. go.mod)
          *                      lies directly in repo
          * @return {@code this}.
@@ -213,7 +236,11 @@ public final class AnalyzedSourceImpl implements AnalyzedSource {
             return this;
         }
 
-        /** @return a new instance */
+        /**
+         * Build a new instance.
+         * 
+         * @return a new instance
+         */
         public AnalyzedSourceImpl build() {
             return new AnalyzedSourceImpl(this);
         }

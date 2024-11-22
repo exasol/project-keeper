@@ -13,6 +13,8 @@ import com.exasol.projectkeeper.ProjectKeeper;
  */
 @Mojo(name = "verify-release")
 public class ProjectKeeperVerifyReleaseMojo extends AbstractProjectKeeperMojo {
+    ProjectKeeperVerifyReleaseMojo() {
+    }
 
     @Override
     protected void runProjectKeeper(final ProjectKeeper projectKeeper) throws MojoFailureException {

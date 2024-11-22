@@ -266,6 +266,7 @@
 
 | Dependency                             | License                                       |
 | -------------------------------------- | --------------------------------------------- |
+| [Project Keeper shared test setup][54] | [The MIT License][55]                         |
 | [Maven Project Version Getter][64]     | [MIT License][65]                             |
 | [JUnit Jupiter Engine][20]             | [Eclipse Public License v2.0][21]             |
 | [JUnit Jupiter Params][20]             | [Eclipse Public License v2.0][21]             |
@@ -328,6 +329,7 @@
 | [Apache Maven Site Plugin][34]                         | [Apache-2.0][1]                  |
 | [SonarQube Scanner for Maven][35]                      | [GNU LGPL 3][36]                 |
 | [Apache Maven Toolchains Plugin][37]                   | [Apache-2.0][1]                  |
+| [Apache Maven Javadoc Plugin][46]                      | [Apache-2.0][1]                  |
 | [Apache Maven Compiler Plugin][38]                     | [Apache-2.0][1]                  |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                  |
 | [Maven Flatten Plugin][39]                             | [Apache Software Licenese][1]    |

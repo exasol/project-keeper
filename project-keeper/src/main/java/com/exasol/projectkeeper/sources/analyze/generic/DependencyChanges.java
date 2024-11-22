@@ -16,7 +16,12 @@ import com.exasol.projectkeeper.shared.dependencychanges.*;
  */
 public class DependencyChanges {
 
+    DependencyChanges() {
+    }
+
     /**
+     * Create a new empty instance.
+     * 
      * @return builder for a new instance of {@link DependencyChanges}
      */
     public static DependencyChanges builder() {
@@ -28,6 +33,8 @@ public class DependencyChanges {
     private final List<DependencyChange> changes = new ArrayList<>();
 
     /**
+     * Set previous dependencies.
+     * 
      * @param dependencies previous list of dependencies
      * @return this for fluent programming
      */
@@ -37,6 +44,8 @@ public class DependencyChanges {
     }
 
     /**
+     * Set current dependencies.
+     * 
      * @param dependencies current list of dependencies
      * @return this for fluent programming
      */
@@ -50,6 +59,8 @@ public class DependencyChanges {
     }
 
     /**
+     * Build changes.
+     * 
      * @return list of dependency changes
      */
     public List<DependencyChange> build() {

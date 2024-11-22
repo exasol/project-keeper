@@ -6,6 +6,10 @@ import java.nio.file.Path;
  * Enable to execute a {@link ShellCommand} and hence to mock this in tests.
  */
 public class CommandExecutor {
+    /** Create a new instance */
+    public CommandExecutor() {
+        // Empty constructor required by javadoc
+    }
 
     /**
      * Executes the specified {@link ShellCommand}.

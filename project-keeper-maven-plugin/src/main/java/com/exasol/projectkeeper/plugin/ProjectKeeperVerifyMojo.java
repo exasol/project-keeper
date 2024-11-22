@@ -15,6 +15,8 @@ import com.exasol.projectkeeper.ProjectKeeper;
 @Mojo(name = "verify", defaultPhase = LifecyclePhase.PACKAGE)
 // [impl->dsn~mvn-verify-goal~1]
 public class ProjectKeeperVerifyMojo extends AbstractProjectKeeperMojo {
+    ProjectKeeperVerifyMojo() {
+    }
 
     @Override
     protected void runProjectKeeper(final ProjectKeeper projectKeeper) throws MojoFailureException {

@@ -82,6 +82,8 @@ public class GoBinary {
     }
 
     /**
+     * Get the command.
+     * 
      * @return command for execution in a process
      */
     public String command() {

@@ -6,9 +6,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Builder for XML nodes with children
+ * Builder for XML nodes with children.
+ * 
+ * @param <T> child element builder
  */
 public abstract class ChildrenBuilder<T extends ChildrenBuilder<T>> {
+
+    /** Create a new instance */
+    protected ChildrenBuilder() {
+        // Empty constructor required by javadoc
+    }
 
     /**
      * children builders of the current builder
@@ -51,6 +58,8 @@ public abstract class ChildrenBuilder<T extends ChildrenBuilder<T>> {
     }
 
     /**
+     * Add children.
+     * 
      * @param children children to add to the current element
      * @return this for fluent programming
      */
@@ -60,6 +69,8 @@ public abstract class ChildrenBuilder<T extends ChildrenBuilder<T>> {
     }
 
     /**
+     * Get typed this pointer.
+     * 
      * @return instance of the current object to support generics
      */
     protected abstract T getThis();

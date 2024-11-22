@@ -26,6 +26,8 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 public class OwnVersionValidator implements Validator {
 
     /**
+     * Create a validator for running as a maven plugin.
+     * 
      * @param currentVersion current version of PK in order to validate if there is an update available.
      * @param updater        instance of {@link Updater} in order to accept the latest version and to perform a
      *                       self-update by replacing the version of PK maven plugin in the user's pom file.

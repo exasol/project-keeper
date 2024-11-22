@@ -11,6 +11,9 @@ import com.exasol.errorreporting.ExaError;
  */
 public class LicenseNameReader {
 
+    LicenseNameReader() {
+    }
+
     /**
      * Read the name of the license (first line of LICENSE file).
      *

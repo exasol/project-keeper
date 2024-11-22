@@ -27,6 +27,9 @@ public abstract class AbstractProjectKeeperMojo extends AbstractMojo {
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
 
+    AbstractProjectKeeperMojo() {
+    }
+
     /**
      * Get a project-keeper core.
      * 

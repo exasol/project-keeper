@@ -13,6 +13,10 @@ import com.exasol.projectkeeper.validators.changesfile.*;
  * String renderer for {@link DependencyChangeReport}.
  */
 public class DependencyChangeReportRenderer {
+    /** Create a new instance */
+    public DependencyChangeReportRenderer() {
+        // Empty constructor required by javadoc
+    }
 
     /**
      * Render a {@link DependencyChangeReport} to string.

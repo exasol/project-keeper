@@ -17,6 +17,9 @@ import com.exasol.errorreporting.ExaError;
 public class PluginTemplateReader {
     private static final DocumentBuilderFactory DOCUMENT_BUILDER_FACTORY = createXmlDocumentBuilderFactory();
 
+    PluginTemplateReader() {
+    }
+
     private static DocumentBuilderFactory createXmlDocumentBuilderFactory() {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
