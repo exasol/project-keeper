@@ -28,7 +28,7 @@ class GitHubWorkflowStepCustomizer implements GitHubWorkflowCustomizer.WorkflowC
     private Job getJob(final GitHubWorkflow workflow, final StepCustomization customization) {
         final Optional<String> jobId = customization.getJobId();
         if (jobId.isPresent()) {
-            return workflow.getJob(customization.getJobId().get());
+            return workflow.getJob(jobId.get());
         }
         final List<Job> allJobs = workflow.getJobs();
         if (allJobs.size() == 1) {
