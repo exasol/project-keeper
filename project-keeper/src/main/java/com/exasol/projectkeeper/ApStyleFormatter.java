@@ -6,6 +6,8 @@ package com.exasol.projectkeeper;
 public class ApStyleFormatter {
 
     /**
+     * Convert string to a human readable value.
+     * 
      * @param string name to be converted
      * @return human readable format for input string
      */

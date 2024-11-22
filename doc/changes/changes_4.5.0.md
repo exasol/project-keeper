@@ -15,6 +15,10 @@ This release allows customization of the java version in `actions/setup-java` st
 
 * #598: Reverted changes to PK's template for IDE Eclipse `javax.annotation.Nonnull`
 
+## Refactoring
+
+* #596: Fixed build with Java 21
+
 ## Dependency Updates
 
 ### Project Keeper Root Project
@@ -116,6 +120,7 @@ This release allows customization of the java version in `actions/setup-java` st
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-project-version-getter:1.2.0` to `1.2.1`
+* Added `com.exasol:project-keeper-shared-test-setup:4.5.0`
 
 #### Plugin Dependency Updates
 
@@ -137,6 +142,7 @@ This release allows customization of the java version in `actions/setup-java` st
 
 #### Plugin Dependency Updates
 
+* Added `org.apache.maven.plugins:maven-javadoc-plugin:3.11.1`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.9.1` to `3.21.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.1` to `3.5.2`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.17.1` to `2.18.0`

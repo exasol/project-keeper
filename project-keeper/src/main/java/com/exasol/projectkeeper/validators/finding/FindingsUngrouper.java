@@ -7,6 +7,10 @@ import java.util.List;
  * This class ungroups all {@link ValidationFindingGroup}s into one flat list.
  */
 public class FindingsUngrouper {
+    /** Create a new instance */
+    public FindingsUngrouper() {
+        // Empty constructor required by javadoc
+    }
 
     /**
      * Ungroup all {@link ValidationFindingGroup}s into one flat list.

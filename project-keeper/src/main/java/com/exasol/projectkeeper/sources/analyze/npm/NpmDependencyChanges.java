@@ -16,6 +16,8 @@ import com.exasol.projectkeeper.sources.analyze.generic.DependencyChanges;
 public class NpmDependencyChanges {
 
     /**
+     * Create a new instance.
+     * 
      * @param current  current release
      * @param previous previous release or empty optional
      * @return {@link DependencyChangeReport}

@@ -43,6 +43,10 @@
         </dependency>
         <!-- test -->
         <dependency>
+            <groupId>com.exasol</groupId>
+            <artifactId>project-keeper-shared-test-setup</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-core</artifactId>
             <scope>provided</scope>

@@ -14,6 +14,8 @@ import com.exasol.projectkeeper.ProjectKeeper;
 @Mojo(name = "fix")
 // [impl->dsn~mvn-fix-goal~1]
 public class ProjectKeeperFixMojo extends AbstractProjectKeeperMojo {
+    ProjectKeeperFixMojo() {
+    }
 
     @Override
     protected void runProjectKeeper(final ProjectKeeper projectKeeper) throws MojoFailureException {

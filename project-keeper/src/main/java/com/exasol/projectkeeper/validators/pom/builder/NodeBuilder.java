@@ -8,12 +8,16 @@ import org.w3c.dom.Node;
  */
 public interface NodeBuilder {
     /**
+     * Create a new node.
+     * 
      * @param document document to use for building the Node
      * @return new instance of a {@link org.w3c.dom.Node}
      */
     public Node build(Document document);
 
     /**
+     * Create a new document builder.
+     * 
      * @return New instance of {@link DocumentBuilder}
      */
     public static DocumentBuilder document() {
@@ -21,6 +25,8 @@ public interface NodeBuilder {
     }
 
     /**
+     * Create a new element builder.
+     * 
      * @param name name of the element to be built by this builder
      * @return New instance of {@link ElementBuilder}
      */
@@ -29,6 +35,8 @@ public interface NodeBuilder {
     }
 
     /**
+     * Create a new element builder.
+     * 
      * @param namespace XML namespace of the element
      * @param name      name of the element to be built by this builder
      * @return New instance of {@link ElementBuilder}

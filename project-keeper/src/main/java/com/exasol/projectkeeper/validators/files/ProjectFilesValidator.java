@@ -97,6 +97,8 @@ public class ProjectFilesValidator implements Validator {
     }
 
     /**
+     * Create a new builder.
+     * 
      * @return Builder for a new instance of {@link ProjectFilesValidator}
      */
     public static Builder builder() {
@@ -119,6 +121,8 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
+         * Set project directory.
+         * 
          * @param projectDirectory project's root directory
          * @return {@code this} for fluent programming
          */
@@ -128,6 +132,8 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
+         * Set analyzed sources.
+         * 
          * @param value list of analyzed sources
          * @return {@code this} for fluent programming
          */
@@ -137,6 +143,8 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
+         * Set logger.
+         * 
          * @param value logger to use for log messages
          * @return {@code this} for fluent programming
          */
@@ -146,6 +154,8 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
+         * Set project keeper version.
+         * 
          * @param value the version of the currently running project keeper
          * @return {@code this} for fluent programming
          */
@@ -155,6 +165,8 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
+         * Define if project has an NPM module.
+         * 
          * @param value {@code true} if the current project contains an NPM module
          * @return {@code this} for fluent programming
          */
@@ -164,6 +176,8 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
+         * Set CI build options.
+         * 
          * @param buildOptions CI build options
          * @return {@code this} for fluent programming
          */
@@ -173,6 +187,8 @@ public class ProjectFilesValidator implements Validator {
         }
 
         /**
+         * Build a new instance.
+         * 
          * @return new instance of {@link ProjectFilesValidator}
          */
         public ProjectFilesValidator build() {

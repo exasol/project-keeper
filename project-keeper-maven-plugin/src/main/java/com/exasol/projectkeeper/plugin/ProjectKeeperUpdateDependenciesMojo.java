@@ -13,6 +13,8 @@ import com.exasol.projectkeeper.ProjectKeeper;
  */
 @Mojo(name = "update-dependencies")
 public class ProjectKeeperUpdateDependenciesMojo extends AbstractProjectKeeperMojo {
+    ProjectKeeperUpdateDependenciesMojo() {
+    }
 
     @Override
     protected void runProjectKeeper(final ProjectKeeper projectKeeper) throws MojoFailureException {

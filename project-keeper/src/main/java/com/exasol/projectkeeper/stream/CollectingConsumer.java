@@ -15,6 +15,9 @@ public class CollectingConsumer implements StreamConsumer {
     private final CountDownLatch countDownLatch = new CountDownLatch(1);
     private final StringBuilder stringBuilder = new StringBuilder();
 
+    CollectingConsumer() {
+    }
+
     @Override
     public void accept(final String line) {
         this.stringBuilder.append(line).append("\n");

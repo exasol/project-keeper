@@ -22,12 +22,20 @@ public final class NamedDependencyChangeReport {
         this.report = report;
     }
 
-    /** @return source name */
+    /**
+     * Get the source name.
+     * 
+     * @return source name
+     */
     public String getSourceName() {
         return sourceName;
     }
 
-    /** @return report */
+    /**
+     * Get the report.
+     * 
+     * @return report
+     */
     public DependencyChangeReport getReport() {
         return report;
     }

@@ -25,6 +25,7 @@ import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.*;
+import com.exasol.projectkeeper.test.TestMavenModel;
 
 @Tag("integration")
 class MavenProjectCrawlerMojoIT {

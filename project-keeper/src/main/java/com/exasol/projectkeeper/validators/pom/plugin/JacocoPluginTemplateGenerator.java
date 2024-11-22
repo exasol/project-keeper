@@ -16,6 +16,11 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 public class JacocoPluginTemplateGenerator implements PluginTemplateGenerator {
     private static final String TEMPLATE = "maven_templates/jacoco-maven-plugin.xml";
 
+    /** Create a new instance. */
+    public JacocoPluginTemplateGenerator() {
+        // Empty constructor required by javadoc
+    }
+
     @Override
     public Optional<Node> generateTemplate(final Collection<ProjectKeeperModule> enabledModules) {
         final Node pluginTemplate = new PluginTemplateReader().readPluginTemplate(TEMPLATE);

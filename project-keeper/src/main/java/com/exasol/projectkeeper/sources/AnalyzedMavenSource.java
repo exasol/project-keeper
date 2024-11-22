@@ -41,52 +41,86 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         this.isRootProject = builder.isRootProject;
     }
 
-    /** @return new builder for an {@link AnalyzedMavenSource}. */
+    /**
+     * Create a new builder.
+     * 
+     * @return new builder for an {@link AnalyzedMavenSource}.
+     */
     public static AnalyzedMavenSource.AnalyzedMavenSourceBuilder builder() {
         return new AnalyzedMavenSource.AnalyzedMavenSourceBuilder();
     }
 
-    /** @return source path, e.g. {@code project-dir/module/pom.xml} */
+    /**
+     * Get source path.
+     * 
+     * @return source path, e.g. {@code project-dir/module/pom.xml}
+     */
     @Override
     public Path getPath() {
         return this.path;
     }
 
-    /** @return modules */
+    /**
+     * Get modules.
+     * 
+     * @return modules
+     */
     @Override
     public Set<ProjectKeeperModule> getModules() {
         return this.modules;
     }
 
-    /** @return advertise this source or not */
+    /**
+     * Check if this should be advertised.
+     * 
+     * @return advertise this source or not
+     */
     @Override
     public boolean isAdvertised() {
         return this.advertise;
     }
 
-    /** @return Maven artifact ID */
+    /**
+     * Get Maven artifact ID.
+     * 
+     * @return Maven artifact ID
+     */
     public String getArtifactId() {
         return this.artifactId;
     }
 
-    /** @return project name */
+    /**
+     * Get project name.
+     * 
+     * @return project name
+     */
     @Override
     public String getProjectName() {
         return this.projectName;
     }
 
-    /** @return Project version */
+    /**
+     * Get project version.
+     * 
+     * @return Project version
+     */
     @Override
     public String getVersion() {
         return this.version;
     }
 
-    /** @return artifact file name or {@code null} if no artifact is built */
+    /**
+     * Get release artifact name.
+     * 
+     * @return artifact file name or {@code null} if no artifact is built
+     */
     public String getReleaseArtifactName() {
         return this.releaseArtifactName;
     }
 
     /**
+     * Get Java version.
+     * 
      * @return Java version used for compiling and testing the project. Read from the {@code properties/java.version}
      *         element of the {@code pom.xml} file. Defaults to {@link PomFileGenerator#DEFAULT_JAVA_VERSION}.
      */
@@ -94,19 +128,25 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         return this.javaVersion;
     }
 
-    /** @return dependency changes */
+    /**
+     * Get dependency changes.
+     * 
+     * @return dependency changes
+     */
     @Override
     public DependencyChangeReport getDependencyChanges() {
         return this.dependencyChanges;
     }
 
-    /** @return dependencies */
+    /** Get current dependencies. @return current dependencies */
     @Override
     public ProjectDependencies getDependencies() {
         return this.dependencies;
     }
 
     /**
+     * Check if this is the root project.
+     * 
      * @return {@code true} if this is the main maven project in the repo (if pom lies directly in repo)
      */
     public boolean isRootProject() {
@@ -134,6 +174,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set source path.
+         * 
          * @param path source path e.g. {@code project-dir/module/pom.xml}
          * @return {@code this}.
          */
@@ -143,6 +185,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set PK modules.
+         * 
          * @param modules modules
          * @return {@code this}.
          */
@@ -152,6 +196,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set if this should be advertised.
+         * 
          * @param advertise advertise this source or not
          * @return {@code this}.
          */
@@ -161,6 +207,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set Maven artifact ID.
+         * 
          * @param artifactId Maven artifact ID
          * @return {@code this}.
          */
@@ -170,6 +218,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set project name.
+         * 
          * @param projectName project name
          * @return {@code this}.
          */
@@ -179,6 +229,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set project version.
+         * 
          * @param version Project version
          * @return {@code this}.
          */
@@ -188,6 +240,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set release artifact name.
+         * 
          * @param releaseArtifactName Artifact file name or {@code null} if no artifact is built
          * @return {@code this}.
          */
@@ -197,6 +251,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set Java version.
+         * 
          * @param javaVersion Java version used for compiling and testing the project. Read from the
          *                    {@code properties/java.version} element of the {@code pom.xml} file. Defaults to
          *                    {@link PomFileGenerator#DEFAULT_JAVA_VERSION}.
@@ -210,6 +266,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set dependency changes.
+         * 
          * @param dependencyChanges dependency changes
          * @return {@code this}.
          */
@@ -220,7 +278,9 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
-         * @param dependencies dependencies
+         * Set current dependencies.
+         * 
+         * @param dependencies current dependencies
          * @return {@code this}.
          */
         public AnalyzedMavenSource.AnalyzedMavenSourceBuilder dependencies(final ProjectDependencies dependencies) {
@@ -229,6 +289,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
+         * Set if this is the root project.
+         * 
          * @param isRootProject {@code true} if this is the main maven project in the repo (if pom lies directly in
          *                      repo)
          * @return {@code this}.
@@ -238,7 +300,11 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
             return this;
         }
 
-        /** @return the new instance */
+        /**
+         * Build a new instance.
+         * 
+         * @return the new instance
+         */
         public AnalyzedMavenSource build() {
             return new AnalyzedMavenSource(this);
         }
