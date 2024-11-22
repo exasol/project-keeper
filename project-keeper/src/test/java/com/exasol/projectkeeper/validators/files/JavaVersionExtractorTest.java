@@ -17,7 +17,7 @@ import com.exasol.projectkeeper.sources.*;
 class JavaVersionExtractorTest {
 
     @Test
-    void nonSource() {
+    void noSources() {
         final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> extract());
         assertThat(exception.getMessage(), equalTo("No sources, can't get java versions"));
     }
