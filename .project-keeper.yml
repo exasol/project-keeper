@@ -133,15 +133,17 @@ build:
               ls -lh coverage-aggregator/target/metrics.json
               cat coverage-aggregator/target/metrics.json
 
-        # Build with Java 21 fails due to missing JavaDoc comments, see https://github.com/exasol/project-keeper/issues/596
-        - action: REPLACE
-          job: next-java-compatibility
-          stepId: build-next-java
+        - action: INSERT_AFTER
+          job: build
+          stepId: setup-java
           content:
-            name: Run tests and build with Maven 21
-            id: build-next-java
-            # Only run tests as javadoc has warnings with Java 21
-            run: mvn --batch-mode clean test -DtrimStackTrace=false -Djava.version=21
+            name: Install Project Keeper before check-release
+            id: install-project-keeper
+            run: |
+              mvn --batch-mode --threads 1C install \
+                  -Dmaven.test.skip=true -Dproject-keeper.skip=true \
+                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
     # [itest->dsn~customize-build-process.dependency-check~0]
     - name: "dependencies_check.yml"
