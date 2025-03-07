@@ -217,7 +217,7 @@ sources:
       - build/my-extension.js
 ```
 
-* Artifacts are uploaded as build artifacts in GitHub independently of sourc type
+* Artifacts are uploaded as build artifacts in GitHub independently of source type
 * The artifact path is relative to the source path. "Source path" here means the directory part of the property `path` in this example `extension` (without the file name of course)
 * The above configuration will archive file `$PROJECT_DIR/extension/build/my-extension.js`.
 * The artifact path may contain placeholder `${version}`. PK will replace it with the current project version.
