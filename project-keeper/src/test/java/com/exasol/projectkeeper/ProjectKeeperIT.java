@@ -2,6 +2,7 @@ package com.exasol.projectkeeper;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -64,7 +65,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         );
     }
 
-    private void writeDefaultPom() throws IOException {
+    private void writeDefaultPom() {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();
         pom.writeAsPomToProject(this.projectDir);
@@ -72,7 +73,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
 
     @Test
     // [itest->dsn~excluding~1]
-    void testVerifyWithExcludedFile() throws IOException {
+    void testVerifyWithExcludedFile() {
         writeDefaultPom();
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder()
                 .excludes(List.of("E-PK-CORE-17: Missing required file: 'src/test/resources/logging.properties'"
@@ -98,7 +99,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
 
     @Test
     // [itest->dsn~excluding~1]
-    void testExcludedPlugin() throws IOException {
+    void testExcludedPlugin() {
         writeDefaultPom();
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder().excludes(List
                 .of("E-PK-CORE-15: Missing maven plugin com.exasol:error-code-crawler-maven-plugin. (in pom.xml)")));
@@ -130,7 +131,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     }
 
     @Test
-    void testValidAfterFix() throws IOException {
+    void testValidAfterFix() {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();
         pom.writeAsPomToProject(this.projectDir);
@@ -150,8 +151,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
                 () -> assertThat(generatedChangesFile, startsWith("# My Test Project 0.2.0, released")),
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `com.exasol:error-reporting-java:0.1.0` to `0.2.0`")),
+                // The plugin assertions change over time, so a regex is safer:
                 () -> assertThat(generatedChangesFile,
-                        containsString("* Updated `org.apache.maven.plugins:maven-assembly-plugin:2.2-beta-5` to")));
+                        matchesPattern("\\* Updated `org\\.apache\\.maven\\.plugins:maven-.*-plugin:.*` to")));
     }
 
     @Test
@@ -187,6 +189,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         assertThat(generatedChangesFile, containsString("* Added `com.exasol:error-reporting-java:0.2.0`"));
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
         try (final Git git = Git.open(this.projectDir.toFile())) {
             this.fixture.writePomWithOneDependency("0.1.0", "0.1.0");
@@ -198,6 +201,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private void createTag(final String tag) throws IOException, GitAPIException {
         try (final Git git = Git.open(this.projectDir.toFile())) {
             commitAndMakeTag(git, tag);
