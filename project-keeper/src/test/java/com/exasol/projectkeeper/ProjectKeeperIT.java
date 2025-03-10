@@ -153,7 +153,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
                         containsString("* Updated `com.exasol:error-reporting-java:0.1.0` to `0.2.0`")),
                 // The plugin assertions change over time, so a regex is safer:
                 () -> assertThat(generatedChangesFile,
-                        matchesPattern("\\* Updated `org\\.apache\\.maven\\.plugins:maven-.*-plugin:.*` to")));
+                        matchesPattern(".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-[a-z]+-plugin:[0-9]+(\\.[0-9]+){1,2}` to.*")));
     }
 
     @Test
