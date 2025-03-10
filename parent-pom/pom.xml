@@ -32,7 +32,7 @@
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
         <maven.version>3.9.9</maven.version>
-        <minimum.maven.version>3.6.3</minimum.maven.version>
+        <minimum.maven.version>3.8.7</minimum.maven.version>
         <junit.version>5.11.3</junit.version>
         <xmlunit.version>2.10.0</xmlunit.version>
         <mockito.version>5.14.2</mockito.version>

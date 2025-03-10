@@ -1,8 +1,12 @@
-# Project Keeper 4.5.1, released 2025-03-10
+# Project Keeper 5.0.0, released 2025-03-10
 
-Code name: Custom artifact clarifications and security policy
+Code name: Maven 3.8.7, custom artifact clarifications and security policy
 
 ## Summary
+
+Breaking change:
+
+From release 5.0.0 on this project requires a minimum Maven version of 3.8.7. 
 
 This release we improved the documentation on the configuration of custom artifacts that project keeper can build into GitHub workflows.
 
