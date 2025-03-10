@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,7 +45,7 @@ class ChangesFileValidatorTest {
     private static final String A_PROJECT_NAME = "my-project";
     private static final String LINE_SEPARATOR = "\n";
     private static final Path CHANGES_FILE_PATH = Path.of("doc", "changes", "changes_" + A_VERSION + ".md");
-    private static final String THIS_YEAR = String.valueOf(java.time.LocalDate.now().getYear());
+    private static final String THIS_YEAR = String.valueOf(LocalDate.now().getYear());
 
     @TempDir
     Path tempDir;
