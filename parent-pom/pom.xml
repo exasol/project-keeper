@@ -282,7 +282,7 @@
                         <configuration>
                             <rules>
                                 <requireMavenVersion>
-                                    <version>3.6.3</version>
+                                    <version>${minimum.maven.version}</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
                                     <version>17</version>
