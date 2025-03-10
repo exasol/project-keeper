@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -147,13 +148,13 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
+        final Pattern pluginEntryPattern = Pattern.compile(".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-\\w+-plugin:\\d+(\\.\\d+){1,2}` to.*", Pattern.DOTALL);
         assertAll(//
                 () -> assertThat(generatedChangesFile, startsWith("# My Test Project 0.2.0, released")),
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `com.exasol:error-reporting-java:0.1.0` to `0.2.0`")),
                 // The plugin assertions change over time, so a regex is safer:
-                () -> assertThat(generatedChangesFile,
-                        matchesPattern(".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-[a-z]+-plugin:[0-9]+(\\.[0-9]+){1,2}` to.*")));
+                () -> assertThat(generatedChangesFile, matchesPattern(pluginEntryPattern)));
     }
 
     @Test
