@@ -318,7 +318,7 @@ build:
             id: setup-go
             uses: actions/setup-go@v5
             with:
-              go-version: "1.22"
+              go-version: "1.24"
               cache-dependency-path: .project-keeper.yml
         - action: INSERT_AFTER
           stepId: setup-go

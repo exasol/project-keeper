@@ -255,12 +255,12 @@ class GitHubWorkflowTest {
                       - id: step1
                         uses: actions/setup-go@v5
                         with:
-                          go-version: '1.22'
+                          go-version: '1.24'
                           cache-dependency-path: .project-keeper.yml
                 """);
         final Step step = workflow.getJob("build").getStep("step1");
         assertThat(step.getWith(),
-                equalTo(Map.of("go-version", "1.22", "cache-dependency-path", ".project-keeper.yml")));
+                equalTo(Map.of("go-version", "1.24", "cache-dependency-path", ".project-keeper.yml")));
     }
 
     @Test
