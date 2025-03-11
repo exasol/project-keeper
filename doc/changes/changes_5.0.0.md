@@ -12,17 +12,17 @@ We also added a security policy to let our contributors know how to best report 
 
 This release improves verification of Maven projects with multiple modules. `project-keeper-maven-plugin` is now only required in the root `pom.xml`, not in sub-modules. This simplifies configuration of multi-module projects.
 
-The release also adds stack traces to the default log format configured via `logging.properties`. This will print stack traces for logged exceptions.
-
 The release also also updates the Eclipse formatter settings to never join wrapped lines and to indent `case` inside of `switch`. This helps avoid forcing line wraps with trailing `//` comments.
 
 The release also runs the CI build workflow also when a PR is converted from "draft" to "ready for review". This ensures that the complete build runs even if some workflow steps are skipped for draft PRs.
 
+The release also adds stack traces to the default log format configured via `logging.properties`. This will print stack traces for logged exceptions.
+
 ## Features
 
 * #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
-* #612: Added stack traces to default log format
 * #620: Run CI build also when a PR is converted from "draft" to "ready for review"
+* #612: Added stack traces to default log format
 
 ## Bugfixes
 
