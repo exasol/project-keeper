@@ -16,12 +16,15 @@ The release also also updates the Eclipse formatter settings to never join wrapp
 
 The release also runs the CI build workflow also when a PR is converted from "draft" to "ready for review". This ensures that the complete build runs even if some workflow steps are skipped for draft PRs.
 
+The release also adds stack traces to the default log format configured via `logging.properties`. This will print stack traces for logged exceptions.
+
 The release also moves execution of `display-plugin-updates` and `display-dependency-updates` from Maven phase `package` to `verify`. This improves developer experience by speeding up the local build process.
 
 ## Features
 
 * #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
 * #620: Run CI build also when a PR is converted from "draft" to "ready for review"
+* #612: Added stack traces to default log format
 * #619: Moved `versions-maven-plugin` display updates execution to verify phase
 
 ## Bugfixes
