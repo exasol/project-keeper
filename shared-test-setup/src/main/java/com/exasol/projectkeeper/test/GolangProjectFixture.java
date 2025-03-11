@@ -65,8 +65,8 @@ public class GolangProjectFixture implements AutoCloseable {
         writeGoModFile(moduleDir, goVersion);
         writeMainGoFile(moduleDir);
         writeTestGoFile(moduleDir);
-        FixtureHelpers.execute(moduleDir, "go", "get");
-        FixtureHelpers.execute(moduleDir, "go", "mod", "tidy");
+        FixtureHelpers.execute(projectDir.resolve(moduleDir), "go", "get");
+        FixtureHelpers.execute(projectDir.resolve(moduleDir), "go", "mod", "tidy");
     }
 
     public String getProjectVersion() {

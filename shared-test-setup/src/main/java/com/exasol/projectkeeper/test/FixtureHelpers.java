@@ -13,7 +13,7 @@ class FixtureHelpers {
     private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
 
     static void execute(final Path workingDir, final String... command) {
-        LOG.fine(() -> "Running command %s...".formatted(Arrays.toString(command)));
+        LOG.fine(() -> "Running command %s in %s...".formatted(Arrays.toString(command), workingDir));
         try {
             final Process process = new ProcessBuilder(command)
                     .directory(workingDir.toFile())
