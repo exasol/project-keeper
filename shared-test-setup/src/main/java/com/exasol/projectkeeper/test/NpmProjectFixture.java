@@ -14,17 +14,14 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
-public class GolangProjectFixture implements AutoCloseable {
-
-    private static final String GO_MOD_FILE_NAME = "go.mod";
-    private static final String GO_MODULE_NAME = "github.com/exasol/my-module";
-    private static final String GO_VERSION = "1.17";
+public class NpmProjectFixture implements AutoCloseable {
+    private static final String PACKAGE_FILE_NAME = "package.json";
     private static final String PROJECT_VERSION = "1.2.3";
 
     private final Path projectDir;
     private Git gitRepo;
 
-    public GolangProjectFixture(final Path projectDir) {
+    public NpmProjectFixture(final Path projectDir) {
         this.projectDir = projectDir;
     }
 
@@ -48,25 +45,21 @@ public class GolangProjectFixture implements AutoCloseable {
 
     public ProjectKeeperConfig.Builder createDefaultConfig() {
         return ProjectKeeperConfig.builder().sources(List.of(
-                Source.builder().modules(emptySet()).type(SourceType.GOLANG).path(Path.of(GO_MOD_FILE_NAME)).build()))
-                .versionConfig(new FixedVersion(PROJECT_VERSION));
+                Source.builder().modules(emptySet()).type(SourceType.NPM).path(Path.of(PACKAGE_FILE_NAME)).build()));
     }
 
     public void prepareProjectFiles(final Builder configBuilder) {
         this.writeConfig(configBuilder);
         this.prepareProjectFiles();
+        FixtureHelpers.execute(projectDir, "npm", "install");
     }
 
     public void prepareProjectFiles() {
-        prepareProjectFiles(Path.of("."), GO_VERSION);
+        prepareProjectFiles(Path.of("."));
     }
 
-    public void prepareProjectFiles(final Path moduleDir, final String goVersion) {
-        writeGoModFile(moduleDir, goVersion);
-        writeMainGoFile(moduleDir);
-        writeTestGoFile(moduleDir);
-        FixtureHelpers.execute(moduleDir, "go", "get");
-        FixtureHelpers.execute(moduleDir, "go", "mod", "tidy");
+    public void prepareProjectFiles(final Path moduleDir) {
+        writePackageJsonFile(moduleDir);
     }
 
     public String getProjectVersion() {
@@ -81,16 +74,17 @@ public class GolangProjectFixture implements AutoCloseable {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
-    private void writeGoModFile(final Path moduleDir, final String goVersion) {
-        final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.4.3",
-                "github.com/exasol/exasol-test-setup-abstraction-server/go-client v0.2.2",
-                "github.com/exasol/error-reporting-go v0.1.1 // indirect");
-        final String content = "module " + GO_MODULE_NAME + "\n" //
-                + "go " + goVersion + "\n" //
-                + "require (\n" //
-                + "\t" + String.join("\n\t", dependencies) + "\n" //
-                + ")\n";
-        writeFile(this.projectDir.resolve(moduleDir).resolve(GO_MOD_FILE_NAME), content);
+    private void writePackageJsonFile(final Path moduleDir) {
+        final String content = """
+                {
+                    "name": "@exasol/project-name",
+                    "version": "%s",
+                    "dependencies": {
+                        "@exasol/extension-parameter-validator": "0.3.1"
+                    }
+                }
+                """.formatted(PROJECT_VERSION);
+        writeFile(this.projectDir.resolve(moduleDir).resolve(PACKAGE_FILE_NAME), content);
     }
 
     private void writeFile(final Path path, final String content) {
@@ -102,27 +96,6 @@ public class GolangProjectFixture implements AutoCloseable {
         } catch (final IOException exception) {
             throw new UncheckedIOException("Error writing content to file " + path, exception);
         }
-    }
-
-    private void writeMainGoFile(final Path moduleDir) {
-        final String content = "package main\n" //
-                + "import (\n" //
-                + "    \"github.com/exasol/exasol-driver-go\"\n" //
-                + ")\n" //
-                + "func main() {\n" //
-                + "    exasol.NewConfig(\"sys\", \"exasol\")\n" //
-                + "}\n";
-        writeFile(this.projectDir.resolve(moduleDir).resolve("main.go"), content);
-    }
-
-    private void writeTestGoFile(final Path moduleDir) {
-        final String content = "package main\n" //
-                + "import (\n" //
-                + "    testSetupAbstraction \"github.com/exasol/exasol-test-setup-abstraction-server/go-client\"\n" //
-                + ")\n" //
-                + "func myTest() {\n" + "    exasol := testSetupAbstraction.Create(\"myConfig.json\")\n"
-                + "    connection := exasol.CreateConnection()\n" + "}\n";
-        writeFile(this.projectDir.resolve(moduleDir).resolve("main_test.go"), content);
     }
 
     @Override
