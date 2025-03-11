@@ -150,9 +150,13 @@ class PomFileValidatorTest {
     }
 
     private List<ValidationFinding> runValidator(final ParentPomRef parentPomRef) {
+        return runValidator(parentPomRef, this.tempDir.resolve("pom.xml"));
+    }
+
+    private List<ValidationFinding> runValidator(final ParentPomRef parentPomRef, final Path pomFilePath) {
         final PomFileValidator validator = new PomFileValidator(this.tempDir,
-                List.of(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.JAR_ARTIFACT), this.tempDir.resolve("pom.xml"),
-                parentPomRef, new RepoInfo("my-repo", "My License"));
+                List.of(ProjectKeeperModule.DEFAULT, ProjectKeeperModule.JAR_ARTIFACT), pomFilePath, parentPomRef,
+                new RepoInfo("my-repo", "My License"));
         return validator.validate();
     }
 
@@ -213,11 +217,19 @@ class PomFileValidatorTest {
 
     // [utest->dsn~verify-own-version~1]
     @Test
-    void noReferenceToProjectKeeperPlugin() {
+    void noReferenceToProjectKeeperPluginInRootModule() {
         getTestModel().writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result, hasFindingWithMessageMatchingRegex(
                 "W-PK-CORE-151: Pom file '.*pom.xml' contains no reference to project-keeper-maven-plugin."));
+    }
+
+    @Test
+    void noReferenceToProjectKeeperPluginInSubModule() {
+        final Path moduleDir = this.tempDir.resolve("module");
+        getTestModel().writeAsPomToProject(moduleDir);
+        final List<ValidationFinding> result = runValidator(null, moduleDir.resolve("pom.xml"));
+        assertThat(result, not(hasFindingWithMessageMatchingRegex("W-PK-CORE-151.*")));
     }
 
     // [utest->dsn~verify-own-version~1]
@@ -272,5 +284,4 @@ class PomFileValidatorTest {
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result, empty());
     }
-
 }

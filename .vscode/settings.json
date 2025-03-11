@@ -1,29 +1,22 @@
 {
-  "editor.formatOnSave": true,
-  "editor.formatOnSaveMode": "file",
-  "editor.codeActionsOnSave": {
-    "source.organizeImports": "explicit",
-    "source.generate.finalModifiers": "explicit",
-    "source.fixAll": "explicit"
-  },
-  "java.saveActions.organizeImports": true,
-  "java.sources.organizeImports.starThreshold": 3,
-  "java.sources.organizeImports.staticStarThreshold": 3,
-  "java.test.config": {
-    "vmArgs": [
-      "-Djava.util.logging.config.file=src/test/resources/logging.properties",
-      "-Dcom.exasol.projectkeeper.ownVersion=4.3.0"
-    ]
-  },
-  "workbench.editor.customLabels.enabled": true,
-  "workbench.editor.customLabels.patterns": {
-    ".github/workflows/*": ".github/${filename}.${extname}",
-    "project-keeper/src/main/resources/templates/.github/workflows/*": "template/${filename}.${extname}",
-    "pom.xml": "root/pom.xml",
-    "*/**/pom.xml": "${dirname(0)}/pom.xml"
-  },
-  "sonarlint.connectedMode.project": {
-    "connectionId": "exasol",
-    "projectKey": "com.exasol:project-keeper-root"
-  }
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file",
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit",
+        "source.generate.finalModifiers": "explicit",
+        "source.fixAll": "explicit"
+    },
+    "java.saveActions.organizeImports": true,
+    "java.sources.organizeImports.starThreshold": 3,
+    "java.sources.organizeImports.staticStarThreshold": 3,
+    "java.test.config": {
+        "vmArgs": [
+            "-Djava.util.logging.config.file=src/test/resources/logging.properties",
+            "-Dcom.exasol.projectkeeper.ownVersion=5.0.0"
+        ]
+    },
+    "sonarlint.connectedMode.project": {
+        "connectionId": "exasol",
+        "projectKey": "com.exasol:project-keeper-root"
+    }
 }

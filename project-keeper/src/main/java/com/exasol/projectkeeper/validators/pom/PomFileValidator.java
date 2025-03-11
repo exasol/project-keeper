@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.validators.pom;
 import static com.exasol.projectkeeper.validators.files.RequiredFileValidator.withContentEqualTo;
 import static com.exasol.projectkeeper.validators.pom.XmlHelper.addTextElement;
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
+import static java.util.Collections.emptyList;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -111,7 +112,11 @@ public class PomFileValidator implements Validator {
 
     private List<ValidationFinding> validateOwnVersion(final Document pom) {
         final Node node = runXPath(pom, XPath.PROJECT_KEEPER_VERSION);
-        if (node == null) {
+        if (node != null) {
+            final OwnVersionValidator.Updater updater = version -> (log -> node.setTextContent(version));
+            return OwnVersionValidator.forMavenPlugin(node.getTextContent(), updater).validate();
+        }
+        if (pomFilePath.getParent().toAbsolutePath().equals(projectDirectory.toAbsolutePath())) {
             return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("W-PK-CORE-151") //
                     .message("Pom file {{file}} contains no reference to project-keeper-maven-plugin.",
                             this.pomFilePath) //
@@ -119,9 +124,7 @@ public class PomFileValidator implements Validator {
                     .optional(true) //
                     .build());
         }
-
-        final OwnVersionValidator.Updater updater = version -> (log -> node.setTextContent(version));
-        return OwnVersionValidator.forMavenPlugin(node.getTextContent(), updater).validate();
+        return emptyList();
     }
 
     private Optional<SimpleValidationFinding> validateUrlTag(final Document document) {
