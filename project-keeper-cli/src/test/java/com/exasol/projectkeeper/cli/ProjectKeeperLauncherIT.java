@@ -19,8 +19,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import com.exasol.projectkeeper.test.GolangProjectFixture;
-import com.exasol.projectkeeper.test.MavenProjectFixture;
+import com.exasol.projectkeeper.test.*;
 
 class ProjectKeeperLauncherIT {
     private static final Logger LOGGER = Logger.getLogger(ProjectKeeperLauncherIT.class.getName());
@@ -42,13 +41,13 @@ class ProjectKeeperLauncherIT {
 
     @ParameterizedTest
     @MethodSource("invalidArguments")
-    void failsForWrongArguments(final String... args) throws IOException, InterruptedException {
+    void failsForWrongArguments(final String... args) {
         assertProcessFails(args, startsWith("E-PK-CLI-2: Got no or invalid command line argument '"
                 + Arrays.toString(args) + "'. Please only specify arguments ['"));
     }
 
     @Test
-    void runMainMethodWithNullArgumentFails() throws IOException, InterruptedException {
+    void runMainMethodWithNullArgumentFails() {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ProjectKeeperLauncher.main(null));
         assertThat(exception.getMessage(), startsWith(
@@ -56,7 +55,7 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
-    void verifyFailsForProjectWithoutGit() throws IOException, InterruptedException {
+    void verifyFailsForProjectWithoutGit() throws IOException {
         final Path projectDirRealPath = this.projectDir.toRealPath();
         assertProcessFails("verify", "E-PK-CORE-90: Could not find .git directory in project-root '"
                 + projectDirRealPath
@@ -64,22 +63,29 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
-    void fixingJavaProjectSucceeds() throws InterruptedException, IOException {
+    void fixingJavaProjectSucceeds() {
         prepareMavenProject();
         assertProcessSucceeds("fix");
         assertProcessSucceeds("verify");
     }
 
     @Test
-    void updateDependenciesJavaProjectSucceeds() throws InterruptedException, IOException {
+    void updateDependenciesJavaProjectSucceeds() {
         prepareMavenProject();
         assertProcessSucceeds("fix");
         assertProcessSucceeds("update-dependencies");
     }
 
     @Test
-    void fixingGolangProjectSucceeds() throws InterruptedException, IOException {
+    void fixingGolangProjectSucceeds() {
         prepareGolangProject();
+        assertProcessSucceeds("fix");
+        assertProcessSucceeds("verify");
+    }
+
+    @Test
+    void fixingNpmProjectSucceeds() {
+        prepareNpmProject();
         assertProcessSucceeds("fix");
         assertProcessSucceeds("verify");
     }
@@ -100,18 +106,24 @@ class ProjectKeeperLauncherIT {
         fixture.prepareProjectFiles(fixture.createDefaultConfig());
     }
 
-    private void assertProcessSucceeds(final String command) throws InterruptedException {
+    private void prepareNpmProject() {
+        LOGGER.info("Preparing NPM project in " + this.projectDir);
+        @SuppressWarnings("resource")
+        final NpmProjectFixture fixture = new NpmProjectFixture(this.projectDir);
+        fixture.gitInit();
+        fixture.prepareProjectFiles(fixture.createDefaultConfig());
+    }
+
+    private void assertProcessSucceeds(final String command) {
         final ProjectKeeperLauncher launcher = new ProjectKeeperLauncher(this.projectDir);
         assertDoesNotThrow(() -> launcher.start(new String[] { command }));
     }
 
-    private void assertProcessFails(final String argument, final String expectedErrorMessage)
-            throws InterruptedException, IOException {
+    private void assertProcessFails(final String argument, final String expectedErrorMessage) {
         assertProcessFails(new String[] { argument }, equalTo(expectedErrorMessage));
     }
 
-    private void assertProcessFails(final String[] arguments, final Matcher<String> expectedErrorMessage)
-            throws InterruptedException, IOException {
+    private void assertProcessFails(final String[] arguments, final Matcher<String> expectedErrorMessage) {
         final ProjectKeeperLauncher launcher = new ProjectKeeperLauncher(this.projectDir);
         final Exception actualException = assertThrows(Exception.class, () -> launcher.start(arguments));
         assertThat(actualException.getMessage(), expectedErrorMessage);
