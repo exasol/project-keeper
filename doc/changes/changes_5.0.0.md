@@ -12,6 +12,12 @@ We also added a security policy to let our contributors know how to best report 
 
 This release improves verification of Maven projects with multiple modules. `project-keeper-maven-plugin` is now only required in the root `pom.xml`, not in sub-modules. This simplifies configuration of multi-module projects.
 
+The release also also updates the Eclipse formatter settings to never join wrapped lines and to indent `case` inside of `switch`. This helps avoid forcing line wraps with trailing `//` comments.
+
+## Features
+
+* #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
+
 ## Bugfixes
 
 * #601: Improved verification of Maven projects with multiple modules
