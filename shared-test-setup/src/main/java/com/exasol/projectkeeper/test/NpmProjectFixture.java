@@ -7,6 +7,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Locale;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -51,7 +52,15 @@ public class NpmProjectFixture implements AutoCloseable {
     public void prepareProjectFiles(final Builder configBuilder) {
         this.writeConfig(configBuilder);
         this.prepareProjectFiles();
-        FixtureHelpers.execute(projectDir, "npm", "install");
+        FixtureHelpers.execute(projectDir, "npm" + suffixForWindows(".cmd"), "install");
+    }
+
+    private String suffixForWindows(final String suffix) {
+        final String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
+        if (os.indexOf("win") >= 0) {
+            return suffix;
+        }
+        return "";
     }
 
     private void prepareProjectFiles() {
