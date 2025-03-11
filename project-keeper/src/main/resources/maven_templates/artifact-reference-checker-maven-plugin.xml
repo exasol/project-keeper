@@ -1,7 +1,7 @@
 <plugin>
     <groupId>com.exasol</groupId>
     <artifactId>artifact-reference-checker-maven-plugin</artifactId>
-    <version>0.4.2</version>
+    <version>0.4.3</version>
     <executions>
         <execution>
             <id>verify</id>

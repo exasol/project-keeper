@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,6 +45,7 @@ class ChangesFileValidatorTest {
     private static final String A_PROJECT_NAME = "my-project";
     private static final String LINE_SEPARATOR = "\n";
     private static final Path CHANGES_FILE_PATH = Path.of("doc", "changes", "changes_" + A_VERSION + ".md");
+    private static final String THIS_YEAR = String.valueOf(LocalDate.now().getYear());
 
     @TempDir
     Path tempDir;
@@ -51,26 +53,26 @@ class ChangesFileValidatorTest {
     ChangesFileIO changesFileIOMock;
 
     @Test
-    void testValidation() throws IOException {
+    void testValidation() {
         final AnalyzedMavenSource source = createTestSetup();
         assertThat(createValidator(source), hasValidationFindingWithMessage(
                 "E-PK-CORE-56: Could not find required file '" + CHANGES_FILE_PATH + "'."));
     }
 
     @Test
-    void testValidationForSnapshotVersion() throws IOException {
+    void testValidationForSnapshotVersion() {
         final AnalyzedMavenSource source = createTestSetup();
         assertThat(new ChangesFileValidator(A_VERSION + "-SNAPSHOT", A_PROJECT_NAME, this.tempDir, List.of(source)),
                 hasNoValidationFindings());
     }
 
     @Test
-    void noDependencyUpdates(@Mock final Logger log) throws IOException {
+    void noDependencyUpdates(@Mock final Logger log){
         final AnalyzedMavenSource source = createTestSetup(new TestMavenModel(), Collections.emptyList());
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(CHANGES_FILE_PATH);
         assertThat(changesFile,
-                hasContent(equalTo("# my-project 1.2.3, released 2024-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
+                hasContent(equalTo("# my-project 1.2.3, released " + THIS_YEAR + "-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "Code name:" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "## Summary" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "## Features" + LINE_SEPARATOR + LINE_SEPARATOR //
@@ -83,12 +85,12 @@ class ChangesFileValidatorTest {
     }
 
     @Test
-    void testFixCreatedTemplate(@Mock final Logger log) throws IOException {
+    void testFixCreatedTemplate(@Mock final Logger log) {
         final AnalyzedMavenSource source = createTestSetup();
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(CHANGES_FILE_PATH);
         assertThat(changesFile,
-                hasContent(equalTo("# my-project 1.2.3, released 2024-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
+                hasContent(equalTo("# my-project 1.2.3, released " + THIS_YEAR +"-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "Code name:" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "## Summary" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "## Features" + LINE_SEPARATOR + LINE_SEPARATOR //
@@ -101,7 +103,7 @@ class ChangesFileValidatorTest {
     }
 
     @Test
-    void testFixContainsDependencyUpdates() throws IOException {
+    void testFixContainsDependencyUpdates() {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency();
         final AnalyzedMavenSource source = createTestSetup(model);
@@ -113,7 +115,7 @@ class ChangesFileValidatorTest {
     }
 
     @Test
-    void testValidationOnFixedFile() throws IOException {
+    void testValidationOnFixedFile() {
         final TestMavenModel model = new TestMavenModel();
         model.addDependency();
         final AnalyzedMavenSource source = createTestSetup(model);
@@ -194,17 +196,17 @@ class ChangesFileValidatorTest {
         return new ChangesFileValidator(A_VERSION, A_PROJECT_NAME, this.tempDir, List.of(source), changesFileIOMock);
     }
 
-    private AnalyzedMavenSource createTestSetup() throws IOException {
+    private AnalyzedMavenSource createTestSetup() {
         return createTestSetup(new TestMavenModel());
     }
 
-    private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel) throws IOException {
+    private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel){
         final List<DependencyChange> list = List.of(new NewDependency("com.example", "my-lib", "1.2.3"));
         return createTestSetup(mavenModel, list);
     }
 
     private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel,
-            final List<DependencyChange> dependencyChanges) throws IOException {
+            final List<DependencyChange> dependencyChanges) {
         mavenModel.writeAsPomToProject(this.tempDir);
         return AnalyzedMavenSource.builder().path(this.tempDir.resolve("pom.xml")).projectName(mavenModel.getName())
                 .dependencyChanges(DependencyChangeReport.builder().typed(Type.COMPILE, dependencyChanges).build()) //

@@ -36,6 +36,7 @@ import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 class ProjectKeeperMojoIT {
     private static final String ORIGINAL_SLF4J_VERSION = "1.7.36";
+    private static final String THIS_YEAR = String.valueOf(LocalDate.now().getYear());
     private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
     private static final Logger LOG = Logger.getLogger(ProjectKeeperMojoIT.class.getName());
 
@@ -156,7 +157,7 @@ class ProjectKeeperMojoIT {
                         allOf(not(equalTo(ORIGINAL_SLF4J_VERSION)), not(startsWith("1.")), startsWith("2."))),
                 () -> assertContent(userGuidePath, startsWith("artifact reference: dummy-0.1.1.jar")),
                 () -> assertContent(ChangesFile.getPathForVersion(newVersion), allOf(
-                        startsWith("# My Test Project 0.1.1, released 2024-??-??"),
+                        startsWith("# My Test Project 0.1.1, released " + THIS_YEAR + "-??-??"),
                         containsString(
                                 "Code name: Fixed vulnerability CVE-2017-10355 in xerces:xercesImpl:jar:2.12.2:test"),
                         containsString("""
