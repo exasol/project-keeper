@@ -54,19 +54,15 @@ public class NpmProjectFixture implements AutoCloseable {
         FixtureHelpers.execute(projectDir, "npm", "install");
     }
 
-    public void prepareProjectFiles() {
+    private void prepareProjectFiles() {
         prepareProjectFiles(Path.of("."));
     }
 
-    public void prepareProjectFiles(final Path moduleDir) {
+    private void prepareProjectFiles(final Path moduleDir) {
         writePackageJsonFile(moduleDir);
     }
 
-    public String getProjectVersion() {
-        return PROJECT_VERSION;
-    }
-
-    public void writeConfig(final ProjectKeeperConfig.Builder config) {
+    private void writeConfig(final ProjectKeeperConfig.Builder config) {
         new ProjectKeeperConfigWriter().writeConfig(config.build(), this.projectDir);
     }
 
