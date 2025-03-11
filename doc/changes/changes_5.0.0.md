@@ -1,4 +1,4 @@
-# Project Keeper 5.0.0, released 2025-03-10
+# Project Keeper 5.0.0, released 2025-03-??
 
 Code name: Maven 3.8.7, custom artifact clarifications and security policy
 
@@ -14,8 +14,8 @@ We also added a security policy to let our contributors know how to best report 
 
 ## Documentation
 
-* #618: Added security policy
-* #621: Added clarifications for custom artifacts
+* Added security policy (PR #618)
+* Added clarifications for custom artifacts (PR #621)
 
 ## Dependency Updates
 
