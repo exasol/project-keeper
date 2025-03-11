@@ -18,11 +18,17 @@ The release also runs the CI build workflow also when a PR is converted from "dr
 
 The release also adds stack traces to the default log format configured via `logging.properties`. This will print stack traces for logged exceptions.
 
+The release also moves execution of `display-plugin-updates` and `display-dependency-updates` from Maven phase `package` to `verify`. This improves developer experience by speeding up the local build process.
+
+The release also improves the error message for unknown job ID in workflow customization. Users now directly get a list of available job IDs they can use instead.
+
 ## Features
 
 * #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
 * #620: Run CI build also when a PR is converted from "draft" to "ready for review"
 * #612: Added stack traces to default log format
+* #619: Moved `versions-maven-plugin` display updates execution to verify phase
+* #614: Improved error message for unknown job ID in workflow customization
 
 ## Bugfixes
 

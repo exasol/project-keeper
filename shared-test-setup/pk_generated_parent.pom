@@ -179,7 +179,7 @@
                 <executions>
                     <execution>
                         <id>display-updates</id>
-                        <phase>package</phase>
+                        <phase>verify</phase>
                         <goals>
                             <goal>display-plugin-updates</goal>
                             <goal>display-dependency-updates</goal>
