@@ -33,7 +33,9 @@ class GitHubWorkflow {
     Job getJob(final String jobId) {
         final Object rawJob = getJobMap().get(jobId);
         if (rawJob == null) {
-            return null;
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-207")
+                    .message("GitHub Workflow does not have a job with ID {{job id}}.", jobId)
+                    .mitigation("Choose one of {{available job ids}}.", getJobMap().keySet()).toString());
         }
         return new Job(jobId, asMap(rawJob));
     }

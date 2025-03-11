@@ -39,7 +39,7 @@ class GitHubWorkflowEnvironmentCustomizerTest {
                     steps:
                 """, customizer));
         assertThat(exception.getMessage(),
-                equalTo("E-PK-CORE-207: GitHub Workflow does not have a job with ID 'unknown-job'"));
+                equalTo("E-PK-CORE-207: GitHub Workflow does not have a job with ID 'unknown-job'. Choose one of ['build']."));
     }
 
     GitHubWorkflow customize(final String yaml, final GitHubWorkflowCustomizer.WorkflowCustomizer customizer) {

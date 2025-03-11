@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.validators.files;
 
-import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
 class GitHubWorkflowEnvironmentCustomizer implements GitHubWorkflowCustomizer.WorkflowCustomizer {
@@ -20,10 +19,6 @@ class GitHubWorkflowEnvironmentCustomizer implements GitHubWorkflowCustomizer.Wo
             return;
         }
         final Job job = workflow.getJob(jobId);
-        if (job == null) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-207")
-                    .message("GitHub Workflow does not have a job with ID {{job id}}", jobId).toString());
-        }
         job.setEnvironment(this.environmentName);
     }
 }
