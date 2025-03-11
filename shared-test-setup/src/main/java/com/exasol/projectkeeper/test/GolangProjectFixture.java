@@ -14,36 +14,15 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
-public class GolangProjectFixture implements AutoCloseable {
+public class GolangProjectFixture extends BaseProjectFixture {
 
     private static final String GO_MOD_FILE_NAME = "go.mod";
     private static final String GO_MODULE_NAME = "github.com/exasol/my-module";
     private static final String GO_VERSION = "1.17";
     private static final String PROJECT_VERSION = "1.2.3";
 
-    private final Path projectDir;
-    private Git gitRepo;
-
     public GolangProjectFixture(final Path projectDir) {
-        this.projectDir = projectDir;
-    }
-
-    public void gitInit() {
-        try {
-            this.gitRepo = Git.init().setDirectory(this.projectDir.toFile()).setInitialBranch("main").call();
-        } catch (final IllegalStateException | GitAPIException exception) {
-            throw new AssertionError("Error running git init: " + exception.getMessage(), exception);
-        }
-    }
-
-    public void gitAddCommitTag(final String tagName) {
-        try {
-            this.gitRepo.add().addFilepattern(".").call();
-            this.gitRepo.commit().setMessage("Prepare release " + tagName).call();
-            this.gitRepo.tag().setName(tagName).call();
-        } catch (final GitAPIException exception) {
-            throw new AssertionError("Error running git add/commit/tag: " + exception.getMessage(), exception);
-        }
+        super(projectDir);
     }
 
     public ProjectKeeperConfig.Builder createDefaultConfig() {
@@ -65,8 +44,8 @@ public class GolangProjectFixture implements AutoCloseable {
         writeGoModFile(moduleDir, goVersion);
         writeMainGoFile(moduleDir);
         writeTestGoFile(moduleDir);
-        FixtureHelpers.execute(projectDir.resolve(moduleDir), "go", "get");
-        FixtureHelpers.execute(projectDir.resolve(moduleDir), "go", "mod", "tidy");
+        execute(projectDir.resolve(moduleDir), "go", "get");
+        execute(projectDir.resolve(moduleDir), "go", "mod", "tidy");
     }
 
     public String getProjectVersion() {
@@ -123,12 +102,5 @@ public class GolangProjectFixture implements AutoCloseable {
                 + "func myTest() {\n" + "    exasol := testSetupAbstraction.Create(\"myConfig.json\")\n"
                 + "    connection := exasol.CreateConnection()\n" + "}\n";
         writeFile(this.projectDir.resolve(moduleDir).resolve("main_test.go"), content);
-    }
-
-    @Override
-    public void close() {
-        if (this.gitRepo != null) {
-            this.gitRepo.close();
-        }
     }
 }

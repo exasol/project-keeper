@@ -8,11 +8,38 @@ import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-class FixtureHelpers {
-    private static final Logger LOG = Logger.getLogger(FixtureHelpers.class.getName());
-    private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
 
-    static void execute(final Path workingDir, final String... command) {
+abstract class BaseProjectFixture implements AutoCloseable {
+    private static final Logger LOG = Logger.getLogger(BaseProjectFixture.class.getName());
+    private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
+    protected final Path projectDir;
+    private Git gitRepo;
+
+    protected BaseProjectFixture(final Path projectDir) {
+        this.projectDir = projectDir;
+    }
+
+    public void gitInit() {
+        try {
+            this.gitRepo = Git.init().setDirectory(this.projectDir.toFile()).setInitialBranch("main").call();
+        } catch (final IllegalStateException | GitAPIException exception) {
+            throw new AssertionError("Error running git init: " + exception.getMessage(), exception);
+        }
+    }
+
+    public void gitAddCommitTag(final String tagName) {
+        try {
+            this.gitRepo.add().addFilepattern(".").call();
+            this.gitRepo.commit().setMessage("Prepare release " + tagName).call();
+            this.gitRepo.tag().setName(tagName).call();
+        } catch (final GitAPIException exception) {
+            throw new AssertionError("Error running git add/commit/tag: " + exception.getMessage(), exception);
+        }
+    }
+
+    protected void execute(final Path workingDir, final String... command) {
         LOG.fine(() -> "Running command %s in %s...".formatted(Arrays.toString(command), workingDir));
         try {
             final Process process = new ProcessBuilder(command)
@@ -36,5 +63,12 @@ class FixtureHelpers {
 
     private static String readStream(final InputStream stream) throws IOException {
         return new String(stream.readAllBytes(), StandardCharsets.UTF_8);
+    }
+
+    @Override
+    public void close() {
+        if (this.gitRepo != null) {
+            this.gitRepo.close();
+        }
     }
 }

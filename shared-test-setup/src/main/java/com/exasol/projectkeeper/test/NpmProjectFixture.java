@@ -15,33 +15,12 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
-public class NpmProjectFixture implements AutoCloseable {
+public class NpmProjectFixture extends BaseProjectFixture {
     private static final String PACKAGE_FILE_NAME = "package.json";
     private static final String PROJECT_VERSION = "1.2.3";
 
-    private final Path projectDir;
-    private Git gitRepo;
-
     public NpmProjectFixture(final Path projectDir) {
-        this.projectDir = projectDir;
-    }
-
-    public void gitInit() {
-        try {
-            this.gitRepo = Git.init().setDirectory(this.projectDir.toFile()).setInitialBranch("main").call();
-        } catch (final IllegalStateException | GitAPIException exception) {
-            throw new AssertionError("Error running git init: " + exception.getMessage(), exception);
-        }
-    }
-
-    public void gitAddCommitTag(final String tagName) {
-        try {
-            this.gitRepo.add().addFilepattern(".").call();
-            this.gitRepo.commit().setMessage("Prepare release " + tagName).call();
-            this.gitRepo.tag().setName(tagName).call();
-        } catch (final GitAPIException exception) {
-            throw new AssertionError("Error running git add/commit/tag: " + exception.getMessage(), exception);
-        }
+        super(projectDir);
     }
 
     public ProjectKeeperConfig.Builder createDefaultConfig() {
@@ -52,7 +31,7 @@ public class NpmProjectFixture implements AutoCloseable {
     public void prepareProjectFiles(final Builder configBuilder) {
         this.writeConfig(configBuilder);
         this.prepareProjectFiles();
-        FixtureHelpers.execute(projectDir, "npm" + suffixForWindows(".cmd"), "install");
+        execute(projectDir, "npm" + suffixForWindows(".cmd"), "install");
     }
 
     private String suffixForWindows(final String suffix) {
@@ -100,13 +79,6 @@ public class NpmProjectFixture implements AutoCloseable {
             Files.writeString(path, content);
         } catch (final IOException exception) {
             throw new UncheckedIOException("Error writing content to file " + path, exception);
-        }
-    }
-
-    @Override
-    public void close() {
-        if (this.gitRepo != null) {
-            this.gitRepo.close();
         }
     }
 }

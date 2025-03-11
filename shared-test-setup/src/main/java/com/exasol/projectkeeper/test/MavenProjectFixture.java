@@ -7,26 +7,14 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
-public class MavenProjectFixture {
+public class MavenProjectFixture extends BaseProjectFixture {
     private static final String POM_XML = "pom.xml";
-    private final Path projectDir;
 
     public MavenProjectFixture(final Path projectDir) {
-        this.projectDir = projectDir;
-    }
-
-    public void gitInit() {
-        try {
-            Git.init().setDirectory(this.projectDir.toFile()).call().close();
-        } catch (IllegalStateException | GitAPIException exception) {
-            throw new AssertionError("Error running git init", exception);
-        }
+        super(projectDir);
     }
 
     public void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) {
