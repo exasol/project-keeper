@@ -12,6 +12,12 @@ We also added a security policy to let our contributors know how to best report 
 
 This release improves verification of Maven projects with multiple modules. `project-keeper-maven-plugin` is now only required in the root `pom.xml`, not in sub-modules. This simplifies configuration of multi-module projects.
 
+The release also adds stack traces to the default log format configured via `logging.properties`. This will print stack traces for logged exceptions.
+
+## Features
+
+* #612: Added stack traces to default log format
+
 ## Bugfixes
 
 * #601: Improved verification of Maven projects with multiple modules
