@@ -16,10 +16,13 @@ The release also adds stack traces to the default log format configured via `log
 
 The release also also updates the Eclipse formatter settings to never join wrapped lines and to indent `case` inside of `switch`. This helps avoid forcing line wraps with trailing `//` comments.
 
+The release also runs the CI build workflow also when a PR is converted from "draft" to "ready for review". This ensures that the complete build runs even if some workflow steps are skipped for draft PRs.
+
 ## Features
 
 * #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
 * #612: Added stack traces to default log format
+* #620: Run CI build also when a PR is converted from "draft" to "ready for review"
 
 ## Bugfixes
 
