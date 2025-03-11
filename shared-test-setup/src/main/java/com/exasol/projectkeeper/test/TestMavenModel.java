@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.test;
 
 import java.io.*;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 import org.apache.maven.model.*;
@@ -80,6 +81,11 @@ public class TestMavenModel extends Model {
     }
 
     public TestMavenModel writeAsPomToProject(final Path projectDir) {
+        try {
+            Files.createDirectories(projectDir);
+        } catch (final IOException exception) {
+            throw new UncheckedIOException(exception);
+        }
         try (final FileWriter fileWriter = new FileWriter(projectDir.resolve("pom.xml").toFile())) {
             new MavenXpp3Writer().write(fileWriter, this);
             return this;
