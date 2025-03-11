@@ -14,8 +14,11 @@ This release improves verification of Maven projects with multiple modules. `pro
 
 The release also adds stack traces to the default log format configured via `logging.properties`. This will print stack traces for logged exceptions.
 
+The release also also updates the Eclipse formatter settings to never join wrapped lines and to indent `case` inside of `switch`. This helps avoid forcing line wraps with trailing `//` comments.
+
 ## Features
 
+* #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
 * #612: Added stack traces to default log format
 
 ## Bugfixes
