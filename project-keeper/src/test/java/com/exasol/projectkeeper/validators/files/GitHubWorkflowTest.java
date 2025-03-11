@@ -188,7 +188,7 @@ class GitHubWorkflowTest {
                       - id: step1
                 """);
         final Step step = workflow.getJob("build").getStep("step1");
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> step.getName());
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, step::getName);
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-204: Step has no field 'name': {id=step1}"));
     }
 
