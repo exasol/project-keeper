@@ -11,6 +11,8 @@ import java.util.logging.Logger;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 
+import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
+
 abstract class BaseProjectFixture implements AutoCloseable {
     private static final Logger LOG = Logger.getLogger(BaseProjectFixture.class.getName());
     private static final Duration PROCESS_TIMEOUT = Duration.ofSeconds(120);
@@ -37,6 +39,10 @@ abstract class BaseProjectFixture implements AutoCloseable {
         } catch (final GitAPIException exception) {
             throw new AssertionError("Error running git add/commit/tag: " + exception.getMessage(), exception);
         }
+    }
+
+    public void writeConfig(final Builder configBuilder) {
+        new ProjectKeeperConfigWriter().writeConfig(configBuilder.build(), this.projectDir);
     }
 
     protected void execute(final Path workingDir, final String... command) {

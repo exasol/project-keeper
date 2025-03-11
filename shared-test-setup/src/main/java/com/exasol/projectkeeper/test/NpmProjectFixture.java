@@ -9,9 +9,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
@@ -48,14 +45,6 @@ public class NpmProjectFixture extends BaseProjectFixture {
 
     private void prepareProjectFiles(final Path moduleDir) {
         writePackageJsonFile(moduleDir);
-    }
-
-    private void writeConfig(final ProjectKeeperConfig.Builder config) {
-        new ProjectKeeperConfigWriter().writeConfig(config.build(), this.projectDir);
-    }
-
-    void initializeGitRepo() throws GitAPIException {
-        Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
     private void writePackageJsonFile(final Path moduleDir) {

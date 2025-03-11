@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import com.exasol.projectkeeper.shared.config.*;
-import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
 public class MavenProjectFixture extends BaseProjectFixture {
     private static final String POM_XML = "pom.xml";
@@ -45,7 +44,4 @@ public class MavenProjectFixture extends BaseProjectFixture {
                 .versionConfig(new VersionFromSource(Path.of(POM_XML)));
     }
 
-    public void writeConfig(final Builder configBuilder) {
-        new ProjectKeeperConfigWriter().writeConfig(configBuilder.build(), this.projectDir);
-    }
 }

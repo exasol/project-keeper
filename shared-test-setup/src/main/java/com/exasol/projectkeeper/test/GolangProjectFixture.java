@@ -8,9 +8,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 
@@ -50,14 +47,6 @@ public class GolangProjectFixture extends BaseProjectFixture {
 
     public String getProjectVersion() {
         return PROJECT_VERSION;
-    }
-
-    public void writeConfig(final ProjectKeeperConfig.Builder config) {
-        new ProjectKeeperConfigWriter().writeConfig(config.build(), this.projectDir);
-    }
-
-    void initializeGitRepo() throws GitAPIException {
-        Git.init().setDirectory(this.projectDir.toFile()).call().close();
     }
 
     private void writeGoModFile(final Path moduleDir, final String goVersion) {
