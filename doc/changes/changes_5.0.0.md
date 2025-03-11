@@ -12,6 +12,12 @@ This release we improved the documentation on the configuration of custom artifa
 
 We also added a security policy to let our contributors know how to best report security problems.
 
+The release also updates the Eclipse formatter settings to never join wrapped lines and to indent `case` inside of `switch`. This helps avoid forcing line wraps with trailing `//` comments.
+
+## Features
+
+* #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
+
 ## Documentation
 
 * Added security policy (PR #618)
