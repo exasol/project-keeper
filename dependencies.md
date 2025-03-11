@@ -29,7 +29,6 @@
 
 | Dependency                                 | License                           |
 | ------------------------------------------ | --------------------------------- |
-| [JUnit Jupiter Engine][20]                 | [Eclipse Public License v2.0][21] |
 | [JUnit Jupiter Params][20]                 | [Eclipse Public License v2.0][21] |
 | [Hamcrest][22]                             | [BSD-3-Clause][23]                |
 | [JUnit5 System Extensions][24]             | [Eclipse Public License v2.0][14] |
@@ -87,7 +86,6 @@
 | ------------------------------------------ | --------------------------------------------- |
 | [Project Keeper shared test setup][55]     | [The MIT License][56]                         |
 | [Maven Project Version Getter][65]         | [MIT License][66]                             |
-| [JUnit Jupiter Engine][20]                 | [Eclipse Public License v2.0][21]             |
 | [JUnit Jupiter Params][20]                 | [Eclipse Public License v2.0][21]             |
 | [Hamcrest][22]                             | [BSD-3-Clause][23]                            |
 | [org.xmlunit:xmlunit-matchers][57]         | [The Apache Software License, Version 2.0][8] |
@@ -148,7 +146,6 @@
 | Dependency                             | License                           |
 | -------------------------------------- | --------------------------------- |
 | [Project Keeper shared test setup][55] | [The MIT License][56]             |
-| [JUnit Jupiter Engine][20]             | [Eclipse Public License v2.0][21] |
 | [JUnit Jupiter Params][20]             | [Eclipse Public License v2.0][21] |
 | [Hamcrest][22]                         | [BSD-3-Clause][23]                |
 | [Maven Project Version Getter][65]     | [MIT License][66]                 |
@@ -208,7 +205,6 @@
 | Dependency                             | License                                       |
 | -------------------------------------- | --------------------------------------------- |
 | [Maven Project Version Getter][65]     | [MIT License][66]                             |
-| [JUnit Jupiter Engine][20]             | [Eclipse Public License v2.0][21]             |
 | [JUnit Jupiter Params][20]             | [Eclipse Public License v2.0][21]             |
 | [Hamcrest][22]                         | [BSD-3-Clause][23]                            |
 | [org.xmlunit:xmlunit-matchers][57]     | [The Apache Software License, Version 2.0][8] |
@@ -268,7 +264,6 @@
 | -------------------------------------- | --------------------------------------------- |
 | [Project Keeper shared test setup][55] | [The MIT License][56]                         |
 | [Maven Project Version Getter][65]     | [MIT License][66]                             |
-| [JUnit Jupiter Engine][20]             | [Eclipse Public License v2.0][21]             |
 | [JUnit Jupiter Params][20]             | [Eclipse Public License v2.0][21]             |
 | [Hamcrest][22]                         | [BSD-3-Clause][23]                            |
 | [org.xmlunit:xmlunit-matchers][57]     | [The Apache Software License, Version 2.0][8] |

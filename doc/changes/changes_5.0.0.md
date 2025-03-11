@@ -28,7 +28,7 @@ We also added a security policy to let our contributors know how to best report 
 #### Test Dependency Updates
 
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.17.3` to `3.19.1`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.11.3` to `5.12.0`
+* Removed `org.junit.jupiter:junit-jupiter-engine:5.11.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.11.3` to `5.12.0`
 * Updated `org.mockito:mockito-core:5.14.2` to `5.16.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.16` to `2.0.17`
@@ -58,7 +58,7 @@ We also added a security policy to let our contributors know how to best report 
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.5.0` to `5.0.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:3.17.3` to `3.19.1`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.11.3` to `5.12.0`
+* Removed `org.junit.jupiter:junit-jupiter-engine:5.11.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.11.3` to `5.12.0`
 * Updated `org.mockito:mockito-junit-jupiter:5.14.2` to `5.16.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.16` to `2.0.17`
@@ -86,7 +86,7 @@ We also added a security policy to let our contributors know how to best report 
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.5.0` to `5.0.0`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.11.3` to `5.12.0`
+* Removed `org.junit.jupiter:junit-jupiter-engine:5.11.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.11.3` to `5.12.0`
 
 #### Plugin Dependency Updates
@@ -107,7 +107,7 @@ We also added a security policy to let our contributors know how to best report 
 
 #### Test Dependency Updates
 
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.11.3` to `5.12.0`
+* Removed `org.junit.jupiter:junit-jupiter-engine:5.11.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.11.3` to `5.12.0`
 * Updated `org.mockito:mockito-core:5.14.2` to `5.16.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.16` to `2.0.17`
@@ -131,7 +131,7 @@ We also added a security policy to let our contributors know how to best report 
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:4.5.0` to `5.0.0`
-* Updated `org.junit.jupiter:junit-jupiter-engine:5.11.3` to `5.12.0`
+* Removed `org.junit.jupiter:junit-jupiter-engine:5.11.3`
 * Updated `org.junit.jupiter:junit-jupiter-params:5.11.3` to `5.12.0`
 * Updated `org.mockito:mockito-core:5.14.2` to `5.16.0`
 * Updated `org.mockito:mockito-junit-jupiter:5.14.2` to `5.16.0`
