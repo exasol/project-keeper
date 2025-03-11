@@ -210,7 +210,7 @@ You can register custom release artifacts by listing them in `.project-keeper.ym
 sources:
   - type: npm
     path: extension/package.json
-    …
+    # ...
     # Here is the definition of which artifacts
     # to deploy in the corresponding delivery repo
     artifacts:
@@ -222,11 +222,27 @@ sources:
 * The above configuration will archive file `$PROJECT_DIR/extension/build/my-extension.js`.
 * The artifact path may contain placeholder `${version}`. PK will replace it with the current project version.
 
-### CI Build Configuration
+### CI Build
+
+PK generates a CI build GitHub workflow at `.github/workflows/ci-build.yml`.
+
+#### CI Build Trigger
+
+The CI build runs automatically on the following triggers:
+
+* Pull Requests
+  * This triggers for all pull requests, independent of the target branch.
+  * Additionally to the default PR activity types `opened`, `synchronize`, and `reopened` this also runs the CI build when the PR changes from draft to "ready for review" (type `ready_for_review`). This ensures that the complete build runs even when some workflows steps are skipped for draft PRs. See [complete list of PR activity types](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request).
+* Workflow Dispatch
+  * This allows starting the CI build manually to debug build issues.
+* Merges to `main` branch
+  * This will also start the [automatic release process](#automatic-release-process).
+
+#### CI Build Configuration
 
 PK allows customizing the generated CI-Build workflow scripts using the `build` section in file `.project-keeper.yml` using the following options:
 
-#### GitHub Runner Operating System
+##### GitHub Runner Operating System
 
 Some projects require to run the integration tests in the CI build on an operating system other than the default `ubuntu-latest`. In this case you can use the following:
 
@@ -237,7 +253,7 @@ build:
 
 PK will use this setting for GitHub workflow `ci-build.yml` which runs integration tests. The other workflows don't run integration tests and will stick to the default `ubuntu-latest`.
 
-#### Free Disk Space
+##### Free Disk Space
 
 Some projects need more disk space during build, e.g. for Docker images. You can free up disk space before the build like this:
 
@@ -248,7 +264,7 @@ build:
 
 This will slow down the build by about one minute.
 
-#### Matrix Build with Exasol DB Versions
+##### Matrix Build with Exasol DB Versions
 
 To CI build as a matrix build with multiple Exasol DB versions you can add the following:
 
@@ -261,7 +277,7 @@ build:
 
 Sonar will only run for the first version in the list.
 
-#### Customize Workflow Environment
+##### Customize Workflow Environment
 
 If your project requires running workflow `ci-build.yml` in a certain GitHub environment, you can specify it like this:
 
@@ -272,7 +288,7 @@ build:
       environment: aws
 ```
 
-#### Customize Workflow Steps
+##### Customize Workflow Steps
 
 If your project requires additional or modified steps in the generated GitHub workflow `ci-build.yml` you can replace existing steps or insert additional steps:
 
@@ -508,7 +524,7 @@ The standalone variant supports the same goals as the Maven plugin: `fix`, `veri
 
 GitHub Workflow [`release.yml`](#releaseyml) will automatically release the project when `ci-build.yml` succeeded on `main` branch and the changes file contains an up-to-date release date. In case of problems you can start the workflow manually on GitHub and skip the release to Maven Central or GitHub if necessary.
 
-To check if a project meets all preconditions for an automated release, run PK goal `verify-release`:
+To check if a project meets all preconditions for an automated release, run PK goal `verify-release`, see [Release verification](#release-verification):
 
 ```sh
 # Maven
