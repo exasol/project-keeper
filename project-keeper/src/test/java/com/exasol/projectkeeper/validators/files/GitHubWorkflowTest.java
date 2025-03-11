@@ -35,7 +35,10 @@ class GitHubWorkflowTest {
                   build:
                     steps:
                 """);
-        assertThat(workflow.getJob("missing-job"), nullValue());
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> workflow.getJob("missing-job"));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-207: GitHub Workflow does not have a job with ID 'missing-job'. Choose one of ['build']."));
     }
 
     @Test

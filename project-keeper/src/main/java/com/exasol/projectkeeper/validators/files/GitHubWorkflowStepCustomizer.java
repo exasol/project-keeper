@@ -46,14 +46,14 @@ class GitHubWorkflowStepCustomizer implements GitHubWorkflowCustomizer.WorkflowC
     // [impl->dsn~customize-build-process.replace-step~0]
     private void applyCustomization(final Job job, final StepCustomization customization) {
         switch (customization.getType()) {
-        case REPLACE:
-            job.replaceStep(customization.getStepId(), customization.getStep());
-            break;
-        case INSERT_AFTER:
-            job.insertStepAfter(customization.getStepId(), customization.getStep());
-            break;
-        default:
-            throw new IllegalStateException("Unknown customization type: " + customization.getType());
+            case REPLACE:
+                job.replaceStep(customization.getStepId(), customization.getStep());
+                break;
+            case INSERT_AFTER:
+                job.insertStepAfter(customization.getStepId(), customization.getStep());
+                break;
+            default:
+                throw new IllegalStateException("Unknown customization type: " + customization.getType());
         }
     }
 }
