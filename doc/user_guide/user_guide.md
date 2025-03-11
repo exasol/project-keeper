@@ -298,6 +298,7 @@ build:
     - name: "ci-build.yml"
       stepCustomizations:
         - action: REPLACE | INSERT_AFTER
+          job: <job-name>
           stepId: <step-id>
           content:
             name: <Step name>
@@ -316,6 +317,7 @@ build:
   * `action`: Type of customization
     * `REPLACE`: Replace an existing step with the new content
     * `INSERT_AFTER`: Insert the content **after** the specified step
+  * `job`: Name of the job inside the workflow that should be modified
   * `stepId`: ID of the step to replace or after which to insert the new step
   * `content`: Content of the new step. PK does not validate this. You can use any valid GitHub action using `run` or `uses`, see examples below.
 
@@ -328,6 +330,7 @@ build:
     - name: "ci-build.yml"
       stepCustomizations:
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: setup-java
           content:
             name: Set up Go
@@ -337,12 +340,14 @@ build:
               go-version: "1.24"
               cache-dependency-path: .project-keeper.yml
         - action: INSERT_AFTER
+          job: build-and-test
           stepId: setup-go
           content:
             name: Install Go tools
             id: install-go-tools
             run: go install github.com/google/go-licenses@v1.6.0
         - action: REPLACE
+          job: build-and-test
           stepId: build-pk-verify
           content:
             name: Run tests and build with Maven

@@ -22,6 +22,8 @@ The release also moves execution of `display-plugin-updates` and `display-depend
 
 The release also improves the error message for unknown job ID in workflow customization. Users now directly get a list of available job IDs they can use instead.
 
+The release also adds documentation of `job` parameter for workflow customizations to the user guide.
+
 ## Features
 
 * #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
@@ -38,6 +40,7 @@ The release also improves the error message for unknown job ID in workflow custo
 
 * Added security policy (PR #618)
 * Added clarifications for custom artifacts (PR #621)
+* #610: Added documentation of `job` field for workflow customizations
 
 ## Dependency Updates
 
