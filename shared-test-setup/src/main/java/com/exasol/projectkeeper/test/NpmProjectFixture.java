@@ -28,13 +28,13 @@ public class NpmProjectFixture extends BaseProjectFixture {
     public void prepareProjectFiles(final Builder configBuilder) {
         this.writeConfig(configBuilder);
         this.prepareProjectFiles();
-        execute(projectDir, "npm" + suffixForWindows(".cmd"), "install");
+        execute(projectDir, "npm" + suffixForWindows(), "install");
     }
 
-    private String suffixForWindows(final String suffix) {
+    private String suffixForWindows() {
         final String os = System.getProperty("os.name", "generic").toLowerCase(Locale.ENGLISH);
         if (os.indexOf("win") >= 0) {
-            return suffix;
+            return ".cmd";
         }
         return "";
     }
