@@ -13,9 +13,6 @@ import java.util.stream.Stream;
  */
 public final class JobPermissions {
 
-    /** Default permissions {@code contents: read} */
-    public static final JobPermissions DEFAULT = builder().add("contents", AccessLevel.READ).build();
-
     private final Map<String, AccessLevel> permissions;
 
     private JobPermissions(final Builder builder) {

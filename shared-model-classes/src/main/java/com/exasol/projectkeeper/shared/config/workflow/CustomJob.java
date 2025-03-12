@@ -73,7 +73,7 @@ public final class CustomJob {
      */
     public static class Builder {
         private String jobName;
-        private JobPermissions permissions = JobPermissions.DEFAULT;
+        private JobPermissions permissions;
 
         private Builder() {
         }
