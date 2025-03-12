@@ -9,8 +9,7 @@ import java.util.function.Supplier;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
-import com.exasol.projectkeeper.shared.config.workflow.CustomWorkflow;
-import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
+import com.exasol.projectkeeper.shared.config.workflow.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class CiBuildWorkflowGenerator {
@@ -51,13 +50,17 @@ class CiBuildWorkflowGenerator {
         final Optional<CustomWorkflow> workflow = buildOptions.getWorkflow(workflowName);
         final List<StepCustomization> customizations = workflow.map(CustomWorkflow::getSteps)
                 .orElseGet(Collections::emptyList);
+        final List<CustomJob> jobCustomizations = workflow.map(CustomWorkflow::getJobs)
+                .orElseGet(Collections::emptyList);
         final String environmentName = workflow.map(CustomWorkflow::getEnvironment).orElse(null);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer( //
                 javaVersionCustomizer(),
                 // [impl->dsn~customize-build-process.ci-build~0]
                 new GitHubWorkflowStepCustomizer(workflowName, customizations),
                 // [impl->dsn~customize-build-process.ci-build.environment~1]
-                new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName)));
+                new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName),
+                // [impl->dsn~customize-build-process.job-permissions~0]
+                new GitHubWorkflowJobPermissionsCustomizer(jobCustomizations)));
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {

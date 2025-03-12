@@ -8,7 +8,7 @@ import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
 import com.exasol.projectkeeper.shared.config.workflow.StepCustomization;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
-class GitHubWorkflowStepCustomizer implements GitHubWorkflowCustomizer.WorkflowCustomizer {
+class GitHubWorkflowStepCustomizer implements WorkflowCustomizer {
     private final String workflowName;
     private final List<StepCustomization> customizations;
 

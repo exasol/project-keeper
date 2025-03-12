@@ -11,11 +11,13 @@ public final class CustomWorkflow {
 
     private final String workflowName;
     private final String environment;
+    private final List<CustomJob> jobs;
     private final List<StepCustomization> steps;
 
     private CustomWorkflow(final Builder builder) {
         this.workflowName = Objects.requireNonNull(builder.workflowName, "workflowName");
         this.environment = builder.environment;
+        this.jobs = builder.jobs == null ? emptyList() : builder.jobs;
         this.steps = builder.steps == null ? emptyList() : builder.steps;
     }
 
@@ -26,6 +28,15 @@ public final class CustomWorkflow {
      */
     public String getWorkflowName() {
         return workflowName;
+    }
+
+    /**
+     * Get the list of job customizations.
+     *
+     * @return the list of job customizations
+     */
+    public List<CustomJob> getJobs() {
+        return jobs;
     }
 
     /**
@@ -58,13 +69,13 @@ public final class CustomWorkflow {
 
     @Override
     public String toString() {
-        return "WorkflowOptions [workflowName=" + workflowName + ", environment=" + environment + ", steps=" + steps
-                + "]";
+        return "CustomWorkflow [workflowName=" + workflowName + ", environment=" + environment + ", jobs=" + jobs
+                + ", steps=" + steps + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workflowName, environment, steps);
+        return Objects.hash(workflowName, environment, jobs, steps);
     }
 
     @Override
@@ -80,7 +91,7 @@ public final class CustomWorkflow {
         }
         final CustomWorkflow other = (CustomWorkflow) obj;
         return Objects.equals(workflowName, other.workflowName) && Objects.equals(environment, other.environment)
-                && Objects.equals(steps, other.steps);
+                && Objects.equals(jobs, other.jobs) && Objects.equals(steps, other.steps);
     }
 
     /**
@@ -89,6 +100,7 @@ public final class CustomWorkflow {
     public static class Builder {
         private String workflowName;
         private String environment;
+        private List<CustomJob> jobs;
         private List<StepCustomization> steps = null;
 
         private Builder() {
@@ -102,6 +114,17 @@ public final class CustomWorkflow {
          */
         public Builder workflowName(final String workflowName) {
             this.workflowName = Objects.requireNonNull(workflowName, "workflowName");
+            return this;
+        }
+
+        /**
+         * Set job customization.
+         *
+         * @param jobs job customizations
+         * @return the builder instance
+         */
+        public Builder jobs(final List<CustomJob> jobs) {
+            this.jobs = Objects.requireNonNull(jobs, "jobs");
             return this;
         }
 

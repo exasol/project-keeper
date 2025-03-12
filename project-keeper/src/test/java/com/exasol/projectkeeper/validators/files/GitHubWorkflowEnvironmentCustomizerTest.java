@@ -42,7 +42,7 @@ class GitHubWorkflowEnvironmentCustomizerTest {
                 equalTo("E-PK-CORE-207: GitHub Workflow does not have a job with ID 'unknown-job'. Choose one of ['build']."));
     }
 
-    GitHubWorkflow customize(final String yaml, final GitHubWorkflowCustomizer.WorkflowCustomizer customizer) {
+    GitHubWorkflow customize(final String yaml, final WorkflowCustomizer customizer) {
         final GitHubWorkflow workflow = GitHubWorkflowIO.create().loadWorkflow(yaml);
         customizer.applyCustomization(workflow);
         return workflow;

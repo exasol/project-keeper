@@ -25,6 +25,7 @@ import org.junit.jupiter.params.provider.*;
 
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.workflow.*;
+import com.exasol.projectkeeper.shared.config.workflow.JobPermissions.AccessLevel;
 
 // [utest->dsn~modules~1]
 class ProjectKeeperConfigReaderTest {
@@ -266,7 +267,19 @@ class ProjectKeeperConfigReaderTest {
                                   stepId: step-id-to-replace
                                   content:
                         """, equalTo(
-                        "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")));
+                        "E-PK-CORE-202: Missing content in step customization of file '.project-keeper.yml'. Add content to the step customization.")),
+                Arguments.of("job: invalid access level", """
+                        build:
+                          workflows:
+                            - name: ci-build.yml
+                              jobs:
+                              - name: build-and-test
+                                permissions:
+                                  perm: invalid
+                        """, equalTo(
+                        "E-PK-CORE-209: Got invalid access level 'invalid' for permission 'perm' of job 'build-and-test' in '.project-keeper.yml'. Please use one of 'none,read,write'."))
+
+        );
     }
 
     @ParameterizedTest(name = "{0}")
@@ -393,6 +406,106 @@ class ProjectKeeperConfigReaderTest {
         assertThat(exception.getMessage(), equalTo("E-PK-CORE-90: Could not find .git directory in project-root '"
                 + this.tempDir
                 + "'. Known mitigations:\n* Run 'git init'.\n* Make sure that you run project-keeper only in the root directory of the git-repository. If you have multiple projects in that directory, define them in file '.project-keeper.yml'."));
+    }
+
+    @Test
+    void readJobWithoutPermissions() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      jobs:
+                      - name: build-and-test
+                """);
+        final CustomJob job = readConfig().getCiBuildConfig().getWorkflows().get(0).getJobs().get(0);
+        assertAll(
+                () -> assertThat(job.getJobName(), equalTo("build-and-test")),
+                () -> assertThat(job.getPermissions().getPermissions(), anEmptyMap()));
+    }
+
+    @Test
+    void readJobWithEmptyPermissions() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      jobs:
+                      - name: build-and-test
+                        permissions:
+                """);
+        final CustomJob job = readConfig().getCiBuildConfig().getWorkflows().get(0).getJobs().get(0);
+        assertAll(
+                () -> assertThat(job.getJobName(), equalTo("build-and-test")),
+                () -> assertThat(job.getPermissions().getPermissions(), anEmptyMap()));
+    }
+
+    @ParameterizedTest
+    @EnumSource(AccessLevel.class)
+    void readJobWithPermission(final AccessLevel accessLevel) throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      jobs:
+                      - name: build-and-test
+                        permissions:
+                          perm: %s
+                """.formatted(accessLevel.getName()));
+        final CustomJob job = readConfig().getCiBuildConfig().getWorkflows().get(0).getJobs().get(0);
+        assertAll(
+                () -> assertThat(job.getJobName(), equalTo("build-and-test")),
+                () -> assertThat(job.getPermissions().getPermissions(), aMapWithSize(1)),
+                () -> assertThat(job.getPermissions().getPermissions(), hasEntry("perm", accessLevel)));
+    }
+
+    @Test
+    void readJobWithMultiplePermission() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      jobs:
+                      - name: build-and-test
+                        permissions:
+                          permA: none
+                          perm-B: read
+                          perm-2: write
+                """);
+        final CustomJob job = readConfig().getCiBuildConfig().getWorkflows().get(0).getJobs().get(0);
+        final Map<String, AccessLevel> permissions = job.getPermissions().getPermissions();
+        assertAll(
+                () -> assertThat(job.getJobName(), equalTo("build-and-test")),
+                () -> assertThat(permissions, aMapWithSize(3)),
+                () -> assertThat(permissions, hasEntry("permA", AccessLevel.NONE)),
+                () -> assertThat(permissions, hasEntry("perm-B", AccessLevel.READ)),
+                () -> assertThat(permissions, hasEntry("perm-2", AccessLevel.WRITE)));
+    }
+
+    @Test
+    void readMultipleJobs() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      jobs:
+                      - name: job1
+                        permissions:
+                          job1Perm: read
+                      - name: job2
+                        permissions:
+                          job2Perm: write
+                """);
+        final CustomJob job1 = readConfig().getCiBuildConfig().getWorkflows().get(0).getJobs().get(0);
+        final CustomJob job2 = readConfig().getCiBuildConfig().getWorkflows().get(0).getJobs().get(1);
+        final Map<String, AccessLevel> permissions1 = job1.getPermissions().getPermissions();
+        final Map<String, AccessLevel> permissions2 = job2.getPermissions().getPermissions();
+        assertAll(
+                () -> assertThat(job1.getJobName(), equalTo("job1")),
+                () -> assertThat(job2.getJobName(), equalTo("job2")),
+                () -> assertThat(permissions1, aMapWithSize(1)),
+                () -> assertThat(permissions2, aMapWithSize(1)),
+                () -> assertThat(permissions1, hasEntry("job1Perm", AccessLevel.READ)),
+                () -> assertThat(permissions2, hasEntry("job2Perm", AccessLevel.WRITE)));
     }
 
     private void writeProjectKeeperConfig(final String content) throws IOException {
