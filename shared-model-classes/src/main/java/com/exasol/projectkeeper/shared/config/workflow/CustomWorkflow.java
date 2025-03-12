@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.shared.config.workflow;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.unmodifiableList;
 
 import java.util.*;
 
@@ -36,7 +37,7 @@ public final class CustomWorkflow {
      * @return the list of job customizations
      */
     public List<CustomJob> getJobs() {
-        return jobs;
+        return unmodifiableList(jobs);
     }
 
     /**
@@ -45,7 +46,7 @@ public final class CustomWorkflow {
      * @return the list of step customizations
      */
     public List<StepCustomization> getSteps() {
-        return steps;
+        return unmodifiableList(null)steps;
     }
 
     /**
