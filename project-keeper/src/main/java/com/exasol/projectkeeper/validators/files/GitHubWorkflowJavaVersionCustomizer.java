@@ -7,7 +7,7 @@ import java.util.List;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 
-class GitHubWorkflowJavaVersionCustomizer implements GitHubWorkflowCustomizer.WorkflowCustomizer {
+class GitHubWorkflowJavaVersionCustomizer implements WorkflowCustomizer {
 
     private final List<String> javaVersions;
     private final String nextJavaVersion;

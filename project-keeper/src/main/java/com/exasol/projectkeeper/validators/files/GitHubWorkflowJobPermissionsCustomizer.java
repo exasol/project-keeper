@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.files;
 
+import static java.util.Objects.requireNonNull;
 import static java.util.stream.Collectors.toMap;
 
 import java.util.List;
@@ -9,12 +10,13 @@ import com.exasol.projectkeeper.shared.config.workflow.CustomJob;
 import com.exasol.projectkeeper.shared.config.workflow.JobPermissions;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
-class GitHubWorkflowJobPermissionsCustomizer implements GitHubWorkflowCustomizer.WorkflowCustomizer {
+class GitHubWorkflowJobPermissionsCustomizer implements WorkflowCustomizer {
 
     private final Map<String, JobPermissions> permissions;
 
     GitHubWorkflowJobPermissionsCustomizer(final List<CustomJob> jobs) {
-        this.permissions = jobs.stream().collect(toMap(CustomJob::getJobName, CustomJob::getPermissions));
+        this.permissions = requireNonNull(jobs, "jobs").stream()
+                .collect(toMap(CustomJob::getJobName, CustomJob::getPermissions));
     }
 
     // [impl->dsn~customize-build-process.ci-build.environment~1]

@@ -175,10 +175,9 @@ public class ProjectKeeperConfigReader {
         final JobPermissions.Builder permissionsBuilder = JobPermissions.builder();
         Optional.ofNullable(job.permissions)
                 .orElseGet(Collections::emptyMap)
-                .entrySet()
-                .forEach(entry -> {
-                    final JobPermissions.AccessLevel level = convertAccessLevel(entry.getValue(), entry.getKey(), job);
-                    permissionsBuilder.add(entry.getKey(), level);
+                .forEach((permission, accessLevelName) -> {
+                    final JobPermissions.AccessLevel level = convertAccessLevel(accessLevelName, permission, job);
+                    permissionsBuilder.add(permission, level);
                 });
         return CustomJob.builder().jobName(job.name).permissions(permissionsBuilder.build()).build();
     }
