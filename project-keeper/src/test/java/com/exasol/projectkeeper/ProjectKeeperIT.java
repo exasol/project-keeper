@@ -19,6 +19,7 @@ import org.junit.jupiter.api.*;
 
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 import com.exasol.projectkeeper.test.TestMavenModel;
+import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
 
 /**
  * This integration test tests the maven plugin in a safe environment. Since we don't want to install the plugin to the
@@ -39,6 +40,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~pom-file-validator~1]
     void testVerifyPhase1() throws IOException {
         Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
+        writeSecurityMdFile();
         this.fixture.writeDefaultPom();
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         final String output = assertInvalidAndGetOutput();
@@ -47,6 +49,11 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
                         containsString("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
                 () -> assertThat(output, containsString(
                         "E-PK-CORE-105: Invalid pom file 'pom.xml': Required property 'finalName' is missing in maven-assembly-plugin.")));
+    }
+
+    private void writeSecurityMdFile() throws IOException {
+        Files.writeString(this.projectDir.resolve("SECURITY.md"),
+                new SecurityMdFileValidator(projectDir, projectDir.getFileName().toString()).getTemplate());
     }
 
     @Test

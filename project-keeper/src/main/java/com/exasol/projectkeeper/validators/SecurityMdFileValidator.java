@@ -42,7 +42,7 @@ public class SecurityMdFileValidator extends AbstractFileContentValidator {
     }
 
     @Override
-    protected String getTemplate() {
+    public String getTemplate() {
         return """
                 # Security
 
