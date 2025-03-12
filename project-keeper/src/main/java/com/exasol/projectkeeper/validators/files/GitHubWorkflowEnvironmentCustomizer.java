@@ -2,7 +2,7 @@ package com.exasol.projectkeeper.validators.files;
 
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
-class GitHubWorkflowEnvironmentCustomizer implements GitHubWorkflowCustomizer.WorkflowCustomizer {
+class GitHubWorkflowEnvironmentCustomizer implements WorkflowCustomizer {
 
     private final String environmentName;
     private final String jobId;

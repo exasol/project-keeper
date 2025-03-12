@@ -296,6 +296,10 @@ If your project requires additional or modified steps in the generated GitHub wo
 build:
   workflows:
     - name: "ci-build.yml"
+      jobs:
+      - name: <job-name>
+        permissions:
+          <permission>: none | read | write
       stepCustomizations:
         - action: REPLACE | INSERT_AFTER
           job: <job-name>
@@ -305,7 +309,7 @@ build:
             id: <step-id>
             uses: ...
             with:
-              ...
+              # ...
 ```
 
 * `name`: Name of the GitHub workflow to customize. PK supports the following workflows:
@@ -313,11 +317,23 @@ build:
   * `release.yml`
   * `dependencies_check.yml`
   * `dependencies_update.yml`
+* `jobs`: List of job customizations:
+  * `name`: Name of the job inside the workflow that should be modified, e.g. `build-and-test` or `next-java-compatibility`
+  * `permissions`: Map of permissions to assign to the job, e.g.
+    ```yml
+    permissions:
+      contents: read
+      issues: read
+      packages: read
+    ```
+    This allows assigning additional permissions to the job, e.g. to download from the GitHub Docker registry `ghcr.io`.
+    
+    **Important:** Explicitly add the permissions defined for the job by default to avoid build failures. Check the `permissions` field of the generated workflow, e.g. `contents: read, issues: read`.
 * `stepCustomizations`: List of customizations:
   * `action`: Type of customization
     * `REPLACE`: Replace an existing step with the new content
     * `INSERT_AFTER`: Insert the content **after** the specified step
-  * `job`: Name of the job inside the workflow that should be modified
+  * `job`: Name of the job inside the workflow that should be modified, e.g. `build-and-test` or `next-java-compatibility`
   * `stepId`: ID of the step to replace or after which to insert the new step
   * `content`: Content of the new step. PK does not validate this. You can use any valid GitHub action using `run` or `uses`, see examples below.
 

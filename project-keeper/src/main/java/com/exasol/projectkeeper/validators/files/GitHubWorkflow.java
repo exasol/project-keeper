@@ -1,13 +1,16 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.toMap;
 
 import java.util.*;
+import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
 
 import com.exasol.errorreporting.ExaError;
+import com.exasol.projectkeeper.shared.config.workflow.JobPermissions;
 import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 
 /**
@@ -116,6 +119,21 @@ class GitHubWorkflow {
 
         public void setEnvironment(final String environmentName) {
             rawJob.put("environment", environmentName);
+        }
+
+        public Map<String, String> getPermissions() {
+            return asStringMap(rawJob.get("permissions"));
+        }
+
+        @SuppressWarnings("unchecked")
+        private static Map<String, String> asStringMap(final Object rawYaml) {
+            return (Map<String, String>) rawYaml;
+        }
+
+        public void setPermissions(final JobPermissions permissions) {
+            final Map<String, String> rawPermissions = permissions.getPermissions().entrySet().stream()
+                    .collect(toMap(Entry::getKey, entry -> entry.getValue().getName()));
+            rawJob.put("permissions", rawPermissions);
         }
 
         private Predicate<? super Step> hasId(final String id) {

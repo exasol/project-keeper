@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper.config;
 
 import static java.util.Arrays.asList;
+import static java.util.stream.Collectors.joining;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -160,8 +161,37 @@ public class ProjectKeeperConfigReader {
         return CustomWorkflow.builder() //
                 .workflowName(workflow.name) //
                 .environment(workflow.environment) //
+                .jobs(convertJobs(workflow.jobs))
                 .steps(convertSteps(workflow.stepCustomizations)) //
                 .build();
+    }
+
+    private List<CustomJob> convertJobs(final List<Job> jobs) {
+        return Optional.ofNullable(jobs).orElseGet(Collections::emptyList)
+                .stream().map(this::convertJob).toList();
+    }
+
+    private CustomJob convertJob(final Job job) {
+        final JobPermissions.Builder permissionsBuilder = JobPermissions.builder();
+        Optional.ofNullable(job.permissions)
+                .orElseGet(Collections::emptyMap)
+                .forEach((permission, accessLevelName) -> {
+                    final JobPermissions.AccessLevel level = convertAccessLevel(accessLevelName, permission, job);
+                    permissionsBuilder.add(permission, level);
+                });
+        return CustomJob.builder().jobName(job.name).permissions(permissionsBuilder.build()).build();
+    }
+
+    private JobPermissions.AccessLevel convertAccessLevel(final String name, final String permission, final Job job) {
+        return JobPermissions.AccessLevel.forName(name).orElseThrow(
+                () -> new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-209")
+                        .message(
+                                "Got invalid access level {{invalid access level}} for permission {{permission}} of job {{job name}} in {{config file}}.",
+                                name, permission, job.name, CONFIG_FILE_NAME)
+                        .mitigation("Please use one of {{available access levels}}.",
+                                Stream.of(JobPermissions.AccessLevel.values()).map(JobPermissions.AccessLevel::getName)
+                                        .collect(joining(",")))
+                        .toString()));
     }
 
     private List<StepCustomization> convertSteps(final List<RawStepCustomization> stepCustomizations) {

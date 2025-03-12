@@ -20,9 +20,9 @@ import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 class GitHubWorkflowCustomizerTest {
 
     @Mock
-    GitHubWorkflowCustomizer.WorkflowCustomizer customizerMock1;
+    WorkflowCustomizer customizerMock1;
     @Mock
-    GitHubWorkflowCustomizer.WorkflowCustomizer customizerMock2;
+    WorkflowCustomizer customizerMock2;
 
     @Test
     void startsWithGeneratedComment() {
@@ -98,7 +98,7 @@ class GitHubWorkflowCustomizerTest {
     }
 
     private String getCustomizedContent(final String workflowTemplate,
-            final GitHubWorkflowCustomizer.WorkflowCustomizer... customizer) {
+            final WorkflowCustomizer... customizer) {
         return new GitHubWorkflowCustomizer(customizer).customizeContent(workflowTemplate);
     }
 }

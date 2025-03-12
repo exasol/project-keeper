@@ -444,8 +444,28 @@ public class ProjectKeeperRawConfig {
         public String name;
         /** GitHub environment, e.g. {@code aws}. */
         public String environment;
+        /** List of customizations for the jobs in the workflow. */
+        public List<Job> jobs;
         /** List of customizations for the workflow. */
         public List<RawStepCustomization> stepCustomizations;
+    }
+
+    /**
+     * Intermediate class for de-serializing job customizations from PK's YAML configuration file.
+     * <p>
+     * SnakeYML requires this class to be public.
+     */
+    @SuppressWarnings("java:S1104") // Only used for serialization, getter/setters not needed
+    public static class Job {
+        /** Create a new instance. */
+        public Job() {
+            // Required for specifying Javadoc
+        }
+
+        /** Job name, e.g. {@code build-and-test} or {@code next-java-compatibility}. */
+        public String name;
+        /** Permissions, e.g. {@code content: read} */
+        public Map<String, String> permissions;
     }
 
     /**

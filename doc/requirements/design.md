@@ -494,6 +494,19 @@ Covers:
 
 Needs: impl, utest, itest
 
+#### Customize Job Permissions
+`dsn~customize-build-process.job-permissions~0`
+
+PK allows customizing permissions of a GitHub Workflow job.
+
+Rationale:
+* Default permissions are `content: read` but some projects need additional permissions like `packages: read`.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest
+
 ## Golang Support
 
 ### Get Project Version
