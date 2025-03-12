@@ -13,7 +13,8 @@ import java.util.stream.Stream;
  */
 public final class JobPermissions {
 
-    public static final JobPermissions DEFAULT = builder().add("content", AccessLevel.READ).build();
+    /** Default permissions {@code contents: read} */
+    public static final JobPermissions DEFAULT = builder().add("contents", AccessLevel.READ).build();
 
     private final Map<String, AccessLevel> permissions;
 
@@ -21,6 +22,11 @@ public final class JobPermissions {
         this.permissions = requireNonNull(builder.permissions);
     }
 
+    /**
+     * Get {@link Map} of permissions, e.g. {@code contents: read}.
+     * 
+     * @return permissions
+     */
     public Map<String, AccessLevel> getPermissions() {
         return unmodifiableMap(permissions);
     }
@@ -63,7 +69,7 @@ public final class JobPermissions {
      * Builder for {@link JobPermissions}.
      */
     public static class Builder {
-        public Map<String, AccessLevel> permissions = new HashMap<>();
+        private final Map<String, AccessLevel> permissions = new HashMap<>();
 
         private Builder() {
         }
@@ -94,7 +100,12 @@ public final class JobPermissions {
      * Access level for permissions.
      */
     public enum AccessLevel {
-        NONE("none"), READ("read"), WRITE("write");
+        /** No access */
+        NONE("none"),
+        /** Only read access */
+        READ("read"),
+        /** Both read and write access */
+        WRITE("write");
 
         private final String name;
 
@@ -111,6 +122,13 @@ public final class JobPermissions {
             return name;
         }
 
+        /**
+         * Get the {@link AccessLevel} for the given name or an empty {@link Optional} if there is no access level with
+         * this name.
+         * 
+         * @param name name
+         * @return access level
+         */
         public static Optional<AccessLevel> forName(final String name) {
             return Stream.of(values()).filter(level -> level.getName().equals(name)).findFirst();
         }

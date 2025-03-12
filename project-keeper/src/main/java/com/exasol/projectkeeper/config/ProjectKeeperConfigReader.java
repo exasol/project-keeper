@@ -21,8 +21,6 @@ import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.shared.config.ParentPomRef;
 import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.config.workflow.*;
-import com.exasol.projectkeeper.shared.config.workflow.JobPermissions.AccessLevel;
-import com.exasol.projectkeeper.shared.config.workflow.JobPermissions.Builder;
 
 /**
  * This class reads {@link ProjectKeeperConfig} from file.
@@ -174,25 +172,25 @@ public class ProjectKeeperConfigReader {
     }
 
     private CustomJob convertJob(final Job job) {
-        final Builder permissionsBuilder = JobPermissions.builder();
+        final JobPermissions.Builder permissionsBuilder = JobPermissions.builder();
         Optional.ofNullable(job.permissions)
                 .orElseGet(Collections::emptyMap)
                 .entrySet()
                 .forEach(entry -> {
-                    final AccessLevel level = convertAccessLevel(entry.getValue(), entry.getKey(), job);
+                    final JobPermissions.AccessLevel level = convertAccessLevel(entry.getValue(), entry.getKey(), job);
                     permissionsBuilder.add(entry.getKey(), level);
                 });
         return CustomJob.builder().jobName(job.name).permissions(permissionsBuilder.build()).build();
     }
 
-    private AccessLevel convertAccessLevel(final String name, final String permission, final Job job) {
-        return AccessLevel.forName(name).orElseThrow(
+    private JobPermissions.AccessLevel convertAccessLevel(final String name, final String permission, final Job job) {
+        return JobPermissions.AccessLevel.forName(name).orElseThrow(
                 () -> new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-209")
                         .message(
                                 "Got invalid access level {{invalid access level}} for permission {{permission}} of job {{job name}} in {{config file}}.",
                                 name, permission, job.name, CONFIG_FILE_NAME)
                         .mitigation("Please use one of {{available access levels}}.",
-                                Stream.of(AccessLevel.values()).map(AccessLevel::getName)
+                                Stream.of(JobPermissions.AccessLevel.values()).map(JobPermissions.AccessLevel::getName)
                                         .collect(joining(",")))
                         .toString()));
     }
