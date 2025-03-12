@@ -112,6 +112,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     @Test
     // [itest->dsn~mvn-fix-goal~1]
     // [itest->dsn~license-file-validator~1]
+    // [itest -> dsn~security.md-file-validator~1]
     // [itest -> dsn~eclipse-prefs-java-version~1]
     void testFix() throws IOException {
         final var pom = new TestMavenModel();
@@ -122,9 +123,16 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         final boolean success = getProjectKeeper(logger).fix();
         final String eclipseJdtCorePrefsContent = Files
                 .readString(this.projectDir.resolve(".settings/org.eclipse.jdt.core.prefs"));
+        final String securityMdContent = Files
+                .readString(this.projectDir.resolve("SECURITY.md"));
         assertAll( //
                 () -> assertThat(success, equalTo(true)),
                 () -> assertThat(this.projectDir.resolve("LICENSE").toFile(), anExistingFile()),
+                () -> assertThat(securityMdContent, allOf(
+                        startsWith("# Security\n"),
+                        containsString("https://github.com/exasol/%s/security/advisories/new"
+                                .formatted(projectDir.getFileName().toString())),
+                        endsWith("We are happy to acknowledge your research publicly when possible.\n"))),
                 () -> assertThat(eclipseJdtCorePrefsContent, allOf( //
                         containsString("org.eclipse.jdt.core.compiler.compliance=11"),
                         containsString("org.eclipse.jdt.core.compiler.codegen.targetPlatform=11"),
@@ -141,6 +149,19 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         assertVerifySucceeds();
     }
 
+    // [itest -> dsn~security.md-file-validator~1]
+    @Test
+    void testFixesInvalidSecurityMd() throws IOException {
+        final var pom = new TestMavenModel();
+        pom.writeAsPomToProject(this.projectDir);
+        fixture.writeConfig(this.fixture.getConfigWithoutModulesBuilder());
+        runFix();
+        final Path securityMdPath = projectDir.resolve("SECURITY.md");
+        Files.writeString(securityMdPath, "invalid content");
+        runFix();
+        assertThat(Files.readString(securityMdPath), startsWith("# Security"));
+    }
+
     @Test
     // [itest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
     void testChangesFileGeneration() throws IOException, GitAPIException {
@@ -148,7 +169,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
-        final Pattern pluginEntryPattern = Pattern.compile(".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-\\w+-plugin:\\d+(\\.\\d+){1,2}` to.*", Pattern.DOTALL);
+        final Pattern pluginEntryPattern = Pattern.compile(
+                ".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-\\w+-plugin:\\d+(\\.\\d+){1,2}` to.*",
+                Pattern.DOTALL);
         assertAll(//
                 () -> assertThat(generatedChangesFile, startsWith("# My Test Project 0.2.0, released")),
                 () -> assertThat(generatedChangesFile,

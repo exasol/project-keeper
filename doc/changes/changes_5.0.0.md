@@ -24,6 +24,8 @@ The release also improves the error message for unknown job ID in workflow custo
 
 The release also adds documentation of `job` parameter for workflow customizations to the user guide.
 
+The release also generates the `SECURITY.md` file with instructions for reporting vulnerabilities in the project.
+
 ## Features
 
 * #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
@@ -31,6 +33,7 @@ The release also adds documentation of `job` parameter for workflow customizatio
 * #612: Added stack traces to default log format
 * #619: Moved `versions-maven-plugin` display updates execution to verify phase
 * #614: Improved error message for unknown job ID in workflow customization
+* #617: Generate `SECURITY.md` file
 
 ## Bugfixes
 

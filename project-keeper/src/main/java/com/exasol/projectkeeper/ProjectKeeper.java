@@ -107,7 +107,8 @@ public class ProjectKeeper {
      * Phase 0 must run before the project file validation, because the project file validation depends on them.
      */
     private ValidationPhase phase0LicenseFile(final ValidationPhase.Provision provision) {
-        return ValidationPhase.from(new LicenseFileValidator(this.projectDir));
+        return ValidationPhase.from(new LicenseFileValidator(this.projectDir),
+                new SecurityMdFileValidator(this.projectDir, this.repoName));
     }
 
     /*
