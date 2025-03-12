@@ -9,12 +9,21 @@ import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
+/**
+ * This validator checks that the {@code SECURITY.md} file exists and has the expected content.
+ */
 // [impl -> dsn~security.md-file-validator~1]
 public class SecurityMdFileValidator extends AbstractFileContentValidator {
 
     private static final Path PATH = Path.of("SECURITY.md");
     private final String repoName;
 
+    /**
+     * Create a new instance.
+     * 
+     * @param projectDirectory absolute path to the project directory
+     * @param repoName         GitHub repository name used for generating the reporting URL
+     */
     public SecurityMdFileValidator(final Path projectDirectory, final String repoName) {
         super(projectDirectory, PATH);
         this.repoName = repoName;
