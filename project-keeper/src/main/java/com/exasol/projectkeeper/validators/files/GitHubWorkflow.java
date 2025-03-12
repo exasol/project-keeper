@@ -33,11 +33,6 @@ class GitHubWorkflow {
         return (Map<String, Object>) rawYaml;
     }
 
-    @SuppressWarnings("unchecked")
-    private static Map<String, String> asStringMap(final Object rawYaml) {
-        return (Map<String, String>) rawYaml;
-    }
-
     Job getJob(final String jobId) {
         final Object rawJob = getJobMap().get(jobId);
         if (rawJob == null) {
@@ -128,6 +123,11 @@ class GitHubWorkflow {
 
         public Map<String, String> getPermissions() {
             return asStringMap(rawJob.get("permissions"));
+        }
+
+        @SuppressWarnings("unchecked")
+        private static Map<String, String> asStringMap(final Object rawYaml) {
+            return (Map<String, String>) rawYaml;
         }
 
         public void setPermissions(final JobPermissions permissions) {

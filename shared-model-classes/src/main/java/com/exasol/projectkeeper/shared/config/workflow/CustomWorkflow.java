@@ -118,20 +118,6 @@ public final class CustomWorkflow {
         }
 
         /**
-         * Add job customization.
-         *
-         * @param job job customization
-         * @return the builder instance
-         */
-        public Builder addJob(final CustomJob job) {
-            if (jobs == null) {
-                jobs = new ArrayList<>();
-            }
-            this.jobs.add(Objects.requireNonNull(job, "job"));
-            return this;
-        }
-
-        /**
          * Set job customization.
          *
          * @param jobs job customizations
