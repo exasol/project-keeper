@@ -46,7 +46,7 @@ public final class CustomWorkflow {
      * @return the list of step customizations
      */
     public List<StepCustomization> getSteps() {
-        return unmodifiableList(null)steps;
+        return unmodifiableList(steps);
     }
 
     /**
