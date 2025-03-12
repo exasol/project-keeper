@@ -17,6 +17,7 @@ import org.yaml.snakeyaml.Yaml;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
 import com.exasol.projectkeeper.shared.config.workflow.*;
+import com.exasol.projectkeeper.shared.config.workflow.JobPermissions.AccessLevel;
 import com.exasol.projectkeeper.shared.config.workflow.StepCustomization.Type;
 import com.exasol.projectkeeper.sources.AnalyzedMavenSource;
 import com.exasol.projectkeeper.validators.files.FileTemplate.Validation;
@@ -142,6 +143,32 @@ class CiBuildWorkflowGeneratorTest {
                 .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml").environment("aws").build())))
                 .getJob("build-and-test");
         assertThat(job.getEnvironment(), equalTo("aws"));
+    }
+
+    @Test
+    void ciBuildDefaultPermissions() {
+        final Job job = ciBuildContent(BuildOptions.builder()).getJob("build-and-test");
+        assertAll(
+                () -> assertThat(job.getPermissions(), aMapWithSize(2)),
+                () -> assertThat(job.getPermissions(), hasEntry("contents", "read")),
+                () -> assertThat(job.getPermissions(), hasEntry("issues", "read")));
+    }
+
+    // [utest->dsn~customize-build-process.job-permissions~0]
+    @Test
+    void ciBuildCustomPermissions() {
+        final Job job = ciBuildContent(BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
+                        .jobs(List.of(CustomJob.builder().jobName("build-and-test")
+                                .permissions(JobPermissions.builder().add("custom", AccessLevel.NONE)
+                                        .add("other", AccessLevel.WRITE).build())
+                                .build()))
+                        .build())))
+                .getJob("build-and-test");
+        assertAll(
+                () -> assertThat(job.getPermissions(), aMapWithSize(2)),
+                () -> assertThat(job.getPermissions(), hasEntry("custom", "none")),
+                () -> assertThat(job.getPermissions(), hasEntry("other", "write")));
     }
 
     @Test

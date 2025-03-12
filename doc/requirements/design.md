@@ -494,7 +494,7 @@ Covers:
 
 Needs: impl, utest, itest
 
-#### Replace Workflow Steps
+#### Customize Job Permissions
 `dsn~customize-build-process.job-permissions~0`
 
 PK allows customizing permissions of a GitHub Workflow job.
@@ -505,7 +505,7 @@ Rationale:
 Covers:
 * [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
 
-Needs: impl, utest, itest
+Needs: impl, utest
 
 ## Golang Support
 

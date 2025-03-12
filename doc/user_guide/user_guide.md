@@ -323,11 +323,12 @@ build:
     ```yml
     permissions:
       contents: read
+      issues: read
       packages: read
     ```
     This allows assigning additional permissions to the job, e.g. to download from the GitHub Docker registry `ghcr.io`.
     
-    **Important:** Always add `contents: read` to allow read access to the repository content.
+    **Important:** Explicitly add the permissions defined for the job by default to avoid build failures. Check the `permissions` field of the generated workflow, e.g. `contents: read, issues: read`.
 * `stepCustomizations`: List of customizations:
   * `action`: Type of customization
     * `REPLACE`: Replace an existing step with the new content
