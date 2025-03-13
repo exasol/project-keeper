@@ -34,7 +34,7 @@ class SecurityMdFileValidatorTest {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "\n", "\r\n", "\r", "\n\r" })
+    @ValueSource(strings = { "\n", "\r\n", "\r" })
     void acceptsAlternativeNewLine(final String newline) throws IOException {
         final String contentWithAlternativeNewline = getSecurityMdContent().replace("\n", newline);
         Files.writeString(projectDir.resolve("SECURITY.md"), contentWithAlternativeNewline);

@@ -46,7 +46,6 @@ public class SecurityMdFileValidator extends AbstractFileContentValidator {
             return null;
         }
         return content.replace("\r\n", "\n")
-                .replace("\n\r", "\n")
                 .replace("\r", "\n");
     }
 
