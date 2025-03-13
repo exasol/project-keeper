@@ -18,7 +18,7 @@ class JavaVersionExtractorTest {
 
     @Test
     void noSources() {
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> extract());
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, this::extract);
         assertThat(exception.getMessage(), equalTo("No sources, can't get java versions"));
     }
 

@@ -48,6 +48,10 @@ The release also generates the `SECURITY.md` file with instructions for reportin
 * Added clarifications for custom artifacts (PR #621)
 * #610: Added documentation of `job` field for workflow customizations
 
+## Refactoring
+
+* #533: Fixed sonar warnings after migration to Java 17
+
 ## Dependency Updates
 
 ### Project Keeper Shared Model Classes

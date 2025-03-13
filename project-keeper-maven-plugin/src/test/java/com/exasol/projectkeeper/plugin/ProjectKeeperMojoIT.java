@@ -74,9 +74,11 @@ class ProjectKeeperMojoIT {
     void testVerify() throws IOException {
         Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
         writeSecurityMdFile();
-        writeProjectKeeperConfig("sources:\n" + //
-                "  - type: maven\n" + //
-                "    path: pom.xml\n");
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
         final VerificationException exception = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = exception.getMessage();

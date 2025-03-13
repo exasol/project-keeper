@@ -24,7 +24,7 @@ class FileContentProviderTest {
     Path tempDir;
 
     @Test
-    void directoryDoesNotExist() throws IOException {
+    void directoryDoesNotExist() {
         final Path file = tempDir.resolve("missingDir").resolve("file");
         final UncheckedIOException exception = assertThrows(UncheckedIOException.class, () -> testee(file));
         assertThat(exception.getMessage(), startsWith("E-PK-CORE-188: Failed to open '"));

@@ -49,13 +49,15 @@ class PomFileValidatorTest {
                 () -> assertThat(result, hasFindingWithMessage(
                         "E-PK-CORE-123: Invalid pom file 'pom.xml': Required property '/project/url' is missing. The expected value is 'https://github.com/exasol/my-repo/'.")),
                 () -> assertThat(result, hasFindingWithMessage(
-                        "E-PK-CORE-105: Invalid pom file 'pom.xml': Required property 'finalName' is missing in maven-assembly-plugin. Use the following template and set finalName:\n<plugin>\n"
-                                + "    <artifactId>maven-assembly-plugin</artifactId>\n"
-                                + "    <groupId>org.apache.maven.plugins</groupId>\n" //
-                                + "    <configuration>\n" //
-                                + "        <finalName>NAME_OF_YOUR_JAR</finalName>\n" //
-                                + "    </configuration>\n" //
-                                + "</plugin>"))//
+                        """
+                                E-PK-CORE-105: Invalid pom file 'pom.xml': Required property 'finalName' is missing in maven-assembly-plugin. Use the following template and set finalName:
+                                <plugin>
+                                    <artifactId>maven-assembly-plugin</artifactId>
+                                    <groupId>org.apache.maven.plugins</groupId>
+                                    <configuration>
+                                        <finalName>NAME_OF_YOUR_JAR</finalName>
+                                    </configuration>
+                                </plugin>"""))//
         );
     }
 
@@ -208,11 +210,12 @@ class PomFileValidatorTest {
                 "<artifactId>other</artifactId>");
         Files.writeString(pom, invalidPomContent);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessage("E-PK-CORE-104: Invalid pom file 'pom.xml':" //
-                + " Invalid /project/parent/artifactId." //
-                + " Expected value is 'my-test-project-generated-parent'."
-                + " The pom must declare 'pk_generated_parent.pom' as parent pom." //
-                + " Check the project-keeper user guide if you need a parent pom."));
+        assertThat(result, hasFindingWithMessage("""
+                E-PK-CORE-104: Invalid pom file 'pom.xml':\
+                 Invalid /project/parent/artifactId.\
+                 Expected value is 'my-test-project-generated-parent'.\
+                 The pom must declare 'pk_generated_parent.pom' as parent pom.\
+                 Check the project-keeper user guide if you need a parent pom."""));
     }
 
     // [utest->dsn~verify-own-version~1]

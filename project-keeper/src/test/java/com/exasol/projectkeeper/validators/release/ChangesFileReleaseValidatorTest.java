@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.time.*;
 import java.util.List;
@@ -13,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -103,16 +103,17 @@ class ChangesFileReleaseValidatorTest {
     }
 
     @Test
-    void codeNameMissing() throws IOException {
+    void codeNameMissing() {
         final List<String> findings = findings(ChangesFile.builder()
                 .summary(ChangesFileSection.builder("## Summary").addLine("non-blank content").build())
                 .releaseDate(TODAY));
         assertThat(findings, contains("E-PK-CORE-197: Code name in '" + PATH + "' is missing. Add a code name."));
     }
 
-    @Test
-    void codeNameBlank() throws IOException {
-        final List<String> findings = findings(ChangesFile.builder()
+    @ParameterizedTest
+    @ValueSource(strings = { "", " ", "\t", "\n" })
+    void codeNameEmpty(final String codeName) {
+        final List<String> findings = findings(ChangesFile.builder().codeName(codeName)
                 .summary(ChangesFileSection.builder("## Summary").addLine("non-blank content").build())
                 .releaseDate(TODAY));
         assertThat(findings, contains("E-PK-CORE-197: Code name in '" + PATH + "' is missing. Add a code name."));
