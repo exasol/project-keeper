@@ -50,8 +50,11 @@ class SimpleProcessIT {
                 () -> process.waitUntilFinished(TIMEOUT));
         assertThat(exception.getMessage(), allOf(startsWith(
                 "E-PK-CORE-126: Failed to run command 'bash -c echo output && >&2 echo error && exit 1' in <null>, exit code was 1 after PT"),
-                endsWith("Output:\n'output'\n" + //
-                        "Error output:\n'error'")));
+                endsWith("""
+                        Output:
+                        'output'
+                        Error output:
+                        'error'""")));
     }
 
     @Test

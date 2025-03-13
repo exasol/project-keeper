@@ -146,9 +146,10 @@ class PomFileValidatorTest {
         testMavenModel.setGroupId(null);
         testMavenModel.writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
-        assertThat(result, hasFindingWithMessage("E-PK-CORE-102: Invalid pom file 'pom.xml':" //
-                + " Required property 'groupId' is missing." //
-                + " Please either set /project/groupId or /project/parent/groupId."));
+        assertThat(result, hasFindingWithMessage("""
+                E-PK-CORE-102: Invalid pom file 'pom.xml':\
+                 Required property 'groupId' is missing.\
+                 Please either set /project/groupId or /project/parent/groupId."""));
     }
 
     private List<ValidationFinding> runValidator(final ParentPomRef parentPomRef) {
