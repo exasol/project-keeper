@@ -1,4 +1,4 @@
-# Project Keeper 5.0.0, released 2025-03-??
+# Project Keeper 5.0.0, released 2025-03-13
 
 Code name: Maven 3.8.7, custom artifact clarifications and security policy
 
