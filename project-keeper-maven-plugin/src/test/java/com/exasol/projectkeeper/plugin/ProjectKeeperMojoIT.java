@@ -31,6 +31,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
+import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
@@ -72,6 +73,7 @@ class ProjectKeeperMojoIT {
     // [itest->dsn~mvn-verify-goal~1]
     void testVerify() throws IOException {
         Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
+        writeSecurityMdFile();
         writeProjectKeeperConfig("sources:\n" + //
                 "  - type: maven\n" + //
                 "    path: pom.xml\n");
@@ -82,6 +84,11 @@ class ProjectKeeperMojoIT {
                 () -> assertThat(output, containsString("Validation failed. See above.")),
                 () -> assertThat(output, containsString("[ERROR] E-PK-CORE-17"))//
         );
+    }
+
+    private void writeSecurityMdFile() throws IOException {
+        Files.writeString(this.projectDir.resolve("SECURITY.md"),
+                new SecurityMdFileValidator(projectDir, projectDir.getFileName().toString()).getTemplate());
     }
 
     @Test
