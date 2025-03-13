@@ -28,6 +28,8 @@ The release also allows customizing the permissions of generated GitHub workflow
 
 The release also generates the `SECURITY.md` file with instructions for reporting vulnerabilities in the project.
 
+The release also stops overriding Maven property `test.excludeTags` from parent POM. This allows specifying the property in a parent POM for all child modules. Before you had to specify the property in each child module because it was overwritten in each `pk_generated_parent.pom`.
+
 ## Features
 
 * #609: Adjusted Eclipse formatter to never join wrapped lines and to indent `case` inside of `switch`
@@ -37,6 +39,7 @@ The release also generates the `SECURITY.md` file with instructions for reportin
 * #614: Improved error message for unknown job ID in workflow customization
 * #611: Allow customizing GitHub workflow job permissions
 * #617: Generate `SECURITY.md` file
+* #613: Don't override Maven property `test.excludeTags` from parent POM
 
 ## Bugfixes
 
