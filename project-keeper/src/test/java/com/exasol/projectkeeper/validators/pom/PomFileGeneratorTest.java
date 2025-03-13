@@ -9,7 +9,6 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.*;
@@ -36,11 +35,11 @@ class PomFileGeneratorTest {
     }
 
     private List<String> getPluginNames(final Model pom) {
-        return pom.getBuild().getPlugins().stream().map(Plugin::getArtifactId).collect(Collectors.toList());
+        return pom.getBuild().getPlugins().stream().map(Plugin::getArtifactId).toList();
     }
 
     private List<String> getDependencyNames(final Model pom) {
-        return pom.getDependencies().stream().map(Dependency::getArtifactId).collect(Collectors.toList());
+        return pom.getDependencies().stream().map(Dependency::getArtifactId).toList();
     }
 
     // [utest -> dsn~mvn-toolchain~1]

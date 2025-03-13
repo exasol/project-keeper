@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -27,7 +26,7 @@ public class ProjectKeeperConfigWriter {
     public ConfigForWriting prepareWriting(final ProjectKeeperConfig config) {
         final List<ConfigForWriting.Source> sourcesForWriting = new ArrayList<>();
         for (final Source source : config.getSources()) {
-            final List<String> modules = source.getModules().stream().map(Enum::name).collect(Collectors.toList());
+            final List<String> modules = source.getModules().stream().map(Enum::name).toList();
             sourcesForWriting
                     .add(new ConfigForWriting.Source(source.getPath().toString(), source.getType().name(), modules));
         }

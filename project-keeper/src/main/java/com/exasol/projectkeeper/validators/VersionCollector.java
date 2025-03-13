@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
@@ -36,7 +35,7 @@ public class VersionCollector {
                     .map(ChangesFileName::from) //
                     .flatMap(Optional::stream) //
                     .sorted(Comparator.reverseOrder()) //
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-66")

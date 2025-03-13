@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
 import static java.util.stream.Collectors.toMap;
 
 import java.io.IOException;
@@ -151,7 +150,7 @@ class GolangServices {
         final List<VersionedDependency> dependencies = Arrays.stream(output) //
                 .skip(1) // ignore first line, it is the project itself
                 .map(this::convertDependency) //
-                .collect(toList());
+                .toList();
         return new GoModule(output[0], dependencies);
     }
 

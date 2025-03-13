@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.*;
@@ -44,7 +43,7 @@ class GitRepositoryTest {
             makeCommitAndTag(git, 3, false);
             this.repository = openRepo(this.tempDir);
             final List<TaggedCommit> result = this.repository.getTagsInCurrentBranch();
-            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
+            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).toList();
             assertThat(tagNames, contains("tag3", "tag1"));
         }
     }
@@ -59,7 +58,7 @@ class GitRepositoryTest {
             makeCommitAndTag(git, 1, true);
             this.repository = openRepo(this.tempDir);
             final List<TaggedCommit> result = this.repository.getTagsInCurrentBranch();
-            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
+            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).toList();
             assertThat(tagNames, contains("tag1"));
         }
     }
@@ -72,7 +71,7 @@ class GitRepositoryTest {
             git.checkout().setName(secondCommit.getName()).call();
             this.repository = openRepo(this.tempDir);
             final List<TaggedCommit> result = this.repository.getTagsInCurrentBranch();
-            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).collect(Collectors.toList());
+            final List<String> tagNames = result.stream().map(TaggedCommit::getTag).toList();
             assertThat(tagNames, contains("tag2", "tag1"));
         }
     }

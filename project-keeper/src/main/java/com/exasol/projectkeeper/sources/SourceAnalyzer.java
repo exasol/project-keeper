@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.sources;
 
 import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.toList;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -72,7 +71,7 @@ public class SourceAnalyzer {
     }
 
     private List<AnalyzedSource> fixOrder(final List<Source> sources, final Map<Path, AnalyzedSource> analyzedSources) {
-        return sources.stream().map(source -> findSource(source, analyzedSources)).collect(toList());
+        return sources.stream().map(source -> findSource(source, analyzedSources)).toList();
     }
 
     private AnalyzedSource findSource(final Source source, final Map<Path, AnalyzedSource> analyzedSources) {
@@ -91,7 +90,7 @@ public class SourceAnalyzer {
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
         final List<Path> duplicatePaths = sourceFrequencies.entrySet().stream() //
                 .filter(entry -> entry.getValue() > 1) //
-                .map(Entry::getKey).collect(toList());
+                .map(Entry::getKey).toList();
         if (!duplicatePaths.isEmpty()) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-149")
                     .message("Sources use duplicate paths {{duplicate paths|u}}.", duplicatePaths)

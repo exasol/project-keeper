@@ -4,7 +4,6 @@ import static java.util.function.Predicate.not;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.ProjectKeeper;
@@ -23,7 +22,7 @@ public final class SimpleValidationFinding implements ValidationFinding {
     public static List<SimpleValidationFinding> blockers(final List<SimpleValidationFinding> findings) {
         return findings.stream() //
                 .filter(not(SimpleValidationFinding::isOptional)) //
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private final String message;

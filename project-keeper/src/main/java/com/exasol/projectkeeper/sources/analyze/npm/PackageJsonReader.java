@@ -4,7 +4,6 @@ import java.io.StringReader;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
@@ -75,7 +74,7 @@ final class PackageJsonReader {
         final JsonObject dependencies = orEmpty(packageJson.getJsonObject(key.key));
         return dependencies.keySet().stream() //
                 .map(k -> dependency(k, key.type, dependencies.getString(k))) //
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private JsonObject orEmpty(final JsonObject jsonObject) {
