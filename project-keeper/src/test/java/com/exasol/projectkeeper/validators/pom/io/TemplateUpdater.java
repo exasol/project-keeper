@@ -37,7 +37,7 @@ public class TemplateUpdater {
                 .of(Path.of("project-keeper/src/main/resources/maven_templates"),
                         Path.of("src/main/resources/maven_templates"))
                 .stream() //
-                .filter(p -> Files.isDirectory(p)) //
+                .filter(Files::isDirectory) //
                 .map(Path::toAbsolutePath) //
                 .findFirst()
                 .orElseThrow(() -> new IllegalStateException("Template directory not found. Adapt working directory"));
@@ -70,12 +70,12 @@ public class TemplateUpdater {
                 "- " + file.getFileName() + ": Updating version " + version + " -> " + latest);
         final Document pom = this.pomFileReader.parseFile(file);
         final Node plugin = runXPath(pom, "/plugin");
-        if (updatePlugin(file, plugin, logger)) {
+        if (updatePlugin(plugin, logger)) {
             this.pomFileWriter.writeToFile(pom, file);
         }
     }
 
-    private boolean updatePlugin(final Path file, final Node plugin, final Reporter logger) {
+    private boolean updatePlugin(final Node plugin, final Reporter logger) {
         final Node versionNode = runXPath(plugin, "version");
         if (versionNode == null) {
             return false;
@@ -105,7 +105,7 @@ public class TemplateUpdater {
         Node plugin = parent.getFirstChild();
         boolean changed = false;
         while (plugin != null) {
-            changed |= updatePlugin(file, plugin, logger);
+            changed |= updatePlugin(plugin, logger);
             plugin = plugin.getNextSibling();
         }
         if (changed) {

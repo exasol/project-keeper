@@ -141,7 +141,9 @@ class GoModFileTest {
     @Test
     void testEqualsContract() {
         EqualsVerifier.forClass(GoModFile.class).verify();
-    }@Test
+    }
+
+    @Test
     void testToString() {
         ToStringVerifier.forClass(GoModFile.class).verify();
     }

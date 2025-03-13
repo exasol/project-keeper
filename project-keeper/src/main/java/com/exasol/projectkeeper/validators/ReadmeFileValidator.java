@@ -106,8 +106,8 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
     private String getSonarCloudBadges() {
         final StringBuilder badges = new StringBuilder();
         for (final AnalyzedSource source : this.sources) {
-            if (source instanceof AnalyzedMavenSource) {
-                getSonarCloudBadgeForMavenSource(badges, (AnalyzedMavenSource) source);
+            if (source instanceof final AnalyzedMavenSource mavenSource) {
+                getSonarCloudBadgeForMavenSource(badges, mavenSource);
             }
         }
         return badges.toString();
@@ -141,7 +141,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
     private String getDeploymentBadges() {
         final List<AnalyzedSource> mavenCentralSources = this.sources.stream()
                 .filter(source -> source.getModules().contains(MAVEN_CENTRAL) && source.isAdvertised())
-                .collect(Collectors.toList());
+                .toList();
         final boolean hasMultipleModules = mavenCentralSources.size() > 1;
         return mavenCentralSources.stream().map(source -> getDeploymentBadge(source, hasMultipleModules))
                 .collect(Collectors.joining(", "));
@@ -159,8 +159,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
     }
 
     private String getDeploymentBadge(final AnalyzedSource source, final boolean withProjectName) {
-        if (source instanceof AnalyzedMavenSource) {
-            final AnalyzedMavenSource mavenSource = (AnalyzedMavenSource) source;
+        if (source instanceof final AnalyzedMavenSource mavenSource) {
             return getMavenCentralBadge(withProjectName, mavenSource);
         } else {
             throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-92")

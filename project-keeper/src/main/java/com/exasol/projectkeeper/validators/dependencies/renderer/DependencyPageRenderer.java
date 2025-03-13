@@ -63,7 +63,7 @@ public class DependencyPageRenderer {
             final BaseDependency.Type type, final MarkdownReferenceBuilder markdownReferenceBuilder,
             final int headlineLevel) {
         final List<ProjectDependency> dependenciesOfThisScope = dependencies.stream()
-                .filter(dependency -> dependency.getType().equals(type)).collect(Collectors.toList());
+                .filter(dependency -> dependency.getType() == type).toList();
         if (dependenciesOfThisScope.isEmpty()) {
             return "";
         } else {

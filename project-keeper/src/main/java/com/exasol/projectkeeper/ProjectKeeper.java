@@ -7,7 +7,6 @@ import static com.exasol.projectkeeper.validators.finding.SimpleValidationFindin
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
@@ -286,7 +285,7 @@ public class ProjectKeeper {
 
     private List<ValidationFinding> runValidation(final List<Validator> validators) {
         final List<ValidationFinding> findings = validators.stream().flatMap(validator -> validator.validate().stream())
-                .collect(Collectors.toList());
+                .toList();
         return new FindingFilter(this.config.getExcludes()).filterFindings(findings);
     }
 

@@ -1,4 +1,4 @@
-# Project Keeper 5.0.0, released 2025-03-??
+# Project Keeper 5.0.0, released 2025-03-13
 
 Code name: Maven 3.8.7, custom artifact clarifications and security policy
 
@@ -50,6 +50,10 @@ The release also stops overriding Maven property `test.excludeTags` from parent 
 * Added security policy (PR #618)
 * Added clarifications for custom artifacts (PR #621)
 * #610: Added documentation of `job` field for workflow customizations
+
+## Refactoring
+
+* #533: Fixed sonar warnings after migration to Java 17
 
 ## Dependency Updates
 

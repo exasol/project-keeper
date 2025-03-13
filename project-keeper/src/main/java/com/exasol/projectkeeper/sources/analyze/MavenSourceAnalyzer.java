@@ -7,7 +7,6 @@ import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.apache.maven.model.Model;
 
@@ -43,7 +42,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
     public List<AnalyzedSource> analyze(final Path projectDir, final List<Source> sources) {
         final Map<String, CrawledMavenProject> crawledMvnSources = runCrawlerForMvnSources(sources);
         return sources.stream().map((final Source source) -> analyzeSource(projectDir, source, crawledMvnSources))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -58,7 +57,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
      */
     private Map<String, CrawledMavenProject> runCrawlerForMvnSources(final List<Source> sources) {
         final List<Path> mvnSourcePaths = sources.stream().filter(source -> MAVEN.equals(source.getType()))
-                .map(Source::getPath).collect(Collectors.toList());
+                .map(Source::getPath).toList();
         if (mvnSourcePaths.isEmpty()) {
             return emptyMap();
         } else {

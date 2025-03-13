@@ -51,7 +51,7 @@ class ProjectKeeperMojoIT {
     }
 
     @BeforeEach
-    void beforeEach(final TestInfo test) throws IOException, GitAPIException {
+    void beforeEach(final TestInfo test) throws GitAPIException {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
         new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION) //
                 .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION) //
@@ -74,9 +74,11 @@ class ProjectKeeperMojoIT {
     void testVerify() throws IOException {
         Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
         writeSecurityMdFile();
-        writeProjectKeeperConfig("sources:\n" + //
-                "  - type: maven\n" + //
-                "    path: pom.xml\n");
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
         final VerificationException exception = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify"));
         final String output = exception.getMessage();
@@ -93,12 +95,14 @@ class ProjectKeeperMojoIT {
 
     @Test
     void testJacocoAgentIsExtracted() throws VerificationException, IOException {
-        writeProjectKeeperConfig("sources:\n" + //
-                "  - type: maven\n" + //
-                "    path: pom.xml\n" + //
-                "    modules:\n" + //
-                "      - integration_tests\n" + //
-                "      - udf_coverage\n");
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                    modules:
+                      - integration_tests
+                      - udf_coverage
+                """);
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");
         assertThat(projectDir.resolve("target/jacoco-agent/org.jacoco.agent-runtime.jar").toFile(), anExistingFile());
@@ -108,9 +112,11 @@ class ProjectKeeperMojoIT {
     // [itest->dsn~verify-release-mode.verify~1]
     @Test
     void testVerifyRelease() throws VerificationException, IOException {
-        writeProjectKeeperConfig("sources:\n" + //
-                "  - type: maven\n" + //
-                "    path: pom.xml\n");
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
         verifier.executeGoal("project-keeper:fix");
         final VerificationException exception = assertThrows(VerificationException.class,
                 () -> verifier.executeGoal("project-keeper:verify-release"));
@@ -219,9 +225,11 @@ class ProjectKeeperMojoIT {
     @ParameterizedTest
     @ValueSource(strings = { "verify", "fix", "update-dependencies", "verify-release" })
     void testSkip(final String goal) throws IOException, VerificationException {
-        writeProjectKeeperConfig("sources:\n" + //
-                "  - type: maven\n" + //
-                "    path: pom.xml\n");
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
         verifier.setSystemProperty("project-keeper.skip", "true");
         verifier.executeGoal("project-keeper:" + goal);
         verifier.verifyTextInLog("Skipping project-keeper.");

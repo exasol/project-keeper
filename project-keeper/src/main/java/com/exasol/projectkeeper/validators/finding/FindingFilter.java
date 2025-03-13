@@ -2,7 +2,6 @@ package com.exasol.projectkeeper.validators.finding;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 /**
  * This class is a filter for {@link ValidationFinding}s.
@@ -17,7 +16,7 @@ public class FindingFilter {
      */
     public FindingFilter(final List<String> denyList) {
         this.denyListPatterns = denyList.stream().map(pattern -> Pattern.compile(pattern, Pattern.DOTALL))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**

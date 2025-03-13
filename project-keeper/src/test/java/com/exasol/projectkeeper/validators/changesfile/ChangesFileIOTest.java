@@ -10,7 +10,6 @@ import java.nio.file.*;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -24,7 +23,7 @@ class ChangesFileIOTest {
         final Path changesFilePath = loadExampleFileToTempDir();
         final ChangesFile changesFile = new ChangesFileIO().read(changesFilePath);
         final List<String> headings = changesFile.getSections().stream().map(ChangesFileSection::getHeading)
-                .collect(Collectors.toList());
+                .toList();
         assertThat(changesFile.getProjectName(), equalTo("My Project"));
         assertThat(changesFile.getProjectVersion().toString(), equalTo("0.1.0"));
         assertThat(changesFile.getReleaseDate(), equalTo("1980-01-01"));

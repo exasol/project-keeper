@@ -1,27 +1,19 @@
 package com.exasol.projectkeeper.shared.dependencychanges;
 
-import java.util.Objects;
-
 import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 /**
  * This class represents a removed dependency.
+ * 
+ * @param groupId    the group ID of the removed dependency. May be null if the package system does not use group IDs
+ *                   (e.g. for Golang)
+ * @param artifactId the artifact ID of the removed dependency
+ * @param version    the version of the removed dependency
  */
-public final class RemovedDependency implements DependencyChange {
-    /**
-     * The group ID of the removed dependency. May be null if the package system does not use group IDs (e.g. for
-     * Golang).
-     */
-    private final String groupId;
-    /**
-     * The artifact ID of the removed dependency.
-     */
-    private final String artifactId;
-    /**
-     * The version of the removed dependency.
-     */
-    private final String version;
+public record RemovedDependency(@JsonbProperty("groupId") String groupId,
+        @JsonbProperty("artifactId") String artifactId, @JsonbProperty("version") String version)
+        implements DependencyChange {
 
     /**
      * Create a new instance.
@@ -31,12 +23,10 @@ public final class RemovedDependency implements DependencyChange {
      * @param artifactId the artifact ID of the removed dependency
      * @param version    the version of the removed dependency
      */
+    @SuppressWarnings("java:S6207") // Redundant constructor required to deserialize JSON
     @JsonbCreator
-    public RemovedDependency(@JsonbProperty("groupId") final String groupId,
-            @JsonbProperty("artifactId") final String artifactId, @JsonbProperty("version") final String version) {
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
+    public RemovedDependency {
+        // Required to deserialize JSON
     }
 
     /** @return group id */
@@ -60,31 +50,5 @@ public final class RemovedDependency implements DependencyChange {
     @Override
     public void accept(final DependencyChangeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public String toString() {
-        return "RemovedDependency [groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(groupId, artifactId, version);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final RemovedDependency other = (RemovedDependency) obj;
-        return Objects.equals(groupId, other.groupId) && Objects.equals(artifactId, other.artifactId)
-                && Objects.equals(version, other.version);
     }
 }

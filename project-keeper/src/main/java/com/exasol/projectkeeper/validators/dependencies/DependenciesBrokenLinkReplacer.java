@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.validators.dependencies;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.BrokenLinkReplacer;
 import com.exasol.projectkeeper.shared.dependencies.License;
@@ -33,7 +32,7 @@ public class DependenciesBrokenLinkReplacer {
      */
     public ProjectWithDependencies replaceBrokenLinks(final ProjectWithDependencies projectWithDependencies) {
         final List<ProjectDependency> fixedDependencies = projectWithDependencies.getDependencies().stream()
-                .map(this::replaceBrokenLinks).collect(Collectors.toList());
+                .map(this::replaceBrokenLinks).toList();
         return projectWithDependencies.withDependencies(fixedDependencies);
     }
 
@@ -47,7 +46,7 @@ public class DependenciesBrokenLinkReplacer {
     }
 
     private List<License> replaceBrokenLicenseLinks(final List<License> licenses) {
-        return licenses.stream().map(this::replaceBrokenLicenseLinks).collect(Collectors.toList());
+        return licenses.stream().map(this::replaceBrokenLicenseLinks).toList();
     }
 
     private License replaceBrokenLicenseLinks(final License license) {

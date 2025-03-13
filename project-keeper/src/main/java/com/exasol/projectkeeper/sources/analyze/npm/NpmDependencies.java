@@ -37,7 +37,7 @@ class NpmDependencies {
         this.licenseMap = retrieveNpmLicenses();
         return this.packageJson.getDependencies().stream() //
                 .map(this::projectDependency) //
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Map<String, List<NpmLicense>> retrieveNpmLicenses() {
@@ -62,7 +62,7 @@ class NpmDependencies {
                 .orElse(emptyList()) //
                 .stream() //
                 .map(NpmLicense::toLicense) //
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private String getUrl(final String moduleName) {

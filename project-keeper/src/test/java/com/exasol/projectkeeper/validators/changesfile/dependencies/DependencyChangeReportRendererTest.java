@@ -25,8 +25,12 @@ class DependencyChangeReportRendererTest {
     @Test
     void testRenderSingleSourceReport() {
         final NamedDependencyChangeReport namedReport = new NamedDependencyChangeReport("my-project", REPORT);
-        assertThat(render(namedReport), equalTo("## Dependency Updates\n" + "\n" + "### Compile Dependency Updates\n"
-                + "\n" + "* Added `com.example:my-lib:1.2.3`"));
+        assertThat(render(namedReport), equalTo("""
+                ## Dependency Updates
+
+                ### Compile Dependency Updates
+
+                * Added `com.example:my-lib:1.2.3`"""));
     }
 
     @Test
@@ -34,7 +38,20 @@ class DependencyChangeReportRendererTest {
         final NamedDependencyChangeReport sourceA = new NamedDependencyChangeReport("project A", REPORT);
         final NamedDependencyChangeReport sourceB = new NamedDependencyChangeReport("project B", REPORT);
         assertThat(render(sourceA, sourceB), equalTo(
-                "## Dependency Updates\n\n### Project A\n\n#### Compile Dependency Updates\n\n* Added `com.example:my-lib:1.2.3`\n\n### Project B\n\n#### Compile Dependency Updates\n\n* Added `com.example:my-lib:1.2.3`"));
+                """
+                        ## Dependency Updates
+
+                        ### Project A
+
+                        #### Compile Dependency Updates
+
+                        * Added `com.example:my-lib:1.2.3`
+
+                        ### Project B
+
+                        #### Compile Dependency Updates
+
+                        * Added `com.example:my-lib:1.2.3`"""));
     }
 
     @Test
@@ -42,7 +59,14 @@ class DependencyChangeReportRendererTest {
         final NamedDependencyChangeReport sourceA = new NamedDependencyChangeReport("project A", REPORT);
         final NamedDependencyChangeReport sourceB = new NamedDependencyChangeReport("project B", EMPTY_REPORT);
         assertThat(render(sourceA, sourceB), equalTo(
-                "## Dependency Updates\n\n### Project A\n\n#### Compile Dependency Updates\n\n* Added `com.example:my-lib:1.2.3`"));
+                """
+                        ## Dependency Updates
+
+                        ### Project A
+
+                        #### Compile Dependency Updates
+
+                        * Added `com.example:my-lib:1.2.3`"""));
     }
 
     @Test

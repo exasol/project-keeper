@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.hamcrest.TypeSafeMatcher;
 
@@ -11,7 +10,7 @@ public abstract class AbstractValidationMatcher extends TypeSafeMatcher<Validato
     protected List<String> getMessages(final Validator item) {
         final List<ValidationFinding> findings = item.validate();
         return new FindingsUngrouper().ungroupFindings(findings).stream().map(SimpleValidationFinding::getMessage)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     protected String findingsAsString(final List<String> messages) {

@@ -5,7 +5,6 @@ import static com.exasol.projectkeeper.validators.pom.builder.NodeBuilder.*;
 import static com.exasol.projectkeeper.validators.pom.io.PomFileReader.trimWhitespace;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.w3c.dom.Node;
 
@@ -130,7 +129,8 @@ public class PomFileGenerator {
         final List<NodeBuilder> propertyBuilders = properties.entrySet().stream() //
                 .sorted(Map.Entry.comparingByKey()) //
                 .map(e -> element(e.getKey()).child(textNode(e.getValue()))) //
-                .collect(Collectors.toList());
+                .map(NodeBuilder.class::cast)
+                .toList();
         return element("profile") //
                 .child("id", id) //
                 .nullableChild(isDefault ? element("activation").child("activeByDefault", "true") : null)

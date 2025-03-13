@@ -2,7 +2,6 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
@@ -43,6 +42,6 @@ class PackageJson {
     }
 
     List<VersionedDependency> getDependencies(final Type type) {
-        return this.dependencies.stream().filter(d -> d.getType() == type).collect(Collectors.toList());
+        return this.dependencies.stream().filter(d -> d.getType() == type).toList();
     }
 }

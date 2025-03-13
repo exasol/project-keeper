@@ -176,12 +176,12 @@ class ProjectVersionIncrementorTest {
     void incrementProjectVersionWithJarArtifactUpdatesReferences() {
         simulatePomVersion(CURRENT_PROJECT_VERSION);
         final String newVersion = testee(configWithJarArtifact(), CURRENT_PROJECT_VERSION).incrementProjectVersion();
-        assertAll(() -> assertThat(newVersion, equalTo("1.2.4")), //
-                () -> assertMavenExecuted());
+        assertAll(() -> assertThat(newVersion, equalTo("1.2.4")),
+                this::assertMavenExecuted);
         verifyPomVersionUpdated("1.2.4");
     }
 
-    private void assertMavenExecuted(final String... mavenArguments) {
+    private void assertMavenExecuted() {
         final ShellCommand command = getExecutedCommand();
         assertThat(command.workingDir().get(), equalTo(PROJECT_DIR));
         assertThat(command.commandLine(), contains(Matchers.startsWith("mvn"), equalTo("--batch-mode"),

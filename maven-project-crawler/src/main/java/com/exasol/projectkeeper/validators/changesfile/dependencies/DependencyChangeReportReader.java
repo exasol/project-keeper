@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.validators.changesfile.dependencies;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.apache.maven.model.*;
 
@@ -57,13 +56,13 @@ public class DependencyChangeReportReader {
                 .filter(dependency -> (scope.equals("compile")
                         && ((dependency.getScope() == null) || dependency.getScope().equals("")))
                         || scope.equals(dependency.getScope()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private List<Dependency> convertPluginsToDependencies(final Model model) {
         return model.getBuild().getPlugins().stream() //
                 .map(this::convertPluginToDependency) //
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private Dependency convertPluginToDependency(final Plugin plugin) {

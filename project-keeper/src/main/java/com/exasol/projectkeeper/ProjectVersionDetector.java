@@ -2,7 +2,6 @@ package com.exasol.projectkeeper;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.*;
@@ -77,7 +76,7 @@ public class ProjectVersionDetector {
         private IllegalArgumentException getNoSourceFoundException(final Path requestedPath,
                 final List<AnalyzedSource> analyzedSources) {
             final List<Path> knownSources = analyzedSources.stream().map(AnalyzedSource::getPath)
-                    .collect(Collectors.toList());
+                    .toList();
             return new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-114")
                     .message(FAILED_TO_DETECT_VERSION + " Could not find a source with specified path {{path}}.",
                             requestedPath.toString())

@@ -73,23 +73,29 @@ public class GolangProjectFixture extends BaseProjectFixture {
     }
 
     private void writeMainGoFile(final Path moduleDir) {
-        final String content = "package main\n" //
-                + "import (\n" //
-                + "    \"github.com/exasol/exasol-driver-go\"\n" //
-                + ")\n" //
-                + "func main() {\n" //
-                + "    exasol.NewConfig(\"sys\", \"exasol\")\n" //
-                + "}\n";
+        final String content = """
+                package main
+                import (
+                    "github.com/exasol/exasol-driver-go"
+                )
+                func main() {
+                    exasol.NewConfig("sys", "exasol")
+                }
+                """;
         writeFile(this.projectDir.resolve(moduleDir).resolve("main.go"), content);
     }
 
     private void writeTestGoFile(final Path moduleDir) {
-        final String content = "package main\n" //
-                + "import (\n" //
-                + "    testSetupAbstraction \"github.com/exasol/exasol-test-setup-abstraction-server/go-client\"\n" //
-                + ")\n" //
-                + "func myTest() {\n" + "    exasol := testSetupAbstraction.Create(\"myConfig.json\")\n"
-                + "    connection := exasol.CreateConnection()\n" + "}\n";
+        final String content = """
+                package main
+                import (
+                    testSetupAbstraction "github.com/exasol/exasol-test-setup-abstraction-server/go-client"
+                )
+                func myTest() {
+                    exasol := testSetupAbstraction.Create("myConfig.json")
+                    connection := exasol.CreateConnection()
+                }
+                """;
         writeFile(this.projectDir.resolve(moduleDir).resolve("main_test.go"), content);
     }
 }

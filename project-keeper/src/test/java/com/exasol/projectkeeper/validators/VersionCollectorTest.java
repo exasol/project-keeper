@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.junit.jupiter.api.Test;
@@ -35,7 +34,7 @@ class VersionCollectorTest {
                 "1.0.0", //
                 "0.3.0") //
                 .map(ChangesFileName::new) //
-                .collect(Collectors.toList());
+                .toList();
         assertThat(new VersionCollector(tempDir).collectChangesFiles(), equalTo(expected));
     }
 

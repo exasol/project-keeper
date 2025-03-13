@@ -6,7 +6,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -40,7 +39,7 @@ class JavaProjectCrawlerRunnerIT {
     }
 
     @Test
-    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException, IOException {
+    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException {
         Git.init().setDirectory(tempDir.toFile()).call().close();
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
@@ -67,14 +66,14 @@ class JavaProjectCrawlerRunnerIT {
     }
 
     @Test
-    void testGetDependencyChangesFailsForEmptyPomList() throws GitAPIException, IOException {
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> crawlProject());
+    void testGetDependencyChangesFailsForEmptyPomList() {
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, this::crawlProject);
         assertThat(exception.getMessage(), containsString(
                 "E-PK-MPC-64: Property 'projectsToCrawl' is not defined or empty. Specify property with least one pom file."));
     }
 
     @Test
-    void testGetDependencyChangesFailsForMissingPom() throws GitAPIException, IOException {
+    void testGetDependencyChangesFailsForMissingPom() {
         final Path missingPomFile = Path.of("missing-pom-file");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> this.crawlProject(missingPomFile));

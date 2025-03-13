@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.validators.dependencies;
 import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.artifact.repository.ArtifactRepository;
@@ -43,7 +42,7 @@ public class ProjectDependencyReader {
     public ProjectDependencies readDependencies() {
         final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins()
                 .map(dependency -> getLicense(dependency, project)) //
-                .collect(Collectors.toList());
+                .toList();
         return new ProjectDependencies(dependencies);
     }
 
@@ -109,7 +108,7 @@ public class ProjectDependencyReader {
             final var dependenciesPom = this.artifactModelReader.readModel(dependency.getArtifactId(),
                     dependency.getGroupId(), dependency.getVersion(), repos);
             final List<License> licenses = dependenciesPom.getLicenses().stream()
-                    .map(license -> new License(license.getName(), license.getUrl())).collect(Collectors.toList());
+                    .map(license -> new License(license.getName(), license.getUrl())).toList();
             return ProjectDependency.builder() //
                     .type(mapScopeToDependencyType(dependency.getScope())) //
                     .name(getDependencyName(dependenciesPom)) //
@@ -137,20 +136,20 @@ public class ProjectDependencyReader {
             return COMPILE;
         } else {
             switch (scope) {
-            case "compile":
-            case "provided":
-            case "system":
-            case "import":
-                return COMPILE;
-            case "test":
-                return TEST;
-            case "runtime":
-                return RUNTIME;
-            case "plugin":
-                return PLUGIN;
-            default:
-                throw new IllegalStateException(ExaError.messageBuilder("F-PK-MPC-54")
-                        .message("Unimplemented dependency scope {{scope}}.", scope).ticketMitigation().toString());
+                case "compile":
+                case "provided":
+                case "system":
+                case "import":
+                    return COMPILE;
+                case "test":
+                    return TEST;
+                case "runtime":
+                    return RUNTIME;
+                case "plugin":
+                    return PLUGIN;
+                default:
+                    throw new IllegalStateException(ExaError.messageBuilder("F-PK-MPC-54")
+                            .message("Unimplemented dependency scope {{scope}}.", scope).ticketMitigation().toString());
             }
         }
     }

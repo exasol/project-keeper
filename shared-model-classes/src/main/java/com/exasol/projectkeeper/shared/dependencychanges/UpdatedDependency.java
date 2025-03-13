@@ -1,32 +1,20 @@
 package com.exasol.projectkeeper.shared.dependencychanges;
 
-import java.util.Objects;
-
 import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 /**
  * This class represents an updated dependency.
+ * 
+ * @param groupId    the group ID of the updated dependency. May be null if the package system does not use group IDs
+ *                   (e.g. for Golang)
+ * @param artifactId the artifact ID of the updated dependency
+ * @param version    the old version of the updated dependency
+ * @param newVersion the new version of the updated dependency
  */
-public final class UpdatedDependency implements DependencyChange {
-    /**
-     * The group ID of the updated dependency. May be null if the package system does not use group IDs (e.g. for
-     * Golang).
-     */
-    private final String groupId;
-    /**
-     * The artifact ID of the updated dependency.
-     */
-    private final String artifactId;
-    /**
-     * The old version of the updated dependency.
-     */
-    private final String version;
-    /**
-     * The new version of the updated dependency.
-     */
-    private final String newVersion;
-
+public record UpdatedDependency(@JsonbProperty("groupId") String groupId,
+        @JsonbProperty("artifactId") String artifactId, @JsonbProperty("version") String version,
+        @JsonbProperty("newVersion") String newVersion) implements DependencyChange {
     /**
      * Create a new instance.
      * 
@@ -36,14 +24,10 @@ public final class UpdatedDependency implements DependencyChange {
      * @param version    the old version of the updated dependency
      * @param newVersion the new version of the updated dependency
      */
+    @SuppressWarnings("java:S6207") // Redundant constructor required to deserialize JSON
     @JsonbCreator
-    public UpdatedDependency(@JsonbProperty("groupId") final String groupId,
-            @JsonbProperty("artifactId") final String artifactId, @JsonbProperty("version") final String version,
-            @JsonbProperty("newVersion") final String newVersion) {
-        this.groupId = groupId;
-        this.artifactId = artifactId;
-        this.version = version;
-        this.newVersion = newVersion;
+    public UpdatedDependency {
+        // Required to deserialize JSON
     }
 
     /** @return group id */
@@ -76,32 +60,5 @@ public final class UpdatedDependency implements DependencyChange {
     @Override
     public void accept(final DependencyChangeVisitor visitor) {
         visitor.visit(this);
-    }
-
-    @Override
-    public String toString() {
-        return "UpdatedDependency [groupId=" + groupId + ", artifactId=" + artifactId + ", version=" + version
-                + ", newVersion=" + newVersion + "]";
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(groupId, artifactId, version, newVersion);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final UpdatedDependency other = (UpdatedDependency) obj;
-        return Objects.equals(groupId, other.groupId) && Objects.equals(artifactId, other.artifactId)
-                && Objects.equals(version, other.version) && Objects.equals(newVersion, other.newVersion);
     }
 }

@@ -1,7 +1,5 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
-import static java.util.stream.Collectors.toList;
-
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
@@ -33,7 +31,7 @@ public class NpmSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     @Override
     public List<AnalyzedSource> analyze(final Path projectDir, final List<Source> sources) {
-        return sources.stream().map(source -> analyzeSource(projectDir, source)).collect(toList());
+        return sources.stream().map(source -> analyzeSource(projectDir, source)).toList();
     }
 
     // [impl -> dsn~npm-project-version~1]

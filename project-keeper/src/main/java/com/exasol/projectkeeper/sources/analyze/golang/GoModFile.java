@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toList;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,7 +34,7 @@ final class GoModFile {
     List<VersionedDependency> getDirectDependencies() {
         return this.dependencies.stream() //
                 .filter(not(VersionedDependency::isIndirect)) //
-                .collect(toList());
+                .toList();
     }
 
     String getModuleName() {

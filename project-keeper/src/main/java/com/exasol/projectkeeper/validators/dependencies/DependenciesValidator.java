@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.file.*;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.*;
@@ -56,7 +55,7 @@ public class DependenciesValidator implements Validator {
         final List<ProjectWithDependencies> dependencies = this.sources.stream()//
                 .map(this::getDependencies)//
                 .map(dependencyLinkReplacer::replaceBrokenLinks)//
-                .collect(Collectors.toList());
+                .toList();
         return new DependencyPageRenderer().render(dependencies);
     }
 

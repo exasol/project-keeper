@@ -2,7 +2,6 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.sources.AnalyzedSource;
 import com.exasol.projectkeeper.validators.changesfile.dependencies.DependencyChangeReportRenderer;
@@ -32,7 +31,7 @@ class DependencySectionFixer {
      */
     public ChangesFile fix(final ChangesFile changesFile) {
         final List<NamedDependencyChangeReport> reports = this.sources.stream().map(this::getDependencyChangesOfSource)
-                .collect(Collectors.toList());
+                .toList();
         final Optional<ChangesFileSection> dependencyChanges = new DependencyChangeReportRenderer().render(reports);
         return changesFile.toBuilder() //
                 .dependencyChangeSection(dependencyChanges.orElse(null)).build();

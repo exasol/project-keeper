@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
@@ -50,7 +49,10 @@ public class DeletedFilesValidator implements Validator {
                         .andFix(getFix(fileThatMustNotExist.toString(), file)).build();
             }
             return null;
-        }).filter(Objects::nonNull).collect(Collectors.toList());
+        })
+                .filter(Objects::nonNull)
+                .map(ValidationFinding.class::cast)
+                .toList();
     }
 
     private String getFileExistsErrorMessage(final Path fileThatMustNotExist, final String reason) {

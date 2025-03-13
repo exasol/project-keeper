@@ -1,7 +1,5 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
-import static java.util.stream.Collectors.toList;
-
 import java.nio.file.Path;
 import java.util.*;
 import java.util.Map.Entry;
@@ -47,7 +45,7 @@ class GolangDependencyCalculator {
         this.compileDependencyLicenses = fetchLicensesForMainModule();
         this.allLicenses = new HashMap<>(this.compileDependencyLicenses);
         final List<ProjectDependency> projectDependencies = this.moduleInfo.getDependencies().stream()
-                .map(this::convertDependency).collect(toList());
+                .map(this::convertDependency).toList();
         return new ProjectDependencies(projectDependencies);
     }
 

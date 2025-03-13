@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.sources;
 
 import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
@@ -48,7 +47,7 @@ class SourceAnalyzerTest {
         final List<Source> sources = invocation.getArgument(1, List.class);
         return sources.stream().map(Source.class::cast) //
                 .map(this::analyzedSource) //
-                .collect(toList());
+                .toList();
     }
 
     @Test
@@ -87,7 +86,7 @@ class SourceAnalyzerTest {
                         source("maven2", SourceType.MAVEN), //
                         source("go2", SourceType.GOLANG)));
         final List<String> analyzedPaths = analyzedSources.stream().map(source -> source.getPath().toString())
-                .collect(toList());
+                .toList();
         assertThat(analyzedPaths, contains("maven1", "go1", "maven2", "go2"));
     }
 

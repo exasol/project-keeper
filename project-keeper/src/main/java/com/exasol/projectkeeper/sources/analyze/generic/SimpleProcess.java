@@ -93,11 +93,14 @@ public class SimpleProcess {
         final int exitCode = this.process.exitValue();
         if (exitCode != 0) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-126")
-                    .message("Failed to run command {{executed command}} in {{working directory}}," //
-                            + " exit code was {{exit code}} after {{duration}}." //
-                            + " Output:\n{{std out}}\n" //
-                            + "Error output:\n{{std error}}", //
-                            formatCommand(), this.workingDirectory, exitCode, duration, //
+                    .message("""
+                            Failed to run command {{executed command}} in {{working directory}},\
+                             exit code was {{exit code}} after {{duration}}.\
+                             Output:
+                            {{std out}}
+                            Error output:
+                            {{std error}}""",
+                            formatCommand(), this.workingDirectory, exitCode, duration,
                             getOutputStreamContent().trim(), getErrorStreamContent().trim())
                     .toString());
         }

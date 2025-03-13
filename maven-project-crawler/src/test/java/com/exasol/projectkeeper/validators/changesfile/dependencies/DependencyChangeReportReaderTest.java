@@ -4,7 +4,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import org.apache.maven.model.*;
@@ -48,7 +47,7 @@ class DependencyChangeReportReaderTest {
         final Model oldModel = getNewModel();
         final DependencyChangeReport report = READER.read(oldModel, newModel);
         final List<String> artifactIds = report.getChanges(Type.COMPILE).stream().map(DependencyChange::getArtifactId)
-                .collect(Collectors.toList());
+                .toList();
         assertThat(artifactIds, contains("a", "b", "c"));
     }
 

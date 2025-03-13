@@ -4,7 +4,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -27,7 +26,7 @@ public class ProjectKeeperConfigWriter {
     public ConfigForWriting prepareWriting(final ProjectKeeperConfig config) {
         final List<ConfigForWriting.Source> sourcesForWriting = new ArrayList<>();
         for (final Source source : config.getSources()) {
-            final List<String> modules = source.getModules().stream().map(Enum::name).collect(Collectors.toList());
+            final List<String> modules = source.getModules().stream().map(Enum::name).toList();
             sourcesForWriting
                     .add(new ConfigForWriting.Source(source.getPath().toString(), source.getType().name(), modules));
         }
@@ -39,10 +38,10 @@ public class ProjectKeeperConfigWriter {
     private Object convertVersionConfig(final VersionConfig versionConfig) {
         if (versionConfig == null) {
             return null;
-        } else if (versionConfig instanceof FixedVersion) {
-            return ((FixedVersion) versionConfig).getVersion();
-        } else if (versionConfig instanceof VersionFromSource) {
-            return Map.of("fromSource", ((VersionFromSource) versionConfig).getPathToPom().toString());
+        } else if (versionConfig instanceof final FixedVersion fixedVersion) {
+            return fixedVersion.getVersion();
+        } else if (versionConfig instanceof final VersionFromSource versionFromSource) {
+            return Map.of("fromSource", versionFromSource.getPathToPom().toString());
         } else {
             throw new UnsupportedOperationException(
                     "Writing version config of type " + versionConfig.getClass().getName() + " is not supported");
