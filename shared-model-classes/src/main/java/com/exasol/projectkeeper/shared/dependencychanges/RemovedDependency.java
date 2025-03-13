@@ -23,8 +23,10 @@ public record RemovedDependency(@JsonbProperty("groupId") String groupId,
      * @param artifactId the artifact ID of the removed dependency
      * @param version    the version of the removed dependency
      */
+    @SuppressWarnings("java:S6207") // Redundant constructor required to deserialize JSON
     @JsonbCreator
     public RemovedDependency {
+        // Required to deserialize JSON
     }
 
     /** @return group id */

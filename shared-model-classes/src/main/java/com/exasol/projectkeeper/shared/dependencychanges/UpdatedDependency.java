@@ -24,8 +24,10 @@ public record UpdatedDependency(@JsonbProperty("groupId") String groupId,
      * @param version    the old version of the updated dependency
      * @param newVersion the new version of the updated dependency
      */
+    @SuppressWarnings("java:S6207") // Redundant constructor required to deserialize JSON
     @JsonbCreator
     public UpdatedDependency {
+        // Required to deserialize JSON
     }
 
     /** @return group id */

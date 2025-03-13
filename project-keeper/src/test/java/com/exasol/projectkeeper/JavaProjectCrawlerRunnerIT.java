@@ -66,7 +66,7 @@ class JavaProjectCrawlerRunnerIT {
     }
 
     @Test
-    void testGetDependencyChangesFailsForEmptyPomList() throws GitAPIException {
+    void testGetDependencyChangesFailsForEmptyPomList() {
         final IllegalStateException exception = assertThrows(IllegalStateException.class, this::crawlProject);
         assertThat(exception.getMessage(), containsString(
                 "E-PK-MPC-64: Property 'projectsToCrawl' is not defined or empty. Specify property with least one pom file."));
