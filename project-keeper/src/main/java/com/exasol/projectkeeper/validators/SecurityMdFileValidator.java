@@ -31,7 +31,7 @@ public class SecurityMdFileValidator extends AbstractFileContentValidator {
 
     @Override
     protected List<ValidationFinding> validateContent(final String content) {
-        if (getTemplate().equals(content)) {
+        if (getTemplate().equals(normalizeNewline(content))) {
             return emptyList();
         }
         return List.of(SimpleValidationFinding
@@ -39,6 +39,15 @@ public class SecurityMdFileValidator extends AbstractFileContentValidator {
                         .message("File {{path}} has outdated content", PATH).toString())
                 .andFix(getCreateFileFix())
                 .build());
+    }
+
+    private String normalizeNewline(final String content) {
+        if (content == null) {
+            return null;
+        }
+        return content.replace("\r\n", "\n")
+                .replace("\n\r", "\n")
+                .replace("\r", "\n");
     }
 
     @Override
