@@ -112,6 +112,18 @@ class PomFileGeneratorTest {
         assertThat(pom.getProperties().get("java.version"), nullValue());
     }
 
+    @Test
+    void testAddTestExcludeTagsPropertyForRootPom() {
+        final Model pom = runGeneration(emptyList(), null);
+        assertThat(pom.getProperties().get("test.excludeTags"), equalTo(""));
+    }
+
+    @Test
+    void testOmitTestExcludeTagsPropertyForNonRootPom() {
+        final Model pom = runGeneration(emptyList(), new ParentPomRef("group", "parent-artifact", "version", "path"));
+        assertThat(pom.getProperties().get("test.excludeTags"), nullValue());
+    }
+
     private Model runGeneration(final List<ProjectKeeperModule> modules, final ParentPomRef parentPomRef) {
         final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
                 "1.0.0", parentPomRef, new RepoInfo(TEST_REPO_NAME, TEST_REPO_LICENSE));

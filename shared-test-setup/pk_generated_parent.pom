@@ -16,7 +16,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <sonar.organization>exasol</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
-        <test.excludeTags/>
     </properties>
     <licenses>
         <license>

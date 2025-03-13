@@ -21,7 +21,6 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
 // [impl -> dsn~mvn-toolchain~1]
 public class PomFileGenerator {
     PomFileGenerator() {
-
     }
 
     /** Default Java version if none is specified in {@code pom.xml} property {@code java.version}. */
@@ -106,7 +105,7 @@ public class PomFileGenerator {
                 .child(VERSION, config.getVersion()) //
                 .child("packaging", "pom") //
                 .nullableChild(parentReference(parentPomRef)) //
-                .child(properties(modules, parentPomRef == null ? DEFAULT_JAVA_VERSION : null)) //
+                .child(properties(modules, parentPomRef != null)) //
                 .nullableChild(profiles(modules)) //
                 .nullableChild(distributionManagement(modules)) //
                 .child(licenses(config)) //
@@ -213,14 +212,16 @@ public class PomFileGenerator {
         return element("build").child(plugins(enabledModules));
     }
 
-    private ElementBuilder properties(final Collection<ProjectKeeperModule> enabledModules, final String javaVersion) {
+    private ElementBuilder properties(final Collection<ProjectKeeperModule> enabledModules,
+            final boolean hasParentPom) {
+        final String javaVersion = hasParentPom ? null : DEFAULT_JAVA_VERSION;
         return element("properties") //
                 .child("project.build.sourceEncoding", "UTF-8") //
                 .child("project.reporting.outputEncoding", "UTF-8") //
                 .nullableChild(javaVersion == null ? null : element("java.version").text(javaVersion)) //
                 .child("sonar.organization", "exasol") //
                 .child("sonar.host.url", "https://sonarcloud.io") //
-                .child("test.excludeTags", "") //
+                .nullableChild(hasParentPom ? null : element("test.excludeTags").text("")) //
                 .nullableChild(!enabledModules.contains(MAVEN_CENTRAL) ? null : element("gpg.skip").text("true"));
     }
 
