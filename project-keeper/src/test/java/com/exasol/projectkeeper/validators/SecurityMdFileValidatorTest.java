@@ -41,7 +41,7 @@ class SecurityMdFileValidatorTest {
         assertThat(getValidator(projectDir).validate(), empty());
     }
 
-    private String getSecurityMdContent() throws IOException {
+    private String getSecurityMdContent() {
         return new SecurityMdFileValidator(projectDir, REPO_NAME).getTemplate();
     }
 
