@@ -106,8 +106,8 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
     private String getSonarCloudBadges() {
         final StringBuilder badges = new StringBuilder();
         for (final AnalyzedSource source : this.sources) {
-            if (source instanceof AnalyzedMavenSource) {
-                getSonarCloudBadgeForMavenSource(badges, (AnalyzedMavenSource) source);
+            if (source instanceof final AnalyzedMavenSource mavenSource) {
+                getSonarCloudBadgeForMavenSource(badges, mavenSource);
             }
         }
         return badges.toString();
@@ -159,8 +159,7 @@ public class ReadmeFileValidator extends AbstractFileContentValidator {
     }
 
     private String getDeploymentBadge(final AnalyzedSource source, final boolean withProjectName) {
-        if (source instanceof AnalyzedMavenSource) {
-            final AnalyzedMavenSource mavenSource = (AnalyzedMavenSource) source;
+        if (source instanceof final AnalyzedMavenSource mavenSource) {
             return getMavenCentralBadge(withProjectName, mavenSource);
         } else {
             throw new UnsupportedOperationException(ExaError.messageBuilder("E-PK-CORE-92")

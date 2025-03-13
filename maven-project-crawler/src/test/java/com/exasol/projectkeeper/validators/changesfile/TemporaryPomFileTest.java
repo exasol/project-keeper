@@ -19,7 +19,7 @@ class TemporaryPomFileTest {
     }
 
     @Test
-    void testDelete() throws IOException {
+    void testDelete() {
         final TemporaryPomFile pomFile = new TemporaryPomFile("test");
         pomFile.close();
         assertFalse(Files.exists(pomFile.getPomFile()));

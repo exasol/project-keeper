@@ -107,13 +107,13 @@ public class ProjectKeeperConfigReader {
     private VersionConfig parseVersion(final Object rawVersion, final Path projectDir) {
         if (rawVersion == null) {
             return null;
-        } else if (rawVersion instanceof String) {
-            return new FixedVersion((String) rawVersion);
+        } else if (rawVersion instanceof final String version) {
+            return new FixedVersion(version);
         }
-        if (rawVersion instanceof Map) {
-            final Object fromMvnSource = ((Map<?, ?>) rawVersion).get("fromSource");
-            if (fromMvnSource instanceof String) {
-                return new VersionFromSource(projectDir.resolve(Path.of((String) fromMvnSource)));
+        if (rawVersion instanceof final Map versionMap) {
+            final Object fromMvnSource = versionMap.get("fromSource");
+            if (fromMvnSource instanceof final String fromMvnSourceString) {
+                return new VersionFromSource(projectDir.resolve(Path.of(fromMvnSourceString)));
             }
         }
         throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-113")
@@ -244,8 +244,8 @@ public class ProjectKeeperConfigReader {
      */
     private String convertExclude(final Object rawExclude) {
         try {
-            if (rawExclude instanceof String) {
-                return Pattern.quote((String) rawExclude);
+            if (rawExclude instanceof final String exclude) {
+                return Pattern.quote(exclude);
             } else {
                 final Map<?, ?> excludeMap = (Map<?, ?>) rawExclude;
                 return (String) Objects.requireNonNull(excludeMap.get("regex"));

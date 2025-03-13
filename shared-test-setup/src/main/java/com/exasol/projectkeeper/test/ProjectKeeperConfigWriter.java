@@ -38,10 +38,10 @@ public class ProjectKeeperConfigWriter {
     private Object convertVersionConfig(final VersionConfig versionConfig) {
         if (versionConfig == null) {
             return null;
-        } else if (versionConfig instanceof FixedVersion) {
-            return ((FixedVersion) versionConfig).getVersion();
-        } else if (versionConfig instanceof VersionFromSource) {
-            return Map.of("fromSource", ((VersionFromSource) versionConfig).getPathToPom().toString());
+        } else if (versionConfig instanceof final FixedVersion fixedVersion) {
+            return fixedVersion.getVersion();
+        } else if (versionConfig instanceof final VersionFromSource versionFromSource) {
+            return Map.of("fromSource", versionFromSource.getPathToPom().toString());
         } else {
             throw new UnsupportedOperationException(
                     "Writing version config of type " + versionConfig.getClass().getName() + " is not supported");

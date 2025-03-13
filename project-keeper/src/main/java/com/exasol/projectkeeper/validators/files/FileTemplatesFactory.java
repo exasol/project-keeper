@@ -79,8 +79,8 @@ class FileTemplatesFactory {
     }
 
     List<FileTemplate> getTemplatesForSource(final AnalyzedSource source) {
-        if (source instanceof AnalyzedMavenSource) {
-            return getMavenTemplates((AnalyzedMavenSource) source);
+        if (source instanceof final AnalyzedMavenSource mavenSource) {
+            return getMavenTemplates(mavenSource);
         } else if (source instanceof AnalyzedSourceImpl) {
             // do not verify templates (e.g. .github/workflows) for submodules
             return Collections.emptyList();

@@ -51,7 +51,7 @@ class ProjectKeeperMojoIT {
     }
 
     @BeforeEach
-    void beforeEach(final TestInfo test) throws IOException, GitAPIException {
+    void beforeEach(final TestInfo test) throws GitAPIException {
         Git.init().setDirectory(this.projectDir.toFile()).call().close();
         new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION) //
                 .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION) //

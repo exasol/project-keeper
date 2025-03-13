@@ -137,8 +137,8 @@ public class GitRepository implements AutoCloseable {
             final var revObject = tagSearcher.parseAny(tagRef.getObjectId());
             if (revObject instanceof RevCommit) {
                 return revObject.getId();
-            } else if (revObject instanceof RevTag) {
-                return ((RevTag) revObject).getObject().getId();
+            } else if (revObject instanceof final RevTag revTag) {
+                return revTag.getObject().getId();
             } else {
                 throw new UnsupportedOperationException(ExaError.messageBuilder("F-PK-SMC-44")
                         .message("Unsupported tag target {{target class name}}.")

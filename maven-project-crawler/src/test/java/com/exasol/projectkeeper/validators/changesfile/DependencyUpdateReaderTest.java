@@ -63,9 +63,8 @@ class DependencyUpdateReaderTest {
     private MavenProject createProjectWithDependencyUpdate(final TestRepo gitRepo) throws IOException, GitAPIException {
         makeRelease(gitRepo, "1.0.0", "1.2.3");
         makeRelease(gitRepo, null, "1.2.4");
-        final MavenProject currentProject = new MavenProjectFromFileReaderStub()
+        return new MavenProjectFromFileReaderStub()
                 .readProject(this.tempDir.resolve("pom.xml").toFile());
-        return currentProject;
     }
 
     private String makeRelease(final TestRepo git, final String name, final String dependencyVersion)

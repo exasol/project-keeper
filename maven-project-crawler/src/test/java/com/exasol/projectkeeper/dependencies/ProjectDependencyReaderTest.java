@@ -84,7 +84,7 @@ class ProjectDependencyReaderTest {
 
     // [utest -> dsn~dependency.md-file-validator-excludes-implicit-plugins~1]
     @Test
-    void implicitPlugin() throws ProjectBuildingException {
+    void implicitPlugin() {
         assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", null))), empty());
     }
 
