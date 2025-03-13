@@ -204,6 +204,22 @@ Covers:
 
 * [`req~verify-license-file~1`](system_requirements.md#verify-license-file)
 
+### Security File Validator
+
+`dsn~security.md-file-validator~1`
+
+PK always generates `SECURITY.md` file with the following link:
+
+```
+https://github.com/exasol/${repo}$/security/advisories
+```
+
+Needs: impl, utest, itest
+
+Covers:
+
+* [`req~verify-security.md-file~1`](system_requirements.md#verify-securitymd-file)
+
 ### Gitignore Validator
 
 `dsn~gitignore-validator~1`

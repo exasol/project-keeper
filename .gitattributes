@@ -4,6 +4,7 @@
 pk_generated_parent.pom  linguist-generated=true
 dependencies.md          linguist-generated=true
 doc/changes/changelog.md linguist-generated=true
+SECURITY.md              linguist-generated=true
 
 doc/images/.svg                      linguist-generated=true
 

@@ -2,10 +2,14 @@
 *.bat   text eol=crlf
 
 $pomFiles
-dependencies.md                                                  linguist-generated=true
-doc/changes/changelog.md                                         linguist-generated=true
-.github/workflows/broken_links_checker.yml                       linguist-generated=true
-.github/workflows/ci-build.yml                                   linguist-generated=true
-.github/workflows/dependencies_check.yml                         linguist-generated=true
-.github/workflows/dependencies_update.yml                        linguist-generated=true
-.github/workflows/release.yml                                    linguist-generated=true
+SECURITY.md                                linguist-generated=true
+dependencies.md                            linguist-generated=true
+doc/changes/changelog.md                   linguist-generated=true
+.github/workflows/broken_links_checker.yml linguist-generated=true
+.github/workflows/ci-build.yml             linguist-generated=true
+.github/workflows/dependencies_check.yml   linguist-generated=true
+.github/workflows/dependencies_update.yml  linguist-generated=true
+.github/workflows/release.yml              linguist-generated=true
+
+.settings/org.eclipse.jdt.core.prefs       linguist-generated=true
+.settings/org.eclipse.jdt.ui.prefs         linguist-generated=true

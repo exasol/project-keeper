@@ -39,7 +39,7 @@ public class ProjectKeeperAbstractIT {
 
     protected void assertVerifySucceeds() {
         final boolean success = getProjectKeeper(mock(Logger.class)).verify();
-        assertThat(success, equalTo(true));
+        assertThat("verification success", success, equalTo(true));
     }
 
     protected static class ToStringLogger implements Logger {

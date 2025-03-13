@@ -19,6 +19,7 @@ import org.junit.jupiter.api.*;
 
 import com.exasol.projectkeeper.test.MavenProjectFixture;
 import com.exasol.projectkeeper.test.TestMavenModel;
+import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
 
 /**
  * This integration test tests the maven plugin in a safe environment. Since we don't want to install the plugin to the
@@ -39,6 +40,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     // [itest->dsn~pom-file-validator~1]
     void testVerifyPhase1() throws IOException {
         Files.writeString(this.projectDir.resolve("LICENSE"), "My License\n");
+        writeSecurityMdFile();
         this.fixture.writeDefaultPom();
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         final String output = assertInvalidAndGetOutput();
@@ -47,6 +49,11 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
                         containsString("E-PK-CORE-17: Missing required file: 'pk_generated_parent.pom'")),
                 () -> assertThat(output, containsString(
                         "E-PK-CORE-105: Invalid pom file 'pom.xml': Required property 'finalName' is missing in maven-assembly-plugin.")));
+    }
+
+    private void writeSecurityMdFile() throws IOException {
+        Files.writeString(this.projectDir.resolve("SECURITY.md"),
+                new SecurityMdFileValidator(projectDir, projectDir.getFileName().toString()).getTemplate());
     }
 
     @Test
@@ -112,6 +119,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     @Test
     // [itest->dsn~mvn-fix-goal~1]
     // [itest->dsn~license-file-validator~1]
+    // [itest -> dsn~security.md-file-validator~1]
     // [itest -> dsn~eclipse-prefs-java-version~1]
     void testFix() throws IOException {
         final var pom = new TestMavenModel();
@@ -122,9 +130,16 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         final boolean success = getProjectKeeper(logger).fix();
         final String eclipseJdtCorePrefsContent = Files
                 .readString(this.projectDir.resolve(".settings/org.eclipse.jdt.core.prefs"));
+        final String securityMdContent = Files
+                .readString(this.projectDir.resolve("SECURITY.md"));
         assertAll( //
                 () -> assertThat(success, equalTo(true)),
                 () -> assertThat(this.projectDir.resolve("LICENSE").toFile(), anExistingFile()),
+                () -> assertThat(securityMdContent, allOf(
+                        startsWith("# Security\n"),
+                        containsString("https://github.com/exasol/%s/security/advisories/new"
+                                .formatted(projectDir.getFileName().toString())),
+                        endsWith("We are happy to acknowledge your research publicly when possible.\n"))),
                 () -> assertThat(eclipseJdtCorePrefsContent, allOf( //
                         containsString("org.eclipse.jdt.core.compiler.compliance=11"),
                         containsString("org.eclipse.jdt.core.compiler.codegen.targetPlatform=11"),
@@ -141,6 +156,19 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         assertVerifySucceeds();
     }
 
+    // [itest -> dsn~security.md-file-validator~1]
+    @Test
+    void testFixesInvalidSecurityMd() throws IOException {
+        final var pom = new TestMavenModel();
+        pom.writeAsPomToProject(this.projectDir);
+        fixture.writeConfig(this.fixture.getConfigWithoutModulesBuilder());
+        runFix();
+        final Path securityMdPath = projectDir.resolve("SECURITY.md");
+        Files.writeString(securityMdPath, "invalid content");
+        runFix();
+        assertThat(Files.readString(securityMdPath), startsWith("# Security"));
+    }
+
     @Test
     // [itest->dsn~dependency-section-in-changes_x.x.x.md-file-validator~1]
     void testChangesFileGeneration() throws IOException, GitAPIException {
@@ -148,7 +176,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
-        final Pattern pluginEntryPattern = Pattern.compile(".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-\\w+-plugin:\\d+(\\.\\d+){1,2}` to.*", Pattern.DOTALL);
+        final Pattern pluginEntryPattern = Pattern.compile(
+                ".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-\\w+-plugin:\\d+(\\.\\d+){1,2}` to.*",
+                Pattern.DOTALL);
         assertAll(//
                 () -> assertThat(generatedChangesFile, startsWith("# My Test Project 0.2.0, released")),
                 () -> assertThat(generatedChangesFile,
