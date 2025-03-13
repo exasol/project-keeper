@@ -99,8 +99,8 @@ public class SimpleProcess {
                              Output:
                             {{std out}}
                             Error output:
-                            {{std error}}""", //
-                            formatCommand(), this.workingDirectory, exitCode, duration, //
+                            {{std error}}""",
+                            formatCommand(), this.workingDirectory, exitCode, duration,
                             getOutputStreamContent().trim(), getErrorStreamContent().trim())
                     .toString());
         }

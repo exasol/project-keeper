@@ -110,7 +110,7 @@ public class ProjectKeeperConfigReader {
         } else if (rawVersion instanceof final String version) {
             return new FixedVersion(version);
         }
-        if (rawVersion instanceof final Map versionMap) {
+        if (rawVersion instanceof final Map<?, ?> versionMap) {
             final Object fromMvnSource = versionMap.get("fromSource");
             if (fromMvnSource instanceof final String fromMvnSourceString) {
                 return new VersionFromSource(projectDir.resolve(Path.of(fromMvnSourceString)));

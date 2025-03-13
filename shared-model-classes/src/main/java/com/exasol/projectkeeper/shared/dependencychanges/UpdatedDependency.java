@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.shared.dependencychanges;
 
+import jakarta.json.bind.annotation.JsonbCreator;
 import jakarta.json.bind.annotation.JsonbProperty;
 
 /**
@@ -14,6 +15,18 @@ import jakarta.json.bind.annotation.JsonbProperty;
 public record UpdatedDependency(@JsonbProperty("groupId") String groupId,
         @JsonbProperty("artifactId") String artifactId, @JsonbProperty("version") String version,
         @JsonbProperty("newVersion") String newVersion) implements DependencyChange {
+    /**
+     * Create a new instance.
+     * 
+     * @param groupId    the group ID of the updated dependency. May be null if the package system does not use group
+     *                   IDs (e.g. for Golang)
+     * @param artifactId the artifact ID of the updated dependency
+     * @param version    the old version of the updated dependency
+     * @param newVersion the new version of the updated dependency
+     */
+    @JsonbCreator
+    public UpdatedDependency {
+    }
 
     /** @return group id */
     @Override
