@@ -24,7 +24,7 @@ class DependencyPageRendererTest {
                 buildDependency("Jakarta JSON Processing API", licenses), //
                 buildDependency("JSON-B API", licenses), //
                 buildDependency("org.eclipse.yasson", List.of(buildLicense("Lx"))));
-        assertThat(new DependencyPageRenderer().render(projects), equalTo( //
+        assertPageRendered(projects,
                 """
                         <!-- @formatter:off -->
                         # Dependencies
@@ -46,14 +46,13 @@ class DependencyPageRendererTest {
                         [5]: https://company-JSON-B API.com/download
                         [6]: https://company-org.eclipse.yasson.com/download
                         [7]: https://lx.org/license
-                        """));
+                        """);
     }
 
     @Test
     void testCompileDependency() {
         final ProjectDependency dependency = buildDependency(ProjectDependency.Type.COMPILE);
-        final String result = new DependencyPageRenderer().render(singleProjectWith(dependency));
-        assertThat(result, equalTo(
+        assertPageRendered(singleProjectWith(dependency),
                 """
                         <!-- @formatter:off -->
                         # Dependencies
@@ -66,7 +65,7 @@ class DependencyPageRendererTest {
 
                         [0]: https://example.com/mylib
                         [1]: https://mit.edu
-                        """));
+                        """);
     }
 
     @Test
@@ -77,8 +76,7 @@ class DependencyPageRendererTest {
                 .websiteUrl("https://example.com/mylib") //
                 .licenses(List.of(new License("MIT|License", "https://mit.edu"))) //
                 .build();
-        final String result = new DependencyPageRenderer().render(singleProjectWith(dependency));
-        assertThat(result, equalTo(
+        assertPageRendered(singleProjectWith(dependency),
                 """
                         <!-- @formatter:off -->
                         # Dependencies
@@ -91,7 +89,7 @@ class DependencyPageRendererTest {
 
                         [0]: https://example.com/mylib
                         [1]: https://mit.edu
-                        """));
+                        """);
     }
 
     private List<ProjectWithDependencies> singleProjectWith(final ProjectDependency... dependencies) {
@@ -101,21 +99,21 @@ class DependencyPageRendererTest {
     @Test
     void testTestDependency() {
         final ProjectDependency dependency = buildDependency(ProjectDependency.Type.TEST);
-        assertThat(new DependencyPageRenderer().render(singleProjectWith(dependency)),
+        assertThat(render(singleProjectWith(dependency)),
                 containsString("## Test Dependencies"));
     }
 
     @Test
     void testRuntimeDependency() {
         final ProjectDependency dependency = buildDependency(ProjectDependency.Type.RUNTIME);
-        assertThat(new DependencyPageRenderer().render(singleProjectWith(dependency)),
+        assertThat(render(singleProjectWith(dependency)),
                 containsString("## Runtime Dependencies"));
     }
 
     @Test
     void testPluginDependency() {
         final ProjectDependency dependency = buildDependency(ProjectDependency.Type.PLUGIN);
-        assertThat(new DependencyPageRenderer().render(singleProjectWith(dependency)),
+        assertThat(render(singleProjectWith(dependency)),
                 containsString("## Plugin Dependencies"));
     }
 
@@ -125,7 +123,7 @@ class DependencyPageRendererTest {
         final List<ProjectWithDependencies> projects = List.of(
                 new ProjectWithDependencies("project a", List.of(dependency)),
                 new ProjectWithDependencies("project b", List.of(dependency)));
-        assertThat(new DependencyPageRenderer().render(projects), equalTo( //
+        assertPageRendered(projects,
                 """
                         <!-- @formatter:off -->
                         # Dependencies
@@ -148,7 +146,7 @@ class DependencyPageRendererTest {
 
                         [0]: https://example.com/mylib
                         [1]: https://mit.edu
-                        """));
+                        """);
     }
 
     private License buildLicense(final String id) {
@@ -171,5 +169,19 @@ class DependencyPageRendererTest {
                 .websiteUrl("https://example.com/mylib") //
                 .licenses(List.of(new License("MIT License", "https://mit.edu"))) //
                 .build();
+    }
+
+    private String render(final List<ProjectWithDependencies> projects) {
+        return new DependencyPageRenderer().render(projects);
+    }
+
+    private void assertPageRendered(final List<ProjectWithDependencies> projects, final String expectedContent) {
+        assertThat(render(projects), equalTo(replaceNewline(expectedContent)));
+    }
+
+    private static final String NEWLINE = System.lineSeparator();
+
+    private String replaceNewline(final String text) {
+        return text.replace("\n", NEWLINE);
     }
 }
