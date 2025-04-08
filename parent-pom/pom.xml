@@ -28,7 +28,7 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>5.0.0</revision>
+        <revision>5.0.1</revision>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
         <maven.version>3.9.9</maven.version>
