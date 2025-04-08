@@ -52,7 +52,10 @@ class ProjectKeeperMojoIT {
 
     @BeforeEach
     void beforeEach(final TestInfo test) throws GitAPIException {
-        Git.init().setDirectory(this.projectDir.toFile()).call().close();
+        try (final Git repository = Git.init().setDirectory(this.projectDir.toFile()).call()) {
+            // git-commit-id-maven-plugin needs at least one commit
+            repository.commit().setMessage("initial commit").setAllowEmpty(true).call();
+        }
         new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION) //
                 .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION) //
                 .setArtifactFinalName("dummy-${project.version}") //
