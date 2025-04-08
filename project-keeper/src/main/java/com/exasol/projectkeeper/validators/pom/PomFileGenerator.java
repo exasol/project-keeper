@@ -57,8 +57,7 @@ public class PomFileGenerator {
             // quality-summarizer-maven-plugin must come after Jacoco
             new SimplePluginTemplateGenerator("maven_templates/quality-summarizer-maven-plugin.xml", DEFAULT),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
-            // Reproducible build plugin must be last
-            new SimplePluginTemplateGenerator("maven_templates/reproducible-build-maven-plugin.xml", DEFAULT));
+            new SimplePluginTemplateGenerator("maven_templates/git-commit-id-maven-plugin.xml", DEFAULT));
     private static final String VERSION = "version";
     private static final String ARTIFACT_ID = "artifactId";
     private static final String GROUP_ID = "groupId";
@@ -218,6 +217,7 @@ public class PomFileGenerator {
         return element("properties") //
                 .child("project.build.sourceEncoding", "UTF-8") //
                 .child("project.reporting.outputEncoding", "UTF-8") //
+                .child("project.build.outputTimestamp", "${git.commit.time}") //
                 .nullableChild(javaVersion == null ? null : element("java.version").text(javaVersion)) //
                 .child("sonar.organization", "exasol") //
                 .child("sonar.host.url", "https://sonarcloud.io") //
