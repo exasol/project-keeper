@@ -214,6 +214,7 @@
                     <generateBackupPoms>true</generateBackupPoms>
                     <processDependencies>true</processDependencies>
                     <processDependencyManagement>true</processDependencyManagement>
+                    <processDependencyManagementTransitive>false</processDependencyManagementTransitive>
                     <processParent>false</processParent>
                     <autoLinkItems>true</autoLinkItems>
                     <excludeReactor>true</excludeReactor>
