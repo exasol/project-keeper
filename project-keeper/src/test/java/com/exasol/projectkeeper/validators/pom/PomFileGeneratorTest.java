@@ -69,7 +69,7 @@ class PomFileGeneratorTest {
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
                                 "flatten-maven-plugin", "ossindex-maven-plugin", "git-commit-id-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
-                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
+                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin", "maven-artifact-plugin",
                                 "maven-toolchains-plugin", "maven-clean-plugin", "maven-install-plugin",
                                 "maven-resources-plugin", "maven-site-plugin", "quality-summarizer-maven-plugin")));
     }
