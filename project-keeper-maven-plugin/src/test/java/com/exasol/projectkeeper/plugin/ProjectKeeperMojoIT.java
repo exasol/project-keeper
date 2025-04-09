@@ -111,6 +111,26 @@ class ProjectKeeperMojoIT {
         assertThat(projectDir.resolve("target/jacoco-agent/org.jacoco.agent-runtime.jar").toFile(), anExistingFile());
     }
 
+    @Test
+    void testReproducibleBuild() throws VerificationException, IOException {
+        Files.writeString(this.projectDir.resolve("error_code_config.yml"), """
+                error-tags:
+                  DUMMY:
+                    packages:
+                      - dummy
+                    highest-index: 1
+                """);
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
+        verifier.executeGoal("project-keeper:fix");
+        verifier.executeGoals(List.of("clean", "install"));
+        verifier.executeGoals(List.of("clean", "verify", "artifact:compare"));
+        assertThat(projectDir.resolve("target/my-test-project-0.1.0.buildcompare").toFile(), anExistingFile());
+    }
+
     // [itest->dsn~verify-release-mode.verify-release-date~1]
     // [itest->dsn~verify-release-mode.verify~1]
     @Test
