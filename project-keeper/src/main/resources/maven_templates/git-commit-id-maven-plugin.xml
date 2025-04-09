@@ -1,0 +1,21 @@
+<plugin>
+    <groupId>io.github.git-commit-id</groupId>
+    <artifactId>git-commit-id-maven-plugin</artifactId>
+    <version>9.0.1</version>
+    <executions>
+        <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+                <goal>revision</goal>
+            </goals>
+            <phase>initialize</phase>
+        </execution>
+    </executions>
+    <configuration>
+        <verbose>true</verbose>
+        <dateFormatTimeZone>UTC</dateFormatTimeZone>
+        <includeOnlyProperties>
+            <includeOnlyProperty>git.commit.time</includeOnlyProperty>
+        </includeOnlyProperties>
+    </configuration>
+</plugin>

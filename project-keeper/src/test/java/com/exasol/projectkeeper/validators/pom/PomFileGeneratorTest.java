@@ -67,9 +67,9 @@ class PomFileGeneratorTest {
                 () -> assertThat(license.getDistribution(), equalTo("repo")),
                 () -> assertThat(pluginNames,
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
-                                "flatten-maven-plugin", "ossindex-maven-plugin", "reproducible-build-maven-plugin",
+                                "flatten-maven-plugin", "ossindex-maven-plugin", "git-commit-id-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
-                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
+                                "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin", "maven-artifact-plugin",
                                 "maven-toolchains-plugin", "maven-clean-plugin", "maven-install-plugin",
                                 "maven-resources-plugin", "maven-site-plugin", "quality-summarizer-maven-plugin")));
     }
@@ -175,14 +175,5 @@ class PomFileGeneratorTest {
                 () -> assertThat(parent.getVersion(), equalTo("1.2.3")),
                 () -> assertThat(parent.getRelativePath(), equalTo(expectedRelativePath))//
         );
-    }
-
-    @Test
-    void testReproducibleBuildPluginIsLast() {
-        final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
-        final List<Plugin> plugins = pom.getBuild().getPlugins();
-        final Plugin lastPlugin = plugins.get(plugins.size() - 1);
-        assertAll(() -> assertThat(lastPlugin.getGroupId(), equalTo("io.github.zlika")),
-                () -> assertThat(lastPlugin.getArtifactId(), equalTo("reproducible-build-maven-plugin")));
     }
 }

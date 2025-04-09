@@ -52,7 +52,10 @@ class ProjectKeeperMojoIT {
 
     @BeforeEach
     void beforeEach(final TestInfo test) throws GitAPIException {
-        Git.init().setDirectory(this.projectDir.toFile()).call().close();
+        try (final Git git = Git.init().setDirectory(this.projectDir.toFile()).call()) {
+            // git-commit-id-maven-plugin needs at least one commit
+            git.commit().setMessage("initial commit").setAllowEmpty(true).call();
+        }
         new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION) //
                 .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION) //
                 .setArtifactFinalName("dummy-${project.version}") //
@@ -106,6 +109,53 @@ class ProjectKeeperMojoIT {
         verifier.executeGoal("project-keeper:fix");
         verifier.executeGoal("package");
         assertThat(projectDir.resolve("target/jacoco-agent/org.jacoco.agent-runtime.jar").toFile(), anExistingFile());
+    }
+
+    @Test
+    void testReproducibleBuild() throws VerificationException, IOException {
+        Files.writeString(this.projectDir.resolve("error_code_config.yml"), """
+                error-tags:
+                  DUMMY:
+                    packages:
+                      - dummy
+                    highest-index: 1
+                """);
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
+        verifier.executeGoal("project-keeper:fix");
+        verifier.executeGoals(List.of("clean", "install"));
+        verifier.executeGoals(List.of("clean", "verify", "artifact:compare"));
+        assertThat(projectDir.resolve("target/my-test-project-0.1.0.buildcompare").toFile(), anExistingFile());
+    }
+
+    @Test
+    void testReproducibleBuildFails() throws VerificationException, GitAPIException, IOException {
+        Files.writeString(this.projectDir.resolve("error_code_config.yml"), """
+                error-tags:
+                  DUMMY:
+                    packages:
+                      - dummy
+                    highest-index: 1
+                """);
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
+        verifier.executeGoal("project-keeper:fix");
+        verifier.executeGoals(List.of("clean", "install"));
+
+        try (Git git = Git.open(projectDir.toFile())) {
+            git.commit().setMessage("new commit").setAllowEmpty(true).call();
+        }
+        final VerificationException exception = assertThrows(VerificationException.class,
+                () -> verifier.executeGoals(List.of("clean", "verify", "artifact:compare")));
+
+        assertThat(exception.getMessage(), containsString("Build artifacts are different from reference"));
+        assertThat(projectDir.resolve("target/my-test-project-0.1.0.buildcompare").toFile(), anExistingFile());
     }
 
     // [itest->dsn~verify-release-mode.verify-release-date~1]
