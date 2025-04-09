@@ -23,6 +23,7 @@ BOMs in dependency management.
 
 * Added `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.1`
 * Removed `io.github.zlika:reproducible-build-maven-plugin:0.17`
+* Added `org.apache.maven.plugins:maven-artifact-plugin:3.6.0`
 
 ### Project Keeper Core
 
@@ -42,6 +43,7 @@ BOMs in dependency management.
 
 * Added `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.1`
 * Removed `io.github.zlika:reproducible-build-maven-plugin:0.17`
+* Added `org.apache.maven.plugins:maven-artifact-plugin:3.6.0`
 
 ### Project Keeper Command Line Interface
 
@@ -57,6 +59,7 @@ BOMs in dependency management.
 
 * Added `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.1`
 * Removed `io.github.zlika:reproducible-build-maven-plugin:0.17`
+* Added `org.apache.maven.plugins:maven-artifact-plugin:3.6.0`
 
 ### Project Keeper Maven Plugin
 
@@ -68,6 +71,7 @@ BOMs in dependency management.
 
 * Added `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.1`
 * Removed `io.github.zlika:reproducible-build-maven-plugin:0.17`
+* Added `org.apache.maven.plugins:maven-artifact-plugin:3.6.0`
 
 ### Project Keeper Java Project Crawler
 
@@ -83,6 +87,7 @@ BOMs in dependency management.
 
 * Added `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.1`
 * Removed `io.github.zlika:reproducible-build-maven-plugin:0.17`
+* Added `org.apache.maven.plugins:maven-artifact-plugin:3.6.0`
 
 ### Project Keeper Shared Test Setup
 
@@ -94,3 +99,4 @@ BOMs in dependency management.
 
 * Added `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.1`
 * Removed `io.github.zlika:reproducible-build-maven-plugin:0.17`
+* Added `org.apache.maven.plugins:maven-artifact-plugin:3.6.0`
