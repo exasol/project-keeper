@@ -1,4 +1,4 @@
-# Project Keeper 5.0.1, released 2025-??-??
+# Project Keeper 5.0.1, released 2025-04-09
 
 Code name: Improve reproducible builds.
 
