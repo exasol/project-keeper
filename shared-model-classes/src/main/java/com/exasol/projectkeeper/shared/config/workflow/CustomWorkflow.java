@@ -145,7 +145,7 @@ public final class CustomWorkflow {
         /**
          * Set job names to remove from the workflow, e.g. {@code next-java-compatibility}.
          *
-         * @param jobs job customizations
+         * @param removedJobs job customizations
          * @return the builder instance
          */
         public Builder removeJobs(final List<String> removedJobs) {
