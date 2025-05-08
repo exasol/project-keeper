@@ -10,6 +10,10 @@ This release allows customizing GitHub workflows `project-keeper-verify.yml` and
 
 * #642: Allowed customizing GitHub workflows `project-keeper-verify.yml` and `broken_links_checker.yml`
 
+## Bugfixes
+
+* #638: Renamed step "Report Security Issues" in GitHub workflow `dependencies_check.yml`
+
 ## Dependency Updates
 
 ### Project Keeper Shared Model Classes
