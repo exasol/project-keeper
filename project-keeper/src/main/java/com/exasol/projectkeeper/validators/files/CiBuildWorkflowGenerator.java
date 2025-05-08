@@ -64,7 +64,7 @@ class CiBuildWorkflowGenerator {
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
-        return new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion.get());
+        return new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion);
     }
 
     private List<StepCustomization> findCustomizations(final String workflowName) {

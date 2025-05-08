@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.validators.files;
 import static java.util.stream.Collectors.joining;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
@@ -10,9 +11,9 @@ import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 class GitHubWorkflowJavaVersionCustomizer implements WorkflowCustomizer {
 
     private final List<String> javaVersions;
-    private final String nextJavaVersion;
+    private final Supplier<String> nextJavaVersion;
 
-    GitHubWorkflowJavaVersionCustomizer(final List<String> javaVersions, final String nextJavaVersion) {
+    GitHubWorkflowJavaVersionCustomizer(final List<String> javaVersions, final Supplier<String> nextJavaVersion) {
         this.javaVersions = javaVersions;
         this.nextJavaVersion = nextJavaVersion;
     }
@@ -21,7 +22,7 @@ class GitHubWorkflowJavaVersionCustomizer implements WorkflowCustomizer {
     public void applyCustomization(final GitHubWorkflow workflow) {
         for (final Job job : workflow.getJobs()) {
             if ("next-java-compatibility".equals(job.getId())) {
-                updateJavaVersion(job, nextJavaVersion);
+                updateJavaVersion(job, nextJavaVersion.get());
             } else {
                 updateJavaVersion(job, formatJavaVersions());
             }
