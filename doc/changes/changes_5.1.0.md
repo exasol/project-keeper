@@ -9,6 +9,7 @@ This release allows customizing GitHub workflows `project-keeper-verify.yml` and
 ## Features
 
 * #642: Allowed customizing GitHub workflows `project-keeper-verify.yml` and `broken_links_checker.yml`
+* #641: Pin version of `exasol/python-toolbox/.github/actions/security-issues` in `dependencies_check.yml`
 
 ## Dependency Updates
 
