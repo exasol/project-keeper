@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 
+// [impl->dsn~customize-build-process.remove-job~0]
 public class GitHubWorkflowRemoveJobCustomizer implements WorkflowCustomizer {
     private final List<String> jobNamesToRemove;
 

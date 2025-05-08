@@ -296,6 +296,7 @@ class CiBuildWorkflowGeneratorTest {
                 "E-PK-CORE-211: GitHub Workflow does not have a job with ID 'missing'. Choose one of ['build-and-test', 'next-java-compatibility', 'build', 'start_release']."));
     }
 
+    // [utest->dsn~customize-build-process.remove-job~0]
     @Test
     void removeJobFromCiBuild() {
         final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder()
@@ -307,6 +308,7 @@ class CiBuildWorkflowGeneratorTest {
                 () -> assertThat(workflow.getJob("build").getNeeds(), contains("build-and-test")));
     }
 
+    // [utest->dsn~customize-build-process.remove-job~0]
     @Test
     void removeJobFromOtherWorkflow() {
         final GitHubWorkflow workflow = dependencyCheckBuildContent(BuildOptions.builder()

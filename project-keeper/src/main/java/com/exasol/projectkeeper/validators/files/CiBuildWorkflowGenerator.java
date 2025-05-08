@@ -63,6 +63,7 @@ class CiBuildWorkflowGenerator {
                 new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName),
                 // [impl->dsn~customize-build-process.job-permissions~0]
                 new GitHubWorkflowJobPermissionsCustomizer(jobCustomizations),
+                // [impl->dsn~customize-build-process.remove-job~0]
                 new GitHubWorkflowRemoveJobCustomizer(jobstoRemove)));
     }
 
@@ -136,6 +137,7 @@ class CiBuildWorkflowGenerator {
                 .map(CustomWorkflow::getRemovedJobs).orElseGet(Collections::emptyList);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(javaVersionCustomizer(),
                 new GitHubWorkflowStepCustomizer(workflowName, customizations),
+                // [impl->dsn~customize-build-process.remove-job~0]
                 new GitHubWorkflowRemoveJobCustomizer(jobstoRemove)));
     }
 
