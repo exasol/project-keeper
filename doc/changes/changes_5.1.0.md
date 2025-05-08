@@ -1,12 +1,14 @@
-# Project Keeper 5.1.0, released 2025-??-??
+# Project Keeper 5.1.0, released 2025-05-??
 
-Code name:
+Code name: Customize more workflows
 
 ## Summary
 
+This release allows customizing GitHub workflows `project-keeper-verify.yml` and `broken_links_checker.yml`.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #642: Allowed customizing GitHub workflows `project-keeper-verify.yml` and `broken_links_checker.yml`
 
 ## Dependency Updates
 

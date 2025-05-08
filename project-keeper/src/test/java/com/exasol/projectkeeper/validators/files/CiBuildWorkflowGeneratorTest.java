@@ -310,6 +310,56 @@ class CiBuildWorkflowGeneratorTest {
         assertThat(customJavaVersion, equalTo("custom-version"));
     }
 
+    @Test
+    void brokenLinksCheckerWorkflowWithoutCustomization() {
+        final GitHubWorkflow workflow = parse(
+                testee(BuildOptions.builder().build()).createBrokenLinksCheckerWorkflow().getContent());
+        assertThat(workflow.getOnTrigger().get("schedule"), equalTo(List.of(Map.of("cron", "0 5 * * 0"))));
+    }
+
+    @Test
+    void brokenLinksCheckerWorkflowWithCustomization() {
+        final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
+        final GitHubWorkflow workflow = parse(
+                testee(BuildOptions.builder()
+                        .workflows(List.of(CustomWorkflow.builder().workflowName("broken_links_checker.yml")
+                                .addStep(StepCustomization.builder().jobId("linkChecker").stepId("checkout")
+                                        .type(Type.INSERT_AFTER).step(WorkflowStep.createStep(setupJavaStep)).build())
+                                .build()))
+                        .build()).createBrokenLinksCheckerWorkflow().getContent());
+        final String customJavaVersion = (String) workflow.getJob("linkChecker").getStep("setup-java").getWith()
+                .get("java-version");
+        assertThat(customJavaVersion, equalTo("custom-version"));
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void projectKeeperVerifyWorkflowWithoutCustomization(final boolean hasNpmModule) {
+        final Job job = parse(
+                testee(BuildOptions.builder().build()).createProjectKeeperVerifyWorkflow(hasNpmModule).getContent())
+                .getJob("project-keeper-verify");
+        assertAll(
+                () -> assertThat(job.getStep("setup-node").getIfCondition(),
+                        equalTo("${{ %s }}".formatted(hasNpmModule))),
+                () -> assertThat(job.getStep("project-keeper-verify").getRunCommand(),
+                        equalTo("./.github/workflows/project-keeper.sh verify")));
+    }
+
+    @Test
+    void projectKeeperVerifyWorkflowWithoutCustomization() {
+        final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
+        final Job job = parse(
+                testee(BuildOptions.builder()
+                        .workflows(List.of(CustomWorkflow.builder().workflowName("project-keeper-verify.yml")
+                                .addStep(StepCustomization.builder().jobId("project-keeper-verify").stepId("setup-java")
+                                        .type(Type.REPLACE).step(WorkflowStep.createStep(setupJavaStep)).build())
+                                .build()))
+                        .build())
+                        .createProjectKeeperVerifyWorkflow(false).getContent())
+                .getJob("project-keeper-verify");
+        assertThat(job.getStep("setup-java").getWith().get("java-version"), equalTo("custom-version"));
+    }
+
     private Map<String, Object> setupJavaStep(final String javaVersion) {
         final Map<String, Object> setupJavaStep = new HashMap<>();
         setupJavaStep.put("id", "setup-java");
