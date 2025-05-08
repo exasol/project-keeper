@@ -153,16 +153,17 @@ public class ProjectKeeperConfigReader {
         if (!supportedWorkflowNames.contains(workflow.name)) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-198")
                     .message("Unsupported workflow name {{workflow name}} found in file {{config file name}}.",
-                            workflow.name, CONFIG_FILE_NAME, supportedWorkflowNames)
+                            workflow.name, CONFIG_FILE_NAME)
                     .mitigation("Please only use one of the supported workflows from {{supported workflow names}}",
                             supportedWorkflowNames)
                     .toString());
         }
-        return CustomWorkflow.builder() //
-                .workflowName(workflow.name) //
-                .environment(workflow.environment) //
+        return CustomWorkflow.builder()
+                .workflowName(workflow.name)
+                .environment(workflow.environment)
                 .jobs(convertJobs(workflow.jobs))
-                .steps(convertSteps(workflow.stepCustomizations)) //
+                .removeJobs(workflow.removeJobs)
+                .steps(convertSteps(workflow.stepCustomizations))
                 .build();
     }
 

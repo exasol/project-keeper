@@ -446,6 +446,8 @@ public class ProjectKeeperRawConfig {
         public String environment;
         /** List of customizations for the jobs in the workflow. */
         public List<Job> jobs;
+        /** List of job names to remove from the workflow, e.g. {@code next-java-compatibility}. */
+        public List<String> removeJobs;
         /** List of customizations for the workflow. */
         public List<RawStepCustomization> stepCustomizations;
     }

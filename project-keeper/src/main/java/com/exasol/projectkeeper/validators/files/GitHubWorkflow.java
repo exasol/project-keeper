@@ -43,6 +43,19 @@ class GitHubWorkflow {
         return new Job(jobId, asMap(rawJob));
     }
 
+    boolean hasJob(final String jobName) {
+        return getJobMap().containsKey(jobName);
+    }
+
+    void removeJob(final String jobName) {
+        final Object previousJob = getJobMap().remove(jobName);
+        if (previousJob == null) {
+            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-211")
+                    .message("GitHub Workflow does not have a job with ID {{job name}}.", jobName)
+                    .mitigation("Choose one of {{available job names}}.", getJobMap().keySet()).toString());
+        }
+    }
+
     private Map<String, Object> getJobMap() {
         return asMap(rawWorkflow.get("jobs"));
     }
@@ -95,6 +108,11 @@ class GitHubWorkflow {
                 return emptyList();
             }
             return (List<Map<String, Object>>) steps;
+        }
+
+        @SuppressWarnings("unchecked")
+        public List<String> getNeeds() {
+            return (List<String>) rawJob.get("needs");
         }
 
         String getRunnerOS() {
