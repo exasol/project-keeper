@@ -41,8 +41,8 @@ jobs:
               -Dossindex.reportFile=$(pwd)/ossindex-report.json \
               -Dossindex.fail=false
 
-      - name: Report Security Issues
-        id: security-issues
+      - name: Create GitHub Issues
+        id: create-security-issues
         uses: exasol/python-toolbox/.github/actions/security-issues@1.1.0
         with:
           format: "maven"
