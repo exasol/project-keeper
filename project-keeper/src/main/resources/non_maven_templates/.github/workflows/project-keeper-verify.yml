@@ -16,13 +16,14 @@ jobs:
       group: ${{ github.workflow }}-${{ github.ref }}
       cancel-in-progress: true
     steps:
-      - name: Checkout the repository
-        id: checkout
+      - id: checkout
+        name: Checkout the repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
-      - name: Set up JDKs
+      - id: setup-java
+        name: Set up JDKs
         uses: actions/setup-java@v4
         with:
           distribution: "temurin"
@@ -33,7 +34,8 @@ jobs:
             .github/workflows/project-keeper-verify.yml
             .github/workflows/project-keeper.sh
 
-      - name: Set up Go
+      - id: setup-go
+        name: Set up Go
         uses: actions/setup-go@v5
         with:
           go-version: "1.24"
@@ -42,7 +44,8 @@ jobs:
             .github/workflows/project-keeper-verify.yml
             .github/workflows/project-keeper.sh
 
-      - name: Set up Node
+      - id: setup-node
+        name: Set up Node
         uses: actions/setup-node@v4
         if: ${{ $installNode }}
         with:
@@ -50,5 +53,6 @@ jobs:
           cache: "npm"
           cache-dependency-path: "**/package-lock.json"
 
-      - name: Project Keeper Verify
-        run: ./.github/workflows/project-keeper.sh
+      - id: project-keeper-verify
+        name: Project Keeper Verify
+        run: ./.github/workflows/project-keeper.sh verify

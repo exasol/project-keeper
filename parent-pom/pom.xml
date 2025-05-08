@@ -28,14 +28,14 @@
         </repository>
     </distributionManagement>
     <properties>
-        <revision>5.0.1</revision>
+        <revision>5.1.0</revision>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
         <maven.version>3.9.9</maven.version>
         <minimum.maven.version>3.8.7</minimum.maven.version>
-        <junit.version>5.12.0</junit.version>
+        <junit.version>5.12.2</junit.version>
         <xmlunit.version>2.10.0</xmlunit.version>
-        <mockito.version>5.16.0</mockito.version>
+        <mockito.version>5.17.0</mockito.version>
         <slf4j.version>2.0.17</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -113,7 +113,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <version>7.1.0.202411261347-r</version>
+                <version>7.2.0.202503040940-r</version>
             </dependency>
             <dependency>
                 <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -243,7 +243,7 @@
             <dependency>
                 <groupId>nl.jqno.equalsverifier</groupId>
                 <artifactId>equalsverifier</artifactId>
-                <version>3.19.1</version>
+                <version>4.0</version>
                 <scope>test</scope>
             </dependency>
             <dependency>

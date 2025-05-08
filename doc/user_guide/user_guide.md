@@ -317,6 +317,8 @@ build:
   * `release.yml`
   * `dependencies_check.yml`
   * `dependencies_update.yml`
+  * `project-keeper-verify.yml`
+  * `broken_links_checker.yml`
 * `jobs`: List of job customizations:
   * `name`: Name of the job inside the workflow that should be modified, e.g. `build-and-test` or `next-java-compatibility`
   * `permissions`: Map of permissions to assign to the job, e.g.

@@ -40,7 +40,7 @@ class FileTemplatesFactory {
 
     List<FileTemplate> getGlobalTemplates() {
         final List<FileTemplate> templates = new ArrayList<>();
-        templates.add(new FileTemplateFromResource(".github/workflows/broken_links_checker.yml", REQUIRE_EXACT));
+        templates.add(this.workflowGenerator.createBrokenLinksCheckerWorkflow());
         templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
@@ -119,13 +119,8 @@ class FileTemplatesFactory {
 
     // [impl -> dsn~pk-verify-workflow~1]
     private List<FileTemplate> getProjectKeeperVerifyWorkflowTemplates() {
-        return List.of(projectKeeperVerifyTemplate(), new ProjectKeeperShellScript(this.ownVersion));
-    }
-
-    private FileTemplate projectKeeperVerifyTemplate() {
-        final String path = ".github/workflows/project-keeper-verify.yml";
-        final FileTemplateFromResource template = new FileTemplateFromResource( //
-                "non_maven_templates/" + path, path, REQUIRE_EXACT);
-        return template.replacing("installNode", String.valueOf(this.hasNpmModule));
+        return List.of(
+                this.workflowGenerator.createProjectKeeperVerifyWorkflow(this.hasNpmModule),
+                new ProjectKeeperShellScript(this.ownVersion));
     }
 }

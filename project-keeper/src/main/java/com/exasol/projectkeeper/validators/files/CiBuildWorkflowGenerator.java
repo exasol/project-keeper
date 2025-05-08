@@ -64,7 +64,7 @@ class CiBuildWorkflowGenerator {
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
-        return new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion.get());
+        return new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion);
     }
 
     private List<StepCustomization> findCustomizations(final String workflowName) {
@@ -118,8 +118,15 @@ class CiBuildWorkflowGenerator {
 
     private FileTemplate createCustomizedWorkflow(final String workflowName,
             final Consumer<FileTemplateFromResource> templateCustomizer) {
-        final FileTemplateFromResource template = new FileTemplateFromResource(WORKFLOW_PATH + workflowName,
-                REQUIRE_EXACT);
+        final String templateResource = "templates/" + WORKFLOW_PATH + workflowName;
+        return createCustomizedWorkflow(templateResource, workflowName, templateCustomizer);
+    }
+
+    private FileTemplate createCustomizedWorkflow(final String templateResource, final String workflowName,
+            final Consumer<FileTemplateFromResource> templateCustomizer) {
+        final String pathInProject = WORKFLOW_PATH + workflowName;
+        final FileTemplateFromResource template = new FileTemplateFromResource(templateResource,
+                pathInProject, REQUIRE_EXACT);
         templateCustomizer.accept(template);
         final List<StepCustomization> customizations = findCustomizations(workflowName);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(javaVersionCustomizer(),
@@ -137,5 +144,15 @@ class CiBuildWorkflowGenerator {
             this.templateName = templateName;
             this.buildJobId = buildJobId;
         }
+    }
+
+    public FileTemplate createBrokenLinksCheckerWorkflow() {
+        return createCustomizedWorkflow("broken_links_checker.yml");
+    }
+
+    public FileTemplate createProjectKeeperVerifyWorkflow(final boolean hasNpmModule) {
+        return createCustomizedWorkflow("non_maven_templates/.github/workflows/project-keeper-verify.yml",
+                "project-keeper-verify.yml",
+                template -> template.replacing("installNode", String.valueOf(hasNpmModule)));
     }
 }

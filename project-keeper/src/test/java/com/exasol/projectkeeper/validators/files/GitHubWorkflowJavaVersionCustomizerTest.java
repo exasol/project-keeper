@@ -142,7 +142,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
 
     GitHubWorkflow customize(final String yaml, final List<String> javaVersions, final String nextJavaVersion) {
         final GitHubWorkflow workflow = GitHubWorkflowIO.create().loadWorkflow(yaml);
-        new GitHubWorkflowJavaVersionCustomizer(javaVersions, nextJavaVersion).applyCustomization(workflow);
+        new GitHubWorkflowJavaVersionCustomizer(javaVersions, () -> nextJavaVersion).applyCustomization(workflow);
         return workflow;
     }
 }
