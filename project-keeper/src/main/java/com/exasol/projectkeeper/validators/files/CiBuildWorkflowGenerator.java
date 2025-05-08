@@ -152,8 +152,7 @@ class CiBuildWorkflowGenerator {
 
     public FileTemplate createProjectKeeperVerifyWorkflow(final boolean hasNpmModule) {
         return createCustomizedWorkflow("non_maven_templates/.github/workflows/project-keeper-verify.yml",
-                "project-keeper-verify.yml", template -> {
-                    template.replacing("installNode", String.valueOf(hasNpmModule));
-                });
+                "project-keeper-verify.yml",
+                template -> template.replacing("installNode", String.valueOf(hasNpmModule)));
     }
 }
