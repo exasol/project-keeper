@@ -53,6 +53,8 @@ class CiBuildWorkflowGenerator {
         final List<CustomJob> jobCustomizations = workflow.map(CustomWorkflow::getJobs)
                 .orElseGet(Collections::emptyList);
         final String environmentName = workflow.map(CustomWorkflow::getEnvironment).orElse(null);
+        final List<String> jobstoRemove = buildOptions.getWorkflow(workflowName)
+                .map(CustomWorkflow::getRemovedJobs).orElseGet(Collections::emptyList);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer( //
                 javaVersionCustomizer(),
                 // [impl->dsn~customize-build-process.ci-build~0]
@@ -60,7 +62,9 @@ class CiBuildWorkflowGenerator {
                 // [impl->dsn~customize-build-process.ci-build.environment~1]
                 new GitHubWorkflowEnvironmentCustomizer(buildJobId, environmentName),
                 // [impl->dsn~customize-build-process.job-permissions~0]
-                new GitHubWorkflowJobPermissionsCustomizer(jobCustomizations)));
+                new GitHubWorkflowJobPermissionsCustomizer(jobCustomizations),
+                // [impl->dsn~customize-build-process.remove-job~0]
+                new GitHubWorkflowRemoveJobCustomizer(jobstoRemove)));
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
@@ -129,8 +133,12 @@ class CiBuildWorkflowGenerator {
                 pathInProject, REQUIRE_EXACT);
         templateCustomizer.accept(template);
         final List<StepCustomization> customizations = findCustomizations(workflowName);
+        final List<String> jobstoRemove = buildOptions.getWorkflow(workflowName)
+                .map(CustomWorkflow::getRemovedJobs).orElseGet(Collections::emptyList);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer(javaVersionCustomizer(),
-                new GitHubWorkflowStepCustomizer(workflowName, customizations)));
+                new GitHubWorkflowStepCustomizer(workflowName, customizations),
+                // [impl->dsn~customize-build-process.remove-job~0]
+                new GitHubWorkflowRemoveJobCustomizer(jobstoRemove)));
     }
 
     enum CiTemplateType {

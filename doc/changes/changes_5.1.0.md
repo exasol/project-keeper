@@ -1,15 +1,16 @@
-# Project Keeper 5.1.0, released 2025-05-??
+# Project Keeper 5.1.0, released 2025-05-09
 
 Code name: Customize more workflows
 
 ## Summary
 
-This release allows customizing GitHub workflows `project-keeper-verify.yml` and `broken_links_checker.yml`.
+This release allows customizing GitHub workflows `project-keeper-verify.yml` and `broken_links_checker.yml`. The release also adds support for completely removing jobs from a workflow.
 
 ## Features
 
 * #642: Allowed customizing GitHub workflows `project-keeper-verify.yml` and `broken_links_checker.yml`
 * #641: Pin version of `exasol/python-toolbox/.github/actions/security-issues` in `dependencies_check.yml`
+* #641: Allowed removing jobs from a GitHub workflow
 
 ## Bugfixes
 

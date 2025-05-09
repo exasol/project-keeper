@@ -399,6 +399,41 @@ class ProjectKeeperConfigReaderTest {
     }
 
     @Test
+    void readWorkflowWithRemovedJobs() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      removeJobs:
+                        - job1
+                        - job2
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getRemovedJobs(),
+                contains("job1", "job2"));
+    }
+
+    @Test
+    void readWorkflowWithMissingRemovedJobs() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getRemovedJobs(), empty());
+    }
+
+    @Test
+    void readWorkflowWithEmptyRemovedJobs() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: ci-build.yml
+                      removeJobs:
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getRemovedJobs(), empty());
+    }
+
+    @Test
     void notInProjectRoot() throws IOException {
         Files.delete(this.tempDir.resolve(".git"));
         writeProjectKeeperConfig("");

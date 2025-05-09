@@ -4,8 +4,7 @@ import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.MAVEN_C
 import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -16,6 +15,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.yaml.snakeyaml.Yaml;
 
 import com.exasol.projectkeeper.shared.config.BuildOptions;
+import com.exasol.projectkeeper.shared.config.BuildOptions.Builder;
 import com.exasol.projectkeeper.shared.config.workflow.*;
 import com.exasol.projectkeeper.shared.config.workflow.JobPermissions.AccessLevel;
 import com.exasol.projectkeeper.shared.config.workflow.StepCustomization.Type;
@@ -282,6 +282,42 @@ class CiBuildWorkflowGeneratorTest {
         final Job job = dependencyUpdateBuildContent(BuildOptions.builder().build()).getJob("update_dependencies");
         assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(13)));
         job.getSteps().forEach(step -> assertThat(step.getId(), notNullValue()));
+    }
+
+    @Test
+    void removeMissingJobFails() {
+        final Builder config = BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
+                        .removeJobs(List.of("missing"))
+                        .build()));
+        final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> ciBuildContent(config));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-211: GitHub Workflow does not have a job with ID 'missing'. Choose one of ['build-and-test', 'next-java-compatibility', 'build', 'start_release']."));
+    }
+
+    // [utest->dsn~customize-build-process.remove-job~0]
+    @Test
+    void removeJobFromCiBuild() {
+        final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
+                        .removeJobs(List.of("next-java-compatibility"))
+                        .build())));
+        assertAll(() -> assertThat(workflow.getJobs(), hasSize(3)),
+                () -> assertThat(workflow.hasJob("next-java-compatibility"), is(false)),
+                () -> assertThat(workflow.getJob("build").getNeeds(), contains("build-and-test")));
+    }
+
+    // [utest->dsn~customize-build-process.remove-job~0]
+    @Test
+    void removeJobFromOtherWorkflow() {
+        final GitHubWorkflow workflow = dependencyCheckBuildContent(BuildOptions.builder()
+                .workflows(List.of(CustomWorkflow.builder().workflowName("dependencies_check.yml")
+                        .removeJobs(List.of("start_dependency_udpate"))
+                        .build()))
+                .build());
+        assertAll(() -> assertThat(workflow.getJobs(), hasSize(1)),
+                () -> assertThat(workflow.hasJob("start_dependency_udpate"), is(false)));
     }
 
     @Test

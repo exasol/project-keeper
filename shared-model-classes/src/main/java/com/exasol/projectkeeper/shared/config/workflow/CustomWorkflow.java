@@ -13,12 +13,14 @@ public final class CustomWorkflow {
     private final String workflowName;
     private final String environment;
     private final List<CustomJob> jobs;
+    private final List<String> removedJobs;
     private final List<StepCustomization> steps;
 
     private CustomWorkflow(final Builder builder) {
         this.workflowName = Objects.requireNonNull(builder.workflowName, "workflowName");
         this.environment = builder.environment;
         this.jobs = builder.jobs == null ? emptyList() : builder.jobs;
+        this.removedJobs = builder.removedJobs == null ? emptyList() : builder.removedJobs;
         this.steps = builder.steps == null ? emptyList() : builder.steps;
     }
 
@@ -38,6 +40,15 @@ public final class CustomWorkflow {
      */
     public List<CustomJob> getJobs() {
         return unmodifiableList(jobs);
+    }
+
+    /**
+     * Get job names to remove from the workflow, e.g. {@code next-java-compatibility}.
+     *
+     * @return the list of job names to remove
+     */
+    public List<String> getRemovedJobs() {
+        return unmodifiableList(removedJobs);
     }
 
     /**
@@ -71,12 +82,12 @@ public final class CustomWorkflow {
     @Override
     public String toString() {
         return "CustomWorkflow [workflowName=" + workflowName + ", environment=" + environment + ", jobs=" + jobs
-                + ", steps=" + steps + "]";
+                + ", removedJobs=" + removedJobs + ", steps=" + steps + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(workflowName, environment, jobs, steps);
+        return Objects.hash(workflowName, environment, jobs, removedJobs, steps);
     }
 
     @Override
@@ -92,7 +103,8 @@ public final class CustomWorkflow {
         }
         final CustomWorkflow other = (CustomWorkflow) obj;
         return Objects.equals(workflowName, other.workflowName) && Objects.equals(environment, other.environment)
-                && Objects.equals(jobs, other.jobs) && Objects.equals(steps, other.steps);
+                && Objects.equals(jobs, other.jobs) && Objects.equals(removedJobs, other.removedJobs)
+                && Objects.equals(steps, other.steps);
     }
 
     /**
@@ -102,7 +114,8 @@ public final class CustomWorkflow {
         private String workflowName;
         private String environment;
         private List<CustomJob> jobs;
-        private List<StepCustomization> steps = null;
+        private List<String> removedJobs;
+        private List<StepCustomization> steps;
 
         private Builder() {
         }
@@ -126,6 +139,17 @@ public final class CustomWorkflow {
          */
         public Builder jobs(final List<CustomJob> jobs) {
             this.jobs = Objects.requireNonNull(jobs, "jobs");
+            return this;
+        }
+
+        /**
+         * Set job names to remove from the workflow, e.g. {@code next-java-compatibility}.
+         *
+         * @param removedJobs job customizations
+         * @return the builder instance
+         */
+        public Builder removeJobs(final List<String> removedJobs) {
+            this.removedJobs = removedJobs;
             return this;
         }
 

@@ -331,6 +331,7 @@ build:
     This allows assigning additional permissions to the job, e.g. to download from the GitHub Docker registry `ghcr.io`.
     
     **Important:** Explicitly add the permissions defined for the job by default to avoid build failures. Check the `permissions` field of the generated workflow, e.g. `contents: read, issues: read`.
+* `removeJobs`: List of job names to remove from the workflow. This is useful when a job like `next-java-compatibility` is not applicable for a project.
 * `stepCustomizations`: List of customizations:
   * `action`: Type of customization
     * `REPLACE`: Replace an existing step with the new content
@@ -346,6 +347,8 @@ Examples (see also [`.project-keeper.yml`](../../.project-keeper.yml)):
 build:
   workflows:
     - name: "ci-build.yml"
+      removeJobs:
+        - next-java-compatibility
       stepCustomizations:
         - action: INSERT_AFTER
           job: build-and-test

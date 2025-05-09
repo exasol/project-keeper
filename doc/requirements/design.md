@@ -523,6 +523,19 @@ Covers:
 
 Needs: impl, utest
 
+#### Remove Job from Workflow
+`dsn~customize-build-process.remove-job~0`
+
+PK allows removing a job completely from a GitHub workflow.
+
+Rationale:
+* Jobs like `next-java-compatibility` are irrelevant for some projects, e.g. because they use Lua.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest
+
 ## Golang Support
 
 ### Get Project Version
