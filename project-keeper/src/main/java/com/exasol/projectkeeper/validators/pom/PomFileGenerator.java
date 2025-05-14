@@ -107,7 +107,6 @@ public class PomFileGenerator {
                 .nullableChild(parentReference(parentPomRef)) //
                 .child(properties(modules, config.getRepoInfo().getRepoName(), parentPomRef != null)) //
                 .nullableChild(profiles(modules)) //
-                .nullableChild(distributionManagement(modules)) //
                 .child(licenses(config)) //
                 .child(developers()) //
                 .child(scm(config.getRepoInfo().getRepoName())) //
@@ -135,19 +134,6 @@ public class PomFileGenerator {
                 .child("id", id) //
                 .nullableChild(isDefault ? element("activation").child("activeByDefault", "true") : null)
                 .child(element("properties").children(propertyBuilders));
-    }
-
-    private ElementBuilder distributionManagement(final Collection<ProjectKeeperModule> modules) {
-        if (!modules.contains(MAVEN_CENTRAL)) {
-            return null;
-        }
-        return element("distributionManagement") //
-                .child(element("snapshotRepository") //
-                        .child("id", "maven-central-portal") //
-                        .child("url", "https://central.sonatype.com/repository/maven-snapshots/")) //
-                .child(element("repository") //
-                        .child("id", "maven-central-portal") //
-                        .child("url", "https://central.sonatype.com/"));
     }
 
     private ElementBuilder licenses(final Config config) {

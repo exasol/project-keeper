@@ -84,3 +84,7 @@ This release updates the Maven Central release process to use the new Central Po
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.1.0` to `5.2.0`
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.2` to `3.1.4`

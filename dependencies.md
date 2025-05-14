@@ -336,6 +336,7 @@
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                   |
 | [Maven Surefire Plugin][41]                            | [Apache-2.0][1]                             |
 | [Versions Maven Plugin][42]                            | [Apache License, Version 2.0][1]            |
+| [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
 | [duplicate-finder-maven-plugin Maven Mojo][43]         | [Apache License 2.0][44]                    |
 | [Apache Maven Artifact Plugin][45]                     | [Apache-2.0][1]                             |
 | [JaCoCo :: Maven Plugin][50]                           | [EPL-2.0][51]                               |

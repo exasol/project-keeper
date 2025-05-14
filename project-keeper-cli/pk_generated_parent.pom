@@ -22,16 +22,6 @@
         <central-publishing.waitUntil>validated</central-publishing.waitUntil>
         <central-publishing.deploymentName>Manual deployment of repo project-keeper</central-publishing.deploymentName>
     </properties>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>maven-central-portal</id>
-            <url>https://central.sonatype.com/repository/maven-snapshots/</url>
-        </snapshotRepository>
-        <repository>
-            <id>maven-central-portal</id>
-            <url>https://central.sonatype.com/</url>
-        </repository>
-    </distributionManagement>
     <licenses>
         <license>
             <name>The MIT License</name>
