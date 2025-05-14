@@ -144,10 +144,10 @@ public class PomFileGenerator {
         return element("distributionManagement") //
                 .child(element("snapshotRepository") //
                         .child("id", "maven-central-portal") //
-                        .child("url", "https://oss.sonatype.org/content/repositories/snapshots")) //
+                        .child("url", "https://central.sonatype.com/repository/maven-snapshots/")) //
                 .child(element("repository") //
                         .child("id", "maven-central-portal") //
-                        .child("url", "https://oss.sonatype.org/service/local/staging/deploy/maven2/"));
+                        .child("url", "https://central.sonatype.com/"));
     }
 
     private ElementBuilder licenses(final Config config) {
