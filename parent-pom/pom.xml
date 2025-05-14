@@ -17,6 +17,16 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
+    <distributionManagement>
+        <snapshotRepository>
+            <id>maven-central-portal</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>maven-central-portal</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
     <properties>
         <revision>5.2.0</revision>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->

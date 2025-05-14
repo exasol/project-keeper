@@ -16,8 +16,7 @@ import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.jupiter.params.provider.*;
 
 import com.exasol.projectkeeper.RepoInfo;
 import com.exasol.projectkeeper.shared.config.ParentPomRef;
@@ -142,6 +141,13 @@ class PomFileGeneratorTest {
                 Arguments.of("UDF_COVERAGE", List.of("org.jacoco.agent")), //
                 Arguments.of("LOMBOK", List.of("lombok"))//
         );
+    }
+
+    @ParameterizedTest
+    @ValueSource(booleans = { true, false })
+    void distributionManagement(final boolean hasDm) {
+        final Model pom = runGeneration(hasDm ? List.of(ProjectKeeperModule.MAVEN_CENTRAL) : List.of(), null);
+        assertThat(pom.getDistributionManagement(), hasDm ? not(nullValue()) : nullValue());
     }
 
     @ParameterizedTest
