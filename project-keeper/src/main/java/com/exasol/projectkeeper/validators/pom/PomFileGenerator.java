@@ -16,7 +16,7 @@ import com.exasol.projectkeeper.validators.pom.io.PomFileWriter;
 import com.exasol.projectkeeper.validators.pom.plugin.*;
 
 /**
- * This class generates the expected content for the auto-generated parent pom file.
+ * This class generates the expected content for the auto-generated parent pom file {@code pk_generated_parent.pom}.
  */
 // [impl -> dsn~mvn-toolchain~1]
 public class PomFileGenerator {
@@ -50,7 +50,7 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/maven-gpg-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/maven-source-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/maven-javadoc-plugin.xml", MAVEN_CENTRAL),
-            new SimplePluginTemplateGenerator("maven_templates/nexus-staging-maven-plugin.xml", MAVEN_CENTRAL),
+            new SimplePluginTemplateGenerator("maven_templates/central-publishing-maven-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/maven-dependency-plugin.xml", UDF_COVERAGE),
             new SimplePluginTemplateGenerator("maven_templates/native-image-maven-plugin.xml", NATIVE_IMAGE),
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
@@ -105,9 +105,8 @@ public class PomFileGenerator {
                 .child(VERSION, config.getVersion()) //
                 .child("packaging", "pom") //
                 .nullableChild(parentReference(parentPomRef)) //
-                .child(properties(modules, parentPomRef != null)) //
+                .child(properties(modules, config.getRepoInfo().getRepoName(), parentPomRef != null)) //
                 .nullableChild(profiles(modules)) //
-                .nullableChild(distributionManagement(modules)) //
                 .child(licenses(config)) //
                 .child(developers()) //
                 .child(scm(config.getRepoInfo().getRepoName())) //
@@ -135,19 +134,6 @@ public class PomFileGenerator {
                 .child("id", id) //
                 .nullableChild(isDefault ? element("activation").child("activeByDefault", "true") : null)
                 .child(element("properties").children(propertyBuilders));
-    }
-
-    private ElementBuilder distributionManagement(final Collection<ProjectKeeperModule> modules) {
-        if (!modules.contains(MAVEN_CENTRAL)) {
-            return null;
-        }
-        return element("distributionManagement") //
-                .child(element("snapshotRepository") //
-                        .child("id", "ossrh") //
-                        .child("url", "https://oss.sonatype.org/content/repositories/snapshots")) //
-                .child(element("repository") //
-                        .child("id", "ossrh") //
-                        .child("url", "https://oss.sonatype.org/service/local/staging/deploy/maven2/"));
     }
 
     private ElementBuilder licenses(final Config config) {
@@ -212,18 +198,27 @@ public class PomFileGenerator {
         return element("build").child(plugins(enabledModules));
     }
 
-    private ElementBuilder properties(final Collection<ProjectKeeperModule> enabledModules,
+    private ElementBuilder properties(final Collection<ProjectKeeperModule> enabledModules, final String repoName,
             final boolean hasParentPom) {
         final String javaVersion = hasParentPom ? null : DEFAULT_JAVA_VERSION;
-        return element("properties") //
-                .child("project.build.sourceEncoding", "UTF-8") //
-                .child("project.reporting.outputEncoding", "UTF-8") //
-                .child("project.build.outputTimestamp", "${git.commit.time}") //
-                .nullableChild(javaVersion == null ? null : element("java.version").text(javaVersion)) //
-                .child("sonar.organization", "exasol") //
-                .child("sonar.host.url", "https://sonarcloud.io") //
-                .nullableChild(hasParentPom ? null : element("test.excludeTags").text("")) //
-                .nullableChild(!enabledModules.contains(MAVEN_CENTRAL) ? null : element("gpg.skip").text("true"));
+        final ElementBuilder properties = element("properties")
+                .child("project.build.sourceEncoding", "UTF-8")
+                .child("project.reporting.outputEncoding", "UTF-8")
+                .child("project.build.outputTimestamp", "${git.commit.time}")
+                .nullableChild(javaVersion == null ? null : element("java.version").text(javaVersion))
+                .child("sonar.organization", "exasol")
+                .child("sonar.host.url", "https://sonarcloud.io")
+                .nullableChild(hasParentPom ? null : element("test.excludeTags").text(""));
+        if (enabledModules.contains(MAVEN_CENTRAL)) {
+            properties
+                    .child(element("gpg.skip").text("true"))
+                    .child(element("central-publishing.autoPublish").text("true"))
+                    // Other options for waitUntil: published, uploaded
+                    .child(element("central-publishing.waitUntil").text("validated"))
+                    .child(element("central-publishing.deploymentName")
+                            .text("Manual deployment of repo %s".formatted(repoName)));
+        }
+        return properties;
     }
 
     private ElementBuilder plugins(final Collection<ProjectKeeperModule> enabledModules) {

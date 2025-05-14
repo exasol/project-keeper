@@ -12,6 +12,13 @@ This release updates the Maven Central release process to use the new Central Po
 
 ## Dependency Updates
 
+### Project Keeper Shared Model Classes
+
+#### Plugin Dependency Updates
+
+* Added `org.sonatype.central:central-publishing-maven-plugin:0.7.0`
+* Removed `org.sonatype.plugins:nexus-staging-maven-plugin:1.7.0`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -26,6 +33,11 @@ This release updates the Maven Central release process to use the new Central Po
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.1.0` to `5.2.0`
 
+#### Plugin Dependency Updates
+
+* Added `org.sonatype.central:central-publishing-maven-plugin:0.7.0`
+* Removed `org.sonatype.plugins:nexus-staging-maven-plugin:1.7.0`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
@@ -36,11 +48,21 @@ This release updates the Maven Central release process to use the new Central Po
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.1.0` to `5.2.0`
 
+#### Plugin Dependency Updates
+
+* Added `org.sonatype.central:central-publishing-maven-plugin:0.7.0`
+* Removed `org.sonatype.plugins:nexus-staging-maven-plugin:1.7.0`
+
 ### Project Keeper Maven Plugin
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-core:5.1.0` to `5.2.0`
+
+#### Plugin Dependency Updates
+
+* Added `org.sonatype.central:central-publishing-maven-plugin:0.7.0`
+* Removed `org.sonatype.plugins:nexus-staging-maven-plugin:1.7.0`
 
 ### Project Keeper Java Project Crawler
 
@@ -51,6 +73,11 @@ This release updates the Maven Central release process to use the new Central Po
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.1.0` to `5.2.0`
+
+#### Plugin Dependency Updates
+
+* Added `org.sonatype.central:central-publishing-maven-plugin:0.7.0`
+* Removed `org.sonatype.plugins:nexus-staging-maven-plugin:1.7.0`
 
 ### Project Keeper Shared Test Setup
 
