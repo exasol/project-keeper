@@ -16,7 +16,7 @@ on:
         type: boolean
         default: false
       maven-central-auto-publish:
-        description: "Automatically publish to Maven Central. Set to false to manually publish at https://central.sonatype.com/publishing/deployments."
+        description: "Automatically publish to Maven Central. Deactivate to manually publish at https://central.sonatype.com/publishing/deployments"
         required: true
         type: boolean
         default: true
