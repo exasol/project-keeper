@@ -9,6 +9,8 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class GitHubWorkflowJavaVersionCustomizerTest {
+    private static final String LATEST_JAVA_VERSION = "24";
+
     @Test
     void testUpdateWithActionVersion4() {
         final GitHubWorkflow workflow = customize("""
@@ -87,7 +89,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                             old
                             version
                           cache: "maven"
-                """, List.of("11", "17", "21"), "23");
+                """, List.of("11", "17", "21"), LATEST_JAVA_VERSION);
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("11\n17\n21"));
     }
 
@@ -106,9 +108,9 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                             old
                             version
                           cache: "maven"
-                """, List.of("11", "17", "21"), "23");
+                """, List.of("11", "17", "21"), LATEST_JAVA_VERSION);
         assertThat(workflow.getJob("next-java-compatibility").getStep("setup-java").getWith().get("java-version"),
-                equalTo("23"));
+                equalTo(LATEST_JAVA_VERSION));
     }
 
     @Test
@@ -122,7 +124,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                         uses: actions/unknown@v4
                         with:
                           java-version: old version
-                """, List.of("11", "17", "21"), "23");
+                """, List.of("11", "17", "21"), LATEST_JAVA_VERSION);
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"),
                 equalTo("old version"));
     }
@@ -136,7 +138,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                       - name: Set up JDKs
                         id: setup-java
                         run: echo Hello
-                """, List.of("11", "17", "21"), "23");
+                """, List.of("11", "17", "21"), LATEST_JAVA_VERSION);
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().size(), is(0));
     }
 

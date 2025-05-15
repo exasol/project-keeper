@@ -17,18 +17,8 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
-        <repository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
     <properties>
-        <revision>5.1.0</revision>
+        <revision>5.2.0</revision>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
         <maven.version>3.9.9</maven.version>
@@ -319,6 +309,17 @@
                     <processDependencies>true</processDependencies>
                     <processDependencyManagement>true</processDependencyManagement>
                     <processParent>false</processParent>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- Explicitly upgrade deploy plugin to fix error
+                     Failed to execute goal org.apache.maven.plugins:maven-deploy-plugin:3.1.2:deploy (default-deploy) on project project-keeper-parent-pom: Deployment failed:
+                     repository element was not specified in the POM inside distributionManagement element or in -DaltDeploymentRepository=id::url parameter -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <version>3.1.4</version>
+                <configuration>
+                    <skip>true</skip>
                 </configuration>
             </plugin>
         </plugins>

@@ -64,7 +64,7 @@ class JavaVersionExtractorTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "8, 11", "9, 11", "11, 17", "12, 17", "17, 21", "17.1, 21", "21, 23" })
+    @CsvSource({ "8, 11", "9, 11", "11, 17", "12, 17", "17, 21", "17.1, 21", "21, 24", "22, 24", "24, 24", "25, 24" })
     void getNextVersion(final String currentVersion, final String nextVersion) {
         assertThat(nextVersion(mavenSource(currentVersion)), equalTo(nextVersion));
     }

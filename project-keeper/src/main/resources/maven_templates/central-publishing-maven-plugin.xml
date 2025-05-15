@@ -1,0 +1,13 @@
+<plugin>
+    <groupId>org.sonatype.central</groupId>
+    <artifactId>central-publishing-maven-plugin</artifactId>
+    <version>0.7.0</version>
+    <extensions>true</extensions>
+    <configuration>
+        <publishingServerId>maven-central-portal</publishingServerId>
+        <!-- We could directly use properties on the command line (e.g. -DautoPublish=true), but this way it's more explicit. -->
+        <autoPublish>${central-publishing.autoPublish}</autoPublish>
+        <waitUntil>${central-publishing.waitUntil}</waitUntil>
+        <deploymentName>${central-publishing.deploymentName}</deploymentName>
+    </configuration>
+</plugin>
