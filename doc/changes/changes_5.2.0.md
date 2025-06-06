@@ -10,6 +10,10 @@ This release updates the Maven Central release process to use the new Central Po
 
 * #647: Migrate to Central Portal for Maven Central publishing
 
+## Security
+
+* #649: Fixed CVE-2025-4949 in `org.eclipse.jgit:org.eclipse.jgit:jar:7.2.0.202503040940-r:compile`
+
 ## Dependency Updates
 
 ### Project Keeper Shared Model Classes
