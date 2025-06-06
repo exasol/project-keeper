@@ -213,6 +213,7 @@ public class PomFileGenerator {
             properties
                     .child(element("gpg.skip").text("true"))
                     .child(element("central-publishing.autoPublish").text("true"))
+                    .child(element("central-publishing.skipPublishing").text("false"))
                     // Other options for waitUntil: published, uploaded
                     .child(element("central-publishing.waitUntil").text("validated"))
                     .child(element("central-publishing.deploymentName")

@@ -9,5 +9,6 @@
         <autoPublish>${central-publishing.autoPublish}</autoPublish>
         <waitUntil>${central-publishing.waitUntil}</waitUntil>
         <deploymentName>${central-publishing.deploymentName}</deploymentName>
+        <skipPublishing>${central-publishing.skipPublishing}</skipPublishing>
     </configuration>
 </plugin>

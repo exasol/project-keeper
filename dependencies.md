@@ -407,7 +407,7 @@
 [60]: https://github.com/vdurmont/semver4j
 [61]: https://bitbucket.org/snakeyaml/snakeyaml
 [62]: https://bitbucket.org/snakeyaml/snakeyaml-engine
-[63]: https://maven.apache.org/ref/3.9.9/maven-model/
+[63]: https://maven.apache.org/ref/3.9.10/maven-model/
 [64]: https://www.jcabi.com/jcabi-github
 [65]: https://www.jcabi.com/LICENSE.txt
 [66]: https://github.com/exasol/maven-project-version-getter/
@@ -421,8 +421,8 @@
 [74]: https://github.com/exasol/artifact-reference-checker-maven-plugin/
 [75]: https://github.com/exasol/artifact-reference-checker-maven-plugin/blob/main/LICENSE
 [76]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[77]: https://maven.apache.org/ref/3.9.9/maven-plugin-api/
-[78]: https://maven.apache.org/ref/3.9.9/maven-core/
+[77]: https://maven.apache.org/ref/3.9.10/maven-plugin-api/
+[78]: https://maven.apache.org/ref/3.9.10/maven-core/
 [79]: https://www.eclemma.org/jacoco/index.html
 [80]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
 [81]: https://maven.apache.org/plugins/maven-dependency-plugin/

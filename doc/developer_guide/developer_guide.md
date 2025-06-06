@@ -113,3 +113,71 @@ This makes PK in all repositories to verify that the file `test/my_file.md` exis
 ## Adding a Pom File Validation
 
 Validations for the POM file are defined using code. For maven plugins there is the abstract base class `AbstractPluginPomTemplate` that facilitates the template implementation.
+
+## Debugging Maven Central Deployment
+
+The PK module `maven_central` specified in `.project-keeper.yml` will deploy the marked Maven module to Maven Central. For debugging you can run this deployment locally.
+
+### Verify Bundle Content
+
+Maven plugin `central-publishing-maven-plugin` creates a bundle and uploads it to Maven Central. To verify the content of this bundle without uploading, run the following command. You don't need to Maven Central credentials to do this.
+
+```sh
+mvn clean deploy -Dgpg.skip=false -DskipTests \
+  -Dcentral-publishing.deploymentName="Testing Deployment" \
+  -Dcentral-publishing.autoPublish=false \
+  -Dcentral-publishing.skipPublishing=true
+```
+
+This will create a bundle containing all published modules **in one of the Maven modules**. You can find the bundle using `find . -name central-bundle.zip`. In Project Keeper this might return `./shared-model-classes/target/central-publishing/central-bundle.zip`. Check the content with `unzip -l`:
+
+```
+$ unzip -l ./shared-model-classes/target/central-publishing/central-bundle.zip
+Archive:  ./shared-model-classes/target/central-publishing/central-bundle.zip
+  Length      Date    Time    Name
+---------  ---------- -----   ----
+       64  06-06-2025 13:18   com/exasol/project-keeper-java-project-crawler/5.2.0/project-keeper-java-project-crawler-5.2.0.jar.sha256
+       32  06-06-2025 13:18   com/exasol/project-keeper-cli/5.2.0/project-keeper-cli-5.2.0.pom.md5
+       64  06-06-2025 13:18   com/exasol/project-keeper-shared-model-classes/5.2.0/project-keeper-shared-model-classes-5.2.0.pom.sha256
+       64  06-06-2025 13:18   com/exasol/project-keeper-java-project-crawler/5.2.0/project-keeper-java-project-crawler-5.2.0-sources.jar.sha256
+      833  06-06-2025 13:18   com/exasol/project-keeper-java-project-crawler/5.2.0/project-keeper-java-project-crawler-5.2.0-javadoc.jar.asc
+       64  06-06-2025 13:18   com/exasol/project-keeper-core/5.2.0/project-keeper-core-5.2.0.jar.sha256
+     3126  06-06-2025 13:18   com/exasol/project-keeper-java-project-crawler/5.2.0/project-keeper-java-project-crawler-5.2.0.pom
+      833  06-06-2025 13:18   com/exasol/project-keeper-shared-model-classes/5.2.0/project-keeper-shared-model-classes-5.2.0.jar.asc
+       32  06-06-2025 13:18   com/exasol/project-keeper-maven-plugin/5.2.0/project-keeper-maven-plugin-5.2.0.jar.md5
+...
+```
+
+Ensure that **only modules meant for publishing** are contained in this bundle and that it does not contain test modules.
+
+### Verify Bundle Upload
+
+To test the bundle upload to Maven Central **without publishing**, configure Maven Central credentials in `~/.m2/settings.xml`:
+
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <servers>
+        <server>
+            <id>maven-central-portal</id>
+            <username>user</username>
+            <password>password</password>
+        </server>
+    </servers>
+</settings>
+```
+
+Then run the following command:
+
+```sh
+mvn clean deploy -Dgpg.skip=false -DskipTests \
+  -Dcentral-publishing.deploymentName="Testing Deployment" \
+  -Dcentral-publishing.autoPublish=false
+```
+
+**Important:** Make sure to specify argument `-Dcentral-publishing.autoPublish=false`. Without this option, the bundle will be published automatically.
+
+Then login to Maven Central Portal and go to the [deployments page](https://central.sonatype.com/publishing/deployments). Verify that your component was deployed successfully and has the expected content.
+
+Don't forget to click the "Drop" button for the deployment to avoid accidentally publishing it.

@@ -1,4 +1,4 @@
-# Project Keeper 5.2.0, released 2025-??-??
+# Project Keeper 5.2.0, released 2025-06-06
 
 Code name: Maven Central Portal Deployment
 
@@ -10,9 +10,22 @@ This release updates the Maven Central release process to use the new Central Po
 
 * #647: Migrate to Central Portal for Maven Central publishing
 
+## Security
+
+* #649: Fixed CVE-2025-4949 in `org.eclipse.jgit:org.eclipse.jgit:jar:7.2.0.202503040940-r:compile`
+
 ## Dependency Updates
 
 ### Project Keeper Shared Model Classes
+
+#### Compile Dependency Updates
+
+* Updated `org.eclipse.jgit:org.eclipse.jgit:7.2.0.202503040940-r` to `7.3.0.202506031305-r`
+
+#### Test Dependency Updates
+
+* Updated `org.junit.jupiter:junit-jupiter-params:5.12.2` to `5.13.0`
+* Updated `org.mockito:mockito-core:5.17.0` to `5.18.0`
 
 #### Plugin Dependency Updates
 
@@ -24,6 +37,7 @@ This release updates the Maven Central release process to use the new Central Po
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.1.0` to `5.2.0`
+* Updated `org.xmlunit:xmlunit-core:2.10.0` to `2.10.2`
 
 #### Runtime Dependency Updates
 
@@ -32,6 +46,9 @@ This release updates the Maven Central release process to use the new Central Po
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.1.0` to `5.2.0`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.12.2` to `5.13.0`
+* Updated `org.mockito:mockito-junit-jupiter:5.17.0` to `5.18.0`
+* Updated `org.xmlunit:xmlunit-matchers:2.10.0` to `2.10.2`
 
 #### Plugin Dependency Updates
 
@@ -43,10 +60,12 @@ This release updates the Maven Central release process to use the new Central Po
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-core:5.1.0` to `5.2.0`
+* Updated `org.apache.maven:maven-model:3.9.9` to `3.9.10`
 
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.1.0` to `5.2.0`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.12.2` to `5.13.0`
 
 #### Plugin Dependency Updates
 
@@ -59,6 +78,12 @@ This release updates the Maven Central release process to use the new Central Po
 
 * Updated `com.exasol:project-keeper-core:5.1.0` to `5.2.0`
 
+#### Test Dependency Updates
+
+* Updated `org.junit.jupiter:junit-jupiter-params:5.12.2` to `5.13.0`
+* Updated `org.mockito:mockito-core:5.17.0` to `5.18.0`
+* Updated `org.xmlunit:xmlunit-matchers:2.10.0` to `2.10.2`
+
 #### Plugin Dependency Updates
 
 * Added `org.sonatype.central:central-publishing-maven-plugin:0.7.0`
@@ -69,10 +94,15 @@ This release updates the Maven Central release process to use the new Central Po
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.1.0` to `5.2.0`
+* Updated `org.eclipse.jgit:org.eclipse.jgit:7.2.0.202503040940-r` to `7.3.0.202506031305-r`
 
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.1.0` to `5.2.0`
+* Updated `org.junit.jupiter:junit-jupiter-params:5.12.2` to `5.13.0`
+* Updated `org.mockito:mockito-core:5.17.0` to `5.18.0`
+* Updated `org.mockito:mockito-junit-jupiter:5.17.0` to `5.18.0`
+* Updated `org.xmlunit:xmlunit-matchers:2.10.0` to `2.10.2`
 
 #### Plugin Dependency Updates
 
