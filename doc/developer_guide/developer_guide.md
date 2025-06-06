@@ -180,4 +180,4 @@ mvn clean deploy -Dgpg.skip=false -DskipTests \
 
 Then login to Maven Central Portal and go to the [deployments page](https://central.sonatype.com/publishing/deployments). Verify that your component was deployed successfully and has the expected content.
 
-When everything looks fine, click the "Drop" button for the deployment to avoid accidentally publishing it.
+Don't forget to click the "Drop" button for the deployment to avoid accidentally publishing it.
