@@ -174,7 +174,7 @@ mvn clean deploy -Dgpg.skip=false -DskipTests \
   -Dcentral-publishing.deploymentName="Testing Deployment"
 ```
 
-**Important:** Do not specify property `central-publishing.autoPublish` to use the default value `false`. This ensures that the bundle will be **not** be published automatically.
+**Important:** Do not specify property `central-publishing.autoPublish` to use the default value `false`. This ensures that the bundle will **not** be published automatically.
 
 Then login to Maven Central Portal and go to the [deployments page](https://central.sonatype.com/publishing/deployments). Verify that your component was deployed successfully and has the expected content.
 

@@ -8,7 +8,7 @@ This release fixes an issue with the `release.yml` workflow that required manual
 
 ## Bugfixes
 
-* #654: Fixed automatic Maven Central deplyoment
+* #654: Fixed automatic Maven Central deployment
 
 ## Dependency Updates
 
