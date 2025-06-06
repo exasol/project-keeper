@@ -12,12 +12,6 @@ This release updates the Maven Central release process to use the new Central Po
 
 ## Dependency Updates
 
-### Project Keeper Root Project
-
-#### Plugin Dependency Updates
-
-* Added `org.sonatype.central:central-publishing-maven-plugin:0.7.0`
-
 ### Project Keeper Shared Model Classes
 
 #### Compile Dependency Updates
