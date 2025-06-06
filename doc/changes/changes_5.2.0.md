@@ -1,4 +1,4 @@
-# Project Keeper 5.2.0, released 2025-??-??
+# Project Keeper 5.2.0, released 2025-06-06
 
 Code name: Maven Central Portal Deployment
 
