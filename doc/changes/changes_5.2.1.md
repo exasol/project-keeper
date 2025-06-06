@@ -4,7 +4,7 @@ Code name: Auto-publish to Maven Central
 
 ## Summary
 
-This release fixes an issue with the `release.yml` workflow that required manually publish deployments to Maven Central. Deployments no are done automatically during the release build.
+This release fixes an issue with the `release.yml` workflow that required manually publishing of Maven Central deployments. Maven Central Deployments no are done automatically during the release build without manual steps.
 
 ## Bugfixes
 
