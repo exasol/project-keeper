@@ -18,7 +18,7 @@
         <sonar.organization>exasol</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <gpg.skip>true</gpg.skip>
-        <central-publishing.autoPublish>true</central-publishing.autoPublish>
+        <central-publishing.autoPublish>false</central-publishing.autoPublish>
         <central-publishing.skipPublishing>false</central-publishing.skipPublishing>
         <central-publishing.waitUntil>validated</central-publishing.waitUntil>
         <central-publishing.deploymentName>Manual deployment of repo project-keeper</central-publishing.deploymentName>

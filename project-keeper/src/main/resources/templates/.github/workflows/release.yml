@@ -8,6 +8,11 @@ on:
         type: boolean
         required: true
         default: false
+      maven-central-auto-publish:
+        description: "Automatically publish to Maven Central. Deactivate to manually publish at https://central.sonatype.com/publishing/deployments"
+        required: true
+        type: boolean
+        default: true
   workflow_dispatch:
     inputs:
       skip-maven-central:

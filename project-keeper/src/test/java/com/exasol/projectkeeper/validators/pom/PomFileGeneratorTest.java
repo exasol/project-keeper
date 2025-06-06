@@ -126,6 +126,16 @@ class PomFileGeneratorTest {
         assertThat(pom.getProperties().get("test.excludeTags"), nullValue());
     }
 
+    @Test
+    void testAddPropertiesForMavenCentralDeployment() {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.MAVEN_CENTRAL), null);
+        assertAll(() -> assertThat(pom.getProperties().get("central-publishing.autoPublish"), equalTo("false")),
+                () -> assertThat(pom.getProperties().get("central-publishing.skipPublishing"), equalTo("false")),
+                () -> assertThat(pom.getProperties().get("central-publishing.waitUntil"), equalTo("validated")),
+                () -> assertThat(pom.getProperties().get("central-publishing.deploymentName"),
+                        equalTo("Manual deployment of repo my-repo")));
+    }
+
     private Model runGeneration(final List<ProjectKeeperModule> modules, final ParentPomRef parentPomRef) {
         final String result = new PomFileGenerator().generatePomContent(modules, "com.example", "my-parent-pom",
                 "1.0.0", parentPomRef, new RepoInfo(TEST_REPO_NAME, TEST_REPO_LICENSE));
