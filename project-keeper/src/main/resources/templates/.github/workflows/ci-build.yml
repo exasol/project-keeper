@@ -213,3 +213,4 @@ jobs:
     uses: ./.github/workflows/release.yml
     with:
       started-from-ci: true
+      maven-central-auto-publish: true

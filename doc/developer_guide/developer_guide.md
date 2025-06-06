@@ -125,7 +125,6 @@ Maven plugin `central-publishing-maven-plugin` creates a bundle and uploads it t
 ```sh
 mvn clean deploy -Dgpg.skip=false -DskipTests \
   -Dcentral-publishing.deploymentName="Testing Deployment" \
-  -Dcentral-publishing.autoPublish=false \
   -Dcentral-publishing.skipPublishing=true
 ```
 
@@ -172,11 +171,10 @@ Then run the following command:
 
 ```sh
 mvn clean deploy -Dgpg.skip=false -DskipTests \
-  -Dcentral-publishing.deploymentName="Testing Deployment" \
-  -Dcentral-publishing.autoPublish=false
+  -Dcentral-publishing.deploymentName="Testing Deployment"
 ```
 
-**Important:** Make sure to specify argument `-Dcentral-publishing.autoPublish=false`. Without this option, the bundle will be published automatically.
+**Important:** Do not specify property `central-publishing.autoPublish` to use the default value `false`. This ensures that the bundle will **not** be published automatically.
 
 Then login to Maven Central Portal and go to the [deployments page](https://central.sonatype.com/publishing/deployments). Verify that your component was deployed successfully and has the expected content.
 

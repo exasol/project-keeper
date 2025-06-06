@@ -212,7 +212,7 @@ public class PomFileGenerator {
         if (enabledModules.contains(MAVEN_CENTRAL)) {
             properties
                     .child(element("gpg.skip").text("true"))
-                    .child(element("central-publishing.autoPublish").text("true"))
+                    .child(element("central-publishing.autoPublish").text("false"))
                     .child(element("central-publishing.skipPublishing").text("false"))
                     // Other options for waitUntil: published, uploaded
                     .child(element("central-publishing.waitUntil").text("validated"))
