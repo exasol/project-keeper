@@ -44,6 +44,28 @@ mvn install --projects . -DskipTests -Dossindex.skip=true
 
 After that the dependencies of PK are available in your local maven repository in the version of the current release and hence references to these versions in the pom of the current release are valid.
 
+## Updating Dependency Versions
+
+Updating dependency versions in **project-keeper** requires the following steps:
+
+1. **Update the version in the `revision` property** of the **parent `pom.xml`**.
+2. Build and install the current state of the project locally:
+
+    ```sh
+    mvn clean install -Dduplicate-finder.skip=true -DskipTests \
+        -Dproject-keeper.skip=true -Dossindex.skip=true \
+        -Dmaven.javadoc.skip=true -Djacoco.skip=true \
+        -Derror-code-crawler.skip=true -Dopenfasttrace.skip=true -T 1C
+    ```
+
+3. Run the `project-keeper:fix` goal using the locally installed version:
+
+    ```sh
+    mvn com.exasol:project-keeper-maven-plugin:fix --projects .
+    ```
+
+This updates Project Keeper maven modules with the new Project Keeper version and generate the changelog with dependency updates.
+
 ## Running Manual Tests To Examine a Specific Project
 
 In case one of the users of PK reports a bug for a specific project you can reproduce and debug PK's behavior in your IDE by using an appropriate run configuration.
