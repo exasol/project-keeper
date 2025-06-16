@@ -46,7 +46,7 @@ After that the dependencies of PK are available in your local maven repository i
 
 ## Updating Dependency Versions
 
-Updating dependency versions in **project-keeper** requires the following steps:
+Updating **project-keeper**'s own version requires the following steps:
 
 1. **Update the version in the `revision` property** of the **parent `pom.xml`**.
 2. Build and install the current state of the project locally:
@@ -64,7 +64,7 @@ Updating dependency versions in **project-keeper** requires the following steps:
     mvn com.exasol:project-keeper-maven-plugin:fix --projects .
     ```
 
-This updates Project Keeper maven modules with the new Project Keeper version and generate the changelog with dependency updates.
+This updates Project Keeper maven modules with the new Project Keeper version and generates the changelog with dependency updates.
 
 ## Running Manual Tests To Examine a Specific Project
 

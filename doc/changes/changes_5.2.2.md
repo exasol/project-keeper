@@ -4,6 +4,8 @@ Code name: Update webhook url for creating new pull requests with dependency upd
 
 ## Summary
 
+This release updates webhook url for creating new pull requests with dependency updates, which fix security vulnerabilities
+
 ## Features
 
 * #657: Update webhook url for creating new pull request with dependency updates
