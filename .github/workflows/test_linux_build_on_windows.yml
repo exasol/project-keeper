@@ -43,7 +43,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-go-
       - name: Install Go tools
-        run: go install github.com/google/go-licenses@v2.0.1
+        run: go install github.com/google/go-licenses/v2@v2.0.1
       - name: Build project-keeper
         run: |
           mvn --batch-mode -T 1C clean package -DskipTests -DtrimStackTrace=false \
