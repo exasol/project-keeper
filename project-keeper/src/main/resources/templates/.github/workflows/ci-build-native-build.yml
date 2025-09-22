@@ -6,7 +6,7 @@ on:
     branches:
       - main
   pull_request:
-    types: [ opened, synchronize, reopened, ready_for_review ]
+    types: [opened, synchronize, reopened, ready_for_review]
 jobs:
   build:
     name: Build native-image on ${{ matrix.os }}
@@ -31,7 +31,7 @@ jobs:
           sudo rm -rf /usr/share/dotnet
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - uses: graalvm/setup-graalvm@v1

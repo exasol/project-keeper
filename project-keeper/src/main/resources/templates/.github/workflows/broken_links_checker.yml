@@ -20,7 +20,7 @@ jobs:
       cancel-in-progress: true
     steps:
       - id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - id: configure-broken-links-checker
         name: Configure broken links checker
         run: |

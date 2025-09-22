@@ -25,14 +25,14 @@ jobs:
       cancel-in-progress: false
     }
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         id: checkout
         with: {
           fetch-depth: 0
         }
       - name: Set up JDKs
         id: setup-jdks
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: |-
