@@ -575,7 +575,9 @@ Scheduled daily, checks the Maven project for vulnerable dependencies, creates n
 
 This workflow is triggered manually or by workflow [`dependencies_check.yml`](#dependencies_checkyml). It updates dependencies, creates a changelog with fixed vulnerabilities and creates a new Pull Requests.
 
-In order to send notifications, this workflow requires GitHub secrets `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK` (to report new release or failure status for dependency check) and `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK` (to report new pull requests with dependency updates).
+In order to send notifications, this workflow requires GitHub secrets
+* `INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK` (to report new release or failure status for dependency check)
+* `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK` (to report new pull requests with dependency updates).
 
 ### [`ci-build.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/ci-build.yml)
 
