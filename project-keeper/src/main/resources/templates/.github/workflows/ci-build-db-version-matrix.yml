@@ -130,7 +130,7 @@ jobs:
                '{"pattern": "^https?://(www.)?eclipse.org"}' \
                '{"pattern": "^https?://projects.eclipse.org"}' \
                ']}' > ./target/broken_links_checker.json
-      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+      - uses: tcort/github-action-markdown-link-check@v1
         id: run-link-check
         with:
           use-quiet-mode: "yes"
