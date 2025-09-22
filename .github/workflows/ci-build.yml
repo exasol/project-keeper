@@ -65,7 +65,7 @@ jobs:
       - {
         name: Install Go tools,
         id: install-go-tools,
-        run: go install github.com/google/go-licenses@v1.6.0
+        run: go install github.com/google/go-licenses@v2.0.1
       }
       - name: Cache SonarCloud packages
         id: cache-sonar

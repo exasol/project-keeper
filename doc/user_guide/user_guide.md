@@ -366,7 +366,7 @@ build:
           content:
             name: Install Go tools
             id: install-go-tools
-            run: go install github.com/google/go-licenses@v1.6.0
+            run: go install github.com/google/go-licenses@v2.0.1
         - action: REPLACE
           job: build-and-test
           stepId: build-pk-verify

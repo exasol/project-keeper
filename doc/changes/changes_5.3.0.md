@@ -27,7 +27,6 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.5.0` to `3.6.1`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.7` to `3.2.8`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.11.2` to `3.12.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.1`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.3` to `3.5.4`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.7.0` to `1.7.3`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.18.0` to `2.19.1`
@@ -64,7 +63,6 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.3` to `3.5.4`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.7` to `3.2.8`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.11.2` to `3.12.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.1`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.3` to `3.5.4`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.7.0` to `1.7.3`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.18.0` to `2.19.1`
@@ -93,7 +91,6 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.3` to `3.5.4`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.7` to `3.2.8`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.11.2` to `3.12.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.1`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.3` to `3.5.4`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.7.0` to `1.7.3`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.18.0` to `2.19.1`
@@ -122,7 +119,6 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.3` to `3.5.4`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.7` to `3.2.8`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.11.2` to `3.12.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.1`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.3` to `3.5.4`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.7.0` to `1.7.3`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.18.0` to `2.19.1`
@@ -153,7 +149,6 @@ Code name:
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.3` to `3.5.4`
 * Updated `org.apache.maven.plugins:maven-gpg-plugin:3.2.7` to `3.2.8`
 * Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.11.2` to `3.12.0`
-* Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.3.1`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.3` to `3.5.4`
 * Updated `org.codehaus.mojo:flatten-maven-plugin:1.7.0` to `1.7.3`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.18.0` to `2.19.1`
