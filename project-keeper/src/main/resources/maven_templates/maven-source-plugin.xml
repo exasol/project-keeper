@@ -14,4 +14,7 @@
             </goals>
         </execution>
     </executions>
+    <configuration>
+        <classifier>sources</classifier>
+    </configuration>
 </plugin>
