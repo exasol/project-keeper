@@ -40,8 +40,8 @@ jobs:
             17
           cache: maven
           server-id: ossindex
-          server-username: ${{ secrets.OSSINDEX_USERNAME }}
-          server-password: ${{ secrets.OSSINDEX_API_TOKEN }}
+          server-username: OSSINDEX_USERNAME
+          server-password: OSSINDEX_API_TOKEN
       - name: Install Project Keeper
         id: install-project-keeper
         run: |
@@ -56,6 +56,10 @@ jobs:
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
               -Dossindex.reportFile=$(pwd)/ossindex-report.json \
               -Dossindex.fail=false
+        env: {
+          OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
+          OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
+        }
       - name: Create GitHub Issues
         id: create-security-issues
         uses: exasol/python-toolbox/.github/actions/security-issues@1.9.0

@@ -56,8 +56,8 @@ jobs:
             17
           cache: maven
           server-id: ossindex
-          server-username: ${{ secrets.OSSINDEX_USERNAME }}
-          server-password: ${{ secrets.OSSINDEX_API_TOKEN }}
+          server-username: OSSINDEX_USERNAME
+          server-password: OSSINDEX_API_TOKEN
       - name: Set up Go
         id: setup-go
         uses: actions/setup-go@v6
@@ -174,14 +174,16 @@ jobs:
           java-version: '21',
           cache: maven,
           server-id: ossindex,
-          server-username: '${{ secrets.OSSINDEX_USERNAME }}',
-          server-password: '${{ secrets.OSSINDEX_API_TOKEN }}'
+          server-username: OSSINDEX_USERNAME,
+          server-password: OSSINDEX_API_TOKEN
         }
-      - {
-        name: Run tests and build with Maven 21,
-        id: build-next-java,
+      - name: Run tests and build with Maven 21
+        id: build-next-java
         run: mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=21
-      }
+        env: {
+          OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
+          OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
+        }
   build:
     needs: [
       build-and-test,
