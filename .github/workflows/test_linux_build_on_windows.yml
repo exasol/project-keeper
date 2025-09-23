@@ -46,7 +46,7 @@ jobs:
         run: go install github.com/google/go-licenses/v2@v2.0.1
       - name: Build project-keeper
         run: |
-          mvn --batch-mode -T 1C clean package -DskipTests -DtrimStackTrace=false \
+          mvn --batch-mode -T 1C clean package -DskipTests -Dossindex.skip=true -DtrimStackTrace=false \
             -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - name: Strip version number
         run: |
