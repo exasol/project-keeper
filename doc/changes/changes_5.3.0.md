@@ -10,6 +10,12 @@ Code name:
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.5.0` to `3.6.1`
+
 ### Project Keeper Shared Model Classes
 
 #### Test Dependency Updates

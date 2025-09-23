@@ -60,7 +60,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>quality-summarizer-maven-plugin</artifactId>
-                <version>0.2.0</version>
+                <version>0.2.1</version>
                 <executions>
                     <execution>
                         <id>summarize-metrics</id>
