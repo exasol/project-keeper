@@ -46,8 +46,8 @@ jobs:
             17
           cache: "maven"
           server-id: ossindex
-          server-username: ${{ secrets.OSSINDEX_USERNAME }}
-          server-password: ${{ secrets.OSSINDEX_API_TOKEN }}
+          server-username: OSSINDEX_USERNAME
+          server-password: OSSINDEX_API_TOKEN
       - name: Cache SonarCloud packages
         id: cache-sonar
         uses: actions/cache@v4
@@ -66,6 +66,8 @@ jobs:
               -DtrimStackTrace=false \
               -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
         env:
+          OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+          OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
           # Set additional environment variable as in scala projects the scalatest plugin does not forward
           # the system property -Dcom.exasol.dockerdb.image to the test's implementation.
           EXASOL_DB_VERSION: ${{ matrix.exasol_db_version }}
@@ -164,11 +166,14 @@ jobs:
           java-version: $nextJavaVersion
           cache: "maven"
           server-id: ossindex
-          server-username: ${{ secrets.OSSINDEX_USERNAME }}
-          server-password: ${{ secrets.OSSINDEX_API_TOKEN }}
+          server-username: OSSINDEX_USERNAME
+          server-password: OSSINDEX_API_TOKEN
       - name: Run tests and build with Maven $nextJavaVersion
         id: build-next-java
         run: mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=$nextJavaVersion
+        env:
+          OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+          OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
 
   build:
     needs:
