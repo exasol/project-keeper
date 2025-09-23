@@ -1,8 +1,15 @@
-# Project Keeper 5.3.0, released 2025-??-??
+# Project Keeper 5.3.0, released 2025-09-24
 
-Code name:
+Code name: Upgrade Github actions and dependencies
 
 ## Summary
+
+This release upgrades GitHub actions and dependencies. It also sets up the authentication for the OSSIndex
+ maven plugin that is now mandatory.
+
+## Features
+
+* #679: Setup OSSIndex authentication
 
 ## Refactoring
 
