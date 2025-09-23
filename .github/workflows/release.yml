@@ -15,6 +15,27 @@ on:
         type: boolean,
         default: true
       }
+    secrets:
+      OSSRH_GPG_SECRET_KEY: {
+        description: Base64 encoded GPG secret key for signing artifacts for deployment to Maven Central.,
+        required: true
+      }
+      OSSRH_GPG_SECRET_KEY_PASSWORD: {
+        description: 'Password for the GPG key. Must not contain special characters, only letters and numbers.',
+        required: true
+      }
+      MAVEN_CENTRAL_PORTAL_USERNAME: {
+        description: Username for the Maven Central Portal.,
+        required: true
+      }
+      MAVEN_CENTRAL_PORTAL_TOKEN: {
+        description: Password for the Maven Central Portal.,
+        required: true
+      }
+      INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK: {
+        description: Slack webhook URL for notifications about failed and succesful releases.,
+        required: true
+      }
   workflow_dispatch:
     inputs:
       skip-maven-central: {

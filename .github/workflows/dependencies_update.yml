@@ -8,6 +8,15 @@ on:
         required: true,
         type: string
       }
+    secrets:
+      INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK: {
+        description: Slack webhook URL for notifications about failed builds.,
+        required: true
+      }
+      INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK: {
+        description: Slack webhook URL for notifications about new Pull Requests.,
+        required: true
+      }
   workflow_dispatch: null
 jobs:
   update_dependencies:
