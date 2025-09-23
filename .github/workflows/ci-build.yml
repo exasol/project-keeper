@@ -55,6 +55,9 @@ jobs:
             11
             17
           cache: maven
+          server-id: ossindex
+          server-username: ${{ secrets.OSSINDEX_USERNAME }}
+          server-password: ${{ secrets.OSSINDEX_API_TOKEN }}
       - name: Set up Go
         id: setup-go
         uses: actions/setup-go@v6
@@ -169,7 +172,10 @@ jobs:
         with: {
           distribution: temurin,
           java-version: '21',
-          cache: maven
+          cache: maven,
+          server-id: ossindex,
+          server-username: '${{ secrets.OSSINDEX_USERNAME }}',
+          server-password: '${{ secrets.OSSINDEX_API_TOKEN }}'
         }
       - {
         name: Run tests and build with Maven 21,
