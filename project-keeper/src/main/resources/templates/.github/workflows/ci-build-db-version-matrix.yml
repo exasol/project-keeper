@@ -45,6 +45,9 @@ jobs:
             11
             17
           cache: "maven"
+          server-id: ossindex
+          server-username: ${{ secrets.OSSINDEX_USERNAME }}
+          server-password: ${{ secrets.OSSINDEX_API_TOKEN }}
       - name: Cache SonarCloud packages
         id: cache-sonar
         uses: actions/cache@v4
@@ -160,6 +163,9 @@ jobs:
           distribution: "temurin"
           java-version: $nextJavaVersion
           cache: "maven"
+          server-id: ossindex
+          server-username: ${{ secrets.OSSINDEX_USERNAME }}
+          server-password: ${{ secrets.OSSINDEX_API_TOKEN }}
       - name: Run tests and build with Maven $nextJavaVersion
         id: build-next-java
         run: mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=$nextJavaVersion
