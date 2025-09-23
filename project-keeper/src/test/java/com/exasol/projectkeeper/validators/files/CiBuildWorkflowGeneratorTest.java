@@ -400,7 +400,7 @@ class CiBuildWorkflowGeneratorTest {
         final Map<String, Object> setupJavaStep = new HashMap<>();
         setupJavaStep.put("id", "setup-java");
         setupJavaStep.put("name", "New Java");
-        setupJavaStep.put("uses", "actions/setup-java@v4");
+        setupJavaStep.put("uses", "actions/setup-java@v5");
         final Map<String, String> withElement = new HashMap<>();
         withElement.put("java-version", javaVersion);
         setupJavaStep.put("with", withElement);

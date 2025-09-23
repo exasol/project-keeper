@@ -19,7 +19,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                     steps:
                       - name: Set up JDKs
                         id: setup-java
-                        uses: actions/setup-java@v4
+                        uses: actions/setup-java@v5
                         with:
                           distribution: "temurin"
                           java-version: |
@@ -55,7 +55,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                     steps:
                       - name: Set up JDKs
                         id: setup-java
-                        uses: actions/setup-java@v4
+                        uses: actions/setup-java@v5
                         with:
                 """, List.of("v1"), "v2");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
@@ -69,7 +69,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                     steps:
                       - name: Set up JDKs
                         id: setup-java
-                        uses: actions/setup-java@v4
+                        uses: actions/setup-java@v5
                 """, List.of("v1"), "v2");
         assertThat(workflow.getJob("any-job-name").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
     }
@@ -82,7 +82,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                     steps:
                       - name: Set up JDKs
                         id: setup-java
-                        uses: actions/setup-java@v4
+                        uses: actions/setup-java@v5
                         with:
                           distribution: "temurin"
                           java-version: |
@@ -101,7 +101,7 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                     steps:
                       - name: Set up JDKs
                         id: setup-java
-                        uses: actions/setup-java@v4
+                        uses: actions/setup-java@v5
                         with:
                           distribution: "temurin"
                           java-version: |

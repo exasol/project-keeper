@@ -28,7 +28,7 @@ public class GoBinary {
     /**
      * {@link GoBinary} for tool {@code go-licenses}
      */
-    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google/go-licenses@v1.6.0", "go-licenses",
+    public static final GoBinary GO_LICENSES = new GoBinary("github.com/google/go-licenses/v2@v2.0.1", "go-licenses",
             Duration.ofMinutes(6));
 
     private static final Logger LOGGER = Logger.getLogger(GoBinary.class.getName());

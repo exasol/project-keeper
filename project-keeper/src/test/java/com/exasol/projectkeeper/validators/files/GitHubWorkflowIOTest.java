@@ -34,12 +34,12 @@ class GitHubWorkflowIOTest {
                     steps:
                       - name: Checkout the repository
                         id: checkout
-                        uses: actions/checkout@v4
+                        uses: actions/checkout@v5
                         with:
                           fetch-depth: 0
                       - name: Set up JDKs
                         id: setup-jdks
-                        uses: actions/setup-java@v4
+                        uses: actions/setup-java@v5
                         with:
                           distribution: "temurin"
                           java-version: |
@@ -56,7 +56,7 @@ class GitHubWorkflowIOTest {
                 () -> assertThat(job.getStep("setup-jdks").getWith(), allOf(hasEntry("distribution", "temurin"), //
                         hasEntry("java-version", "11\n17\n"), //
                         hasEntry("cache", "maven"))),
-                () -> assertThat(job.getStep("setup-jdks").getUsesAction(), equalTo("actions/setup-java@v4")));
+                () -> assertThat(job.getStep("setup-jdks").getUsesAction(), equalTo("actions/setup-java@v5")));
     }
 
     @Test
@@ -102,7 +102,7 @@ class GitHubWorkflowIOTest {
                           build:
                             steps:
                               - name: Set up JDKs
-                                uses: actions/setup-java@v4
+                                uses: actions/setup-java@v5
                                 with:
                                   distribution: temurin
                                   java-version: |

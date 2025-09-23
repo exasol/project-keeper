@@ -356,7 +356,7 @@ build:
           content:
             name: Set up Go
             id: setup-go
-            uses: actions/setup-go@v5
+            uses: actions/setup-go@v6
             with:
               go-version: "1.24"
               cache-dependency-path: .project-keeper.yml
@@ -366,7 +366,7 @@ build:
           content:
             name: Install Go tools
             id: install-go-tools
-            run: go install github.com/google/go-licenses@v1.6.0
+            run: go install github.com/google/go-licenses/v2@v2.0.1
         - action: REPLACE
           job: build-and-test
           stepId: build-pk-verify
@@ -575,7 +575,9 @@ Scheduled daily, checks the Maven project for vulnerable dependencies, creates n
 
 This workflow is triggered manually or by workflow [`dependencies_check.yml`](#dependencies_checkyml). It updates dependencies, creates a changelog with fixed vulnerabilities and creates a new Pull Requests.
 
-In order to send notifications, this workflow requires GitHub secrets `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK` (to report new release or failure status for dependency check) and `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK` (to report new pull requests with dependency updates).
+In order to send notifications, this workflow requires GitHub secrets
+* `INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK` (to report new release or failure status for dependency check)
+* `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK` (to report new pull requests with dependency updates).
 
 ### [`ci-build.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/ci-build.yml)
 
@@ -597,7 +599,7 @@ For GitHub Actions you can solve this by adding `fetch-depth: 0` to the checkout
 
 ```yaml
 - name: Checkout the repository
-  uses: actions/checkout@v4
+  uses: actions/checkout@v5
   with:
     fetch-depth: 0
 ```

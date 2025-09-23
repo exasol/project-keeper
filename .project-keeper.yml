@@ -92,7 +92,7 @@ build:
           content:
             name: Set up Go
             id: setup-go
-            uses: actions/setup-go@v5
+            uses: actions/setup-go@v6
             with:
               go-version: "1.24"
               cache-dependency-path: .project-keeper.yml
@@ -102,7 +102,7 @@ build:
           content:
             name: Install Go tools
             id: install-go-tools
-            run: go install github.com/google/go-licenses@v1.6.0
+            run: go install github.com/google/go-licenses/v2@v2.0.1
         - action: REPLACE
           job: build-and-test
           stepId: build-pk-verify

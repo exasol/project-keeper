@@ -29,12 +29,12 @@ jobs:
           sudo rm -rf /usr/share/dotnet
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: |
@@ -121,7 +121,7 @@ jobs:
                '{"pattern": "^https?://(www.)?eclipse.org"}' \
                '{"pattern": "^https?://projects.eclipse.org"}' \
                ']}' > ./target/broken_links_checker.json
-      - uses: gaurav-nelson/github-action-markdown-link-check@v1
+      - uses: tcort/github-action-markdown-link-check@v1
         id: run-link-check
         with:
           use-quiet-mode: "yes"
@@ -141,12 +141,12 @@ jobs:
     steps:
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up JDK $nextJavaVersion
         id: setup-java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: $nextJavaVersion
@@ -171,12 +171,12 @@ jobs:
     steps:
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: "temurin"
           java-version: |
@@ -205,7 +205,12 @@ jobs:
     concurrency:
       cancel-in-progress: false
       group: "release"
-    secrets: inherit
+    secrets:
+      OSSRH_GPG_SECRET_KEY: ${{ secrets.OSSRH_GPG_SECRET_KEY }}
+      OSSRH_GPG_SECRET_KEY_PASSWORD: ${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }}
+      MAVEN_CENTRAL_PORTAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_PORTAL_USERNAME }}
+      MAVEN_CENTRAL_PORTAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_PORTAL_TOKEN }}
+      INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK: ${{ secrets.INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK }}
     permissions:
       contents: write
       actions: read
