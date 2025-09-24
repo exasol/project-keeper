@@ -1,12 +1,14 @@
 # Project Keeper 5.4.0, released 2025-??-??
 
-Code name:
+Code name: Allow patch releases
 
 ## Summary
 
+This release allows TODO
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #672: Allow patch releases from branches
 
 ## Dependency Updates
 
