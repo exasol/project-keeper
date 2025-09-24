@@ -215,7 +215,7 @@ jobs:
               echo "* \`$file\`" >> "$GITHUB_STEP_SUMMARY"
           done
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          release_url=$(gh release create --latest --title "$TITLE" --notes "$NOTES" --target main $TAG "${artifacts_array[@]}")
+          release_url=$(gh release create --latest --title "$TITLE" --notes "$NOTES" --target $BRANCH_NAME $TAG "${artifacts_array[@]}")
           echo "Created release $TAG with title '$TITLE' at $release_url ✅" >> "$GITHUB_STEP_SUMMARY"
           echo "release-url=$release_url" >> "$GITHUB_OUTPUT"
 
@@ -237,7 +237,8 @@ jobs:
           ADDITIONAL_TAGS: '${{ steps.verify-release.outputs.additional-release-tags }}',
           NOTES: '${{ steps.verify-release.outputs.release-notes }}',
           TITLE: '${{ steps.verify-release.outputs.release-title }}',
-          ARTIFACTS: '${{ steps.artifact-checksum.outputs.artifacts }}'
+          ARTIFACTS: '${{ steps.artifact-checksum.outputs.artifacts }}',
+          BRANCH_NAME: '${{ github.ref_name }}'
         }
       - name: Report failure Status to Slack channel
         id: report-failure-status-slack
