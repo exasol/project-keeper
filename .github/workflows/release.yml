@@ -106,11 +106,11 @@ jobs:
           cache: maven
       - name: Fail if not running on main or release branch
         id: check-main-or-release-branch
-        if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release') }}
+        if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release/') }}
         uses: actions/github-script@v8
         with:
           script: |
-            core.setFailed('Not running on main or release branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch starting with release')
+            core.setFailed('Not running on main or release branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch starting with release/')
       - name: Check CI build of this commit succeeded
         id: check-ci-build-status
         if: ${{ ! inputs.started-from-ci }}
