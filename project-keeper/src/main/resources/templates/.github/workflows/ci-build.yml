@@ -1,7 +1,9 @@
 name: CI Build
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+      - release/*
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
