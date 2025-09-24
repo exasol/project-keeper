@@ -132,7 +132,7 @@ jobs:
       # [impl->dsn~release-workflow.verify-skip-tests~1]
       - name: Build project
         id: build
-        run: mvn --batch-mode -DskipTests clean verify
+        run: mvn --batch-mode -DskipTests -Dossindex.skip=true clean verify
 
       # Maven Central Deployment
       - name: List secret GPG keys
@@ -145,7 +145,7 @@ jobs:
         if: ${{ $mavenCentralDeployment && (! inputs.skip-maven-central) }}
         run: |
           echo "#### Maven Central Release" >> "$GITHUB_STEP_SUMMARY"
-          mvn --batch-mode -Dgpg.skip=false -DskipTests deploy \
+          mvn --batch-mode -Dgpg.skip=false -DskipTests -Dossindex.skip=true deploy \
               -Dcentral-publishing.deploymentName="Auto release of repo ${{ github.repository }} using PK release.yml" \
               -Dcentral-publishing.autoPublish=${{ inputs.maven-central-auto-publish }}
           if [[ "${{ inputs.maven-central-auto-publish }}" == "true" ]]; then

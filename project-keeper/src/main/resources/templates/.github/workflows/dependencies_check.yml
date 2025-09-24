@@ -32,6 +32,9 @@ jobs:
             11
             17
           cache: "maven"
+          server-id: ossindex
+          server-username: OSSINDEX_USERNAME
+          server-password: OSSINDEX_API_TOKEN
 
       - name: Generate ossindex report
         id: ossindex-report
@@ -40,6 +43,9 @@ jobs:
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
               -Dossindex.reportFile=$(pwd)/ossindex-report.json \
               -Dossindex.fail=false
+        env:
+          OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+          OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
 
       - name: Create GitHub Issues
         id: create-security-issues
