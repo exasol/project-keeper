@@ -119,7 +119,7 @@ jobs:
 
       - name: Create branch
         id: create-branch
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }} # TODO should we check dependency updates in all release branches?
         run: |
           branch_name="dependency-update/$(date "+%Y%m%d%H%M%S")"
           echo "Creating branch $branch_name"
@@ -149,7 +149,7 @@ jobs:
 
       - name: Create pull request
         id: create-pr
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' }}  # TODO should we check dependency updates in all release branches?
         run: |
           pr_url=$(gh pr create --base main --title "$TITLE" --body "$COMMENT")
           echo "Created Pull Request: $pr_url"
