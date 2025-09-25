@@ -1,7 +1,9 @@
 name: CI Build
 on:
   push:
-    branches: ["main"]
+    branches:
+      - main
+      - release/*
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   workflow_dispatch:
@@ -197,7 +199,7 @@ jobs:
           cache: "maven"
       - name: Check if release is needed
         id: check-release
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') }}
         run: |
           if mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .; then
               echo "### ✅ Release preconditions met, start release" >> "$GITHUB_STEP_SUMMARY"
@@ -213,7 +215,7 @@ jobs:
   # [impl->dsn~release-workflow.ci-build-starts-release~2]
   start_release:
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' && needs.build.outputs.release-required == 'true' }}
+    if: ${{ needs.build.outputs.release-required == 'true' }}
     concurrency:
       cancel-in-progress: false
       group: "release"

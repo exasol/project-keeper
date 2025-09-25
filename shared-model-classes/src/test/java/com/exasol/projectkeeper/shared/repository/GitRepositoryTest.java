@@ -35,7 +35,7 @@ class GitRepositoryTest {
 
     @Test
     void testGetTags() throws GitAPIException, IOException {
-        try (final Git git = gitInit();) {
+        try (final Git git = gitInit()) {
             makeCommitAndTag(git, 1, false);
             git.branchCreate().setName("other").call();
             makeCommitAndTag(git, 2, false);
@@ -54,7 +54,7 @@ class GitRepositoryTest {
      */
     @Test
     void testGetLightweightTag() throws GitAPIException, IOException {
-        try (final Git git = gitInit();) {
+        try (final Git git = gitInit()) {
             makeCommitAndTag(git, 1, true);
             this.repository = openRepo(this.tempDir);
             final List<TaggedCommit> result = this.repository.getTagsInCurrentBranch();
@@ -65,7 +65,7 @@ class GitRepositoryTest {
 
     @Test
     void testGetTagsFromDetachedHead() throws GitAPIException, IOException {
-        try (final Git git = gitInit();) {
+        try (final Git git = gitInit()) {
             makeCommitAndTag(git, 1, true);
             final RevCommit secondCommit = makeCommitAndTag(git, 2, true);
             git.checkout().setName(secondCommit.getName()).call();
@@ -102,7 +102,7 @@ class GitRepositoryTest {
     }
 
     private void makeTag(final Git git, final String tagName, final boolean lightweight)
-            throws GitAPIException, ConcurrentRefUpdateException, InvalidTagNameException, NoHeadException {
+            throws GitAPIException {
         git.tag().setName(tagName).setAnnotated(!lightweight).call();
     }
 
@@ -209,6 +209,20 @@ class GitRepositoryTest {
             final Optional<TaggedCommit> commit = this.repository.findLatestReleaseCommit(null);
             assertAll(() -> assertTrue(commit.isPresent()), //
                     () -> assertThat(commit.get().getTag(), equalTo("1.2.3")));
+        }
+    }
+
+    @Test
+    void testFindLatestReleaseCommitMatchingTagInBranch() throws GitAPIException, IOException {
+        try (final Git git = gitInit()) {
+            this.repository = openRepo(this.tempDir);
+            makeCommitAndTag(git, 1, false, "1.0.0");
+            git.branchCreate().setName("release-1.0").call();
+            makeCommitAndTag(git, 1, false, "2.0.0");
+            git.checkout().setName("release-1.0").call();
+            final Optional<TaggedCommit> commit = this.repository.findLatestReleaseCommit(null);
+            assertAll(() -> assertTrue(commit.isPresent()), //
+                    () -> assertThat(commit.get().getTag(), equalTo("1.0.0")));
         }
     }
 

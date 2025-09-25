@@ -3,7 +3,8 @@ name: CI Build
 on:
   push:
     branches: [
-      main
+      main,
+      release/*
     ]
     
   pull_request:
@@ -226,7 +227,7 @@ jobs:
               -Derror-code-crawler.skip=true -Dreproducible.skip=true
       - name: Check if release is needed
         id: check-release
-        if: ${{ github.ref == 'refs/heads/main' }}
+        if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') }}
         run: |
           if mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .; then
               echo "### ✅ Release preconditions met, start release" >> "$GITHUB_STEP_SUMMARY"
@@ -241,7 +242,7 @@ jobs:
         }
   start_release:
     needs: build
-    if: ${{ github.ref == 'refs/heads/main' && needs.build.outputs.release-required == 'true' }}
+    if: ${{ needs.build.outputs.release-required == 'true' }}
     concurrency: {
       cancel-in-progress: false,
       group: release

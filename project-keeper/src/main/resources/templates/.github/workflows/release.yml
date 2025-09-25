@@ -94,13 +94,13 @@ jobs:
 
       # Check preconditions
 
-      - name: Fail if not running on main branch
-        id: check-main-branch
-        if: ${{ github.ref != 'refs/heads/main' }}
+      - name: Fail if not running on main or release branch
+        id: check-main-or-release-branch
+        if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release/') }}
         uses: actions/github-script@v8
         with:
           script: |
-            core.setFailed('Not running on main branch, github.ref is ${{ github.ref }}. Please start this workflow only on main')
+            core.setFailed('Not running on main or release branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch starting with release/')
 
       # [impl->dsn~release-workflow.verify-ci-build-success~1]
       - name: Check CI build of this commit succeeded
@@ -109,8 +109,9 @@ jobs:
         if: ${{ ! inputs.started-from-ci }}
         run: |
           echo "Commit SHA: $COMMIT_SHA"
-          gh run list --workflow ci-build.yml --branch main --event push --commit $COMMIT_SHA
-          ci_build_status=$(gh run list --workflow ci-build.yml --branch main --event push --commit $COMMIT_SHA --json conclusion --template '{{range .}}{{.conclusion}}{{"\n"}}{{end}}')
+          echo "Branch: $BRANCH_NAME"
+          gh run list --workflow ci-build.yml --branch $BRANCH_NAME --event push --commit $COMMIT_SHA
+          ci_build_status=$(gh run list --workflow ci-build.yml --branch $BRANCH_NAME --event push --commit $COMMIT_SHA --json conclusion --template '{{range .}}{{.conclusion}}{{"\n"}}{{end}}')
           echo "CI build status at commit $COMMIT_SHA was '$ci_build_status'"
           if [[ "$ci_build_status" != "success" ]]; then
             gh run list --workflow ci-build.yml --commit $COMMIT_SHA >> $GITHUB_STEP_SUMMARY
@@ -121,6 +122,7 @@ jobs:
         env:
           COMMIT_SHA: ${{ github.sha }}
           GH_TOKEN: ${{ github.token }}
+          BRANCH_NAME: ${{ github.ref_name }}
       # [impl->dsn~release-workflow.run-verify-release~1]
       - name: Verify release preconditions
         id: verify-release
@@ -201,7 +203,7 @@ jobs:
               echo "* \`$file\`" >> "$GITHUB_STEP_SUMMARY"
           done
           echo "" >> "$GITHUB_STEP_SUMMARY"
-          release_url=$(gh release create --latest --title "$TITLE" --notes "$NOTES" --target main $TAG "${artifacts_array[@]}")
+          release_url=$(gh release create --latest --title "$TITLE" --notes "$NOTES" --target $BRANCH_NAME $TAG "${artifacts_array[@]}")
           echo "Created release $TAG with title '$TITLE' at $release_url ✅" >> "$GITHUB_STEP_SUMMARY"
           echo "release-url=$release_url" >> "$GITHUB_OUTPUT"
 
@@ -224,6 +226,7 @@ jobs:
           NOTES: ${{ steps.verify-release.outputs.release-notes }}
           TITLE: ${{ steps.verify-release.outputs.release-title }}
           ARTIFACTS: ${{ steps.artifact-checksum.outputs.artifacts }}
+          BRANCH_NAME: ${{ github.ref_name }}
 
       - name: Report failure Status to Slack channel
         id: report-failure-status-slack
