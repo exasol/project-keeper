@@ -381,6 +381,16 @@ build:
                   -DtrimStackTrace=false
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
+              OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+              OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
+```
+
+**Note**: If you override workflow step `build-pk-verify` in `.project-keeper.yml` please ensure to pass the OSSIndex credentials as environment variables `OSSINDEX_USERNAME` and `OSSINDEX_API_TOKEN` like this:
+
+```yml
+            env:
+              OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+              OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
 ```
 
 ## Maven Projects

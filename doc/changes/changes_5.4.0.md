@@ -13,6 +13,10 @@ It will now be triggered not only when merging into the `main` branch, but also 
 
 * #672: Allow patch releases from branches
 
+## Documentation
+
+* #680: Update documentation to include a warning about overriding build steps due to new OSS Index auth
+
 ## Dependency Updates
 
 ### Project Keeper Core
