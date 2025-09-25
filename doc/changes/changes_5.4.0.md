@@ -1,10 +1,11 @@
-# Project Keeper 5.4.0, released 2025-??-??
+# Project Keeper 5.4.0, released 2025-09-25
 
 Code name: Allow patch releases
 
 ## Summary
 
-This release allows TODO
+The release process has been extended to support maintenance and patch branches.
+It will now be triggered not only when merging into the `main` branch, but also when merging into any branch matching the `release/*` pattern. 
 
 ## Features
 
