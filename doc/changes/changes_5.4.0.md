@@ -7,6 +7,8 @@ Code name: Allow patch releases
 The release process has been extended to support maintenance and patch branches.
 It will now be triggered not only when merging into the `main` branch, but also when merging into any branch matching the `release/*` pattern. 
 
+**Warning**: Because branches matching `release/*` trigger the release process, they should be protected with the same rules as the `main` branch.
+
 ## Features
 
 * #672: Allow patch releases from branches
