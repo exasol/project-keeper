@@ -235,8 +235,10 @@ The CI build runs automatically on the following triggers:
   * Additionally to the default PR activity types `opened`, `synchronize`, and `reopened` this also runs the CI build when the PR changes from draft to "ready for review" (type `ready_for_review`). This ensures that the complete build runs even when some workflows steps are skipped for draft PRs. See [complete list of PR activity types](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request).
 * Workflow Dispatch
   * This allows starting the CI build manually to debug build issues.
-* Merges to `main` branch
+* Merges into `main` or into branches matching `release/*`. 
   * This will also start the [automatic release process](#automatic-release-process).
+
+⚠️ **Warning**: Because branches matching `release/*` trigger the release process, they should be protected with the same rules as the `main` branch.
 
 #### CI Build Configuration
 
@@ -548,7 +550,7 @@ The standalone variant supports the same goals as the Maven plugin: `fix`, `veri
 
 ### Automatic Release Process
 
-GitHub Workflow [`release.yml`](#releaseyml) will automatically release the project when `ci-build.yml` succeeded on `main` branch and the changes file contains an up-to-date release date. In case of problems you can start the workflow manually on GitHub and skip the release to Maven Central or GitHub if necessary.
+GitHub Workflow [`release.yml`](#releaseyml) will automatically release the project when `ci-build.yml` succeeded on `main` or on branches matching `release/*` and the changes file contains an up-to-date release date. In case of problems you can start the workflow manually on GitHub and skip the release to Maven Central or GitHub if necessary.
 
 To check if a project meets all preconditions for an automated release, run PK goal `verify-release`, see [Release verification](#release-verification):
 
