@@ -71,9 +71,7 @@ jobs:
       group: ${{ github.workflow }}-start_dependency_update
       cancel-in-progress: false
     # Workflow needs secrets INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK and INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK
-    secrets:
-      INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK: ${{ secrets.INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK }}
-      INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK: ${{ secrets.INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK }}
+    secrets: inherit
     permissions:
       contents: write
       pull-requests: write

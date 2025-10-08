@@ -48,7 +48,7 @@ class GitHubConnectionProvider {
     private Optional<String> getTokenFromGhTool() {
         try {
             final SimpleProcess process = SimpleProcess.start(List.of("gh", "auth", "token"));
-            process.waitUntilFinished(Duration.ofSeconds(1));
+            process.waitUntilFinished(Duration.ofSeconds(10));
             return Optional.of(process.getOutputStreamContent().trim());
         } catch (final RuntimeException exception) {
             LOG.log(Level.WARNING, exception,
