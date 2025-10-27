@@ -4,7 +4,6 @@ import static java.util.Arrays.asList;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.equalTo;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
 
@@ -18,8 +17,7 @@ class JavaVersionExtractorTest {
 
     @Test
     void noSources() {
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, this::extract);
-        assertThat(exception.getMessage(), equalTo("No sources, can't get java versions"));
+        assertThat(extract(), contains("17"));
     }
 
     @Test
@@ -64,7 +62,8 @@ class JavaVersionExtractorTest {
     }
 
     @ParameterizedTest
-    @CsvSource({ "8, 11", "9, 11", "11, 17", "12, 17", "17, 21", "17.1, 21", "21, 24", "22, 24", "24, 24", "25, 24" })
+    @CsvSource({ "8, 11", "9, 11", "11, 17", "12, 17", "17, 21", "17.1, 21", "21, 25", "22, 25", "24, 25",
+            "26, 25", "27, 25" })
     void getNextVersion(final String currentVersion, final String nextVersion) {
         assertThat(nextVersion(mavenSource(currentVersion)), equalTo(nextVersion));
     }

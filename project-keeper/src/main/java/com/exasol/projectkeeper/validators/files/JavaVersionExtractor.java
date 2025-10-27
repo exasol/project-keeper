@@ -40,11 +40,12 @@ class JavaVersionExtractor {
 
     private Set<String> getSourceJavaVersions() {
         if (sources.isEmpty()) {
-            throw new IllegalStateException("No sources, can't get java versions");
+            return Set.of(MAVEN_BUILD_JAVA_VERSION);
         }
-        return sources.stream().filter(AnalyzedMavenSource.class::isInstance) //
-                .map(AnalyzedMavenSource.class::cast) //
-                .map(AnalyzedMavenSource::getJavaVersion) //
+        return sources.stream()
+                .filter(AnalyzedMavenSource.class::isInstance)
+                .map(AnalyzedMavenSource.class::cast)
+                .map(AnalyzedMavenSource::getJavaVersion)
                 .collect(toSet());
     }
 
@@ -59,7 +60,7 @@ class JavaVersionExtractor {
         if (current < 21) {
             return "21";
         }
-        return "24";
+        return "25";
     }
 
     private double getCurrentLatestVersion() {
