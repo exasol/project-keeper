@@ -14,12 +14,15 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.3` to `2.0.5`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.3` to `3.1.4`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.1` to `3.6.2`
 
 ### Project Keeper Shared Model Classes
 
 #### Plugin Dependency Updates
 
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.0` to `3.6.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.1` to `3.6.2`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.13` to `0.8.14`
 * Updated `org.sonatype.central:central-publishing-maven-plugin:0.8.0` to `0.9.0`
@@ -42,6 +45,7 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.0` to `3.6.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.1` to `3.6.2`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.13` to `0.8.14`
 * Updated `org.sonatype.central:central-publishing-maven-plugin:0.8.0` to `0.9.0`
@@ -58,6 +62,7 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.0` to `3.6.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.1` to `3.6.2`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.13` to `0.8.14`
 * Updated `org.sonatype.central:central-publishing-maven-plugin:0.8.0` to `0.9.0`
@@ -75,7 +80,10 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.0` to `3.6.1`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.8.1` to `3.9.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.1` to `3.6.2`
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.4.1` to `3.4.2`
 * Updated `org.apache.maven.plugins:maven-plugin-plugin:3.15.1` to `3.15.2`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.13` to `0.8.14`
 * Updated `org.sonatype.central:central-publishing-maven-plugin:0.8.0` to `0.9.0`
@@ -94,6 +102,8 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.0` to `3.6.1`
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.8.1` to `3.9.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.1` to `3.6.2`
 * Updated `org.apache.maven.plugins:maven-plugin-plugin:3.15.1` to `3.15.2`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.13` to `0.8.14`
@@ -107,5 +117,7 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.0` to `3.6.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.1` to `3.6.2`
+* Updated `org.apache.maven.plugins:maven-javadoc-plugin:3.11.1` to `3.12.0`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.13` to `0.8.14`
