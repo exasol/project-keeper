@@ -30,7 +30,7 @@ class OwnVersionValidatorTest {
 
     @Test
     void retrieveLatestVersion_IoError() {
-        verifyOptionalFinding(testee("0.1.0", new MavenRepository("https://localhost/unknown/end/point")),
+        verifyOptionalFinding(testee("0.1.0", new MavenRepository("https://localhost:12345/unknown/end/point")),
                 expectedMessage("W-PK-CORE-155", "Connection refused.*"));
     }
 
