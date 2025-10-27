@@ -154,7 +154,7 @@ class ProjectKeeperMojoIT {
         final VerificationException exception = assertThrows(VerificationException.class,
                 () -> verifier.executeGoals(List.of("clean", "verify", "artifact:compare")));
 
-        assertThat(exception.getMessage(), containsString("Build artifacts are different from reference"));
+        assertThat(exception.getMessage(), containsString("Rebuilt artifacts are different from reference"));
         assertThat(projectDir.resolve("target/my-test-project-0.1.0.buildcompare").toFile(), anExistingFile());
     }
 
