@@ -86,7 +86,7 @@ jobs:
             17
           cache: "maven"
       - name: Download jar
-        uses: actions/download-artifact@v5
+        uses: actions/download-artifact@v6
         with:
           name: project-keeper-jar
       - name: List files
