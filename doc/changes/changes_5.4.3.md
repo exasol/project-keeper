@@ -1,12 +1,14 @@
-# Project Keeper 5.4.3, released 2025-??-??
+# Project Keeper 5.4.3, released 2025-10-27
 
-Code name:
+Code name: Projects without sources
 
 ## Summary
 
-## Features
+This release adds support for projects without sources. PK failed for these projects with error message `No sources, can't get java versions`.
 
-* ISSUE_NUMBER: description
+## Bugfixes
+
+* #687: Add support for projects without sources
 
 ## Dependency Updates
 
