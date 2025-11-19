@@ -55,10 +55,14 @@ public class ChangesFileValidator extends AbstractFileValidator {
         this.projectName = projectName;
         this.sources = sources;
         this.changesFileIO = changesFileIO;
-        final String repoName = RepoNameReader.getRepoName(projectDirectory);
-        this.gitHubAdapter = GitHubAdapter.connect(repoName);
+        this.gitHubAdapter = getGithubAdapter(projectDirectory);
         this.changesFilePath = projectDirectory.resolve(ChangesFile.getPathForVersion(projectVersion));
         this.changesFile = changesFileIO.read(changesFilePath);
+    }
+
+    private GitHubAdapter getGithubAdapter(final Path projectDirectory) {
+        final String repoName = RepoNameReader.getRepoName(projectDirectory);
+        return GitHubAdapter.connect(repoName);
     }
 
     @Override
