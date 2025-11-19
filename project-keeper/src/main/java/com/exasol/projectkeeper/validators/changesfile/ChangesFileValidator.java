@@ -1,10 +1,5 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
-import java.nio.file.Path;
-import java.time.LocalDateTime;
-import java.util.*;
-import java.util.stream.Stream;
-
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.ExasolVersionMatcher;
@@ -17,7 +12,11 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 import com.exasol.projectkeeper.validators.release.github.GitHubAdapter;
 import com.exasol.projectkeeper.validators.release.github.IssueState;
 
-import static java.util.Collections.sort;
+import java.nio.file.Path;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Stream;
+
 import static java.util.stream.Collectors.toSet;
 
 /**
@@ -32,11 +31,9 @@ public class ChangesFileValidator extends AbstractFileValidator {
     private final List<AnalyzedSource> sources;
     private final String projectVersion;
     private final ChangesFileIO changesFileIO;
-    private final String repoName;
     private final GitHubAdapter gitHubAdapter;
     private final Path changesFilePath;
     private final ChangesFile changesFile;
-    private final ChangesFileIO changesFileIO;
 
     /**
      * Create a new instance of {@link ChangesFileValidator}
@@ -58,9 +55,10 @@ public class ChangesFileValidator extends AbstractFileValidator {
         this.projectName = projectName;
         this.sources = sources;
         this.changesFileIO = changesFileIO;
-        this.repoName = RepoNameReader.getRepoName(projectDirectory);
+        final String repoName = RepoNameReader.getRepoName(projectDirectory);
         this.gitHubAdapter = GitHubAdapter.connect(repoName);
         this.changesFilePath = projectDirectory.resolve(ChangesFile.getPathForVersion(projectVersion));
+        this.changesFile = changesFileIO.read(changesFilePath);
     }
 
     @Override
@@ -136,7 +134,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
     }
 
     private List<Integer> getIssuesWronglyMarkedAsClosed() {
-        final Set<Integer> mentionedTickets = changesFilePath.getFixedIssues().stream().map(FixedIssue::issueNumber)
+        final Set<Integer> mentionedTickets = changesFile.getFixedIssues().stream().map(FixedIssue::issueNumber)
                 .collect(toSet());
         final Set<Integer> stillOpenIssues = new HashSet<>();
         for (final Integer issue : mentionedTickets) {

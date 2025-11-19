@@ -8,7 +8,7 @@ Wrong issue number in the changelog is only detected during release
 
 ## Features
 
-* #696: Wrong issue number in the changelog is only detected during release
+* #695: Wrong issue number in the changelog is only detected during release
 
 ## Dependency Updates
 
