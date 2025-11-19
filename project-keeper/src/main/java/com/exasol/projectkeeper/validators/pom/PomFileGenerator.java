@@ -51,10 +51,11 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/maven-source-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/maven-javadoc-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/central-publishing-maven-plugin.xml", MAVEN_CENTRAL),
-            new SimplePluginTemplateGenerator("maven_templates/maven-dependency-plugin.xml", UDF_COVERAGE),
             new SimplePluginTemplateGenerator("maven_templates/native-image-maven-plugin.xml", NATIVE_IMAGE),
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
-            new FailsafePluginTemplateGenerator(), new JacocoPluginTemplateGenerator(),
+            new DependencyPluginTemplateGenerator(),
+            new FailsafePluginTemplateGenerator(),
+            new JacocoPluginTemplateGenerator(),
             // quality-summarizer-maven-plugin must come after Jacoco
             new SimplePluginTemplateGenerator("maven_templates/quality-summarizer-maven-plugin.xml", DEFAULT),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
