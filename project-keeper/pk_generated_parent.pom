@@ -176,7 +176,7 @@
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we
           have a chance to reach branches in the logging lambdas too. -->
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar} -Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                     <excludedGroups>${test.excludeTags}</excludedGroups>
                 </configuration>
             </plugin>
@@ -348,7 +348,7 @@
                 <version>3.5.4</version>
                 <configuration>
                     <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar} -Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
                     <systemPropertyVariables/>
                     <excludedGroups>${test.excludeTags}</excludedGroups>
                 </configuration>

@@ -342,7 +342,6 @@
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
 | [duplicate-finder-maven-plugin Maven Mojo][43]         | [Apache License 2.0][44]                    |
 | [Apache Maven Artifact Plugin][45]                     | [Apache-2.0][1]                             |
-| [Apache Maven Dependency Plugin][50]                   | [Apache-2.0][1]                             |
 | [JaCoCo :: Maven Plugin][51]                           | [EPL-2.0][52]                               |
 | [Quality Summarizer Maven Plugin][53]                  | [MIT License][54]                           |
 | [error-code-crawler-maven-plugin][5]                   | [MIT License][6]                            |
