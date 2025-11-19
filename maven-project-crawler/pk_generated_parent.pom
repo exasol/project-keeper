@@ -355,6 +355,12 @@
                             <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>
+                    <execution>
+                        <goals>
+                            <!-- Allow resolving dependency placeholders like ${org.mockito:mockito-core:jar} -->
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>

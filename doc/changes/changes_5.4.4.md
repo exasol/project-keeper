@@ -12,6 +12,12 @@ This release adds support for Java 21 removing a warning when running tests that
 
 ## Dependency Updates
 
+### Project Keeper Shared Model Classes
+
+#### Plugin Dependency Updates
+
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.9.0`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -26,6 +32,10 @@ This release adds support for Java 21 removing a warning when running tests that
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.4.3` to `5.4.4`
 
+#### Plugin Dependency Updates
+
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.9.0`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
@@ -35,6 +45,10 @@ This release adds support for Java 21 removing a warning when running tests that
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.4.3` to `5.4.4`
+
+#### Plugin Dependency Updates
+
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.9.0`
 
 ### Project Keeper Maven Plugin
 
@@ -57,3 +71,7 @@ This release adds support for Java 21 removing a warning when running tests that
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.4.3` to `5.4.4`
+
+#### Plugin Dependency Updates
+
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.9.0`
