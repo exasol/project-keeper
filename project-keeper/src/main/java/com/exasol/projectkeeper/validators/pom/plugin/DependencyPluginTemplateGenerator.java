@@ -13,11 +13,13 @@ import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
  */
 public class DependencyPluginTemplateGenerator extends SimplePluginTemplateGenerator {
 
+    private static final String TEMPLATE = "maven_templates/maven-dependency-plugin.xml";
+
     /**
      * Create a new instance.
      */
     public DependencyPluginTemplateGenerator() {
-        super("maven_templates/maven-dependency-plugin.xml", ProjectKeeperModule.DEFAULT);
+        super(TEMPLATE, ProjectKeeperModule.DEFAULT);
     }
 
     @Override
