@@ -5,6 +5,7 @@ sources:
     path: shared-model-classes/pom.xml
     modules:
       - maven_central
+      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -19,6 +20,7 @@ sources:
     modules:
       - maven_central
       - integration_tests
+      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -30,6 +32,7 @@ sources:
       - maven_central
       - integration_tests
       - jar_artifact
+      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -41,6 +44,7 @@ sources:
       - maven_central
       - integration_tests
       - udf_coverage
+      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -52,6 +56,7 @@ sources:
       - maven_central
       - udf_coverage
       - integration_tests
+      - mockito_agent
     advertise: false
     parentPom:
       groupId: "com.exasol"
