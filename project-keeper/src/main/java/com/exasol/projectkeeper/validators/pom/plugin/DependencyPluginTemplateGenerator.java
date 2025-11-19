@@ -11,7 +11,7 @@ import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 /**
  * Generator for the maven-dependency-plugin
  */
-public class DependencyPluginTemplateGenerator extends SimplePluginTemplateGenerator {
+public class DependencyPluginTemplateGenerator implements PluginTemplateGenerator {
 
     private static final String TEMPLATE = "maven_templates/maven-dependency-plugin.xml";
 
@@ -19,18 +19,21 @@ public class DependencyPluginTemplateGenerator extends SimplePluginTemplateGener
      * Create a new instance.
      */
     public DependencyPluginTemplateGenerator() {
-        super(TEMPLATE, ProjectKeeperModule.DEFAULT);
+        // Empty constructor required by javadoc
     }
 
     @Override
     public Optional<Node> generateTemplate(final Collection<ProjectKeeperModule> enabledModules) {
-        final Optional<Node> nodeOptional = super.generateTemplate(enabledModules);
-        nodeOptional.ifPresent(node -> {
-            addJacocoExecution(node, enabledModules);
-            addMockitoExecution(node, enabledModules);
-        });
+        if (!enabledModules.contains(ProjectKeeperModule.UDF_COVERAGE)
+                && !enabledModules.contains(ProjectKeeperModule.MOCKITO_AGENT)) {
+            return Optional.empty();
+        }
 
-        return nodeOptional;
+        final Node pluginTemplate = new PluginTemplateReader().readPluginTemplate(TEMPLATE);
+        addJacocoExecution(pluginTemplate, enabledModules);
+        addMockitoExecution(pluginTemplate, enabledModules);
+
+        return Optional.of(pluginTemplate);
     }
 
     private static void addMockitoExecution(final Node node, final Collection<ProjectKeeperModule> enabledModules) {
