@@ -2,18 +2,23 @@ package com.exasol.projectkeeper.validators.changesfile;
 
 import java.nio.file.Path;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Stream;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
 import com.exasol.projectkeeper.shared.ExasolVersionMatcher;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.sources.analyze.generic.RepoNameReader;
 import com.exasol.projectkeeper.validators.AbstractFileValidator;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding.Fix;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
+import com.exasol.projectkeeper.validators.release.github.GitHubAdapter;
+import com.exasol.projectkeeper.validators.release.github.IssueState;
+
+import static java.util.Collections.sort;
+import static java.util.stream.Collectors.toSet;
 
 /**
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
@@ -26,6 +31,11 @@ public class ChangesFileValidator extends AbstractFileValidator {
     private final String projectName;
     private final List<AnalyzedSource> sources;
     private final String projectVersion;
+    private final ChangesFileIO changesFileIO;
+    private final String repoName;
+    private final GitHubAdapter gitHubAdapter;
+    private final Path changesFilePath;
+    private final ChangesFile changesFile;
     private final ChangesFileIO changesFileIO;
 
     /**
@@ -48,6 +58,9 @@ public class ChangesFileValidator extends AbstractFileValidator {
         this.projectName = projectName;
         this.sources = sources;
         this.changesFileIO = changesFileIO;
+        this.repoName = RepoNameReader.getRepoName(projectDirectory);
+        this.gitHubAdapter = GitHubAdapter.connect(repoName);
+        this.changesFilePath = projectDirectory.resolve(ChangesFile.getPathForVersion(projectVersion));
     }
 
     @Override
@@ -66,7 +79,7 @@ public class ChangesFileValidator extends AbstractFileValidator {
         final ChangesFile changesFile = changesFileIO.read(file);
         return Stream
                 .of(validateDependencySection(file, changesFile), validateSummarySection(changesFile),
-                        validateProjectName(changesFile))
+                        validateProjectName(changesFile), validateIssuesClosed())
                 .filter(Optional::isPresent) //
                 .map(Optional::get) //
                 .toList();
@@ -109,6 +122,36 @@ public class ChangesFileValidator extends AbstractFileValidator {
         } else {
             return noFinding();
         }
+    }
+
+    // [impl->dsn~verify-release-mode.verify-issues-closed~1]
+    private Optional<ValidationFinding> validateIssuesClosed() {
+        final List<Integer> wrongIssues = getIssuesWronglyMarkedAsClosed();
+        if (!wrongIssues.isEmpty()) {
+            return finding(ExaError.messageBuilder("E-PK-CORE-186").message(
+                    "The following GitHub issues are marked as fixed in {{changes file}} but are not closed in GitHub: {{issue numbers}}",
+                    changesFilePath, wrongIssues).toString());
+        }
+        return noFinding();
+    }
+
+    private List<Integer> getIssuesWronglyMarkedAsClosed() {
+        final Set<Integer> mentionedTickets = changesFilePath.getFixedIssues().stream().map(FixedIssue::issueNumber)
+                .collect(toSet());
+        final Set<Integer> stillOpenIssues = new HashSet<>();
+        for (final Integer issue : mentionedTickets) {
+            final IssueState state = gitHubAdapter.getIssueState(issue);
+            if (state != IssueState.CLOSED) {
+                stillOpenIssues.add(issue);
+            }
+        }
+        return sort(stillOpenIssues);
+    }
+
+    private List<Integer> sort(final Set<Integer> numbers) {
+        final ArrayList<Integer> list = new ArrayList<>(numbers);
+        list.sort(Comparator.naturalOrder());
+        return list;
     }
 
     private Optional<ValidationFinding> finding(final String message) {
