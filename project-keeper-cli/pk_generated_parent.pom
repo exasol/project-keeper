@@ -399,9 +399,11 @@
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
-                    <argLine>-javaagent:${org.mockito:mockito-core:jar} -Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
-                    <systemPropertyVariables/>
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar} ${argLine}</argLine>
+                    <systemPropertyVariables>
+                        <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
+                        <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
+                    </systemPropertyVariables>
                     <excludedGroups>${test.excludeTags}</excludedGroups>
                 </configuration>
                 <executions>
