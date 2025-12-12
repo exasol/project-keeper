@@ -1,12 +1,13 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
-import org.w3c.dom.Node;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
+import org.w3c.dom.Node;
+
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 /**
  * Generator for the maven-dependency-plugin
@@ -24,31 +25,13 @@ public class DependencyPluginTemplateGenerator implements PluginTemplateGenerato
 
     @Override
     public Optional<Node> generateTemplate(final Collection<ProjectKeeperModule> enabledModules) {
-        if (!enabledModules.contains(ProjectKeeperModule.UDF_COVERAGE)
-                && !enabledModules.contains(ProjectKeeperModule.MOCKITO_AGENT)) {
-            return Optional.empty();
-        }
-
+        // We always add the plugin as it might be required later for the Mockito agent.
         final Node pluginTemplate = new PluginTemplateReader().readPluginTemplate(TEMPLATE);
-        addJacocoExecution(pluginTemplate, enabledModules);
-        addMockitoExecution(pluginTemplate, enabledModules);
+        if (enabledModules.contains(ProjectKeeperModule.UDF_COVERAGE)) {
+            addJacocoExecution(pluginTemplate, enabledModules);
+        }
 
         return Optional.of(pluginTemplate);
-    }
-
-    private static void addMockitoExecution(final Node node, final Collection<ProjectKeeperModule> enabledModules) {
-        if (!enabledModules.contains(ProjectKeeperModule.MOCKITO_AGENT)) {
-            return;
-        }
-
-        addExecutionContent(node, """
-                <execution>
-                    <goals>
-                        <!-- Allow resolving dependency placeholders like ${org.mockito:mockito-core:jar} -->
-                        <goal>properties</goal>
-                    </goals>
-                </execution>
-                """);
     }
 
     private static void addJacocoExecution(final Node node, final Collection<ProjectKeeperModule> enabledModules) {

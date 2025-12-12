@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import static com.exasol.projectkeeper.validators.pom.plugin.SurefirePluginTemplateGenerator.ARG_LINE_XPATH;
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.util.Collection;
@@ -28,10 +27,6 @@ public class FailsafePluginTemplateGenerator implements PluginTemplateGenerator 
             final Node pluginTemplate = new PluginTemplateReader().readPluginTemplate(TEMPLATE);
             if (!enabledModules.contains(ProjectKeeperModule.UDF_COVERAGE)) {
                 removeCoverageConfig(pluginTemplate);
-            }
-            if (enabledModules.contains(ProjectKeeperModule.MOCKITO_AGENT)) {
-                final Node argLineNode = runXPath(pluginTemplate, ARG_LINE_XPATH);
-                argLineNode.setTextContent("-javaagent:${org.mockito:mockito-core:jar} " + argLineNode.getTextContent());
             }
             return Optional.of(pluginTemplate);
         } else {
