@@ -16,7 +16,6 @@ import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResu
 import com.jparams.verifier.tostring.ToStringVerifier;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
-import nl.jqno.equalsverifier.Warning;
 
 class MavenProjectCrawlResultTest {
     private static final ProjectDependency DEPENDENCY = ProjectDependency.builder() //
@@ -58,7 +57,7 @@ class MavenProjectCrawlResultTest {
 
     @Test
     void testEqualsContract() {
-        EqualsVerifier.forClass(MavenProjectCrawlResult.class).suppress(Warning.NONFINAL_FIELDS).verify();
+        EqualsVerifier.forClass(MavenProjectCrawlResult.class).verify();
     }
 
     @Test
