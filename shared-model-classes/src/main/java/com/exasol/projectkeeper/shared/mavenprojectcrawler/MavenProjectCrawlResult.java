@@ -1,7 +1,6 @@
 package com.exasol.projectkeeper.shared.mavenprojectcrawler;
 
 import java.util.Map;
-import java.util.Objects;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
@@ -11,23 +10,10 @@ import jakarta.json.bind.JsonbBuilder;
 
 /**
  * Result of the maven-project-crawler.
+ * 
+ * @param crawledProjects the crawled projects
  */
-public final class MavenProjectCrawlResult {
-    private Map<String, CrawledMavenProject> crawledProjects;
-
-    /** Required for deserializing from JSON */
-    public MavenProjectCrawlResult() {
-        this(null);
-    }
-
-    /**
-     * Create a new instance.
-     * 
-     * @param crawledProjects the crawled projects
-     */
-    public MavenProjectCrawlResult(final Map<String, CrawledMavenProject> crawledProjects) {
-        this.crawledProjects = crawledProjects;
-    }
+public record MavenProjectCrawlResult(Map<String, CrawledMavenProject> crawledProjects) {
 
     /**
      * Deserialize {@link DependencyChangeReport} from JSON string.
@@ -65,26 +51,6 @@ public final class MavenProjectCrawlResult {
         return "MavenProjectCrawlResult [crawledProjects=" + crawledProjects + "]";
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(crawledProjects);
-    }
-
-    @Override
-    public boolean equals(final Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        final MavenProjectCrawlResult other = (MavenProjectCrawlResult) obj;
-        return Objects.equals(crawledProjects, other.crawledProjects);
-    }
-
     /**
      * Get projects.
      * 
@@ -92,14 +58,5 @@ public final class MavenProjectCrawlResult {
      */
     public Map<String, CrawledMavenProject> getCrawledProjects() {
         return crawledProjects;
-    }
-
-    /**
-     * Set projects.
-     * 
-     * @param crawledProjects crawled projects
-     */
-    public void setCrawledProjects(final Map<String, CrawledMavenProject> crawledProjects) {
-        this.crawledProjects = crawledProjects;
     }
 }
