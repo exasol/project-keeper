@@ -1,11 +1,11 @@
 package com.exasol.projectkeeper.sources;
 
 import java.nio.file.Path;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
+import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.validators.pom.PomFileGenerator;
 
@@ -275,6 +275,16 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
                 final DependencyChangeReport dependencyChanges) {
             this.dependencyChanges = dependencyChanges;
             return this;
+        }
+
+        /**
+         * Set current dependencies.
+         * 
+         * @param dependencies current dependencies
+         * @return {@code this}.
+         */
+        public AnalyzedMavenSource.AnalyzedMavenSourceBuilder dependencies(final ProjectDependency... dependencies) {
+            return dependencies(new ProjectDependencies(List.of(dependencies)));
         }
 
         /**

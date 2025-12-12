@@ -24,6 +24,7 @@ import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
 import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
+import com.exasol.projectkeeper.validators.pom.GeneratedPomFileCustomizer;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 import com.exasol.projectkeeper.validators.release.ReleaseInspector;
 
@@ -153,7 +154,8 @@ public class ProjectKeeper {
                 new ReadmeFileValidator(this.projectDir, projectName, this.repoName, analyzedSources),
                 new ChangesFileValidator(projectVersion, projectName, this.projectDir, analyzedSources),
                 new DependenciesValidator(analyzedSources, this.projectDir, brokenLinkReplacer),
-                new DeletedFilesValidator(this.projectDir), //
+                new GeneratedPomFileCustomizer(analyzedSources, this.projectDir),
+                new DeletedFilesValidator(this.projectDir),
                 new GitignoreFileValidator(this.projectDir));
         return new ValidationPhase(new ValidationPhase.Provision(projectVersion), validators);
     }

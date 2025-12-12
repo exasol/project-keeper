@@ -25,11 +25,12 @@ import com.exasol.projectkeeper.validators.pom.io.PomFileWriter;
 import com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper;
 
 /**
- * Validator for the pom.xml file.
+ * Validator for the {@code pom.xml} file and the generated parent pom file.
  */
 // [impl->dsn~pom-file-validator~1]
 public class PomFileValidator implements Validator {
 
+    static final String GENERATED_PARENT_POM_NAME = "pk_generated_parent.pom";
     private static final String PARENT_POM_MITIGATION = "Check the project-keeper user guide if you need a parent pom.";
     private static final String MUST_DECLARE_GENERATED_PARENT = " The pom must declare {{generated parent}} as parent pom.";
 
@@ -97,7 +98,7 @@ public class PomFileValidator implements Validator {
             validateGroupId(groupId).ifPresent(findings::add);
             validateUrlTag(pom).ifPresent(findings::add);
             findings.addAll(validateOwnVersion(pom));
-            final Path generatedPomPath = this.pomFilePath.getParent().resolve("pk_generated_parent.pom");
+            final Path generatedPomPath = this.pomFilePath.getParent().resolve(GENERATED_PARENT_POM_NAME);
             findings.addAll(validateParentTag(pom, version, artifactId, groupId, generatedPomPath));
             findings.addAll(validateGeneratedPomFile(groupId, artifactId, version, generatedPomPath));
             validationDescriptionExists(pom).ifPresent(findings::add);
