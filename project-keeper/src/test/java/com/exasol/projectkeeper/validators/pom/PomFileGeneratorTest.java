@@ -73,7 +73,8 @@ class PomFileGeneratorTest {
                                 "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
                                 "maven-artifact-plugin",
                                 "maven-toolchains-plugin", "maven-clean-plugin", "maven-install-plugin",
-                                "maven-resources-plugin", "maven-site-plugin", "quality-summarizer-maven-plugin")));
+                                "maven-resources-plugin", "maven-site-plugin", "quality-summarizer-maven-plugin",
+                                "maven-dependency-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
