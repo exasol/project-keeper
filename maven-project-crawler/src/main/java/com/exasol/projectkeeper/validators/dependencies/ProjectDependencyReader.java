@@ -41,7 +41,7 @@ public class ProjectDependencyReader {
      */
     public ProjectDependencies readDependencies() {
         final List<ProjectDependency> dependencies = getDependenciesIncludingPlugins()
-                .map(dependency -> getLicense(dependency, project)) //
+                .map(dependency -> toProjectDependency(dependency, project)) //
                 .toList();
         return new ProjectDependencies(dependencies);
     }
@@ -101,7 +101,7 @@ public class ProjectDependencyReader {
         return dependency;
     }
 
-    private ProjectDependency getLicense(final Dependency dependency, final MavenProject project) {
+    private ProjectDependency toProjectDependency(final Dependency dependency, final MavenProject project) {
         try {
             @SuppressWarnings("deprecation") // Maven class ArtifactRepository is deprecated
             final List<ArtifactRepository> repos = project.getRemoteArtifactRepositories();
@@ -109,11 +109,12 @@ public class ProjectDependencyReader {
                     dependency.getGroupId(), dependency.getVersion(), repos);
             final List<License> licenses = dependenciesPom.getLicenses().stream()
                     .map(license -> new License(license.getName(), license.getUrl())).toList();
-            return ProjectDependency.builder() //
-                    .type(mapScopeToDependencyType(dependency.getScope())) //
-                    .name(getDependencyName(dependenciesPom)) //
-                    .websiteUrl(dependenciesPom.getUrl()) //
-                    .licenses(licenses) //
+            return ProjectDependency.builder()
+                    .type(mapScopeToDependencyType(dependency.getScope()))
+                    .name(getDependencyName(dependenciesPom))
+                    .coordinates(getCoordinates(dependenciesPom))
+                    .websiteUrl(dependenciesPom.getUrl())
+                    .licenses(licenses)
                     .build();
         } catch (final ProjectBuildingException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-49")
@@ -129,6 +130,10 @@ public class ProjectDependencyReader {
         } else {
             return dependenciesPom.getName();
         }
+    }
+
+    private String getCoordinates(final Model dependenciesPom) {
+        return dependenciesPom.getGroupId() + ":" + dependenciesPom.getArtifactId();
     }
 
     private BaseDependency.Type mapScopeToDependencyType(final String scope) {

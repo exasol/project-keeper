@@ -50,11 +50,12 @@ class GolangDependencyCalculator {
     }
 
     private ProjectDependency convertDependency(final VersionedDependency dependency) {
-        return ProjectDependency.builder() //
-                .name(dependency.getName()) //
-                .type(getDependencyType(dependency.getName())) //
-                .websiteUrl(null) //
-                .licenses(List.of(getLicense(dependency.getName()).toLicense())) //
+        return ProjectDependency.builder()
+                .name(dependency.getName())
+                .coordinates(dependency.getName())
+                .type(getDependencyType(dependency.getName()))
+                .websiteUrl(null)
+                .licenses(List.of(getLicense(dependency.getName()).toLicense()))
                 .build();
     }
 

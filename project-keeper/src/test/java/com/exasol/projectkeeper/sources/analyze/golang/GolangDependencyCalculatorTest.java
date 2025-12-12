@@ -86,10 +86,10 @@ class GolangDependencyCalculatorTest {
 
     private ProjectDependency expectedDep(final String name, final String licencesName, final String licenseUrl,
             final Type type) {
-        return ProjectDependency.builder() //
-                .type(type) //
-                .name(name) //
-                .licenses(List.of(new License(licencesName, licenseUrl))) //
+        return ProjectDependency.builder()
+                .type(type)
+                .name(name).coordinates(name)
+                .licenses(List.of(new License(licencesName, licenseUrl)))
                 .build();
     }
 

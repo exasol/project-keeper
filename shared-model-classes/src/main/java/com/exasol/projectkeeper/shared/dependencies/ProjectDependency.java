@@ -6,13 +6,14 @@ import java.util.stream.Collectors;
 /**
  * Generic dependency.
  * 
- * @param type       type of the dependency
- * @param name       name of the module of the dependency
- * @param websiteUrl URL of the website for the dependency
- * @param licenses   list of licenses associated with the dependency
+ * @param type        type of the dependency
+ * @param name        human readable name of the module of the dependency, e.g. {@code Jakarta JSON Processing API}
+ * @param coordinates coordinates of the dependency, e.g. {@code jakarta.json:jakarta.json-api} for Maven dependencies
+ * @param websiteUrl  URL of the website for the dependency
+ * @param licenses    list of licenses associated with the dependency
  */
-public final record ProjectDependency(Type type, String name, String websiteUrl, List<License> licenses)
-        implements BaseDependency {
+public final record ProjectDependency(Type type, String name, String coordinates, String websiteUrl,
+        List<License> licenses) implements BaseDependency {
 
     /**
      * Create a new builder.
@@ -61,9 +62,19 @@ public final record ProjectDependency(Type type, String name, String websiteUrl,
         return this.licenses;
     }
 
+    public Builder copy() {
+        return builder()
+                .type(this.type)
+                .name(this.name)
+                .coordinates(this.coordinates)
+                .websiteUrl(this.websiteUrl)
+                .licenses(this.licenses);
+    }
+
     @Override
     public String toString() {
-        return this.type + " dependency '" + this.name + "', " + this.websiteUrl + ", " + this.licenses.size()
+        return this.type + " dependency '" + this.name + "', (" + this.coordinates + "), " + this.websiteUrl + ", "
+                + this.licenses.size()
                 + " licenses: " + this.licenses.stream().map(License::toString).collect(Collectors.joining(", "));
     }
 
@@ -72,6 +83,7 @@ public final record ProjectDependency(Type type, String name, String websiteUrl,
 
         private Type type;
         private String name;
+        private String coordinates;
         private String websiteUrl;
         private List<License> licenses;
 
@@ -98,6 +110,17 @@ public final record ProjectDependency(Type type, String name, String websiteUrl,
          */
         public Builder name(final String name) {
             this.name = name;
+            return this;
+        }
+
+        /**
+         * Set coordinates.
+         * 
+         * @param coordinates coordinates of the dependency to build
+         * @return this for fluent programming
+         */
+        public Builder coordinates(final String coordinates) {
+            this.coordinates = coordinates;
             return this;
         }
 
@@ -129,7 +152,7 @@ public final record ProjectDependency(Type type, String name, String websiteUrl,
          * @return new instance of {@link ProjectDependency}
          */
         public ProjectDependency build() {
-            return new ProjectDependency(this.type, this.name, this.websiteUrl, this.licenses);
+            return new ProjectDependency(this.type, this.name, this.coordinates, this.websiteUrl, this.licenses);
         }
     }
 }

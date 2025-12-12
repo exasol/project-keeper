@@ -49,11 +49,12 @@ class NpmDependencies {
 
     private ProjectDependency projectDependency(final VersionedDependency versionedDependency) {
         final String moduleName = versionedDependency.getName();
-        return ProjectDependency.builder() //
-                .name(moduleName) //
-                .websiteUrl(getUrl(moduleName)) //
-                .type(versionedDependency.getType()) //
-                .licenses(moduleLicenses(moduleName)) //
+        return ProjectDependency.builder()
+                .name(moduleName)
+                .coordinates(moduleName)
+                .websiteUrl(getUrl(moduleName))
+                .type(versionedDependency.getType())
+                .licenses(moduleLicenses(moduleName))
                 .build();
     }
 

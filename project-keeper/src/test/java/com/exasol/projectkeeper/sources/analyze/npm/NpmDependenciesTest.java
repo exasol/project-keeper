@@ -45,26 +45,25 @@ class NpmDependenciesTest {
         when(this.npmServices.getLicenses(any())).thenReturn(json(TestData.LICENSES));
 
         final NpmDependencies testee = new NpmDependencies(this.npmServices, TestData.samplePackageJson());
-        assertThat(testee.getDependencies(), containsInAnyOrder( //
-                dependency(Type.DEV, "changed-plugin", "1.2.0", "CP"), //
-                dependency(Type.DEV, "new-plugin", "1.3.0", "NP"), //
-                dependency(Type.COMPILE, "changed-compile", "2.2.0", "CC"), //
-                ProjectDependency.builder() //
-                        .type(Type.COMPILE)//
-                        .name("new-compile") //
-                        .websiteUrl(null) //
-                        .licenses(List.of(new License("NC" + "-License", "https://" + "new-compile"))) //
-                        .build() //
-        ));
+        assertThat(testee.getDependencies(), containsInAnyOrder(
+                dependency(Type.DEV, "changed-plugin", "1.2.0", "CP"),
+                dependency(Type.DEV, "new-plugin", "1.3.0", "NP"),
+                dependency(Type.COMPILE, "changed-compile", "2.2.0", "CC"),
+                ProjectDependency.builder()
+                        .type(Type.COMPILE)
+                        .name("new-compile").coordinates("new-compile")
+                        .websiteUrl(null)
+                        .licenses(List.of(new License("NC" + "-License", "https://" + "new-compile")))
+                        .build()));
     }
 
     private ProjectDependency dependency(final Type type, final String name, final String version,
             final String license) {
-        return ProjectDependency.builder() //
-                .type(type)//
-                .name(name) //
-                .websiteUrl("https://" + name + "/-/" + version + ".tgz") //
-                .licenses(List.of(new License(license + "-License", "https://" + name))) //
+        return ProjectDependency.builder()
+                .type(type)
+                .name(name).coordinates(name)
+                .websiteUrl("https://" + name + "/-/" + version + ".tgz")
+                .licenses(List.of(new License(license + "-License", "https://" + name)))
                 .build();
     }
 }

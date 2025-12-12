@@ -47,7 +47,8 @@ class ProjectDependencyReaderTest {
         simulateDependencies("group", "art", "ver", "website", List.of(createMavenLicense("license", "licenseUrl")));
 
         assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", "non-null"))),
-                contains(ProjectDependency.builder().type(Type.PLUGIN).name("name:group:art").websiteUrl("website")
+                contains(ProjectDependency.builder().type(Type.PLUGIN).name("name:group:art").coordinates("group:art")
+                        .websiteUrl("website")
                         .licenses(List.of(new License("license", "licenseUrl"))).build()));
     }
 

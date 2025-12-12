@@ -37,11 +37,9 @@ public class DependenciesBrokenLinkReplacer {
     }
 
     private ProjectDependency replaceBrokenLinks(final ProjectDependency dependency) {
-        return ProjectDependency.builder() //
-                .type(dependency.getType()) //
-                .name(dependency.getName()) //
-                .websiteUrl(this.brokenLinkReplacer.replaceIfBroken(dependency.getWebsiteUrl())) //
-                .licenses(replaceBrokenLicenseLinks(dependency.getLicenses())) //
+        return dependency.copy()
+                .websiteUrl(this.brokenLinkReplacer.replaceIfBroken(dependency.getWebsiteUrl()))
+                .licenses(replaceBrokenLicenseLinks(dependency.getLicenses()))
                 .build();
     }
 
