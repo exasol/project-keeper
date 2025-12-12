@@ -18,6 +18,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
 import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
@@ -146,10 +147,10 @@ class GolangServicesTest {
     }
 
     private VersionedDependency indirectDep(final String name, final String version) {
-        return VersionedDependency.builder().name(name).version(version).isIndirect(true).build();
+        return VersionedDependency.builder().name(name).version(version).isIndirect(true).type(Type.UNKNOWN).build();
     }
 
     private VersionedDependency dep(final String name, final String version) {
-        return VersionedDependency.builder().name(name).version(version).isIndirect(false).build();
+        return VersionedDependency.builder().name(name).version(version).isIndirect(false).type(Type.UNKNOWN).build();
     }
 }

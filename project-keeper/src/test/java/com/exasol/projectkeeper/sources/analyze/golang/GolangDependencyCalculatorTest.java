@@ -94,7 +94,8 @@ class GolangDependencyCalculatorTest {
     }
 
     private VersionedDependency dep(final String moduleName, final String version) {
-        return VersionedDependency.builder().name(moduleName).version(version).isIndirect(false).build();
+        return VersionedDependency.builder().name(moduleName).version(version).isIndirect(false).type(Type.UNKNOWN)
+                .build();
     }
 
     private GolangDependencyLicense license(final String moduleName, final String licenseName,
