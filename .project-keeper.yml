@@ -5,6 +5,7 @@ sources:
     path: shared-model-classes/pom.xml
     modules:
       - maven_central
+      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -19,6 +20,7 @@ sources:
     modules:
       - maven_central
       - integration_tests
+      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -41,6 +43,7 @@ sources:
       - maven_central
       - integration_tests
       - udf_coverage
+      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"
@@ -52,6 +55,7 @@ sources:
       - maven_central
       - udf_coverage
       - integration_tests
+      - mockito_agent
     advertise: false
     parentPom:
       groupId: "com.exasol"
@@ -115,6 +119,8 @@ build:
                   -DtrimStackTrace=false
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
+              OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }},
+              OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
         - action: INSERT_AFTER
           job: build-and-test
           stepId: sonar-analysis

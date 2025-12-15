@@ -174,9 +174,11 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <!-- Set the highest log level for coverage testing, so that we
-          have a chance to reach branches in the logging lambdas too. -->
-                    <argLine>-Djava.util.logging.config.file=src/test/resources/logging.properties ${argLine}</argLine>
+                    <argLine>-javaagent:${org.mockito:mockito-core:jar} ${argLine}</argLine>
+                    <systemPropertyVariables>
+                        <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
+                        <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
+                    </systemPropertyVariables>
                     <excludedGroups>${test.excludeTags}</excludedGroups>
                 </configuration>
             </plugin>
@@ -328,6 +330,19 @@
                     <deploymentName>${central-publishing.deploymentName}</deploymentName>
                     <skipPublishing>${central-publishing.skipPublishing}</skipPublishing>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <version>3.9.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <!-- Allow resolving dependency placeholders like ${org.mockito:mockito-core:jar} -->
+                            <goal>properties</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                 <groupId>org.jacoco</groupId>

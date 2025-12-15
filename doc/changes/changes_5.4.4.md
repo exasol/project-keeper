@@ -1,12 +1,14 @@
 # Project Keeper 5.4.4, released 2025-??-??
 
-Code name:
+Code name: Java 21 support
 
 ## Summary
 
+This release adds support for Java 21 removing a warning when running tests that use Mockito.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #689: Configure Mockito agent
 
 ## Dependency Updates
 
@@ -25,6 +27,7 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.9.0`
 * Updated `org.apache.maven.plugins:maven-resources-plugin:3.3.1` to `3.4.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.19.1` to `2.20.1`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.2.0.4988` to `5.5.0.6356`
@@ -53,6 +56,7 @@ Code name:
 
 #### Plugin Dependency Updates
 
+* Added `org.apache.maven.plugins:maven-dependency-plugin:3.9.0`
 * Updated `org.apache.maven.plugins:maven-jar-plugin:3.4.2` to `3.5.0`
 * Updated `org.apache.maven.plugins:maven-resources-plugin:3.3.1` to `3.4.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.19.1` to `2.20.1`

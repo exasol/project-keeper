@@ -2,19 +2,5 @@
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-dependency-plugin</artifactId>
     <version>3.9.0</version>
-    <executions>
-        <execution>
-            <id>copy-jacoco</id>
-            <goals>
-                <goal>copy-dependencies</goal>
-            </goals>
-            <phase>compile</phase>
-            <configuration>
-                <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
-                <includeClassifiers>runtime</includeClassifiers>
-                <outputDirectory>${project.build.directory}/jacoco-agent</outputDirectory>
-                <stripVersion>true</stripVersion>
-            </configuration>
-        </execution>
-    </executions>
+    <executions />
 </plugin>

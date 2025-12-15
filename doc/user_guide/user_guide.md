@@ -119,7 +119,8 @@ This plugin provides different template modules for different kinds of projects.
 | `integration_tests` | Module for sources with integration tests.                                                                                                                                                             |
 | `maven_central`     | This module checks the required configuration for releasing on maven central.                                                                                                                          |
 | `udf_coverage`      | This module configures the pom for extracting the code coverage from UDF executions.                                                                                                                   |
-| `lombok`            | This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/).                                                                                                        |
+| `mockito_agent`.    | Add the Mockito agent to test configurations (`-javaagent:${org.mockito:mockito-core:jar}`). This avoids warnings with Java > 21.                                                                      |
+| `lombok`            | This module configures the pom.xml for the use of [Project Lombok](https://projectlombok.org/) (deprecated).                                                                                           |
 | `native_image`      | This module configures the project for building Java native-images (executables) for windows, linux and mac. For details see our [native-image guide](preparing_a_project_for_native_image_builds.md). |
 
 ### Excluding Findings
@@ -629,7 +630,7 @@ Typically, this happens if you did not fetch all tags. Simply run `git pull`.
 ```
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-enforcer-plugin:3.4.1:enforce (enforce-maven) on project project-keeper-shared-model-classes: 
 [ERROR] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion failed with message:
-[ERROR] Detected JDK version 11.0.18 (JAVA_HOME=/Users/chp/Applications/java/jdk-11.0.18+10/Contents/Home) is not in the allowed range [17,).
+[ERROR] Detected JDK version 11.0.18 (JAVA_HOME=/Users/user/Applications/java/jdk-11.0.18+10/Contents/Home) is not in the allowed range [17,).
 ```
 
 This means that environment variable `JAVA_HOME` points to a JDK 11. Please ensure that JDK 17 is installed and `JAVA_HOME` points to it.
@@ -638,7 +639,7 @@ See section [Install Required JDK Versions](#install-required-jdk-versions) for 
 
 ---
 
-**Problem:**: Maven build fails with the following error message:
+**Problem:** Maven build fails with the following error message:
 
 ```
 [ERROR] Failed to execute goal org.apache.maven.plugins:maven-toolchains-plugin:3.1.0:toolchain (default) on project project-keeper-shared-model-classes: Cannot find matching toolchain definitions for the following toolchain types:
@@ -648,6 +649,30 @@ See section [Install Required JDK Versions](#install-required-jdk-versions) for 
 
 Ensure that `~/.m2/toolchains.xml` exists and contains a JDK version 11. See section [Configure Maven's `toolchains.xml`](#configure-mavens-toolchainsxml) for details.
 
-**Problem:**: Running PK using Maven fails but the error message is not helpful.
+**Problem:** Running PK using Maven fails but the error message is not helpful.
 
 Run Maven with the `--errors` option to get a stack trace.
+
+**Problem:** Running unit or integration tests with Maven fails with the following error message:
+
+```
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.4:verify (verify) on project project-keeper-cli: 
+[ERROR] 
+[ERROR] See $HOME/project-keeper/project-keeper-cli/target/failsafe-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] The forked VM terminated without properly saying goodbye. VM crash or System.exit called?
+[ERROR] Command was /bin/sh -c cd '$HOME/project-keeper/project-keeper-cli' && '/Users/user/Applications/java/jdk-17.0.6+10/Contents/Home/bin/java' '-javaagent:${org.mockito:mockito-core:jar}' '-javaagent:/Users/user/.m2/repository/org/jacoco/org.jacoco.agent/0.8.14/org.jacoco.agent-0.8.14-runtime.jar=destfile=$HOME/project-keeper/project-keeper-cli/target/jacoco.exec' '-jar' '$HOME/project-keeper/project-keeper-cli/target/surefire/surefirebooter-20251215100342783_3.jar' '$HOME/project-keeper/project-keeper-cli/target/surefire' '2025-12-15T10-02-41_157-jvmRun1' 'surefire-20251215100342783_1tmp' 'surefire_0-20251215100342783_2tmp'
+[ERROR] Error occurred in starting fork, check output in log
+[ERROR] Process Exit Code: 1
+```
+
+This can happen when PK Module `mockito_agent` but dependency `org.mockito:mockito-core:jar` is not available. Note `-javaagent:${org.mockito:mockito-core:jar}` in the error message. To fix this, either remove module `mockito_agent` or add Mockito as a dependency:
+
+```xml
+<dependency>
+    <groupId>org.mockito</groupId>
+    <artifactId>mockito-core</artifactId>
+    <version>${mockito.version}</version>
+    <scope>test</scope>
+</dependency>
+```
