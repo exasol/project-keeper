@@ -117,7 +117,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.4.2</version>
+                <version>3.5.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -137,6 +137,16 @@
                         <arg>-Xlint:all,-processing,-path</arg>
                         <arg>-Werror</arg>
                     </compilerArgs>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.basepom.maven</groupId>
+                <artifactId>duplicate-finder-maven-plugin</artifactId>
+                <configuration>
+                    <ignoredResourcePatterns>
+                        <!-- Found duplicate and different resources in [org.eclipse.jgit:org.eclipse.jgit:7.5.0.202512021534-r, org.glassfish.jersey.core:jersey-client:4.0.0, org.glassfish.jersey.core:jersey-common:4.0.0, org.glassfish.jersey.inject:jersey-hk2:4.0.0] -->
+                        <ignoredResourcePattern>about.html</ignoredResourcePattern>
+                    </ignoredResourcePatterns>
                 </configuration>
             </plugin>
             <plugin>

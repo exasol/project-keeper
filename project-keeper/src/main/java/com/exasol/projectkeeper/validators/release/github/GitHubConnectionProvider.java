@@ -7,8 +7,8 @@ import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.sources.analyze.generic.SimpleProcess;
-import com.jcabi.github.Github;
-import com.jcabi.github.RtGithub;
+import com.jcabi.github.GitHub;
+import com.jcabi.github.RtGitHub;
 
 class GitHubConnectionProvider {
     private static final Logger LOG = Logger.getLogger(GitHubConnectionProvider.class.getName());
@@ -23,7 +23,7 @@ class GitHubConnectionProvider {
         this.environmentVariables = environmentVariables;
     }
 
-    Github connect() {
+    GitHub connect() {
         return getToken().map(this::connectWithToken) //
                 .orElseThrow(() -> new IllegalStateException(
                         ExaError.messageBuilder("E-PK-CORE-185").message("Failed to get GitHub credentials.")
@@ -31,8 +31,8 @@ class GitHubConnectionProvider {
                                 .mitigation("Configure 'gh' command line tool using 'gh auth login'").toString()));
     }
 
-    private Github connectWithToken(final String token) {
-        return new RtGithub(token);
+    private GitHub connectWithToken(final String token) {
+        return new RtGitHub(token);
     }
 
     Optional<String> getToken() {

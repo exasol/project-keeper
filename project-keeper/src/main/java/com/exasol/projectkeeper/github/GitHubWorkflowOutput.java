@@ -23,7 +23,6 @@ import com.exasol.projectkeeper.validators.changesfile.*;
 // [impl->dsn~verify-modes.output-parameters~1]
 public class GitHubWorkflowOutput {
 
-    @SuppressWarnings("unused") // Will be used soon
     private final ProjectKeeperConfig config;
     private final Path projectDir;
     private final String projectVersion;

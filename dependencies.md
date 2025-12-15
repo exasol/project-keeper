@@ -80,7 +80,7 @@
 | [SnakeYAML][62]                           | [Apache License, Version 2.0][8]              |
 | [SnakeYAML Engine][63]                    | [Apache License, Version 2.0][8]              |
 | [Maven Model][64]                         | [Apache-2.0][1]                               |
-| [jcabi-github][65]                        | [BSD][66]                                     |
+| [jcabi-github][65]                        | [3-Clause BSD License][66]                    |
 
 ### Test Dependencies
 
@@ -382,7 +382,7 @@
 [33]: https://maven.apache.org/plugins/maven-install-plugin/
 [34]: https://maven.apache.org/plugins/maven-resources-plugin/
 [35]: https://maven.apache.org/plugins/maven-site-plugin/
-[36]: http://docs.sonarqube.org/display/PLUG/Plugin+Library/sonar-scanner-maven/sonar-maven-plugin
+[36]: https://docs.sonarsource.com/sonarqube-server/latest/extension-guide/developing-a-plugin/plugin-basics/sonar-scanner-maven/sonar-maven-plugin/
 [37]: http://www.gnu.org/licenses/lgpl.txt
 [38]: https://maven.apache.org/plugins/maven-toolchains-plugin/
 [39]: https://maven.apache.org/plugins/maven-compiler-plugin/
