@@ -27,12 +27,14 @@ public class HasValidationFindingWithMessageMatcher<T extends Iterable<? extends
         return new HasValidationFindingWithMessageMatcher<>(messagesMatcher);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Matcher<Validator> hasNoValidationFindings() {
-        return new HasValidationFindingWithMessageMatcher<>(empty());
+        return new HasValidationFindingWithMessageMatcher(empty());
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public static Matcher<Validator> hasValidationFindings() {
-        return new HasValidationFindingWithMessageMatcher<>(not(empty()));
+        return new HasValidationFindingWithMessageMatcher(not(empty()));
     }
 
     @Override
