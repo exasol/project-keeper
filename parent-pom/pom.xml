@@ -128,8 +128,7 @@
             <dependency>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-github</artifactId>
-                <!-- Version 1.10 causes compile errors -->
-                <version>1.9.1</version>
+                <version>1.10.0</version>
             </dependency>
             <dependency>
                 <!-- Fix CVE-2014-3643 in transitive dependency of com.jcabi:jcabi-github -->

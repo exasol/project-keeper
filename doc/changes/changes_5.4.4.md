@@ -35,6 +35,7 @@ Code name:
 
 * Updated `com.exasol:error-reporting-java:1.0.1` to `1.0.2`
 * Updated `com.exasol:project-keeper-shared-model-classes:5.4.3` to `5.4.4`
+* Updated `com.jcabi:jcabi-github:1.9.1` to `1.10.0`
 * Updated `org.snakeyaml:snakeyaml-engine:2.10` to `3.0.1`
 
 #### Runtime Dependency Updates

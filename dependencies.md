@@ -79,7 +79,7 @@
 | [SnakeYAML][61]                           | [Apache License, Version 2.0][8]              |
 | [SnakeYAML Engine][62]                    | [Apache License, Version 2.0][8]              |
 | [Maven Model][63]                         | [Apache-2.0][1]                               |
-| [jcabi-github][64]                        | [BSD][65]                                     |
+| [jcabi-github][64]                        | [3-Clause BSD License][65]                    |
 
 ### Test Dependencies
 
