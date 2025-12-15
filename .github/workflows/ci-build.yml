@@ -73,7 +73,7 @@ jobs:
       }
       - name: Cache SonarCloud packages
         id: cache-sonar
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with: {
           path: ~/.sonar/cache,
           key: '${{ runner.os }}-sonar',
@@ -126,7 +126,7 @@ jobs:
         }
       - name: Upload artifacts
         id: upload-artifacts
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with: {
           name: artifacts,
           path: '${{ steps.build-pk-verify.outputs.release-artifacts }}',
