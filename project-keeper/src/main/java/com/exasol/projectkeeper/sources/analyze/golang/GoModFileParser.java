@@ -6,7 +6,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import com.exasol.errorreporting.ExaError;
-import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 
 /**
@@ -52,8 +51,7 @@ class GoModFileParser {
         final boolean indirect = (groups.size() >= 3) //
                 && (groups.get(2) != null) //
                 && groups.get(2).startsWith("indirect");
-        return VersionedDependency.builder().name(groups.get(0)).version(groups.get(1)).isIndirect(indirect)
-                .type(Type.UNKNOWN).build();
+        return VersionedDependency.builder().name(groups.get(0)).version(groups.get(1)).isIndirect(indirect).build();
     }
 
     void parse(final String content) {
