@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
@@ -35,14 +35,31 @@ public class PluginTemplateReader {
      */
     public Node readPluginTemplate(final String templateResourceName) {
         try (final InputStream templateInputStream = readResource(templateResourceName)) {
-            final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
-            return documentBuilder.parse(templateInputStream).getFirstChild();
+            return inputStreamToNode(templateInputStream);
         } catch (final IOException | SAXException | ParserConfigurationException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-10")
                     .message("Failed to parse plugin template {{template}}.", templateResourceName).ticketMitigation()
                     .toString(), exception);
         }
     }
+
+    /**
+     * Read an arbitrary xml content.
+     *
+     * @param xmlContent the xml content
+     * @return XML object
+     */
+    public Node readXmlContent(final String xmlContent) {
+        final byte[] xmlContentBytes = xmlContent.getBytes(StandardCharsets.UTF_8);
+        try (final InputStream inputStream = new ByteArrayInputStream(xmlContentBytes)) {
+            return inputStreamToNode(inputStream);
+        } catch (final IOException | SAXException | ParserConfigurationException exception) {
+            throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-212")
+                    .message("Failed to parse xml content {{xmlContent}}.", xmlContent)
+                    .ticketMitigation().toString(), exception);
+        }
+    }
+
 
     private InputStream readResource(final String templateResourceName) {
         final InputStream stream = getClass().getClassLoader().getResourceAsStream(templateResourceName);
@@ -52,5 +69,10 @@ public class PluginTemplateReader {
                     .toString());
         }
         return stream;
+    }
+
+    private static Node inputStreamToNode(final InputStream inputStream) throws ParserConfigurationException, SAXException, IOException {
+        final DocumentBuilder documentBuilder = DOCUMENT_BUILDER_FACTORY.newDocumentBuilder();
+        return documentBuilder.parse(inputStream).getFirstChild();
     }
 }

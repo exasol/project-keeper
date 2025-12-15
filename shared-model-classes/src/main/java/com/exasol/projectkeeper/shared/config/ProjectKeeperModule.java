@@ -35,7 +35,10 @@ public enum ProjectKeeperModule {
     LOMBOK,
 
     /** Module for java projects that build a native-image (executable). */
-    NATIVE_IMAGE;
+    NATIVE_IMAGE,
+
+    /** Module for java projects that configures the Mockito agent for tests. */
+    MOCKITO_AGENT;
 
     /**
      * Get {@link ProjectKeeperModule} by its name.
