@@ -1,23 +1,7 @@
 package com.exasol.projectkeeper.shared.dependencies;
 
-import static java.util.Objects.requireNonNull;
-
-/**
- * This class represents an abstract dependency enabling to create a report of dependency changes later on.
- * 
- * @param type       type of the dependency
- * @param name       name of the module of the dependency
- * @param version    version of the dependency
- * @param isIndirect {@code true} if the dependency is indirect, i.e. transitive
- */
-public record VersionedDependency(Type type, String name, String version, boolean isIndirect)
-        implements BaseDependency {
-
-    public VersionedDependency {
-        requireNonNull(type, "type");
-        requireNonNull(name, "name");
-        requireNonNull(version, "version");
-    }
+/** This class represents an abstract dependency enabling to create a report of dependency changes later on. */
+public class VersionedDependency implements BaseDependency {
 
     /**
      * Create a new builder.
@@ -26,6 +10,14 @@ public record VersionedDependency(Type type, String name, String version, boolea
      */
     public static Builder builder() {
         return new Builder();
+    }
+
+    private Type type;
+    private String name;
+    private String version;
+    private boolean isIndirect;
+
+    VersionedDependency() {
     }
 
     /**
@@ -62,17 +54,13 @@ public record VersionedDependency(Type type, String name, String version, boolea
      * 
      * @return {@code true} if the dependency is indirect, i.e. transitive
      */
-    @Override
     public boolean isIndirect() {
         return this.isIndirect;
     }
 
     /** Builder for a new instance of {@link VersionedDependency} */
     public static final class Builder {
-        private Type type;
-        private String name;
-        private boolean isIndirect;
-        private String version;
+        private final VersionedDependency dependency = new VersionedDependency();
 
         private Builder() {
         }
@@ -84,7 +72,7 @@ public record VersionedDependency(Type type, String name, String version, boolea
          * @return this for fluent programming
          */
         public Builder type(final Type type) {
-            this.type = type;
+            this.dependency.type = type;
             return this;
         }
 
@@ -95,7 +83,7 @@ public record VersionedDependency(Type type, String name, String version, boolea
          * @return this for fluent programming
          */
         public Builder name(final String name) {
-            this.name = name;
+            this.dependency.name = name;
             return this;
         }
 
@@ -106,7 +94,7 @@ public record VersionedDependency(Type type, String name, String version, boolea
          * @return this for fluent programming
          */
         public Builder version(final String version) {
-            this.version = version;
+            this.dependency.version = version;
             return this;
         }
 
@@ -117,7 +105,7 @@ public record VersionedDependency(Type type, String name, String version, boolea
          * @return this for fluent programming
          */
         public Builder isIndirect(final boolean isIndirect) {
-            this.isIndirect = isIndirect;
+            this.dependency.isIndirect = isIndirect;
             return this;
         }
 
@@ -127,7 +115,7 @@ public record VersionedDependency(Type type, String name, String version, boolea
          * @return new instance of {@link VersionedDependency}
          */
         public VersionedDependency build() {
-            return new VersionedDependency(type, name, version, isIndirect);
+            return this.dependency;
         }
     }
 }

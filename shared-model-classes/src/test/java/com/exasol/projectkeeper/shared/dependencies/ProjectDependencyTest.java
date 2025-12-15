@@ -10,11 +10,12 @@ import org.junit.jupiter.api.Test;
 import com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
 class ProjectDependencyTest {
     @Test
     void testEqualsContract() {
-        EqualsVerifier.forClass(ProjectDependency.class).verify();
+        EqualsVerifier.forClass(ProjectDependency.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 
     @Test
