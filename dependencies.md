@@ -187,7 +187,6 @@
 | [Apache Maven Source Plugin][47]                       | [Apache License, Version 2.0][1]            |
 | [Apache Maven Javadoc Plugin][48]                      | [Apache-2.0][1]                             |
 | [Central Publishing Maven Plugin][49]                  | [The Apache License, Version 2.0][1]        |
-| [Apache Maven Dependency Plugin][50]                   | [Apache-2.0][1]                             |
 | [Maven Failsafe Plugin][73]                            | [Apache-2.0][1]                             |
 | [JaCoCo :: Maven Plugin][51]                           | [EPL-2.0][52]                               |
 | [Quality Summarizer Maven Plugin][53]                  | [MIT License][54]                           |

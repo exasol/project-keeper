@@ -32,7 +32,6 @@ sources:
       - maven_central
       - integration_tests
       - jar_artifact
-      - mockito_agent
     parentPom:
       groupId: "com.exasol"
       artifactId: "project-keeper-parent-pom"

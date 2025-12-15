@@ -174,7 +174,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <argLine>-javaagent:${org.mockito:mockito-core:jar} ${argLine}</argLine>
+                    <argLine>${argLine}</argLine>
                     <systemPropertyVariables>
                         <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
                         <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
@@ -383,23 +383,10 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <version>3.9.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <!-- Allow resolving dependency placeholders like ${org.mockito:mockito-core:jar} -->
-                            <goal>properties</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-failsafe-plugin</artifactId>
                 <version>3.5.4</version>
                 <configuration>
-                    <argLine>-javaagent:${org.mockito:mockito-core:jar} ${argLine}</argLine>
+                    <argLine>${argLine}</argLine>
                     <systemPropertyVariables>
                         <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
                         <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
