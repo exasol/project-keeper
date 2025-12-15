@@ -34,7 +34,7 @@ class GitHubWorkflowIOTest {
                     steps:
                       - name: Checkout the repository
                         id: checkout
-                        uses: actions/checkout@v5
+                        uses: actions/checkout@v6
                         with:
                           fetch-depth: 0
                       - name: Set up JDKs
