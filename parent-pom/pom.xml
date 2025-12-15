@@ -129,6 +129,16 @@
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-github</artifactId>
                 <version>1.10.0</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-classic</artifactId>
+                    </exclusion>
+                    <exclusion>
+                        <groupId>ch.qos.logback</groupId>
+                        <artifactId>logback-core</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <!-- Fix CVE-2014-3643 in transitive dependency of com.jcabi:jcabi-github -->
