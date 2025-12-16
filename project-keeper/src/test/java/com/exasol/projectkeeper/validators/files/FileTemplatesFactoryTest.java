@@ -98,7 +98,7 @@ class FileTemplatesFactoryTest {
         final String content = template.get().getContent();
         assertThat(content, allOf(not(containsString("$npmSetup")), //
                 not(containsString("$installNode")), //
-                containsString("uses: actions/setup-node@v4\n" +
+                containsString("uses: actions/setup-node@v6\n" +
                         "        if: ${{ " + hasNpmModule + " }}")));
     }
 

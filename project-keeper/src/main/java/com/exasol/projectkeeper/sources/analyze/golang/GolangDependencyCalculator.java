@@ -14,8 +14,8 @@ class GolangDependencyCalculator {
     private final Path projectPath;
     private final GolangServices golangServices;
 
-    private Map<String, GolangDependencyLicense> compileDependencyLicenses;
-    private Map<String, GolangDependencyLicense> allLicenses;
+    private Map<String, List<GolangDependencyLicense>> compileDependencyLicenses;
+    private Map<String, List<GolangDependencyLicense>> allLicenses;
 
     private GolangDependencyCalculator(final GolangServices golangServices, final Path projectPath,
             final GoModule moduleInfo) {
@@ -50,20 +50,24 @@ class GolangDependencyCalculator {
     }
 
     private ProjectDependency convertDependency(final VersionedDependency dependency) {
-        return ProjectDependency.builder() //
-                .name(dependency.getName()) //
-                .type(getDependencyType(dependency.getName())) //
-                .websiteUrl(null) //
-                .licenses(List.of(getLicense(dependency.getName()).toLicense())) //
+        return ProjectDependency.builder()
+                .name(dependency.getName())
+                .type(getDependencyType(dependency.getName()))
+                .websiteUrl(null)
+                .licenses(getLicenses(dependency))
                 .build();
     }
 
-    private GolangDependencyLicense getLicense(final String moduleName) {
+    private List<License> getLicenses(final VersionedDependency dependency) {
+        return getLicenses(dependency.getName()).stream().map(GolangDependencyLicense::toLicense).toList();
+    }
+
+    private List<GolangDependencyLicense> getLicenses(final String moduleName) {
         if (this.allLicenses.containsKey(moduleName)) {
             return this.allLicenses.get(moduleName);
         }
-        final Optional<GolangDependencyLicense> prefixMatch = this.allLicenses.entrySet().stream() //
-                .filter(e -> e.getKey().startsWith(moduleName)) //
+        final Optional<List<GolangDependencyLicense>> prefixMatch = this.allLicenses.entrySet().stream()
+                .filter(e -> e.getKey().startsWith(moduleName))
                 .map(Entry::getValue).findAny();
         if (prefixMatch.isPresent()) {
             return prefixMatch.get();
@@ -71,10 +75,10 @@ class GolangDependencyCalculator {
         return fetchLicense(moduleName);
     }
 
-    private GolangDependencyLicense fetchLicense(final String moduleName) {
-        final Map<String, GolangDependencyLicense> licenses = fetchAllLicenses(moduleName);
+    private List<GolangDependencyLicense> fetchLicense(final String moduleName) {
+        final Map<String, List<GolangDependencyLicense>> licenses = fetchAllLicenses(moduleName);
         this.allLicenses.putAll(licenses);
-        final GolangDependencyLicense license = licenses.get(moduleName);
+        final List<GolangDependencyLicense> license = licenses.get(moduleName);
         if (license == null) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-147").message(
                     "No license found for test dependency module {{module name}}, all licenses: {{all licenses}}",
@@ -83,11 +87,11 @@ class GolangDependencyCalculator {
         return license;
     }
 
-    private Map<String, GolangDependencyLicense> fetchLicensesForMainModule() {
+    private Map<String, List<GolangDependencyLicense>> fetchLicensesForMainModule() {
         return this.golangServices.getLicenses(this.projectPath, "./...");
     }
 
-    private Map<String, GolangDependencyLicense> fetchAllLicenses(final String moduleName) {
+    private Map<String, List<GolangDependencyLicense>> fetchAllLicenses(final String moduleName) {
         final Path moduleDir = this.golangServices.getModuleDir(this.projectPath, moduleName);
         return this.golangServices.getLicenses(moduleDir, moduleName);
     }
