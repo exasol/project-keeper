@@ -2,7 +2,8 @@ package com.exasol.projectkeeper.sources.analyze.npm;
 
 import static com.exasol.projectkeeper.sources.analyze.npm.TestData.json;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -56,6 +57,36 @@ class NpmDependenciesTest {
                         .licenses(List.of(new License("NC" + "-License", "https://" + "new-compile"))) //
                         .build() //
         ));
+    }
+
+    @Test
+    void convertLicensesWithDuplicateEntry() {
+        final var result = NpmDependencies.convertLicenses(
+                json("""
+                        {
+                            "string-length@4.0.2": {
+                              "licenses": "MIT",
+                              "repository": "https://github.com/sindresorhus/string-length"
+                            },
+                            "string-width@4.2.3": {
+                              "licenses": "MIT",
+                              "repository": "https://github.com/sindresorhus/string-width"
+                            },
+                            "string-width@5.1.2": {
+                              "licenses": "MIT",
+                              "repository": "https://github.com/sindresorhus/string-width"
+                            }
+                        }
+                        """));
+        assertAll(
+                () -> assertThat(result, aMapWithSize(2)),
+                () -> assertThat(result, hasEntry("string-width", List.of(
+                        new NpmLicense("string-width", "4.2.3", "MIT", "https://github.com/sindresorhus/string-width"),
+                        new NpmLicense("string-width", "5.1.2", "MIT",
+                                "https://github.com/sindresorhus/string-width")))),
+                () -> assertThat(result, hasEntry("string-length", List
+                        .of(new NpmLicense("string-length", "4.0.2", "MIT",
+                                "https://github.com/sindresorhus/string-length")))));
     }
 
     private ProjectDependency dependency(final Type type, final String name, final String version,
