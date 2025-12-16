@@ -1,9 +1,9 @@
 package com.exasol.projectkeeper.sources.analyze.npm;
 
 import static java.util.Collections.emptyList;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import com.exasol.projectkeeper.shared.dependencies.*;
 
@@ -42,9 +42,13 @@ class NpmDependencies {
 
     private Map<String, List<NpmLicense>> retrieveNpmLicenses() {
         final JsonObject json = this.services.getLicenses(this.packageJson.getWorkingDir());
-        return json.keySet().stream() //
-                .map(key -> NpmLicense.from(key, json)) //
-                .collect(Collectors.toMap(NpmLicense::getModule, List::of));
+        return convertLicenses(json);
+    }
+
+    static Map<String, List<NpmLicense>> convertLicenses(final JsonObject json) {
+        return json.keySet().stream()
+                .map(key -> NpmLicense.from(key, json))
+                .collect(groupingBy(NpmLicense::getModule));
     }
 
     private ProjectDependency projectDependency(final VersionedDependency versionedDependency) {

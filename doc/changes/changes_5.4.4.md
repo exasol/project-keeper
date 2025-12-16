@@ -6,9 +6,19 @@ Code name: Java 21 support
 
 This release adds support for Java 21 removing a warning when running tests that use Mockito.
 
+The release also fixes the following error with duplicate licenses in NPM projects:
+
+```
+java.lang.IllegalStateException: Duplicate key string-width (attempted merging values [com.exasol.projectkeeper.sources.analyze.npm.NpmLicense@409c54f] and [com.exasol.projectkeeper.sources.analyze.npm.NpmLicense@3e74829])
+```
+
 ## Features
 
 * #689: Configure Mockito agent
+
+## Bugfixes
+
+* #701: Fix
 
 ## Dependency Updates
 
