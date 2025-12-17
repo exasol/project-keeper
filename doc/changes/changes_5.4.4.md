@@ -12,9 +12,12 @@ The release also fixes the following error with duplicate licenses in NPM and Go
 java.lang.IllegalStateException: Duplicate key string-width (attempted merging values [com.exasol.projectkeeper.sources.analyze.npm.NpmLicense@409c54f] and [com.exasol.projectkeeper.sources.analyze.npm.NpmLicense@3e74829])
 ```
 
+The release also updates the Eclipse formatter to allow line length 160 in comments.
+
 ## Features
 
 * #689: Configure Mockito agent
+* #702: Adapted Eclipse formatter settings to allow wider comment lines
 
 ## Bugfixes
 
