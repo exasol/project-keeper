@@ -1,4 +1,4 @@
-# Project Keeper 5.4.4, released 2025-??-??
+# Project Keeper 5.4.4, released 2025-12-17
 
 Code name: Java 21 support
 
