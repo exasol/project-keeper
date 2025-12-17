@@ -1,7 +1,7 @@
 package com.exasol.projectkeeper.sources.analyze.golang;
 
 import static java.util.function.Predicate.not;
-import static java.util.stream.Collectors.toMap;
+import static java.util.stream.Collectors.groupingBy;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -10,7 +10,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
-import java.util.function.Function;
 import java.util.function.Supplier;
 import java.util.logging.Logger;
 
@@ -63,12 +62,16 @@ class GolangServices {
         }
     }
 
-    Map<String, GolangDependencyLicense> getLicenses(final Path absoluteSourcePath, final String module) {
+    Map<String, List<GolangDependencyLicense>> getLicenses(final Path absoluteSourcePath, final String module) {
         final String[] licenses = retrieveLicenses(absoluteSourcePath, module).split("\n");
-        return Arrays.stream(licenses) //
-                .filter(not(String::isBlank)) //
-                .map(this::convertDependencyLicense)
-                .collect(toMap(GolangDependencyLicense::getModuleName, Function.identity()));
+        return parseLicenseCsv(licenses);
+    }
+
+    static Map<String, List<GolangDependencyLicense>> parseLicenseCsv(final String[] licenses) {
+        return Arrays.stream(licenses)
+                .filter(not(String::isBlank))
+                .map(GolangServices::convertDependencyLicense)
+                .collect(groupingBy(GolangDependencyLicense::getModuleName));
     }
 
     private String retrieveLicenses(final Path absoluteSourcePath, final String module) {
@@ -87,7 +90,7 @@ class GolangServices {
                             .parameter("working dir", absoluteSourcePath,
                                     "working directory where go-licenses was executed")
                             .mitigation("Verify that 'go-licenses' is installed.")
-                            .mitigation("Install it by running 'go install github.com/google/go-licenses@latest'.")
+                            .mitigation("Install it by running 'go install github.com/google/go-licenses/v2@latest'.")
                             .mitigation("If it is already installed, re-install it by running the same command.")
                             .mitigation("This might be necessary after installing a new Go version.").toString(),
                     exception);
@@ -117,7 +120,7 @@ class GolangServices {
         return path;
     }
 
-    private GolangDependencyLicense convertDependencyLicense(final String line) {
+    private static GolangDependencyLicense convertDependencyLicense(final String line) {
         final String[] parts = line.split(",");
         if (parts.length != 3) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-132").message(

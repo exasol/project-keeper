@@ -35,22 +35,32 @@ class GolangDependencyCalculatorTest {
 
     @Test
     void calculatorIgnoresLicenses() {
-        simulateMainModuleLicenses(Map.of("mod1", license("mod1", "lic1", "url1")));
+        simulateMainModuleLicenses(Map.of("mod1", List.of(license("mod1", "lic1", "url1"))));
         assertThat(calculate(), hasSize(0));
     }
 
     @Test
     void onlyCompileDependencies() {
-        simulateMainModuleLicenses(Map.of("comp1", license("mod1", "lic1", "url1")));
+        simulateMainModuleLicenses(Map.of("comp1", List.of(license("mod1", "lic1", "url1"))));
         final List<ProjectDependency> dependencies = calculate(dep("comp1", "ver1"));
         assertThat(dependencies, hasSize(1));
         assertThat(dependencies, contains(expectedDep("comp1", "lic1", "url1", Type.COMPILE)));
     }
 
     @Test
+    void twoLicensesPerModule() {
+        simulateMainModuleLicenses(
+                Map.of("comp1", List.of(license("mod1", "lic1", "url1"), license("mod2", "lic2", "url2"))));
+        final List<ProjectDependency> dependencies = calculate(dep("comp1", "ver1"));
+        assertThat(dependencies, hasSize(1));
+        assertThat(dependencies, contains(
+                expectedDep("comp1", Type.COMPILE, List.of(new License("lic1", "url1"), new License("lic2", "url2")))));
+    }
+
+    @Test
     void onlyTestDependencies() {
         simulateMainModuleLicenses(Map.of());
-        simulateLicenses("test1", Map.of("test1", license("test1", "lic1", "url1")));
+        simulateLicenses("test1", Map.of("test1", List.of(license("test1", "lic1", "url1"))));
         final List<ProjectDependency> dependencies = calculate(dep("test1", "ver1"));
         assertThat(dependencies, hasSize(1));
         assertThat(dependencies, contains(expectedDep("test1", "lic1", "url1", Type.TEST)));
@@ -58,8 +68,8 @@ class GolangDependencyCalculatorTest {
 
     @Test
     void mixedDependencies() {
-        simulateMainModuleLicenses(Map.of("comp2", license("mod2", "lic2", "url2")));
-        simulateLicenses("test1", Map.of("test1", license("test1", "lic1", "url1")));
+        simulateMainModuleLicenses(Map.of("comp2", List.of(license("mod2", "lic2", "url2"))));
+        simulateLicenses("test1", Map.of("test1", List.of(license("test1", "lic1", "url1"))));
         final List<ProjectDependency> dependencies = calculate(dep("test1", "ver1"), dep("comp2", "ver2"));
         assertThat(dependencies, hasSize(2));
         assertThat(dependencies, contains(expectedDep("test1", "lic1", "url1", Type.TEST),
@@ -68,7 +78,7 @@ class GolangDependencyCalculatorTest {
 
     @Test
     void dependencyWithPrefixFound() {
-        simulateMainModuleLicenses(Map.of("dep1/suffix", license("dep1", "lic1", "url1")));
+        simulateMainModuleLicenses(Map.of("dep1/suffix", List.of(license("dep1", "lic1", "url1"))));
         final List<ProjectDependency> dependencies = calculate(dep("dep1", "ver1"));
         assertThat(dependencies, hasSize(1));
         assertThat(dependencies, contains(expectedDep("dep1", "lic1", "url1", Type.TEST)));
@@ -86,10 +96,15 @@ class GolangDependencyCalculatorTest {
 
     private ProjectDependency expectedDep(final String name, final String licencesName, final String licenseUrl,
             final Type type) {
-        return ProjectDependency.builder() //
-                .type(type) //
-                .name(name) //
-                .licenses(List.of(new License(licencesName, licenseUrl))) //
+        final List<License> licenses = List.of(new License(licencesName, licenseUrl));
+        return expectedDep(name, type, licenses);
+    }
+
+    private ProjectDependency expectedDep(final String name, final Type type, final List<License> licenses) {
+        return ProjectDependency.builder()
+                .type(type)
+                .name(name)
+                .licenses(licenses)
                 .build();
     }
 
@@ -102,11 +117,11 @@ class GolangDependencyCalculatorTest {
         return new GolangDependencyLicense(moduleName, licenseName, licenseUrl);
     }
 
-    private void simulateMainModuleLicenses(final Map<String, GolangDependencyLicense> licenses) {
+    private void simulateMainModuleLicenses(final Map<String, List<GolangDependencyLicense>> licenses) {
         when(this.golangServicesMock.getLicenses(PROJECT_PATH, "./...")).thenReturn(licenses);
     }
 
-    private void simulateLicenses(final String moduleName, final Map<String, GolangDependencyLicense> licenses) {
+    private void simulateLicenses(final String moduleName, final Map<String, List<GolangDependencyLicense>> licenses) {
         final Path modulePath = Path.of("modulePath");
         when(this.golangServicesMock.getModuleDir(PROJECT_PATH, moduleName)).thenReturn(modulePath);
         when(this.golangServicesMock.getLicenses(modulePath, moduleName)).thenReturn(licenses);

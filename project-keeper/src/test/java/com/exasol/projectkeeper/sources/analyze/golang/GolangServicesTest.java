@@ -109,8 +109,25 @@ class GolangServicesTest {
         assertThat(exception.getMessage(),
                 allOf(startsWith(
                         "E-PK-CORE-142: Error starting the 'go-licenses' binary in working dir '" + path + "'."),
-                        containsString("* Install it by running 'go install github.com/google/go-licenses@latest'."),
+                        containsString("* Install it by running 'go install github.com/google/go-licenses/v2@latest'."),
                         containsString("* If it is already installed, re-install it by running the same command.")));
+    }
+
+    @Test
+    void parseLicenseCsvWithDuplicateEntry() {
+        final var result = GolangServices.parseLicenseCsv(new String[] {
+                "github.com/klauspost/compress,https://github.com/klauspost/compress/blob/v1.18.1/LICENSE,MIT",
+                "github.com/klauspost/compress,https://github.com/klauspost/compress/blob/v1.18.1/LICENSE,Apache-2.0",
+                "github.com/klauspost/compress,https://github.com/klauspost/compress/blob/v1.18.1/LICENSE,BSD-3-Clause" });
+        assertAll(
+                () -> assertThat(result, aMapWithSize(1)),
+                () -> assertThat(result, hasEntry("github.com/klauspost/compress", List.of(
+                        new GolangDependencyLicense("github.com/klauspost/compress",
+                                "MIT", "https://github.com/klauspost/compress/blob/v1.18.1/LICENSE"),
+                        new GolangDependencyLicense("github.com/klauspost/compress",
+                                "Apache-2.0", "https://github.com/klauspost/compress/blob/v1.18.1/LICENSE"),
+                        new GolangDependencyLicense("github.com/klauspost/compress",
+                                "BSD-3-Clause", "https://github.com/klauspost/compress/blob/v1.18.1/LICENSE")))));
     }
 
     private void assertChanges(final GoModFile oldMod, final GoModFile newMod,
