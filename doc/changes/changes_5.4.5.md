@@ -1,4 +1,4 @@
-# Project Keeper 5.4.5, released 2026-??-??
+# Project Keeper 5.4.5, released 2026-01-09
 
 Code name: Fix Report Security Issues workflow
 
