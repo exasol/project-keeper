@@ -57,7 +57,7 @@
 | [Apache Maven Artifact Plugin][45]                     | [Apache-2.0][1]                             |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
 | [Apache Maven GPG Plugin][46]                          | [Apache-2.0][1]                             |
-| [Apache Maven Source Plugin][47]                       | [Apache License, Version 2.0][1]            |
+| [Apache Maven Source Plugin][47]                       | [Apache-2.0][1]                             |
 | [Apache Maven Javadoc Plugin][48]                      | [Apache-2.0][1]                             |
 | [Central Publishing Maven Plugin][49]                  | [The Apache License, Version 2.0][1]        |
 | [Apache Maven Dependency Plugin][50]                   | [Apache-2.0][1]                             |
@@ -125,7 +125,7 @@
 | [Apache Maven Artifact Plugin][45]                     | [Apache-2.0][1]                             |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
 | [Apache Maven GPG Plugin][46]                          | [Apache-2.0][1]                             |
-| [Apache Maven Source Plugin][47]                       | [Apache License, Version 2.0][1]            |
+| [Apache Maven Source Plugin][47]                       | [Apache-2.0][1]                             |
 | [Apache Maven Javadoc Plugin][48]                      | [Apache-2.0][1]                             |
 | [Central Publishing Maven Plugin][49]                  | [The Apache License, Version 2.0][1]        |
 | [Apache Maven Dependency Plugin][50]                   | [Apache-2.0][1]                             |
@@ -184,7 +184,7 @@
 | [Artifact reference checker and unifier][75]           | [MIT License][76]                           |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
 | [Apache Maven GPG Plugin][46]                          | [Apache-2.0][1]                             |
-| [Apache Maven Source Plugin][47]                       | [Apache License, Version 2.0][1]            |
+| [Apache Maven Source Plugin][47]                       | [Apache-2.0][1]                             |
 | [Apache Maven Javadoc Plugin][48]                      | [Apache-2.0][1]                             |
 | [Central Publishing Maven Plugin][49]                  | [The Apache License, Version 2.0][1]        |
 | [Maven Failsafe Plugin][73]                            | [Apache-2.0][1]                             |
@@ -240,7 +240,7 @@
 | [Apache Maven Artifact Plugin][45]                     | [Apache-2.0][1]                             |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
 | [Apache Maven GPG Plugin][46]                          | [Apache-2.0][1]                             |
-| [Apache Maven Source Plugin][47]                       | [Apache License, Version 2.0][1]            |
+| [Apache Maven Source Plugin][47]                       | [Apache-2.0][1]                             |
 | [Apache Maven Javadoc Plugin][48]                      | [Apache-2.0][1]                             |
 | [Central Publishing Maven Plugin][49]                  | [The Apache License, Version 2.0][1]        |
 | [Apache Maven Dependency Plugin][50]                   | [Apache-2.0][1]                             |
@@ -300,7 +300,7 @@
 | [Apache Maven Artifact Plugin][45]                     | [Apache-2.0][1]                             |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
 | [Apache Maven GPG Plugin][46]                          | [Apache-2.0][1]                             |
-| [Apache Maven Source Plugin][47]                       | [Apache License, Version 2.0][1]            |
+| [Apache Maven Source Plugin][47]                       | [Apache-2.0][1]                             |
 | [Apache Maven Javadoc Plugin][48]                      | [Apache-2.0][1]                             |
 | [Central Publishing Maven Plugin][49]                  | [The Apache License, Version 2.0][1]        |
 | [Apache Maven Dependency Plugin][50]                   | [Apache-2.0][1]                             |
