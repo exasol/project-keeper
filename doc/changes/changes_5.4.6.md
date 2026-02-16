@@ -1,10 +1,10 @@
 # Project Keeper 5.4.6, released 2026-02-16
 
-Code name: Update dependencies
+Code name: Update maven plugin dependencies
 
 ## Summary
 
-This release updates dependencies
+This release updates maven plugin dependencies
 
 ## Dependency Updates
 
