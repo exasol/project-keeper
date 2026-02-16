@@ -79,7 +79,7 @@
             <plugin>
                 <groupId>com.exasol</groupId>
                 <artifactId>error-code-crawler-maven-plugin</artifactId>
-                <version>2.0.5</version>
+                <version>2.0.6</version>
                 <executions>
                     <execution>
                         <phase>verify</phase>
@@ -95,9 +95,9 @@
                 <version>3.2.0</version>
                 <configuration>
                     <excludeVulnerabilityIds>
-                      <!-- Ignore vulnerability in org.glassfish:javax.json:jar:1.1.4:runtime
+                        <!-- Ignore vulnerability in org.glassfish:javax.json:jar:1.1.4:runtime
                       as this is accepted for accessing exasol json documents on GitHub -->
-                      <exclude>CVE-2023-7272</exclude>
+                        <exclude>CVE-2023-7272</exclude>
                     </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
