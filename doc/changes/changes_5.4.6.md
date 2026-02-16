@@ -89,6 +89,7 @@ This release updates dependencies
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.5` to `2.0.6`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.14.1` to `3.15.0`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.9.0` to `3.10.0`
+* Updated `org.apache.maven.plugins:maven-jar-plugin:3.4.2` to `3.5.0`
 * Updated `org.apache.maven.plugins:maven-source-plugin:3.2.1` to `3.4.0`
 * Updated `org.codehaus.mojo:versions-maven-plugin:2.20.1` to `2.21.0`
 * Updated `org.sonatype.central:central-publishing-maven-plugin:0.9.0` to `0.10.0`
