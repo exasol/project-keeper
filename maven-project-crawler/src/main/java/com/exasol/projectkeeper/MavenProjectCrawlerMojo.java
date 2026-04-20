@@ -1,18 +1,20 @@
 package com.exasol.projectkeeper;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.inject.Inject;
 
+import org.apache.maven.artifact.handler.manager.ArtifactHandlerManager;
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
-import org.apache.maven.repository.RepositorySystem;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.pom.*;
@@ -31,8 +33,7 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
 
     private static final String PROPERTY_PROJECTS_TO_CRAWL = "projectsToCrawl";
 
-    @SuppressWarnings("deprecation") // Will be fixed in https://github.com/exasol/project-keeper/issues/718
-    RepositorySystem repositorySystem;
+    private final ArtifactHandlerManager artifactHandlerManager;
 
     @Parameter(property = PROPERTY_PROJECTS_TO_CRAWL, required = true)
     private String projectsToCrawl;
@@ -43,10 +44,10 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
     private MavenSession session;
 
     @Inject
-    @SuppressWarnings("deprecation") // Will be fixed in https://github.com/exasol/project-keeper/issues/718
-    MavenProjectCrawlerMojo(final RepositorySystem repositorySystem, final ProjectBuilder mavenProjectBuilder) {
-        this.repositorySystem = repositorySystem;
-        this.mavenProjectBuilder = mavenProjectBuilder;
+    MavenProjectCrawlerMojo(final ArtifactHandlerManager artifactHandlerManager,
+            final ProjectBuilder mavenProjectBuilder) {
+        this.artifactHandlerManager = requireNonNull(artifactHandlerManager, "artifactHandlerManager");
+        this.mavenProjectBuilder = requireNonNull(mavenProjectBuilder, "mavenProjectBuilder");
     }
 
     // [impl -> dsn~eclipse-prefs-java-version~1]
@@ -60,7 +61,7 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
         final MavenProjectFromFileReader mavenProjectReader = new DefaultMavenProjectFromFileReader(
                 this.mavenProjectBuilder, this.session);
         final MavenModelFromRepositoryReader modelFromRepositoryReader = new MavenModelFromRepositoryReader(
-                this.mavenProjectBuilder, this.session, this.repositorySystem);
+                this.mavenProjectBuilder, this.session, this.artifactHandlerManager);
         final Map<String, CrawledMavenProject> crawledProjects = new HashMap<>();
         final String[] paths = this.projectsToCrawl.split(";");
         for (final String path : paths) {

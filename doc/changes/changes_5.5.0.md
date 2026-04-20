@@ -1,4 +1,4 @@
-# Project Keeper 5.5.0, released 2026-04-??
+# Project Keeper 5.5.0, released 2026-04-20
 
 Code name:
 
@@ -13,6 +13,10 @@ The release also updates the versions of Go and Node.JS used in GitHub workflows
 ## Features
 
 * #717: Disable telemetry for Maven projects
+
+## Bugfixes
+
+* #718: Replace deprecated Maven class `RepositorySystem`
 
 ## Dependency Updates
 
