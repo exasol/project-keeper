@@ -4,9 +4,13 @@ Code name:
 
 ## Summary
 
+This release updates Maven configuration to disable telemetry via [telemetry-java](https://github.com/exasol/telemetry-java/) for unit and integration tests and when executing other processes.
+
+The release also updates the versions of Go and Node.JS used in GitHub workflows to 1.26 resp. 24.
+
 ## Features
 
-* ISSUE_NUMBER: description
+* #717: Disable telemetry for Maven projects
 
 ## Dependency Updates
 
