@@ -63,6 +63,7 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void fixingJavaProjectSucceeds() {
         try (MavenProjectFixture mavenProject = prepareMavenProject()) {
             assertProcessSucceeds("fix");
@@ -71,6 +72,7 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void updateDependenciesJavaProjectSucceeds() {
         try (MavenProjectFixture mavenProject = prepareMavenProject()) {
             assertProcessSucceeds("fix");
@@ -79,6 +81,7 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void fixingGolangProjectSucceeds() {
         try (GolangProjectFixture golangProject = prepareGolangProject()) {
             assertProcessSucceeds("fix");
@@ -87,6 +90,7 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void fixingNpmProjectSucceeds() {
         try (NpmProjectFixture npmProject = prepareNpmProject()) {
             assertProcessSucceeds("fix");

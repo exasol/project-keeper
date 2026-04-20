@@ -184,8 +184,7 @@
                 <configuration>
                     <argLine>-javaagent:${org.mockito:mockito-core:jar} ${argLine}</argLine>
                     <environmentVariables>
-                        <!-- [impl->dsn~disable-telemetry.unit-tests~1] -->
-                        <EXASOL_TELEMETRY_DISABLE>truex</EXASOL_TELEMETRY_DISABLE>
+                        <EXASOL_TELEMETRY_DISABLE>true</EXASOL_TELEMETRY_DISABLE>
                     </environmentVariables>
                     <systemPropertyVariables>
                         <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
@@ -262,6 +261,16 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.6.3</version>
+                <configuration>
+                    <environmentVariables>
+                        <EXASOL_TELEMETRY_DISABLE>true</EXASOL_TELEMETRY_DISABLE>
+                    </environmentVariables>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -373,8 +382,7 @@
                 <configuration>
                     <argLine>-javaagent:${org.mockito:mockito-core:jar} ${argLine}</argLine>
                     <environmentVariables>
-                        <!-- [impl->dsn~disable-telemetry.integration-tests~1] -->
-                        <EXASOL_TELEMETRY_DISABLE>truex</EXASOL_TELEMETRY_DISABLE>
+                        <EXASOL_TELEMETRY_DISABLE>true</EXASOL_TELEMETRY_DISABLE>
                     </environmentVariables>
                     <systemPropertyVariables>
                         <test.coverage>true</test.coverage>
