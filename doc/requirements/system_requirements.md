@@ -56,6 +56,18 @@ Covers:
 
 Needs: dsn
 
+##### Disable Telemetry
+
+`req~disable-telemetry~1`
+
+PK must disable telemetry to avoid polluting feature usage statistics when running tests locally or in CI.
+
+Covers:
+
+* `req~verify-pom-file~1`
+
+Needs: dsn
+
 ##### Verify Maven Dependencies
 
 `req~verify-maven-dependencies~1`

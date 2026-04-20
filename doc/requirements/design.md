@@ -118,6 +118,31 @@ This approach failed because a pom file can express the same thing often in mult
 
 Another problem was, that in multi maven module projects PK enforced the same plugins in all pom files, which is a lot of duplication. That's also true for the current approach, but there it's in files with generated content only. There duplication is not such a problem.
 
+### Disable Telemetry
+
+#### Disable Telemetry When Running Unit Tests
+`dsn~disable-telemetry.unit-tests~1`
+
+PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Surefire plugin.
+
+Covers: `req~disable-telemetry~1`
+Needs: impl, utest
+
+#### Disable Telemetry When Running Integration Tests
+`dsn~disable-telemetry.integration-tests~1`
+
+PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Failsafe plugin.
+
+Covers: `req~disable-telemetry~1`
+Needs: impl, itest
+
+#### Disable Telemetry When Executing Other Processes
+`dsn~disable-telemetry.execute-processes~1`
+PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Exec plugin.
+
+Covers: `req~disable-telemetry~1`
+Needs: impl
+
 ### Dependency Changes Section in changes_x.x.x.md File Validator
 
 `dsn~dependency-section-in-changes_x.x.x.md-file-validator~1`

@@ -4,6 +4,10 @@
     <version>3.5.5</version>
     <configuration>
         <argLine>${argLine}</argLine>
+        <environmentVariables>
+            <!-- [impl->dsn~disable-telemetry.unit-tests~1] -->
+            <EXASOL_TELEMETRY_DISABLE>truex</EXASOL_TELEMETRY_DISABLE>
+        </environmentVariables>
         <systemPropertyVariables>
             <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
             <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>
