@@ -140,6 +140,7 @@ Needs: impl, itest
 
 #### Disable Telemetry When Executing Other Processes
 `dsn~disable-telemetry.execute-processes~1`
+
 PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Exec plugin.
 
 Covers:
