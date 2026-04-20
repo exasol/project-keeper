@@ -1,13 +1,15 @@
 package com.exasol.projectkeeper;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.inject.Inject;
+
 import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugins.annotations.*;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.ProjectBuilder;
 import org.apache.maven.repository.RepositorySystem;
@@ -29,18 +31,20 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
 
     private static final String PROPERTY_PROJECTS_TO_CRAWL = "projectsToCrawl";
 
+    @SuppressWarnings("deprecation") // Will be fixed in https://github.com/exasol/project-keeper/issues/718
     RepositorySystem repositorySystem;
 
     @Parameter(property = PROPERTY_PROJECTS_TO_CRAWL, required = true)
     private String projectsToCrawl;
 
-    private ProjectBuilder mavenProjectBuilder;
+    private final ProjectBuilder mavenProjectBuilder;
 
     @Parameter(defaultValue = "${session}", readonly = true)
     private MavenSession session;
 
     @Inject
-    MavenProjectCrawlerMojo(RepositorySystem repositorySystem, ProjectBuilder mavenProjectBuilder) {
+    @SuppressWarnings("deprecation") // Will be fixed in https://github.com/exasol/project-keeper/issues/718
+    MavenProjectCrawlerMojo(final RepositorySystem repositorySystem, final ProjectBuilder mavenProjectBuilder) {
         this.repositorySystem = repositorySystem;
         this.mavenProjectBuilder = mavenProjectBuilder;
     }
