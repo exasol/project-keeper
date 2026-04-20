@@ -6,6 +6,7 @@
         "source.generate.finalModifiers": "explicit",
         "source.fixAll": "explicit"
     },
+    "java.codeGeneration.useBlocks": true,
     "java.sources.organizeImports.starThreshold": 3,
     "java.sources.organizeImports.staticStarThreshold": 3,
     "java.test.config": {
