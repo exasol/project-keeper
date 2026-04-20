@@ -29,6 +29,8 @@ The release also updates the versions of Go and Node.JS used in GitHub workflows
 #### Test Dependency Updates
 
 * Updated `nl.jqno.equalsverifier:equalsverifier:4.3.1` to `4.5`
+* Removed `org.junit.jupiter:junit-jupiter-params:6.0.3`
+* Added `org.junit.jupiter:junit-jupiter:6.0.3`
 * Updated `org.mockito:mockito-core:5.21.0` to `5.23.0`
 
 #### Plugin Dependency Updates
@@ -55,6 +57,8 @@ The release also updates the versions of Go and Node.JS used in GitHub workflows
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.4` to `1.1.5`
 * Updated `com.exasol:project-keeper-shared-test-setup:5.4.6` to `5.5.0`
 * Updated `nl.jqno.equalsverifier:equalsverifier:4.3.1` to `4.5`
+* Removed `org.junit.jupiter:junit-jupiter-params:6.0.3`
+* Added `org.junit.jupiter:junit-jupiter:6.0.3`
 * Updated `org.mockito:mockito-junit-jupiter:5.21.0` to `5.23.0`
 
 #### Plugin Dependency Updates
@@ -76,6 +80,8 @@ The release also updates the versions of Go and Node.JS used in GitHub workflows
 #### Test Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.4.6` to `5.5.0`
+* Removed `org.junit.jupiter:junit-jupiter-params:6.0.3`
+* Added `org.junit.jupiter:junit-jupiter:6.0.3`
 
 #### Plugin Dependency Updates
 
@@ -95,6 +101,8 @@ The release also updates the versions of Go and Node.JS used in GitHub workflows
 #### Test Dependency Updates
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.4` to `1.1.5`
+* Removed `org.junit.jupiter:junit-jupiter-params:6.0.3`
+* Added `org.junit.jupiter:junit-jupiter:6.0.3`
 * Updated `org.mockito:mockito-core:5.21.0` to `5.23.0`
 
 #### Plugin Dependency Updates
@@ -117,6 +125,8 @@ The release also updates the versions of Go and Node.JS used in GitHub workflows
 
 * Updated `com.exasol:maven-plugin-integration-testing:1.1.4` to `1.1.5`
 * Updated `com.exasol:project-keeper-shared-test-setup:5.4.6` to `5.5.0`
+* Removed `org.junit.jupiter:junit-jupiter-params:6.0.3`
+* Added `org.junit.jupiter:junit-jupiter:6.0.3`
 * Updated `org.mockito:mockito-core:5.21.0` to `5.23.0`
 * Updated `org.mockito:mockito-junit-jupiter:5.21.0` to `5.23.0`
 
@@ -135,6 +145,10 @@ The release also updates the versions of Go and Node.JS used in GitHub workflows
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.4.6` to `5.5.0`
 * Updated `org.yaml:snakeyaml:2.5` to `2.6`
+
+#### Test Dependency Updates
+
+* Added `org.junit.jupiter:junit-jupiter:6.0.3`
 
 #### Plugin Dependency Updates
 

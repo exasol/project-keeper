@@ -29,13 +29,13 @@
 
 | Dependency                                 | License                           |
 | ------------------------------------------ | --------------------------------- |
-| [JUnit Jupiter Params][20]                 | [Eclipse Public License v2.0][21] |
-| [Hamcrest][22]                             | [BSD-3-Clause][23]                |
-| [JUnit5 System Extensions][24]             | [Eclipse Public License v2.0][14] |
-| [EqualsVerifier \| release normal jar][25] | [Apache License, Version 2.0][1]  |
-| [to-string-verifier][26]                   | [MIT License][27]                 |
-| [mockito-core][28]                         | [MIT][29]                         |
-| [SLF4J JDK14 Provider][30]                 | [MIT][31]                         |
+| [JUnit5 System Extensions][20]             | [Eclipse Public License v2.0][14] |
+| [EqualsVerifier \| release normal jar][21] | [Apache License, Version 2.0][1]  |
+| [to-string-verifier][22]                   | [MIT License][23]                 |
+| [mockito-core][24]                         | [MIT][25]                         |
+| [SLF4J JDK14 Provider][26]                 | [MIT][27]                         |
+| [JUnit Jupiter (Aggregator)][28]           | [Eclipse Public License v2.0][29] |
+| [Hamcrest][30]                             | [BSD-3-Clause][31]                |
 
 ### Plugin Dependencies
 
@@ -77,7 +77,7 @@
 | [org.xmlunit:xmlunit-core][60]            | [The Apache Software License, Version 2.0][8] |
 | [error-reporting-java][16]                | [MIT License][17]                             |
 | [Markdown Generator][61]                  | [The Apache Software License, Version 2.0][8] |
-| [semver4j][62]                            | [The MIT License][27]                         |
+| [semver4j][62]                            | [The MIT License][23]                         |
 | [SnakeYAML][63]                           | [Apache License, Version 2.0][8]              |
 | [SnakeYAML Engine][64]                    | [Apache License, Version 2.0][8]              |
 | [Maven Model][65]                         | [Apache-2.0][1]                               |
@@ -89,15 +89,15 @@
 | ------------------------------------------ | --------------------------------------------- |
 | [Project Keeper shared test setup][58]     | [The MIT License][59]                         |
 | [Maven Project Version Getter][68]         | [MIT License][69]                             |
-| [JUnit Jupiter Params][20]                 | [Eclipse Public License v2.0][21]             |
-| [Hamcrest][22]                             | [BSD-3-Clause][23]                            |
 | [org.xmlunit:xmlunit-matchers][60]         | [The Apache Software License, Version 2.0][8] |
-| [mockito-junit-jupiter][28]                | [MIT][29]                                     |
+| [mockito-junit-jupiter][24]                | [MIT][25]                                     |
 | [Maven Plugin Integration Testing][70]     | [MIT License][71]                             |
-| [EqualsVerifier \| release normal jar][25] | [Apache License, Version 2.0][1]              |
-| [to-string-verifier][26]                   | [MIT License][27]                             |
-| [junit-pioneer][72]                        | [Eclipse Public License v2.0][21]             |
-| [SLF4J JDK14 Provider][30]                 | [MIT][31]                                     |
+| [EqualsVerifier \| release normal jar][21] | [Apache License, Version 2.0][1]              |
+| [to-string-verifier][22]                   | [MIT License][23]                             |
+| [junit-pioneer][72]                        | [Eclipse Public License v2.0][29]             |
+| [SLF4J JDK14 Provider][26]                 | [MIT][27]                                     |
+| [JUnit Jupiter (Aggregator)][28]           | [Eclipse Public License v2.0][29]             |
+| [Hamcrest][30]                             | [BSD-3-Clause][31]                            |
 
 ### Runtime Dependencies
 
@@ -152,16 +152,16 @@
 | Dependency                             | License                           |
 | -------------------------------------- | --------------------------------- |
 | [Project Keeper shared test setup][58] | [The MIT License][59]             |
-| [JUnit Jupiter Params][20]             | [Eclipse Public License v2.0][21] |
-| [Hamcrest][22]                         | [BSD-3-Clause][23]                |
 | [Maven Project Version Getter][68]     | [MIT License][69]                 |
+| [JUnit Jupiter (Aggregator)][28]       | [Eclipse Public License v2.0][29] |
+| [Hamcrest][30]                         | [BSD-3-Clause][31]                |
 
 ### Runtime Dependencies
 
 | Dependency                 | License   |
 | -------------------------- | --------- |
-| [SLF4J API Module][30]     | [MIT][31] |
-| [SLF4J JDK14 Provider][30] | [MIT][31] |
+| [SLF4J API Module][26]     | [MIT][27] |
+| [SLF4J JDK14 Provider][26] | [MIT][27] |
 
 ### Plugin Dependencies
 
@@ -213,13 +213,13 @@
 | Dependency                             | License                                       |
 | -------------------------------------- | --------------------------------------------- |
 | [Maven Project Version Getter][68]     | [MIT License][69]                             |
-| [JUnit Jupiter Params][20]             | [Eclipse Public License v2.0][21]             |
-| [Hamcrest][22]                         | [BSD-3-Clause][23]                            |
 | [org.xmlunit:xmlunit-matchers][60]     | [The Apache Software License, Version 2.0][8] |
-| [mockito-core][28]                     | [MIT][29]                                     |
+| [mockito-core][24]                     | [MIT][25]                                     |
 | [Maven Plugin Integration Testing][70] | [MIT License][71]                             |
-| [SLF4J JDK14 Provider][30]             | [MIT][31]                                     |
+| [SLF4J JDK14 Provider][26]             | [MIT][27]                                     |
 | [JaCoCo :: Agent][81]                  | [EPL-2.0][53]                                 |
+| [JUnit Jupiter (Aggregator)][28]       | [Eclipse Public License v2.0][29]             |
+| [Hamcrest][30]                         | [BSD-3-Clause][31]                            |
 
 ### Plugin Dependencies
 
@@ -265,7 +265,7 @@
 | [Maven Plugin API][79]                    | [Apache-2.0][1]       |
 | [error-reporting-java][16]                | [MIT License][17]     |
 | [JGit - Core][18]                         | [BSD-3-Clause][19]    |
-| [semver4j][62]                            | [The MIT License][27] |
+| [semver4j][62]                            | [The MIT License][23] |
 | [Maven Core][80]                          | [Apache-2.0][1]       |
 
 ### Test Dependencies
@@ -274,14 +274,14 @@
 | -------------------------------------- | --------------------------------------------- |
 | [Project Keeper shared test setup][58] | [The MIT License][59]                         |
 | [Maven Project Version Getter][68]     | [MIT License][69]                             |
-| [JUnit Jupiter Params][20]             | [Eclipse Public License v2.0][21]             |
-| [Hamcrest][22]                         | [BSD-3-Clause][23]                            |
 | [org.xmlunit:xmlunit-matchers][60]     | [The Apache Software License, Version 2.0][8] |
-| [SLF4J JDK14 Provider][30]             | [MIT][31]                                     |
-| [mockito-core][28]                     | [MIT][29]                                     |
-| [mockito-junit-jupiter][28]            | [MIT][29]                                     |
+| [SLF4J JDK14 Provider][26]             | [MIT][27]                                     |
+| [mockito-core][24]                     | [MIT][25]                                     |
+| [mockito-junit-jupiter][24]            | [MIT][25]                                     |
 | [Maven Plugin Integration Testing][70] | [MIT License][71]                             |
 | [JaCoCo :: Agent][81]                  | [EPL-2.0][53]                                 |
+| [JUnit Jupiter (Aggregator)][28]       | [Eclipse Public License v2.0][29]             |
+| [Hamcrest][30]                         | [BSD-3-Clause][31]                            |
 
 ### Plugin Dependencies
 
@@ -323,8 +323,14 @@
 | ----------------------------------------- | -------------------------------- |
 | [Project Keeper shared model classes][58] | [The MIT License][59]            |
 | [SnakeYAML][63]                           | [Apache License, Version 2.0][8] |
-| [Hamcrest][22]                            | [BSD-3-Clause][23]               |
+| [Hamcrest][30]                            | [BSD-3-Clause][31]               |
 | [Maven Model][65]                         | [Apache-2.0][1]                  |
+
+### Test Dependencies
+
+| Dependency                       | License                           |
+| -------------------------------- | --------------------------------- |
+| [JUnit Jupiter (Aggregator)][28] | [Eclipse Public License v2.0][29] |
 
 ### Plugin Dependencies
 
@@ -372,18 +378,18 @@
 [17]: https://github.com/exasol/error-reporting-java/blob/main/LICENSE
 [18]: https://www.eclipse.org/jgit/
 [19]: https://www.eclipse.org/org/documents/edl-v10.php
-[20]: https://junit.org/
-[21]: https://www.eclipse.org/legal/epl-v20.html
-[22]: http://hamcrest.org/JavaHamcrest/
-[23]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
-[24]: https://github.com/itsallcode/junit5-system-extensions
-[25]: https://www.jqno.nl/equalsverifier
-[26]: https://github.com/jparams/to-string-verifier
-[27]: http://www.opensource.org/licenses/mit-license.php
-[28]: https://github.com/mockito/mockito
-[29]: https://opensource.org/licenses/MIT
-[30]: http://www.slf4j.org
-[31]: https://opensource.org/license/mit
+[20]: https://github.com/itsallcode/junit5-system-extensions
+[21]: https://www.jqno.nl/equalsverifier
+[22]: https://github.com/jparams/to-string-verifier
+[23]: http://www.opensource.org/licenses/mit-license.php
+[24]: https://github.com/mockito/mockito
+[25]: https://opensource.org/licenses/MIT
+[26]: http://www.slf4j.org
+[27]: https://opensource.org/license/mit
+[28]: https://junit.org/
+[29]: https://www.eclipse.org/legal/epl-v20.html
+[30]: http://hamcrest.org/JavaHamcrest/
+[31]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
 [32]: https://maven.apache.org/plugins/maven-clean-plugin/
 [33]: https://maven.apache.org/plugins/maven-install-plugin/
 [34]: https://maven.apache.org/plugins/maven-resources-plugin/
