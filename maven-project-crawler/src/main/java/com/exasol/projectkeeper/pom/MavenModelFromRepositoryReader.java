@@ -16,6 +16,7 @@ import org.apache.maven.repository.RepositorySystem;
  */
 public class MavenModelFromRepositoryReader {
     private final ProjectBuilder mavenProjectBuilder;
+    @SuppressWarnings("deprecation") // Will be fixed in https://github.com/exasol/project-keeper/issues/718
     private final RepositorySystem repositorySystem;
     private final ProjectBuildingRequest projectBuildingRequest;
 
@@ -26,6 +27,7 @@ public class MavenModelFromRepositoryReader {
      * @param session             maven session
      * @param repositorySystem    maven repository system
      */
+    @SuppressWarnings("deprecation") // Will be fixed in https://github.com/exasol/project-keeper/issues/718
     public MavenModelFromRepositoryReader(final ProjectBuilder mavenProjectBuilder, final MavenSession session,
             final RepositorySystem repositorySystem) {
         this.mavenProjectBuilder = mavenProjectBuilder;

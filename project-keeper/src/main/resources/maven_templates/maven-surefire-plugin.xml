@@ -1,9 +1,12 @@
 <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-surefire-plugin</artifactId>
-    <version>3.5.4</version>
+    <version>3.5.5</version>
     <configuration>
         <argLine>${argLine}</argLine>
+        <environmentVariables>
+            <EXASOL_TELEMETRY_DISABLE>true</EXASOL_TELEMETRY_DISABLE>
+        </environmentVariables>
         <systemPropertyVariables>
             <!-- Set the highest log level for coverage testing, so that we have a chance to reach branches in the logging lambdas too. -->
             <java.util.logging.config.file>src/test/resources/logging.properties</java.util.logging.config.file>

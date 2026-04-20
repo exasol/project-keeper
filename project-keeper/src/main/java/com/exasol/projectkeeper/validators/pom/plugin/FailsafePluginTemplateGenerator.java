@@ -13,6 +13,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 /**
  * Validator for the maven-failsafe-plugin's configuration.
  */
+// [impl->dsn~disable-telemetry.integration-tests~1]
 public class FailsafePluginTemplateGenerator implements PluginTemplateGenerator {
     private static final String TEST_COVERAGE_CONFIGURATION = "configuration/systemPropertyVariables/test.coverage";
     private static final String TEMPLATE = "maven_templates/maven-failsafe-plugin.xml";

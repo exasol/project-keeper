@@ -98,7 +98,7 @@ build:
             id: setup-go
             uses: actions/setup-go@v6
             with:
-              go-version: "1.24"
+              go-version: "1.26"
               cache-dependency-path: .project-keeper.yml
         - action: INSERT_AFTER
           job: build-and-test

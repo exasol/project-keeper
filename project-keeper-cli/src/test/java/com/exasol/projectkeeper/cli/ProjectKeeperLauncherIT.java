@@ -63,55 +63,64 @@ class ProjectKeeperLauncherIT {
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void fixingJavaProjectSucceeds() {
-        prepareMavenProject();
-        assertProcessSucceeds("fix");
-        assertProcessSucceeds("verify");
+        try (MavenProjectFixture mavenProject = prepareMavenProject()) {
+            assertProcessSucceeds("fix");
+            assertProcessSucceeds("verify");
+        }
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void updateDependenciesJavaProjectSucceeds() {
-        prepareMavenProject();
-        assertProcessSucceeds("fix");
-        assertProcessSucceeds("update-dependencies");
+        try (MavenProjectFixture mavenProject = prepareMavenProject()) {
+            assertProcessSucceeds("fix");
+            assertProcessSucceeds("update-dependencies");
+        }
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void fixingGolangProjectSucceeds() {
-        prepareGolangProject();
-        assertProcessSucceeds("fix");
-        assertProcessSucceeds("verify");
+        try (GolangProjectFixture golangProject = prepareGolangProject()) {
+            assertProcessSucceeds("fix");
+            assertProcessSucceeds("verify");
+        }
     }
 
     @Test
+    @SuppressWarnings("try") // fixture used for setup and cleanup
     void fixingNpmProjectSucceeds() {
-        prepareNpmProject();
-        assertProcessSucceeds("fix");
-        assertProcessSucceeds("verify");
+        try (NpmProjectFixture npmProject = prepareNpmProject()) {
+            assertProcessSucceeds("fix");
+            assertProcessSucceeds("verify");
+        }
     }
 
-    private void prepareMavenProject() {
+    private MavenProjectFixture prepareMavenProject() {
         LOGGER.info("Preparing Maven project in " + this.projectDir);
         final MavenProjectFixture fixture = new MavenProjectFixture(this.projectDir);
         fixture.gitInit();
         fixture.writeConfig(fixture.getConfigWithoutModulesBuilder());
         fixture.writeDefaultPom();
+        return fixture;
     }
 
-    private void prepareGolangProject() {
+    private GolangProjectFixture prepareGolangProject() {
         LOGGER.info("Preparing Golang project in " + this.projectDir);
-        @SuppressWarnings("resource")
         final GolangProjectFixture fixture = new GolangProjectFixture(this.projectDir);
         fixture.gitInit();
         fixture.prepareProjectFiles(fixture.createDefaultConfig());
+        return fixture;
     }
 
-    private void prepareNpmProject() {
+    private NpmProjectFixture prepareNpmProject() {
         LOGGER.info("Preparing NPM project in " + this.projectDir);
-        @SuppressWarnings("resource")
         final NpmProjectFixture fixture = new NpmProjectFixture(this.projectDir);
         fixture.gitInit();
         fixture.prepareProjectFiles(fixture.createDefaultConfig());
+        return fixture;
     }
 
     private void assertProcessSucceeds(final String command) {
