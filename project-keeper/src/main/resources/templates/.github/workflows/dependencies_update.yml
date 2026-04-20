@@ -121,7 +121,7 @@ jobs:
         id: create-branch
         if: ${{ github.ref == 'refs/heads/main' }}
         run: |
-          branch_name="dependency-update/$(date "+%Y%m%d%H%M%S")"
+          branch_name="dependency-update/$(date "+%Y-%m-%d_%H-%M-%S")"
           echo "Creating branch $branch_name"
           git checkout -b "$branch_name"
 
