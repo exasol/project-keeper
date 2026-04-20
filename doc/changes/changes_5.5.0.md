@@ -30,6 +30,9 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
+* Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.2` to `10.0.0`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
 
 ### Project Keeper Core
 
@@ -52,6 +55,10 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
+* Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.2` to `10.0.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.4` to `3.5.5`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
 
 ### Project Keeper Command Line Interface
 
@@ -67,6 +74,10 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
+* Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.2` to `10.0.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.4` to `3.5.5`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
 
 ### Project Keeper Maven Plugin
 
@@ -82,6 +93,10 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
+* Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.2` to `10.0.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.4` to `3.5.5`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
 
 ### Project Keeper Java Project Crawler
 
@@ -100,6 +115,10 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
+* Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.2` to `10.0.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.4` to `3.5.5`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
 
 ### Project Keeper Shared Test Setup
 
@@ -111,3 +130,6 @@ Code name:
 #### Plugin Dependency Updates
 
 * Updated `com.exasol:error-code-crawler-maven-plugin:2.0.6` to `2.0.7`
+* Updated `io.github.git-commit-id:git-commit-id-maven-plugin:9.0.2` to `10.0.0`
+* Updated `org.apache.maven.plugins:maven-resources-plugin:3.4.0` to `3.5.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.4` to `3.5.5`
