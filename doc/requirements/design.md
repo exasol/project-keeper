@@ -144,7 +144,7 @@ PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Exec 
 
 Covers:
 * `req~disable-telemetry~1`
-Needs: impl
+Needs: impl, utest
 
 ### Dependency Changes Section in changes_x.x.x.md File Validator
 
