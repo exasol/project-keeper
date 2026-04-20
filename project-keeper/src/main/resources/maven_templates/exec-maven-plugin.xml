@@ -1,0 +1,10 @@
+<plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>3.6.3</version>
+    <configuration>
+        <environmentVariables>
+            <EXASOL_TELEMETRY_DISABLE>true</EXASOL_TELEMETRY_DISABLE>
+        </environmentVariables>
+    </configuration>
+</plugin>

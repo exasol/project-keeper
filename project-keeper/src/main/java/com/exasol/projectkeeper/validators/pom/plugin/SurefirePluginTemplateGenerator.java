@@ -1,16 +1,18 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
-import org.w3c.dom.Node;
+import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
 
 import java.util.Collection;
 import java.util.Optional;
 
-import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
+import org.w3c.dom.Node;
+
+import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 
 /**
  * Validator for the maven-surefire-plugin's configuration.
  */
+// [impl->dsn~disable-telemetry.unit-tests~1]
 public class SurefirePluginTemplateGenerator implements PluginTemplateGenerator {
 
     private static final String TEMPLATE = "maven_templates/maven-surefire-plugin.xml";

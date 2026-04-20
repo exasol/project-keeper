@@ -125,7 +125,8 @@ Another problem was, that in multi maven module projects PK enforced the same pl
 
 PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Surefire plugin.
 
-Covers: `req~disable-telemetry~1`
+Covers:
+* `req~disable-telemetry~1`
 Needs: impl, utest
 
 #### Disable Telemetry When Running Integration Tests
@@ -133,14 +134,16 @@ Needs: impl, utest
 
 PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Failsafe plugin.
 
-Covers: `req~disable-telemetry~1`
+Covers:
+* `req~disable-telemetry~1`
 Needs: impl, itest
 
 #### Disable Telemetry When Executing Other Processes
 `dsn~disable-telemetry.execute-processes~1`
 PK sets environment variable `EXASOL_TELEMETRY_DISABLE=true` for the Maven Exec plugin.
 
-Covers: `req~disable-telemetry~1`
+Covers:
+* `req~disable-telemetry~1`
 Needs: impl
 
 ### Dependency Changes Section in changes_x.x.x.md File Validator
