@@ -1,6 +1,6 @@
-# Project Keeper 5.5.0, released 2026-04-20
+# Project Keeper 5.5.0, released 2026-04-22
 
-Code name:
+Code name: Disable Telemetry for Tests
 
 ## Summary
 
