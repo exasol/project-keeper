@@ -1,12 +1,16 @@
-# Project Keeper 5.5.1, released 2026-??-??
+# Project Keeper 5.5.1, released 2026-04-28
 
-Code name:
+Code name: Fix plugin execution order
 
 ## Summary
 
-## Features
+Fixed the generated Maven plugin configuration so the Exec Maven Plugin is managed without affecting plugin execution order.
 
-* ISSUE_NUMBER: description
+The exec plugin and other plugins added only for version pinning are now moved to the `pluginManagement` element in the generated parent pom.
+
+## Bugfixes
+
+* #723: Fixed plugin execution order
 
 ## Dependency Updates
 
