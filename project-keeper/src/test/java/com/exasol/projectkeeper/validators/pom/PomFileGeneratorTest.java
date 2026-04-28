@@ -39,6 +39,10 @@ class PomFileGeneratorTest {
         return pom.getBuild().getPlugins().stream().map(Plugin::getArtifactId).toList();
     }
 
+    private List<String> getPluginManagementPluginNames(final Model pom) {
+        return pom.getBuild().getPluginManagement().getPlugins().stream().map(Plugin::getArtifactId).toList();
+    }
+
     private List<String> getDependencyNames(final Model pom) {
         return pom.getDependencies().stream().map(Dependency::getArtifactId).toList();
     }
@@ -48,6 +52,7 @@ class PomFileGeneratorTest {
     void testGenerateWithDefaultModule() {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
         final List<String> pluginNames = getPluginNames(pom);
+        final List<String> pluginManagementPluginNames = getPluginManagementPluginNames(pom);
         final License license = pom.getLicenses().get(0);
         assertAll(//
                 () -> assertThat(pom.getGroupId(), equalTo("com.example")),
@@ -66,16 +71,16 @@ class PomFileGeneratorTest {
                         equalTo("https://github.com/exasol/" + TEST_REPO_NAME + "/blob/main/LICENSE")),
                 () -> assertThat(license.getName(), equalTo("My License")),
                 () -> assertThat(license.getDistribution(), equalTo("repo")),
+                () -> assertThat(pluginManagementPluginNames, containsInAnyOrder("maven-clean-plugin", "maven-install-plugin",
+                        "maven-resources-plugin", "maven-site-plugin",
+                        // [utest->dsn~disable-telemetry.execute-processes~1]
+                        "exec-maven-plugin")),
                 () -> assertThat(pluginNames,
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
                                 "flatten-maven-plugin", "ossindex-maven-plugin", "git-commit-id-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
                                 "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
-                                "maven-artifact-plugin",
-                                "maven-toolchains-plugin", "maven-clean-plugin", "maven-install-plugin",
-                                "maven-resources-plugin", "maven-site-plugin", "quality-summarizer-maven-plugin",
-                                // [utest->dsn~disable-telemetry.execute-processes~1]
-                                "exec-maven-plugin")));
+                                "maven-artifact-plugin", "maven-toolchains-plugin", "quality-summarizer-maven-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {

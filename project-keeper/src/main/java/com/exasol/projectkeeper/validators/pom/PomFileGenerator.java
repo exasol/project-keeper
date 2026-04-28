@@ -26,11 +26,6 @@ public class PomFileGenerator {
     /** Default Java version if none is specified in {@code pom.xml} property {@code java.version}. */
     public static final String DEFAULT_JAVA_VERSION = "11";
     private static final List<PluginTemplateGenerator> PLUGIN_GENERATORS = List.of(
-            // Pin version for the following plugins
-            new SimplePluginTemplateGenerator("maven_templates/maven-clean-plugin.xml", DEFAULT),
-            new SimplePluginTemplateGenerator("maven_templates/maven-install-plugin.xml", DEFAULT),
-            new SimplePluginTemplateGenerator("maven_templates/maven-resources-plugin.xml", DEFAULT),
-            new SimplePluginTemplateGenerator("maven_templates/maven-site-plugin.xml", DEFAULT),
             // Plugins with configuration
             new SimplePluginTemplateGenerator("maven_templates/sonar-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-toolchains-plugin.xml", DEFAULT),
@@ -42,8 +37,6 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/versions-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/duplicate-finder-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-artifact-plugin.xml", DEFAULT),
-            // [impl->dsn~disable-telemetry.execute-processes~1]
-            new SimplePluginTemplateGenerator("maven_templates/exec-maven-plugin.xml", DEFAULT),
             new SimplePluginTemplateGenerator("maven_templates/maven-assembly-plugin.xml", JAR_ARTIFACT),
             new SimplePluginTemplateGenerator("maven_templates/maven-jar-plugin-exclusion.xml", JAR_ARTIFACT),
             new SimplePluginTemplateGenerator("maven_templates/artifact-reference-checker-maven-plugin.xml",
@@ -62,6 +55,16 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/quality-summarizer-maven-plugin.xml", DEFAULT),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
             new SimplePluginTemplateGenerator("maven_templates/git-commit-id-maven-plugin.xml", DEFAULT));
+
+    private static final List<PluginTemplateGenerator> PLUGIN_MANAGEMENT_GENERATORS = List.of(
+            // Pin version for the following plugins
+            new SimplePluginTemplateGenerator("maven_templates/maven-clean-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-install-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-resources-plugin.xml", DEFAULT),
+            new SimplePluginTemplateGenerator("maven_templates/maven-site-plugin.xml", DEFAULT),
+            // [impl->dsn~disable-telemetry.execute-processes~1]
+            new SimplePluginTemplateGenerator("maven_templates/exec-maven-plugin.xml", DEFAULT));
+
     private static final String VERSION = "version";
     private static final String ARTIFACT_ID = "artifactId";
     private static final String GROUP_ID = "groupId";
@@ -198,7 +201,9 @@ public class PomFileGenerator {
     }
 
     private ElementBuilder build(final Collection<ProjectKeeperModule> enabledModules) {
-        return element("build").child(plugins(enabledModules));
+        return element("build")
+                .child(pluginManagement(enabledModules))
+                .child(plugins(enabledModules));
     }
 
     private ElementBuilder properties(final Collection<ProjectKeeperModule> enabledModules, final String repoName,
@@ -225,9 +230,17 @@ public class PomFileGenerator {
         return properties;
     }
 
+    private ElementBuilder pluginManagement(final Collection<ProjectKeeperModule> enabledModules) {
+        return element("pluginManagement").child(plugins(enabledModules, PLUGIN_MANAGEMENT_GENERATORS));
+    }
+
     private ElementBuilder plugins(final Collection<ProjectKeeperModule> enabledModules) {
+        return plugins(enabledModules, PLUGIN_GENERATORS);
+    }
+
+    private ElementBuilder plugins(final Collection<ProjectKeeperModule> enabledModules, final List<PluginTemplateGenerator> generators) {
         final ElementBuilder builder = element("plugins");
-        for (final PluginTemplateGenerator pluginGenerator : PLUGIN_GENERATORS) {
+        for (final PluginTemplateGenerator pluginGenerator : generators) {
             final Optional<Node> pluginTemplate = pluginGenerator.generateTemplate(enabledModules);
             pluginTemplate.ifPresent(template -> {
                 trimWhitespace(template);
