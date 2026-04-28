@@ -12,6 +12,10 @@
         <artifactId>project-keeper-core-generated-parent</artifactId>
         <version>${revision}</version>
     </parent>
+    <properties>
+        <!-- Bash is not available on Windows. -->
+        <skip.verify-exec-plugin-configuration>false</skip.verify-exec-plugin-configuration>
+    </properties>
     <dependencies>
         <dependency>
             <groupId>com.exasol</groupId>
@@ -65,7 +69,6 @@
             <artifactId>maven-project-version-getter</artifactId>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.xmlunit</groupId>
             <artifactId>xmlunit-matchers</artifactId>
@@ -131,6 +134,27 @@
                 </configuration>
             </plugin>
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>verify-exec-plugin-configuration</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <skip>${skip.verify-exec-plugin-configuration}</skip>
+                            <executable>bash</executable>
+                            <arguments>
+                                <argument>${project.basedir}/../scripts/verify_telemetry_env_var.sh</argument>
+                            </arguments>
+                            <useMavenLogger>false</useMavenLogger>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.basepom.maven</groupId>
                 <artifactId>duplicate-finder-maven-plugin</artifactId>
                 <configuration>
@@ -153,4 +177,17 @@
             </plugin>
         </plugins>
     </build>
+    <profiles>
+        <profile>
+            <id>skip-exec-plugin-configuration-verification-on-windows</id>
+            <activation>
+                <os>
+                    <family>Windows</family>
+                </os>
+            </activation>
+            <properties>
+                <skip.verify-exec-plugin-configuration>true</skip.verify-exec-plugin-configuration>
+            </properties>
+        </profile>
+    </profiles>
 </project>
