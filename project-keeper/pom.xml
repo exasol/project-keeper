@@ -142,9 +142,7 @@
                         <configuration>
                             <executable>bash</executable>
                             <arguments>
-                                <argument>${project.basedir}/../scripts/verify_env_var.sh</argument>
-                                <argument>EXASOL_TELEMETRY_DISABLE</argument>
-                                <argument>true</argument>
+                                <argument>${project.basedir}/../scripts/verify_telemetry_env_var.sh</argument>
                             </arguments>
                             <useMavenLogger>false</useMavenLogger>
                         </configuration>

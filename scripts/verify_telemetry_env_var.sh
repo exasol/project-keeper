@@ -8,18 +8,8 @@ set -o errexit
 set -o nounset
 set -o pipefail
 
-if [[ "$#" -ne 2 ]]; then
-  echo "Usage: $0 <ENV_VAR_NAME> <EXPECTED_VALUE>" >&2
-  exit 2
-fi
-
-readonly variable_name="$1"
-readonly expected_value="$2"
-
-if [[ ! "$variable_name" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
-  echo "ERROR: Invalid environment variable name '$variable_name'" >&2
-  exit 2
-fi
+readonly variable_name="EXASOL_TELEMETRY_DISABLE"
+readonly expected_value="true"
 
 if ! actual_value="$(printenv "$variable_name")"; then
   echo "ERROR: Environment variable '$variable_name' is not set" >&2
