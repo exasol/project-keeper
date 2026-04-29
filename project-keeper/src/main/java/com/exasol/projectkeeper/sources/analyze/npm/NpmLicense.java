@@ -16,7 +16,7 @@ record NpmLicense(String module, String version, String name, String url) {
     private static final Pattern PATTERN = Pattern.compile("^(.+)@([0-9]+(\\.[0-9]+)*+)$");
 
     static Map<String, List<NpmLicense>> from(final JsonObject json) {
-        return json.keySet().stream() //
+        return json.keySet().stream()
                 .collect(toMap(NpmLicense::moduleName, key -> NpmLicense.extract(key, json), NpmLicense::merge));
     }
 
@@ -49,8 +49,8 @@ record NpmLicense(String module, String version, String name, String url) {
         }
         final JsonValue value = o.get(key);
         if (value.getValueType() == JsonValue.ValueType.ARRAY) {
-            return value.asJsonArray().getValuesAs(JsonString.class).stream() //
-                    .map(JsonString::getString) //
+            return value.asJsonArray().getValuesAs(JsonString.class).stream()
+                    .map(JsonString::getString)
                     .toList();
         } else {
             return List.of(((JsonString) value).getString());
