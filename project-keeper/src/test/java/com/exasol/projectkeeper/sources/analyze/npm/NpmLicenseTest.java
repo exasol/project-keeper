@@ -82,4 +82,39 @@ class NpmLicenseTest {
                 () -> assertThat(result, aMapWithSize(1)),
                 () -> assertThat(result, hasEntry("pause-stream", List.of())));
     }
+
+    @Test
+    void convertLicensesWithoutLicenseKey() {
+        final var result = NpmLicense.from(
+                json("""
+                        {
+                            "pause-stream@0.0.11": {
+                              "repository": "https://github.com/isaacs/pause-stream"
+                            }
+                        }
+                        """));
+        assertAll(
+                () -> assertThat(result, aMapWithSize(1)),
+                () -> assertThat(result, hasEntry("pause-stream", List
+                        .of(new NpmLicense("pause-stream", "0.0.11", null,
+                                "https://github.com/isaacs/pause-stream")))));
+    }
+
+    @Test
+    void convertLicensesWithUnsupportedVersionFormat() {
+        final var result = NpmLicense.from(
+                json("""
+                        {
+                            "pause-stream@0.0.11-beta.1": {
+                              "licenses": "MIT",
+                              "repository": "https://github.com/isaacs/pause-stream"
+                            }
+                        }
+                        """));
+        assertAll(
+                () -> assertThat(result, aMapWithSize(1)),
+                () -> assertThat(result, hasEntry("pause-stream@0.0.11-beta.1", List
+                        .of(new NpmLicense("pause-stream@0.0.11-beta.1", null, "MIT",
+                                "https://github.com/isaacs/pause-stream")))));
+    }
 }
