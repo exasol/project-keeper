@@ -17,15 +17,17 @@ record NpmLicense(String module, String version, String name, String url) {
 
     static Map<String, List<NpmLicense>> from(final JsonObject json) {
         return json.keySet().stream()
-                .collect(toMap(NpmLicense::moduleName, key -> NpmLicense.extract(key, json), NpmLicense::merge));
+                .collect(toMap(NpmLicense::moduleName, key -> extract(key, json), NpmLicense::merge));
     }
 
     private static List<NpmLicense> extract(final String moduleAndVersion, final JsonObject licenseInfos) {
         final JsonObject o = licenseInfos.getJsonObject(moduleAndVersion);
         final String mainUrl = jString(o, "repository");
         final String[] p = split(moduleAndVersion);
+        final String module = p[0];
+        final String version = p[1];
         return jStringList(o, "licenses").stream()
-                .map(name -> new NpmLicense(p[0], p[1], name, mainUrl))
+                .map(name -> new NpmLicense(module, version, name, mainUrl))
                 .toList();
     }
 
