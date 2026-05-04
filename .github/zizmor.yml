@@ -10,3 +10,16 @@ rules:
       - project-keeper-verify.yml
       - test_on_windows.yml
       - test_linux_build_on_windows.yml
+  obfuscation:
+    ignore:
+      # Generated workflows
+      - ci-build.yml:40
+      - release.yml:85
+      - release.yml:99
+  secrets-inherit:
+    ignore:
+      # Required for passing slack webhooks
+      - ci-build.yml
+      - ci-build-db-version-matrix.yml
+      - dependencies_check.yml
+      - release.yml

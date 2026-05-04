@@ -110,7 +110,11 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            core.setFailed('Not running on main or release branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch starting with release/')
+            const ref = process.env.GITHUB_REF
+            core.setFailed(`Not running on main or release branch, github.ref is ${ref}. Please start this workflow only on main or a branch starting with release/`)
+        env: {
+          GITHUB_REF: '${{ github.ref }}'
+        }
       - name: Check CI build of this commit succeeded
         id: check-ci-build-status
         if: ${{ ! inputs.started-from-ci }}

@@ -62,7 +62,11 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            core.setFailed('Not running on a branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch')
+            const ref = process.env.GITHUB_REF
+            core.setFailed(`Not running on a branch, github.ref is ${ref}. Please start this workflow only on main or a branch`)
+        env: {
+          GITHUB_REF: '${{ github.ref }}'
+        }
       - name: Install Project Keeper
         id: install-project-keeper
         run: |
