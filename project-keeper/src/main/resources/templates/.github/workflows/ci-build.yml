@@ -182,7 +182,7 @@ jobs:
       contents: read # only needed for private or internal repos
       actions: read # only needed for private or internal repos
     concurrency:
-      group: ${{ github.workflow }}-next-java-${{ github.ref }}
+      group: ${{ github.workflow }}-github-actions-linter-${{ github.ref }}
       cancel-in-progress: true
     steps:
       - name: Checkout the repository

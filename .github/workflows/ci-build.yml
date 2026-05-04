@@ -201,7 +201,7 @@ jobs:
       actions: read
     }
     concurrency: {
-      group: '${{ github.workflow }}-next-java-${{ github.ref }}',
+      group: '${{ github.workflow }}-github-actions-linter-${{ github.ref }}',
       cancel-in-progress: true
     }
     steps:
