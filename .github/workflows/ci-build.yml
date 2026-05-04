@@ -215,7 +215,7 @@ jobs:
         id: lint-github-actions
         uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e
         with: {
-          advanced-security: true
+          advanced-security: false
         }
   build:
     needs: [
