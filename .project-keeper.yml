@@ -126,7 +126,10 @@ build:
           content:
             name: Run project-keeper itself
             id: build-pk-verify
-            run: mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify --projects .
+            run: |
+              mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify \
+                --projects . \
+                -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
         - action: INSERT_AFTER
           job: build-and-test
           stepId: build-pk-verify
