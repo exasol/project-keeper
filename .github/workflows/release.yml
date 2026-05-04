@@ -89,7 +89,6 @@ jobs:
           java-version: |-
             11
             17
-          cache: maven
           server-id: maven-central-portal
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
