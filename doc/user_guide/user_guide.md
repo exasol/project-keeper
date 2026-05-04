@@ -615,6 +615,7 @@ For GitHub Actions you can solve this by adding `fetch-depth: 0` to the checkout
   uses: actions/checkout@v6
   with:
     fetch-depth: 0
+    persist-credentials: false
 ```
 
 ---

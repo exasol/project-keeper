@@ -21,10 +21,11 @@ jobs:
       cancel-in-progress: true
     }
     steps:
-      - {
-        id: checkout,
+      - id: checkout
         uses: actions/checkout@v6
-      }
+        with: {
+          persist-credentials: false
+        }
       - id: configure-broken-links-checker
         name: Configure broken links checker
         run: |

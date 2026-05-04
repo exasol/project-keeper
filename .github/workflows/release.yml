@@ -77,7 +77,8 @@ jobs:
         id: checkout
         uses: actions/checkout@v6
         with: {
-          fetch-depth: 0
+          fetch-depth: 0,
+          persist-credentials: false
         }
       - name: Set up Maven Central Repository
         id: configure-maven-central-credentials
