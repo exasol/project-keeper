@@ -169,10 +169,35 @@ jobs:
           OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
           OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
 
+
+  github-actions-linter:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
+    permissions:
+      security-events: write # needed for advanced security
+      contents: read # only needed for private or internal repos
+      actions: read # only needed for private or internal repos
+    concurrency:
+      group: ${{ github.workflow }}-next-java-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout the repository
+        id: checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Lint GitHub actions with Zizmore
+        uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
+        with:
+          advanced-security: false
+
   build:
     needs:
       - build-and-test
       - next-java-compatibility
+      - github-actions-linter
     runs-on: ubuntu-latest
     defaults:
       run:
