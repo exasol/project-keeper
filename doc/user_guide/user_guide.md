@@ -582,7 +582,7 @@ Scheduled weekly, checks Markdown files for broken links.
 
 ### [`dependencies_check.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_check.yml)
 
-Scheduled daily, checks the Maven project for vulnerable dependencies, creates new issues using [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) and starts the [`dependencies_update.yml`](#dependencies_updateyml) workflow that updates dependencies.
+Scheduled weekly, checks the Maven project for vulnerable dependencies, creates new issues using [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) and starts the [`dependencies_update.yml`](#dependencies_updateyml) workflow that updates dependencies.
 
 ### [`dependencies_update.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml)
 
@@ -601,6 +601,8 @@ This workflow runs for each change of a Pull Request and whenever a Pull Request
 This workflow is triggered manually or by workflow [`ci-build.yml`](#ci-buildyml). It verifies that all preconditions for a release are met and performs the release.
 
 In order to send notifications, this workflow requires GitHub secret `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK`.
+
+### [``]()
 
 ## Troubleshooting
 
