@@ -153,7 +153,8 @@ Needs: impl, utest
 PK adds a dedicated job to GitHub workflow `ci-build.yml` that runs the Ossindex vulnerability scanner. All other jobs don't run the vulnerability scanner. When running the Maven build locally, Ossindex is executed by default.
 
 Rationale:
-* Running Ossindex only in one dedicated CI job reduces the number of required credits for the paid Sonatype plan.
+
+Running Ossindex only in one dedicated CI job reduces the number of required credits for the paid Sonatype plan.
 
 Covers:
 * `req~dependency-vulnerabilities~1`
