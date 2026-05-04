@@ -49,13 +49,11 @@ class FileTemplatesFactory {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
         } else {
             templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
+            templates.add(getLintGitHubActionsWorkflow());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
         }
-        // TODO: Only for non-maven projects
-        final FileTemplateFromResource e = getLintGitHubActionsWorkflow();
-        templates.add(e);
         return templates;
     }
 
