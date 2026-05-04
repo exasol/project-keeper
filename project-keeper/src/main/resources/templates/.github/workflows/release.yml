@@ -66,7 +66,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
-          persist-credentials: false
+          persist-credentials: true # Required for pushing tag for the release
       - name: Set up Maven Central Repository
         id: configure-maven-central-credentials
         if: ${{ $mavenCentralDeployment }}
