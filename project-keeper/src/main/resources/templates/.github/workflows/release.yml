@@ -76,7 +76,8 @@ jobs:
           java-version: |
             11
             17
-          # Do not enable caching to avoid cache poisoning: https://docs.zizmor.sh/audits/#cache-poisoning
+          # Do not enable caching for release build to avoid cache poisoning
+          # See https://docs.zizmor.sh/audits/#cache-poisoning
           server-id: maven-central-portal
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
