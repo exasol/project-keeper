@@ -378,21 +378,14 @@ build:
             id: maven-build
             run: |
               mvn -T 1C --batch-mode clean install verify \
+                  -DossindexSkip=true \
                   -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
                   -DtrimStackTrace=false
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
-              OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
-              OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
 ```
 
-**Note**: If you override workflow step `build-pk-verify` in `.project-keeper.yml` please ensure to pass the OSSIndex credentials as environment variables `OSSINDEX_USERNAME` and `OSSINDEX_API_TOKEN` like this:
-
-```yml
-            env:
-              OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
-              OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
-```
+**Note**: If you override workflow step `build-pk-verify` in `.project-keeper.yml` please ensure disable OssIndex via `-DossindexSkip=true' as it requires additional credentials. OssIndex already runs in a separate job.
 
 ## Maven Projects
 

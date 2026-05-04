@@ -147,6 +147,18 @@ Covers:
 * `req~disable-telemetry~1`
 Needs: impl, utest
 
+### Ossindex
+`dsn~dependency-vulnerabilities~1`
+
+PK adds a dedicated job to GitHub workflow `ci-build.yml` that runs the Ossindex vulnerability scanner. All other jobs don't run the vulnerability scanner. When running the Maven build locally, Ossindex is executed by default.
+
+Rationale:
+* Running Ossindex only in one dedicated CI job reduces the number of required credits for the paid Sonatype plan.
+
+Covers:
+* `req~dependency-vulnerabilities~1`
+Needs: impl, utest
+
 ### Dependency Changes Section in changes_x.x.x.md File Validator
 
 `dsn~dependency-section-in-changes_x.x.x.md-file-validator~1`

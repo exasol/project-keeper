@@ -215,8 +215,14 @@ public class PomFileGenerator {
                 .child("project.build.outputTimestamp", "${git.commit.time}")
                 .nullableChild(javaVersion == null ? null : element("java.version").text(javaVersion))
                 .child("sonar.organization", "exasol")
-                .child("sonar.host.url", "https://sonarcloud.io")
-                .nullableChild(hasParentPom ? null : element("test.excludeTags").text(""));
+                .child("sonar.host.url", "https://sonarcloud.io");
+
+        if (!hasParentPom) {
+            properties.child(element("test.excludeTags").text(""))
+                    // [impl->dsn~dependency-vulnerabilities~1]
+                    .child(element("ossindexSkip").text("false"));
+        }
+
         if (enabledModules.contains(MAVEN_CENTRAL)) {
             properties
                     .child(element("gpg.skip").text("true"))

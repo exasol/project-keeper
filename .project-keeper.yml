@@ -115,12 +115,11 @@ build:
             id: maven-build
             run: |
               mvn -T 1C --batch-mode clean install verify \
+                  -DossindexSkip=true \
                   -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
                   -DtrimStackTrace=false
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
-              OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }},
-              OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
         - action: INSERT_AFTER
           job: build-and-test
           stepId: sonar-analysis
@@ -148,7 +147,7 @@ build:
             run: |
               mvn --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
     # [itest->dsn~customize-build-process.dependency-check~0]
@@ -164,7 +163,7 @@ build:
             run: |
               mvn --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
     # [itest->dsn~customize-build-process.dependency-update~0]
@@ -179,7 +178,7 @@ build:
             run: |
               mvn --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
     # [itest->dsn~customize-build-process.release~0]
@@ -194,5 +193,5 @@ build:
             run: |
               mvn --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+                  -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true

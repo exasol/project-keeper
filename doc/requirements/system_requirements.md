@@ -68,6 +68,18 @@ Covers:
 
 Needs: dsn
 
+##### Scan Dependencies for Vulnerabilities
+
+`req~dependency-vulnerabilities~1`
+
+PK must add a scanner to the Maven build that verifies, that no dependency contains a vulnerability.
+
+Covers:
+
+* `req~verify-pom-file~1`
+
+Needs: dsn
+
 ##### Verify Maven Dependencies
 
 `req~verify-maven-dependencies~1`
