@@ -156,6 +156,7 @@ jobs:
         id: build-next-java
         run: |
           mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=$nextJavaVersion \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DossindexSkip=true \
 
 
@@ -191,7 +192,8 @@ jobs:
         run: |
           mvn --batch-mode test-compile \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
-              org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate
+              org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
         env:
           OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
           OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
