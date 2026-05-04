@@ -69,7 +69,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
     private void assertLintGitHubActionsWorkflow() throws IOException {
         final String workflowFile = Files
                 .readString(this.projectDir.resolve(".github/workflows/lint-github-actions.yml"));
-        assertThat(workflowFile, containsString("zizmorcore/zizmor-action@"));
+        assertThat(workflowFile, containsString("uses: zizmorcore/zizmor-action@"));
     }
 
     @Test

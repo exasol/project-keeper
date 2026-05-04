@@ -54,9 +54,15 @@ class FileTemplatesFactory {
                     .mitigation("Please create the required actions on your own.").toString());
         }
         // TODO: Only for non-maven projects
-        // [impl->dsn~non-maven-lint-github-actions~1]
-        templates.add(new FileTemplateFromResource("non_maven_templates", ".github/workflows/lint-github-actions.yml", REQUIRE_EXACT));
+        final FileTemplateFromResource e = getLintGitHubActionsWorkflow();
+        templates.add(e);
         return templates;
+    }
+
+    // [impl->dsn~non-maven-lint-github-actions~1]
+    private FileTemplateFromResource getLintGitHubActionsWorkflow() {
+        final String lintActionPath = ".github/workflows/lint-github-actions.yml";
+        return new FileTemplateFromResource("non_maven_templates/" + lintActionPath, lintActionPath, REQUIRE_EXACT);
     }
 
     private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {
