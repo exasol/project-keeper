@@ -53,6 +53,9 @@ class FileTemplatesFactory {
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
         }
+        // TODO: Only for non-maven projects
+        // [impl->dsn~non-maven-lint-github-actions~1]
+        templates.add(new FileTemplateFromResource("non_maven_templates", ".github/workflows/lint-github-actions.yml", REQUIRE_EXACT));
         return templates;
     }
 

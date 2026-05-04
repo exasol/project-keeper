@@ -189,7 +189,7 @@ jobs:
           OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
           OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
         }
-  github-actions-linter:
+  lint-github-actions:
     runs-on: ubuntu-latest
     defaults:
       run: {
@@ -212,15 +212,16 @@ jobs:
           persist-credentials: false
         }
       - name: Lint GitHub actions with Zizmore
+        id: lint-github-actions
         uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e
         with: {
-          advanced-security: false
+          advanced-security: true
         }
   build:
     needs: [
       build-and-test,
       next-java-compatibility,
-      github-actions-linter
+      lint-github-actions
     ]
     runs-on: ubuntu-latest
     defaults:

@@ -38,6 +38,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
         assertVerifySucceeds();
         assertGeneratedDependencyFiles();
         assertGeneratedVerifyWorkflow();
+        assertLintGitHubActionsWorkflow();
     }
 
     // [itest -> dsn~golang-project-version~1]
@@ -62,6 +63,13 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
         final String shellScript = Files.readString(this.projectDir.resolve(".github/workflows/project-keeper.sh"));
         assertThat(workflowFile, containsString("run: ./.github/workflows/project-keeper.sh"));
         assertThat(shellScript, containsString("readonly version=\"" + currentVersion + "\""));
+    }
+
+    // [otest->dsn~non-maven-lint-github-actions~1]
+    private void assertLintGitHubActionsWorkflow() throws IOException {
+        final String workflowFile = Files
+                .readString(this.projectDir.resolve(".github/workflows/lint-github-actions.yml"));
+        assertThat(workflowFile, containsString("zizmorcore/zizmor-action@"));
     }
 
     @Test

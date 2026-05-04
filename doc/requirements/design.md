@@ -368,6 +368,22 @@ Covers:
 
 Needs: impl, itest
 
+## Non-Maven GitHub Workflow Linting
+`dsn~non-maven-lint-github-actions~1`
+
+For projects that don't contain a Maven module in the root folder, PK generates a workflow that runs a GitHub workflow linter.
+
+Rationale:
+
+* PK already generates job `lint-github-actions` in `ci-build.yml` for Maven projects.
+* Non-Maven projects also need a linter for GitHub actions workflows.
+
+Covers:
+
+* [`feat~non-mvn-integration~1`](system_requirements.md#integration-for-non-maven-projects)
+
+Needs: impl, itest
+
 ## Configuration
 
 ### Modules
