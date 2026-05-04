@@ -65,7 +65,7 @@ class ProjectKeeperGolangIT extends ProjectKeeperAbstractIT {
         assertThat(shellScript, containsString("readonly version=\"" + currentVersion + "\""));
     }
 
-    // [otest->dsn~non-maven-lint-github-actions~1]
+    // [itest->dsn~non-maven-lint-github-actions~1]
     private void assertLintGitHubActionsWorkflow() throws IOException {
         final String workflowFile = Files
                 .readString(this.projectDir.resolve(".github/workflows/lint-github-actions.yml"));
