@@ -2,7 +2,7 @@ name: Report Security Issues
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 2 * * *"
+    - cron: "42 22 * * 0"
 
 jobs:
   report_security_issues:

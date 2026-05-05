@@ -60,7 +60,7 @@ class CiBuildWorkflowGeneratorTest {
                         .builder().jobId("build-and-test").type(Type.INSERT_AFTER).stepId("sonar-analysis")
                         .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step"))).build())
                         .build())))
-                .getJob("build-and-test");
+                                .getJob("build-and-test");
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
         assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
                 () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
@@ -77,7 +77,7 @@ class CiBuildWorkflowGeneratorTest {
                         .builder().jobId("matrix-build").type(Type.INSERT_AFTER).stepId("sonar-analysis")
                         .step(WorkflowStep.createStep(Map.of("id", "inserted-step", "name", "Inserted Step"))).build())
                         .build())))
-                .getJob("matrix-build");
+                                .getJob("matrix-build");
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
         assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
                 () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
@@ -141,7 +141,7 @@ class CiBuildWorkflowGeneratorTest {
     void ciBuildCustomEnvironment() {
         final Job job = ciBuildContent(BuildOptions.builder()
                 .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml").environment("aws").build())))
-                .getJob("build-and-test");
+                        .getJob("build-and-test");
         assertThat(job.getEnvironment(), equalTo("aws"));
     }
 
@@ -164,7 +164,7 @@ class CiBuildWorkflowGeneratorTest {
                                         .add("other", AccessLevel.WRITE).build())
                                 .build()))
                         .build())))
-                .getJob("build-and-test");
+                                .getJob("build-and-test");
         assertAll(
                 () -> assertThat(job.getPermissions(), aMapWithSize(2)),
                 () -> assertThat(job.getPermissions(), hasEntry("custom", "none")),
@@ -293,7 +293,7 @@ class CiBuildWorkflowGeneratorTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ciBuildContent(config));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-211: GitHub Workflow does not have a job with ID 'missing'. Choose one of ['build-and-test', 'next-java-compatibility', 'build', 'start_release']."));
+                "E-PK-CORE-211: GitHub Workflow does not have a job with ID 'missing'. Choose one of ['build-and-test', 'next-java-compatibility', 'ossindex', 'build', 'start_release']."));
     }
 
     // [utest->dsn~customize-build-process.remove-job~0]
@@ -303,9 +303,9 @@ class CiBuildWorkflowGeneratorTest {
                 .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
                         .removeJobs(List.of("next-java-compatibility"))
                         .build())));
-        assertAll(() -> assertThat(workflow.getJobs(), hasSize(3)),
+        assertAll(() -> assertThat(workflow.getJobs(), hasSize(4)),
                 () -> assertThat(workflow.hasJob("next-java-compatibility"), is(false)),
-                () -> assertThat(workflow.getJob("build").getNeeds(), contains("build-and-test")));
+                () -> assertThat(workflow.getJob("build").getNeeds(), contains("build-and-test", "ossindex")));
     }
 
     // [utest->dsn~customize-build-process.remove-job~0]
@@ -328,7 +328,7 @@ class CiBuildWorkflowGeneratorTest {
                         .addStep(StepCustomization.builder().jobId("build-and-test").type(Type.REPLACE)
                                 .stepId("setup-java").step(WorkflowStep.createStep(setupJavaStep)).build())
                         .build())))
-                .getJob("build-and-test");
+                                .getJob("build-and-test");
         final String customJavaVersion = (String) job.getStep("setup-java").getWith().get("java-version");
         assertThat(customJavaVersion, equalTo("custom-version"));
     }
@@ -373,7 +373,7 @@ class CiBuildWorkflowGeneratorTest {
     void projectKeeperVerifyWorkflowWithoutCustomization(final boolean hasNpmModule) {
         final Job job = parse(
                 testee(BuildOptions.builder().build()).createProjectKeeperVerifyWorkflow(hasNpmModule).getContent())
-                .getJob("project-keeper-verify");
+                        .getJob("project-keeper-verify");
         assertAll(
                 () -> assertThat(job.getStep("setup-node").getIfCondition(),
                         equalTo("${{ %s }}".formatted(hasNpmModule))),
@@ -391,8 +391,8 @@ class CiBuildWorkflowGeneratorTest {
                                         .type(Type.REPLACE).step(WorkflowStep.createStep(setupJavaStep)).build())
                                 .build()))
                         .build())
-                        .createProjectKeeperVerifyWorkflow(false).getContent())
-                .getJob("project-keeper-verify");
+                                .createProjectKeeperVerifyWorkflow(false).getContent())
+                                        .getJob("project-keeper-verify");
         assertThat(job.getStep("setup-java").getWith().get("java-version"), equalTo("custom-version"));
     }
 

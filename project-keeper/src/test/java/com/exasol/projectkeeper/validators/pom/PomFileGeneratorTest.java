@@ -133,6 +133,19 @@ class PomFileGeneratorTest {
         assertThat(pom.getProperties().get("test.excludeTags"), nullValue());
     }
 
+    // [utest->dsn~dependency-vulnerabilities~1]
+    @Test
+    void testAddOssindexSkipPropertyForRootPom() {
+        final Model pom = runGeneration(emptyList(), null);
+        assertThat(pom.getProperties().get("ossindexSkip"), equalTo("false"));
+    }
+
+    @Test
+    void testOmitOssindexSkipPropertyForNonRootPom() {
+        final Model pom = runGeneration(emptyList(), new ParentPomRef("group", "parent-artifact", "version", "path"));
+        assertThat(pom.getProperties().get("ossindexSkip"), nullValue());
+    }
+
     @Test
     void testAddPropertiesForMavenCentralDeployment() {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.MAVEN_CENTRAL), null);

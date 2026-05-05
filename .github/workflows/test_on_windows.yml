@@ -49,11 +49,13 @@ jobs:
       - name: Install Go tools
         run: go install github.com/google/go-licenses/v2@v2.0.1
       - name: Build and install
-        run: mvn --batch-mode -T 1C -Dossindex.skip=true -DtrimStackTrace=false clean install
+        run: mvn --batch-mode -T 1C -DossindexSkip=true -DtrimStackTrace=false clean install
       - name: Run project-keeper itself
         id: build-pk-verify
-        run: mvn --batch-mode -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
-
+        run: |
+          mvn --batch-mode -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify \
+              --projects . \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
       - name: Verify Release Artifacts
         run: |
           print_message() {
