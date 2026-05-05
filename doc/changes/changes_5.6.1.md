@@ -1,12 +1,14 @@
-# Project Keeper 5.6.1, released 2026-??-??
+# Project Keeper 5.6.1, released 2026-05-05
 
-Code name:
+Code name: Relax exclusion for GitHub action linter
 
 ## Summary
 
-## Features
+This release avoids failing GitHub action linter rule `obfuscation` caused by constructions like `if: ${{ false }}` in `ci-build-db-version-matrix.yml`.
 
-* ISSUE_NUMBER: description
+## Bugfixes
+
+* #732: Relaxed exclusion for GitHub action linter
 
 ## Dependency Updates
 
