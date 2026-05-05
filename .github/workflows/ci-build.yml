@@ -257,6 +257,7 @@ jobs:
     needs: [
       build-and-test,
       next-java-compatibility,
+      ossindex,
       lint-github-actions
     ]
     runs-on: ubuntu-latest
