@@ -13,7 +13,7 @@ class ResourceReader {
     }
 
     private String readResource(final String resourceName) {
-        try (final InputStream resourceAsStream = getClass().getClassLoader().getResourceAsStream(resourceName)) {
+        try (final InputStream resourceAsStream = getResourceAsStream(resourceName)) {
             if (resourceAsStream == null) {
                 throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-213")
                         .message("Template not found for resource name {{resource name}}.", resourceName)
@@ -25,5 +25,10 @@ class ResourceReader {
                     .message("Failed to read template from resource {{resource name}}.", resourceName)
                     .ticketMitigation().toString(), exception);
         }
+    }
+
+    // Allow overriding in unit test to simulate failure
+    InputStream getResourceAsStream(final String resourceName) {
+        return getClass().getClassLoader().getResourceAsStream(resourceName);
     }
 }
