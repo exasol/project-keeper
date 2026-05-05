@@ -140,7 +140,7 @@ jobs:
         run: |
           mvn --batch-mode --threads 1C install \
               -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-              -Dossindex.skip=true -Dmaven.javadoc.skip=true \
+              -DossindexSkip=true -Dmaven.javadoc.skip=true \
               -Derror-code-crawler.skip=true -Dreproducible.skip=true
       - name: Verify release preconditions
         id: verify-release
@@ -153,7 +153,7 @@ jobs:
       - {
         name: Build project,
         id: build,
-        run: mvn --batch-mode -DskipTests -Dossindex.skip=true clean verify
+        run: mvn --batch-mode -DskipTests -DossindexSkip=true clean verify
       }
       - {
         name: List secret GPG keys,
@@ -166,7 +166,7 @@ jobs:
         if: ${{ true && (! inputs.skip-maven-central) }}
         run: |
           echo "#### Maven Central Release" >> "$GITHUB_STEP_SUMMARY"
-          mvn --batch-mode -Dgpg.skip=false -DskipTests -Dossindex.skip=true deploy \
+          mvn --batch-mode -Dgpg.skip=false -DskipTests -DossindexSkip=true deploy \
               -Dcentral-publishing.deploymentName="Auto release of repo ${{ github.repository }} using PK release.yml" \
               -Dcentral-publishing.autoPublish=${{ inputs.maven-central-auto-publish }}
           if [[ "${{ inputs.maven-central-auto-publish }}" == "true" ]]; then

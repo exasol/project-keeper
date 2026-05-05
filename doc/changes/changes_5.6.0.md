@@ -1,11 +1,19 @@
-# Project Keeper 5.6.0, released 2026-??-??
+# Project Keeper 5.6.0, released 2026-05-05
 
-Code name:
+Code name: Reduce Ossindex usage
 
 ## Summary
 
+This release reduces the number of consumed Ossindex credits by
+* running ossindex only in a dedicated job
+* skipping ossindex in all other jobs
+* reducing the frequency of the `dependencies_check.yml` workflow from daily to weekly
+
+The release also adds a linter workflow for GitHub actions.
+
 ## Features
 
+* #728: Reduce usage of Ossindex tokens
 * #727: Added linter for GitHub actions
 
 ## Dependency Updates

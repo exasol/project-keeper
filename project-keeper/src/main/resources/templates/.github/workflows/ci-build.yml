@@ -44,9 +44,6 @@ jobs:
             11
             17
           cache: "maven"
-          server-id: ossindex
-          server-username: OSSINDEX_USERNAME
-          server-password: OSSINDEX_API_TOKEN
       - name: Cache SonarCloud packages
         id: cache-sonar
         uses: actions/cache@v5
@@ -61,16 +58,15 @@ jobs:
         id: build-pk-verify
         run: |
           mvn --batch-mode clean verify \
+              -DossindexSkip=true \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
-        env:
-          OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
-          OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
       - name: Sonar analysis
         id: sonar-analysis
         if: ${{ env.SONAR_TOKEN != null }}
         run: |
           mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+              -DossindexSkip=true \
               -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false \
               -Dsonar.token=$SONAR_TOKEN
@@ -161,12 +157,48 @@ jobs:
           distribution: "temurin"
           java-version: $nextJavaVersion
           cache: "maven"
+      - name: Run tests and build with Maven $nextJavaVersion
+        id: build-next-java
+        run: |
+          mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=$nextJavaVersion \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              -DossindexSkip=true \
+
+
+  ossindex:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
+    permissions:
+      contents: read
+    concurrency:
+      group: ${{ github.workflow }}-ossindex-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout the repository
+        id: checkout
+        uses: actions/checkout@v6
+      - name: Set up JDKs
+        id: setup-java
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: |
+            11
+            17
+          cache: "maven"
           server-id: ossindex
           server-username: OSSINDEX_USERNAME
           server-password: OSSINDEX_API_TOKEN
-      - name: Run tests and build with Maven $nextJavaVersion
-        id: build-next-java
-        run: mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=$nextJavaVersion
+      - name: Run Ossindex
+        id: ossindex
+        # Note: test-compile required for multi-module projects to avoid dependency resolution problems
+        run: |
+          mvn --batch-mode test-compile \
+              org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
+              org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
+              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
         env:
           OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
           OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
@@ -200,6 +232,7 @@ jobs:
     needs:
       - build-and-test
       - next-java-compatibility
+      - ossindex
       - lint-github-actions
     runs-on: ubuntu-latest
     defaults:

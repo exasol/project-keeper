@@ -19,6 +19,7 @@
     </licenses>
     <properties>
         <revision>5.6.0</revision>
+        <ossindexSkip>false</ossindexSkip>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
         <maven.version>3.9.15</maven.version>

@@ -63,7 +63,7 @@ class ProjectKeeperMojoIT {
         LOG.info(() -> "Running test " + test.getDisplayName() + " using project " + this.projectDir + "...");
         verifier = mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
         // Ossindex requires credentials, skip it in tests
-        verifier.setSystemProperty("ossindex.skip", "true");
+        verifier.setSystemProperty("ossindexSkip", "true");
     }
 
     @AfterEach
