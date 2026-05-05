@@ -247,7 +247,7 @@ jobs:
       - name: Report failure Status to Slack channel
         id: report-failure-status-slack
         if: ${{ always() }}
-        uses: ravsamhq/notify-slack-action@v2
+        uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2
         with: {
           status: '${{ job.status }}',
           token: '${{ github.token }}',
@@ -261,7 +261,7 @@ jobs:
       - name: Report new release to Slack channel
         id: report-new-release-slack
         if: ${{ steps.create-github-release.outputs.release-url }}
-        uses: ravsamhq/notify-slack-action@v2
+        uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2
         with: {
           status: '${{ job.status }}',
           token: '${{ github.token }}',
