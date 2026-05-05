@@ -608,13 +608,15 @@ This workflow is added only for non-Maven projects. It runs a linter for GitHub 
 
 ## Linting GitHub Action Workflows
 
-PK uses [zizmor](https://zizmor.sh/) for finding potential issues with GitHub Action workflows. To debug issues with the linter, you need to [install it locally](https://docs.zizmor.sh/installation/) and run it in the project root dir with
+PK uses [zizmor](https://zizmor.sh/) for finding potential issues with GitHub Action workflows. PK generates config file `.github/zizmor.yml` with default rule exclusions.
+
+To debug issues with the linter, [install it locally](https://docs.zizmor.sh/installation/) and run it in the project root dir with
 
 ```sh
 zizmor .
 ```
 
-If you need to add custom linter exclusions, create file `.github/zizmor.yml`. See the [zizmore documentation](https://docs.zizmor.sh/configuration/#settings) for details about the configuration.
+If you need to add custom linter exclusions, update the generated file `.github/zizmor.yml` and add an exclusion to `.project-keeper.yml`. See the [zizmore documentation](https://docs.zizmor.sh/configuration/#settings) for details about the configuration.
 
 ## Troubleshooting
 

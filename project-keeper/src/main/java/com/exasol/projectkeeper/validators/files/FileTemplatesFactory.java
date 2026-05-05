@@ -45,6 +45,7 @@ class FileTemplatesFactory {
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
                 .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
+        templates.add(new FileTemplateFromResource(".github/zizmor.yml", REQUIRE_EXACT));
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
         } else {
