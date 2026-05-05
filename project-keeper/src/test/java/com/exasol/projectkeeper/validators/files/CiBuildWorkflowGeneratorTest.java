@@ -293,7 +293,7 @@ class CiBuildWorkflowGeneratorTest {
         final IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> ciBuildContent(config));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-211: GitHub Workflow does not have a job with ID 'missing'. Choose one of ['build-and-test', 'next-java-compatibility', 'ossindex', 'build', 'start_release']."));
+                "E-PK-CORE-211: GitHub Workflow does not have a job with ID 'missing'. Choose one of ['build-and-test', 'next-java-compatibility', 'ossindex', 'lint-github-actions', 'build', 'start_release']."));
     }
 
     // [utest->dsn~customize-build-process.remove-job~0]
@@ -303,9 +303,9 @@ class CiBuildWorkflowGeneratorTest {
                 .workflows(List.of(CustomWorkflow.builder().workflowName("ci-build.yml")
                         .removeJobs(List.of("next-java-compatibility"))
                         .build())));
-        assertAll(() -> assertThat(workflow.getJobs(), hasSize(4)),
+        assertAll(() -> assertThat(workflow.getJobs(), hasSize(5)),
                 () -> assertThat(workflow.hasJob("next-java-compatibility"), is(false)),
-                () -> assertThat(workflow.getJob("build").getNeeds(), contains("build-and-test", "ossindex")));
+                () -> assertThat(workflow.getJob("build").getNeeds(), contains("build-and-test", "ossindex", "lint-github-actions")));
     }
 
     // [utest->dsn~customize-build-process.remove-job~0]

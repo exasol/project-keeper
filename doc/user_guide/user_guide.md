@@ -595,6 +595,22 @@ This workflow is triggered manually or by workflow [`ci-build.yml`](#ci-buildyml
 
 In order to send notifications, this workflow requires GitHub secret `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK`.
 
+### [`lint-github-actions.yml`](../../project-keeper/src/main/resources/non_maven_templates/.github/workflows/lint-github-actions.yml)
+
+This workflow is added only for non-Maven projects. It runs a linter for GitHub action workflows. For Maven projects, PK adds the linter to `ci-build.yml` as separate job `lint-github-actions`.
+
+## Linting GitHub Action Workflows
+
+PK uses [zizmor](https://zizmor.sh/) for finding potential issues with GitHub Action workflows. PK generates config file `.github/zizmor.yml` with default rule exclusions.
+
+To debug issues with the linter, [install it locally](https://docs.zizmor.sh/installation/) and run it in the project root dir with
+
+```sh
+zizmor .
+```
+
+If you need to add custom linter exclusions, update the generated file `.github/zizmor.yml` and add an exclusion to `.project-keeper.yml`. See the [zizmore documentation](https://docs.zizmor.sh/configuration/#settings) for details about the configuration.
+
 ## Troubleshooting
 
 **Problem:** Validation on CI fails but succeeds locally. In the CI PK wants to list all dependencies as `Added`.
@@ -608,6 +624,7 @@ For GitHub Actions you can solve this by adding `fetch-depth: 0` to the checkout
   uses: actions/checkout@v6
   with:
     fetch-depth: 0
+    persist-credentials: false
 ```
 
 ---

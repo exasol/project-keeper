@@ -34,6 +34,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v5
@@ -125,7 +126,7 @@ jobs:
                '{"pattern": "^https?://(www.)?eclipse.org"}' \
                '{"pattern": "^https?://projects.eclipse.org"}' \
                ']}' > ./target/broken_links_checker.json
-      - uses: tcort/github-action-markdown-link-check@v1
+      - uses: tcort/github-action-markdown-link-check@e7c7a18363c842693fadde5d41a3bd3573a7a225 # v1.1.2
         id: run-link-check
         with:
           use-quiet-mode: "yes"
@@ -148,6 +149,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Set up JDK $nextJavaVersion
         id: setup-java
         uses: actions/setup-java@v5
@@ -177,6 +179,8 @@ jobs:
       - name: Checkout the repository
         id: checkout
         uses: actions/checkout@v6
+        with:
+          persist-credentials: false
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v5
@@ -201,11 +205,37 @@ jobs:
           OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
           OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
 
+
+  lint-github-actions:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: "bash"
+    permissions:
+      security-events: write # needed for advanced security
+      contents: read # only needed for private or internal repos
+      actions: read # only needed for private or internal repos
+    concurrency:
+      group: ${{ github.workflow }}-github-actions-linter-${{ github.ref }}
+      cancel-in-progress: true
+    steps:
+      - name: Checkout the repository
+        id: checkout
+        uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+      - name: Lint GitHub actions with Zizmore
+        id: lint-github-actions
+        uses: zizmorcore/zizmor-action@b1d7e1fb5de872772f31590499237e7cce841e8e # v0.5.3
+        with:
+          advanced-security: false
+
   build:
     needs:
       - build-and-test
       - next-java-compatibility
       - ossindex
+      - lint-github-actions
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -221,6 +251,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: false
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v5

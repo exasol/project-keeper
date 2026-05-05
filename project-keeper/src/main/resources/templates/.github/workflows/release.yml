@@ -66,6 +66,7 @@ jobs:
         uses: actions/checkout@v6
         with:
           fetch-depth: 0
+          persist-credentials: true # Required for pushing tag for the release
       - name: Set up Maven Central Repository
         id: configure-maven-central-credentials
         if: ${{ $mavenCentralDeployment }}
@@ -75,7 +76,8 @@ jobs:
           java-version: |
             11
             17
-          cache: "maven"
+          # Do not enable caching for release build to avoid cache poisoning
+          # See https://docs.zizmor.sh/audits/#cache-poisoning
           server-id: maven-central-portal
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
@@ -100,7 +102,10 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            core.setFailed('Not running on main or release branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch starting with release/')
+            const ref = process.env.GITHUB_REF
+            core.setFailed(`Not running on main or release branch, github.ref is '${ref}'. Please start this workflow only on main or a branch starting with release/`)
+        env:
+          GITHUB_REF: ${{ github.ref }}
 
       # [impl->dsn~release-workflow.verify-ci-build-success~1]
       - name: Check CI build of this commit succeeded
@@ -232,7 +237,7 @@ jobs:
         id: report-failure-status-slack
         # Also run this step in case of failures
         if: ${{ always() }}
-        uses: ravsamhq/notify-slack-action@v2
+        uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2 # 2.5.0
         with:
           status: ${{ job.status }}
           token: ${{ github.token }}
@@ -245,7 +250,7 @@ jobs:
       - name: Report new release to Slack channel
         id: report-new-release-slack
         if: ${{ steps.create-github-release.outputs.release-url }}
-        uses: ravsamhq/notify-slack-action@v2
+        uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2 # 2.5.0
         with:
           status: ${{ job.status }}
           token: ${{ github.token }}

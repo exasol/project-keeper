@@ -37,6 +37,7 @@ class GitHubWorkflowIOTest {
                         uses: actions/checkout@v6
                         with:
                           fetch-depth: 0
+                          persist-credentials: false
                       - name: Set up JDKs
                         id: setup-jdks
                         uses: actions/setup-java@v5

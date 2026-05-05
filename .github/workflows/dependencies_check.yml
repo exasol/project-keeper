@@ -25,11 +25,12 @@ jobs:
       cancel-in-progress: true
     }
     steps:
-      - {
-        name: Checkout,
-        id: checkout,
+      - name: Checkout
+        id: checkout
         uses: actions/checkout@v6
-      }
+        with: {
+          persist-credentials: false
+        }
       - name: Set up JDKs
         id: setup-jdks
         uses: actions/setup-java@v5

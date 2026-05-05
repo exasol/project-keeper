@@ -45,15 +45,23 @@ class FileTemplatesFactory {
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
                 .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
+        templates.add(new FileTemplateFromResource(".github/zizmor.yml", REQUIRE_EXACT));
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
         } else {
             templates.addAll(getProjectKeeperVerifyWorkflowTemplates());
+            templates.add(getLintGitHubActionsWorkflow());
             this.logger.warn(ExaError.messageBuilder("W-PK-CORE-91")
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
         }
         return templates;
+    }
+
+    // [impl->dsn~non-maven-lint-github-actions~1]
+    private FileTemplateFromResource getLintGitHubActionsWorkflow() {
+        final String lintActionPath = ".github/workflows/lint-github-actions.yml";
+        return new FileTemplateFromResource("non_maven_templates/" + lintActionPath, lintActionPath, REQUIRE_EXACT);
     }
 
     private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {

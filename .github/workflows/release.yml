@@ -77,7 +77,8 @@ jobs:
         id: checkout
         uses: actions/checkout@v6
         with: {
-          fetch-depth: 0
+          fetch-depth: 0,
+          persist-credentials: true
         }
       - name: Set up Maven Central Repository
         id: configure-maven-central-credentials
@@ -88,7 +89,6 @@ jobs:
           java-version: |-
             11
             17
-          cache: maven
           server-id: maven-central-portal
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
@@ -110,7 +110,11 @@ jobs:
         uses: actions/github-script@v9
         with:
           script: |
-            core.setFailed('Not running on main or release branch, github.ref is ${{ github.ref }}. Please start this workflow only on main or a branch starting with release/')
+            const ref = process.env.GITHUB_REF
+            core.setFailed(`Not running on main or release branch, github.ref is '${ref}'. Please start this workflow only on main or a branch starting with release/`)
+        env: {
+          GITHUB_REF: '${{ github.ref }}'
+        }
       - name: Check CI build of this commit succeeded
         id: check-ci-build-status
         if: ${{ ! inputs.started-from-ci }}
@@ -243,7 +247,7 @@ jobs:
       - name: Report failure Status to Slack channel
         id: report-failure-status-slack
         if: ${{ always() }}
-        uses: ravsamhq/notify-slack-action@v2
+        uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2
         with: {
           status: '${{ job.status }}',
           token: '${{ github.token }}',
@@ -257,7 +261,7 @@ jobs:
       - name: Report new release to Slack channel
         id: report-new-release-slack
         if: ${{ steps.create-github-release.outputs.release-url }}
-        uses: ravsamhq/notify-slack-action@v2
+        uses: ravsamhq/notify-slack-action@be814b201e233b2dc673608aa46e5447c8ab13f2
         with: {
           status: '${{ job.status }}',
           token: '${{ github.token }}',
