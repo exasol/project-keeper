@@ -19,10 +19,9 @@ rules:
       - test_linux_build_on_windows.yml
   obfuscation:
     ignore:
-      # Generated workflows
-      - ci-build.yml:40
-      - release.yml:85
-      - release.yml:99
+      # Generated workflows use boolean conditions like ${{ false }}
+      - ci-build.yml
+      - release.yml
   secrets-inherit:
     ignore:
       # Required for passing slack webhooks
