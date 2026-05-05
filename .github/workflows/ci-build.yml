@@ -197,11 +197,12 @@ jobs:
       cancel-in-progress: true
     }
     steps:
-      - {
-        name: Checkout the repository,
-        id: checkout,
+      - name: Checkout the repository
+        id: checkout
         uses: actions/checkout@v6
-      }
+        with: {
+          persist-credentials: false
+        }
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v5
