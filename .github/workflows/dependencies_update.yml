@@ -63,7 +63,7 @@ jobs:
         with:
           script: |
             const ref = process.env.GITHUB_REF
-            core.setFailed(`Not running on a branch, github.ref is ${ref}. Please start this workflow only on main or a branch`)
+            core.setFailed(`Not running on a branch, github.ref is '${ref}'. Please start this workflow only on main or a branch`)
         env: {
           GITHUB_REF: '${{ github.ref }}'
         }

@@ -111,7 +111,7 @@ jobs:
         with:
           script: |
             const ref = process.env.GITHUB_REF
-            core.setFailed(`Not running on main or release branch, github.ref is ${ref}. Please start this workflow only on main or a branch starting with release/`)
+            core.setFailed(`Not running on main or release branch, github.ref is '${ref}'. Please start this workflow only on main or a branch starting with release/`)
         env: {
           GITHUB_REF: '${{ github.ref }}'
         }
