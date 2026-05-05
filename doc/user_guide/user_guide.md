@@ -575,7 +575,7 @@ Scheduled weekly, checks Markdown files for broken links.
 
 ### [`dependencies_check.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_check.yml)
 
-Scheduled daily, checks the Maven project for vulnerable dependencies, creates new issues using [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) and starts the [`dependencies_update.yml`](#dependencies_updateyml) workflow that updates dependencies.
+Scheduled weekly, checks the Maven project for vulnerable dependencies, creates new issues using [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) and starts the [`dependencies_update.yml`](#dependencies_updateyml) workflow that updates dependencies.
 
 ### [`dependencies_update.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml)
 
