@@ -10,6 +10,13 @@ Code name:
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.itsallcode:openfasttrace-maven-plugin:2.3.0` to `2.3.1`
+
 ### Project Keeper Shared Model Classes
 
 #### Compile Dependency Updates
@@ -22,6 +29,15 @@ Code name:
 * Updated `org.itsallcode:junit5-system-extensions:1.2.2` to `1.2.3`
 * Updated `org.junit.jupiter:junit-jupiter:6.0.3` to `6.1.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.17` to `2.0.18`
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
 
 ### Project Keeper Core
 
@@ -42,6 +58,16 @@ Code name:
 * Updated `org.slf4j:slf4j-jdk14:2.0.17` to `2.0.18`
 * Updated `org.xmlunit:xmlunit-matchers:2.11.0` to `2.12.0`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
@@ -59,6 +85,15 @@ Code name:
 * Updated `com.exasol:project-keeper-shared-test-setup:5.6.2` to `5.7.0`
 * Updated `org.junit.jupiter:junit-jupiter:6.0.3` to `6.1.0`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+
 ### Project Keeper Maven Plugin
 
 #### Compile Dependency Updates
@@ -71,6 +106,16 @@ Code name:
 * Updated `org.junit.jupiter:junit-jupiter:6.0.3` to `6.1.0`
 * Updated `org.slf4j:slf4j-jdk14:2.0.17` to `2.0.18`
 * Updated `org.xmlunit:xmlunit-matchers:2.11.0` to `2.12.0`
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
 
 ### Project Keeper Java Project Crawler
 
@@ -87,6 +132,16 @@ Code name:
 * Updated `org.slf4j:slf4j-jdk14:2.0.17` to `2.0.18`
 * Updated `org.xmlunit:xmlunit-matchers:2.11.0` to `2.12.0`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+
 ### Project Keeper Shared Test Setup
 
 #### Compile Dependency Updates
@@ -96,3 +151,11 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `org.junit.jupiter:junit-jupiter:6.0.3` to `6.1.0`
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
+* Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
