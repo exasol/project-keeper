@@ -20,7 +20,7 @@
 | Dependency                       | License                                                                                                        |
 | -------------------------------- | -------------------------------------------------------------------------------------------------------------- |
 | [Jakarta JSON Processing API][9] | [Eclipse Public License 2.0][10]; [GNU General Public License, version 2 with the GNU Classpath Exception][11] |
-| [JSON-B API][12]                 | [Eclipse Public License 2.0][10]; [GNU General Public License, version 2 with the GNU Classpath Exception][11] |
+| [Jakarta JSON Binding API][12]   | [Eclipse Public License 2.0][10]; [GNU General Public License, version 2 with the GNU Classpath Exception][11] |
 | [Yasson][13]                     | [Eclipse Public License v. 2.0][14]; [Eclipse Distribution License v. 1.0][15]                                 |
 | [error-reporting-java][16]       | [MIT License][17]                                                                                              |
 | [JGit - Core][18]                | [BSD-3-Clause][19]                                                                                             |
@@ -365,7 +365,7 @@
 [9]: https://github.com/eclipse-ee4j/jsonp
 [10]: https://projects.eclipse.org/license/epl-2.0
 [11]: https://projects.eclipse.org/license/secondary-gpl-2.0-cp
-[12]: https://jakartaee.github.io/jsonb-api
+[12]: https://projects.eclipse.org/projects/ee4j.jsonb/jakarta.json.bind-api
 [13]: https://projects.eclipse.org/projects/ee4j.yasson
 [14]: http://www.eclipse.org/legal/epl-v20.html
 [15]: http://www.eclipse.org/org/documents/edl-v10.php
@@ -417,7 +417,7 @@
 [61]: https://github.com/vdurmont/semver4j
 [62]: https://bitbucket.org/snakeyaml/snakeyaml
 [63]: https://bitbucket.org/snakeyaml/snakeyaml-engine
-[64]: https://maven.apache.org/ref/3.9.15/maven-model/
+[64]: https://maven.apache.org/ref/3.9.16/maven-model/
 [65]: https://www.jcabi.com/jcabi-github
 [66]: https://www.jcabi.com/LICENSE.txt
 [67]: https://github.com/exasol/maven-project-version-getter/
@@ -432,7 +432,7 @@
 [76]: https://github.com/exasol/artifact-reference-checker-maven-plugin/
 [77]: https://github.com/exasol/artifact-reference-checker-maven-plugin/blob/main/LICENSE
 [78]: https://maven.apache.org/plugin-tools/maven-plugin-annotations
-[79]: https://maven.apache.org/ref/3.9.15/maven-plugin-api/
-[80]: https://maven.apache.org/ref/3.9.15/maven-core/
+[79]: https://maven.apache.org/ref/3.9.16/maven-plugin-api/
+[80]: https://maven.apache.org/ref/3.9.16/maven-core/
 [81]: https://www.eclemma.org/jacoco/index.html
 [82]: https://maven.apache.org/plugin-tools/maven-plugin-plugin
