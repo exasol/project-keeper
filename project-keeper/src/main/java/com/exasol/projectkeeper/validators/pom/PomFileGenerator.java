@@ -183,10 +183,10 @@ public class PomFileGenerator {
     private ElementBuilder dependencies(final Collection<ProjectKeeperModule> enabledModules) {
         return element("dependencies") //
                 .nullableChild(enabledModules.contains(LOMBOK) //
-                        ? dependency("org.projectlombok", "lombok", "1.18.38", "provided", null)
+                        ? dependency("org.projectlombok", "lombok", "1.18.46", "provided", null)
                         : null) //
                 .nullableChild(enabledModules.contains(UDF_COVERAGE) //
-                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.14", "test", "runtime")
+                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.15", "test", "runtime")
                         : null);
     }
 

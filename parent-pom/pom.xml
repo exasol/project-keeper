@@ -18,15 +18,15 @@
         </license>
     </licenses>
     <properties>
-        <revision>5.6.2</revision>
+        <revision>5.7.0</revision>
         <ossindexSkip>false</ossindexSkip>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
-        <maven.version>3.9.15</maven.version>
+        <maven.version>3.9.16</maven.version>
         <minimum.maven.version>3.8.7</minimum.maven.version>
-        <xmlunit.version>2.11.0</xmlunit.version>
+        <xmlunit.version>2.12.0</xmlunit.version>
         <mockito.version>5.23.0</mockito.version>
-        <slf4j.version>2.0.17</slf4j.version>
+        <slf4j.version>2.0.18</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gpg.skip>true</gpg.skip>
@@ -65,18 +65,12 @@
             <dependency>
                 <groupId>jakarta.json.bind</groupId>
                 <artifactId>jakarta.json.bind-api</artifactId>
-                <version>3.0.1</version>
+                <version>3.0.2</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse</groupId>
                 <artifactId>yasson</artifactId>
                 <version>3.0.4</version>
-            </dependency>
-            <dependency>
-                <!-- Upgrade transitive dependency of org.eclipse:yasson to fix CVE-2023-4043 -->
-                <groupId>org.eclipse.parsson</groupId>
-                <artifactId>parsson</artifactId>
-                <version>1.1.7</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
@@ -103,7 +97,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <version>7.6.0.202603022253-r</version>
+                <version>7.7.0.202606012155-r</version>
             </dependency>
             <dependency>
                 <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -128,7 +122,7 @@
             <dependency>
                 <groupId>com.jcabi</groupId>
                 <artifactId>jcabi-github</artifactId>
-                <version>1.10.0</version>
+                <version>1.11.1</version>
                 <exclusions>
                     <exclusion>
                         <groupId>ch.qos.logback</groupId>
@@ -140,20 +134,7 @@
                     </exclusion>
                 </exclusions>
             </dependency>
-            <dependency>
-                <!-- Fix CVE-2014-3643 in transitive dependency of com.jcabi:jcabi-github -->
-                <groupId>com.sun.jersey</groupId>
-                <artifactId>jersey-client</artifactId>
-                <version>1.19.4</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <!-- Fix CVE-2025-48924 in transitive dependency of com.jcabi:jcabi-github -->
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>3.20.0</version>
-                <scope>runtime</scope>
-            </dependency>
+
             <!-- test -->
             <dependency>
                 <groupId>org.apache.maven</groupId>
@@ -170,7 +151,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>6.0.3</version>
+                <version>6.1.0</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -225,7 +206,7 @@
             <dependency>
                 <groupId>org.itsallcode</groupId>
                 <artifactId>junit5-system-extensions</artifactId>
-                <version>1.2.2</version>
+                <version>1.2.3</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -288,7 +269,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>3.6.2</version>
+                <version>3.6.3</version>
                 <executions>
                     <execution>
                         <id>enforce-maven</id>
