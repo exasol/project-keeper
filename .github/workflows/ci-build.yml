@@ -43,14 +43,14 @@ jobs:
           sudo rm -rf /usr/share/dotnet
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with: {
           fetch-depth: 0,
           persist-credentials: false
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.2.0
         with:
           distribution: temurin
           java-version: |-
@@ -164,14 +164,14 @@ jobs:
     steps:
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with: {
           fetch-depth: 0,
           persist-credentials: false
         }
       - name: Set up JDK 21
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.2.0
         with: {
           distribution: temurin,
           java-version: '21',
@@ -199,13 +199,13 @@ jobs:
     steps:
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with: {
           persist-credentials: false
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.2.0
         with:
           distribution: temurin
           java-version: |-
@@ -244,7 +244,7 @@ jobs:
     steps:
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with: {
           persist-credentials: false
         }
@@ -276,14 +276,14 @@ jobs:
     steps:
       - name: Checkout the repository
         id: checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v6.0.3
         with: {
           fetch-depth: 0,
           persist-credentials: false
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.2.0
         with:
           distribution: temurin
           java-version: |-
