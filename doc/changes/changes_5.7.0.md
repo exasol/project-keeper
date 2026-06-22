@@ -45,6 +45,7 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.7` to `2.1.0`
 * Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
@@ -74,6 +75,7 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.7` to `2.1.0`
 * Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
@@ -102,6 +104,7 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.7` to `2.1.0`
 * Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
@@ -125,6 +128,7 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.7` to `2.1.0`
 * Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
@@ -151,6 +155,7 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.7` to `2.1.0`
 * Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
@@ -172,6 +177,7 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.0.7` to `2.1.0`
 * Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
