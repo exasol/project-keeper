@@ -4,11 +4,15 @@ Code name:
 
 ## Summary
 
-This release removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
+This release deactivates the new JavaDoc option `--no-fonts` that is only supported with JDK >= 23. The release also specifies the new `--release` option for JavaDoc instead of `-source` and explicitly specifies `-locale en`.
+
+The release also removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
 
 ## Features
 
-* ISSUE_NUMBER: description
+## Bugfixes
+
+* #745: Fix javadoc error caused by unsupported `--no-fonts` option.
 
 ## Refactoring
 
