@@ -4,9 +4,15 @@ Code name:
 
 ## Summary
 
+This release replaces the old Java compiler flags `-source` and `-target` with `--release`. See the [maven plugin documentation](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html) for details.
+
 ## Features
 
 * ISSUE_NUMBER: description
+
+## Bugfixes
+
+* #738: Use compiler flag `--release` instead of `-source` and `-target`
 
 ## Dependency Updates
 
