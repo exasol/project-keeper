@@ -80,7 +80,7 @@ class PomFileGeneratorTest {
                                 "flatten-maven-plugin", "ossindex-maven-plugin", "git-commit-id-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
                                 "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
-                                "maven-artifact-plugin", "maven-toolchains-plugin", "quality-summarizer-maven-plugin")));
+                                "maven-artifact-plugin", "maven-toolchains-plugin")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {

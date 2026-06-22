@@ -51,8 +51,6 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),
             new FailsafePluginTemplateGenerator(),
             new JacocoPluginTemplateGenerator(),
-            // quality-summarizer-maven-plugin must come after Jacoco
-            new SimplePluginTemplateGenerator("maven_templates/quality-summarizer-maven-plugin.xml", DEFAULT),
             new ErrorCodeCrawlerPluginTemplateGenerator(),
             new SimplePluginTemplateGenerator("maven_templates/git-commit-id-maven-plugin.xml", DEFAULT));
 
