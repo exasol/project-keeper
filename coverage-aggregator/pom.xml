@@ -58,19 +58,6 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.exasol</groupId>
-                <artifactId>quality-summarizer-maven-plugin</artifactId>
-                <version>0.2.1</version>
-                <executions>
-                    <execution>
-                        <id>summarize-metrics</id>
-                        <goals>
-                            <goal>summarize</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
                 <version>3.6.3</version>

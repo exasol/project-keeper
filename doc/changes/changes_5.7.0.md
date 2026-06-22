@@ -6,9 +6,17 @@ Code name:
 
 This release replaces the old Java compiler flags `-source` and `-target` with `--release`. See the [maven plugin documentation](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html) for details.
 
+The release also removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
+
+## Features
+
 ## Bugfixes
 
 * #738: Use compiler flag `--release` instead of `-source` and `-target`
+
+## Refactoring
+
+* #741: Removed deprecated `quality-summarizer-maven-plugin`
 
 ## Dependency Updates
 
@@ -34,6 +42,7 @@ This release replaces the old Java compiler flags `-source` and `-target` with `
 
 #### Plugin Dependency Updates
 
+* Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
@@ -62,6 +71,7 @@ This release replaces the old Java compiler flags `-source` and `-target` with `
 
 #### Plugin Dependency Updates
 
+* Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
@@ -89,6 +99,7 @@ This release replaces the old Java compiler flags `-source` and `-target` with `
 
 #### Plugin Dependency Updates
 
+* Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
@@ -111,6 +122,7 @@ This release replaces the old Java compiler flags `-source` and `-target` with `
 
 #### Plugin Dependency Updates
 
+* Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
@@ -136,6 +148,7 @@ This release replaces the old Java compiler flags `-source` and `-target` with `
 
 #### Plugin Dependency Updates
 
+* Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-dependency-plugin:3.10.0` to `3.11.0`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
@@ -156,6 +169,7 @@ This release replaces the old Java compiler flags `-source` and `-target` with `
 
 #### Plugin Dependency Updates
 
+* Removed `com.exasol:quality-summarizer-maven-plugin:0.2.1`
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
