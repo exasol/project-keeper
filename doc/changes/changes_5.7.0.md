@@ -4,9 +4,11 @@ Code name:
 
 ## Summary
 
-## Features
+This release deactivates the new JavaDoc option `--no-fonts` that is only supported with JDK >= 23. The release also specifies the new `--release` option for JavaDoc instead of `-source` and explicitly specifies `-locale en`.
 
-* ISSUE_NUMBER: description
+## Bugfixes
+
+* #745: Fix javadoc error caused by unsupported `--no-fonts` option.
 
 ## Dependency Updates
 
