@@ -324,12 +324,14 @@
                 </executions>
                 <configuration>
                     <charset>UTF-8</charset>
+                    <locale>en</locale>
                     <doclint/>
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
                     <quiet>true</quiet>
-                    <source>${java.version}</source>
+                    <release>${java.version}</release>
+                    <disableNoFonts>true</disableNoFonts>
                 </configuration>
             </plugin>
             <plugin>

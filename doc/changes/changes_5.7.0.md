@@ -8,11 +8,14 @@ This release replaces the old Java compiler flags `-source` and `-target` with `
 
 The release also removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
 
-## Features
+The release also deactivates the new JavaDoc option `--no-fonts` that is only supported with JDK >= 23. The release also specifies the new `--release` option for JavaDoc instead of `-source` and explicitly specifies `-locale en`.
+
+The release also removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
 
 ## Bugfixes
 
 * #738: Use compiler flag `--release` instead of `-source` and `-target`
+* #745: Fix javadoc error caused by unsupported `--no-fonts` option.
 
 ## Refactoring
 
