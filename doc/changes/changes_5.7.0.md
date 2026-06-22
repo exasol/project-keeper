@@ -12,6 +12,7 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 ## Bugfixes
 
+* #698: Allowed `verify-release` changelog dates from today minus 5 days through today.
 * #745: Fix javadoc error caused by unsupported `--no-fonts` option.
 
 ## Refactoring

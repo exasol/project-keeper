@@ -160,7 +160,7 @@ class ProjectKeeperMojoIT {
         assertThat(projectDir.resolve("target/my-test-project-0.1.0.buildcompare").toFile(), anExistingFile());
     }
 
-    // [itest->dsn~verify-release-mode.verify-release-date~1]
+    // [itest->dsn~verify-release-mode.verify-release-date~2]
     // [itest->dsn~verify-release-mode.verify~1]
     @Test
     void testVerifyRelease() throws VerificationException, IOException {

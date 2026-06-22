@@ -33,14 +33,16 @@ class ChangesFileReleaseValidatorTest {
     @Mock
     GitHubAdapter gitHubAdapterMock;
 
-    // [utest->dsn~verify-release-mode.verify-release-date~1]
+    // [utest->dsn~verify-release-mode.verify-release-date~2]
     @ParameterizedTest
     @CsvSource(nullValues = "NULL", value = {
             "invalid, E-PK-CORE-182: Release date 'invalid' has invalid format in 'changes.md'",
             "2007-??-??, E-PK-CORE-182: Release date '2007-??-??' has invalid format in 'changes.md'",
             "2007-02-??, E-PK-CORE-182: Release date '2007-02-??' has invalid format in 'changes.md'",
-            "2007-12-02, E-PK-CORE-183: Release date 2007-12-02 must be today 2007-12-03 in 'changes.md'",
-            "2007-12-04, E-PK-CORE-183: Release date 2007-12-04 must be today 2007-12-03 in 'changes.md'",
+            "2007-11-27, E-PK-CORE-183: Release date 2007-11-27 must be between 2007-11-28 and 2007-12-03 in 'changes.md'",
+            "2007-12-04, E-PK-CORE-183: Release date 2007-12-04 must be between 2007-11-28 and 2007-12-03 in 'changes.md'",
+            "2007-11-28, NULL",
+            "2007-12-02, NULL",
             "2007-12-03, NULL" })
     void invalidReleaseDate(final String releaseDate, final String expectedError) {
         final List<String> findings = findings(ChangesFile.builder().releaseDate(releaseDate).codeName(CODE_NAME));

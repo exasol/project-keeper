@@ -1092,15 +1092,16 @@ Covers:
 Needs: impl, itest
 
 #### PK Mode `verify-release` Checks Release Date
-`dsn~verify-release-mode.verify-release-date~1`
+`dsn~verify-release-mode.verify-release-date~2`
 
-PK's `verify-release` mode verifies that the release date in the current version's changelog is the current date.
+PK's `verify-release` mode verifies that the release date in the current version's changelog is between today minus five days and today.
 
 Rationale:
 * The release date must be up-to-date. In the previous release process this was checked by release-droid.
 * This allows opting out of releasing:
   * The `release.yml` workflow runs for every push to the `main` branch. This is not always intended if developers want to wait with the release and add more changes in other pull requests.
   * Setting the release date to `2024-??-??` will let the `verify-release` mode fail which will stop the release build.
+* Accepting a release date of today minus five days leaves room for timing issues when merging pull requests.
 * Possible future improvement:
   * To avoid creating a PR just for updating the release date we could add an optional parameter to the `release.yml` workflow that updates the release date and commits this change directly to `main`.
 

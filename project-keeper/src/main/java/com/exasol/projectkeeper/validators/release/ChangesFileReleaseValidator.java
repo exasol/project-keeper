@@ -18,6 +18,7 @@ import com.exasol.projectkeeper.validators.release.github.IssueState;
 
 class ChangesFileReleaseValidator implements Validator {
     private static final ZoneId UTC_ZONE = ZoneId.of("UTC");
+    private static final Period MAX_RELEASE_DATE_AGE = Period.ofDays(5);
     private final ChangesFile changesFile;
     private final Path changesFilePath;
     private final Clock clock;
@@ -73,7 +74,7 @@ class ChangesFileReleaseValidator implements Validator {
         return noFindings();
     }
 
-    // [impl->dsn~verify-release-mode.verify-release-date~1]
+    // [impl->dsn~verify-release-mode.verify-release-date~2]
     private Optional<ValidationFinding> validateReleaseDate() {
         final Optional<LocalDate> releaseDate = changesFile.getParsedReleaseDate();
         if (releaseDate.isEmpty()) {
@@ -83,10 +84,11 @@ class ChangesFileReleaseValidator implements Validator {
                     .toString());
         }
         final LocalDate today = today();
-        if (!releaseDate.get().equals(today)) {
+        final LocalDate earliestAllowedReleaseDate = today.minus(MAX_RELEASE_DATE_AGE);
+        if (releaseDate.get().isBefore(earliestAllowedReleaseDate) || releaseDate.get().isAfter(today)) {
             return finding(ExaError.messageBuilder("E-PK-CORE-183")
-                    .message("Release date {{actual date}} must be today {{today}} in {{changes file path}}",
-                            releaseDate.get(), today, changesFilePath)
+                    .message("Release date {{actual date}} must be between {{earliest allowed date}} and {{today}} in {{changes file path}}",
+                            releaseDate.get(), earliestAllowedReleaseDate, today, changesFilePath)
                     .toString());
         }
         return noFindings();
