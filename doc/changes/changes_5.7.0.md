@@ -4,6 +4,8 @@ Code name:
 
 ## Summary
 
+This release removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
+
 ## Features
 
 * ISSUE_NUMBER: description
