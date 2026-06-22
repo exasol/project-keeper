@@ -324,12 +324,14 @@
                 </executions>
                 <configuration>
                     <charset>UTF-8</charset>
+                    <locale>en</locale>
                     <doclint/>
                     <serialwarn>true</serialwarn>
                     <failOnError>true</failOnError>
                     <failOnWarnings>true</failOnWarnings>
                     <quiet>true</quiet>
-                    <source>${java.version}</source>
+                    <release>${java.version}</release>
+                    <disableNoFonts>true</disableNoFonts>
                 </configuration>
             </plugin>
             <plugin>
@@ -422,19 +424,6 @@
                         <configuration>
                             <dataFile>${project.build.directory}/aggregate.exec</dataFile>
                         </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>com.exasol</groupId>
-                <artifactId>quality-summarizer-maven-plugin</artifactId>
-                <version>0.2.1</version>
-                <executions>
-                    <execution>
-                        <id>summarize-metrics</id>
-                        <goals>
-                            <goal>summarize</goal>
-                        </goals>
                     </execution>
                 </executions>
             </plugin>
