@@ -1,8 +1,6 @@
 package com.exasol.projectkeeper.validators.pom.plugin;
 
-import java.util.Collection;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import org.w3c.dom.Node;
 
@@ -23,7 +21,7 @@ public class AnyOfModulesPluginTemplateGenerator implements PluginTemplateGenera
      */
     public AnyOfModulesPluginTemplateGenerator(final String templateResource, final Set<ProjectKeeperModule> modules) {
         this.templateResource = templateResource;
-        this.modules = modules;
+        this.modules = Set.copyOf(modules);
     }
 
     @Override

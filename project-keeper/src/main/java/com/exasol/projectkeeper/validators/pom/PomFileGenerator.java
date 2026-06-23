@@ -47,11 +47,9 @@ public class PomFileGenerator {
             new SimplePluginTemplateGenerator("maven_templates/maven-javadoc-plugin.xml", MAVEN_CENTRAL),
             new SimplePluginTemplateGenerator("maven_templates/central-publishing-maven-plugin.xml", MAVEN_CENTRAL),
             // [impl->dsn~release-workflow.publish-release-sboms~0]
-            new AnyOfModulesPluginTemplateGenerator("maven_templates/spdx-maven-plugin.xml",
-                    Set.of(MAVEN_CENTRAL, JAR_ARTIFACT)),
+            new AnyOfModulesPluginTemplateGenerator("maven_templates/spdx-maven-plugin.xml", Set.of(MAVEN_CENTRAL, JAR_ARTIFACT)),
             // [impl->dsn~release-workflow.publish-release-sboms~0]
-            new AnyOfModulesPluginTemplateGenerator("maven_templates/build-helper-maven-plugin.xml",
-                    Set.of(MAVEN_CENTRAL, JAR_ARTIFACT)),
+            new AnyOfModulesPluginTemplateGenerator("maven_templates/build-helper-maven-plugin.xml", Set.of(MAVEN_CENTRAL, JAR_ARTIFACT)),
             new DependencyPluginTemplateGenerator(),
             new SimplePluginTemplateGenerator("maven_templates/native-image-maven-plugin.xml", NATIVE_IMAGE),
             new SimplePluginTemplateGenerator("maven_templates/lombok-maven-plugin.xml", LOMBOK),

@@ -86,12 +86,9 @@ class PomFileGeneratorTest {
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
         return Stream.of(
-                Arguments.of("JAR_ARTIFACT",
-                        List.of("maven-assembly-plugin", "maven-jar-plugin", "spdx-maven-plugin",
-                                "build-helper-maven-plugin")),
+                Arguments.of("JAR_ARTIFACT", List.of("maven-assembly-plugin", "maven-jar-plugin", "spdx-maven-plugin", "build-helper-maven-plugin")),
                 Arguments.of("MAVEN_CENTRAL",
-                        List.of("maven-deploy-plugin", "maven-gpg-plugin", "maven-source-plugin",
-                                "central-publishing-maven-plugin", "spdx-maven-plugin",
+                        List.of("maven-deploy-plugin", "maven-gpg-plugin", "maven-source-plugin", "central-publishing-maven-plugin", "spdx-maven-plugin",
                                 "build-helper-maven-plugin")),
                 Arguments.of("UDF_COVERAGE", List.of("maven-dependency-plugin")),
                 Arguments.of("INTEGRATION_TESTS", List.of("maven-failsafe-plugin")),
@@ -193,8 +190,7 @@ class PomFileGeneratorTest {
         final List<String> pluginNames = getPluginNames(pom);
         assertAll(
                 () -> assertThat(pluginNames.stream().filter("spdx-maven-plugin"::equals).count(), equalTo(1L)),
-                () -> assertThat(pluginNames.stream().filter("build-helper-maven-plugin"::equals).count(),
-                        equalTo(1L)));
+                () -> assertThat(pluginNames.stream().filter("build-helper-maven-plugin"::equals).count(), equalTo(1L)));
     }
 
     @Test
@@ -210,14 +206,9 @@ class PomFileGeneratorTest {
                 () -> assertThat(spdxConfig.getChild("sbomType").getValue(), equalTo("build")),
                 () -> assertThat(buildHelperPlugin.getVersion(), equalTo("3.6.1")),
                 () -> assertThat(buildHelperPlugin.getExecutions().get(0).getGoals(), contains("attach-artifact")),
-                () -> assertThat(
-                        buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("file").getValue(),
-                        equalTo(
-                                "${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json")),
-                () -> assertThat(
-                        buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("classifier")
-                                .getValue(),
-                        equalTo("sbom")));
+                () -> assertThat(buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("file").getValue(),
+                        equalTo("${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json")),
+                () -> assertThat(buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("classifier").getValue(), equalTo("sbom")));
     }
 
     private Plugin findPlugin(final Model pom, final String artifactId) {

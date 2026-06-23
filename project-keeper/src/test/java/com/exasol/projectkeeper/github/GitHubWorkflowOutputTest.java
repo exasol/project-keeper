@@ -103,8 +103,7 @@ class GitHubWorkflowOutputTest {
                 .path(this.projectDir.resolve("project-dir/pom.xml"))
                 .releaseArtifactPaths(List.of(Path.of("my-project.jar"), Path.of("site/com.exasol_my-project-1.2.3.spdx.json")))
                 .build());
-        verifyReleaseArtifacts("project-dir/target/my-project.jar",
-                "project-dir/target/site/com.exasol_my-project-1.2.3.spdx.json");
+        verifyReleaseArtifacts("project-dir/target/my-project.jar", "project-dir/target/site/com.exasol_my-project-1.2.3.spdx.json");
     }
 
     // [utest->dsn~customize-release-artifacts-custom~0]
