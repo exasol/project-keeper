@@ -6,7 +6,9 @@ Code name: Generate SBOM
 
 This release generates and attaches SBOMs for all artifacts published to Maven Central and for JAR artifacts attached to GitHub releases.
 
-This release replaces the old Java compiler flags `-source` and `-target` with `--release`. See the [maven plugin documentation](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html) for details.
+The release also relaxes requirements for the release date. Release builds will now also run when the release date in the current changelog is not older than five days.
+
+The release also replaces the old Java compiler flags `-source` and `-target` with `--release`. See the [maven plugin documentation](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html) for details.
 
 The release also removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
 
@@ -16,7 +18,8 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 
 ## Features
 
-* #739: Generate and attache SBOM
+* #739: Generate and attach SBOM
+* #698: Allowed `verify-release` changelog dates from today minus 5 days through today.
 
 ## Bugfixes
 
