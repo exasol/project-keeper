@@ -44,8 +44,7 @@ class JavaProjectCrawlerRunnerIT {
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
         final MavenProjectCrawlResult result = crawlProject(pomFile);
-        final CrawledMavenProject mavenProject = result.getCrawledProjects()
-                .get(pomFile.toAbsolutePath().toString().replace("\\", "/"));
+        final CrawledMavenProject mavenProject = result.getCrawledProjects().get(pomFile.toAbsolutePath().toString());
         final ProjectDependency expectedDependency = ProjectDependency.builder() //
                 .type(COMPILE) //
                 .name("error-reporting-java") //

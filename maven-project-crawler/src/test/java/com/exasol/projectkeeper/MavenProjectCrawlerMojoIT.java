@@ -104,7 +104,7 @@ class MavenProjectCrawlerMojoIT {
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {
         final Verifier verifier = TEST_ENV.getVerifier(this.tempDir);
         verifier.setAutoclean(false);
-        final String path = projectDir.resolve("pom.xml").toAbsolutePath().toString().replace("\\", "/");
+        final String path = projectDir.resolve("pom.xml").toAbsolutePath().toString();
         verifier.setSystemProperty("projectsToCrawl", path);
         verifier.executeGoal("com.exasol:project-keeper-java-project-crawler:" + CURRENT_VERSION + ":crawl");
         final String output = Files.readString(Path.of(verifier.getBasedir()).resolve(verifier.getLogFileName()));
