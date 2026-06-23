@@ -1,6 +1,8 @@
 package com.exasol.projectkeeper.sources;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
+import static java.util.Objects.requireNonNull;
 
 import java.nio.file.Path;
 import java.util.*;
@@ -35,7 +37,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         this.artifactId = builder.artifactId;
         this.projectName = builder.projectName;
         this.version = builder.version;
-        this.releaseArtifactPaths = builder.releaseArtifactPaths;
+        this.releaseArtifactPaths = requireNonNull(builder.releaseArtifactPaths);
         this.javaVersion = builder.javaVersion;
         this.dependencyChanges = builder.dependencyChanges;
         this.dependencies = builder.dependencies;
@@ -159,7 +161,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
      */
     public static class AnalyzedMavenSourceBuilder {
         private Path path;
-        private Set<ProjectKeeperModule> modules;
+        private Set<ProjectKeeperModule> modules = emptySet();
         private boolean advertise;
         private String artifactId;
         private String projectName;

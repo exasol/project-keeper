@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.shared.mavenprojectcrawler;
 
+import static java.util.Collections.emptyList;
+
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
@@ -15,11 +17,12 @@ public final class CrawledMavenProject {
     private ProjectDependencies projectDependencies;
     private String projectVersion;
     private String javaVersion;
-    private List<Path> releaseArtifactPaths;
+    // We store the artifact paths as strings to avoid issues with JSON serialization of Path objects.
+    private List<String> releaseArtifactPaths;
 
     /** Default constructor required for JSON serialization. */
     public CrawledMavenProject() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, emptyList());
     }
 
     /**
@@ -40,7 +43,7 @@ public final class CrawledMavenProject {
         this.projectDependencies = projectDependencies;
         this.projectVersion = projectVersion;
         this.javaVersion = javaVersion;
-        this.releaseArtifactPaths = releaseArtifactPaths;
+        this.releaseArtifactPaths = releaseArtifactPaths.stream().map(Path::toString).toList();
     }
 
     /**
@@ -121,7 +124,7 @@ public final class CrawledMavenProject {
      * @return artifact paths relative to the {@code target} directory or {@code null} if no artifact is created
      */
     public List<Path> getReleaseArtifactPaths() {
-        return releaseArtifactPaths;
+        return releaseArtifactPaths.stream().map(Path::of).toList();
     }
 
     /**
@@ -131,7 +134,7 @@ public final class CrawledMavenProject {
      *                             artifact is created
      */
     public void setReleaseArtifactPaths(final List<Path> releaseArtifactPaths) {
-        this.releaseArtifactPaths = releaseArtifactPaths;
+        this.releaseArtifactPaths = releaseArtifactPaths.stream().map(Path::toString).toList();
     }
 
     @Override
