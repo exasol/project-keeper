@@ -39,7 +39,9 @@ public class ArtifactNameReader {
 
     // [impl->dsn~customize-release-artifacts-jar~0]
     private String readFinalArtifactName() {
-        return Optional.ofNullable(this.project.getBuild().getPluginsAsMap().get(ASSEMBLY_PLUGIN_QUALIFIED_NAME))
+        return Optional.ofNullable(this.project.getBuild()
+                .getPluginsAsMap()
+                .get(ASSEMBLY_PLUGIN_QUALIFIED_NAME))
                 .map(Plugin::getConfiguration) //
                 .map(Xpp3Dom.class::cast) //
                 .map(config -> config.getChild("finalName")) //

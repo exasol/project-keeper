@@ -26,7 +26,7 @@ class ArtifactNameReaderTest {
         project.setGroupId("com.exasol");
         project.setArtifactId("my-project");
         project.setVersion("1.2.3");
-        project.getBuild().addPlugin(createPlugin("artifact-name"));
+        project.getBuild().addPlugin(createAssemblyPlugin("artifact-name"));
         assertThat(readArtifactNames(project), contains("artifact-name.jar", "site/com.exasol_my-project-1.2.3.spdx.json"));
     }
 
@@ -34,9 +34,9 @@ class ArtifactNameReaderTest {
         return new ArtifactNameReader(project).readArtifactNames();
     }
 
-    private Plugin createPlugin(final String finalName) {
+    private Plugin createAssemblyPlugin(final String finalName) {
         final Plugin plugin = new Plugin();
-        plugin.setGroupId("org.apache.maven.plugins");
+        plugin.setGroupId("org.apache.maven.pluginms");
         plugin.setArtifactId("maven-assembly-plugin");
         final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
         finalNameElement.setValue(finalName);
