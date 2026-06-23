@@ -168,6 +168,8 @@ Example Maven Central credentials:
 
 ### Test 1: Verify Bundle Content Locally
 
+**Note:** Latest versions of `central-publishing-maven-plugin` have a regression that `skipPublishing` does not produce `central-bundle.zip`. Version 0.8.0 is the last known version where this worked. A workaround is to specify invalid credentials and try [Test 2](#test-2-verify-bundle-upload-without-publishing). This will also build the bundle.
+
 Maven plugin `central-publishing-maven-plugin` creates a bundle and uploads it to Maven Central. To verify the content of this bundle without uploading it, run the following command. You do not need Maven Central credentials for this test.
 
 ```sh
