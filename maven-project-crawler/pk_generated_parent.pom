@@ -357,6 +357,52 @@
                 </configuration>
             </plugin>
             <plugin>
+                <!-- [impl->dsn~release-workflow.publish-release-sboms~0] -->
+                <groupId>org.spdx</groupId>
+                <artifactId>spdx-maven-plugin</artifactId>
+                <version>1.0.3</version>
+                <executions>
+                    <execution>
+                        <id>build-spdx</id>
+                        <goals>
+                            <goal>createSPDX</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <sbomType>build</sbomType>
+                    <includeCompileScope>true</includeCompileScope>
+                    <includeRuntimeScope>true</includeRuntimeScope>
+                    <includeProvidedScope>true</includeProvidedScope>
+                    <includeSystemScope>false</includeSystemScope>
+                    <includeTestScope>false</includeTestScope>
+                </configuration>
+            </plugin>
+            <plugin>
+                <!-- [impl->dsn~release-workflow.publish-release-sboms~0] -->
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.6.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-spdx-sbom</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>attach-artifact</goal>
+                        </goals>
+                        <configuration>
+                            <artifacts>
+                                <artifact>
+                                    <file>${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json</file>
+                                    <type>spdx</type>
+                                    <classifier>sbom</classifier>
+                                </artifact>
+                            </artifacts>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <version>3.11.0</version>

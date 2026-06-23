@@ -2,8 +2,7 @@ package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.io.IOException;
@@ -48,6 +47,7 @@ class MavenProjectCrawlerMojoIT {
 
     // [itest->dsn~eclipse-prefs-java-version~1]
     // [itest->dsn~customize-release-artifacts-jar~0]
+    // [itest->dsn~customize-release-artifacts-sbom~0]
     @Test
     void testCrawlProject() throws GitAPIException, IOException, VerificationException {
         final Path subfolder = this.tempDir.resolve("subfolder").toAbsolutePath();
@@ -74,8 +74,9 @@ class MavenProjectCrawlerMojoIT {
                         crawledProject.getDependencyChangeReport().getChanges(COMPILE),
                         Matchers.contains(new NewDependency("com.exasol", "error-reporting-java", "0.4.1"))),
                 () -> assertThat("java version", crawledProject.getJavaVersion(), equalTo("17")), //
-                () -> assertThat("artifact name", crawledProject.getReleaseArtifactName(),
-                        equalTo("java-version-17-project-version-0.1.0.jar")) //
+                () -> assertThat("artifact names", crawledProject.getReleaseArtifactNames(),
+                        equalTo(List.of("java-version-17-project-version-0.1.0.jar",
+                                "site/com.exasol_my-test-project-0.1.0.spdx.json"))) //
         );
     }
 
@@ -99,7 +100,7 @@ class MavenProjectCrawlerMojoIT {
         final TestMavenModel testProject = new TestMavenModel();
         testProject.writeAsPomToProject(subfolder);
         final CrawledMavenProject crawledProject = runCrawler(subfolder);
-        assertThat(crawledProject.getReleaseArtifactName(), nullValue());
+        assertThat(crawledProject.getReleaseArtifactNames(), empty());
     }
 
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {

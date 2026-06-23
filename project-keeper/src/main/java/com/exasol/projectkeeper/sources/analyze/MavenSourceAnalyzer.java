@@ -87,7 +87,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .version(crawledMavenProject.getProjectVersion()) //
                     .isRootProject(isRoot) //
                     .javaVersion(crawledMavenProject.getJavaVersion()) //
-                    .releaseArtifactName(crawledMavenProject.getReleaseArtifactName()) //
+                    .releaseArtifactNames(crawledMavenProject.getReleaseArtifactNames()) //
                     .build();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-93")

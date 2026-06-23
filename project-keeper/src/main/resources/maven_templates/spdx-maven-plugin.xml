@@ -1,0 +1,22 @@
+<plugin>
+    <!-- [impl->dsn~release-workflow.publish-release-sboms~0] -->
+    <groupId>org.spdx</groupId>
+    <artifactId>spdx-maven-plugin</artifactId>
+    <version>1.0.3</version>
+    <executions>
+        <execution>
+            <id>build-spdx</id>
+            <goals>
+                <goal>createSPDX</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <sbomType>build</sbomType>
+        <includeCompileScope>true</includeCompileScope>
+        <includeRuntimeScope>true</includeRuntimeScope>
+        <includeProvidedScope>true</includeProvidedScope>
+        <includeSystemScope>false</includeSystemScope>
+        <includeTestScope>false</includeTestScope>
+    </configuration>
+</plugin>

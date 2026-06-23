@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.shared.mavenprojectcrawler;
 
+import java.util.List;
 import java.util.Objects;
 
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
@@ -13,7 +14,7 @@ public final class CrawledMavenProject {
     private ProjectDependencies projectDependencies;
     private String projectVersion;
     private String javaVersion;
-    private String releaseArtifactName;
+    private List<String> releaseArtifactNames;
 
     /** Default constructor required for JSON serialization. */
     public CrawledMavenProject() {
@@ -28,17 +29,17 @@ public final class CrawledMavenProject {
      * @param projectVersion         project version
      * @param javaVersion            Java version from the {@code java.version} property or {@code null} if property is
      *                               not defined
-     * @param releaseArtifactName    file name of the artifact in the {@code target} directory or {@code null} if no
-     *                               artifact is created
+     * @param releaseArtifactNames   artifact file names relative to the {@code target} directory or {@code null} if no
+     *                               artifacts are created
      */
     public CrawledMavenProject(final DependencyChangeReport dependencyChangeReport,
             final ProjectDependencies projectDependencies, final String projectVersion, final String javaVersion,
-            final String releaseArtifactName) {
+            final List<String> releaseArtifactNames) {
         this.dependencyChangeReport = dependencyChangeReport;
         this.projectDependencies = projectDependencies;
         this.projectVersion = projectVersion;
         this.javaVersion = javaVersion;
-        this.releaseArtifactName = releaseArtifactName;
+        this.releaseArtifactNames = releaseArtifactNames;
     }
 
     /**
@@ -114,35 +115,35 @@ public final class CrawledMavenProject {
     }
 
     /**
-     * Get release artifact name.
+     * Get release artifact names.
      * 
-     * @return file name of the artifact in the {@code target} directory or {@code null} if no artifact is created
+     * @return artifact file names relative to the {@code target} directory or {@code null} if no artifact is created
      */
-    public String getReleaseArtifactName() {
-        return releaseArtifactName;
+    public List<String> getReleaseArtifactNames() {
+        return releaseArtifactNames;
     }
 
     /**
-     * Set release artifact name.
+     * Set release artifact names.
      * 
-     * @param releaseArtifactName file name of the artifact in the {@code target} directory or {@code null} if no
-     *                            artifact is created
+     * @param releaseArtifactNames artifact file names relative to the {@code target} directory or {@code null} if no
+     *                             artifact is created
      */
-    public void setReleaseArtifactName(final String releaseArtifactName) {
-        this.releaseArtifactName = releaseArtifactName;
+    public void setReleaseArtifactNames(final List<String> releaseArtifactNames) {
+        this.releaseArtifactNames = releaseArtifactNames;
     }
 
     @Override
     public String toString() {
         return "CrawledMavenProject [dependencyChangeReport=" + dependencyChangeReport + ", projectDependencies="
                 + projectDependencies + ", projectVersion=" + projectVersion + ", javaVersion=" + javaVersion
-                + ", releaseArtifactName=" + releaseArtifactName + "]";
+                + ", releaseArtifactNames=" + releaseArtifactNames + "]";
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(dependencyChangeReport, projectDependencies, projectVersion, javaVersion,
-                releaseArtifactName);
+                releaseArtifactNames);
     }
 
     @Override
@@ -161,6 +162,6 @@ public final class CrawledMavenProject {
                 && Objects.equals(projectDependencies, other.projectDependencies)
                 && Objects.equals(projectVersion, other.projectVersion)
                 && Objects.equals(javaVersion, other.javaVersion)
-                && Objects.equals(releaseArtifactName, other.releaseArtifactName);
+                && Objects.equals(releaseArtifactNames, other.releaseArtifactNames);
     }
 }

@@ -1,8 +1,10 @@
 package com.exasol.projectkeeper.validators;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.nullValue;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.empty;
+
+import java.util.List;
 
 import org.apache.maven.model.Plugin;
 import org.apache.maven.project.MavenProject;
@@ -13,19 +15,23 @@ class ArtifactNameReaderTest {
 
     @Test
     void readArtifactNameMissingPlugin() {
-        assertThat(readArtifactName(new MavenProject()), nullValue());
+        assertThat(readArtifactNames(new MavenProject()), empty());
     }
 
     // [utest->dsn~customize-release-artifacts-jar~0]
+    // [utest->dsn~customize-release-artifacts-sbom~0]
     @Test
-    void readArtifactName() {
+    void readArtifactNames() {
         final MavenProject project = new MavenProject();
+        project.setGroupId("com.exasol");
+        project.setArtifactId("my-project");
+        project.setVersion("1.2.3");
         project.getBuild().addPlugin(createPlugin("artifact-name"));
-        assertThat(readArtifactName(project), equalTo("artifact-name.jar"));
+        assertThat(readArtifactNames(project), contains("artifact-name.jar", "site/com.exasol_my-project-1.2.3.spdx.json"));
     }
 
-    private String readArtifactName(final MavenProject project) {
-        return new ArtifactNameReader(project).readFinalArtifactName();
+    private List<String> readArtifactNames(final MavenProject project) {
+        return new ArtifactNameReader(project).readArtifactNames();
     }
 
     private Plugin createPlugin(final String finalName) {

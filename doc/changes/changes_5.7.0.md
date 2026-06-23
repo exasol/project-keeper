@@ -51,8 +51,10 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 * Updated `org.apache.maven.plugins:maven-enforcer-plugin:3.6.2` to `3.6.3`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Added `org.codehaus.mojo:build-helper-maven-plugin:3.6.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+* Added `org.spdx:spdx-maven-plugin:1.0.3`
 
 ### Project Keeper Core
 
@@ -82,8 +84,10 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Added `org.codehaus.mojo:build-helper-maven-plugin:3.6.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+* Added `org.spdx:spdx-maven-plugin:1.0.3`
 
 ### Project Keeper Command Line Interface
 
@@ -110,8 +114,10 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Added `org.codehaus.mojo:build-helper-maven-plugin:3.6.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+* Added `org.spdx:spdx-maven-plugin:1.0.3`
 
 ### Project Keeper Maven Plugin
 
@@ -135,8 +141,10 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Added `org.codehaus.mojo:build-helper-maven-plugin:3.6.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+* Added `org.spdx:spdx-maven-plugin:1.0.3`
 
 ### Project Keeper Java Project Crawler
 
@@ -162,8 +170,10 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.5` to `3.5.6`
 * Updated `org.apache.maven.plugins:maven-site-plugin:3.21.0` to `3.22.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.5` to `3.5.6`
+* Added `org.codehaus.mojo:build-helper-maven-plugin:3.6.1`
 * Updated `org.jacoco:jacoco-maven-plugin:0.8.14` to `0.8.15`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356` to `5.7.0.6970`
+* Added `org.spdx:spdx-maven-plugin:1.0.3`
 
 ### Project Keeper Shared Test Setup
 

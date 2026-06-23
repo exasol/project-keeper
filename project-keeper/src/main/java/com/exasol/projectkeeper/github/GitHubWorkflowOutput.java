@@ -107,12 +107,15 @@ public class GitHubWorkflowOutput {
     }
 
     // [impl->dsn~customize-release-artifacts-jar~0]
+    // [impl->dsn~customize-release-artifacts-sbom~0]
     private Stream<Path> sourceReleaseArtifacts() {
         return this.analyzedSources.stream() //
                 .filter(AnalyzedMavenSource.class::isInstance) //
                 .map(AnalyzedMavenSource.class::cast) //
-                .filter(source -> source.getReleaseArtifactName() != null) //
-                .map(source -> source.getPath().getParent().resolve("target").resolve(source.getReleaseArtifactName()));
+                .filter(source -> source.getReleaseArtifactNames() != null) //
+                .flatMap(source -> source.getReleaseArtifactNames().stream()
+                        .map(releaseArtifactName -> source.getPath().getParent().resolve("target")
+                                .resolve(releaseArtifactName)));
     }
 
     // [impl->dsn~customize-release-artifacts-hard-coded~0]

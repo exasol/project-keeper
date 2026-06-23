@@ -13,6 +13,7 @@ import java.util.stream.Stream;
 
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Reader;
+import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.codehaus.plexus.util.xml.pull.XmlPullParserException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -85,10 +86,13 @@ class PomFileGeneratorTest {
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
         return Stream.of(
-                Arguments.of("JAR_ARTIFACT", List.of("maven-assembly-plugin", "maven-jar-plugin")),
+                Arguments.of("JAR_ARTIFACT",
+                        List.of("maven-assembly-plugin", "maven-jar-plugin", "spdx-maven-plugin",
+                                "build-helper-maven-plugin")),
                 Arguments.of("MAVEN_CENTRAL",
                         List.of("maven-deploy-plugin", "maven-gpg-plugin", "maven-source-plugin",
-                                "central-publishing-maven-plugin")),
+                                "central-publishing-maven-plugin", "spdx-maven-plugin",
+                                "build-helper-maven-plugin")),
                 Arguments.of("UDF_COVERAGE", List.of("maven-dependency-plugin")),
                 Arguments.of("INTEGRATION_TESTS", List.of("maven-failsafe-plugin")),
                 Arguments.of("NATIVE_IMAGE", List.of("native-image-maven-plugin")),
@@ -179,6 +183,48 @@ class PomFileGeneratorTest {
     void testPluginsAddedByModule(final ProjectKeeperModule module, final List<String> expectedPlugins) {
         final Model pom = runGeneration(List.of(module), null);
         assertThat(getPluginNames(pom), hasItems(expectedPlugins.toArray(String[]::new)));
+    }
+
+    // [utest->dsn~release-workflow.publish-release-sboms~0]
+    @Test
+    void testSbomPluginsAddedOnlyOnceForCombinedModules() {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.MAVEN_CENTRAL, ProjectKeeperModule.JAR_ARTIFACT),
+                null);
+        final List<String> pluginNames = getPluginNames(pom);
+        assertAll(
+                () -> assertThat(pluginNames.stream().filter("spdx-maven-plugin"::equals).count(), equalTo(1L)),
+                () -> assertThat(pluginNames.stream().filter("build-helper-maven-plugin"::equals).count(),
+                        equalTo(1L)));
+    }
+
+    @Test
+    void testSbomPluginConfiguration() {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.JAR_ARTIFACT), null);
+        final Plugin spdxPlugin = findPlugin(pom, "spdx-maven-plugin");
+        final Plugin buildHelperPlugin = findPlugin(pom, "build-helper-maven-plugin");
+        final Xpp3Dom spdxConfig = (Xpp3Dom) spdxPlugin.getConfiguration();
+        final Xpp3Dom buildHelperConfig = (Xpp3Dom) buildHelperPlugin.getExecutions().get(0).getConfiguration();
+        assertAll(
+                () -> assertThat(spdxPlugin.getVersion(), equalTo("1.0.3")),
+                () -> assertThat(spdxPlugin.getExecutions().get(0).getGoals(), contains("createSPDX")),
+                () -> assertThat(spdxConfig.getChild("sbomType").getValue(), equalTo("build")),
+                () -> assertThat(buildHelperPlugin.getVersion(), equalTo("3.6.1")),
+                () -> assertThat(buildHelperPlugin.getExecutions().get(0).getGoals(), contains("attach-artifact")),
+                () -> assertThat(
+                        buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("file").getValue(),
+                        equalTo(
+                                "${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json")),
+                () -> assertThat(
+                        buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("classifier")
+                                .getValue(),
+                        equalTo("sbom")));
+    }
+
+    private Plugin findPlugin(final Model pom, final String artifactId) {
+        return pom.getBuild().getPlugins().stream()
+                .filter(plugin -> artifactId.equals(plugin.getArtifactId()))
+                .findFirst()
+                .orElseThrow();
     }
 
     @ParameterizedTest
