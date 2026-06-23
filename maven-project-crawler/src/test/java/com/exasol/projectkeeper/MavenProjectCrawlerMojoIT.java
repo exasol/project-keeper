@@ -74,7 +74,7 @@ class MavenProjectCrawlerMojoIT {
                         crawledProject.getDependencyChangeReport().getChanges(COMPILE),
                         Matchers.contains(new NewDependency("com.exasol", "error-reporting-java", "0.4.1"))),
                 () -> assertThat("java version", crawledProject.getJavaVersion(), equalTo("17")), //
-                () -> assertThat("artifact names", crawledProject.getReleaseArtifactNames(),
+                () -> assertThat("artifact paths", crawledProject.getReleaseArtifactPaths(),
                         equalTo(List.of(Path.of("java-version-17-project-version-0.1.0.jar"),
                                 Path.of("site/com.exasol_my-test-project-0.1.0.spdx.json")))));
     }
@@ -99,7 +99,7 @@ class MavenProjectCrawlerMojoIT {
         final TestMavenModel testProject = new TestMavenModel();
         testProject.writeAsPomToProject(subfolder);
         final CrawledMavenProject crawledProject = runCrawler(subfolder);
-        assertThat(crawledProject.getReleaseArtifactNames(), empty());
+        assertThat(crawledProject.getReleaseArtifactPaths(), empty());
     }
 
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {

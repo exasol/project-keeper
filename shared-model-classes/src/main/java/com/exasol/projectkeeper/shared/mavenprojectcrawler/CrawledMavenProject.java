@@ -15,7 +15,7 @@ public final class CrawledMavenProject {
     private ProjectDependencies projectDependencies;
     private String projectVersion;
     private String javaVersion;
-    private List<Path> releaseArtifactNames;
+    private List<Path> releaseArtifactPaths;
 
     /** Default constructor required for JSON serialization. */
     public CrawledMavenProject() {
@@ -30,17 +30,17 @@ public final class CrawledMavenProject {
      * @param projectVersion         project version
      * @param javaVersion            Java version from the {@code java.version} property or {@code null} if property is
      *                               not defined
-     * @param releaseArtifactNames   artifact paths relative to the {@code target} directory or {@code null} if no
+     * @param releaseArtifactPaths   artifact paths relative to the {@code target} directory or {@code null} if no
      *                               artifacts are created
      */
     public CrawledMavenProject(final DependencyChangeReport dependencyChangeReport,
             final ProjectDependencies projectDependencies, final String projectVersion, final String javaVersion,
-            final List<Path> releaseArtifactNames) {
+            final List<Path> releaseArtifactPaths) {
         this.dependencyChangeReport = dependencyChangeReport;
         this.projectDependencies = projectDependencies;
         this.projectVersion = projectVersion;
         this.javaVersion = javaVersion;
-        this.releaseArtifactNames = releaseArtifactNames;
+        this.releaseArtifactPaths = releaseArtifactPaths;
     }
 
     /**
@@ -120,31 +120,31 @@ public final class CrawledMavenProject {
      * 
      * @return artifact paths relative to the {@code target} directory or {@code null} if no artifact is created
      */
-    public List<Path> getReleaseArtifactNames() {
-        return releaseArtifactNames;
+    public List<Path> getReleaseArtifactPaths() {
+        return releaseArtifactPaths;
     }
 
     /**
      * Set release artifact paths.
      * 
-     * @param releaseArtifactNames artifact paths relative to the {@code target} directory or {@code null} if no
+     * @param releaseArtifactPaths artifact paths relative to the {@code target} directory or {@code null} if no
      *                             artifact is created
      */
-    public void setReleaseArtifactNames(final List<Path> releaseArtifactNames) {
-        this.releaseArtifactNames = releaseArtifactNames;
+    public void setReleaseArtifactPaths(final List<Path> releaseArtifactPaths) {
+        this.releaseArtifactPaths = releaseArtifactPaths;
     }
 
     @Override
     public String toString() {
         return "CrawledMavenProject [dependencyChangeReport=" + dependencyChangeReport + ", projectDependencies="
                 + projectDependencies + ", projectVersion=" + projectVersion + ", javaVersion=" + javaVersion
-                + ", releaseArtifactNames=" + releaseArtifactNames + "]";
+                + ", releaseArtifactPaths=" + releaseArtifactPaths + "]";
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(dependencyChangeReport, projectDependencies, projectVersion, javaVersion,
-                releaseArtifactNames);
+                releaseArtifactPaths);
     }
 
     @Override
@@ -163,6 +163,6 @@ public final class CrawledMavenProject {
                 && Objects.equals(projectDependencies, other.projectDependencies)
                 && Objects.equals(projectVersion, other.projectVersion)
                 && Objects.equals(javaVersion, other.javaVersion)
-                && Objects.equals(releaseArtifactNames, other.releaseArtifactNames);
+                && Objects.equals(releaseArtifactPaths, other.releaseArtifactPaths);
     }
 }

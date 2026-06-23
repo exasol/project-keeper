@@ -1,5 +1,7 @@
 package com.exasol.projectkeeper.sources;
 
+import static java.util.Collections.emptyList;
+
 import java.nio.file.Path;
 import java.util.*;
 
@@ -20,7 +22,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
     private final String artifactId;
     private final String projectName;
     private final String version;
-    private final List<Path> releaseArtifactNames;
+    private final List<Path> releaseArtifactPaths;
     private final String javaVersion;
     private final DependencyChangeReport dependencyChanges;
     private final ProjectDependencies dependencies;
@@ -33,7 +35,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         this.artifactId = builder.artifactId;
         this.projectName = builder.projectName;
         this.version = builder.version;
-        this.releaseArtifactNames = builder.releaseArtifactNames;
+        this.releaseArtifactPaths = builder.releaseArtifactPaths;
         this.javaVersion = builder.javaVersion;
         this.dependencyChanges = builder.dependencyChanges;
         this.dependencies = builder.dependencies;
@@ -113,8 +115,8 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
      * 
      * @return artifact paths relative to the {@code target} directory or an empty list if no artifact is built
      */
-    public List<Path> getReleaseArtifactNames() {
-        return this.releaseArtifactNames;
+    public List<Path> getReleaseArtifactPaths() {
+        return this.releaseArtifactPaths;
     }
 
     /**
@@ -162,7 +164,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         private String artifactId;
         private String projectName;
         private String version;
-        private List<Path> releaseArtifactNames;
+        private List<Path> releaseArtifactPaths = emptyList();
         private String javaVersion = PomFileGenerator.DEFAULT_JAVA_VERSION;
         private DependencyChangeReport dependencyChanges;
         private ProjectDependencies dependencies;
@@ -241,12 +243,12 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         /**
          * Set release artifact paths.
          * 
-         * @param releaseArtifactNames Artifact paths relative to the {@code target} directory or an empty list if no
+         * @param releaseArtifactPaths Artifact paths relative to the {@code target} directory or an empty list if no
          *                             artifact is built
          * @return {@code this}.
          */
-        public AnalyzedMavenSource.AnalyzedMavenSourceBuilder releaseArtifactNames(final List<Path> releaseArtifactNames) {
-            this.releaseArtifactNames = releaseArtifactNames;
+        public AnalyzedMavenSource.AnalyzedMavenSourceBuilder releaseArtifactPaths(final List<Path> releaseArtifactPaths) {
+            this.releaseArtifactPaths = releaseArtifactPaths;
             return this;
         }
 
@@ -313,7 +315,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         public String toString() {
             return "AnalyzedMavenSourceBuilder [path=" + path + ", modules=" + modules + ", advertise=" + advertise
                     + ", artifactId=" + artifactId + ", projectName=" + projectName + ", version=" + version
-                    + ", releaseArtifactNames=" + releaseArtifactNames + ", javaVersion=" + javaVersion
+                    + ", releaseArtifactPaths=" + releaseArtifactPaths + ", javaVersion=" + javaVersion
                     + ", dependencyChanges=" + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject="
                     + isRootProject + "]";
         }
@@ -323,14 +325,14 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
     public String toString() {
         return "AnalyzedMavenSource [path=" + path + ", modules=" + modules + ", advertise=" + advertise
                 + ", artifactId=" + artifactId + ", projectName=" + projectName + ", version=" + version
-                + ", releaseArtifactNames=" + releaseArtifactNames + ", javaVersion=" + javaVersion
+                + ", releaseArtifactPaths=" + releaseArtifactPaths + ", javaVersion=" + javaVersion
                 + ", dependencyChanges=" + dependencyChanges + ", dependencies=" + dependencies + ", isRootProject="
                 + isRootProject + "]";
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(path, modules, advertise, artifactId, projectName, version, releaseArtifactNames,
+        return Objects.hash(path, modules, advertise, artifactId, projectName, version, releaseArtifactPaths,
                 javaVersion, dependencyChanges, dependencies, isRootProject);
     }
 
@@ -349,7 +351,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         return Objects.equals(path, other.path) && Objects.equals(modules, other.modules)
                 && advertise == other.advertise && Objects.equals(artifactId, other.artifactId)
                 && Objects.equals(projectName, other.projectName) && Objects.equals(version, other.version)
-                && Objects.equals(releaseArtifactNames, other.releaseArtifactNames)
+                && Objects.equals(releaseArtifactPaths, other.releaseArtifactPaths)
                 && Objects.equals(javaVersion, other.javaVersion)
                 && Objects.equals(dependencyChanges, other.dependencyChanges)
                 && Objects.equals(dependencies, other.dependencies) && isRootProject == other.isRootProject;

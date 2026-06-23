@@ -4,9 +4,7 @@ import static java.util.Objects.requireNonNull;
 
 import java.io.File;
 import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Inject;
 
@@ -23,7 +21,7 @@ import com.exasol.projectkeeper.pom.*;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
 import com.exasol.projectkeeper.shared.dependencychanges.DependencyChangeReport;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.*;
-import com.exasol.projectkeeper.validators.ArtifactNameReader;
+import com.exasol.projectkeeper.validators.ArtifactPathReader;
 import com.exasol.projectkeeper.validators.changesfile.DependencyUpdateReader;
 import com.exasol.projectkeeper.validators.dependencies.ProjectDependencyReader;
 
@@ -73,9 +71,9 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
             final ProjectDependencies dependencies = new ProjectDependencyReader(modelFromRepositoryReader, project)
                     .readDependencies();
             final String javaVersion = project.getProperties().getProperty("java.version", null);
-            final List<Path> artifactNames = new ArtifactNameReader(project).readArtifactNames();
+            final List<Path> artifactPaths = new ArtifactPathReader(project).readArtifactPaths();
             final CrawledMavenProject crawledMavenProject = new CrawledMavenProject(dependencyChangeReport,
-                    dependencies, project.getVersion(), javaVersion, artifactNames);
+                    dependencies, project.getVersion(), javaVersion, artifactPaths);
             crawledProjects.put(path, crawledMavenProject);
         }
         final MavenProjectCrawlResult report = new MavenProjectCrawlResult(crawledProjects);

@@ -11,9 +11,9 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 /**
- * This class reads the file name of the release artifact produced by this pom.
+ * This class reads the artifact paths of the release artifacts produced by this pom.
  */
-public class ArtifactNameReader {
+public class ArtifactPathReader {
 
     private static final String ASSEMBLY_PLUGIN_QUALIFIED_NAME = "org.apache.maven.plugins:maven-assembly-plugin";
     private final MavenProject project;
@@ -23,7 +23,7 @@ public class ArtifactNameReader {
      * 
      * @param project the Maven project
      */
-    public ArtifactNameReader(final MavenProject project) {
+    public ArtifactPathReader(final MavenProject project) {
         this.project = project;
     }
 
@@ -32,9 +32,9 @@ public class ArtifactNameReader {
      *
      * @return artifact paths relative to the {@code target} directory
      */
-    public List<Path> readArtifactNames() {
+    public List<Path> readArtifactPaths() {
         return Optional.ofNullable(readFinalArtifactName())
-                .map(this::releaseArtifactNames)
+                .map(this::releaseArtifactPaths)
                 .orElse(emptyList());
     }
 
@@ -52,7 +52,7 @@ public class ArtifactNameReader {
     }
 
     // [impl->dsn~customize-release-artifacts-sbom~0]
-    private List<Path> releaseArtifactNames(final String jarArtifactName) {
+    private List<Path> releaseArtifactPaths(final String jarArtifactName) {
         final String spdxArtifactName = "site/" + this.project.getGroupId() + "_" + this.project.getArtifactId() + "-"
                 + this.project.getVersion() + ".spdx.json";
         return List.of(Path.of(jarArtifactName), Path.of(spdxArtifactName));

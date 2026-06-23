@@ -12,27 +12,27 @@ import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
 import org.junit.jupiter.api.Test;
 
-class ArtifactNameReaderTest {
+class ArtifactPathReaderTest {
 
     @Test
     void readArtifactNameMissingPlugin() {
-        assertThat(readArtifactNames(new MavenProject()), empty());
+        assertThat(readArtifactPaths(new MavenProject()), empty());
     }
 
     // [utest->dsn~customize-release-artifacts-jar~0]
     // [utest->dsn~customize-release-artifacts-sbom~0]
     @Test
-    void readArtifactNames() {
+    void readArtifactPaths() {
         final MavenProject project = new MavenProject();
         project.setGroupId("com.exasol");
         project.setArtifactId("my-project");
         project.setVersion("1.2.3");
         project.getBuild().addPlugin(createAssemblyPlugin("artifact-name"));
-        assertThat(readArtifactNames(project), contains(Path.of("artifact-name.jar"), Path.of("site/com.exasol_my-project-1.2.3.spdx.json")));
+        assertThat(readArtifactPaths(project), contains(Path.of("artifact-name.jar"), Path.of("site/com.exasol_my-project-1.2.3.spdx.json")));
     }
 
-    private List<Path> readArtifactNames(final MavenProject project) {
-        return new ArtifactNameReader(project).readArtifactNames();
+    private List<Path> readArtifactPaths(final MavenProject project) {
+        return new ArtifactPathReader(project).readArtifactPaths();
     }
 
     private Plugin createAssemblyPlugin(final String finalName) {
