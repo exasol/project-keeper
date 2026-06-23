@@ -1,8 +1,10 @@
 # Project Keeper 5.7.0, released 2026-??-??
 
-Code name:
+Code name: Generate SBOM
 
 ## Summary
+
+This release generates and attaches SBOMs for all artifacts published to Maven Central and for JAR artifacts attached to GitHub releases.
 
 This release replaces the old Java compiler flags `-source` and `-target` with `--release`. See the [maven plugin documentation](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html) for details.
 
@@ -11,6 +13,10 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 The release also deactivates the new JavaDoc option `--no-fonts` that is only supported with JDK >= 23. The release also specifies the new `--release` option for JavaDoc instead of `-source` and explicitly specifies `-locale en`.
 
 The release also removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
+
+## Features
+
+* #739: Generate and attache SBOM
 
 ## Bugfixes
 
