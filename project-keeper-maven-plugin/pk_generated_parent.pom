@@ -371,11 +371,15 @@
                 </executions>
                 <configuration>
                     <sbomType>build</sbomType>
+                    <!-- Exclude source code files -->
+                    <useArtifactID>true</useArtifactID>
                     <includeCompileScope>true</includeCompileScope>
                     <includeRuntimeScope>true</includeRuntimeScope>
                     <includeProvidedScope>true</includeProvidedScope>
                     <includeSystemScope>false</includeSystemScope>
                     <includeTestScope>false</includeTestScope>
+                    <copyrightText>Copyright (c) Exasol</copyrightText>
+                    <createExternalRefs>false</createExternalRefs>
                 </configuration>
             </plugin>
             <plugin>
