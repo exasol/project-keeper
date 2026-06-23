@@ -483,6 +483,22 @@ Covers:
 
 Needs: impl, utest, itest
 
+#### Release SBOM Artifacts for `jar_artifact` Modules
+`dsn~customize-release-artifacts-sbom~0`
+
+For sources using the `jar_artifact` module, PK adds the generated SPDX SBOM file for the release JAR to the list of GitHub release artifacts.
+
+Status: draft
+
+Rationale:
+* The GitHub release should publish the SBOM next to the released JAR.
+* PK should derive the SBOM file name from the same release-artifact metadata as the JAR instead of requiring duplicate configuration in `.project-keeper.yml`.
+
+Covers:
+* [`req~publish-release-sboms~0`](system_requirements.md#publish-spdx-sboms-with-releases)
+
+Needs: impl, utest, itest
+
 ### Customize Build Process
 
 #### Customize GitHub Workflow `ci-build.yml`
@@ -1030,6 +1046,22 @@ Covers:
 
 Needs: impl, utest
 
+#### Workflow `release.yml` Publishes SPDX SBOMs to Maven Central
+`dsn~release-workflow.publish-release-sboms~0`
+
+For sources using the `maven_central` module, PK extends the generated release POM templates so that release builds generate an SPDX SBOM and attach it to the deployed Maven artifacts.
+
+Status: draft
+
+Rationale:
+* Maven Central consumers need the SBOM together with the deployed artifacts.
+* PK should generate the SBOM as part of the release build instead of relying on project-specific manual plugin configuration.
+
+Covers:
+* [`req~publish-release-sboms~0`](system_requirements.md#publish-spdx-sboms-with-releases)
+
+Needs: impl, utest, itest
+
 #### Workflow `release.yml` Creates GitHub Release
 `dsn~release-workflow.create-github-release~1`
 
@@ -1194,7 +1226,7 @@ Needs: impl, utest
 #### PK Modes `verify` and `verify-release` Publish List of Release Artifacts
 `dsn~verify-release-mode.output-parameters.release-artifacts~1`
 
-PK mode `verify-release` publishes the list of release artifacts as GitHub Output Parameter, see [`dsn~customize-release-artifacts-jar~0`](#customize-release-artifacts)
+PK mode `verify-release` publishes the list of release artifacts as GitHub Output Parameter, see [`dsn~customize-release-artifacts-jar~0`](#customize-release-artifacts) and [`dsn~customize-release-artifacts-sbom~0`](#release-sbom-artifacts-for-jar_artifact-modules)
 
 Rationale:
 * The list is used for calculating checksums for each artifact.
