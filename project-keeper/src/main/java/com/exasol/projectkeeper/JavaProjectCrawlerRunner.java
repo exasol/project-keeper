@@ -1,6 +1,5 @@
 package com.exasol.projectkeeper;
 
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
@@ -67,13 +66,10 @@ public class JavaProjectCrawlerRunner {
         return builder;
     }
 
-    private String getProjectList(final Path... pomFiles) {
-        return Arrays.stream(pomFiles).map(this::formatPath).collect(Collectors.joining(";"));
-    }
-
-    private String formatPath(final Path pomFile) {
-        return pomFile.toAbsolutePath().toString()
-                // we use / instead of \ here as a fix for https://github.com/eclipse-ee4j/yasson/issues/540
-                .replace(FileSystems.getDefault().getSeparator(), "/");
+    private static String getProjectList(final Path... pomFiles) {
+        return Arrays.stream(pomFiles)
+                .map(Path::toAbsolutePath)
+                .map(Path::toString)
+                .collect(Collectors.joining(";"));
     }
 }
