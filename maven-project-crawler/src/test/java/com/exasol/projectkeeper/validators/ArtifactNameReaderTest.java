@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import org.apache.maven.model.Plugin;
@@ -27,16 +28,16 @@ class ArtifactNameReaderTest {
         project.setArtifactId("my-project");
         project.setVersion("1.2.3");
         project.getBuild().addPlugin(createAssemblyPlugin("artifact-name"));
-        assertThat(readArtifactNames(project), contains("artifact-name.jar", "site/com.exasol_my-project-1.2.3.spdx.json"));
+        assertThat(readArtifactNames(project), contains(Path.of("artifact-name.jar"), Path.of("site/com.exasol_my-project-1.2.3.spdx.json")));
     }
 
-    private List<String> readArtifactNames(final MavenProject project) {
+    private List<Path> readArtifactNames(final MavenProject project) {
         return new ArtifactNameReader(project).readArtifactNames();
     }
 
     private Plugin createAssemblyPlugin(final String finalName) {
         final Plugin plugin = new Plugin();
-        plugin.setGroupId("org.apache.maven.pluginms");
+        plugin.setGroupId("org.apache.maven.plugins");
         plugin.setArtifactId("maven-assembly-plugin");
         final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
         finalNameElement.setValue(finalName);

@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.shared;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +34,7 @@ class MavenProjectCrawlResultTest {
                     new UpdatedDependency("com.example", "my-updated-dependency", "1.0.0", "1.0.1"))) //
             .build();
     private static final CrawledMavenProject CRAWLED_MAVEN_PROJECT = new CrawledMavenProject(REPORT,
-            PROJECT_DEPENDENCIES, "1.2.3", "17", List.of("my-artifact-1.2.3.jar"));
+            PROJECT_DEPENDENCIES, "1.2.3", "17", List.of(Path.of("my-artifact-1.2.3.jar")));
     private static final MavenProjectCrawlResult CRAWL_RESULT = new MavenProjectCrawlResult(
             Map.of("pom.xml", CRAWLED_MAVEN_PROJECT));
 

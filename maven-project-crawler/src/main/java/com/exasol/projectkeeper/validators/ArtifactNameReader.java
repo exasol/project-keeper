@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.validators;
 
 import static java.util.Collections.emptyList;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
 
@@ -27,11 +28,11 @@ public class ArtifactNameReader {
     }
 
     /**
-     * Get the file names of the release artifacts relative to the {@code target} directory.
+     * Get the paths of the release artifacts relative to the {@code target} directory.
      *
-     * @return file names relative to the {@code target} directory
+     * @return artifact paths relative to the {@code target} directory
      */
-    public List<String> readArtifactNames() {
+    public List<Path> readArtifactNames() {
         return Optional.ofNullable(readFinalArtifactName())
                 .map(this::releaseArtifactNames)
                 .orElse(emptyList());
@@ -51,9 +52,9 @@ public class ArtifactNameReader {
     }
 
     // [impl->dsn~customize-release-artifacts-sbom~0]
-    private List<String> releaseArtifactNames(final String jarArtifactName) {
+    private List<Path> releaseArtifactNames(final String jarArtifactName) {
         final String spdxArtifactName = "site/" + this.project.getGroupId() + "_" + this.project.getArtifactId() + "-"
                 + this.project.getVersion() + ".spdx.json";
-        return List.of(jarArtifactName, spdxArtifactName);
+        return List.of(Path.of(jarArtifactName), Path.of(spdxArtifactName));
     }
 }

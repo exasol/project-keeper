@@ -20,7 +20,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
     private final String artifactId;
     private final String projectName;
     private final String version;
-    private final List<String> releaseArtifactNames;
+    private final List<Path> releaseArtifactNames;
     private final String javaVersion;
     private final DependencyChangeReport dependencyChanges;
     private final ProjectDependencies dependencies;
@@ -109,11 +109,11 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
     }
 
     /**
-     * Get release artifact names.
+     * Get release artifact paths.
      * 
-     * @return artifact file names relative to the {@code target} directory or an empty list if no artifact is built
+     * @return artifact paths relative to the {@code target} directory or an empty list if no artifact is built
      */
-    public List<String> getReleaseArtifactNames() {
+    public List<Path> getReleaseArtifactNames() {
         return this.releaseArtifactNames;
     }
 
@@ -162,7 +162,7 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         private String artifactId;
         private String projectName;
         private String version;
-        private List<String> releaseArtifactNames;
+        private List<Path> releaseArtifactNames;
         private String javaVersion = PomFileGenerator.DEFAULT_JAVA_VERSION;
         private DependencyChangeReport dependencyChanges;
         private ProjectDependencies dependencies;
@@ -239,14 +239,13 @@ public final class AnalyzedMavenSource implements AnalyzedSource {
         }
 
         /**
-         * Set release artifact names.
+         * Set release artifact paths.
          * 
-         * @param releaseArtifactNames Artifact file names relative to the {@code target} directory or an empty list if
-         *                             no artifact is built
+         * @param releaseArtifactNames Artifact paths relative to the {@code target} directory or an empty list if no
+         *                             artifact is built
          * @return {@code this}.
          */
-        public AnalyzedMavenSource.AnalyzedMavenSourceBuilder releaseArtifactNames(
-                final List<String> releaseArtifactNames) {
+        public AnalyzedMavenSource.AnalyzedMavenSourceBuilder releaseArtifactNames(final List<Path> releaseArtifactNames) {
             this.releaseArtifactNames = releaseArtifactNames;
             return this;
         }

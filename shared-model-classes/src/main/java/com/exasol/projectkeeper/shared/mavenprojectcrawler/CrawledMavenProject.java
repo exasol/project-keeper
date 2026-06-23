@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.shared.mavenprojectcrawler;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Objects;
 
@@ -14,7 +15,7 @@ public final class CrawledMavenProject {
     private ProjectDependencies projectDependencies;
     private String projectVersion;
     private String javaVersion;
-    private List<String> releaseArtifactNames;
+    private List<Path> releaseArtifactNames;
 
     /** Default constructor required for JSON serialization. */
     public CrawledMavenProject() {
@@ -29,12 +30,12 @@ public final class CrawledMavenProject {
      * @param projectVersion         project version
      * @param javaVersion            Java version from the {@code java.version} property or {@code null} if property is
      *                               not defined
-     * @param releaseArtifactNames   artifact file names relative to the {@code target} directory or {@code null} if no
+     * @param releaseArtifactNames   artifact paths relative to the {@code target} directory or {@code null} if no
      *                               artifacts are created
      */
     public CrawledMavenProject(final DependencyChangeReport dependencyChangeReport,
             final ProjectDependencies projectDependencies, final String projectVersion, final String javaVersion,
-            final List<String> releaseArtifactNames) {
+            final List<Path> releaseArtifactNames) {
         this.dependencyChangeReport = dependencyChangeReport;
         this.projectDependencies = projectDependencies;
         this.projectVersion = projectVersion;
@@ -115,21 +116,21 @@ public final class CrawledMavenProject {
     }
 
     /**
-     * Get release artifact names.
+     * Get release artifact paths.
      * 
-     * @return artifact file names relative to the {@code target} directory or {@code null} if no artifact is created
+     * @return artifact paths relative to the {@code target} directory or {@code null} if no artifact is created
      */
-    public List<String> getReleaseArtifactNames() {
+    public List<Path> getReleaseArtifactNames() {
         return releaseArtifactNames;
     }
 
     /**
-     * Set release artifact names.
+     * Set release artifact paths.
      * 
-     * @param releaseArtifactNames artifact file names relative to the {@code target} directory or {@code null} if no
+     * @param releaseArtifactNames artifact paths relative to the {@code target} directory or {@code null} if no
      *                             artifact is created
      */
-    public void setReleaseArtifactNames(final List<String> releaseArtifactNames) {
+    public void setReleaseArtifactNames(final List<Path> releaseArtifactNames) {
         this.releaseArtifactNames = releaseArtifactNames;
     }
 

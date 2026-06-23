@@ -3,6 +3,7 @@ package com.exasol.projectkeeper;
 import static java.util.Objects.requireNonNull;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -72,7 +73,7 @@ public class MavenProjectCrawlerMojo extends AbstractMojo {
             final ProjectDependencies dependencies = new ProjectDependencyReader(modelFromRepositoryReader, project)
                     .readDependencies();
             final String javaVersion = project.getProperties().getProperty("java.version", null);
-            final List<String> artifactNames = new ArtifactNameReader(project).readArtifactNames();
+            final List<Path> artifactNames = new ArtifactNameReader(project).readArtifactNames();
             final CrawledMavenProject crawledMavenProject = new CrawledMavenProject(dependencyChangeReport,
                     dependencies, project.getVersion(), javaVersion, artifactNames);
             crawledProjects.put(path, crawledMavenProject);
