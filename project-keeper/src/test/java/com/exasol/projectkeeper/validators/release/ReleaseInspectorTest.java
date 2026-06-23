@@ -32,7 +32,7 @@ class ReleaseInspectorTest {
         assertThat(testee().validators(), hasSize(1));
     }
 
-    // [utest->dsn~verify-release-mode.verify-release-date~1]
+    // [utest->dsn~verify-release-mode.verify-release-date~2]
     @Test
     void verifyReleaseDate() {
         simulateChangesFile(ChangesFile.builder().codeName("code name").releaseDate("invalid"));

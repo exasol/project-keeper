@@ -1,8 +1,12 @@
 # Project Keeper 5.7.0, released 2026-??-??
 
-Code name:
+Code name: Relax Release Date Requirements
 
 ## Summary
+
+This release relaxes requirements for the release date. Release builds will now also run when the release date in the current changelog is not older than five days.
+
+This release deactivates the new JavaDoc option `--no-fonts` that is only supported with JDK >= 23. The release also specifies the new `--release` option for JavaDoc instead of `-source` and explicitly specifies `-locale en`.
 
 This release replaces the old Java compiler flags `-source` and `-target` with `--release`. See the [maven plugin documentation](https://maven.apache.org/plugins/maven-compiler-plugin/examples/set-compiler-release.html) for details.
 
@@ -11,6 +15,8 @@ The release also removes the deprecated Maven Plugin `quality-summarizer-maven-p
 The release also deactivates the new JavaDoc option `--no-fonts` that is only supported with JDK >= 23. The release also specifies the new `--release` option for JavaDoc instead of `-source` and explicitly specifies `-locale en`.
 
 The release also removes the deprecated Maven Plugin `quality-summarizer-maven-plugin` we used to generate `metrics.json`. This file is no longer added to releases.
+
+* #698: Allowed `verify-release` changelog dates from today minus 5 days through today.
 
 ## Bugfixes
 
