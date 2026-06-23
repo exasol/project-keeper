@@ -86,7 +86,7 @@ class PomFileGeneratorTest {
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
         return Stream.of(
-                Arguments.of("JAR_ARTIFACT", List.of("maven-assembly-plugin", "maven-jar-plugin", "spdx-maven-plugin", "build-helper-maven-plugin")),
+                Arguments.of("JAR_ARTIFACT", List.of("maven-assembly-plugin", "maven-jar-plugin", "spdx-maven-plugin")),
                 Arguments.of("MAVEN_CENTRAL",
                         List.of("maven-deploy-plugin", "maven-gpg-plugin", "maven-source-plugin", "central-publishing-maven-plugin", "spdx-maven-plugin",
                                 "build-helper-maven-plugin")),
@@ -194,8 +194,8 @@ class PomFileGeneratorTest {
     }
 
     @Test
-    void testSbomPluginConfiguration() {
-        final Model pom = runGeneration(List.of(ProjectKeeperModule.JAR_ARTIFACT), null);
+    void testSbomPluginConfigurationForMaven() {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.MAVEN_CENTRAL), null);
         final Plugin spdxPlugin = findPlugin(pom, "spdx-maven-plugin");
         final Plugin buildHelperPlugin = findPlugin(pom, "build-helper-maven-plugin");
         final Xpp3Dom spdxConfig = (Xpp3Dom) spdxPlugin.getConfiguration();
@@ -209,6 +209,17 @@ class PomFileGeneratorTest {
                 () -> assertThat(buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("file").getValue(),
                         equalTo("${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json")),
                 () -> assertThat(buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("classifier").getValue(), equalTo("sbom")));
+    }
+
+    @Test
+    void testSbomPluginConfigurationForJarArtifact() {
+        final Model pom = runGeneration(List.of(ProjectKeeperModule.JAR_ARTIFACT), null);
+        final Plugin spdxPlugin = findPlugin(pom, "spdx-maven-plugin");
+        final Xpp3Dom spdxConfig = (Xpp3Dom) spdxPlugin.getConfiguration();
+        assertAll(
+                () -> assertThat(spdxPlugin.getVersion(), equalTo("1.0.3")),
+                () -> assertThat(spdxPlugin.getExecutions().get(0).getGoals(), contains("createSPDX")),
+                () -> assertThat(spdxConfig.getChild("sbomType").getValue(), equalTo("build")));
     }
 
     private Plugin findPlugin(final Model pom, final String artifactId) {
