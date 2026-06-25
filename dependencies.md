@@ -52,11 +52,11 @@
 | [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
 | [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
-| [Apache Maven GPG Plugin][42]                          | [Apache-2.0][1]                               |
-| [Apache Maven Source Plugin][43]                       | [Apache-2.0][1]                               |
-| [Apache Maven Javadoc Plugin][44]                      | [Apache-2.0][1]                               |
-| [spdx-maven-plugin Maven Plugin][45]                   | [The Apache Software License, Version 2.0][8] |
-| [Build Helper Maven Plugin][46]                        | [The MIT License][47]                         |
+| [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
+| [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
+| [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
+| [Build Helper Maven Plugin][45]                        | [The MIT License][46]                         |
+| [Apache Maven GPG Plugin][47]                          | [Apache-2.0][1]                               |
 | [Central Publishing Maven Plugin][48]                  | [The Apache License, Version 2.0][1]          |
 | [Apache Maven Dependency Plugin][49]                   | [Apache-2.0][1]                               |
 | [JaCoCo :: Maven Plugin][50]                           | [EPL-2.0][51]                                 |
@@ -122,11 +122,11 @@
 | [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
 | [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
-| [Apache Maven GPG Plugin][42]                          | [Apache-2.0][1]                               |
-| [Apache Maven Source Plugin][43]                       | [Apache-2.0][1]                               |
-| [Apache Maven Javadoc Plugin][44]                      | [Apache-2.0][1]                               |
-| [spdx-maven-plugin Maven Plugin][45]                   | [The Apache Software License, Version 2.0][8] |
-| [Build Helper Maven Plugin][46]                        | [The MIT License][47]                         |
+| [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
+| [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
+| [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
+| [Build Helper Maven Plugin][45]                        | [The MIT License][46]                         |
+| [Apache Maven GPG Plugin][47]                          | [Apache-2.0][1]                               |
 | [Central Publishing Maven Plugin][48]                  | [The Apache License, Version 2.0][1]          |
 | [Apache Maven Dependency Plugin][49]                   | [Apache-2.0][1]                               |
 | [Maven Failsafe Plugin][75]                            | [Apache-2.0][1]                               |
@@ -182,11 +182,11 @@
 | [Apache Maven JAR Plugin][73]                          | [Apache-2.0][1]                               |
 | [Artifact reference checker and unifier][77]           | [MIT License][78]                             |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
-| [Apache Maven GPG Plugin][42]                          | [Apache-2.0][1]                               |
-| [Apache Maven Source Plugin][43]                       | [Apache-2.0][1]                               |
-| [Apache Maven Javadoc Plugin][44]                      | [Apache-2.0][1]                               |
-| [spdx-maven-plugin Maven Plugin][45]                   | [The Apache Software License, Version 2.0][8] |
-| [Build Helper Maven Plugin][46]                        | [The MIT License][47]                         |
+| [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
+| [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
+| [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
+| [Build Helper Maven Plugin][45]                        | [The MIT License][46]                         |
+| [Apache Maven GPG Plugin][47]                          | [Apache-2.0][1]                               |
 | [Central Publishing Maven Plugin][48]                  | [The Apache License, Version 2.0][1]          |
 | [Maven Failsafe Plugin][75]                            | [Apache-2.0][1]                               |
 | [JaCoCo :: Maven Plugin][50]                           | [EPL-2.0][51]                                 |
@@ -239,11 +239,11 @@
 | [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
 | [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
-| [Apache Maven GPG Plugin][42]                          | [Apache-2.0][1]                               |
-| [Apache Maven Source Plugin][43]                       | [Apache-2.0][1]                               |
-| [Apache Maven Javadoc Plugin][44]                      | [Apache-2.0][1]                               |
-| [spdx-maven-plugin Maven Plugin][45]                   | [The Apache Software License, Version 2.0][8] |
-| [Build Helper Maven Plugin][46]                        | [The MIT License][47]                         |
+| [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
+| [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
+| [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
+| [Build Helper Maven Plugin][45]                        | [The MIT License][46]                         |
+| [Apache Maven GPG Plugin][47]                          | [Apache-2.0][1]                               |
 | [Central Publishing Maven Plugin][48]                  | [The Apache License, Version 2.0][1]          |
 | [Apache Maven Dependency Plugin][49]                   | [Apache-2.0][1]                               |
 | [Maven Failsafe Plugin][75]                            | [Apache-2.0][1]                               |
@@ -300,11 +300,11 @@
 | [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
 | [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
-| [Apache Maven GPG Plugin][42]                          | [Apache-2.0][1]                               |
-| [Apache Maven Source Plugin][43]                       | [Apache-2.0][1]                               |
-| [Apache Maven Javadoc Plugin][44]                      | [Apache-2.0][1]                               |
-| [spdx-maven-plugin Maven Plugin][45]                   | [The Apache Software License, Version 2.0][8] |
-| [Build Helper Maven Plugin][46]                        | [The MIT License][47]                         |
+| [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
+| [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
+| [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
+| [Build Helper Maven Plugin][45]                        | [The MIT License][46]                         |
+| [Apache Maven GPG Plugin][47]                          | [Apache-2.0][1]                               |
 | [Central Publishing Maven Plugin][48]                  | [The Apache License, Version 2.0][1]          |
 | [Apache Maven Dependency Plugin][49]                   | [Apache-2.0][1]                               |
 | [Maven Failsafe Plugin][75]                            | [Apache-2.0][1]                               |
@@ -339,7 +339,7 @@
 | ------------------------------------------------------ | ------------------------------------------- |
 | [SonarQube Scanner for Maven][32]                      | [GNU LGPL 3][33]                            |
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                             |
-| [Apache Maven Javadoc Plugin][44]                      | [Apache-2.0][1]                             |
+| [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                             |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                             |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                             |
 | [Maven Flatten Plugin][36]                             | [Apache Software License][1]                |
@@ -399,12 +399,12 @@
 [39]: https://basepom.github.io/duplicate-finder-maven-plugin
 [40]: http://www.apache.org/licenses/LICENSE-2.0.html
 [41]: https://maven.apache.org/plugins/maven-artifact-plugin/
-[42]: https://maven.apache.org/plugins/maven-gpg-plugin/
-[43]: https://maven.apache.org/plugins/maven-source-plugin/
-[44]: https://maven.apache.org/plugins/maven-javadoc-plugin/
-[45]: https://github.com/spdx/spdx-maven-plugin
-[46]: https://www.mojohaus.org/build-helper-maven-plugin/
-[47]: https://spdx.org/licenses/MIT.txt
+[42]: https://maven.apache.org/plugins/maven-source-plugin/
+[43]: https://maven.apache.org/plugins/maven-javadoc-plugin/
+[44]: https://github.com/spdx/spdx-maven-plugin
+[45]: https://www.mojohaus.org/build-helper-maven-plugin/
+[46]: https://spdx.org/licenses/MIT.txt
+[47]: https://maven.apache.org/plugins/maven-gpg-plugin/
 [48]: https://central.sonatype.org
 [49]: https://maven.apache.org/plugins/maven-dependency-plugin/
 [50]: https://www.jacoco.org/jacoco/trunk/doc/maven.html

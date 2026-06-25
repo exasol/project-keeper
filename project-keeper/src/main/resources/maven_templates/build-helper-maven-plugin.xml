@@ -6,7 +6,7 @@
     <executions>
         <execution>
             <id>attach-spdx-sbom</id>
-            <phase>verify</phase>
+            <phase>package</phase>
             <goals>
                 <goal>attach-artifact</goal>
             </goals>
