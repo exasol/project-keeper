@@ -262,6 +262,17 @@ Needs: dsn
 
 ### Support for Maven Projects
 
+`feat~maven-project-support~0`
+
+PK supports Maven projects, including the Maven-specific build and release artifacts required by supported release channels.
+
+Rationale:
+
+* PK generates Maven-specific templates and workflows.
+* Maven Central deployment and GitHub release publication both depend on Maven artifact metadata.
+
+Needs: req
+
 #### Support Building With Multiple Java Versions
 `feat~mvn-multiple-java-versions~1`
 
@@ -419,6 +430,21 @@ Rationale:
 
 Covers:
 * [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
+
+Needs: dsn
+
+#### Publish SPDX SBOMs with Releases
+`req~publish-release-sboms~0`
+
+PK generates SPDX SBOM files for Maven artifacts produced during a release and publishes them in all supported release channels.
+
+Rationale:
+
+* Downstream consumers need SBOMs from both Maven Central and GitHub releases.
+* Projects using the `maven_central` and `jar_artifact` modules should not have to duplicate SBOM configuration.
+
+Covers:
+* [`feat~maven-project-support~0`](#support-for-maven-projects)
 
 Needs: dsn
 

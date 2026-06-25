@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.model.Model;
+import org.apache.maven.model.Plugin;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matcher;
@@ -178,6 +179,26 @@ class ProjectKeeperMojoIT {
                 containsString("E-PK-CORE-182: Release date '" + thisYear + "-??-??' has invalid format in "));
     }
 
+    @Test
+    // [itest->dsn~release-workflow.publish-release-sboms~0]
+    void testFixAddsSbomPluginsToGeneratedParentPom() throws VerificationException, IOException {
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                    modules:
+                      - jar_artifact
+                      - maven_central
+                """);
+        verifier.executeGoal("project-keeper:fix");
+        final Model generatedParentPom = readGeneratedParentPom();
+        final List<String> pluginArtifactIds = generatedParentPom.getBuild().getPlugins().stream()
+                .map(Plugin::getArtifactId).toList();
+        assertAll(
+                () -> assertThat(pluginArtifactIds, hasItem("spdx-maven-plugin")),
+                () -> assertThat(pluginArtifactIds, hasItem("build-helper-maven-plugin")));
+    }
+
     // [itest->dsn~dependency-updater.increment-version~2]
     // [itest->dsn~dependency-updater.update-dependencies~1]
     // [itest->dsn~dependency-updater.read-vulnerability-info~1]
@@ -272,6 +293,10 @@ class ProjectKeeperMojoIT {
 
     private Model readPom() {
         return new PomFileIO().readPom(projectDir.resolve("pom.xml"));
+    }
+
+    private Model readGeneratedParentPom() {
+        return new PomFileIO().readPom(projectDir.resolve("pk_generated_parent.pom"));
     }
 
     @ParameterizedTest

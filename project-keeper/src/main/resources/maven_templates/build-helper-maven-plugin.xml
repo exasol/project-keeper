@@ -1,0 +1,24 @@
+<plugin>
+    <!-- [impl->dsn~release-workflow.publish-release-sboms~0] -->
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>build-helper-maven-plugin</artifactId>
+    <version>3.6.1</version>
+    <executions>
+        <execution>
+            <id>attach-spdx-sbom</id>
+            <phase>verify</phase>
+            <goals>
+                <goal>attach-artifact</goal>
+            </goals>
+            <configuration>
+                <artifacts>
+                    <artifact>
+                        <file>${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json</file>
+                        <type>spdx</type>
+                        <classifier>sbom</classifier>
+                    </artifact>
+                </artifacts>
+            </configuration>
+        </execution>
+    </executions>
+</plugin>

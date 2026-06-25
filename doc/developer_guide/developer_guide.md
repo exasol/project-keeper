@@ -136,13 +136,41 @@ This makes PK in all repositories to verify that the file `test/my_file.md` exis
 
 Validations for the POM file are defined using code. For maven plugins there is the abstract base class `AbstractPluginPomTemplate` that facilitates the template implementation.
 
-## Debugging Maven Central Deployment
+## Testing Maven Central Deployment Locally
 
-The PK module `maven_central` specified in `.project-keeper.yml` will deploy the marked Maven module to Maven Central. For debugging you can run this deployment locally.
+The PK module `maven_central` specified in `.project-keeper.yml` deploys marked Maven modules to Maven Central. You can test this release flow locally in two stages:
 
-### Verify Bundle Content
+1. Build the Maven Central bundle locally and inspect its content without contacting Maven Central.
+2. Upload the bundle to Maven Central as a draft deployment without publishing it.
 
-Maven plugin `central-publishing-maven-plugin` creates a bundle and uploads it to Maven Central. To verify the content of this bundle without uploading, run the following command. You don't need to Maven Central credentials to do this.
+### Prerequisites
+
+Local deployment testing uses the same signing and publishing setup as the real release:
+
+* A working GPG setup for artifact signing
+* Maven Central credentials in `~/.m2/settings.xml` if you want to test the upload
+
+Example Maven Central credentials:
+
+```xml
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+    <servers>
+        <server>
+            <id>maven-central-portal</id>
+            <username>user</username>
+            <password>password</password>
+        </server>
+    </servers>
+</settings>
+```
+
+### Test 1: Verify Bundle Content Locally
+
+**Note:** Latest versions of `central-publishing-maven-plugin` have a regression that `skipPublishing` does not produce `central-bundle.zip`. Version 0.8.0 is the last known version where this worked. A workaround is to specify invalid credentials and try [Test 2](#test-2-verify-bundle-upload-without-publishing). This will also build the bundle.
+
+Maven plugin `central-publishing-maven-plugin` creates a bundle and uploads it to Maven Central. To verify the content of this bundle without uploading it, run the following command. You do not need Maven Central credentials for this test.
 
 ```sh
 mvn clean deploy -Dgpg.skip=false -DskipTests \
@@ -150,7 +178,7 @@ mvn clean deploy -Dgpg.skip=false -DskipTests \
   -Dcentral-publishing.skipPublishing=true
 ```
 
-This will create a bundle containing all published modules **in one of the Maven modules**. You can find the bundle using `find . -name central-bundle.zip`. In Project Keeper this might return `./shared-model-classes/target/central-publishing/central-bundle.zip`. Check the content with `unzip -l`:
+This creates a bundle containing all published modules **in one of the Maven modules**. You can find the bundle using `find . -name central-bundle.zip`. In Project Keeper this might return `./shared-model-classes/target/central-publishing/central-bundle.zip`. Check the content with `unzip -l`:
 
 ```
 $ unzip -l ./shared-model-classes/target/central-publishing/central-bundle.zip
@@ -171,33 +199,17 @@ Archive:  ./shared-model-classes/target/central-publishing/central-bundle.zip
 
 Ensure that **only modules meant for publishing** are contained in this bundle and that it does not contain test modules.
 
-### Verify Bundle Upload
+### Test 2: Verify Bundle Upload Without Publishing
 
-To test the bundle upload to Maven Central **without publishing**, configure Maven Central credentials in `~/.m2/settings.xml`:
-
-```xml
-<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
-    <servers>
-        <server>
-            <id>maven-central-portal</id>
-            <username>user</username>
-            <password>password</password>
-        </server>
-    </servers>
-</settings>
-```
-
-Then run the following command:
+To test the upload to Maven Central **without publishing**, run the following command:
 
 ```sh
 mvn clean deploy -Dgpg.skip=false -DskipTests \
   -Dcentral-publishing.deploymentName="Testing Deployment"
 ```
 
-**Important:** Do not specify property `central-publishing.autoPublish` to use the default value `false`. This ensures that the bundle will **not** be published automatically.
+**Important:** Do not specify property `central-publishing.autoPublish`. The default value is `false`, so the uploaded bundle stays in draft state and is **not** published automatically.
 
-Then login to Maven Central Portal and go to the [deployments page](https://central.sonatype.com/publishing/deployments). Verify that your component was deployed successfully and has the expected content.
+Then log in to Maven Central Portal and open the [deployments page](https://central.sonatype.com/publishing/deployments). Verify that your component was uploaded successfully and has the expected content.
 
 Don't forget to click the "Drop" button for the deployment to avoid accidentally publishing it.

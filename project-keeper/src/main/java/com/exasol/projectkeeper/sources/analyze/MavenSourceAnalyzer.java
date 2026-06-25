@@ -3,7 +3,6 @@ package com.exasol.projectkeeper.sources.analyze;
 import static com.exasol.projectkeeper.shared.config.SourceType.MAVEN;
 import static java.util.Collections.emptyMap;
 
-import java.nio.file.FileSystems;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +86,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
                     .version(crawledMavenProject.getProjectVersion()) //
                     .isRootProject(isRoot) //
                     .javaVersion(crawledMavenProject.getJavaVersion()) //
-                    .releaseArtifactName(crawledMavenProject.getReleaseArtifactName()) //
+                    .releaseArtifactPaths(crawledMavenProject.getReleaseArtifactPaths()) //
                     .build();
         } else {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-93")
@@ -98,12 +97,10 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     private CrawledMavenProject getCrawlResultForProject(final Source source,
             final Map<String, CrawledMavenProject> crawlResult) {
-        final String key = source.getPath().toString()
-                // we use / instead of \ here as a fix for https://github.com/eclipse-ee4j/yasson/issues/540
-                .replace(FileSystems.getDefault().getSeparator(), "/");
+        final String key = source.getPath().toString();
         if (!crawlResult.containsKey(key)) {
             throw new IllegalStateException(ExaError.messageBuilder("F-PK-CORE-117")
-                    .message("The crawl result did not contain the project {{project}}.", source.getPath())
+                    .message("The crawl result did not contain the project {{project}}.", key)
                     .ticketMitigation().toString());
         }
         return crawlResult.get(key);

@@ -1,5 +1,9 @@
 package com.exasol.projectkeeper.shared.mavenprojectcrawler;
 
+import static java.util.Collections.emptyList;
+
+import java.nio.file.Path;
+import java.util.List;
 import java.util.Objects;
 
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependencies;
@@ -13,11 +17,12 @@ public final class CrawledMavenProject {
     private ProjectDependencies projectDependencies;
     private String projectVersion;
     private String javaVersion;
-    private String releaseArtifactName;
+    // We store the artifact paths as strings to avoid issues with JSON serialization of Path objects.
+    private List<String> releaseArtifactPaths;
 
     /** Default constructor required for JSON serialization. */
     public CrawledMavenProject() {
-        this(null, null, null, null, null);
+        this(null, null, null, null, emptyList());
     }
 
     /**
@@ -28,17 +33,17 @@ public final class CrawledMavenProject {
      * @param projectVersion         project version
      * @param javaVersion            Java version from the {@code java.version} property or {@code null} if property is
      *                               not defined
-     * @param releaseArtifactName    file name of the artifact in the {@code target} directory or {@code null} if no
-     *                               artifact is created
+     * @param releaseArtifactPaths   artifact paths relative to the {@code target} directory or {@code null} if no
+     *                               artifacts are created
      */
     public CrawledMavenProject(final DependencyChangeReport dependencyChangeReport,
             final ProjectDependencies projectDependencies, final String projectVersion, final String javaVersion,
-            final String releaseArtifactName) {
+            final List<Path> releaseArtifactPaths) {
         this.dependencyChangeReport = dependencyChangeReport;
         this.projectDependencies = projectDependencies;
         this.projectVersion = projectVersion;
         this.javaVersion = javaVersion;
-        this.releaseArtifactName = releaseArtifactName;
+        this.releaseArtifactPaths = releaseArtifactPaths.stream().map(Path::toString).toList();
     }
 
     /**
@@ -114,35 +119,35 @@ public final class CrawledMavenProject {
     }
 
     /**
-     * Get release artifact name.
+     * Get release artifact paths.
      * 
-     * @return file name of the artifact in the {@code target} directory or {@code null} if no artifact is created
+     * @return artifact paths relative to the {@code target} directory or {@code null} if no artifact is created
      */
-    public String getReleaseArtifactName() {
-        return releaseArtifactName;
+    public List<Path> getReleaseArtifactPaths() {
+        return releaseArtifactPaths.stream().map(Path::of).toList();
     }
 
     /**
-     * Set release artifact name.
+     * Set release artifact paths.
      * 
-     * @param releaseArtifactName file name of the artifact in the {@code target} directory or {@code null} if no
-     *                            artifact is created
+     * @param releaseArtifactPaths artifact paths relative to the {@code target} directory or {@code null} if no
+     *                             artifact is created
      */
-    public void setReleaseArtifactName(final String releaseArtifactName) {
-        this.releaseArtifactName = releaseArtifactName;
+    public void setReleaseArtifactPaths(final List<Path> releaseArtifactPaths) {
+        this.releaseArtifactPaths = releaseArtifactPaths.stream().map(Path::toString).toList();
     }
 
     @Override
     public String toString() {
         return "CrawledMavenProject [dependencyChangeReport=" + dependencyChangeReport + ", projectDependencies="
                 + projectDependencies + ", projectVersion=" + projectVersion + ", javaVersion=" + javaVersion
-                + ", releaseArtifactName=" + releaseArtifactName + "]";
+                + ", releaseArtifactPaths=" + releaseArtifactPaths + "]";
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(dependencyChangeReport, projectDependencies, projectVersion, javaVersion,
-                releaseArtifactName);
+                releaseArtifactPaths);
     }
 
     @Override
@@ -161,6 +166,6 @@ public final class CrawledMavenProject {
                 && Objects.equals(projectDependencies, other.projectDependencies)
                 && Objects.equals(projectVersion, other.projectVersion)
                 && Objects.equals(javaVersion, other.javaVersion)
-                && Objects.equals(releaseArtifactName, other.releaseArtifactName);
+                && Objects.equals(releaseArtifactPaths, other.releaseArtifactPaths);
     }
 }

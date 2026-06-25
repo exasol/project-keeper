@@ -34,7 +34,7 @@ class GitHubWorkflowIOTest {
                     steps:
                       - name: Checkout the repository
                         id: checkout
-                        uses: actions/checkout@v6
+                        uses: actions/checkout@v7
                         with:
                           fetch-depth: 0
                           persist-credentials: false
