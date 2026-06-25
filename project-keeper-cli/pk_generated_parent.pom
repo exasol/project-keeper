@@ -392,6 +392,7 @@
                 <executions>
                     <execution>
                         <id>build-spdx</id>
+                        <phase>package</phase>
                         <goals>
                             <goal>createSPDX</goal>
                         </goals>
@@ -418,7 +419,7 @@
                 <executions>
                     <execution>
                         <id>attach-spdx-sbom</id>
-                        <phase>verify</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>attach-artifact</goal>
                         </goals>

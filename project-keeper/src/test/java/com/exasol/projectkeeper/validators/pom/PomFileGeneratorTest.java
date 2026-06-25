@@ -202,9 +202,11 @@ class PomFileGeneratorTest {
         final Xpp3Dom buildHelperConfig = (Xpp3Dom) buildHelperPlugin.getExecutions().get(0).getConfiguration();
         assertAll(
                 () -> assertThat(spdxPlugin.getVersion(), equalTo("1.0.3")),
+                () -> assertThat(spdxPlugin.getExecutions().get(0).getPhase(), equalTo("package")),
                 () -> assertThat(spdxPlugin.getExecutions().get(0).getGoals(), contains("createSPDX")),
                 () -> assertThat(spdxConfig.getChild("sbomType").getValue(), equalTo("build")),
                 () -> assertThat(buildHelperPlugin.getVersion(), equalTo("3.6.1")),
+                () -> assertThat(buildHelperPlugin.getExecutions().get(0).getPhase(), equalTo("package")),
                 () -> assertThat(buildHelperPlugin.getExecutions().get(0).getGoals(), contains("attach-artifact")),
                 () -> assertThat(buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("file").getValue(),
                         equalTo("${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json")),
