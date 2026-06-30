@@ -18,7 +18,7 @@
         </license>
     </licenses>
     <properties>
-        <revision>5.7.0</revision>
+        <revision>5.7.1</revision>
         <ossindexSkip>false</ossindexSkip>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
@@ -151,7 +151,7 @@
             <dependency>
                 <groupId>org.junit</groupId>
                 <artifactId>junit-bom</artifactId>
-                <version>6.1.0</version>
+                <version>6.1.1</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
