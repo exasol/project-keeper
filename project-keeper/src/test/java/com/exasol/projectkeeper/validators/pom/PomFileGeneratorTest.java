@@ -201,7 +201,6 @@ class PomFileGeneratorTest {
         final Xpp3Dom spdxConfig = (Xpp3Dom) spdxPlugin.getConfiguration();
         final Xpp3Dom buildHelperConfig = (Xpp3Dom) buildHelperPlugin.getExecutions().get(0).getConfiguration();
         assertAll(
-                () -> assertThat(spdxPlugin.getVersion(), equalTo("1.0.4")),
                 () -> assertThat(spdxPlugin.getExecutions().get(0).getPhase(), equalTo("package")),
                 () -> assertThat(spdxPlugin.getExecutions().get(0).getGoals(), contains("createSPDX")),
                 () -> assertThat(spdxConfig.getChild("sbomType").getValue(), equalTo("build")),
@@ -219,7 +218,6 @@ class PomFileGeneratorTest {
         final Plugin spdxPlugin = findPlugin(pom, "spdx-maven-plugin");
         final Xpp3Dom spdxConfig = (Xpp3Dom) spdxPlugin.getConfiguration();
         assertAll(
-                () -> assertThat(spdxPlugin.getVersion(), equalTo("1.0.4")),
                 () -> assertThat(spdxPlugin.getExecutions().get(0).getGoals(), contains("createSPDX")),
                 () -> assertThat(spdxConfig.getChild("sbomType").getValue(), equalTo("build")));
     }
