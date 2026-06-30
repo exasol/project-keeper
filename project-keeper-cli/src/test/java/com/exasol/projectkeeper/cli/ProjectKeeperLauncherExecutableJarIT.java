@@ -34,6 +34,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     Path projectDir;
 
     @Test
+    @SuppressWarnings("try") // fixture not referenced in body of try statement
     void fixingMavenProjectSucceeds() {
         try (MavenProjectFixture fixture = prepareMavenProject()) {
             assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
@@ -43,6 +44,7 @@ class ProjectKeeperLauncherExecutableJarIT {
     }
 
     @Test
+    @SuppressWarnings("try") // fixture not referenced in body of try statement
     void fixingGolangProjectSucceeds() {
         try (GolangProjectFixture fixture = prepareGolangProject()) {
             assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
