@@ -34,35 +34,40 @@ class ProjectKeeperLauncherExecutableJarIT {
     Path projectDir;
 
     @Test
+    @SuppressWarnings("try") // fixture not referenced in body of try statement
     void fixingMavenProjectSucceeds() {
-        prepareMavenProject();
-        assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
-                containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
-        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
+        try (MavenProjectFixture fixture = prepareMavenProject()) {
+            assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
+                    containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
+            assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
+        }
     }
 
     @Test
+    @SuppressWarnings("try") // fixture not referenced in body of try statement
     void fixingGolangProjectSucceeds() {
-        prepareGolangProject();
-        assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
-                containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
-        assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
+        try (GolangProjectFixture fixture = prepareGolangProject()) {
+            assertProcessSucceeds(run(this.projectDir, "fix"), equalTo(""),
+                    containsString("[INFO   ] Created 'LICENSE'. Don't forget to update its content!"));
+            assertProcessSucceeds(run(this.projectDir, "verify"), equalTo(""), containsString("Executing command"));
+        }
     }
 
-    private void prepareMavenProject() {
+    private MavenProjectFixture prepareMavenProject() {
         LOGGER.info("Preparing Maven project in " + this.projectDir);
         final MavenProjectFixture fixture = new MavenProjectFixture(this.projectDir);
         fixture.gitInit();
         fixture.writeConfig(fixture.getConfigWithoutModulesBuilder());
         fixture.writeDefaultPom();
+        return fixture;
     }
 
-    private void prepareGolangProject() {
+    private GolangProjectFixture prepareGolangProject() {
         LOGGER.info("Preparing Golang project in " + this.projectDir);
-        @SuppressWarnings("resource")
         final GolangProjectFixture fixture = new GolangProjectFixture(this.projectDir);
         fixture.gitInit();
         fixture.prepareProjectFiles(fixture.createDefaultConfig());
+        return fixture;
     }
 
     private SimpleProcess run(final Path workingDir, final String... args) {
