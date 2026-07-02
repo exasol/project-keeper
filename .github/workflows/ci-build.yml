@@ -71,7 +71,7 @@ jobs:
       }
       - name: Cache SonarCloud packages
         id: cache-sonar
-        uses: actions/cache@v5
+        uses: actions/cache@v6.1.0
         with: {
           path: ~/.sonar/cache,
           key: '${{ runner.os }}-sonar',
@@ -244,7 +244,7 @@ jobs:
         }
       - name: Lint GitHub actions with Zizmore
         id: lint-github-actions
-        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d
+        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa
         with: {
           advanced-security: false
         }
