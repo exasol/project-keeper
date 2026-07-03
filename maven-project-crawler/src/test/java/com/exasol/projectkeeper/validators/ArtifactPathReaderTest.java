@@ -28,7 +28,7 @@ class ArtifactPathReaderTest {
         project.setArtifactId("my-project");
         project.setVersion("1.2.3");
         project.getBuild().addPlugin(createAssemblyPlugin("artifact-name"));
-        assertThat(readArtifactPaths(project), contains(Path.of("artifact-name.jar"), Path.of("site/com.exasol_my-project-1.2.3.spdx.json")));
+        assertThat(readArtifactPaths(project), contains(Path.of("artifact-name.jar"), Path.of("site/com.exasol.my-project-1.2.3.spdx3.json")));
     }
 
     private List<Path> readArtifactPaths(final MavenProject project) {
