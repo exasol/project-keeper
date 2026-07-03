@@ -101,9 +101,9 @@ class GitHubWorkflowOutputTest {
     void releaseArtifactsMavenSourceWithArtifact() {
         publish(ProjectKeeperConfig.builder(), ChangesFile.builder(), AnalyzedMavenSource.builder()
                 .path(this.projectDir.resolve("project-dir/pom.xml"))
-                .releaseArtifactPaths(List.of(Path.of("my-project.jar"), Path.of("site/com.exasol_my-project-1.2.3.spdx.json")))
+                .releaseArtifactPaths(List.of(Path.of("my-project.jar"), Path.of("site/com.exasol.my-project-1.2.3.spdx3.json")))
                 .build());
-        verifyReleaseArtifacts("project-dir/target/my-project.jar", "project-dir/target/site/com.exasol_my-project-1.2.3.spdx.json");
+        verifyReleaseArtifacts("project-dir/target/my-project.jar", "project-dir/target/site/com.exasol.my-project-1.2.3.spdx3.json");
     }
 
     // [utest->dsn~customize-release-artifacts-custom~0]
@@ -132,13 +132,13 @@ class GitHubWorkflowOutputTest {
                                 .releaseArtifacts(List.of(Path.of("build/custom-extension.js"))).build())),
                 ChangesFile.builder(),
                 AnalyzedMavenSource.builder().path(this.projectDir.resolve("pom.xml"))
-                        .releaseArtifactPaths(List.of(Path.of("my-project1.jar"), Path.of("site/com.exasol_my-project1-1.2.3.spdx.json")))
+                        .releaseArtifactPaths(List.of(Path.of("my-project1.jar"), Path.of("site/com.exasol.my-project1-1.2.3.spdx3.json")))
                         .isRootProject(true).build(),
                 AnalyzedMavenSource.builder().path(this.projectDir.resolve("module1/pom.xml"))
-                        .releaseArtifactPaths(List.of(Path.of("my-project2.jar"), Path.of("site/com.exasol_my-project2-1.2.3.spdx.json")))
+                        .releaseArtifactPaths(List.of(Path.of("my-project2.jar"), Path.of("site/com.exasol.my-project2-1.2.3.spdx3.json")))
                         .build());
-        verifyReleaseArtifacts("target/my-project1.jar", "target/site/com.exasol_my-project1-1.2.3.spdx.json",
-                "module1/target/my-project2.jar", "module1/target/site/com.exasol_my-project2-1.2.3.spdx.json",
+        verifyReleaseArtifacts("target/my-project1.jar", "target/site/com.exasol.my-project1-1.2.3.spdx3.json",
+                "module1/target/my-project2.jar", "module1/target/site/com.exasol.my-project2-1.2.3.spdx3.json",
                 "target/error_code_report.json", "target/custom-" + PROJECT_VERSION + ".jar",
                 "subModule/build/custom-extension.js");
     }

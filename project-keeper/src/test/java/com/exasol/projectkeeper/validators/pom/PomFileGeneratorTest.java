@@ -208,7 +208,7 @@ class PomFileGeneratorTest {
                 () -> assertThat(buildHelperPlugin.getExecutions().get(0).getPhase(), equalTo("package")),
                 () -> assertThat(buildHelperPlugin.getExecutions().get(0).getGoals(), contains("attach-artifact")),
                 () -> assertThat(buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("file").getValue(),
-                        equalTo("${project.build.directory}/site/${project.groupId}_${project.artifactId}-${project.version}.spdx.json")),
+                        equalTo("${project.build.directory}/site/${project.groupId}.${project.artifactId}-${project.version}.spdx3.json")),
                 () -> assertThat(buildHelperConfig.getChild("artifacts").getChild("artifact").getChild("classifier").getValue(), equalTo("sbom")));
     }
 
