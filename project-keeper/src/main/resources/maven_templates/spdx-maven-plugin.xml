@@ -22,5 +22,7 @@
         <includeTestScope>false</includeTestScope>
         <copyrightText>Copyright (c) Exasol</copyrightText>
         <createExternalRefs>false</createExternalRefs>
+        <outputFormat>JSON-LD</outputFormat>
+        <spdxFile>${project.reporting.outputDirectory}/${project.groupId}_${project.artifactId}-${project.version}.spdx3.json</spdxFile>
     </configuration>
 </plugin>
