@@ -53,7 +53,7 @@ public class ArtifactPathReader {
 
     // [impl->dsn~customize-release-artifacts-sbom~0]
     private List<Path> releaseArtifactPaths(final String jarArtifactName) {
-        final String spdxArtifactName = "site/" + this.project.getGroupId() + "_" + this.project.getArtifactId() + "."
+        final String spdxArtifactName = "site/" + this.project.getGroupId() + "." + this.project.getArtifactId() + "."
                 + this.project.getVersion() + ".spdx3.json";
         return List.of(Path.of(jarArtifactName), Path.of(spdxArtifactName));
     }
