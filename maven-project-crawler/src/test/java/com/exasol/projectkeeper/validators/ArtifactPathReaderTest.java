@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.validators;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.*;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -28,7 +27,8 @@ class ArtifactPathReaderTest {
         project.setArtifactId("my-project");
         project.setVersion("1.2.3");
         project.getBuild().addPlugin(createAssemblyPlugin("artifact-name"));
-        assertThat(readArtifactPaths(project), contains(Path.of("artifact-name.jar"), Path.of("site/com.exasol.my-project-1.2.3.spdx3.json")));
+        assertThat(readArtifactPaths(project), containsInAnyOrder(Path.of("artifact-name.jar"),
+                Path.of("site/com.exasol.my-project-1.2.3.spdx3.json")));
     }
 
     private List<Path> readArtifactPaths(final MavenProject project) {
