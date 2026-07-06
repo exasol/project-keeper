@@ -6,6 +6,8 @@ Code name: Template for Artifact Reference Checker Maven Plugin 1.0.0
 
 We updated the template for the Artifact Reference Checker Maven Plugin to version 1.0.0.
 
+This release also fixes CVE-2026-9563 in transitive dependency `org.eclipse.parsson:parsson`.
+
 ## Features
 
 * Updated Artifact Reference Checker Maven Plugin template from 0.4.4 to 1.0.0 (PR #754)
