@@ -21,16 +21,6 @@
         <module>parent-pom</module>
         <module>coverage-aggregator</module>
     </modules>
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <!-- Update transitive dependency to fix CVE-2026-9563 -->
-                <groupId>org.eclipse.parsson</groupId>
-                <artifactId>project</artifactId>
-                <version>1.1.9</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
     <build>
         <resources>
             <resource>

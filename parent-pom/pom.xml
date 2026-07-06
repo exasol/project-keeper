@@ -32,9 +32,14 @@
         <gpg.skip>true</gpg.skip>
         <test.excludeTags/>
     </properties>
-
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <!-- Update transitive dependency to fix CVE-2026-9563 -->
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>project</artifactId>
+                <version>1.1.9</version>
+            </dependency>
             <dependency>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-shared-model-classes</artifactId>
