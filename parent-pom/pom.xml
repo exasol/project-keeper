@@ -35,9 +35,9 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <!-- Update transitive dependency to fix CVE-2026-9563 -->
+                <!-- Update transitive dependency of org.eclipse:yasson to fix CVE-2026-9563 -->
                 <groupId>org.eclipse.parsson</groupId>
-                <artifactId>project</artifactId>
+                <artifactId>parsson</artifactId>
                 <version>1.1.9</version>
             </dependency>
             <dependency>
