@@ -1,10 +1,10 @@
 # Project Keeper 5.7.3, released 2026-07-06
 
-Code name: Template for Artifact Reference Checker Maven Plugin 1.0.0
+Code name: Template for Artifact Reference Checker Maven Plugin 1.0.1
 
 ## Summary
 
-We updated the template for the Artifact Reference Checker Maven Plugin to version 1.0.0.
+We updated the template for the Artifact Reference Checker Maven Plugin to version 1.0.1.
 
 This release also fixes CVE-2026-9563 in transitive dependency `org.eclipse.parsson:parsson`.
 
