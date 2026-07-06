@@ -46,7 +46,7 @@ jobs:
           cache: "maven"
       - name: Cache SonarCloud packages
         id: cache-sonar
-        uses: actions/cache@v5
+        uses: actions/cache@v6
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
@@ -88,7 +88,7 @@ jobs:
           IFS=$'\n' artifacts_array=($ARTIFACTS)
           missing_files=()
           for file in "${artifacts_array[@]}";
-          do  
+          do
               echo "Checking if file $file exists..."
               if ! [[ -f "$file" ]]; then
                   print_message "* ⚠️ \`$file\` does not exist ⚠️"
@@ -96,7 +96,7 @@ jobs:
                   ls "$(dirname "$file")"
                   missing_files+=("$file")
               else
-                  print_message "* \`$file\` ✅" 
+                  print_message "* \`$file\` ✅"
               fi
           done
           print_message ""
@@ -226,7 +226,7 @@ jobs:
           persist-credentials: false
       - name: Lint GitHub actions with Zizmore
         id: lint-github-actions
-        uses: zizmorcore/zizmor-action@5f14fd08f7cf1cb1609c1e344975f152c7ee938d # v0.5.6
+        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7
         with:
           advanced-security: false
 
