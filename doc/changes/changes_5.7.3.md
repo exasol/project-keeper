@@ -1,4 +1,4 @@
-# Project Keeper 5.7.3, released 2026-07-06
+# Project Keeper 5.7.3, released 2026-07-07
 
 Code name: Template for Artifact Reference Checker Maven Plugin 1.0.1
 
