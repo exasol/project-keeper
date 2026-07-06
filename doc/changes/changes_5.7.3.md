@@ -40,7 +40,7 @@ This release also fixes CVE-2026-9563 in transitive dependency `org.eclipse.pars
 
 #### Plugin Dependency Updates
 
-* Updated `com.exasol:artifact-reference-checker-maven-plugin:0.4.4` to `1.0.0`
+* Updated `com.exasol:artifact-reference-checker-maven-plugin:0.4.4` to `1.0.1`
 
 ### Project Keeper Maven Plugin
 
