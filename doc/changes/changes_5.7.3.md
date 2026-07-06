@@ -8,7 +8,7 @@ We updated the template for the Artifact Reference Checker Maven Plugin to versi
 
 ## Features
 
-* Updated Artifact Reference Checker Maven Plugin template from 0.4.4 to 1.0.0
+* Updated Artifact Reference Checker Maven Plugin template from 0.4.4 to 1.0.0 (PR #754)
 
 ## Dependency Updates
 
