@@ -18,7 +18,7 @@
         </license>
     </licenses>
     <properties>
-        <revision>5.7.2</revision>
+        <revision>5.7.3</revision>
         <ossindexSkip>false</ossindexSkip>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
@@ -32,9 +32,14 @@
         <gpg.skip>true</gpg.skip>
         <test.excludeTags/>
     </properties>
-
     <dependencyManagement>
         <dependencies>
+            <dependency>
+                <!-- Update transitive dependency of org.eclipse:yasson to fix CVE-2026-9563 -->
+                <groupId>org.eclipse.parsson</groupId>
+                <artifactId>parsson</artifactId>
+                <version>1.1.9</version>
+            </dependency>
             <dependency>
                 <groupId>com.exasol</groupId>
                 <artifactId>project-keeper-shared-model-classes</artifactId>
