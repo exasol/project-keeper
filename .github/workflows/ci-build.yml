@@ -50,7 +50,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.4.0
         with:
           distribution: temurin
           java-version: |-
@@ -193,7 +193,7 @@ jobs:
         }
       - name: Set up JDK 21
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.4.0
         with: {
           distribution: temurin,
           java-version: '21',
@@ -227,7 +227,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.4.0
         with:
           distribution: temurin
           java-version: |-
@@ -305,7 +305,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v5.4.0
         with:
           distribution: temurin
           java-version: |-
