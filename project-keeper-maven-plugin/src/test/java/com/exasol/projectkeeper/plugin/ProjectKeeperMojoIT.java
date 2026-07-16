@@ -57,9 +57,10 @@ class ProjectKeeperMojoIT {
             // git-commit-id-maven-plugin needs at least one commit
             git.commit().setMessage("initial commit").setAllowEmpty(true).call();
         }
-        new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION) //
-                .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION) //
-                .setArtifactFinalName("dummy-${project.version}") //
+        new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION)
+                .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION)
+                .setArtifactFinalName("dummy-${project.version}")
+                .withJavaVersion("17")
                 .writeAsPomToProject(this.projectDir);
         LOG.info(() -> "Running test " + test.getDisplayName() + " using project " + this.projectDir + "...");
         verifier = mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
