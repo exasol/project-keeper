@@ -16,6 +16,12 @@ Please note that the Java version used for compiling and building the projects u
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Added `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970`
+
 ### Project Keeper Shared Model Classes
 
 #### Test Dependency Updates
