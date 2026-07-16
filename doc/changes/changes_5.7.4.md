@@ -6,6 +6,8 @@ Code name: Upgrade SonarQube analysis runtime
 
 This release upgrade the Java version for the Maven build from 17 to 21. Background: SonarQube analysis now requires runtime Java 21.
 
+We also updated the Java version used in the "Next Java" CI build for projects using Java 25 to 26.
+
 Please note that the Java version used for compiling and building the projects using project keeper will not change.
 
 ## Bugfixes
