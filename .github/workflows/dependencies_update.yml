@@ -46,8 +46,8 @@ jobs:
         with:
           distribution: temurin
           java-version: |-
-            11
             17
+            21
           cache: maven
       - name: Print issues
         id: debug-print-issues

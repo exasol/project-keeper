@@ -10,7 +10,8 @@ import com.exasol.projectkeeper.sources.AnalyzedSource;
 
 class JavaVersionExtractor {
 
-    private static final String MAVEN_BUILD_JAVA_VERSION = "17";
+    // Sonar requires Java 21 for analysis
+    private static final String MAVEN_BUILD_JAVA_VERSION = "21";
     private final List<AnalyzedSource> sources;
 
     JavaVersionExtractor(final List<AnalyzedSource> sources) {
@@ -21,8 +22,8 @@ class JavaVersionExtractor {
         final Set<String> javaVersions = new HashSet<>();
         javaVersions.addAll(getSourceJavaVersions());
         javaVersions.add(MAVEN_BUILD_JAVA_VERSION);
-        return javaVersions.stream() //
-                .sorted(comparing(JavaVersionExtractor::parseVersion)) //
+        return javaVersions.stream()
+                .sorted(comparing(JavaVersionExtractor::parseVersion))
                 .toList();
     }
 
@@ -60,7 +61,10 @@ class JavaVersionExtractor {
         if (current < 21) {
             return "21";
         }
-        return "25";
+        if (current < 25) {
+            return "25";
+        }
+        return "26";
     }
 
     private double getCurrentLatestVersion() {
