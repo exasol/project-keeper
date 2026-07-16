@@ -54,8 +54,8 @@ jobs:
         with:
           distribution: temurin
           java-version: |-
-            11
             17
+            21
           cache: maven
       - name: Set up Go
         id: setup-go
@@ -231,8 +231,8 @@ jobs:
         with:
           distribution: temurin
           java-version: |-
-            11
             17
+            21
           cache: maven
           server-id: ossindex
           server-username: OSSINDEX_USERNAME
@@ -309,8 +309,8 @@ jobs:
         with:
           distribution: temurin
           java-version: |-
-            11
             17
+            21
           cache: maven
       - name: Install Project Keeper before check-release
         id: install-project-keeper

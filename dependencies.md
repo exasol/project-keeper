@@ -12,36 +12,37 @@
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                      |
 | [error-code-crawler-maven-plugin][5]                   | [MIT License][6]                     |
 | [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                            |
+| [SonarQube Scanner for Maven][9]                       | [GNU LGPL 3][10]                     |
 
 ## Project Keeper Shared Model Classes
 
 ### Compile Dependencies
 
-| Dependency                       | License                                                                                                        |
-| -------------------------------- | -------------------------------------------------------------------------------------------------------------- |
-| [Jakarta JSON Processing API][9] | [Eclipse Public License 2.0][10]; [GNU General Public License, version 2 with the GNU Classpath Exception][11] |
-| [Jakarta JSON Binding API][12]   | [Eclipse Public License 2.0][10]; [GNU General Public License, version 2 with the GNU Classpath Exception][11] |
-| [Yasson][13]                     | [Eclipse Public License v. 2.0][14]; [Eclipse Distribution License v. 1.0][15]                                 |
-| [error-reporting-java][16]       | [MIT License][17]                                                                                              |
-| [JGit - Core][18]                | [BSD-3-Clause][19]                                                                                             |
+| Dependency                        | License                                                                                                        |
+| --------------------------------- | -------------------------------------------------------------------------------------------------------------- |
+| [Jakarta JSON Processing API][11] | [Eclipse Public License 2.0][12]; [GNU General Public License, version 2 with the GNU Classpath Exception][13] |
+| [Jakarta JSON Binding API][14]    | [Eclipse Public License 2.0][12]; [GNU General Public License, version 2 with the GNU Classpath Exception][13] |
+| [Yasson][15]                      | [Eclipse Public License v. 2.0][16]; [Eclipse Distribution License v. 1.0][17]                                 |
+| [error-reporting-java][18]        | [MIT License][19]                                                                                              |
+| [JGit - Core][20]                 | [BSD-3-Clause][21]                                                                                             |
 
 ### Test Dependencies
 
 | Dependency                                 | License                           |
 | ------------------------------------------ | --------------------------------- |
-| [JUnit5 System Extensions][20]             | [Eclipse Public License v2.0][14] |
-| [EqualsVerifier \| release normal jar][21] | [Apache License, Version 2.0][1]  |
-| [to-string-verifier][22]                   | [MIT License][23]                 |
-| [mockito-core][24]                         | [MIT][25]                         |
-| [SLF4J JDK14 Provider][26]                 | [MIT][27]                         |
-| [JUnit Jupiter (Aggregator)][28]           | [Eclipse Public License v2.0][29] |
-| [Hamcrest][30]                             | [BSD-3-Clause][31]                |
+| [JUnit5 System Extensions][22]             | [Eclipse Public License v2.0][16] |
+| [EqualsVerifier \| release normal jar][23] | [Apache License, Version 2.0][1]  |
+| [to-string-verifier][24]                   | [MIT License][25]                 |
+| [mockito-core][26]                         | [MIT][27]                         |
+| [SLF4J JDK14 Provider][28]                 | [MIT][29]                         |
+| [JUnit Jupiter (Aggregator)][30]           | [Eclipse Public License v2.0][31] |
+| [Hamcrest][32]                             | [BSD-3-Clause][33]                |
 
 ### Plugin Dependencies
 
 | Dependency                                             | License                                       |
 | ------------------------------------------------------ | --------------------------------------------- |
-| [SonarQube Scanner for Maven][32]                      | [GNU LGPL 3][33]                              |
+| [SonarQube Scanner for Maven][9]                       | [GNU LGPL 3][10]                              |
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
@@ -75,9 +76,9 @@
 | ----------------------------------------- | --------------------------------------------- |
 | [Project Keeper shared model classes][58] | [The MIT License][59]                         |
 | [org.xmlunit:xmlunit-core][60]            | [The Apache Software License, Version 2.0][8] |
-| [error-reporting-java][16]                | [MIT License][17]                             |
+| [error-reporting-java][18]                | [MIT License][19]                             |
 | [Markdown Generator][61]                  | [The Apache Software License, Version 2.0][8] |
-| [semver4j][62]                            | [The MIT License][23]                         |
+| [semver4j][62]                            | [The MIT License][25]                         |
 | [SnakeYAML][63]                           | [Apache License, Version 2.0][8]              |
 | [SnakeYAML Engine][64]                    | [Apache License, Version 2.0][8]              |
 | [Maven Model][65]                         | [Apache-2.0][1]                               |
@@ -90,14 +91,14 @@
 | [Project Keeper shared test setup][58]     | [The MIT License][59]                         |
 | [Maven Project Version Getter][68]         | [MIT License][69]                             |
 | [org.xmlunit:xmlunit-matchers][60]         | [The Apache Software License, Version 2.0][8] |
-| [mockito-junit-jupiter][24]                | [MIT][25]                                     |
+| [mockito-junit-jupiter][26]                | [MIT][27]                                     |
 | [Maven Plugin Integration Testing][70]     | [MIT License][71]                             |
-| [EqualsVerifier \| release normal jar][21] | [Apache License, Version 2.0][1]              |
-| [to-string-verifier][22]                   | [MIT License][23]                             |
-| [junit-pioneer][72]                        | [Eclipse Public License v2.0][29]             |
-| [SLF4J JDK14 Provider][26]                 | [MIT][27]                                     |
-| [JUnit Jupiter (Aggregator)][28]           | [Eclipse Public License v2.0][29]             |
-| [Hamcrest][30]                             | [BSD-3-Clause][31]                            |
+| [EqualsVerifier \| release normal jar][23] | [Apache License, Version 2.0][1]              |
+| [to-string-verifier][24]                   | [MIT License][25]                             |
+| [junit-pioneer][72]                        | [Eclipse Public License v2.0][31]             |
+| [SLF4J JDK14 Provider][28]                 | [MIT][29]                                     |
+| [JUnit Jupiter (Aggregator)][30]           | [Eclipse Public License v2.0][31]             |
+| [Hamcrest][32]                             | [BSD-3-Clause][33]                            |
 
 ### Runtime Dependencies
 
@@ -109,7 +110,7 @@
 
 | Dependency                                             | License                                       |
 | ------------------------------------------------------ | --------------------------------------------- |
-| [SonarQube Scanner for Maven][32]                      | [GNU LGPL 3][33]                              |
+| [SonarQube Scanner for Maven][9]                       | [GNU LGPL 3][10]                              |
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Apache Maven JAR Plugin][73]                          | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
@@ -145,7 +146,7 @@
 | Dependency                 | License               |
 | -------------------------- | --------------------- |
 | [Project Keeper Core][58]  | [The MIT License][59] |
-| [error-reporting-java][16] | [MIT License][17]     |
+| [error-reporting-java][18] | [MIT License][19]     |
 | [Maven Model][65]          | [Apache-2.0][1]       |
 
 ### Test Dependencies
@@ -154,21 +155,21 @@
 | -------------------------------------- | --------------------------------- |
 | [Project Keeper shared test setup][58] | [The MIT License][59]             |
 | [Maven Project Version Getter][68]     | [MIT License][69]                 |
-| [JUnit Jupiter (Aggregator)][28]       | [Eclipse Public License v2.0][29] |
-| [Hamcrest][30]                         | [BSD-3-Clause][31]                |
+| [JUnit Jupiter (Aggregator)][30]       | [Eclipse Public License v2.0][31] |
+| [Hamcrest][32]                         | [BSD-3-Clause][33]                |
 
 ### Runtime Dependencies
 
 | Dependency                 | License   |
 | -------------------------- | --------- |
-| [SLF4J API Module][26]     | [MIT][27] |
-| [SLF4J JDK14 Provider][26] | [MIT][27] |
+| [SLF4J API Module][28]     | [MIT][29] |
+| [SLF4J JDK14 Provider][28] | [MIT][29] |
 
 ### Plugin Dependencies
 
 | Dependency                                             | License                                       |
 | ------------------------------------------------------ | --------------------------------------------- |
-| [SonarQube Scanner for Maven][32]                      | [GNU LGPL 3][33]                              |
+| [SonarQube Scanner for Maven][9]                       | [GNU LGPL 3][10]                              |
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
@@ -207,7 +208,7 @@
 | [Maven Plugin Tools Java Annotations][79] | [Apache-2.0][1]       |
 | [Maven Plugin API][80]                    | [Apache-2.0][1]       |
 | [Maven Core][81]                          | [Apache-2.0][1]       |
-| [error-reporting-java][16]                | [MIT License][17]     |
+| [error-reporting-java][18]                | [MIT License][19]     |
 
 ### Test Dependencies
 
@@ -215,18 +216,18 @@
 | -------------------------------------- | --------------------------------------------- |
 | [Maven Project Version Getter][68]     | [MIT License][69]                             |
 | [org.xmlunit:xmlunit-matchers][60]     | [The Apache Software License, Version 2.0][8] |
-| [mockito-core][24]                     | [MIT][25]                                     |
+| [mockito-core][26]                     | [MIT][27]                                     |
 | [Maven Plugin Integration Testing][70] | [MIT License][71]                             |
-| [SLF4J JDK14 Provider][26]             | [MIT][27]                                     |
+| [SLF4J JDK14 Provider][28]             | [MIT][29]                                     |
 | [JaCoCo :: Agent][82]                  | [EPL-2.0][51]                                 |
-| [JUnit Jupiter (Aggregator)][28]       | [Eclipse Public License v2.0][29]             |
-| [Hamcrest][30]                         | [BSD-3-Clause][31]                            |
+| [JUnit Jupiter (Aggregator)][30]       | [Eclipse Public License v2.0][31]             |
+| [Hamcrest][32]                         | [BSD-3-Clause][33]                            |
 
 ### Plugin Dependencies
 
 | Dependency                                             | License                                       |
 | ------------------------------------------------------ | --------------------------------------------- |
-| [SonarQube Scanner for Maven][32]                      | [GNU LGPL 3][33]                              |
+| [SonarQube Scanner for Maven][9]                       | [GNU LGPL 3][10]                              |
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Maven Plugin Plugin][83]                              | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
@@ -264,9 +265,9 @@
 | [Project Keeper shared model classes][58] | [The MIT License][59] |
 | [Maven Plugin Tools Java Annotations][79] | [Apache-2.0][1]       |
 | [Maven Plugin API][80]                    | [Apache-2.0][1]       |
-| [error-reporting-java][16]                | [MIT License][17]     |
-| [JGit - Core][18]                         | [BSD-3-Clause][19]    |
-| [semver4j][62]                            | [The MIT License][23] |
+| [error-reporting-java][18]                | [MIT License][19]     |
+| [JGit - Core][20]                         | [BSD-3-Clause][21]    |
+| [semver4j][62]                            | [The MIT License][25] |
 | [Maven Core][81]                          | [Apache-2.0][1]       |
 
 ### Test Dependencies
@@ -276,19 +277,19 @@
 | [Project Keeper shared test setup][58] | [The MIT License][59]                         |
 | [Maven Project Version Getter][68]     | [MIT License][69]                             |
 | [org.xmlunit:xmlunit-matchers][60]     | [The Apache Software License, Version 2.0][8] |
-| [SLF4J JDK14 Provider][26]             | [MIT][27]                                     |
-| [mockito-core][24]                     | [MIT][25]                                     |
-| [mockito-junit-jupiter][24]            | [MIT][25]                                     |
+| [SLF4J JDK14 Provider][28]             | [MIT][29]                                     |
+| [mockito-core][26]                     | [MIT][27]                                     |
+| [mockito-junit-jupiter][26]            | [MIT][27]                                     |
 | [Maven Plugin Integration Testing][70] | [MIT License][71]                             |
 | [JaCoCo :: Agent][82]                  | [EPL-2.0][51]                                 |
-| [JUnit Jupiter (Aggregator)][28]       | [Eclipse Public License v2.0][29]             |
-| [Hamcrest][30]                         | [BSD-3-Clause][31]                            |
+| [JUnit Jupiter (Aggregator)][30]       | [Eclipse Public License v2.0][31]             |
+| [Hamcrest][32]                         | [BSD-3-Clause][33]                            |
 
 ### Plugin Dependencies
 
 | Dependency                                             | License                                       |
 | ------------------------------------------------------ | --------------------------------------------- |
-| [SonarQube Scanner for Maven][32]                      | [GNU LGPL 3][33]                              |
+| [SonarQube Scanner for Maven][9]                       | [GNU LGPL 3][10]                              |
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
@@ -324,20 +325,20 @@
 | ----------------------------------------- | -------------------------------- |
 | [Project Keeper shared model classes][58] | [The MIT License][59]            |
 | [SnakeYAML][63]                           | [Apache License, Version 2.0][8] |
-| [Hamcrest][30]                            | [BSD-3-Clause][31]               |
+| [Hamcrest][32]                            | [BSD-3-Clause][33]               |
 | [Maven Model][65]                         | [Apache-2.0][1]                  |
 
 ### Test Dependencies
 
 | Dependency                       | License                           |
 | -------------------------------- | --------------------------------- |
-| [JUnit Jupiter (Aggregator)][28] | [Eclipse Public License v2.0][29] |
+| [JUnit Jupiter (Aggregator)][30] | [Eclipse Public License v2.0][31] |
 
 ### Plugin Dependencies
 
 | Dependency                                             | License                                     |
 | ------------------------------------------------------ | ------------------------------------------- |
-| [SonarQube Scanner for Maven][32]                      | [GNU LGPL 3][33]                            |
+| [SonarQube Scanner for Maven][9]                       | [GNU LGPL 3][10]                            |
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                             |
 | [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                             |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                             |
@@ -366,31 +367,31 @@
 [6]: https://github.com/exasol/error-code-crawler-maven-plugin/blob/main/LICENSE
 [7]: https://sonatype.github.io/ossindex-maven/maven-plugin/
 [8]: http://www.apache.org/licenses/LICENSE-2.0.txt
-[9]: https://github.com/eclipse-ee4j/jsonp
-[10]: https://projects.eclipse.org/license/epl-2.0
-[11]: https://projects.eclipse.org/license/secondary-gpl-2.0-cp
-[12]: https://projects.eclipse.org/projects/ee4j.jsonb/jakarta.json.bind-api
-[13]: https://projects.eclipse.org/projects/ee4j.yasson
-[14]: http://www.eclipse.org/legal/epl-v20.html
-[15]: http://www.eclipse.org/org/documents/edl-v10.php
-[16]: https://github.com/exasol/error-reporting-java/
-[17]: https://github.com/exasol/error-reporting-java/blob/main/LICENSE
-[18]: https://www.eclipse.org/jgit/
-[19]: https://www.eclipse.org/org/documents/edl-v10.php
-[20]: https://github.com/itsallcode/junit5-system-extensions
-[21]: https://www.jqno.nl/equalsverifier
-[22]: https://github.com/jparams/to-string-verifier
-[23]: http://www.opensource.org/licenses/mit-license.php
-[24]: https://github.com/mockito/mockito
-[25]: https://opensource.org/licenses/MIT
-[26]: http://www.slf4j.org
-[27]: https://opensource.org/license/mit
-[28]: https://junit.org/
-[29]: https://www.eclipse.org/legal/epl-v20.html
-[30]: http://hamcrest.org/JavaHamcrest/
-[31]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
-[32]: https://docs.sonarsource.com/sonarqube-server/latest/extension-guide/developing-a-plugin/plugin-basics/sonar-scanner-maven/sonar-maven-plugin/
-[33]: http://www.gnu.org/licenses/lgpl.txt
+[9]: https://docs.sonarsource.com/sonarqube-server/latest/extension-guide/developing-a-plugin/plugin-basics/sonar-scanner-maven/sonar-maven-plugin/
+[10]: http://www.gnu.org/licenses/lgpl.txt
+[11]: https://github.com/eclipse-ee4j/jsonp
+[12]: https://projects.eclipse.org/license/epl-2.0
+[13]: https://projects.eclipse.org/license/secondary-gpl-2.0-cp
+[14]: https://projects.eclipse.org/projects/ee4j.jsonb/jakarta.json.bind-api
+[15]: https://projects.eclipse.org/projects/ee4j.yasson
+[16]: http://www.eclipse.org/legal/epl-v20.html
+[17]: http://www.eclipse.org/org/documents/edl-v10.php
+[18]: https://github.com/exasol/error-reporting-java/
+[19]: https://github.com/exasol/error-reporting-java/blob/main/LICENSE
+[20]: https://www.eclipse.org/jgit/
+[21]: https://www.eclipse.org/org/documents/edl-v10.php
+[22]: https://github.com/itsallcode/junit5-system-extensions
+[23]: https://www.jqno.nl/equalsverifier
+[24]: https://github.com/jparams/to-string-verifier
+[25]: http://www.opensource.org/licenses/mit-license.php
+[26]: https://github.com/mockito/mockito
+[27]: https://opensource.org/licenses/MIT
+[28]: http://www.slf4j.org
+[29]: https://opensource.org/license/mit
+[30]: https://junit.org/
+[31]: https://www.eclipse.org/legal/epl-v20.html
+[32]: http://hamcrest.org/JavaHamcrest/
+[33]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
 [34]: https://maven.apache.org/plugins/maven-toolchains-plugin/
 [35]: https://maven.apache.org/plugins/maven-compiler-plugin/
 [36]: https://www.mojohaus.org/flatten-maven-plugin/

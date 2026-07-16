@@ -10,6 +10,8 @@
     <properties>
         <sonar.organization>exasol</sonar.organization>
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <!-- Avoid installing JDK 11 in CI -->
+        <java.version>17</java.version>
     </properties>
     <modules>
         <module>shared-model-classes</module>
@@ -97,6 +99,12 @@
                     <authId>ossindex</authId>
                     <skip>${ossindexSkip}</skip>
                 </configuration>
+            </plugin>
+            <plugin>
+                <!-- Explicitly specify version to avoid a warning -->
+                <groupId>org.sonarsource.scanner.maven</groupId>
+                <artifactId>sonar-maven-plugin</artifactId>
+                <version>5.7.0.6970</version>
             </plugin>
         </plugins>
     </build>

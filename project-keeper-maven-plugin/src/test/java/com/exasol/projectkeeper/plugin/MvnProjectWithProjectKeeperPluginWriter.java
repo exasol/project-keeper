@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.plugin;
 
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Properties;
 
 import org.apache.maven.model.*;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -21,6 +22,7 @@ public class MvnProjectWithProjectKeeperPluginWriter {
         this.model.setGroupId("com.exasol");
         this.model.setModelVersion("4.0.0");
         this.model.setDescription("my project description");
+        this.model.setProperties(new Properties());
         addProjectKeeperPlugin(projectKeeperVersion);
     }
 
@@ -36,6 +38,11 @@ public class MvnProjectWithProjectKeeperPluginWriter {
         dependency.setArtifactId(artifactId);
         dependency.setVersion(version);
         this.model.getDependencies().add(dependency);
+        return this;
+    }
+
+    public MvnProjectWithProjectKeeperPluginWriter withJavaVersion(final String javaVersion) {
+        this.model.getProperties().setProperty("java.version", javaVersion);
         return this;
     }
 
