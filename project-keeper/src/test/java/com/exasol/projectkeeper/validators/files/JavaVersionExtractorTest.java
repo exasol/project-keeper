@@ -63,6 +63,11 @@ class JavaVersionExtractorTest {
         assertThat(nextVersion(mavenSource("21"), mavenSource("11")), equalTo("25"));
     }
 
+    @Test
+    void getNextVersionUsesMaximumVersionBeforeThreshold() {
+        assertThat(nextVersion(mavenSource("25"), mavenSource("21")), equalTo("26"));
+    }
+
     @ParameterizedTest
     @CsvSource({ "8, 11", "9, 11", "11, 17", "12, 17", "17, 21", "17.1, 21", "21, 25", "22, 25", "24, 25",
             "25, 26", "26, 26", "27, 26" })

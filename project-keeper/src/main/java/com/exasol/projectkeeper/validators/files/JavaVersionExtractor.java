@@ -68,14 +68,10 @@ class JavaVersionExtractor {
     }
 
     private double getCurrentLatestVersion() {
-        return getSourceJavaVersions().stream() //
-                .map(JavaVersionExtractor::parseVersion) //
-                .reduce(JavaVersionExtractor::takeLast) //
+        return getSourceJavaVersions().stream()
+                .map(JavaVersionExtractor::parseVersion)
+                .max(Double::compareTo)
                 .orElseThrow(() -> new IllegalStateException(
                         "No latest java version found in source java versions " + getSourceJavaVersions()));
-    }
-
-    private static double takeLast(final double first, final double second) {
-        return second;
     }
 }
