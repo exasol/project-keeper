@@ -50,7 +50,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: |-
@@ -59,7 +59,7 @@ jobs:
           cache: maven
       - name: Set up Go
         id: setup-go
-        uses: actions/setup-go@v6
+        uses: actions/setup-go@v7
         with: {
           go-version: '1.26',
           cache-dependency-path: .project-keeper.yml
@@ -163,7 +163,7 @@ jobs:
                '{"pattern": "^https?://(www.)?eclipse.org"}' \
                '{"pattern": "^https?://projects.eclipse.org"}' \
                ']}' > ./target/broken_links_checker.json
-      - uses: tcort/github-action-markdown-link-check@e7c7a18363c842693fadde5d41a3bd3573a7a225
+      - uses: tcort/github-action-markdown-link-check@e047c5b37f24ab722bbef1a27b6fab7f96bc4068
         id: run-link-check
         with: {
           use-quiet-mode: yes,
@@ -193,7 +193,7 @@ jobs:
         }
       - name: Set up JDK 21
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with: {
           distribution: temurin,
           java-version: '21',
@@ -227,7 +227,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: |-
@@ -272,7 +272,7 @@ jobs:
         }
       - name: Lint GitHub actions with Zizmore
         id: lint-github-actions
-        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa
+        uses: zizmorcore/zizmor-action@3dc1ecc9bcb9e94e9b2c709687979e1298497054
         with: {
           advanced-security: false
         }
@@ -305,7 +305,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: |-
