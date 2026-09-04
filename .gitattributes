@@ -27,3 +27,7 @@ shared-model-classes/.settings/org.eclipse.jdt.core.prefs                       
 shared-model-classes/.settings/org.eclipse.jdt.ui.prefs                          linguist-generated=true
 shared-test-setup/.settings/org.eclipse.jdt.core.prefs                           linguist-generated=true
 shared-test-setup/.settings/org.eclipse.jdt.ui.prefs                             linguist-generated=true
+maven-project-crawler/.settings/org.eclipse.jdt.core.prefs                       linguist-generated=true
+maven-project-crawler/.settings/org.eclipse.jdt.ui.prefs                         linguist-generated=true
+parent-pom/.settings/org.eclipse.jdt.core.prefs                                  linguist-generated=true
+parent-pom/.settings/org.eclipse.jdt.ui.prefs                                    linguist-generated=true
