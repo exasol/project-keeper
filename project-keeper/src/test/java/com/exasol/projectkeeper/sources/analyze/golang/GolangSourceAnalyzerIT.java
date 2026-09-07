@@ -172,7 +172,7 @@ class GolangSourceAnalyzerIT {
         final ProjectDependency dependency2 = ProjectDependency.builder()
                 .name("github.com/exasol/exasol-test-setup-abstraction-server/go-client")
                 .licenses(List.of(new License("MIT",
-                        "https://github.com/exasol/exasol-test-setup-abstraction-server/blob/HEAD/go-client/LICENSE")))
+                        "https://github.com/exasol/exasol-test-setup-abstraction-server/blob/go-client/v0.2.2/go-client/LICENSE")))
                 .type(Type.TEST).build();
         assertAll(() -> assertThat(dependencies, hasSize(2)),
                 () -> assertThat(dependencies, containsInAnyOrder(dependency1, dependency2)));
