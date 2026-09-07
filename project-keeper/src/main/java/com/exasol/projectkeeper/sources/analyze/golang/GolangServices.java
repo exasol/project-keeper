@@ -219,11 +219,11 @@ class GolangServices {
     }
 
     void installDependencies(final Path projectPath) {
-        final ShellCommand sc = ShellCommand.builder() //
-                .timeout(Duration.ofMinutes(2)) //
-                .command(GoBinary.GO.command()) //
-                .args("get", "-t", "./...") //
-                .workingDir(projectPath) //
+        final ShellCommand sc = ShellCommand.builder()
+                .timeout(Duration.ofMinutes(2))
+                .command(GoBinary.GO.command())
+                .args("get", "-t", ALL_PACKAGES)
+                .workingDir(projectPath)
                 .build();
         this.executor.execute(sc);
     }
