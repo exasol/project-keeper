@@ -60,7 +60,7 @@ class GolangDependencyCalculatorTest {
     @Test
     void onlyTestDependencies() {
         simulateMainModuleLicenses(Map.of());
-        simulateLicenses("test1", Map.of("test1", List.of(license("test1", "lic1", "url1"))));
+        simulateTestLicenses(Map.of("test1", List.of(license("test1", "lic1", "url1"))));
         final List<ProjectDependency> dependencies = calculate(dep("test1", "ver1"));
         assertThat(dependencies, hasSize(1));
         assertThat(dependencies, contains(expectedDep("test1", "lic1", "url1", Type.TEST)));
@@ -69,7 +69,8 @@ class GolangDependencyCalculatorTest {
     @Test
     void mixedDependencies() {
         simulateMainModuleLicenses(Map.of("comp2", List.of(license("mod2", "lic2", "url2"))));
-        simulateLicenses("test1", Map.of("test1", List.of(license("test1", "lic1", "url1"))));
+        simulateTestLicenses(Map.of("comp2", List.of(license("mod2", "lic2", "url2")),
+                "test1", List.of(license("test1", "lic1", "url1"))));
         final List<ProjectDependency> dependencies = calculate(dep("test1", "ver1"), dep("comp2", "ver2"));
         assertThat(dependencies, hasSize(2));
         assertThat(dependencies, contains(expectedDep("test1", "lic1", "url1", Type.TEST),
@@ -87,7 +88,7 @@ class GolangDependencyCalculatorTest {
     @Test
     void licenseNotFound() {
         simulateMainModuleLicenses(Map.of());
-        simulateLicenses("test1", Map.of());
+        simulateTestLicenses(Map.of());
         final VersionedDependency dep = dep("test1", "ver1");
         final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> calculate(dep));
         assertThat(exception.getMessage(),
@@ -119,12 +120,11 @@ class GolangDependencyCalculatorTest {
 
     private void simulateMainModuleLicenses(final Map<String, List<GolangDependencyLicense>> licenses) {
         when(this.golangServicesMock.getLicenses(PROJECT_PATH, "./...")).thenReturn(licenses);
+        when(this.golangServicesMock.getLicensesIncludingTests(PROJECT_PATH, "./...")).thenReturn(licenses);
     }
 
-    private void simulateLicenses(final String moduleName, final Map<String, List<GolangDependencyLicense>> licenses) {
-        final Path modulePath = Path.of("modulePath");
-        when(this.golangServicesMock.getModuleDir(PROJECT_PATH, moduleName)).thenReturn(modulePath);
-        when(this.golangServicesMock.getLicenses(modulePath, moduleName)).thenReturn(licenses);
+    private void simulateTestLicenses(final Map<String, List<GolangDependencyLicense>> licenses) {
+        when(this.golangServicesMock.getLicensesIncludingTests(PROJECT_PATH, "./...")).thenReturn(licenses);
     }
 
     private List<ProjectDependency> calculate(final VersionedDependency... goModDependencies) {

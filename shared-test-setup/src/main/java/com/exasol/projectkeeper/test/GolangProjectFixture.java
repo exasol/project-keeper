@@ -45,14 +45,27 @@ public class GolangProjectFixture extends BaseProjectFixture {
         execute(projectDir.resolve(moduleDir), "go", "mod", "tidy");
     }
 
+    public void prepareProjectFilesWithYamlTestDependency() {
+        final Path moduleDir = Path.of(".");
+        writeGoModFile(moduleDir, GO_VERSION, List.of("github.com/exasol/exasol-driver-go v0.4.3",
+                "gopkg.in/yaml.v3 v3.0.1"));
+        writeMainGoFile(moduleDir);
+        writeYamlTestGoFile(moduleDir);
+        execute(projectDir.resolve(moduleDir), "go", "get");
+        execute(projectDir.resolve(moduleDir), "go", "mod", "tidy");
+    }
+
     public String getProjectVersion() {
         return PROJECT_VERSION;
     }
 
     private void writeGoModFile(final Path moduleDir, final String goVersion) {
-        final List<String> dependencies = List.of("github.com/exasol/exasol-driver-go v0.4.3",
+        writeGoModFile(moduleDir, goVersion, List.of("github.com/exasol/exasol-driver-go v0.4.3",
                 "github.com/exasol/exasol-test-setup-abstraction-server/go-client v0.2.2",
-                "github.com/exasol/error-reporting-go v0.1.1 // indirect");
+                "github.com/exasol/error-reporting-go v0.1.1 // indirect"));
+    }
+
+    private void writeGoModFile(final Path moduleDir, final String goVersion, final List<String> dependencies) {
         final String content = "module " + GO_MODULE_NAME + "\n" //
                 + "go " + goVersion + "\n" //
                 + "require (\n" //
@@ -94,6 +107,17 @@ public class GolangProjectFixture extends BaseProjectFixture {
                 func myTest() {
                     exasol := testSetupAbstraction.Create("myConfig.json")
                     connection := exasol.CreateConnection()
+                }
+                """;
+        writeFile(this.projectDir.resolve(moduleDir).resolve("main_test.go"), content);
+    }
+
+    private void writeYamlTestGoFile(final Path moduleDir) {
+        final String content = """
+                package main
+                import yaml "gopkg.in/yaml.v3"
+                func myTest() {
+                    _, _ = yaml.Marshal(map[string]string{"key": "value"})
                 }
                 """;
         writeFile(this.projectDir.resolve(moduleDir).resolve("main_test.go"), content);

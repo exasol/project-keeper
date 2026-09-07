@@ -11,7 +11,6 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
 import java.util.function.Supplier;
-import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.*;
@@ -25,7 +24,6 @@ import com.exasol.projectkeeper.sources.analyze.generic.*;
  */
 class GolangServices {
     public static final String GOLANG_DEPENDENCY_NAME = "golang";
-    private static final Logger LOGGER = Logger.getLogger(GolangServices.class.getName());
     private static final List<String> COMMAND_LIST_DIRECT_DEPENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
@@ -63,8 +61,12 @@ class GolangServices {
     }
 
     Map<String, List<GolangDependencyLicense>> getLicenses(final Path absoluteSourcePath, final String module) {
-        final String[] licenses = retrieveLicenses(absoluteSourcePath, module).split("\n");
-        return parseLicenseCsv(licenses);
+        return parseLicenseCsv(retrieveLicenses(absoluteSourcePath, module).split("\n"));
+    }
+
+    Map<String, List<GolangDependencyLicense>> getLicensesIncludingTests(final Path absoluteSourcePath,
+            final String module) {
+        return parseLicenseCsv(retrieveLicensesIncludingTests(absoluteSourcePath, module).split("\n"));
     }
 
     static Map<String, List<GolangDependencyLicense>> parseLicenseCsv(final String[] licenses) {
@@ -75,11 +77,19 @@ class GolangServices {
     }
 
     private String retrieveLicenses(final Path absoluteSourcePath, final String module) {
+        return retrieveLicenses(absoluteSourcePath, List.of("csv", module));
+    }
+
+    private String retrieveLicensesIncludingTests(final Path absoluteSourcePath, final String module) {
+        return retrieveLicenses(absoluteSourcePath, List.of("csv", "--include_tests", module));
+    }
+
+    private String retrieveLicenses(final Path absoluteSourcePath, final List<String> arguments) {
         final GoBinary goLicenses = GoBinary.GO_LICENSES.install();
         final ShellCommand shellCommand = ShellCommand.builder() //
                 .timeout(EXECUTION_TIMEOUT) //
                 .command(goLicenses.command()) //
-                .args("csv", module) //
+                .args(arguments) //
                 .workingDir(absoluteSourcePath).build();
         try {
             return this.executor.execute(shellCommand).getOutputStreamContent();
@@ -97,28 +107,6 @@ class GolangServices {
         }
     }
 
-    Path getModuleDir(final Path absoluteSourcePath, final String moduleName) {
-        final ShellCommand shellCommand = ShellCommand.builder() //
-                .timeout(Duration.ofSeconds(3)) //
-                .command(GoBinary.GO.command()) //
-                .args("list", "-m", "-f", "{{.Dir}}", moduleName) //
-                .workingDir(absoluteSourcePath) //
-                .build();
-        final String output = this.executor.execute(shellCommand).getOutputStreamContent().trim();
-        if (output.isEmpty()) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-160")
-                    .message("Did not get directory for module {{module name}}.", moduleName).ticketMitigation()
-                    .toString());
-        }
-        final Path path = Path.of(output).toAbsolutePath();
-        LOGGER.finest(() -> "Found module dir '" + path + "' for module '" + moduleName + "'");
-        if (!Files.exists(path)) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-156")
-                    .message("Directory {{directory}} for module {{module name}} does not exist", path, moduleName)
-                    .ticketMitigation().toString());
-        }
-        return path;
-    }
 
     private static GolangDependencyLicense convertDependencyLicense(final String line) {
         final String[] parts = line.split(",");

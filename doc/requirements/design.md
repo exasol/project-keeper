@@ -634,6 +634,8 @@ Needs: impl, itest
 
 PK uses the [go-licenses](https://github.com/google/go-licenses/) project for retrieving the licenses of the dependencies.
 
+PK invokes `go-licenses csv ./...` from the consuming project to retrieve compile dependencies and `go-licenses csv --include_tests ./...` from the same project to retrieve compile and test dependencies. A dependency is classified as compile when it occurs in the first result and as test otherwise. License information is taken from the test-inclusive result; PK does not invoke `go-licenses` from cached dependency module directories.
+
 Rationale:
 
 go-licenses is a simple command line tool that outputs the license name and license URL as CSV. Installing it is easy and creating our own tool is a lot of effort.

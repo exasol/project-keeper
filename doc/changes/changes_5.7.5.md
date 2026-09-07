@@ -4,9 +4,13 @@ Code name:
 
 ## Summary
 
+This release avoids invoking `go-licenses` from cached module directories when retrieving Go test dependency licenses. This avoids problems for dependencies that don't contain a `go.sum` file.
+
 ## Features
 
-* ISSUE_NUMBER: description
+## Bug Fixes
+
+* #770: Avoid invoking `go-licenses` from cached module directories when retrieving Go test dependency licenses.
 
 ## Dependency Updates
 
