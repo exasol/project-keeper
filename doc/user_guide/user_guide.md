@@ -236,7 +236,7 @@ The CI build runs automatically on the following triggers:
   * Additionally to the default PR activity types `opened`, `synchronize`, and `reopened` this also runs the CI build when the PR changes from draft to "ready for review" (type `ready_for_review`). This ensures that the complete build runs even when some workflows steps are skipped for draft PRs. See [complete list of PR activity types](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#pull_request).
 * Workflow Dispatch
   * This allows starting the CI build manually to debug build issues.
-* Merges into `main` or into branches matching `release/*`. 
+* Merges into `main` or into branches matching `release/*`.
   * This will also start the [automatic release process](#automatic-release-process).
 
 ⚠️ **Warning**: Because branches matching `release/*` trigger the release process, they should be protected with the same rules as the `main` branch.
@@ -332,7 +332,7 @@ build:
       packages: read
     ```
     This allows assigning additional permissions to the job, e.g. to download from the GitHub Docker registry `ghcr.io`.
-    
+
     **Important:** Explicitly add the permissions defined for the job by default to avoid build failures. Check the `permissions` field of the generated workflow, e.g. `contents: read, issues: read`.
 * `removeJobs`: List of job names to remove from the workflow. This is useful when a job like `next-java-compatibility` is not applicable for a project.
 * `stepCustomizations`: List of customizations:
@@ -359,9 +359,9 @@ build:
           content:
             name: Set up Go
             id: setup-go
-            uses: actions/setup-go@v6
+            uses: actions/setup-go@v7
             with:
-              go-version: "1.26"
+              go-version: "1.27"
               cache-dependency-path: .project-keeper.yml
         - action: INSERT_AFTER
           job: build-and-test
@@ -638,7 +638,7 @@ Typically, this happens if you did not fetch all tags. Simply run `git pull`.
 **Problem:** Maven build fails with the following error message:
 
 ```
-[ERROR] Failed to execute goal org.apache.maven.plugins:maven-enforcer-plugin:3.4.1:enforce (enforce-maven) on project project-keeper-shared-model-classes: 
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-enforcer-plugin:3.4.1:enforce (enforce-maven) on project project-keeper-shared-model-classes:
 [ERROR] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion failed with message:
 [ERROR] Detected JDK version 11.0.18 (JAVA_HOME=/Users/user/Applications/java/jdk-11.0.18+10/Contents/Home) is not in the allowed range [17,).
 ```
@@ -666,8 +666,8 @@ Run Maven with the `--errors` option to get a stack trace.
 **Problem:** Running unit or integration tests with Maven fails with the following error message:
 
 ```
-[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.4:verify (verify) on project project-keeper-cli: 
-[ERROR] 
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-failsafe-plugin:3.5.4:verify (verify) on project project-keeper-cli:
+[ERROR]
 [ERROR] See $HOME/project-keeper/project-keeper-cli/target/failsafe-reports for the individual test results.
 [ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
 [ERROR] The forked VM terminated without properly saying goodbye. VM crash or System.exit called?

@@ -243,10 +243,10 @@ class GitHubWorkflowTest {
                   build:
                     steps:
                       - id: step1
-                        uses: actions/setup-go@v6
+                        uses: actions/setup-go@v7
                 """);
         final Step step = workflow.getJob("build").getStep("step1");
-        assertThat(step.getUsesAction(), equalTo("actions/setup-go@v6"));
+        assertThat(step.getUsesAction(), equalTo("actions/setup-go@v7"));
     }
 
     @Test
@@ -256,9 +256,9 @@ class GitHubWorkflowTest {
                   build:
                     steps:
                       - id: step1
-                        uses: actions/setup-go@v6
+                        uses: actions/setup-go@v7
                         with:
-                          go-version: '1.26'
+                          go-version: '1.27'
                           cache-dependency-path: .project-keeper.yml
                 """);
         final Step step = workflow.getJob("build").getStep("step1");
