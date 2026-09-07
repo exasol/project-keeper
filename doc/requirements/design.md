@@ -640,6 +640,10 @@ Rationale:
 
 go-licenses is a simple command line tool that outputs the license name and license URL as CSV. Installing it is easy and creating our own tool is a lot of effort.
 
+Known limitation:
+
+The test-inclusive scan covers all packages below `./...`. Consequently, it can report test utility modules that are reachable from test-only code, including mock implementations in regular package directories. For example, a module such as `testify` can be reported when it is imported by a mock used only in tests. PK accepts these dependencies as test dependencies because Go does not provide a reliable distinction between production and test dependencies in `go.mod`.
+
 Covers:
 
 * [`req~golang-dependency-licenses~1`](system_requirements.md#get-licenses-of-dependencies)
