@@ -26,6 +26,7 @@ class GolangServices {
     public static final String GOLANG_DEPENDENCY_NAME = "golang";
     private static final List<String> COMMAND_LIST_DIRECT_DEPENDENCIES = List.of("go", "list", "-f",
             "{{if not .Indirect}}{{.}}{{end}}", "-m", "all");
+    private static final String ALL_PACKAGES = "./...";
     private static final Duration EXECUTION_TIMEOUT = Duration.ofSeconds(30);
 
     private final CommandExecutor executor;
@@ -60,13 +61,12 @@ class GolangServices {
         }
     }
 
-    Map<String, List<GolangDependencyLicense>> getLicenses(final Path absoluteSourcePath, final String module) {
-        return parseLicenseCsv(retrieveLicenses(absoluteSourcePath, module).split("\n"));
+    Map<String, List<GolangDependencyLicense>> getLicenses(final Path absoluteSourcePath) {
+        return parseLicenseCsv(retrieveLicenses(absoluteSourcePath).split("\n"));
     }
 
-    Map<String, List<GolangDependencyLicense>> getLicensesIncludingTests(final Path absoluteSourcePath,
-            final String module) {
-        return parseLicenseCsv(retrieveLicensesIncludingTests(absoluteSourcePath, module).split("\n"));
+    Map<String, List<GolangDependencyLicense>> getLicensesIncludingTests(final Path absoluteSourcePath) {
+        return parseLicenseCsv(retrieveLicensesIncludingTests(absoluteSourcePath).split("\n"));
     }
 
     static Map<String, List<GolangDependencyLicense>> parseLicenseCsv(final String[] licenses) {
@@ -76,12 +76,12 @@ class GolangServices {
                 .collect(groupingBy(GolangDependencyLicense::getModuleName));
     }
 
-    private String retrieveLicenses(final Path absoluteSourcePath, final String module) {
-        return retrieveLicenses(absoluteSourcePath, List.of("csv", module));
+    private String retrieveLicenses(final Path absoluteSourcePath) {
+        return retrieveLicenses(absoluteSourcePath, List.of("csv", ALL_PACKAGES));
     }
 
-    private String retrieveLicensesIncludingTests(final Path absoluteSourcePath, final String module) {
-        return retrieveLicenses(absoluteSourcePath, List.of("csv", "--include_tests", module));
+    private String retrieveLicensesIncludingTests(final Path absoluteSourcePath) {
+        return retrieveLicenses(absoluteSourcePath, List.of("csv", "--include_tests", ALL_PACKAGES));
     }
 
     private String retrieveLicenses(final Path absoluteSourcePath, final List<String> arguments) {

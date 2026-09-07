@@ -107,7 +107,7 @@ class GolangServicesTest {
         final Path path = Path.of("path");
         when(executor.execute(any(), eq(path))).thenThrow(new IllegalStateException("expected"));
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> service.getLicenses(path, MODULE_NAME));
+                () -> service.getLicenses(path));
         assertThat(exception.getMessage(),
                 allOf(startsWith(
                         "E-PK-CORE-142: Error starting the 'go-licenses' binary in working dir '" + path + "'."),
@@ -119,11 +119,11 @@ class GolangServicesTest {
     void getLicensesUsesProjectDirectoryWithoutTests() {
         final Path path = Path.of("path");
         when(executor.execute(any())).thenReturn(new ProcessResult("module,url,license\n", ""));
-        service().getLicenses(path, MODULE_NAME);
+        service().getLicenses(path);
         final ArgumentCaptor<ShellCommand> command = ArgumentCaptor.forClass(ShellCommand.class);
         verify(executor).execute(command.capture());
         assertAll(
-                () -> assertThat(command.getValue().commandLine().subList(1, 3), contains("csv", MODULE_NAME)),
+                () -> assertThat(command.getValue().commandLine().subList(1, 3), contains("csv", "./...")),
                 () -> assertThat(command.getValue().commandLine(), not(hasItem("--include_tests"))),
                 () -> assertThat(command.getValue().workingDir(), equalTo(Optional.of(path))));
     }
@@ -132,12 +132,12 @@ class GolangServicesTest {
     void getLicensesIncludingTestsUsesProjectDirectory() {
         final Path path = Path.of("path");
         when(executor.execute(any())).thenReturn(new ProcessResult("module,url,license\n", ""));
-        service().getLicensesIncludingTests(path, MODULE_NAME);
+        service().getLicensesIncludingTests(path);
         final ArgumentCaptor<ShellCommand> command = ArgumentCaptor.forClass(ShellCommand.class);
         verify(executor).execute(command.capture());
         assertAll(
                 () -> assertThat(command.getValue().commandLine().subList(1, 4),
-                        contains("csv", "--include_tests", MODULE_NAME)),
+                        contains("csv", "--include_tests", "./...")),
                 () -> assertThat(command.getValue().workingDir(), equalTo(Optional.of(path))));
     }
 

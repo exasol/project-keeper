@@ -119,12 +119,12 @@ class GolangDependencyCalculatorTest {
     }
 
     private void simulateMainModuleLicenses(final Map<String, List<GolangDependencyLicense>> licenses) {
-        when(this.golangServicesMock.getLicenses(PROJECT_PATH, "./...")).thenReturn(licenses);
-        when(this.golangServicesMock.getLicensesIncludingTests(PROJECT_PATH, "./...")).thenReturn(licenses);
+        when(this.golangServicesMock.getLicenses(PROJECT_PATH)).thenReturn(licenses);
+        when(this.golangServicesMock.getLicensesIncludingTests(PROJECT_PATH)).thenReturn(licenses);
     }
 
     private void simulateTestLicenses(final Map<String, List<GolangDependencyLicense>> licenses) {
-        when(this.golangServicesMock.getLicensesIncludingTests(PROJECT_PATH, "./...")).thenReturn(licenses);
+        when(this.golangServicesMock.getLicensesIncludingTests(PROJECT_PATH)).thenReturn(licenses);
     }
 
     private List<ProjectDependency> calculate(final VersionedDependency... goModDependencies) {

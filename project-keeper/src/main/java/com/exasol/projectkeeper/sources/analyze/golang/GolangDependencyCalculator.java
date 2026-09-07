@@ -78,11 +78,11 @@ class GolangDependencyCalculator {
     }
 
     private Map<String, List<GolangDependencyLicense>> fetchLicensesForMainModule() {
-        return this.golangServices.getLicenses(this.projectPath, "./...");
+        return this.golangServices.getLicenses(this.projectPath);
     }
 
     private Map<String, List<GolangDependencyLicense>> fetchLicensesIncludingTests() {
-        return this.golangServices.getLicensesIncludingTests(this.projectPath, "./...");
+        return this.golangServices.getLicensesIncludingTests(this.projectPath);
     }
 
     /**
