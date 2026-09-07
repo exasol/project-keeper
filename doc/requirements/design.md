@@ -634,7 +634,7 @@ Needs: impl, itest
 
 PK uses the [go-licenses](https://github.com/google/go-licenses/) project for retrieving the licenses of the dependencies.
 
-PK invokes `go-licenses csv ./...` from the consuming project to retrieve compile dependencies and `go-licenses csv --include_tests ./...` from the same project to retrieve compile and test dependencies. A dependency is classified as compile when it occurs in the first result and as test otherwise. License information is taken from the test-inclusive result; PK does not invoke `go-licenses` from cached dependency module directories.
+PK invokes `go-licenses csv ./...` from the consuming project to retrieve compile dependencies and `go-licenses csv --include_tests ./...` to retrieve compile and test dependencies. A dependency is classified as compile when it occurs in the first result and as test otherwise. License information is taken from the test-inclusive result.
 
 Rationale:
 
@@ -642,7 +642,9 @@ go-licenses is a simple command line tool that outputs the license name and lice
 
 Known limitation:
 
-The test-inclusive scan covers all packages below `./...`. Consequently, it can report test utility modules that are reachable from test-only code, including mock implementations in regular package directories. For example, a module such as `testify` can be reported when it is imported by a mock used only in tests. PK accepts these dependencies as test dependencies because Go does not provide a reliable distinction between production and test dependencies in `go.mod`.
+The test-inclusive scan covers all packages below `./...`. Consequently, it can report test utility modules that are reachable from test-only code, including mock implementations in regular package directories. For example, a module such as `testify` can be reported when it is imported by a mock used only in tests. PK accepts these dependencies as compile dependencies because Go does not provide a reliable distinction between production and test dependencies in `go.mod`.
+
+A workaround would be to refactor the Go project and move test code to a separate Go module.
 
 Covers:
 

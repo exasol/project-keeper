@@ -76,6 +76,13 @@ class GolangServices {
                 .collect(groupingBy(GolangDependencyLicense::getModuleName));
     }
 
+    /**
+     * Retrieve the licenses of the Go project located at the given absolute source path.
+     * <p>
+     * Note: This will also return test dependencies that are used in test util modules outside of {@code *_test.go} files. These dependencies will wrongly be
+     * classified as "compile" dependencies.
+     * <p>
+     */
     private String retrieveLicenses(final Path absoluteSourcePath) {
         return retrieveLicenses(absoluteSourcePath, List.of("csv", ALL_PACKAGES));
     }
@@ -106,7 +113,6 @@ class GolangServices {
                     exception);
         }
     }
-
 
     private static GolangDependencyLicense convertDependencyLicense(final String line) {
         final String[] parts = line.split(",");
