@@ -1,6 +1,6 @@
-# Project Keeper 5.7.5, released 2026-??-??
+# Project Keeper 5.7.5, released 2026-09-07
 
-Code name:
+Code name: Fixes for Go and Npm
 
 ## Summary
 
@@ -8,11 +8,19 @@ This release avoids invoking `go-licenses` from cached module directories when r
 
 The release also upgrades the Go version used in GitHub workflow `project-keeper-verify.yml` to 1.27. This won't affect the Go version in the actual CI workflows of your projects.
 
+The release also adds arguments `--ignore-scripts --no-audit` when running `npm ci` for Node.js projects.
+* `--no-audit` skips the dependency audit to speed up the build. Dependency audit should be run explicitly in a separate CI workflow.
+* `--ignore-scripts` skips execution of scripts provided by dependencies. This avoids executing potentially dangerous code.
+
 ## Features
 
 ## Bug Fixes
 
 * #770: Avoid invoking `go-licenses` from cached module directories when retrieving Go test dependency licenses.
+
+## Security
+
+* #771: Added argument `--ignore-scripts` when running `npm ci`
 
 ## Dependency Updates
 
