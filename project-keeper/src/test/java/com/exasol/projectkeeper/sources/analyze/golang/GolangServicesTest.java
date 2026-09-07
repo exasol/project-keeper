@@ -105,7 +105,7 @@ class GolangServicesTest {
         final Path path = Path.of("path");
         when(executor.execute(any(), eq(path))).thenThrow(new IllegalStateException("expected"));
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> service.getLicenses(path, MODULE_NAME));
+                () -> service.getLicenses(path));
         assertThat(exception.getMessage(),
                 allOf(startsWith(
                         "E-PK-CORE-142: Error starting the 'go-licenses' binary in working dir '" + path + "'."),

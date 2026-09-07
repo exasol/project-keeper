@@ -114,6 +114,25 @@ class GolangSourceAnalyzerIT {
                 () -> assertThat("project name", analyzedProject.getProjectName(), equalTo("subdir")));
     }
 
+    @Test
+    void testWithYamlTestDependencyWithoutCachedModuleScan() {
+        this.fixture.prepareProjectFilesWithYamlTestDependency();
+        final ProjectKeeperConfig config = this.fixture.createDefaultConfig().build();
+        final AnalyzedSource analyzedProject = analyzeSingleProject(config);
+        final ProjectDependency compileDependency = ProjectDependency.builder()
+                .name("github.com/exasol/exasol-driver-go")
+                .type(Type.COMPILE)
+                .licenses(List.of(new License("MIT", "https://github.com/exasol/exasol-driver-go/blob/v0.4.3/LICENSE")))
+                .build();
+        final ProjectDependency yamlDependency = ProjectDependency.builder().name("gopkg.in/yaml.v3")
+                .type(Type.TEST)
+                .licenses(List.of(new License("MIT", "https://github.com/go-yaml/yaml/blob/v3.0.1/LICENSE")))
+                .build();
+        assertAll(
+                () -> assertThat(analyzedProject.getDependencies().getDependencies(), hasItem(compileDependency)),
+                () -> assertThat(analyzedProject.getDependencies().getDependencies(), hasItem(yamlDependency)));
+    }
+
     private void prepareProjectFiles(final Path moduleDir) {
         this.fixture.prepareProjectFiles(moduleDir, "1.15");
         this.fixture.gitAddCommitTag("1.2.2");
@@ -153,7 +172,7 @@ class GolangSourceAnalyzerIT {
         final ProjectDependency dependency2 = ProjectDependency.builder()
                 .name("github.com/exasol/exasol-test-setup-abstraction-server/go-client")
                 .licenses(List.of(new License("MIT",
-                        "https://github.com/exasol/exasol-test-setup-abstraction-server/blob/HEAD/go-client/LICENSE")))
+                        "https://github.com/exasol/exasol-test-setup-abstraction-server/blob/go-client/v0.2.2/go-client/LICENSE")))
                 .type(Type.TEST).build();
         assertAll(() -> assertThat(dependencies, hasSize(2)),
                 () -> assertThat(dependencies, containsInAnyOrder(dependency1, dependency2)));

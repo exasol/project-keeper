@@ -43,7 +43,7 @@ class GolangDependencyCalculator {
 
     private ProjectDependencies getDependencies() {
         this.compileDependencyLicenses = fetchLicensesForMainModule();
-        this.allLicenses = new HashMap<>(this.compileDependencyLicenses);
+        this.allLicenses = fetchLicensesIncludingTests();
         final List<ProjectDependency> projectDependencies = this.moduleInfo.getDependencies().stream()
                 .map(this::convertDependency).toList();
         return new ProjectDependencies(projectDependencies);
@@ -72,36 +72,25 @@ class GolangDependencyCalculator {
         if (prefixMatch.isPresent()) {
             return prefixMatch.get();
         }
-        return fetchLicense(moduleName);
-    }
-
-    private List<GolangDependencyLicense> fetchLicense(final String moduleName) {
-        final Map<String, List<GolangDependencyLicense>> licenses = fetchAllLicenses(moduleName);
-        this.allLicenses.putAll(licenses);
-        final List<GolangDependencyLicense> license = licenses.get(moduleName);
-        if (license == null) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-147").message(
-                    "No license found for test dependency module {{module name}}, all licenses: {{all licenses}}",
-                    moduleName, licenses).toString());
-        }
-        return license;
+        throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-147").message(
+                "No license found for test dependency module {{module name}}, all licenses: {{all licenses}}",
+                moduleName, this.allLicenses).toString());
     }
 
     private Map<String, List<GolangDependencyLicense>> fetchLicensesForMainModule() {
-        return this.golangServices.getLicenses(this.projectPath, "./...");
+        return this.golangServices.getLicenses(this.projectPath);
     }
 
-    private Map<String, List<GolangDependencyLicense>> fetchAllLicenses(final String moduleName) {
-        final Path moduleDir = this.golangServices.getModuleDir(this.projectPath, moduleName);
-        return this.golangServices.getLicenses(moduleDir, moduleName);
+    private Map<String, List<GolangDependencyLicense>> fetchLicensesIncludingTests() {
+        return this.golangServices.getLicensesIncludingTests(this.projectPath);
     }
 
     /**
      * Get the dependency type of a given module.
      * <p>
      * Note: this is a heuristic. Go does not distinguish between compile and test dependencies in {@code go.mod}. This
-     * implementation uses the fact that the {@code go-licenses} tool only returns licenses for compile dependencies and
-     * omits test dependencies.
+     * implementation uses the fact that the normal {@code go-licenses} invocation omits test dependencies and returns test dependencies only with
+     * {@code --include_tests}.
      *
      * @param moduleName the module name
      * @return the module's dependency type
