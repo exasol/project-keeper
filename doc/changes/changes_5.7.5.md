@@ -6,6 +6,8 @@ Code name:
 
 This release avoids invoking `go-licenses` from cached module directories when retrieving Go test dependency licenses. This avoids problems for dependencies that don't contain a `go.sum` file.
 
+The release also upgrades the Go version used in GitHub workflow `project-keeper-verify.yml` to 1.27. This won't affect the Go version in the actual CI workflows of your projects.
+
 ## Features
 
 ## Bug Fixes
