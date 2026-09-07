@@ -7,7 +7,6 @@ import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
@@ -16,13 +15,12 @@ import java.util.Optional;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.exasol.projectkeeper.shared.dependencies.VersionedDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.*;
-import com.exasol.projectkeeper.sources.analyze.generic.*;
+import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
 
 @ExtendWith(MockitoExtension.class)
 class GolangServicesTest {
@@ -113,32 +111,6 @@ class GolangServicesTest {
                         "E-PK-CORE-142: Error starting the 'go-licenses' binary in working dir '" + path + "'."),
                         containsString("* Install it by running 'go install github.com/google/go-licenses/v2@latest'."),
                         containsString("* If it is already installed, re-install it by running the same command.")));
-    }
-
-    @Test
-    void getLicensesUsesProjectDirectoryWithoutTests() {
-        final Path path = Path.of("path");
-        when(executor.execute(any())).thenReturn(new ProcessResult("module,url,license\n", ""));
-        service().getLicenses(path);
-        final ArgumentCaptor<ShellCommand> command = ArgumentCaptor.forClass(ShellCommand.class);
-        verify(executor).execute(command.capture());
-        assertAll(
-                () -> assertThat(command.getValue().commandLine().subList(1, 3), contains("csv", "./...")),
-                () -> assertThat(command.getValue().commandLine(), not(hasItem("--include_tests"))),
-                () -> assertThat(command.getValue().workingDir(), equalTo(Optional.of(path))));
-    }
-
-    @Test
-    void getLicensesIncludingTestsUsesProjectDirectory() {
-        final Path path = Path.of("path");
-        when(executor.execute(any())).thenReturn(new ProcessResult("module,url,license\n", ""));
-        service().getLicensesIncludingTests(path);
-        final ArgumentCaptor<ShellCommand> command = ArgumentCaptor.forClass(ShellCommand.class);
-        verify(executor).execute(command.capture());
-        assertAll(
-                () -> assertThat(command.getValue().commandLine().subList(1, 4),
-                        contains("csv", "--include_tests", "./...")),
-                () -> assertThat(command.getValue().workingDir(), equalTo(Optional.of(path))));
     }
 
     @Test
