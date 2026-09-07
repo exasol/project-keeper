@@ -4,9 +4,13 @@ Code name:
 
 ## Summary
 
-## Features
+This release adds arguments `--ignore-scripts --no-audit` when running `npm ci` for Node.js projects.
+* `--no-audit` skips the dependency audit to speed up the build. Dependency audit should be run explicitly in a separate CI workflow.
+* `--ignore-scripts` skips execution of scripts provided by dependencies. This avoids executing potentially dangerous code.
 
-* ISSUE_NUMBER: description
+## Security
+
+* #771: Added argument `--ignore-scripts` when running `npm ci`
 
 ## Dependency Updates
 

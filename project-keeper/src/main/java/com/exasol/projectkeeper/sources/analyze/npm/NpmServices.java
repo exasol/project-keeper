@@ -17,9 +17,10 @@ class NpmServices {
     private static final String NPM = "npm" + OsCheck.suffix(".cmd");
     private static final String NPX = "npx" + OsCheck.suffix(".cmd");
 
-    static final ShellCommand FETCH_DEPENDENCIES = ShellCommand.builder() //
-            .command(NPM, "ci") //
-            .timeout(Duration.ofMinutes(5)) //
+    static final ShellCommand FETCH_DEPENDENCIES = ShellCommand.builder()
+            .command(NPM, "ci")
+            .args(List.of("--no-audit", "--ignore-scripts"))
+            .timeout(Duration.ofMinutes(5))
             .build();
 
     // [impl -> dsn~npm-dependency-licenses~1]
