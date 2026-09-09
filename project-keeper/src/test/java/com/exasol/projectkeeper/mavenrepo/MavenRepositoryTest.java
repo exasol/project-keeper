@@ -29,22 +29,6 @@ class MavenRepositoryTest {
     }
 
     @Test
-    void testFailureXmlWithoutVersionInformation() {
-        final Document xml = xmlDocument("<metadata><versioning><other>1.2.3</other></versioning></metadata>");
-        assertThrows(XmlContentException.class, () -> MavenRepository.getLatestVersion(xml));
-    }
-
-    @Test
-    void testSuccessLocalResource() throws Exception {
-        final String url = MavenRepositoryTest.class //
-                .getResource("/simulated-maven-central-version-response.xml") //
-                .toExternalForm();
-        final MavenRepository testee = new MavenRepository(url);
-        assertThat(testee.getLatestVersion(), equalTo("2.9.1"));
-        assertThat(testee.getLatestStableVersion(), equalTo("2.9.1"));
-    }
-
-    @Test
     void testGetLatestStableVersionUsesMavenVersionOrdering() throws Exception {
         final Document xml = xmlDocument("""
                 <metadata><versioning><versions>
@@ -84,8 +68,8 @@ class MavenRepositoryTest {
     @Test
     // [itest->dsn~verify-own-version~2]
     void integrationTest() throws Exception {
-        assertThat(MavenRepository.projectKeeperCli().getLatestVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
-        assertThat(MavenRepository.projectKeeperMavenPlugin().getLatestVersion(),
+        assertThat(MavenRepository.projectKeeperCli().getLatestStableVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
+        assertThat(MavenRepository.projectKeeperMavenPlugin().getLatestStableVersion(),
                 matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
     }
 

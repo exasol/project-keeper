@@ -52,21 +52,6 @@ public class MavenRepository {
     }
 
     /**
-     * Accessor for XML document, called internally and in tests.
-     *
-     * @param document XML DOM document to retrieve latest version from
-     * @return latest version.
-     * @throws XmlContentException
-     */
-    static String getLatestVersion(final Document document) throws XmlContentException {
-        final Node node = runXPath(document, LATEST_VERSION_XPATH);
-        if (node == null) {
-            throw new XmlContentException("Couldn't find node " + LATEST_VERSION_XPATH);
-        }
-        return node.getTextContent();
-    }
-
-    /**
      * Get the greatest stable version from Maven metadata.
      *
      * @param document XML DOM document to retrieve stable versions from
@@ -115,28 +100,6 @@ public class MavenRepository {
      */
     public MavenRepository(final String url) {
         this.url = url;
-    }
-
-    /**
-     * Get latest project-keeper version.
-     *
-     * @throws ParserConfigurationException in configuring parser failed (implementation error)
-     * @throws SAXException                 in case XML is invalid
-     * @throws IOException                  if URL cannot be connected
-     * @throws XmlContentException          in case Maven metadata XML document does not contains expected XML elements
-     *                                      with latest version
-     * @return latest version of project-keeper in the flavor addressed by the URL of this repository.
-     */
-    public String getLatestVersion()
-            throws ParserConfigurationException, SAXException, IOException, XmlContentException {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        final DocumentBuilder db = factory.newDocumentBuilder();
-        try (InputStream stream = URI.create(this.url).toURL().openStream()) {
-            return getLatestVersion(db.parse(stream));
-        }
     }
 
     /**
