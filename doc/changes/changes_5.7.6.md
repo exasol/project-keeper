@@ -20,6 +20,12 @@ Code name:
 
 * Updated `org.slf4j:slf4j-jdk14:2.0.18` to `2.0.19`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
@@ -36,6 +42,13 @@ Code name:
 * Updated `com.exasol:project-keeper-shared-test-setup:5.7.5` to `5.7.6`
 * Updated `org.slf4j:slf4j-jdk14:2.0.18` to `2.0.19`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
+
 ### Project Keeper Command Line Interface
 
 #### Compile Dependency Updates
@@ -51,6 +64,13 @@ Code name:
 
 * Updated `com.exasol:project-keeper-shared-test-setup:5.7.5` to `5.7.6`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
+
 ### Project Keeper Maven Plugin
 
 #### Compile Dependency Updates
@@ -60,6 +80,13 @@ Code name:
 #### Test Dependency Updates
 
 * Updated `org.slf4j:slf4j-jdk14:2.0.18` to `2.0.19`
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
 
 ### Project Keeper Java Project Crawler
 
@@ -73,8 +100,21 @@ Code name:
 * Updated `com.exasol:project-keeper-shared-test-setup:5.7.5` to `5.7.6`
 * Updated `org.slf4j:slf4j-jdk14:2.0.18` to `2.0.19`
 
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
+
 ### Project Keeper Shared Test Setup
 
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.7.5` to `5.7.6`
+
+#### Plugin Dependency Updates
+
+* Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
