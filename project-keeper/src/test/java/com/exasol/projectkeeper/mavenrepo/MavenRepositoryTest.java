@@ -67,7 +67,7 @@ class MavenRepositoryTest {
     @Tag("integration")
     @Test
     // [itest->dsn~verify-own-version~2]
-    void integrationTest() throws Exception {
+    void integrationTest() {
         assertThat(MavenRepository.projectKeeperCli().getLatestStableVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
         assertThat(MavenRepository.projectKeeperMavenPlugin().getLatestStableVersion(),
                 matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));

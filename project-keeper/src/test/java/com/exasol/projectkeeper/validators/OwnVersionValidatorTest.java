@@ -42,19 +42,19 @@ class OwnVersionValidatorTest {
     }
 
     @Test
-    void latestVersionUnsupportedFormat() throws Exception {
+    void latestVersionUnsupportedFormat() {
         verifyOptionalFinding(testee("0.0.1", "x.y.z"),
                 expectedMessage("W-PK-CORE-154", "Unsupported format of latest stable version from Maven repository.*"));
     }
 
     @Test
-    void ownVersionOutDatet_ProposeUpdate() throws Exception {
+    void ownVersionOutDatet_ProposeUpdate() {
         verifyOptionalFinding(testee("0.0.1", "99999999"), OUTDATED);
     }
 
     @Tag("integration")
     @Test
-    void versionUpToDate_NoFinding() throws Exception {
+    void versionUpToDate_NoFinding() {
         final String currentVersion = MavenRepository.projectKeeperMavenPlugin().getLatestStableVersion();
         final OwnVersionValidator testee = OwnVersionValidator
                 .forMavenPlugin(currentVersion, mock(Updater.class));
@@ -63,7 +63,7 @@ class OwnVersionValidatorTest {
 
     @Tag("integration")
     @Test
-    void cli_NoFinding() throws Exception {
+    void cli_NoFinding() {
         final String currentVersion = MavenRepository.projectKeeperCli().getLatestStableVersion();
         final OwnVersionValidator testee = OwnVersionValidator.forCli(currentVersion);
         assertThat(testee.validate(), empty());
@@ -71,7 +71,7 @@ class OwnVersionValidatorTest {
 
     @Tag("integration")
     @Test
-    void cli_NoFix() throws Exception {
+    void cli_NoFix() {
         final OwnVersionValidator testee = OwnVersionValidator.forCli("0.0.1");
         final SimpleValidationFinding finding = (SimpleValidationFinding) testee.validate().get(0);
         assertThat(finding.getMessage(), matchesRegex(OUTDATED));
@@ -85,7 +85,7 @@ class OwnVersionValidatorTest {
         return new OwnVersionValidator(currentVersion, repo, updater);
     }
 
-    private OwnVersionValidator testee(final String currentVersion, final String latestVersion) throws Exception {
+    private OwnVersionValidator testee(final String currentVersion, final String latestVersion) {
         final MavenRepository repo = mock(MavenRepository.class);
         when(repo.getLatestStableVersion()).thenReturn(latestVersion);
         return testee(currentVersion, repo);
