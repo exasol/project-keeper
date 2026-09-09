@@ -21,7 +21,7 @@ public class OwnVersionValidator implements Validator {
 
     /**
      * Create a validator for running as a maven plugin.
-     * 
+     *
      * @param currentVersion current version of PK in order to validate if there is an update available.
      * @param updater        instance of {@link Updater} in order to accept the latest stable version and to perform a
      *                       self-update by replacing the version of PK maven plugin in the user's pom file.
@@ -94,15 +94,15 @@ public class OwnVersionValidator implements Validator {
     private Version getLatestVersion(final MavenRepository repo) throws ValidationException {
         try {
             final String versionString = repo.getLatestStableVersion();
-            return parseVersion(versionString, ExaError.messageBuilder("W-PK-CORE-154") //
-                    .message("Could not detect latest stable version of project-keeper.") //
-                    .message(" Unsupported format of latest stable version from Maven repository: {{version}}.", versionString) //
+            return parseVersion(versionString, ExaError.messageBuilder("W-PK-CORE-154")
+                    .message("Could not detect latest stable version of project-keeper.")
+                    .message(" Unsupported format of latest stable version from Maven repository: {{version}}.", versionString)
                     .toString());
         } catch (final IllegalStateException exception) {
-            throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155") //
-                    .message("Could not detect latest stable version of project-keeper.") //
-                    .message(" {{message|u}}.", exception.getMessage()) //
-                    .mitigation("Please check network connection and response from {{url}}", repo.getUrl()) //
+            throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155")
+                    .message("Could not detect latest stable version of project-keeper.")
+                    .message(" {{message|u}}.", exception.getMessage())
+                    .mitigation("Please check network connection and response from {{url}}", repo.getUrl())
                     .toString(), exception);
         }
     }
