@@ -108,7 +108,7 @@ Each Maven plugin is identified by its Maven coordinates group, artifact, and ve
 
 If you want to check if newer versions of some of the plugins are available and potentially update the plugin versions in the templates you can run the java class `TemplateUpdater` as java application.
 
-`TemplateUpdater` will inspect the template files and replace the plugin version by the latest version available from maven-central.
+`TemplateUpdater` will inspect the template files and replace the plugin version by the latest stable version available from Maven Central.
 
 ## Requirement Tracing
 

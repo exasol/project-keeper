@@ -12,7 +12,7 @@ import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatExcept
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-//[utest->dsn~verify-own-version~1]
+//[utest->dsn~verify-own-version~2]
 class VersionTest {
 
     @ParameterizedTest(name = "Version(\"{0}\")")

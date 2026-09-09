@@ -18,7 +18,7 @@
         </license>
     </licenses>
     <properties>
-        <revision>5.7.5</revision>
+        <revision>5.7.6</revision>
         <ossindexSkip>false</ossindexSkip>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
@@ -26,7 +26,7 @@
         <minimum.maven.version>3.8.7</minimum.maven.version>
         <xmlunit.version>2.13.0</xmlunit.version>
         <mockito.version>5.23.0</mockito.version>
-        <slf4j.version>2.0.18</slf4j.version>
+        <slf4j.version>2.0.19</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gpg.skip>true</gpg.skip>
@@ -102,7 +102,7 @@
             <dependency>
                 <groupId>org.eclipse.jgit</groupId>
                 <artifactId>org.eclipse.jgit</artifactId>
-                <version>7.7.1.202607240634-r</version>
+                <version>7.8.0.202609011348-r</version>
             </dependency>
             <dependency>
                 <groupId>net.steppschuh.markdowngenerator</groupId>
@@ -146,6 +146,11 @@
                 <artifactId>maven-core</artifactId>
                 <version>${maven.version}</version>
                 <scope>provided</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.maven</groupId>
+                <artifactId>maven-artifact</artifactId>
+                <version>${maven.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.exasol</groupId>

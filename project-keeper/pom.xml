@@ -51,6 +51,11 @@
             <artifactId>snakeyaml-engine</artifactId>
         </dependency>
         <dependency>
+            <!-- Required for Maven-compatible ordering. The internal Version class supports numeric versions only. -->
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.apache.maven</groupId>
             <artifactId>maven-model</artifactId>
         </dependency>
