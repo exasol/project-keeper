@@ -354,6 +354,7 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     @Test
+    // [utest -> dsn~customize-build-process.broken-links-checker~1]
     void brokenLinksCheckerWorkflowWithCustomization() {
         final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
         final GitHubWorkflow workflow = parse(
@@ -382,7 +383,8 @@ class CiBuildWorkflowGeneratorTest {
     }
 
     @Test
-    void projectKeeperVerifyWorkflowWithoutCustomization() {
+    // [utest -> dsn~customize-build-process.project-keeper-verify~1]
+    void projectKeeperVerifyWorkflowWithCustomization() {
         final Map<String, Object> setupJavaStep = setupJavaStep("custom-version");
         final Job job = parse(
                 testee(BuildOptions.builder()

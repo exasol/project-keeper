@@ -55,6 +55,7 @@ class FileTemplatesFactory {
                     .message("For this project structure project keeper does not know how to configure ci-build.")
                     .mitigation("Please create the required actions on your own.").toString());
         }
+        this.workflowGenerator.verifyAllWorkflowCustomizationsAreUsed();
         return templates;
     }
 
