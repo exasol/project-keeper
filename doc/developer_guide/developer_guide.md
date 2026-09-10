@@ -39,7 +39,7 @@ https://repo.maven.apache.org/maven2 during a previous attempt.
 In order to fix this, just install project-keeper:
 
 ```sh
-mvn install --projects . -DskipTests -DossindexSkip=true
+mvn install --projects . -DskipTests -DskipITs -DossindexSkip=true
 ```
 
 After that the dependencies of PK are available in your local maven repository in the version of the current release and hence references to these versions in the pom of the current release are valid.
@@ -52,7 +52,7 @@ Updating **project-keeper**'s own version requires the following steps:
 2. Build and install the current state of the project locally:
 
     ```sh
-    mvn clean install -Dduplicate-finder.skip=true -DskipTests \
+    mvn clean install -Dduplicate-finder.skip=true -DskipTests -DskipITs \
         -Dproject-keeper.skip=true -DossindexSkip=true \
         -Dmaven.javadoc.skip=true -Djacoco.skip=true \
         -Derror-code-crawler.skip=true -Dopenfasttrace.skip=true -T 1C
@@ -83,7 +83,7 @@ Usually you need to
 In some cases PK runs maven as a shell command. Maven will then search your for PK module "project crawler" in the version identical to PK opened in your IDE. The following command publishes project crawler to your local maven repository `~/.m2`:
 
 ```sh
-mvn clean install -DskipTests
+mvn clean install -DskipTests -DskipITs
 ```
 
 ### Specify PK Version
@@ -120,9 +120,9 @@ mvn openfasttrace:trace --projects .
 
 Copy the required file to directory `src/main/resources/templates/<module>/<require_exist | require_exact>`.
 
-Replace `<module>` with the name of the module the required file should be added to. 
+Replace `<module>` with the name of the module the required file should be added to.
 
-If you want this plugin to only check that the file exists, put it into `require_exist`. If you also want that it check that the file has the same content like the template, add it to `require_exact`. 
+If you want this plugin to only check that the file exists, put it into `require_exist`. If you also want that it check that the file has the same content like the template, add it to `require_exact`.
 
 Inside of these folders you can also create sub folders. The sub folder structure of the templates defines the folder structure of the repository.
 
@@ -173,7 +173,7 @@ Example Maven Central credentials:
 Maven plugin `central-publishing-maven-plugin` creates a bundle and uploads it to Maven Central. To verify the content of this bundle without uploading it, run the following command. You do not need Maven Central credentials for this test.
 
 ```sh
-mvn clean deploy -Dgpg.skip=false -DskipTests \
+mvn clean deploy -Dgpg.skip=false -DskipTests -DskipITs \
   -Dcentral-publishing.deploymentName="Testing Deployment" \
   -Dcentral-publishing.skipPublishing=true
 ```
@@ -204,7 +204,7 @@ Ensure that **only modules meant for publishing** are contained in this bundle a
 To test the upload to Maven Central **without publishing**, run the following command:
 
 ```sh
-mvn clean deploy -Dgpg.skip=false -DskipTests \
+mvn clean deploy -Dgpg.skip=false -DskipTests -DskipITs \
   -Dcentral-publishing.deploymentName="Testing Deployment"
 ```
 

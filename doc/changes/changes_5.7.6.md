@@ -4,6 +4,8 @@ Code name:
 
 ## Summary
 
+**Note:** This release upgrades the `maven-failsafe-plugin` to 3.6.0. Builds that skip tests with `-DskipTests` must now also set `-DskipITs` to skip Failsafe integration tests.
+
 ## Features
 
 * #766: Update Maven template plugins and Project Keeper's self-version check to the latest stable release only.
@@ -31,7 +33,6 @@ Code name:
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.7.5` to `5.7.6`
-* Added `org.apache.maven:maven-artifact:3.9.16`
 
 #### Runtime Dependency Updates
 
