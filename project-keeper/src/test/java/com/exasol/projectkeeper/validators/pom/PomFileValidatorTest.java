@@ -255,7 +255,7 @@ class PomFileValidatorTest {
                 .runXPath(pom, PomFileValidator.XPath.PROJECT_KEEPER_VERSION) //
                 .getTextContent();
         assertThat(version, not("0.0.1"));
-        assertThat(version, matchesRegex(Version.PATTERN));
+        assertThat(Version.isValidVersion(version), is(true));
     }
 
     @Test

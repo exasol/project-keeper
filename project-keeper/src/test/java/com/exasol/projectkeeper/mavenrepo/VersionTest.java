@@ -8,6 +8,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatException;
 
@@ -40,8 +41,21 @@ class VersionTest {
 
     @ParameterizedTest(name = "Version(\"{0}\")")
     @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
+    @NullAndEmptySource
     void parseInvalidVersionStrings(final String version) throws UnsupportedVersionFormatException {
         assertThrows(IllegalArgumentException.class, () -> Version.parse(version));
+    }
+
+    @ParameterizedTest(name = "isValidVersion(\"{0}\")")
+    @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
+    void recognizesValidVersionStrings(final String version) {
+        assertThat(Version.isValidVersion(version), is(true));
+    }
+
+    @ParameterizedTest(name = "isValidVersion(\"{0}\")")
+    @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
+    void rejectsInvalidVersionStrings(final String version) {
+        assertThat(Version.isValidVersion(version), is(false));
     }
 
     @ParameterizedTest(name = "Version(\"{0}\") < Version(\"{1}\") ")

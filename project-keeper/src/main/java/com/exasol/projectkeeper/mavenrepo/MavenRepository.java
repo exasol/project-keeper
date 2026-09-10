@@ -117,7 +117,7 @@ public class MavenRepository {
     }
 
     private static boolean isStableVersion(final String version) {
-        return Version.PATTERN.matcher(version).matches();
+        return Version.isValidVersion(version);
     }
 
     private static XmlContentException noStableVersionException() {

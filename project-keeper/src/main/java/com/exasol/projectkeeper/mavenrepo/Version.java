@@ -14,14 +14,7 @@ import java.util.regex.Pattern;
 // [impl->dsn~verify-own-version~2]
 public final class Version implements Comparable<Version> {
 
-    /**
-     * Regular expression pattern in order to verify version number format.
-     *
-     * <p>
-     * Only used internally and in tests.
-     * </p>
-     */
-    public static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*+");
+    private static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*+");
 
     private static final int LESS = -1;
     private static final int EQUAL = 0;
@@ -49,6 +42,16 @@ public final class Version implements Comparable<Version> {
     }
 
     /**
+     * Check whether a string is a version number supported by this class.
+     *
+     * @param version version string to validate
+     * @return {@code true} if the version consists of one or more numeric components separated by dots
+     */
+    public static boolean isValidVersion(final String version) {
+        return version != null && PATTERN.matcher(version).matches();
+    }
+
+    /**
      * Create a new instance.
      *
      * @param version string representation of version number.
@@ -60,7 +63,7 @@ public final class Version implements Comparable<Version> {
     }
 
     private static int[] parseVersion(final String v) throws UnsupportedVersionFormatException {
-        if (!PATTERN.matcher(v).matches()) {
+        if (!isValidVersion(v)) {
             throw new UnsupportedVersionFormatException(v);
         }
         return Arrays.stream(v.split("\\.")) //
