@@ -27,7 +27,7 @@ class VersionTest {
 
     @ParameterizedTest(name = "Version(\"{0}\")")
     @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
-    void parseValidVersionStrings(final String version) throws UnsupportedVersionFormatException {
+    void parseValidVersionStrings(final String version) {
         final Version testee = Version.parse(version);
         assertAll(() -> assertThat(testee, notNullValue()),
                 () -> assertThat(testee.toString(), equalTo(version)));
@@ -42,7 +42,7 @@ class VersionTest {
     @ParameterizedTest(name = "Version(\"{0}\")")
     @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
     @NullAndEmptySource
-    void parseInvalidVersionStrings(final String version) throws UnsupportedVersionFormatException {
+    void parseInvalidVersionStrings(final String version) {
         assertThrows(IllegalArgumentException.class, () -> Version.parse(version));
     }
 
