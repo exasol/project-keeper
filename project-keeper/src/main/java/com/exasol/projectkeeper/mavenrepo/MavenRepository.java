@@ -6,13 +6,11 @@ import static java.util.Comparator.comparing;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
 
-import org.apache.maven.artifact.versioning.ComparableVersion;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
@@ -68,9 +66,7 @@ public class MavenRepository {
                 .filter(node -> "version".equals(node.getNodeName()))
                 .map(Node::getTextContent)
                 .filter(MavenRepository::isStableVersion)
-                // The internal Version class supports numeric versions only. Maven metadata requires Maven-compatible ordering. That's why we use
-                // ComparableVersion from maven-artifact.
-                .max(comparing(ComparableVersion::new))
+                .max(comparing(Version::parse))
                 .orElseThrow(MavenRepository::noStableVersionException);
     }
 
@@ -82,9 +78,6 @@ public class MavenRepository {
     @SuppressWarnings("java:S1075")
     private static final String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
     private static final String VERSIONS_XPATH = "/metadata/versioning/versions";
-    private static final Pattern PRE_RELEASE_QUALIFIER = Pattern.compile(
-            "(?i)(?<![a-z])(?:alpha|a|beta|b|milestone|m|rc|cr|snapshot)(?=$|[._-]|\\d)");
-
     private final String url;
 
     /**
@@ -124,7 +117,7 @@ public class MavenRepository {
     }
 
     private static boolean isStableVersion(final String version) {
-        return !PRE_RELEASE_QUALIFIER.matcher(version).find();
+        return Version.PATTERN.matcher(version).matches();
     }
 
     private static XmlContentException noStableVersionException() {

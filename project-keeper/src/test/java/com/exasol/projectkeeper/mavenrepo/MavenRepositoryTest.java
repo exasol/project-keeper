@@ -40,7 +40,7 @@ class MavenRepositoryTest {
 
     @ParameterizedTest
     @ValueSource(strings = { "1.1-alpha", "1.1-A1", "1.1-BeTa", "1.1-M1", "1.1-RC1", "1.1-cR2",
-            "1.1-SNAPSHOT" })
+            "1.1-SNAPSHOT", "1.1-preview1", "1.1-ea", "1.1-1" })
     void testGetLatestStableVersionExcludesPreReleaseQualifiers(final String preReleaseVersion) throws Exception {
         final Document xml = xmlDocument("<metadata><versioning><versions><version>1.0.0</version><version>"
                 + preReleaseVersion + "</version></versions></versioning></metadata>");

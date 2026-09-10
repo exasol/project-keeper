@@ -148,11 +148,6 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
-                <groupId>org.apache.maven</groupId>
-                <artifactId>maven-artifact</artifactId>
-                <version>${maven.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.exasol</groupId>
                 <artifactId>maven-project-version-getter</artifactId>
                 <version>1.2.2</version>

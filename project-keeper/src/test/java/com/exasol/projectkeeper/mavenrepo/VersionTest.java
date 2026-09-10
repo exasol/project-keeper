@@ -2,6 +2,7 @@ package com.exasol.projectkeeper.mavenrepo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
@@ -19,14 +20,28 @@ class VersionTest {
     @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
     void validVersionStrings(final String version) throws UnsupportedVersionFormatException {
         final Version testee = new Version(version);
-        assertThat(testee, notNullValue());
-        assertThat(testee.toString(), equalTo(version));
+        assertAll(() -> assertThat(testee, notNullValue()),
+                () -> assertThat(testee.toString(), equalTo(version)));
+    }
+
+    @ParameterizedTest(name = "Version(\"{0}\")")
+    @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
+    void parseValidVersionStrings(final String version) throws UnsupportedVersionFormatException {
+        final Version testee = Version.parse(version);
+        assertAll(() -> assertThat(testee, notNullValue()),
+                () -> assertThat(testee.toString(), equalTo(version)));
     }
 
     @ParameterizedTest(name = "Version(\"{0}\")")
     @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
     void invalidVersionStrings(final String version) throws UnsupportedVersionFormatException {
         assertThrows(UnsupportedVersionFormatException.class, () -> new Version(version));
+    }
+
+    @ParameterizedTest(name = "Version(\"{0}\")")
+    @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
+    void parseInvalidVersionStrings(final String version) throws UnsupportedVersionFormatException {
+        assertThrows(IllegalArgumentException.class, () -> Version.parse(version));
     }
 
     @ParameterizedTest(name = "Version(\"{0}\") < Version(\"{1}\") ")

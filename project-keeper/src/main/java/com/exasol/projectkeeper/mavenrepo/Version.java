@@ -31,8 +31,26 @@ public final class Version implements Comparable<Version> {
     private final int[] items;
 
     /**
+     * Parse the given version string and return a new {@link Version} instance.
+     * <p>
+     * This method just calls the constructor, but wraps the checked exception into an unchecked one.
+     * </p>
+     *
+     * @param version version string to parse
+     * @return new {@link Version} instance
+     * @throws IllegalArgumentException if string does not match {@link #PATTERN}.
+     */
+    public static Version parse(final String version) {
+        try {
+            return new Version(version);
+        } catch (final UnsupportedVersionFormatException exception) {
+            throw new IllegalArgumentException("Unsupported version format: " + version, exception);
+        }
+    }
+
+    /**
      * Create a new instance.
-     * 
+     *
      * @param version string representation of version number.
      * @throws UnsupportedVersionFormatException if string does not match {@link #PATTERN}.
      */
@@ -66,7 +84,7 @@ public final class Version implements Comparable<Version> {
 
     /**
      * Check if this version is greater than another version.
-     * 
+     *
      * @param other other version to compare this version to
      * @return {@code true} if this version is greater or equal than the other one
      */
@@ -93,7 +111,7 @@ public final class Version implements Comparable<Version> {
 
         /**
          * Create a new instance.
-         * 
+         *
          * @param message detailed message of the exception
          */
         public UnsupportedVersionFormatException(final String message) {
