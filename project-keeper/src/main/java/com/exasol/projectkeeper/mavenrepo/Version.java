@@ -9,7 +9,7 @@ import java.util.regex.Pattern;
  *
  * <p>
  * Compared to class {@code org.apache.maven.artifact.versioning.ComparableVersion} from Maven this class supports less
- * features, e.g. only numeric version components.
+ * features, e.g. only numeric version components but avoids an additional dependency.
  */
 // [impl->dsn~verify-own-version~2]
 public final class Version implements Comparable<Version> {
