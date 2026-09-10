@@ -4,7 +4,7 @@ Code name:
 
 ## Summary
 
-This release fixes customization of the generated `project-keeper-verify.yml` workflow for non-Maven projects.
+This release fixes customization of the generated `project-keeper-verify.yml` workflow for non-Maven projects. Instead of validating workflow names in `.project-keeper.yml` against an allow-list, PK now verifies that each customization is actually used. This ensures that newly added workflows are automatically allowed.
 
 ## Features
 
