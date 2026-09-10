@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.mavenrepo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.matchesRegex;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.*;
@@ -68,9 +69,9 @@ class MavenRepositoryTest {
     @Test
     // [itest->dsn~verify-own-version~2]
     void integrationTest() {
-        assertThat(MavenRepository.projectKeeperCli().getLatestStableVersion(), matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
-        assertThat(MavenRepository.projectKeeperMavenPlugin().getLatestStableVersion(),
-                matchesRegex("[0-9]+\\.[0-9]+\\.[0-9]+"));
+        assertAll(() -> assertThat(MavenRepository.projectKeeperCli().getLatestStableVersion(), matchesRegex("\\d+\\.\\d+\\.\\d+")),
+                () -> assertThat(MavenRepository.projectKeeperMavenPlugin().getLatestStableVersion(),
+                        matchesRegex("\\d+\\.\\d+\\.\\d+")));
     }
 
     private Document xmlDocument(final String content) {

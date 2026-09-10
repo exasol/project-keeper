@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 // [impl->dsn~verify-own-version~2]
 public final class Version implements Comparable<Version> {
 
-    private static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*+");
+    private static final Pattern PATTERN = Pattern.compile("\\d+(\\.\\d+)*+");
 
     private static final int LESS = -1;
     private static final int EQUAL = 0;
