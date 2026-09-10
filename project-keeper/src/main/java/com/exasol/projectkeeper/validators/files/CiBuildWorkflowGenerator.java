@@ -154,10 +154,12 @@ class CiBuildWorkflowGenerator {
         }
     }
 
+    // [impl -> dsn~customize-build-process.broken-links-checker~1]
     public FileTemplate createBrokenLinksCheckerWorkflow() {
         return createCustomizedWorkflow("broken_links_checker.yml");
     }
 
+    // [impl -> dsn~customize-build-process.project-keeper-verify~1]
     public FileTemplate createProjectKeeperVerifyWorkflow(final boolean hasNpmModule) {
         return createCustomizedWorkflow("non_maven_templates/.github/workflows/project-keeper-verify.yml",
                 "project-keeper-verify.yml",
