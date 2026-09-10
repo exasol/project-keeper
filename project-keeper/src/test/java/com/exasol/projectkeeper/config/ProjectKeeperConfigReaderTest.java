@@ -176,12 +176,6 @@ class ProjectKeeperConfigReaderTest {
     static Stream<Arguments> invalidConfig() {
         return Stream.of(Arguments.of("missing config file", null, equalTo(
                 "E-PK-CORE-89: Could not find file '.project-keeper.yml'. Please create this file according to the user-guide https://github.com/exasol/project-keeper.")),
-                Arguments.of("unsupported workflow name", """
-                        build:
-                          workflows:
-                            - name: unsupported.yml
-                        """, startsWith(
-                        "E-PK-CORE-198: Unsupported workflow name 'unsupported.yml' found in file '.project-keeper.yml'. Please only use one of the supported workflows from [")),
                 Arguments.of("missing source path", """
                             sources:
                               - type: maven
@@ -301,6 +295,17 @@ class ProjectKeeperConfigReaderTest {
                     - name: ci-build.yml
                 """);
         assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getSteps(), empty());
+    }
+
+    @Test
+    void readWorkflowWithUnknownName() throws IOException {
+        writeProjectKeeperConfig("""
+                build:
+                  workflows:
+                    - name: does-not-exist.yml
+                """);
+        assertThat(readConfig().getCiBuildConfig().getWorkflows().get(0).getWorkflowName(),
+                equalTo("does-not-exist.yml"));
     }
 
     @Test
