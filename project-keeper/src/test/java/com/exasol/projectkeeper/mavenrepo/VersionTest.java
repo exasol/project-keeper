@@ -2,31 +2,60 @@ package com.exasol.projectkeeper.mavenrepo;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.NullAndEmptySource;
 
 import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatException;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
 
-//[utest->dsn~verify-own-version~1]
+//[utest->dsn~verify-own-version~2]
 class VersionTest {
 
     @ParameterizedTest(name = "Version(\"{0}\")")
     @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
     void validVersionStrings(final String version) throws UnsupportedVersionFormatException {
         final Version testee = new Version(version);
-        assertThat(testee, notNullValue());
-        assertThat(testee.toString(), equalTo(version));
+        assertAll(() -> assertThat(testee, notNullValue()),
+                () -> assertThat(testee.toString(), equalTo(version)));
+    }
+
+    @ParameterizedTest(name = "Version(\"{0}\")")
+    @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
+    void parseValidVersionStrings(final String version) {
+        final Version testee = Version.parse(version);
+        assertAll(() -> assertThat(testee, notNullValue()),
+                () -> assertThat(testee.toString(), equalTo(version)));
     }
 
     @ParameterizedTest(name = "Version(\"{0}\")")
     @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
     void invalidVersionStrings(final String version) throws UnsupportedVersionFormatException {
         assertThrows(UnsupportedVersionFormatException.class, () -> new Version(version));
+    }
+
+    @ParameterizedTest(name = "Version(\"{0}\")")
+    @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
+    @NullAndEmptySource
+    void parseInvalidVersionStrings(final String version) {
+        assertThrows(IllegalArgumentException.class, () -> Version.parse(version));
+    }
+
+    @ParameterizedTest(name = "isValidVersion(\"{0}\")")
+    @CsvSource(value = { "0", "0.1", "02.03", "000.111.222" })
+    void recognizesValidVersionStrings(final String version) {
+        assertThat(Version.isValidVersion(version), is(true));
+    }
+
+    @ParameterizedTest(name = "isValidVersion(\"{0}\")")
+    @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222.", "2147483648" })
+    void rejectsInvalidVersionStrings(final String version) {
+        assertThat(Version.isValidVersion(version), is(false));
     }
 
     @ParameterizedTest(name = "Version(\"{0}\") < Version(\"{1}\") ")

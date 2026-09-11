@@ -13,7 +13,7 @@ import jakarta.json.*;
 //[impl -> dsn~npm-dependency-licenses~1]
 record NpmLicense(String module, String version, String name, String url) {
 
-    private static final Pattern PATTERN = Pattern.compile("^(.+)@([0-9]+(\\.[0-9]+)*+)$");
+    private static final Pattern PATTERN = Pattern.compile("^(.+)@(\\d+(\\.\\d+)*+)$");
 
     static Map<String, List<NpmLicense>> from(final JsonObject json) {
         return json.keySet().stream()

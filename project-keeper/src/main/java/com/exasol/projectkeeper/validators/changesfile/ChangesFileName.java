@@ -14,8 +14,7 @@ import com.vdurmont.semver4j.Semver.SemverType;
  * Filename of a changes file, e.g. {@code changes_1.2.3.md}.
  */
 public final class ChangesFileName implements Comparable<ChangesFileName> {
-    /** Regular expression to identify valid names of changes files and to extract version number. **/
-    public static final Pattern PATTERN = Pattern.compile("changes_(" + Version.PATTERN.pattern() + ")\\.md");
+    private static final Pattern FILE_PATTERN = Pattern.compile("changes_(.+)\\.md");
 
     /**
      * Get Changes file name for the given path.
@@ -26,11 +25,11 @@ public final class ChangesFileName implements Comparable<ChangesFileName> {
      */
     public static Optional<ChangesFileName> from(final Path path) {
         final String filename = path.getFileName().toString();
-        final Matcher matcher = PATTERN.matcher(filename);
-        if (!matcher.matches()) {
+        final Matcher matcher = FILE_PATTERN.matcher(filename);
+        if (!matcher.matches() || !Version.isValidVersion(matcher.group(1))) {
             return Optional.empty();
         }
-        return Optional.of(new ChangesFileName(matcher.replaceFirst("$1")));
+        return Optional.of(new ChangesFileName(matcher.group(1)));
     }
 
     private final Semver version;

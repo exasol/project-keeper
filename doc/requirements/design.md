@@ -34,9 +34,9 @@ Needs: impl
 
 
 ### Project Keeper Verifies Own Version
-`dsn~verify-own-version~1`
+`dsn~verify-own-version~2`
 
-PK is able to detect its own current installed version, retrieve the latest version available for download, and to validate if the current version is not older than the latest available.
+PK is able to detect its own current installed version, retrieve the latest stable version available for download, and to validate if the current version is not older than the latest stable version.
 
 All findings related to detecting and verifying its own version are optional.
 

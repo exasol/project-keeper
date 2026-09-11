@@ -1,10 +1,12 @@
 package com.exasol.projectkeeper.mavenrepo;
 
 import static com.exasol.projectkeeper.xpath.XPathErrorHandlingWrapper.runXPath;
+import static java.util.Comparator.comparing;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.util.stream.IntStream;
 
 import javax.xml.XMLConstants;
 import javax.xml.parsers.*;
@@ -16,12 +18,12 @@ import org.xml.sax.SAXException;
 /**
  * This class allows getting the latest version of project-keeper from Maven Central.
  */
-// [impl->dsn~verify-own-version~1]
+// [impl->dsn~verify-own-version~2]
 public class MavenRepository {
 
     /**
      * Get repo for CLI artifacts.
-     * 
+     *
      * @return Maven repository using URL for cli artifacts of project-keeper.
      */
     public static MavenRepository projectKeeperCli() {
@@ -30,7 +32,7 @@ public class MavenRepository {
 
     /**
      * Get repo for Maven plugins.
-     * 
+     *
      * @return Maven repository using URL for project-keeper maven-plugin.
      */
     public static MavenRepository projectKeeperMavenPlugin() {
@@ -39,7 +41,7 @@ public class MavenRepository {
 
     /**
      * Get repo for the given URL infix.
-     * 
+     *
      * @param urlInfix infix for URL to maven artifact, e.g. "com/exasol/project-keeper-maven-plugin"
      * @return new instance of {@link MavenRepository} for this artifact
      */
@@ -48,18 +50,24 @@ public class MavenRepository {
     }
 
     /**
-     * Accessor for XML document, called internally and in tests.
+     * Get the greatest stable version from Maven metadata.
      *
-     * @param document XML DOM document to retrieve latest version from
-     * @return latest version.
-     * @throws XmlContentException
+     * @param document XML DOM document to retrieve stable versions from
+     * @return greatest stable version
+     * @throws XmlContentException if the metadata does not contain a stable version
      */
-    static String getLatestVersion(final Document document) throws XmlContentException {
-        final Node node = runXPath(document, LATEST_VERSION_XPATH);
-        if (node == null) {
-            throw new XmlContentException("Couldn't find node " + LATEST_VERSION_XPATH);
+    static String getLatestStableVersion(final Document document) throws XmlContentException {
+        final Node versions = runXPath(document, VERSIONS_XPATH);
+        if (versions == null) {
+            throw noStableVersionException();
         }
-        return node.getTextContent();
+        return IntStream.range(0, versions.getChildNodes().getLength())
+                .mapToObj(versions.getChildNodes()::item)
+                .filter(node -> "version".equals(node.getNodeName()))
+                .map(Node::getTextContent)
+                .filter(MavenRepository::isStableVersion)
+                .max(comparing(Version::parse))
+                .orElseThrow(MavenRepository::noStableVersionException);
     }
 
     static final String BASE_URL = "https://repo1.maven.org/maven2/";
@@ -69,7 +77,7 @@ public class MavenRepository {
     // sonar requests to get this URI from a customizable parameter which is inappropriate in the current situation
     @SuppressWarnings("java:S1075")
     private static final String LATEST_VERSION_XPATH = "/metadata/versioning/latest";
-
+    private static final String VERSIONS_XPATH = "/metadata/versioning/versions";
     private final String url;
 
     /**
@@ -88,25 +96,32 @@ public class MavenRepository {
     }
 
     /**
-     * Get latest project-keeper version.
-     * 
-     * @throws ParserConfigurationException in configuring parser failed (implementation error)
-     * @throws SAXException                 in case XML is invalid
-     * @throws IOException                  if URL cannot be connected
-     * @throws XmlContentException          in case Maven metadata XML document does not contains expected XML elements
-     *                                      with latest version
-     * @return latest version of project-keeper in the flavor addressed by the URL of this repository.
+     * Get the greatest stable version of the artifact addressed by this repository.
+     *
+     * @return greatest stable version
+     * @throws IllegalStateException if Maven metadata cannot be read or does not contain a stable version
      */
-    public String getLatestVersion()
-            throws ParserConfigurationException, SAXException, IOException, XmlContentException {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-        factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-        final DocumentBuilder db = factory.newDocumentBuilder();
-        try (InputStream stream = URI.create(this.url).toURL().openStream()) {
-            return getLatestVersion(db.parse(stream));
+    public String getLatestStableVersion() {
+        try {
+            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+            factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+            final DocumentBuilder db = factory.newDocumentBuilder();
+            try (InputStream stream = URI.create(this.url).toURL().openStream()) {
+                return getLatestStableVersion(db.parse(stream));
+            }
+        } catch (final ParserConfigurationException | SAXException | IOException | XmlContentException exception) {
+            throw new IllegalStateException("Couldn't get latest stable version from " + this.url, exception);
         }
+    }
+
+    private static boolean isStableVersion(final String version) {
+        return Version.isValidVersion(version);
+    }
+
+    private static XmlContentException noStableVersionException() {
+        return new XmlContentException("Couldn't find a stable version in node " + VERSIONS_XPATH);
     }
 
     /**
@@ -117,7 +132,7 @@ public class MavenRepository {
 
         /**
          * Create a new instance.
-         * 
+         *
          * @param message the detail message.
          */
         public XmlContentException(final String message) {
@@ -127,7 +142,7 @@ public class MavenRepository {
 
     /**
      * Get the URL.
-     * 
+     *
      * @return URL of this Maven repository
      */
     public String getUrl() {

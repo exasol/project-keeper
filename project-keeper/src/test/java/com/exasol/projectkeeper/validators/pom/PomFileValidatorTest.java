@@ -219,7 +219,7 @@ class PomFileValidatorTest {
                  Check the project-keeper user guide if you need a parent pom."""));
     }
 
-    // [utest->dsn~verify-own-version~1]
+    // [utest->dsn~verify-own-version~2]
     @Test
     void noReferenceToProjectKeeperPluginInRootModule() {
         getTestModel().writeAsPomToProject(this.tempDir);
@@ -236,13 +236,13 @@ class PomFileValidatorTest {
         assertThat(result, not(hasFindingWithMessageMatchingRegex("W-PK-CORE-151.*")));
     }
 
-    // [utest->dsn~verify-own-version~1]
+    // [utest->dsn~verify-own-version~2]
     @Test
     void outdatedReferenceToProjectKeeperPlugin() {
         getTestModel().withProjectKeeperPlugin("0.0.1").writeAsPomToProject(this.tempDir);
         final List<ValidationFinding> result = runValidator(null);
         assertThat(result, hasFindingWithMessageMatchingRegex("W-PK-CORE-153: Project-keeper version 0.0.1 is outdated."
-                + " Please update project-keeper to latest version.*"));
+                + " Please update project-keeper to latest stable version.*"));
     }
 
     // [utest->dsn~self-update~1]
@@ -255,7 +255,7 @@ class PomFileValidatorTest {
                 .runXPath(pom, PomFileValidator.XPath.PROJECT_KEEPER_VERSION) //
                 .getTextContent();
         assertThat(version, not("0.0.1"));
-        assertThat(version, matchesRegex(Version.PATTERN));
+        assertThat(Version.isValidVersion(version), is(true));
     }
 
     @Test
