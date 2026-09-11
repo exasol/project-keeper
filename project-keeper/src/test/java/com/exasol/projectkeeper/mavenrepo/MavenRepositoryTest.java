@@ -58,6 +58,16 @@ class MavenRepositoryTest {
     }
 
     @Test
+    void testGetLatestStableVersionFailsForVersionWithUnparseableComponent() {
+        final Document xml = xmlDocument("""
+                <metadata><versioning><versions>
+                    <version>2147483648.0.0</version>
+                </versions></versioning></metadata>
+                """);
+        assertThrows(XmlContentException.class, () -> MavenRepository.getLatestStableVersion(xml));
+    }
+
+    @Test
     void testGetLatestStableVersionWrapsCheckedExceptions() {
         final MavenRepository repository = new MavenRepository("file:///non-existent-maven-metadata.xml");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,

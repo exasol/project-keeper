@@ -53,7 +53,7 @@ class VersionTest {
     }
 
     @ParameterizedTest(name = "isValidVersion(\"{0}\")")
-    @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222." })
+    @CsvSource(value = { "''", "aa", "1.2.c", "1 2", ".1", "000.111.222.", "2147483648" })
     void rejectsInvalidVersionStrings(final String version) {
         assertThat(Version.isValidVersion(version), is(false));
     }

@@ -48,7 +48,15 @@ public final class Version implements Comparable<Version> {
      * @return {@code true} if the version consists of one or more numeric components separated by dots
      */
     public static boolean isValidVersion(final String version) {
-        return version != null && PATTERN.matcher(version).matches();
+        if (version == null || !PATTERN.matcher(version).matches()) {
+            return false;
+        }
+        try {
+            Arrays.stream(version.split("\\.")).forEach(Integer::parseInt);
+            return true;
+        } catch (final NumberFormatException exception) {
+            return false;
+        }
     }
 
     /**
