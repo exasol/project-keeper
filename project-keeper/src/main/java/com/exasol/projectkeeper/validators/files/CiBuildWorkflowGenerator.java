@@ -56,7 +56,7 @@ class CiBuildWorkflowGenerator {
         final List<CustomJob> jobCustomizations = workflow.map(CustomWorkflow::getJobs)
                 .orElseGet(Collections::emptyList);
         final String environmentName = workflow.map(CustomWorkflow::getEnvironment).orElse(null);
-        final List<String> jobstoRemove = workflow
+        final List<String> jobsToRemove = workflow
                 .map(CustomWorkflow::getRemovedJobs).orElseGet(Collections::emptyList);
         return new ContentCustomizingTemplate(template, new GitHubWorkflowCustomizer( //
                 javaVersionCustomizer(),
@@ -67,7 +67,7 @@ class CiBuildWorkflowGenerator {
                 // [impl->dsn~customize-build-process.job-permissions~0]
                 new GitHubWorkflowJobPermissionsCustomizer(jobCustomizations),
                 // [impl->dsn~customize-build-process.remove-job~0]
-                new GitHubWorkflowRemoveJobCustomizer(jobstoRemove)));
+                new GitHubWorkflowRemoveJobCustomizer(jobsToRemove)));
     }
 
     private GitHubWorkflowJavaVersionCustomizer javaVersionCustomizer() {
@@ -82,7 +82,9 @@ class CiBuildWorkflowGenerator {
 
     private Optional<CustomWorkflow> findWorkflow(final String workflowName) {
         final Optional<CustomWorkflow> workflow = buildOptions.getWorkflow(workflowName);
-        workflow.ifPresent(ignored -> usedWorkflowNames.add(workflowName));
+        if (workflow.isPresent()) {
+            usedWorkflowNames.add(workflowName);
+        }
         return workflow;
     }
 
