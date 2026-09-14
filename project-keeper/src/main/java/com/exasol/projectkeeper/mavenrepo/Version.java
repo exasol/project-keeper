@@ -11,17 +11,10 @@ import java.util.regex.Pattern;
  * Compared to class {@code org.apache.maven.artifact.versioning.ComparableVersion} from Maven this class supports less
  * features, e.g. only numeric version components but avoids an additional dependency.
  */
-// [impl->dsn~verify-own-version~1]
+// [impl->dsn~verify-own-version~2]
 public final class Version implements Comparable<Version> {
 
-    /**
-     * Regular expression pattern in order to verify version number format.
-     *
-     * <p>
-     * Only used internally and in tests.
-     * </p>
-     */
-    public static final Pattern PATTERN = Pattern.compile("[0-9]+(\\.[0-9]+)*+");
+    private static final Pattern PATTERN = Pattern.compile("\\d+(\\.\\d+)*+");
 
     private static final int LESS = -1;
     private static final int EQUAL = 0;
@@ -31,8 +24,44 @@ public final class Version implements Comparable<Version> {
     private final int[] items;
 
     /**
+     * Parse the given version string and return a new {@link Version} instance.
+     * <p>
+     * This method just calls the constructor, but wraps the checked exception into an unchecked one.
+     * </p>
+     *
+     * @param version version string to parse
+     * @return new {@link Version} instance
+     * @throws IllegalArgumentException if string does not match {@link #PATTERN}.
+     */
+    public static Version parse(final String version) {
+        try {
+            return new Version(version);
+        } catch (final UnsupportedVersionFormatException exception) {
+            throw new IllegalArgumentException("Unsupported version format: " + version, exception);
+        }
+    }
+
+    /**
+     * Check whether a string is a version number supported by this class.
+     *
+     * @param version version string to validate
+     * @return {@code true} if the version consists of one or more numeric components separated by dots
+     */
+    public static boolean isValidVersion(final String version) {
+        if (version == null || !PATTERN.matcher(version).matches()) {
+            return false;
+        }
+        try {
+            Arrays.stream(version.split("\\.")).forEach(Integer::parseInt);
+            return true;
+        } catch (final NumberFormatException exception) {
+            return false;
+        }
+    }
+
+    /**
      * Create a new instance.
-     * 
+     *
      * @param version string representation of version number.
      * @throws UnsupportedVersionFormatException if string does not match {@link #PATTERN}.
      */
@@ -42,7 +71,7 @@ public final class Version implements Comparable<Version> {
     }
 
     private static int[] parseVersion(final String v) throws UnsupportedVersionFormatException {
-        if (!PATTERN.matcher(v).matches()) {
+        if (!isValidVersion(v)) {
             throw new UnsupportedVersionFormatException(v);
         }
         return Arrays.stream(v.split("\\.")) //
@@ -66,7 +95,7 @@ public final class Version implements Comparable<Version> {
 
     /**
      * Check if this version is greater than another version.
-     * 
+     *
      * @param other other version to compare this version to
      * @return {@code true} if this version is greater or equal than the other one
      */
@@ -93,7 +122,7 @@ public final class Version implements Comparable<Version> {
 
         /**
          * Create a new instance.
-         * 
+         *
          * @param message detailed message of the exception
          */
         public UnsupportedVersionFormatException(final String message) {

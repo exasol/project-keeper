@@ -1,16 +1,10 @@
 package com.exasol.projectkeeper.validators;
 
-import java.io.IOException;
 import java.util.*;
-
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.mavenrepo.MavenRepository;
-import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
 import com.exasol.projectkeeper.mavenrepo.Version;
 import com.exasol.projectkeeper.mavenrepo.Version.UnsupportedVersionFormatException;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
@@ -21,15 +15,15 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 /**
  * Validates if PK itself is up-to-date and performs self-update of called from a pom file.
  */
-// [impl->dsn~verify-own-version~1]
+// [impl->dsn~verify-own-version~2]
 // [impl->dsn~self-update~1]
 public class OwnVersionValidator implements Validator {
 
     /**
      * Create a validator for running as a maven plugin.
-     * 
+     *
      * @param currentVersion current version of PK in order to validate if there is an update available.
-     * @param updater        instance of {@link Updater} in order to accept the latest version and to perform a
+     * @param updater        instance of {@link Updater} in order to accept the latest stable version and to perform a
      *                       self-update by replacing the version of PK maven plugin in the user's pom file.
      * @return instance of {@link OwnVersionValidator} with the ability to perform a self-update
      */
@@ -82,7 +76,7 @@ public class OwnVersionValidator implements Validator {
             final Fix fix = (this.updater == null ? null : this.updater.accept(latest.toString()));
             return findings(fix, ExaError.messageBuilder("W-PK-CORE-153") //
                     .message("Project-keeper version {{current}} is outdated.", current) //
-                    .mitigation("Please update project-keeper to latest version {{latest}}.", latest) //
+                    .mitigation("Please update project-keeper to latest stable version {{latest}}.", latest) //
                     .toString());
         } catch (final ValidationException exception) {
             return findings(null, exception.getMessage());
@@ -99,16 +93,16 @@ public class OwnVersionValidator implements Validator {
 
     private Version getLatestVersion(final MavenRepository repo) throws ValidationException {
         try {
-            final String versionString = repo.getLatestVersion();
-            return parseVersion(versionString, ExaError.messageBuilder("W-PK-CORE-154") //
-                    .message("Could not detect latest available version of project-keeper.") //
-                    .message(" Unsupported format of latest version from Maven repository: {{version}}.", versionString) //
+            final String versionString = repo.getLatestStableVersion();
+            return parseVersion(versionString, ExaError.messageBuilder("W-PK-CORE-154")
+                    .message("Could not detect latest stable version of project-keeper.")
+                    .message(" Unsupported format of latest stable version from Maven repository: {{version}}.", versionString)
                     .toString());
-        } catch (final IOException | XmlContentException | ParserConfigurationException | SAXException exception) {
-            throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155") //
-                    .message("Could not detect latest available version of project-keeper.") //
-                    .message(" {{message|u}}.", exception.getMessage()) //
-                    .mitigation("Please check network connection and response from {{url}}", repo.getUrl()) //
+        } catch (final IllegalStateException exception) {
+            throw new ValidationException(ExaError.messageBuilder("W-PK-CORE-155")
+                    .message("Could not detect latest stable version of project-keeper.")
+                    .message(" {{message|u}}.", exception.getMessage())
+                    .mitigation("Please check network connection and response from {{url}}", repo.getUrl())
                     .toString(), exception);
         }
     }
@@ -123,17 +117,17 @@ public class OwnVersionValidator implements Validator {
 
     /**
      * Users of {@link OwnVersionValidator} need to provide an implementation of this updater. The validator may then
-     * pass the latest version to the updater. The updater in turn may then version of the project keeper plugin in the
-     * user's pom file.
+     * pass the latest stable version to the updater. The updater in turn may then version of the project keeper plugin
+     * in the user's pom file.
      */
     @FunctionalInterface
     public interface Updater {
         /**
-         * By accepting the latest version retrieved from central Maven repository this updater then creates and returns
+         * By accepting the latest stable version retrieved from Maven Central this updater then creates and returns
          * a Fix in order to perform a self-update of PK. Note that this currently is only supported if PK is used as a
          * Maven plugin.
          *
-         * @param latestVersion latest version
+         * @param latestVersion latest stable version
          * @return Fix performing a self-update of PK.
          */
         Fix accept(String latestVersion);

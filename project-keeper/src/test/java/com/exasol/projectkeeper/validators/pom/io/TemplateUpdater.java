@@ -8,16 +8,13 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.logging.Logger;
 
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.xml.sax.SAXException;
 
 import com.exasol.projectkeeper.mavenrepo.MavenRepository;
-import com.exasol.projectkeeper.mavenrepo.MavenRepository.XmlContentException;
 
 /**
  * This class updates the versions of the plugins in the maven templates. Simply run it as Java application.
@@ -56,8 +53,8 @@ public class TemplateUpdater {
     private TemplateUpdater updateTemplates(final Path dir) {
         LOGGER.info("Updating templates in folder " + dir);
         try {
-            Files.list(dir) //
-                    .filter(p -> p.toString().endsWith(".xml")) //
+            Files.list(dir)
+                    .filter(p -> p.toString().endsWith(".xml"))
                     .forEach(this::updateSingleTemplate);
             return this;
         } catch (final IOException exception) {
@@ -83,7 +80,7 @@ public class TemplateUpdater {
         final String version = versionNode.getTextContent();
         final String group = getText(plugin, "groupId");
         final String artifact = getText(plugin, "artifactId");
-        final String latest = getLatestVersion(group, artifact);
+        final String latest = getLatestStableVersion(group, artifact);
         if ((version != null) && version.equals(latest)) {
             return false;
         }
@@ -115,12 +112,8 @@ public class TemplateUpdater {
         return this;
     }
 
-    private String getLatestVersion(final String group, final String artifact) {
-        try {
-            return MavenRepository.of(url(group, artifact)).getLatestVersion();
-        } catch (ParserConfigurationException | SAXException | IOException | XmlContentException exception) {
-            throw new IllegalStateException(exception);
-        }
+    private String getLatestStableVersion(final String group, final String artifact) {
+        return MavenRepository.of(url(group, artifact)).getLatestStableVersion();
     }
 
     private String url(final String group, final String artifact) {

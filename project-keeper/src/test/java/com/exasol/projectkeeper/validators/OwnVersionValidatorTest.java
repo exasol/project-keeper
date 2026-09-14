@@ -15,8 +15,8 @@ import com.exasol.projectkeeper.validators.OwnVersionValidator.Updater;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
-//[utest->dsn~verify-own-version~1]
-//[itest->dsn~verify-own-version~1]
+//[utest->dsn~verify-own-version~2]
+//[itest->dsn~verify-own-version~2]
 //[utest->dsn~self-update~1]
 //[itest->dsn~self-update~1]
 class OwnVersionValidatorTest {
@@ -26,52 +26,52 @@ class OwnVersionValidatorTest {
     }
 
     private static final String OUTDATED = "W-PK-CORE-153: Project-keeper version 0.0.1 is outdated."
-            + " Please update project-keeper to latest version.*";
+            + " Please update project-keeper to latest stable version.*";
 
     @Test
     void retrieveLatestVersion_IoError() {
         verifyOptionalFinding(testee("0.1.0", new MavenRepository("https://localhost:12345/unknown/end/point")),
-                expectedMessage("W-PK-CORE-155", "Connection refused.*"));
+                expectedMessage("W-PK-CORE-155", "Couldn't get latest stable version from.*"));
     }
 
     @Test
     void ownVersionUnsupportedFormat() {
-        verifyOptionalFinding(testee("a.b.c", (MavenRepository) null), //
+        verifyOptionalFinding(testee("a.b.c", (MavenRepository) null),
                 "W-PK-CORE-152: Could not validate version of project-keeper."
                         + " Unsupported format of own version.*");
     }
 
     @Test
-    void latestVersionUnsupportedFormat() throws Exception {
+    void latestVersionUnsupportedFormat() {
         verifyOptionalFinding(testee("0.0.1", "x.y.z"),
-                expectedMessage("W-PK-CORE-154", "Unsupported format of latest version from Maven repository.*"));
+                expectedMessage("W-PK-CORE-154", "Unsupported format of latest stable version from Maven repository.*"));
     }
 
     @Test
-    void ownVersionOutDatet_ProposeUpdate() throws Exception {
+    void ownVersionOutDatet_ProposeUpdate() {
         verifyOptionalFinding(testee("0.0.1", "99999999"), OUTDATED);
     }
 
     @Tag("integration")
     @Test
-    void versionUpToDate_NoFinding() throws Exception {
-        final String currentVersion = MavenRepository.projectKeeperMavenPlugin().getLatestVersion();
-        final OwnVersionValidator testee = OwnVersionValidator //
+    void versionUpToDate_NoFinding() {
+        final String currentVersion = MavenRepository.projectKeeperMavenPlugin().getLatestStableVersion();
+        final OwnVersionValidator testee = OwnVersionValidator
                 .forMavenPlugin(currentVersion, mock(Updater.class));
         assertThat(testee.validate(), empty());
     }
 
     @Tag("integration")
     @Test
-    void cli_NoFinding() throws Exception {
-        final String currentVersion = MavenRepository.projectKeeperCli().getLatestVersion();
+    void cli_NoFinding() {
+        final String currentVersion = MavenRepository.projectKeeperCli().getLatestStableVersion();
         final OwnVersionValidator testee = OwnVersionValidator.forCli(currentVersion);
         assertThat(testee.validate(), empty());
     }
 
     @Tag("integration")
     @Test
-    void cli_NoFix() throws Exception {
+    void cli_NoFix() {
         final OwnVersionValidator testee = OwnVersionValidator.forCli("0.0.1");
         final SimpleValidationFinding finding = (SimpleValidationFinding) testee.validate().get(0);
         assertThat(finding.getMessage(), matchesRegex(OUTDATED));
@@ -85,9 +85,9 @@ class OwnVersionValidatorTest {
         return new OwnVersionValidator(currentVersion, repo, updater);
     }
 
-    private OwnVersionValidator testee(final String currentVersion, final String latestVersion) throws Exception {
+    private OwnVersionValidator testee(final String currentVersion, final String latestVersion) {
         final MavenRepository repo = mock(MavenRepository.class);
-        when(repo.getLatestVersion()).thenReturn(latestVersion);
+        when(repo.getLatestStableVersion()).thenReturn(latestVersion);
         return testee(currentVersion, repo);
     }
 
