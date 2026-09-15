@@ -143,20 +143,10 @@ public class ProjectKeeperConfigReader {
     }
 
     private CustomWorkflow convertWorkflow(final Workflow workflow) {
-        final List<String> supportedWorkflowNames = List.of("ci-build.yml", "release.yml", "dependencies_check.yml",
-                "dependencies_update.yml");
         if (workflow.name == null) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-199")
                     .message("Missing workflow name in file {{config file name}}.", CONFIG_FILE_NAME)
                     .mitigation("Add a workflow name to the workflow configuration.").toString());
-        }
-        if (!supportedWorkflowNames.contains(workflow.name)) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-198")
-                    .message("Unsupported workflow name {{workflow name}} found in file {{config file name}}.",
-                            workflow.name, CONFIG_FILE_NAME)
-                    .mitigation("Please only use one of the supported workflows from {{supported workflow names}}",
-                            supportedWorkflowNames)
-                    .toString());
         }
         return CustomWorkflow.builder()
                 .workflowName(workflow.name)

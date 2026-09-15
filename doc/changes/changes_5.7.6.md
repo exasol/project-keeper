@@ -4,9 +4,17 @@ Code name:
 
 ## Summary
 
-This release allows disabling the Eclipse formatter for certain code regions by adding comments `// @formatter:off` and `// @formatter:on`. The relevant setting `org.eclipse.jdt.core.formatter.use_on_off_tags` was `false` before.
+This release fixes customization of the generated `project-keeper-verify.yml` workflow for non-Maven projects. Instead of validating workflow names in `.project-keeper.yml` against an allow-list, PK now verifies that each customization is actually used. This ensures that newly added workflows are automatically allowed.
+
+The release also allows disabling the Eclipse formatter for certain code regions by adding comments `// @formatter:off` and `// @formatter:on`. The relevant setting `org.eclipse.jdt.core.formatter.use_on_off_tags` was `false` before.
 
 **Note:** This release upgrades the `maven-failsafe-plugin` to 3.6.0. Builds that skip tests with `-DskipTests` must now also set `-DskipITs` to skip Failsafe integration tests.
+
+## Features
+
+## Bug Fixes
+
+* #775: Fixed customizing GitHub workflow `project-keeper-verify.yml`
 
 ## Features
 

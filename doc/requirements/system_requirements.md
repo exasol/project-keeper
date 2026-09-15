@@ -449,9 +449,9 @@ Covers:
 Needs: dsn
 
 ### Customizable Workflows
-`feat~customize-workflows~0`
+`feat~customize-workflows~1`
 
-PK allows customizing the `ci-build.yml` and `release.yml` workflows with project-specific build steps.
+PK allows customizing generated GitHub workflows with project-specific build steps.
 
 Rationale:
 Currently some projects are already using customized workflows but needed to exclude them from PK generation. Allowing to customize workflows will simplify maintenance of GH workflows.
@@ -469,7 +469,7 @@ Some projects need to release custom files like executable `.jar` files or `.js`
 Needs: dsn
 
 Covers:
-* [`feat~customize-workflows~0`](#customizable-workflows)
+* [`feat~customize-workflows~1`](#customizable-workflows)
 
 #### Customize Build Process
 `req~customize-build-process~0`
@@ -488,4 +488,4 @@ Some projects need to
 Needs: dsn
 
 Covers:
-* [`feat~customize-workflows~0`](#customizable-workflows)
+* [`feat~customize-workflows~1`](#customizable-workflows)

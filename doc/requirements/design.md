@@ -557,6 +557,26 @@ Covers:
 
 Needs: impl, utest, itest
 
+#### Customize GitHub Workflow `project-keeper-verify.yml`
+`dsn~customize-build-process.project-keeper-verify~1`
+
+PK allows customizing workflow steps in GitHub workflow `project-keeper-verify.yml`.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest
+
+#### Customize GitHub Workflow `broken_links_checker.yml`
+`dsn~customize-build-process.broken-links-checker~1`
+
+PK allows customizing workflow steps in GitHub workflow `broken_links_checker.yml`.
+
+Covers:
+* [`req~customize-build-process~0`](system_requirements.md#customize-build-process)
+
+Needs: impl, utest
+
 #### Insert Workflow Steps
 `dsn~customize-build-process.insert-step-after~0`
 
