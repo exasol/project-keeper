@@ -4,11 +4,14 @@ Code name:
 
 ## Summary
 
+This release allows disabling the Eclipse formatter for certain code regions by adding comments `// @formatter:off` and `// @formatter:on`. The relevant setting `org.eclipse.jdt.core.formatter.use_on_off_tags` was `false` before.
+
 **Note:** This release upgrades the `maven-failsafe-plugin` to 3.6.0. Builds that skip tests with `-DskipTests` must now also set `-DskipITs` to skip Failsafe integration tests.
 
 ## Features
 
 * #766: Update Maven template plugins and Project Keeper's self-version check to the latest stable release only.
+* #778: Allowed disabling Eclipse formatter via tags
 
 ## Dependency Updates
 
