@@ -21,8 +21,6 @@ project-keeper-maven-plugin/.settings/org.eclipse.jdt.core.prefs                
 project-keeper-maven-plugin/.settings/org.eclipse.jdt.ui.prefs                   linguist-generated=true
 project-keeper/.settings/org.eclipse.jdt.core.prefs                              linguist-generated=true
 project-keeper/.settings/org.eclipse.jdt.ui.prefs                                linguist-generated=true
-project-keeper/src/main/resources/templates/.settings/org.eclipse.jdt.core.prefs linguist-generated=true
-project-keeper/src/main/resources/templates/.settings/org.eclipse.jdt.ui.prefs   linguist-generated=true
 shared-model-classes/.settings/org.eclipse.jdt.core.prefs                        linguist-generated=true
 shared-model-classes/.settings/org.eclipse.jdt.ui.prefs                          linguist-generated=true
 shared-test-setup/.settings/org.eclipse.jdt.core.prefs                           linguist-generated=true
