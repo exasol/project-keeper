@@ -220,9 +220,7 @@ jobs:
       run:
         shell: "bash"
     permissions:
-      security-events: write # needed for advanced security
-      contents: read # only needed for private or internal repos
-      actions: read # only needed for private or internal repos
+      contents: read
     concurrency:
       group: ${{ github.workflow }}-github-actions-linter-${{ github.ref }}
       cancel-in-progress: true
@@ -232,9 +230,9 @@ jobs:
         uses: actions/checkout@v7
         with:
           persist-credentials: false
-      - name: Lint GitHub actions with Zizmore
+      - name: Lint GitHub actions with Zizmor
         id: lint-github-actions
-        uses: zizmorcore/zizmor-action@192e21d79ab29983730a13d1382995c2307fbcaa # v0.5.7
+        uses: zizmorcore/zizmor-action@cc914d7f3750a2d13d75c7f184a1060aa0e9d482 # v0.6.4
         with:
           advanced-security: false
 
@@ -296,7 +294,7 @@ jobs:
       contents: write
       actions: read
       issues: read
-    uses: ./.github/workflows/release.yml
+    uses: $/.github/workflows/release.yml
     with:
       started-from-ci: true
       maven-central-auto-publish: true

@@ -603,13 +603,25 @@ This workflow is added only for non-Maven projects. It runs a linter for GitHub 
 
 PK uses [zizmor](https://zizmor.sh/) for finding potential issues with GitHub Action workflows. PK generates config file `.github/zizmor.yml` with default rule exclusions.
 
-To debug issues with the linter, [install it locally](https://docs.zizmor.sh/installation/) and run it in the project root dir with
+To debug issues with the linter locally, install [zizmor](https://docs.zizmor.sh/installation/) with Cargo:
 
 ```sh
-zizmor .
+cargo install --locked zizmor
 ```
 
-If you need to add custom linter exclusions, update the generated file `.github/zizmor.yml` and add an exclusion to `.project-keeper.yml`. See the [zizmore documentation](https://docs.zizmor.sh/configuration/#settings) for details about the configuration.
+Then run it from the project root, passing the token from your authenticated GitHub CLI session:
+
+```sh
+zizmor . --gh-token $(gh auth token)
+```
+
+To automatically apply all fixes that zizmor supports, add `--fix=all`:
+
+```sh
+zizmor . --gh-token $(gh auth token) --fix=all
+```
+
+If you need to add custom linter exclusions, update the generated file `.github/zizmor.yml` and add an exclusion to `.project-keeper.yml`. See the [zizmor documentation](https://docs.zizmor.sh/configuration/#settings) for details about the configuration.
 
 ## Troubleshooting
 

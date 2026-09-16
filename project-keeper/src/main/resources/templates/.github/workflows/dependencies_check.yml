@@ -77,6 +77,6 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
-    uses: ./.github/workflows/dependencies_update.yml
+    uses: $/.github/workflows/dependencies_update.yml
     with:
       vulnerability_issues: ${{ needs.report_security_issues.outputs.created-issues }}
