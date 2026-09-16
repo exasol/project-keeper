@@ -40,7 +40,7 @@ class GitHubWorkflowIOTest {
                           persist-credentials: false
                       - name: Set up JDKs
                         id: setup-jdks
-                        uses: actions/setup-java@v5
+                        uses: actions/setup-java@v6
                         with:
                           distribution: "temurin"
                           java-version: |
@@ -57,7 +57,7 @@ class GitHubWorkflowIOTest {
                 () -> assertThat(job.getStep("setup-jdks").getWith(), allOf(hasEntry("distribution", "temurin"), //
                         hasEntry("java-version", "11\n17\n"), //
                         hasEntry("cache", "maven"))),
-                () -> assertThat(job.getStep("setup-jdks").getUsesAction(), equalTo("actions/setup-java@v5")));
+                () -> assertThat(job.getStep("setup-jdks").getUsesAction(), equalTo("actions/setup-java@v6")));
     }
 
     @Test
@@ -103,7 +103,7 @@ class GitHubWorkflowIOTest {
                           build:
                             steps:
                               - name: Set up JDKs
-                                uses: actions/setup-java@v5
+                                uses: actions/setup-java@v6
                                 with:
                                   distribution: temurin
                                   java-version: |
@@ -119,7 +119,7 @@ class GitHubWorkflowIOTest {
                                       - name: Run tests and build with Maven
                                         run: |
                                           mvn -T 1C --batch-mode clean verify install \
-                                              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                                              --no-transfer-progress \
                                               -DtrimStackTrace=false
                                         env:
                                           GITHUB_TOKEN: ${{ github.token }} # Required for integration tests of GitHub access
@@ -131,7 +131,7 @@ class GitHubWorkflowIOTest {
                                       - name: Run tests and build with Maven
                                         run: |
                                           mvn -T 1C --batch-mode clean verify install \
-                                              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+                                              --no-transfer-progress \
                                               -DtrimStackTrace=false
                                         env: {
                                           GITHUB_TOKEN: '${{ github.token }}'

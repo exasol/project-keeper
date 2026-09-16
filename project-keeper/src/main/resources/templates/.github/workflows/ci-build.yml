@@ -37,7 +37,7 @@ jobs:
           persist-credentials: false
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "temurin"
           java-version: |
@@ -59,7 +59,7 @@ jobs:
         run: |
           mvn --batch-mode clean verify \
               -DossindexSkip=true \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              --no-transfer-progress \
               -DtrimStackTrace=false
       - name: Sonar analysis
         id: sonar-analysis
@@ -67,7 +67,7 @@ jobs:
         run: |
           mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -DossindexSkip=true \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              --no-transfer-progress \
               -DtrimStackTrace=false \
               -Dsonar.token=$SONAR_TOKEN
         env:
@@ -152,7 +152,7 @@ jobs:
           persist-credentials: false
       - name: Set up JDK $nextJavaVersion
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "temurin"
           java-version: $nextJavaVersion
@@ -161,7 +161,7 @@ jobs:
         id: build-next-java
         run: |
           mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=$nextJavaVersion \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              --no-transfer-progress \
               -DossindexSkip=true \
 
 
@@ -183,7 +183,7 @@ jobs:
           persist-credentials: false
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "temurin"
           java-version: |
@@ -191,8 +191,8 @@ jobs:
             17
           cache: "maven"
           server-id: ossindex
-          server-username: OSSINDEX_USERNAME
-          server-password: OSSINDEX_API_TOKEN
+          server-username-env-var: OSSINDEX_USERNAME
+          server-password-env-var: OSSINDEX_API_TOKEN
       - name: Run Ossindex
         id: ossindex
         # Note: test-compile required for multi-module projects to avoid dependency resolution problems
@@ -200,7 +200,7 @@ jobs:
           mvn --batch-mode test-compile \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+              --no-transfer-progress
         env:
           OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
           OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
@@ -252,7 +252,7 @@ jobs:
           persist-credentials: false
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "temurin"
           java-version: |
