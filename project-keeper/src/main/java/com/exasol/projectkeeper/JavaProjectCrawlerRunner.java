@@ -48,7 +48,7 @@ public class JavaProjectCrawlerRunner {
     private MavenProcessBuilder buildMavenCommand(final Path... pomFiles) {
         final MavenProcessBuilder builder = MavenProcessBuilder.create()
                 .addArguments(
-                        "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn",
+                        "--no-transfer-progress",
                         "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + "crawl",
                         "-DprojectsToCrawl=" + getProjectList(pomFiles),
                         /*
