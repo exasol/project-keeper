@@ -26,7 +26,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Set up JDKs
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "temurin"
           java-version: 17
@@ -47,9 +47,7 @@ jobs:
       - name: Install Go tools
         run: go install github.com/google/go-licenses/v2@v2.0.1
       - name: Build project-keeper
-        run: |
-          mvn --batch-mode -T 1C clean package -DskipTests -DskipITs -DossindexSkip=true -DtrimStackTrace=false \
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+        run: mvn --batch-mode --no-transfer-progress -T 1C clean package -DskipTests -DskipITs -DossindexSkip=true -DtrimStackTrace=false
       - name: Strip version number
         run: |
           mkdir artifact
@@ -80,7 +78,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: false
       - name: Set up JDKs
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: "temurin"
           java-version: |
@@ -96,18 +94,14 @@ jobs:
       - name: Install project-keeper
         shell: pwsh
         run: |
-          mvn --batch-mode install:install-file -Dfile="shared-model-classes.jar" `
-            -DpomFile="shared-model-classes.pom" `
-            "-Dorg.slf4j.simpleLogger.log.org.apache.aven.cli.transfer.Slf4jMavenTransferListener=warn"
-          mvn --batch-mode install:install-file -Dfile="maven-project-crawler.jar" `
-            -DpomFile="maven-project-crawler.pom" `
-            "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-          mvn --batch-mode install:install-file -Dfile="project-keeper-core.jar" `
-                      -DpomFile="project-keeper-core.pom" `
-                      "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
-          mvn --batch-mode install:install-file -Dfile="project-keeper-maven-plugin.jar" `
-                      -DpomFile="project-keeper-maven-plugin.pom" `
-                      "-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn"
+          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="shared-model-classes.jar" `
+            -DpomFile="shared-model-classes.pom"
+          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="maven-project-crawler.jar" `
+            -DpomFile="maven-project-crawler.pom"
+          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="project-keeper-core.jar" `
+            -DpomFile="project-keeper-core.pom"
+          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="project-keeper-maven-plugin.jar" `
+            -DpomFile="project-keeper-maven-plugin.pom"
       - name: run project-keeper
         shell: pwsh
-        run: mvn --batch-mode -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
+        run: mvn --batch-mode --no-transfer-progress -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .

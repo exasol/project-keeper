@@ -378,8 +378,8 @@ build:
             id: maven-build
             run: |
               mvn -T 1C --batch-mode clean install verify \
+                  --no-transfer-progress \
                   -DossindexSkip=true \
-                  -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
                   -DtrimStackTrace=false
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests

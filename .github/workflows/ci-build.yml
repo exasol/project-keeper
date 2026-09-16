@@ -50,7 +50,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: |-
@@ -86,8 +86,8 @@ jobs:
         id: maven-build
         run: |
           mvn -T 1C --batch-mode clean install verify \
+              --no-transfer-progress \
               -DossindexSkip=true \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
               -DtrimStackTrace=false
         env: {
           GITHUB_TOKEN: '${{ github.token }}'
@@ -98,7 +98,7 @@ jobs:
         run: |
           mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -DossindexSkip=true \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              --no-transfer-progress \
               -DtrimStackTrace=false \
               -Dsonar.token=$SONAR_TOKEN
         env: {
@@ -110,7 +110,7 @@ jobs:
         run: |
           mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify \
             --projects . \
-            -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+            --no-transfer-progress
       - name: Verify Release Artifacts
         id: verify-release-artifacts
         run: |
@@ -193,7 +193,7 @@ jobs:
         }
       - name: Set up JDK 21
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with: {
           distribution: temurin,
           java-version: '21',
@@ -203,7 +203,7 @@ jobs:
         id: build-next-java
         run: |
           mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=21 \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn \
+              --no-transfer-progress \
               -DossindexSkip=true \
   ossindex:
     runs-on: ubuntu-latest
@@ -227,7 +227,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: |-
@@ -235,15 +235,15 @@ jobs:
             21
           cache: maven
           server-id: ossindex
-          server-username: OSSINDEX_USERNAME
-          server-password: OSSINDEX_API_TOKEN
+          server-username-env-var: OSSINDEX_USERNAME
+          server-password-env-var: OSSINDEX_API_TOKEN
       - name: Run Ossindex
         id: ossindex
         run: |
           mvn --batch-mode test-compile \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
-              -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
+              --no-transfer-progress
         env: {
           OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
           OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
@@ -303,7 +303,7 @@ jobs:
         }
       - name: Set up JDKs
         id: setup-java
-        uses: actions/setup-java@v5
+        uses: actions/setup-java@v6
         with:
           distribution: temurin
           java-version: |-

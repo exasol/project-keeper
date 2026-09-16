@@ -379,6 +379,7 @@
                             <goal>sign</goal>
                         </goals>
                         <configuration>
+                            <bestPractices>true</bestPractices>
                             <gpgArguments>
                                 <arg>--pinentry-mode</arg>
                                 <arg>loopback</arg>

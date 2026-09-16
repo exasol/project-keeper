@@ -186,6 +186,10 @@ class CiBuildWorkflowGeneratorTest {
                 () -> assertThat(job.getSteps(), hasSize(13)),
                 () -> assertThat(job.getStep("configure-maven-central-credentials").getIfCondition(),
                         equalTo("${{ true }}")),
+                () -> assertThat(job.getStep("configure-maven-central-credentials").getWith(), allOf(
+                        hasEntry("server-username-env-var", "MAVEN_USERNAME"),
+                        hasEntry("server-password-env-var", "MAVEN_PASSWORD"),
+                        hasEntry("gpg-passphrase-env-var", "MAVEN_GPG_PASSPHRASE"))),
                 () -> assertThat(job.getStep("setup-jdks").getIfCondition(), equalTo("${{ ! true }}")),
                 () -> assertThat(job.getStep("list-secret-gpg-keys").getIfCondition(),
                         equalTo("${{ true && (! inputs.skip-maven-central) }}")),
@@ -402,7 +406,7 @@ class CiBuildWorkflowGeneratorTest {
         final Map<String, Object> setupJavaStep = new HashMap<>();
         setupJavaStep.put("id", "setup-java");
         setupJavaStep.put("name", "New Java");
-        setupJavaStep.put("uses", "actions/setup-java@v5");
+        setupJavaStep.put("uses", "actions/setup-java@v6");
         final Map<String, String> withElement = new HashMap<>();
         withElement.put("java-version", javaVersion);
         setupJavaStep.put("with", withElement);
