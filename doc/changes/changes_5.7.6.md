@@ -1,6 +1,6 @@
-# Project Keeper 5.7.6, released 2026-??-??
+# Project Keeper 5.7.6, released 2026-09-16
 
-Code name:
+Code name: Workflow Customization and Formatter Control
 
 ## Summary
 
