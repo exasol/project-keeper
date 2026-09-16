@@ -35,7 +35,7 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <!-- Update transitive dependency of org.eclipse:yasson to fix CVE-2026-9563 -->
+                <!-- Update transitive dependency of org.eclipse.yasson:yasson to fix CVE-2026-9563 -->
                 <groupId>org.eclipse.parsson</groupId>
                 <artifactId>parsson</artifactId>
                 <version>1.1.9</version>
@@ -73,14 +73,14 @@
                 <version>3.0.3</version>
             </dependency>
             <dependency>
-                <groupId>org.eclipse</groupId>
+                <groupId>org.eclipse.yasson</groupId>
                 <artifactId>yasson</artifactId>
                 <version>3.0.5</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
-                <version>3.15.2</version>
+                <version>3.16.0</version>
                 <scope>provided</scope>
             </dependency>
             <dependency>

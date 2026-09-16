@@ -34,6 +34,8 @@ The release also fixes linter warnings for generated GitHub workflows in the lat
 #### Compile Dependency Updates
 
 * Updated `org.eclipse.jgit:org.eclipse.jgit:7.7.1.202607240634-r` to `7.8.0.202609011348-r`
+* Added `org.eclipse.yasson:yasson:3.0.5`
+* Removed `org.eclipse:yasson:3.0.5`
 
 #### Test Dependency Updates
 
