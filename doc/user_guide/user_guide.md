@@ -609,7 +609,7 @@ To debug issues with the linter, [install it locally](https://docs.zizmor.sh/ins
 zizmor .
 ```
 
-If you need to add custom linter exclusions, update the generated file `.github/zizmor.yml` and add an exclusion to `.project-keeper.yml`. See the [zizmore documentation](https://docs.zizmor.sh/configuration/#settings) for details about the configuration.
+If you need to add custom linter exclusions, update the generated file `.github/zizmor.yml` and add an exclusion to `.project-keeper.yml`. See the [zizmor documentation](https://docs.zizmor.sh/configuration/#settings) for details about the configuration.
 
 ## Troubleshooting
 

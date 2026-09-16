@@ -8,6 +8,8 @@ This release fixes customization of the generated `project-keeper-verify.yml` wo
 
 The release also allows disabling the Eclipse formatter for certain code regions by adding comments `// @formatter:off` and `// @formatter:on`. The relevant setting `org.eclipse.jdt.core.formatter.use_on_off_tags` was `false` before.
 
+The release also fixes linter warnings for generated GitHub workflows in the latest zizmor version 1.30.1 and reduces permissions for the linter job.
+
 **Note:** This release upgrades the `maven-failsafe-plugin` to 3.6.0. Builds that skip tests with `-DskipTests` must now also set `-DskipITs` to skip Failsafe integration tests.
 
 ## Features
@@ -15,6 +17,7 @@ The release also allows disabling the Eclipse formatter for certain code regions
 ## Bug Fixes
 
 * #775: Fixed customizing GitHub workflow `project-keeper-verify.yml`
+* #780: Fixed linter warnings with latest zizmor version 1.30.1
 
 ## Features
 
