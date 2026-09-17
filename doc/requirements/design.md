@@ -455,6 +455,24 @@ Covers:
 
 Needs: impl, utest, itest
 
+#### Exclude JPMS Module Descriptors From Fat JARs
+`dsn~mvn-jpms-safe-fat-jars~1`
+
+For `jar_artifact` sources, PK configures the Maven Assembly dependency set to exclude both `module-info.class` and `**/module-info.class` while unpacking artifacts. The latter also excludes runtime-versioned module descriptors in multi-release JARs.
+
+Rationale:
+
+* Maven Assembly merges the current project's artifact and runtime dependencies into one fat JAR.
+* Copying a dependency's module descriptor can make that JAR claim the dependency's module name. If Maven Surefire or Failsafe also places the actual dependency on the module path, JPMS can fail with duplicate modules or split packages.
+* A multi-release JAR can provide its effective descriptor below `META-INF/versions/`, so excluding only the root descriptor would leave the same failure possible on newer Java runtimes.
+* A `jar_artifact` output is a classpath-oriented distribution. It must not inherit the JPMS identity of any artifact it contains. Normal classes and `META-INF/services` resource merging remain unchanged.
+
+Covers:
+
+* [`req~mvn-jpms-safe-fat-jars~1`](system_requirements.md#jpms-safe-fat-jars)
+
+Needs: impl, utest
+
 #### Common List of Release Artifacts
 `dsn~customize-release-artifacts-hard-coded~0`
 
