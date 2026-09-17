@@ -1,6 +1,6 @@
-# Project Keeper 5.7.6, released 2026-??-??
+# Project Keeper 5.7.6, released 2026-09-16
 
-Code name:
+Code name: Workflow Customization and Formatter Control
 
 ## Summary
 
@@ -32,6 +32,15 @@ Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from conta
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.1.0` to `2.1.2`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.4` to `3.2.0`
+* Updated `org.itsallcode:openfasttrace-maven-plugin:2.3.1` to `3.0.0`
+* Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
+
 ### Project Keeper Shared Model Classes
 
 #### Compile Dependency Updates
@@ -46,8 +55,14 @@ Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from conta
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.1.1` to `2.1.2`
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.1` to `3.7.0`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.4` to `3.2.0`
+* Updated `org.apache.maven.plugins:maven-install-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.codehaus.mojo:build-helper-maven-plugin:3.6.1` to `3.6.2`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.21.0` to `2.22.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
 
 ### Project Keeper Core
@@ -67,9 +82,16 @@ Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from conta
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.1.1` to `2.1.2`
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.1` to `3.7.0`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-install-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.codehaus.mojo:build-helper-maven-plugin:3.6.1` to `3.6.2`
+* Updated `org.codehaus.mojo:exec-maven-plugin:3.6.3` to `3.6.4`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.21.0` to `2.22.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
 
 ### Project Keeper Command Line Interface
@@ -89,9 +111,15 @@ Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from conta
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.1.1` to `2.1.2`
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.1` to `3.7.0`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-install-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.codehaus.mojo:build-helper-maven-plugin:3.6.1` to `3.6.2`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.21.0` to `2.22.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
 
 ### Project Keeper Maven Plugin
@@ -106,9 +134,16 @@ Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from conta
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.1.1` to `2.1.2`
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.1` to `3.7.0`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-install-plugin:3.1.4` to `3.2.0`
+* Updated `org.apache.maven.plugins:maven-plugin-plugin:3.15.2` to `3.16.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.codehaus.mojo:build-helper-maven-plugin:3.6.1` to `3.6.2`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.21.0` to `2.22.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
 
 ### Project Keeper Java Project Crawler
@@ -125,9 +160,16 @@ Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from conta
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.1.1` to `2.1.2`
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.1` to `3.7.0`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-failsafe-plugin:3.5.6` to `3.6.0`
+* Updated `org.apache.maven.plugins:maven-install-plugin:3.1.4` to `3.2.0`
+* Updated `org.apache.maven.plugins:maven-plugin-plugin:3.15.2` to `3.16.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.codehaus.mojo:build-helper-maven-plugin:3.6.1` to `3.6.2`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.21.0` to `2.22.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
 
 ### Project Keeper Shared Test Setup
@@ -138,6 +180,11 @@ Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from conta
 
 #### Plugin Dependency Updates
 
+* Updated `com.exasol:error-code-crawler-maven-plugin:2.1.1` to `2.1.2`
+* Updated `org.apache.maven.plugins:maven-artifact-plugin:3.6.1` to `3.7.0`
 * Updated `org.apache.maven.plugins:maven-compiler-plugin:3.15.0` to `3.16.0`
+* Updated `org.apache.maven.plugins:maven-deploy-plugin:3.1.4` to `3.2.0`
+* Updated `org.apache.maven.plugins:maven-install-plugin:3.1.4` to `3.2.0`
 * Updated `org.apache.maven.plugins:maven-surefire-plugin:3.5.6` to `3.6.0`
+* Updated `org.codehaus.mojo:versions-maven-plugin:2.21.0` to `2.22.0`
 * Updated `org.sonarsource.scanner.maven:sonar-maven-plugin:5.7.0.6970` to `5.8.0.7211`
