@@ -168,6 +168,17 @@ class FileTemplatesFactoryTest {
         assertContainsTemplate(templates, expectedTemplate);
     }
 
+    // [utest->dsn~mvn-jpms-safe-fat-jars~1]
+    @Test
+    void jarArtifactTemplateExcludesModuleDescriptors() {
+        final AnalyzedMavenSource source = AnalyzedMavenSource.builder().modules(Set.of(ProjectKeeperModule.JAR_ARTIFACT))
+                .build();
+        final FileTemplate template = findTemplate(testee(List.of(source)).getTemplatesForSource(source),
+                "src/assembly/all-dependencies.xml").orElseThrow();
+        assertThat(template.getContent(), allOf(containsString("<exclude>module-info.class</exclude>"),
+                containsString("<exclude>**/module-info.class</exclude>")));
+    }
+
     @ParameterizedTest
     @CsvSource({ "8, 1.8", "11, 11", "17, 17", "21, 21" })
     void testSettingsOrgEclipseJdtUiPrefs(final String javaVersion, final String expected) {

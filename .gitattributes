@@ -29,3 +29,5 @@ maven-project-crawler/.settings/org.eclipse.jdt.core.prefs                      
 maven-project-crawler/.settings/org.eclipse.jdt.ui.prefs                         linguist-generated=true
 parent-pom/.settings/org.eclipse.jdt.core.prefs                                  linguist-generated=true
 parent-pom/.settings/org.eclipse.jdt.ui.prefs                                    linguist-generated=true
+
+project-keeper-cli/src/assembly/all-dependencies.xml                             linguist-generated=true
