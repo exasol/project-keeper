@@ -111,6 +111,7 @@ class FileTemplatesFactory {
             templates.add(new FileTemplateFromResource("versionsMavenPluginRules.xml", REQUIRE_EXACT));
         }
         if (enabledModules.contains(JAR_ARTIFACT)) {
+            // [impl->dsn~mvn-jpms-safe-fat-jars~1]
             templates.add(new FileTemplateFromResource("src/assembly/all-dependencies.xml", REQUIRE_EXACT));
         }
         if (enabledModules.contains(LOMBOK)) {

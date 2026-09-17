@@ -10,6 +10,8 @@ The release also allows disabling the Eclipse formatter for certain code regions
 
 The release also fixes linter warnings for generated GitHub workflows in the latest zizmor version 1.30.1 and reduces permissions for the linter job.
 
+Generated `jar_artifact` fat JARs now exclude JPMS module descriptors from contained artifacts, including multi-release descriptors. This prevents the distribution JAR from accidentally claiming a dependency's module identity and causing duplicate or split-module failures in JDK 11 test runs.
+
 **Breaking Changes:**
 * Generated Java workflows now require `actions/setup-java@v6`. Maven Central release workflows now pass repository credentials and the GPG passphrase through environment variables; projects overriding the generated setup step must use `server-username-env-var`, `server-password-env-var`, and `gpg-passphrase-env-var`.
 * This release upgrades the `maven-failsafe-plugin` to 3.6.0. Builds that skip tests with `-DskipTests` must now also set `-DskipITs` to skip Failsafe integration tests.
@@ -21,6 +23,7 @@ The release also fixes linter warnings for generated GitHub workflows in the lat
 * #775: Fixed customizing GitHub workflow `project-keeper-verify.yml`
 * #780: Fixed linter warnings with latest zizmor version 1.30.1
 * #763: Upgraded generated Java setup workflows to `actions/setup-java@v6`
+* #785: Excluded JPMS module descriptors from generated fat JARs
 
 ## Features
 

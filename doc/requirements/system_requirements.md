@@ -287,6 +287,17 @@ More and more libraries and tools for Java don't support Java 11 anymore, only J
 
 Needs: dsn
 
+#### JPMS-Safe Fat JARs
+`req~mvn-jpms-safe-fat-jars~1`
+
+PK generates `jar_artifact` assembly descriptors that exclude JPMS module descriptors from unpacked artifacts.
+
+Covers:
+
+* [`feat~maven-project-support~0`](#support-for-maven-projects)
+
+Needs: dsn
+
 ### Support for Golang Projects
 `feat~golang-project-support~1`
 
