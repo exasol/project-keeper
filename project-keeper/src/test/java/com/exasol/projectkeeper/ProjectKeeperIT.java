@@ -2,7 +2,6 @@ package com.exasol.projectkeeper;
 
 import static org.hamcrest.CoreMatchers.*;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.matchesPattern;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
@@ -11,7 +10,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -176,15 +174,12 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
         runFix();
         final String generatedChangesFile = Files.readString(this.projectDir.resolve("doc/changes/changes_0.2.0.md"));
-        final Pattern pluginEntryPattern = Pattern.compile(
-                ".*\\* Updated `org\\.apache\\.maven\\.plugins:maven-\\w+-plugin:\\d+(\\.\\d+){1,2}` to.*",
-                Pattern.DOTALL);
         assertAll(//
                 () -> assertThat(generatedChangesFile, startsWith("# My Test Project 0.2.0, released")),
                 () -> assertThat(generatedChangesFile,
                         containsString("* Updated `com.exasol:error-reporting-java:0.1.0` to `0.2.0`")),
-                // The plugin assertions change over time, so a regex is safer:
-                () -> assertThat(generatedChangesFile, matchesPattern(pluginEntryPattern)));
+                () -> assertThat(generatedChangesFile, containsString(
+                        "* Updated `org.apache.maven.plugins:maven-assembly-plugin:3.7.1` to `3.8.0`")));
     }
 
     @Test
@@ -223,9 +218,9 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     @SuppressWarnings("SameParameterValue")
     private void setupDemoProjectWithDependencyChange(final boolean released) throws IOException, GitAPIException {
         try (final Git git = Git.open(this.projectDir.toFile())) {
-            this.fixture.writePomWithOneDependency("0.1.0", "0.1.0");
+            this.fixture.writePomWithOneDependency("0.1.0", "0.1.0", "3.7.1");
             commitAndMakeTag(git, "0.1.0");
-            this.fixture.writePomWithOneDependency("0.2.0", "0.2.0");
+            this.fixture.writePomWithOneDependency("0.2.0", "0.2.0", "3.8.0");
             if (released) {
                 commitAndMakeTag(git, "0.2.0");
             }

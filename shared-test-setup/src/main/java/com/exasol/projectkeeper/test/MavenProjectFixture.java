@@ -17,11 +17,23 @@ public class MavenProjectFixture extends BaseProjectFixture {
     }
 
     public void writePomWithOneDependency(final String pomVersion, final String dependencyVersion) {
+        final TestMavenModel testMavenModel = createPomWithOneDependency(pomVersion, dependencyVersion);
+        testMavenModel.configureAssemblyPluginFinalName();
+        writePom(testMavenModel);
+    }
+
+    public void writePomWithOneDependency(final String pomVersion, final String dependencyVersion,
+            final String assemblyPluginVersion) {
+        final TestMavenModel testMavenModel = createPomWithOneDependency(pomVersion, dependencyVersion);
+        testMavenModel.configureAssemblyPluginFinalName("jar-name", assemblyPluginVersion);
+        writePom(testMavenModel);
+    }
+
+    private TestMavenModel createPomWithOneDependency(final String pomVersion, final String dependencyVersion) {
         final TestMavenModel testMavenModel = new TestMavenModel();
         testMavenModel.setVersion(pomVersion);
         testMavenModel.addDependency("error-reporting-java", "com.exasol", "compile", dependencyVersion);
-        testMavenModel.configureAssemblyPluginFinalName();
-        writePom(testMavenModel);
+        return testMavenModel;
     }
 
     public void writeDefaultPom() {

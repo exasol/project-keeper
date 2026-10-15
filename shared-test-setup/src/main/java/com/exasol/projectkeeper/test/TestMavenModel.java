@@ -100,9 +100,13 @@ public class TestMavenModel extends Model {
     }
 
     public TestMavenModel configureAssemblyPluginFinalName(final String finalName) {
+        return configureAssemblyPluginFinalName(finalName, MAVEN_ASSEMBLY_PLUGIN_VERSION);
+    }
+
+    public TestMavenModel configureAssemblyPluginFinalName(final String finalName, final String pluginVersion) {
         final Plugin plugin = new Plugin();
         plugin.setArtifactId("maven-assembly-plugin");
-        plugin.setVersion(MAVEN_ASSEMBLY_PLUGIN_VERSION);
+        plugin.setVersion(pluginVersion);
         final Xpp3Dom configuration = new Xpp3Dom("configuration");
         final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
         finalNameElement.setValue(finalName);
