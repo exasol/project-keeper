@@ -67,6 +67,7 @@ This release fixes vulnerabilities in the following dependencies:
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-core:5.7.6` to `5.7.7`
+* Updated `org.apache.maven:maven-model:3.9.16` to `3.10.0`
 
 #### Runtime Dependency Updates
 
