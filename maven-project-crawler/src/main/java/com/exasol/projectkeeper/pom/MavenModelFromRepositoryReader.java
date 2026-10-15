@@ -13,6 +13,8 @@ import org.apache.maven.model.Model;
 import org.apache.maven.model.building.ModelBuildingRequest;
 import org.apache.maven.project.*;
 
+import com.exasol.errorreporting.ExaError;
+
 /**
  * Read a maven {@link Model} from an artifact of the maven repository using the {@link ProjectBuilder} that is injected
  * by Maven core to Mojo.
@@ -53,6 +55,12 @@ public class MavenModelFromRepositoryReader {
     @SuppressWarnings("deprecation") // Maven class ArtifactRepository is deprecated
     public Model readModel(final String artifactId, final String groupId, final String version,
             final List<ArtifactRepository> remoteRepositories) throws ProjectBuildingException {
+        if (version == null) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-66")
+                    .message("Version of dependency {{dependencyGroupId|uq}}:{{dependencyArtifactId|uq}} is null in project {{project}}.",
+                            groupId, artifactId, this.projectBuildingRequest.getProject().getName())
+                    .toString());
+        }
         final Artifact artifactDescription = new DefaultArtifact(groupId, artifactId, version, null,
                 POM_ARTIFACT_TYPE, null, this.artifactHandlerManager.getArtifactHandler(POM_ARTIFACT_TYPE));
         this.projectBuildingRequest.setRemoteRepositories(remoteRepositories);
