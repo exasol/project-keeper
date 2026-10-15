@@ -18,15 +18,15 @@
         </license>
     </licenses>
     <properties>
-        <revision>5.7.6</revision>
+        <revision>5.7.7</revision>
         <ossindexSkip>false</ossindexSkip>
         <!-- Integration test ProjectKeeperMojoIT starts a Maven build which requires Java 17. -->
         <java.version>17</java.version>
         <maven.version>3.9.16</maven.version>
         <minimum.maven.version>3.8.7</minimum.maven.version>
-        <xmlunit.version>2.13.0</xmlunit.version>
-        <mockito.version>5.23.0</mockito.version>
-        <slf4j.version>2.0.19</slf4j.version>
+        <xmlunit.version>2.14.0</xmlunit.version>
+        <mockito.version>5.24.0</mockito.version>
+        <slf4j.version>2.0.20</slf4j.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <gpg.skip>true</gpg.skip>
@@ -70,7 +70,7 @@
             <dependency>
                 <groupId>jakarta.json.bind</groupId>
                 <artifactId>jakarta.json.bind-api</artifactId>
-                <version>3.0.3</version>
+                <version>3.0.4</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.yasson</groupId>
@@ -122,7 +122,7 @@
             <dependency>
                 <groupId>org.snakeyaml</groupId>
                 <artifactId>snakeyaml-engine</artifactId>
-                <version>3.1.1</version>
+                <version>3.2</version>
             </dependency>
             <dependency>
                 <groupId>com.jcabi</groupId>
