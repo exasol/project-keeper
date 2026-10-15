@@ -6,6 +6,20 @@ Code name: Fix Maven Central Publishing
 
 This release fixes an issue with Maven 3.10 that cause publishing to Maven Central to fail by upgrading Maven plugin `org.sonatype.central:central-publishing-maven-plugin` to [0.12.0](https://github.com/sonatype-nexus-community/central-publishing-maven-plugin/releases/tag/release-0.12.0). See details in [central-publishing-maven-plugin#3](https://github.com/sonatype-nexus-community/central-publishing-maven-plugin/pull/3)
 
+## Security
+
+This release fixes vulnerabilities in the following dependencies:
+
+* `org.ow2.asm:asm:jar:9.9.1`:
+  * CVE-2026-110257
+  * CVE-2026-110258
+  * CVE-2026-110259
+  * CVE-2026-110260
+  * CVE-2026-110261
+  * CVE-2026-110263
+* `com.google.guava:guava:jar:33.6.0-jre`:
+  * CVE-2026-102554
+
 ## Dependency Updates
 
 ### Project Keeper Shared Model Classes

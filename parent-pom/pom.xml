@@ -148,6 +148,22 @@
                 <scope>provided</scope>
             </dependency>
             <dependency>
+                <!-- Upgrade transitive dependency of maven-core to fix CVE-2026-110257, CVE-2026-110258, CVE-2026-110259, CVE-2026-110260, CVE-2026-110261, CVE-2026-110263 -->
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-bom</artifactId>
+                <version>9.11</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <!-- Upgrade transitive dependency of maven-core and com.jcabi:jcabi-github to fix CVE-2026-102554 -->
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava-bom</artifactId>
+                <version>33.7.2-jre</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
                 <groupId>com.exasol</groupId>
                 <artifactId>maven-project-version-getter</artifactId>
                 <version>1.2.2</version>
