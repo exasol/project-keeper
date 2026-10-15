@@ -62,7 +62,7 @@ public class ProjectDependencyReader {
 
     /**
      * Check if the given plugin is an explicit or implicit plugin.
-     * 
+     *
      * <ul>
      * <li>Direct plugins (e.g. {@code org.apache.maven.plugins:maven-failsafe-plugin}) are explicitly added to the
      * build in a POM or parent POM.
@@ -82,7 +82,7 @@ public class ProjectDependencyReader {
      * </ul>
      * The Maven API allows distinguishing both types via Source model ID and Source location. We decided to only use
      * the source location as this requires only a simple not-null check.
-     * 
+     *
      * @param plugin plugin to check
      * @return {@code true} if the plugin is explicitly added to the build
      */
@@ -102,6 +102,8 @@ public class ProjectDependencyReader {
     }
 
     private ProjectDependency getLicense(final Dependency dependency, final MavenProject project) {
+        validateVersion(dependency, project);
+
         try {
             @SuppressWarnings("deprecation") // Maven class ArtifactRepository is deprecated
             final List<ArtifactRepository> repos = project.getRemoteArtifactRepositories();
@@ -120,6 +122,21 @@ public class ProjectDependencyReader {
                     .message("Failed to get license information for dependency {{groupId}}:{{artifactId}}.",
                             dependency.getGroupId(), dependency.getArtifactId())
                     .toString(), exception);
+        }
+    }
+
+    /**
+     * Constructors of {@link org.apache.maven.artifact.DefaultArtifact} now require a version. To simplify debugging we throw a meaningful error message.
+     */
+    private void validateVersion(final Dependency dependency, final MavenProject project) {
+        if (dependency.getVersion() == null) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-65")
+                    .message(
+                            "Dependency {{groupId|uq}}:{{artifactId|uq}} in project {{projectGroupId|uq}}:{{projectName|uq}} / file {{projectFile|uq}} has no version.",
+                            dependency.getGroupId(),
+                            dependency.getArtifactId(), project.getGroupId(), project.getName(), project.getFile())
+                    .mitigation("Add a version.")
+                    .toString());
         }
     }
 

@@ -2,12 +2,14 @@ package com.exasol.projectkeeper.dependencies;
 
 import static java.util.Collections.emptyList;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
+import static org.hamcrest.Matchers.*;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyList;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import org.apache.maven.model.*;
@@ -36,7 +38,11 @@ class ProjectDependencyReaderTest {
     }
 
     private List<ProjectDependency> readDependencies(final List<Plugin> plugins) {
-        final MavenProject project = new MavenProject(new Model());
+        final Model model = new Model();
+        model.setGroupId("project-group");
+        model.setName("project name");
+        final MavenProject project = new MavenProject(model);
+        project.setFile(Path.of("pom.xml").toFile());
         project.getModel().setBuild(new Build());
         project.getModel().getBuild().setPlugins(plugins);
         return new ProjectDependencyReader(artifactModelReaderMock, project).readDependencies().getDependencies();
@@ -49,6 +55,16 @@ class ProjectDependencyReaderTest {
         assertThat(readDependencies(List.of(createPlugin("group", "art", "ver", "non-null"))),
                 contains(ProjectDependency.builder().type(Type.PLUGIN).name("name:group:art").websiteUrl("website")
                         .licenses(List.of(new License("license", "licenseUrl"))).build()));
+    }
+
+    @Test
+    void explicitPluginWithoutVersion() {
+        final List<Plugin> plugins = List.of(createPlugin("group", "art", null, "non-null"));
+        final IllegalStateException exception = assertThrows(IllegalStateException.class, () -> readDependencies(plugins));
+
+        assertThat(exception.getMessage(),
+                equalTo("E-PK-MPC-65: Dependency group:art in project project-group:project name / file pom.xml has no version. Add a version."));
+        verifyNoInteractions(this.artifactModelReaderMock);
     }
 
     private org.apache.maven.model.License createMavenLicense(final String name, final String url) {

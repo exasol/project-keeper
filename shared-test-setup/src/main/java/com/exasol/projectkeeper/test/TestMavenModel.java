@@ -10,6 +10,7 @@ import org.codehaus.plexus.util.xml.Xpp3Dom;
 
 public class TestMavenModel extends Model {
     private static final long serialVersionUID = -4204751250626409157L;
+    private static final String MAVEN_ASSEMBLY_PLUGIN_VERSION = "3.8.0";
     public static final String DEPENDENCY_GROUP_ID = "com.example";
     public static final String DEPENDENCY_ARTIFACT_ID = "my-lib";
     public static final String PROJECT_ARTIFACT_ID = "my-test-project";
@@ -101,6 +102,7 @@ public class TestMavenModel extends Model {
     public TestMavenModel configureAssemblyPluginFinalName(final String finalName) {
         final Plugin plugin = new Plugin();
         plugin.setArtifactId("maven-assembly-plugin");
+        plugin.setVersion(MAVEN_ASSEMBLY_PLUGIN_VERSION);
         final Xpp3Dom configuration = new Xpp3Dom("configuration");
         final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
         finalNameElement.setValue(finalName);
