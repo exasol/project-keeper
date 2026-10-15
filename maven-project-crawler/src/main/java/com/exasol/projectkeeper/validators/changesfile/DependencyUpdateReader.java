@@ -1,5 +1,6 @@
 package com.exasol.projectkeeper.validators.changesfile;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -24,7 +25,7 @@ public class DependencyUpdateReader {
 
     /**
      * Create a new instance of {@link DependencyUpdateReader}.
-     * 
+     *
      * @param mavenModelReader  maven model reader
      * @param projectDirectory  project directory
      * @param currentMavenModel current project
@@ -38,11 +39,15 @@ public class DependencyUpdateReader {
 
     /**
      * Read the dependency changes.
-     * 
+     *
      * @return dependency changes report
      */
     public DependencyChangeReport readDependencyChanges() {
-        return new DependencyChangeReportReader().read(getOldModel(), this.currentMavenModel);
+        return new DependencyChangeReportReader().read(getOldModel(), getCurrentModel());
+    }
+
+    private Model getCurrentModel() {
+        return parsePomFile(this.currentMavenModel.getPomFile());
     }
 
     private Model getOldModel() {
@@ -95,11 +100,15 @@ public class DependencyUpdateReader {
     }
 
     private Model parseOldPomFile(final Path pomFile) {
+        return parsePomFile(pomFile.toFile());
+    }
+
+    private Model parsePomFile(final File pomFile) {
         try {
-            return this.mavenModelReader.readProject(pomFile.toFile()).getModel();
+            return this.mavenModelReader.readProject(pomFile).getModel();
         } catch (final MavenProjectFromFileReader.ReadFailedException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-MPC-38")
-                    .message("Failed to parse pom file of previous release.").toString(), exception);
+                    .message("Failed to parse pom file for dependency comparison.").toString(), exception);
         }
     }
 }

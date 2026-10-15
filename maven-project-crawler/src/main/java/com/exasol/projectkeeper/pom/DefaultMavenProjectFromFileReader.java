@@ -11,7 +11,7 @@ import com.exasol.errorreporting.ExaError;
  * Implementation of {@link MavenProjectFromFileReader} using the {@link ProjectBuilder} that is injected by Maven core
  * to Mojo.
  */
-//[impl->dsn~reading-project-dependencies~1]
+// [impl->dsn~reading-project-dependencies~1]
 public class DefaultMavenProjectFromFileReader implements MavenProjectFromFileReader {
     private final ProjectBuilder mavenProjectBuilder;
     private final MavenSession session;
@@ -30,9 +30,10 @@ public class DefaultMavenProjectFromFileReader implements MavenProjectFromFileRe
     @Override
     public MavenProject readProject(final File pomFile) throws ReadFailedException {
         try {
-            final ProjectBuildingRequest projectBuildingRequest = this.session.getProjectBuildingRequest();
-            final ProjectBuildingResult build = this.mavenProjectBuilder.build(pomFile, projectBuildingRequest);
-            return build.getProject();
+            final MavenProject project = this.mavenProjectBuilder.build(pomFile, this.session.getProjectBuildingRequest())
+                    .getProject();
+            MavenPluginVersionCompatibility.apply(project.getModel());
+            return project;
         } catch (final ProjectBuildingException exception) {
             throw new ReadFailedException(
                     ExaError.messageBuilder("E-PK-MPC-46").message("Failed to build maven model.").toString(),

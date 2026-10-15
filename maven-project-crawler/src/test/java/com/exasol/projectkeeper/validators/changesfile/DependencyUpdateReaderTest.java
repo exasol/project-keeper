@@ -56,7 +56,7 @@ class DependencyUpdateReaderTest {
                     this.tempDir, currentProject.getModel());
             final IllegalStateException exception = assertThrows(IllegalStateException.class,
                     dependencyUpdateReader::readDependencyChanges);
-            assertThat(exception.getMessage(), equalTo("E-PK-MPC-38: Failed to parse pom file of previous release."));
+            assertThat(exception.getMessage(), equalTo("E-PK-MPC-38: Failed to parse pom file for dependency comparison."));
         }
     }
 
