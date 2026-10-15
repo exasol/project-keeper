@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.plugin;
 
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import org.apache.maven.model.*;
 import org.codehaus.plexus.util.xml.Xpp3Dom;
@@ -50,6 +49,7 @@ public class MvnProjectWithProjectKeeperPluginWriter {
         final Plugin plugin = new Plugin();
         plugin.setGroupId("org.apache.maven.plugins");
         plugin.setArtifactId("maven-assembly-plugin");
+        plugin.setVersion("3.8.0");
         final Xpp3Dom configuration = new Xpp3Dom("configuration");
         final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
         finalNameElement.setValue(finalName);
@@ -63,7 +63,7 @@ public class MvnProjectWithProjectKeeperPluginWriter {
         final Plugin projectKeeperPlugin = new Plugin();
         projectKeeperPlugin.setGroupId("com.exasol");
         projectKeeperPlugin.setArtifactId("project-keeper-maven-plugin");
-        projectKeeperPlugin.setVersion(version);
+        projectKeeperPlugin.setVersion(Objects.requireNonNull(version));
         final PluginExecution execution = new PluginExecution();
         execution.setGoals(List.of("verify"));
         projectKeeperPlugin.setExecutions(List.of(execution));

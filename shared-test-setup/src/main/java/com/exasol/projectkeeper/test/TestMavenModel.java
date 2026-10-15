@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.test;
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import org.apache.maven.model.*;
 import org.apache.maven.model.io.xpp3.MavenXpp3Writer;
@@ -106,7 +107,7 @@ public class TestMavenModel extends Model {
     public TestMavenModel configureAssemblyPluginFinalName(final String finalName, final String pluginVersion) {
         final Plugin plugin = new Plugin();
         plugin.setArtifactId("maven-assembly-plugin");
-        plugin.setVersion(pluginVersion);
+        plugin.setVersion(Objects.requireNonNull(pluginVersion));
         final Xpp3Dom configuration = new Xpp3Dom("configuration");
         final Xpp3Dom finalNameElement = new Xpp3Dom("finalName");
         finalNameElement.setValue(finalName);
