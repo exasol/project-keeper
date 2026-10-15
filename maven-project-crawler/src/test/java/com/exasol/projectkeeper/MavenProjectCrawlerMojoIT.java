@@ -1,6 +1,7 @@
 package com.exasol.projectkeeper;
 
 import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.COMPILE;
+import static com.exasol.projectkeeper.shared.dependencies.BaseDependency.Type.PLUGIN;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
@@ -12,6 +13,7 @@ import java.util.List;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
+import org.apache.maven.model.Plugin;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.hamcrest.Matchers;
@@ -23,6 +25,7 @@ import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 import com.exasol.projectkeeper.shared.dependencies.License;
 import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
+import com.exasol.projectkeeper.shared.dependencychanges.UpdatedDependency;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.*;
 import com.exasol.projectkeeper.test.TestMavenModel;
 
@@ -99,6 +102,35 @@ class MavenProjectCrawlerMojoIT {
         testProject.writeAsPomToProject(subfolder);
         final CrawledMavenProject crawledProject = runCrawler(subfolder);
         assertThat(crawledProject.getReleaseArtifactPaths(), empty());
+    }
+
+    @Test
+    void testCrawlProjectWithVersionlessMavenDependencyPlugin() throws GitAPIException, IOException,
+            VerificationException {
+        final Path subfolder = this.tempDir.resolve("subfolder").toAbsolutePath();
+        try (final TestRepo gitRepo = new TestRepo(subfolder)) {
+            final TestMavenModel previousRelease = new TestMavenModel().withVersion("0.1.0");
+            previousRelease.withPlugin(createDependencyPlugin(null)).writeAsPomToProject(subfolder);
+            gitRepo.addAll().commit().createTag("0.1.0");
+            final TestMavenModel currentRelease = new TestMavenModel().withVersion("0.1.1");
+            currentRelease.withPlugin(createDependencyPlugin("3.11.0")).writeAsPomToProject(subfolder);
+            gitRepo.addAll().commit();
+
+            final CrawledMavenProject crawledProject = runCrawler(subfolder);
+
+            assertThat(crawledProject.getDependencyChangeReport().getChanges(COMPILE), empty());
+            assertThat(crawledProject.getDependencyChangeReport().getChanges(PLUGIN),
+                    hasItem(new UpdatedDependency("org.apache.maven.plugins", "maven-dependency-plugin", "3.7.0",
+                            "3.11.0")));
+        }
+    }
+
+    private Plugin createDependencyPlugin(final String version) {
+        final Plugin plugin = new Plugin();
+        plugin.setGroupId("org.apache.maven.plugins");
+        plugin.setArtifactId("maven-dependency-plugin");
+        plugin.setVersion(version);
+        return plugin;
     }
 
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {
