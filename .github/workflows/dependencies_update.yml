@@ -75,7 +75,7 @@ jobs:
       - name: Install Project Keeper
         id: install-project-keeper
         run: |
-          mvn --batch-mode --threads 1C install \
+          ./mvnw --batch-mode --threads 1C install \
               -Dmaven.test.skip=true -Dproject-keeper.skip=true \
               -DossindexSkip=true -Dmaven.javadoc.skip=true \
               -Derror-code-crawler.skip=true -Dreproducible.skip=true

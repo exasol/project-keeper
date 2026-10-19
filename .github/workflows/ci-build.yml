@@ -90,7 +90,7 @@ jobs:
       - name: Run tests and build with Maven
         id: maven-build
         run: |
-          mvn -T 1C --batch-mode clean install verify \
+          ./mvnw -T 1C --batch-mode clean install verify \
               --no-transfer-progress \
               -DossindexSkip=true \
               -DtrimStackTrace=false
@@ -113,7 +113,7 @@ jobs:
       - name: Run project-keeper itself
         id: build-pk-verify
         run: |
-          mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify \
+          ./mvnw --batch-mode com.exasol:project-keeper-maven-plugin:verify \
             --projects . \
             --no-transfer-progress
       - name: Verify Release Artifacts
@@ -318,7 +318,7 @@ jobs:
       - name: Install Project Keeper before check-release
         id: install-project-keeper
         run: |
-          mvn --batch-mode --threads 1C install \
+          ./mvnw --batch-mode --threads 1C install \
               -Dmaven.test.skip=true -Dproject-keeper.skip=true \
               -DossindexSkip=true -Dmaven.javadoc.skip=true \
               -Derror-code-crawler.skip=true -Dreproducible.skip=true
