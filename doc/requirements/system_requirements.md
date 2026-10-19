@@ -300,6 +300,17 @@ Rationale:
 
 Needs: dsn
 
+#### Maven Distribution Checksum Validation
+`req~maven-distribution-checksum-validation~1`
+
+PK generates Maven Wrapper configuration that validates the SHA-256 checksum of the downloaded Maven distribution before using it.
+
+Rationale:
+
+* Detects an inconsistent or tampered Maven distribution download before it is used.
+
+Needs: dsn
+
 #### JPMS-Safe Fat JARs
 `req~mvn-jpms-safe-fat-jars~1`
 
