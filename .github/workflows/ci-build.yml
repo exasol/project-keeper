@@ -69,6 +69,11 @@ jobs:
         id: install-go-tools,
         run: go install github.com/google/go-licenses/v2@v2.0.1
       }
+      - {
+        name: Prepare Maven Wrapper,
+        id: prepare-maven-wrapper,
+        run: MVNW_VERBOSE=true ./mvnw -version
+      }
       - name: Cache SonarCloud packages
         id: cache-sonar
         uses: actions/cache@v6

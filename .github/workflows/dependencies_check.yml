@@ -50,6 +50,11 @@ jobs:
               -Dmaven.test.skip=true -Dproject-keeper.skip=true \
               -DossindexSkip=true -Dmaven.javadoc.skip=true \
               -Derror-code-crawler.skip=true -Dreproducible.skip=true
+      - {
+        name: Prepare Maven Wrapper,
+        id: prepare-maven-wrapper,
+        run: MVNW_VERBOSE=true ./mvnw -version
+      }
       - name: Generate ossindex report
         id: ossindex-report
         run: |

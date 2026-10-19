@@ -94,6 +94,10 @@ jobs:
             17
           cache: "maven"
 
+      - name: Prepare Maven Wrapper
+        id: prepare-maven-wrapper
+        run: MVNW_VERBOSE=true ./mvnw -version
+
       # Check preconditions
 
       - name: Fail if not running on main or release branch
