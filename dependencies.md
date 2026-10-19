@@ -46,13 +46,13 @@
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
-| [Maven Flatten Plugin][36]                             | [Apache Software License][1]                  |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
-| [Maven Surefire Plugin][37]                            | [Apache-2.0][1]                               |
-| [Versions Maven Plugin][38]                            | [Apache License, Version 2.0][1]              |
-| [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
-| [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
+| [Maven Surefire Plugin][36]                            | [Apache-2.0][1]                               |
+| [Versions Maven Plugin][37]                            | [Apache License, Version 2.0][1]              |
+| [duplicate-finder-maven-plugin Maven Mojo][38]         | [Apache License 2.0][39]                      |
+| [Apache Maven Artifact Plugin][40]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
+| [Maven Flatten Plugin][41]                             | [Apache Software License][1]                  |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
 | [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
 | [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
 | [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
@@ -115,14 +115,14 @@
 | [Apache Maven JAR Plugin][73]                          | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
-| [Maven Flatten Plugin][36]                             | [Apache Software License][1]                  |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
-| [Maven Surefire Plugin][37]                            | [Apache-2.0][1]                               |
-| [Versions Maven Plugin][38]                            | [Apache License, Version 2.0][1]              |
+| [Maven Surefire Plugin][36]                            | [Apache-2.0][1]                               |
+| [Versions Maven Plugin][37]                            | [Apache License, Version 2.0][1]              |
 | [Exec Maven Plugin][74]                                | [Apache License 2][1]                         |
-| [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
-| [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
+| [duplicate-finder-maven-plugin Maven Mojo][38]         | [Apache License 2.0][39]                      |
+| [Apache Maven Artifact Plugin][40]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
+| [Maven Flatten Plugin][41]                             | [Apache Software License][1]                  |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
 | [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
 | [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
 | [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
@@ -173,16 +173,16 @@
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
-| [Maven Flatten Plugin][36]                             | [Apache Software License][1]                  |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
-| [Maven Surefire Plugin][37]                            | [Apache-2.0][1]                               |
-| [Versions Maven Plugin][38]                            | [Apache License, Version 2.0][1]              |
-| [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
-| [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
+| [Maven Surefire Plugin][36]                            | [Apache-2.0][1]                               |
+| [Versions Maven Plugin][37]                            | [Apache License, Version 2.0][1]              |
+| [duplicate-finder-maven-plugin Maven Mojo][38]         | [Apache License 2.0][39]                      |
+| [Apache Maven Artifact Plugin][40]                     | [Apache-2.0][1]                               |
 | [Apache Maven Assembly Plugin][76]                     | [Apache-2.0][1]                               |
 | [Apache Maven JAR Plugin][73]                          | [Apache-2.0][1]                               |
 | [Artifact reference checker and unifier][77]           | [MIT License][78]                             |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
+| [Maven Flatten Plugin][41]                             | [Apache Software License][1]                  |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
 | [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
 | [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
 | [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
@@ -232,14 +232,14 @@
 | [Maven Plugin Plugin][83]                              | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
-| [Maven Flatten Plugin][36]                             | [Apache Software License][1]                  |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
-| [Maven Surefire Plugin][37]                            | [Apache-2.0][1]                               |
-| [Versions Maven Plugin][38]                            | [Apache License, Version 2.0][1]              |
+| [Maven Surefire Plugin][36]                            | [Apache-2.0][1]                               |
+| [Versions Maven Plugin][37]                            | [Apache License, Version 2.0][1]              |
 | [Apache Maven JAR Plugin][73]                          | [Apache-2.0][1]                               |
-| [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
-| [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
+| [duplicate-finder-maven-plugin Maven Mojo][38]         | [Apache License 2.0][39]                      |
+| [Apache Maven Artifact Plugin][40]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
+| [Maven Flatten Plugin][41]                             | [Apache Software License][1]                  |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
 | [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
 | [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
 | [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
@@ -293,14 +293,14 @@
 | [Apache Maven Toolchains Plugin][34]                   | [Apache-2.0][1]                               |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                               |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                               |
-| [Maven Flatten Plugin][36]                             | [Apache Software License][1]                  |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
-| [Maven Surefire Plugin][37]                            | [Apache-2.0][1]                               |
-| [Versions Maven Plugin][38]                            | [Apache License, Version 2.0][1]              |
+| [Maven Surefire Plugin][36]                            | [Apache-2.0][1]                               |
+| [Versions Maven Plugin][37]                            | [Apache License, Version 2.0][1]              |
 | [Maven Plugin Plugin][83]                              | [Apache-2.0][1]                               |
-| [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                      |
-| [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                               |
+| [duplicate-finder-maven-plugin Maven Mojo][38]         | [Apache License 2.0][39]                      |
+| [Apache Maven Artifact Plugin][40]                     | [Apache-2.0][1]                               |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                               |
+| [Maven Flatten Plugin][41]                             | [Apache Software License][1]                  |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                     |
 | [Apache Maven Source Plugin][42]                       | [Apache-2.0][1]                               |
 | [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                               |
 | [spdx-maven-plugin Maven Plugin][44]                   | [The Apache Software License, Version 2.0][8] |
@@ -343,13 +343,13 @@
 | [Apache Maven Javadoc Plugin][43]                      | [Apache-2.0][1]                             |
 | [Apache Maven Compiler Plugin][35]                     | [Apache-2.0][1]                             |
 | [Apache Maven Enforcer Plugin][0]                      | [Apache-2.0][1]                             |
-| [Maven Flatten Plugin][36]                             | [Apache Software License][1]                |
-| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                   |
-| [Maven Surefire Plugin][37]                            | [Apache-2.0][1]                             |
-| [Versions Maven Plugin][38]                            | [Apache License, Version 2.0][1]            |
+| [Maven Surefire Plugin][36]                            | [Apache-2.0][1]                             |
+| [Versions Maven Plugin][37]                            | [Apache License, Version 2.0][1]            |
 | [Apache Maven Deploy Plugin][4]                        | [Apache-2.0][1]                             |
-| [duplicate-finder-maven-plugin Maven Mojo][39]         | [Apache License 2.0][40]                    |
-| [Apache Maven Artifact Plugin][41]                     | [Apache-2.0][1]                             |
+| [Maven Flatten Plugin][41]                             | [Apache Software License][1]                |
+| [org.sonatype.ossindex.maven:ossindex-maven-plugin][7] | [ASL2][8]                                   |
+| [duplicate-finder-maven-plugin Maven Mojo][38]         | [Apache License 2.0][39]                    |
+| [Apache Maven Artifact Plugin][40]                     | [Apache-2.0][1]                             |
 | [JaCoCo :: Maven Plugin][50]                           | [EPL-2.0][51]                               |
 | [error-code-crawler-maven-plugin][5]                   | [MIT License][6]                            |
 | [Git Commit Id Maven Plugin][52]                       | [GNU Lesser General Public License 3.0][53] |
@@ -394,12 +394,12 @@
 [33]: https://raw.githubusercontent.com/hamcrest/JavaHamcrest/master/LICENSE
 [34]: https://maven.apache.org/plugins/maven-toolchains-plugin/
 [35]: https://maven.apache.org/plugins/maven-compiler-plugin/
-[36]: https://www.mojohaus.org/flatten-maven-plugin/
-[37]: https://maven.apache.org/surefire/maven-surefire-plugin/
-[38]: https://www.mojohaus.org/versions/versions-maven-plugin/
-[39]: https://basepom.github.io/duplicate-finder-maven-plugin
-[40]: http://www.apache.org/licenses/LICENSE-2.0.html
-[41]: https://maven.apache.org/plugins/maven-artifact-plugin/
+[36]: https://maven.apache.org/surefire/maven-surefire-plugin/
+[37]: https://www.mojohaus.org/versions/versions-maven-plugin/
+[38]: https://basepom.github.io/duplicate-finder-maven-plugin
+[39]: http://www.apache.org/licenses/LICENSE-2.0.html
+[40]: https://maven.apache.org/plugins/maven-artifact-plugin/
+[41]: https://www.mojohaus.org/flatten-maven-plugin/
 [42]: https://maven.apache.org/plugins/maven-source-plugin/
 [43]: https://maven.apache.org/plugins/maven-javadoc-plugin/
 [44]: https://github.com/spdx/spdx-maven-plugin
