@@ -362,6 +362,19 @@ IDEs like Eclipse or VS Code modify `.settings/org.eclipse.jdt.core.prefs` when 
 
 Needs: impl, utest, itest
 
+### Maven Wrapper
+`dsn~maven-wrapper~1`
+
+For Maven-root projects, PK keeps `mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties` as exact managed templates. The wrapper uses Maven Wrapper's `only-script` distribution type. PK marks these generated files in `.gitattributes`, makes `mvnw` executable on Unix-like systems, and repairs missing or changed files.
+
+Generated Maven workflows call `./mvnw`. PK's Maven subprocesses use the project-root wrapper, retaining a module working directory where the command requires it.
+
+Covers:
+
+* [`req~maven-wrapper~1`](system_requirements.md#maven-wrapper)
+
+Needs: impl, utest, itest
+
 ## Non-Maven Integration
 `dsn~pk-verify-workflow~1`
 

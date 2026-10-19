@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
+import java.nio.file.Path;
+
 import com.exasol.projectkeeper.OsCheck.OSType;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -25,6 +27,13 @@ class OsCheckTest {
     @Test
     void getOperatingSystemType() {
         assertThat(osCheck.getOperatingSystemType(), allOf(notNullValue(), not(equalTo(OSType.OTHER))));
+    }
+
+    @Test
+    void getMavenWrapperPath() {
+        final Path projectPath = Path.of("project");
+        assertThat(OsCheck.getMavenWrapperPath(projectPath),
+                equalTo(projectPath.toAbsolutePath().resolve("mvnw" + OsCheck.suffix(".cmd"))));
     }
 
     @ParameterizedTest

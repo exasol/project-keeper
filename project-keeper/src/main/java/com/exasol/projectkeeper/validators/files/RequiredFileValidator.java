@@ -6,6 +6,7 @@ import java.util.*;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.validators.finding.SimpleValidationFinding;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
@@ -41,10 +42,13 @@ public class RequiredFileValidator {
         return new FileExistsValidator(defaultContent);
     }
 
-    private static void fixFile(final Path file, final String templateContent) {
+    private static void fixFile(final Path file, final String templateContent, final boolean requiresExecutablePermission) {
         try {
             Files.createDirectories(file.getParent());
             Files.writeString(file, templateContent.replace("\r", "").replace("\n", System.lineSeparator()));
+            if (requiresExecutablePermission) {
+                file.toFile().setExecutable(true, false);
+            }
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-16").message("Failed to create or replace {{required file}}.")
@@ -71,11 +75,29 @@ public class RequiredFileValidator {
      */
     public List<ValidationFinding> validateFile(final Path projectDir, final Path file,
             final ContentValidator contentValidator) {
+        return validateFile(projectDir, file, contentValidator, false);
+    }
+
+    /**
+     * Validate a file's content and, if requested, its executable permission.
+     *
+     * @param projectDir                   project directory
+     * @param file                         absolute path of the file to validate
+     * @param contentValidator             content validator
+     * @param requiresExecutablePermission whether the file must be executable
+     * @return validation findings
+     */
+    public List<ValidationFinding> validateFile(final Path projectDir, final Path file,
+            final ContentValidator contentValidator, final boolean requiresExecutablePermission) {
         final String content = getActualContent(projectDir, file);
         final String contentWithUnifiedNewline = unifyNewlines(content);
-        final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline);
+        final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline)
+                .or(() -> isMissingExecutablePermission(file, requiresExecutablePermission)
+                        ? Optional.of(contentWithUnifiedNewline)
+                        : Optional.empty());
         if (newContent.isPresent()) {
-            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get());
+            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get(),
+                    requiresExecutablePermission);
             if (contentWithUnifiedNewline == null) {
                 return List.of(SimpleValidationFinding
                         .withMessage(ExaError.messageBuilder("E-PK-CORE-17")
@@ -90,6 +112,10 @@ public class RequiredFileValidator {
         } else {
             return Collections.emptyList();
         }
+    }
+
+    private boolean isMissingExecutablePermission(final Path file, final boolean requiresExecutablePermission) {
+        return requiresExecutablePermission && !OsCheck.isWindows() && !Files.isExecutable(file);
     }
 
     private String osIndependentPath(final Path projectDir, final Path file) {

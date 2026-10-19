@@ -41,7 +41,7 @@ jobs:
       - name: Generate ossindex report
         id: ossindex-report
         run: |
-          mvn --batch-mode org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
+          ./mvnw --batch-mode org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
               -Dossindex.reportFile=$(pwd)/ossindex-report.json \
               -Dossindex.fail=false

@@ -108,7 +108,7 @@ class ProjectVersionIncrementor {
     private void updateReferences(final Source source) {
         final Path moduleDir = projectDir.resolve(source.getPath()).getParent();
         logger.info("Unify artifact references in dir " + moduleDir + "...");
-        final ShellCommand command = MavenProcessBuilder.create().addArgument("artifact-reference-checker:unify")
+        final ShellCommand command = MavenProcessBuilder.create(projectDir).addArgument("artifact-reference-checker:unify")
                 .workingDir(moduleDir).timeout(Duration.ofSeconds(30)).buildCommand();
         commandExecutor.execute(command);
     }

@@ -50,12 +50,12 @@ This maven plugin checks and unifies the project's structure according to the Ex
 
 4. Run PK fix:
    ```sh
-   mvn project-keeper:fix --projects .
+   ./mvnw project-keeper:fix --projects .
    ```
 
 5. Run PK verify:
    ```sh
-   mvn project-keeper:verify --projects .
+   ./mvnw project-keeper:verify --projects .
    ```
 
 See the [User Guide](doc/user_guide/user_guide.md) for details and for non-Maven projects.

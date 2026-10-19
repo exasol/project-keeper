@@ -23,6 +23,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
 import com.exasol.projectkeeper.Logger;
+import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.analyze.generic.CommandExecutor;
 import com.exasol.projectkeeper.sources.analyze.generic.ShellCommand;
@@ -184,7 +185,7 @@ class ProjectVersionIncrementorTest {
     private void assertMavenExecuted() {
         final ShellCommand command = getExecutedCommand();
         assertThat(command.workingDir().get(), equalTo(PROJECT_DIR));
-        assertThat(command.commandLine(), contains(Matchers.startsWith("mvn"), equalTo("--batch-mode"),
+        assertThat(command.commandLine(), contains(equalTo(OsCheck.getMavenWrapperPath(PROJECT_DIR).toString()), equalTo("--batch-mode"),
                 equalTo("artifact-reference-checker:unify")));
     }
 

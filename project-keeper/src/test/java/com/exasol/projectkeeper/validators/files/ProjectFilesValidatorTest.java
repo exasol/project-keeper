@@ -7,7 +7,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
 import static org.junit.jupiter.api.Assertions.assertAll;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
@@ -18,6 +21,8 @@ import java.util.List;
 import java.util.Set;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.EnabledOnOs;
+import org.junit.jupiter.api.condition.OS;
 import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.Logger;
@@ -72,6 +77,45 @@ class ProjectFilesValidatorTest {
         final Path testFile = this.tempDir.resolve(Path.of(".settings", "org.eclipse.jdt.core.prefs"));
         changeFile(testFile);
         assertThat(validator, hasNoMoreFindingsAfterApplyingFixes());
+    }
+
+    @Test
+    // [utest->dsn~maven-wrapper~1]
+    void testFixMavenWrapperFiles() throws IOException {
+        final ProjectFilesValidator validator = testee();
+        fixAllFindings(validator);
+        final Path wrapper = this.tempDir.resolve("mvnw");
+        assertAll(() -> assertTrue(Files.isExecutable(wrapper)),
+                () -> assertThat(Files.readString(wrapper), containsString("Maven Wrapper")),
+                () -> assertThat(Files.readString(this.tempDir.resolve("mvnw.cmd")), containsString("Maven Wrapper")),
+                () -> assertThat(Files.readString(this.tempDir.resolve(".mvn/wrapper/maven-wrapper.properties")),
+                        containsString("distributionType=only-script")));
+    }
+
+    @Test
+    @EnabledOnOs({ OS.LINUX, OS.MAC })
+    void testMavenWrapperWithoutExecutablePermissionIsRestored() throws IOException {
+        final ProjectFilesValidator validator = testee();
+        fixAllFindings(validator);
+        final Path wrapper = this.tempDir.resolve("mvnw");
+        Files.setPosixFilePermissions(wrapper, Set.of(OWNER_READ, OWNER_WRITE));
+
+        assertFalse(Files.isExecutable(wrapper));
+        assertThat(validator, validationErrorMessages(contains("E-PK-CORE-18: Outdated content: 'mvnw'")));
+
+        fixAllFindings(validator);
+        assertTrue(Files.isExecutable(wrapper));
+    }
+
+    @Test
+    void testModifiedMavenWrapperFileIsRestored() throws IOException {
+        final ProjectFilesValidator validator = testee();
+        fixAllFindings(validator);
+        final Path wrapper = this.tempDir.resolve("mvnw");
+        changeFile(wrapper);
+        assertThat(validator, validationErrorMessages(contains("E-PK-CORE-18: Outdated content: 'mvnw'")));
+        fixAllFindings(validator);
+        assertThat(Files.readString(wrapper), containsString("Maven Wrapper"));
     }
 
     @Test

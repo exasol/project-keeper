@@ -2,6 +2,7 @@
 *.bat   text eol=crlf
 
 $pomFiles
+$mavenWrapperFiles
 SECURITY.md                                linguist-generated=true
 dependencies.md                            linguist-generated=true
 doc/changes/changelog.md                   linguist-generated=true

@@ -25,14 +25,13 @@ class MavenSourceAnalyzerTest {
     }
 
     @Test
-    void analyzingSourcesWithInvalidOwnVersionFails() {
+    void analyzingSourcesWithoutMavenWrapperFails() {
         final List<Source> mavenSources = createMavenSources();
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyze(OWN_VERSION, mavenSources));
         assertThat(exception.getMessage(),
-                allOf(containsString("E-PK-CORE-126: Failed to run command"),
-                        containsString("[ERROR] Plugin com.exasol:project-keeper-java-project-crawler:" + OWN_VERSION
-                                + " or one of its dependencies could not be resolved")));
+                allOf(containsString("E-PK-CORE-125: Error executing command 'dir/mvnw"),
+                        containsString("Verify that the 'dir/mvnw' executable exists and can be run.")));
     }
 
     @Test

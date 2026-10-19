@@ -9,6 +9,6 @@ Do not edit generated files in `.github/workflows/` directly.
 * After changing templates or `.project-keeper.yml`, install the local Project Keeper build and regenerate managed files:
 
   ```sh
-  mvn install -DossindexSkip=true -Dduplicate-finder.skip=true -DskipTests -DskipITs -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true -Djacoco.skip=true -Derror-code-crawler.skip=true -Dopenfasttrace.skip=true -T 1C
-  mvn com.exasol:project-keeper-maven-plugin:fix --projects .
+  ./mvnw install -DossindexSkip=true -Dduplicate-finder.skip=true -DskipTests -DskipITs -Dproject-keeper.skip=true -Dossindex.skip=true -Dmaven.javadoc.skip=true -Djacoco.skip=true -Derror-code-crawler.skip=true -Dopenfasttrace.skip=true -T 1C
+  ./mvnw com.exasol:project-keeper-maven-plugin:fix --projects .
   ```

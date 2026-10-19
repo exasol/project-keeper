@@ -377,7 +377,7 @@ build:
             name: Run tests and build with Maven
             id: maven-build
             run: |
-              mvn -T 1C --batch-mode clean install verify \
+              ./mvnw -T 1C --batch-mode clean install verify \
                   --no-transfer-progress \
                   -DossindexSkip=true \
                   -DtrimStackTrace=false
@@ -391,7 +391,9 @@ build:
 
 For Maven projects, PK generates a `pk_generated_parent.pom` file. This file contains all the required plugins, dependencies and configurations. PK configures your `pom.xml` to use this file as a parent pom. By that, your `pom.xml` inherits all the configuration.
 
-The `pk_generated_parent.pom` file is required during the build and must be checked into version control. Run `mvn project-keeper:fix` to update the file instead of editing it manually.
+The `pk_generated_parent.pom` file is required during the build and must be checked into version control. Run `./mvnw project-keeper:fix` to update the file instead of editing it manually.
+
+PK also generates Maven Wrapper files (`mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties`) for Maven-root projects. They pin the Maven version for local builds and GitHub Actions. Use `./mvnw` on Linux and macOS, or `mvnw.cmd` on Windows.
 
 ### Overriding Defaults
 
@@ -486,12 +488,12 @@ Use the `project-keeper-maven-plugin` for analyzing Maven projects.
 
 #### Verify Your Project
 
-PK allows verifying the structure and configuration of your project. For Maven projects, Maven will automatically execute this verification when running `mvn verify`, i.e. within the maven package lifecycle phase.
+PK allows verifying the structure and configuration of your project. For Maven projects, Maven will automatically execute this verification when running `./mvnw verify`, i.e. within the Maven package lifecycle phase.
 
 You can also run the checks manually using:
 
 ```shell
-mvn project-keeper:verify
+./mvnw project-keeper:verify
 ```
 
 #### Release Verification
@@ -499,7 +501,7 @@ mvn project-keeper:verify
 PK's Maven-Goal `verify-release` helps you to verify if your project is ready to release:
 
 ```shell
-mvn project-keeper:verify-release
+./mvnw project-keeper:verify-release
 ```
 
 This goal requires reading issues from the GitHub API. To allow running this locally you need to install the [GitHub CLI](https://cli.github.com/) and configure your GitHub credentials by executing `gh auth login`.
@@ -509,7 +511,7 @@ This goal requires reading issues from the GitHub API. To allow running this loc
 In addition this plugin can also fix the project structure. For that use:
 
 ```sh
-mvn project-keeper:fix
+./mvnw project-keeper:fix
 ```
 
 #### Update Dependencies
@@ -517,7 +519,7 @@ mvn project-keeper:fix
 Run the following commands to update dependencies:
 
 ```sh
-mvn project-keeper:update-dependencies
+./mvnw project-keeper:update-dependencies
 ```
 
 The command will increment the project's patch version if the current version is already released.
@@ -533,10 +535,10 @@ For multi-module projects these commands may fail with the following error:
 In this case add command line option `--projects .`:
 
 ```sh
-mvn project-keeper:verify --projects .
-mvn project-keeper:verify-release --projects .
-mvn project-keeper:fix --projects .
-mvn project-keeper:update-dependencies --projects .
+./mvnw project-keeper:verify --projects .
+./mvnw project-keeper:verify-release --projects .
+./mvnw project-keeper:fix --projects .
+./mvnw project-keeper:update-dependencies --projects .
 ```
 
 You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=true` to your maven command.
@@ -560,7 +562,7 @@ To check if a project meets all preconditions for an automated release, run PK g
 
 ```sh
 # Maven
-mvn com.exasol:project-keeper-maven-plugin:verify-release
+./mvnw com.exasol:project-keeper-maven-plugin:verify-release
 # Standalone:
 ./.github/workflows/project-keeper.sh verify-release
 ```

@@ -3,6 +3,7 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.shared.config.ProjectKeeperModule.*;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXACT;
 import static com.exasol.projectkeeper.validators.files.FileTemplate.Validation.REQUIRE_EXIST;
+import static java.util.stream.Collectors.joining;
 
 import java.util.*;
 
@@ -18,6 +19,8 @@ import com.exasol.projectkeeper.sources.*;
 class FileTemplatesFactory {
     private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
             "linguist-generated=true");
+    private static final List<String> MAVEN_WRAPPER_PATHS = List.of("mvnw", "mvnw.cmd",
+            ".mvn/wrapper/maven-wrapper.properties");
 
     private final Logger logger;
     private final String ownVersion;
@@ -44,7 +47,8 @@ class FileTemplatesFactory {
         templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
         templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
-                .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
+                .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : "")
+                .replacing("mavenWrapperFiles", mvnRoot.isPresent() ? getMavenWrapperFilesGenerated() : ""));
         templates.add(new FileTemplateFromResource(".github/zizmor.yml", REQUIRE_EXACT));
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
@@ -65,13 +69,25 @@ class FileTemplatesFactory {
         return new FileTemplateFromResource("non_maven_templates/" + lintActionPath, lintActionPath, REQUIRE_EXACT);
     }
 
+    // [impl->dsn~maven-wrapper~1]
     private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(getCiBuildTemplate(modules));
         templates.add(this.workflowGenerator.createDependenciesCheckWorkflow());
         templates.add(this.workflowGenerator.createDependenciesUpdateWorkflow());
         templates.add(this.workflowGenerator.createReleaseWorkflow(sources));
+        MAVEN_WRAPPER_PATHS.forEach(path -> templates.add(createMavenWrapperTemplate(path)));
         return templates;
+    }
+
+    private FileTemplateFromResource createMavenWrapperTemplate(final String path) {
+        final FileTemplateFromResource template = new FileTemplateFromResource(path, REQUIRE_EXACT);
+        return "mvnw".equals(path) ? template.executable() : template;
+    }
+
+    private String getMavenWrapperFilesGenerated() {
+        return MAVEN_WRAPPER_PATHS.stream().map(path -> String.format("%-40slinguist-generated=true", path))
+                .collect(joining("\n"));
     }
 
     private FileTemplate getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {

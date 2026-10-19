@@ -10,4 +10,4 @@ When the `native-image` module is enabled for a project, project-keeper configur
 
 ## Building Without Native Image
 
-Building the native image is quite resource expensive (~4GB RAM, 2 min CPU). If you just want to quickly run the build you can also skip it by adding `-P skipNativeImage` as parameter to `mvn`.
+Building the native image is quite resource expensive (~4GB RAM, 2 min CPU). If you just want to quickly run the build you can also skip it by adding `-P skipNativeImage` as parameter to `./mvnw`.

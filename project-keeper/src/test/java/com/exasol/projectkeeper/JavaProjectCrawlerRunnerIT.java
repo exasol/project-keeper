@@ -6,6 +6,8 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -39,8 +41,10 @@ class JavaProjectCrawlerRunnerIT {
     }
 
     @Test
-    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException {
+    // [itest->dsn~maven-wrapper~1]
+    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException, IOException {
         Git.init().setDirectory(tempDir.toFile()).call().close();
+        installMavenWrapper(tempDir);
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
         final MavenProjectCrawlResult result = crawlProject(pomFile);
@@ -61,7 +65,25 @@ class JavaProjectCrawlerRunnerIT {
     }
 
     MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
-        return new JavaProjectCrawlerRunner(testMavenRepo, TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFiles);
+        final Path projectDirectory = pomFiles.length == 0 || pomFiles[0].getParent() == null ? Path.of(".").toAbsolutePath()
+                : pomFiles[0].getParent();
+        return new JavaProjectCrawlerRunner(projectDirectory, testMavenRepo, TestEnvBuilder.CURRENT_VERSION)
+                .crawlProject(pomFiles);
+    }
+
+    private void installMavenWrapper(final Path projectDirectory) throws IOException {
+        copyResource("templates/mvnw", projectDirectory.resolve("mvnw"));
+        projectDirectory.resolve("mvnw").toFile().setExecutable(true);
+        copyResource("templates/mvnw.cmd", projectDirectory.resolve("mvnw.cmd"));
+        copyResource("templates/.mvn/wrapper/maven-wrapper.properties",
+                projectDirectory.resolve(".mvn/wrapper/maven-wrapper.properties"));
+    }
+
+    private void copyResource(final String resource, final Path target) throws IOException {
+        Files.createDirectories(target.getParent());
+        try (var content = getClass().getClassLoader().getResourceAsStream(resource)) {
+            Files.copy(content, target);
+        }
     }
 
     @Test

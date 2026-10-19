@@ -27,4 +27,9 @@ class ProjectKeeperShellScript implements FileTemplate {
     public Validation getValidation() {
         return Validation.REQUIRE_EXACT;
     }
+
+    @Override
+    public boolean requiresExecutablePermission() {
+        return true;
+    }
 }

@@ -15,6 +15,7 @@ public final class FileTemplateFromResource implements FileTemplate {
     private final String pathInProject;
     private final Validation validation;
     private final Map<String, String> replacements = new HashMap<>();
+    private boolean requiresExecutablePermission;
 
     /**
      * Create a new instance of {@link FileTemplateFromResource}.
@@ -59,6 +60,16 @@ public final class FileTemplateFromResource implements FileTemplate {
         return this;
     }
 
+    /**
+     * Require the generated file to be executable.
+     *
+     * @return this template
+     */
+    public FileTemplateFromResource executable() {
+        this.requiresExecutablePermission = true;
+        return this;
+    }
+
     @Override
     public Path getPathInProject() {
         return Path.of(this.pathInProject);
@@ -90,8 +101,13 @@ public final class FileTemplateFromResource implements FileTemplate {
     }
 
     @Override
+    public boolean requiresExecutablePermission() {
+        return this.requiresExecutablePermission;
+    }
+
+    @Override
     public int hashCode() {
-        return Objects.hash(templateResource, pathInProject, validation, replacements);
+        return Objects.hash(templateResource, pathInProject, validation, replacements, requiresExecutablePermission);
     }
 
     @Override
@@ -108,6 +124,7 @@ public final class FileTemplateFromResource implements FileTemplate {
         final FileTemplateFromResource other = (FileTemplateFromResource) obj;
         return Objects.equals(templateResource, other.templateResource)
                 && Objects.equals(pathInProject, other.pathInProject) && validation == other.validation
-                && Objects.equals(replacements, other.replacements);
+                && Objects.equals(replacements, other.replacements)
+                && requiresExecutablePermission == other.requiresExecutablePermission;
     }
 }

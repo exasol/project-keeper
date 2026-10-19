@@ -96,7 +96,7 @@ jobs:
         id: sonar-analysis
         if: ${{ env.SONAR_TOKEN != null }}
         run: |
-          mvn --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          ./mvnw --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
               -DossindexSkip=true \
               --no-transfer-progress \
               -DtrimStackTrace=false \
@@ -202,7 +202,7 @@ jobs:
       - name: Run tests and build with Maven 21
         id: build-next-java
         run: |
-          mvn --batch-mode clean package -DtrimStackTrace=false -Djava.version=21 \
+          ./mvnw --batch-mode clean package -DtrimStackTrace=false -Djava.version=21 \
               --no-transfer-progress \
               -DossindexSkip=true \
   ossindex:
@@ -240,7 +240,7 @@ jobs:
       - name: Run Ossindex
         id: ossindex
         run: |
-          mvn --batch-mode test-compile \
+          ./mvnw --batch-mode test-compile \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
               --no-transfer-progress
@@ -321,7 +321,7 @@ jobs:
         id: check-release
         if: ${{ github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/heads/release/') }}
         run: |
-          if mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .; then
+          if ./mvnw --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .; then
               echo "### ✅ Release preconditions met, start release" >> "$GITHUB_STEP_SUMMARY"
               echo "release-required=true" >> "$GITHUB_OUTPUT"
           else

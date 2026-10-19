@@ -74,6 +74,6 @@ class SimpleProcessIT {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> SimpleProcess.start(command));
         assertThat(exception.getMessage(), equalTo(
-                "E-PK-CORE-125: Error executing command 'no-such-binary'. Verify that the 'no-such-binary' executable is on the PATH."));
+                "E-PK-CORE-125: Error executing command 'no-such-binary'. Verify that the 'no-such-binary' executable exists and can be run."));
     }
 }

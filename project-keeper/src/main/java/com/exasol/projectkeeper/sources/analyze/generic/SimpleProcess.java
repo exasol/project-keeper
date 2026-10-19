@@ -76,7 +76,7 @@ public class SimpleProcess {
         } catch (final IOException exception) {
             throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-125")
                     .message("Error executing command {{command}}.", String.join(" ", command))
-                    .mitigation("Verify that the {{executable name}} executable is on the PATH.", command.get(0))
+                    .mitigation("Verify that the {{executable name}} executable exists and can be run.", command.get(0))
                     .toString(), exception);
         }
     }
