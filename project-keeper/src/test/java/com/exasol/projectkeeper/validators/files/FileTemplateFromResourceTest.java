@@ -14,7 +14,6 @@ import nl.jqno.equalsverifier.Warning;
 class FileTemplateFromResourceTest {
     @Test
     void testEqualsContract() {
-        // FIXME: make final
         EqualsVerifier.forClass(FileTemplateFromResource.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 
@@ -30,8 +29,7 @@ class FileTemplateFromResourceTest {
 
     @Test
     void rejectsReplacingTheSameKey() {
-        final FileTemplateFromResource testee = testee();
-        testee.replacing("key", "value1");
+        final FileTemplateFromResource testee = testee().replacing("key", "value1");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> testee.replacing("key", "value2"));
         assertThat(exception.getMessage(), equalTo(

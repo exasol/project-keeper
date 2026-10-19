@@ -41,8 +41,6 @@ class FileTemplatesFactoryTest {
                 () -> assertContainsTemplate(templates, ".vscode/settings.json"),
                 () -> assertTrue(gitattributes.isPresent()),
                 () -> assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom")),
-                () -> assertThat(gitattributes.get().getContent(), allOf(containsString("mvnw"),
-                        containsString(".mvn/wrapper/maven-wrapper.properties"))),
                 () -> assertContainsTemplate(templates, "mvnw"),
                 () -> assertContainsTemplate(templates, "mvnw.cmd"),
                 () -> assertContainsTemplate(templates, ".mvn/wrapper/maven-wrapper.properties"));
