@@ -98,6 +98,11 @@
                 <configuration>
                     <authId>ossindex</authId>
                     <skip>${ossindexSkip}</skip>
+                    <!-- Unresolved vulnerability CVE-2026-92877 in transitive dependency com.sun.xml.bind:jaxb-core of jcabi-github.
+                        See https://github.com/exasol/project-keeper/issues/799 for the proposed solution. -->
+                    <excludeVulnerabilityIds>
+                        <exclude>CVE-2026-92877</exclude>
+                    </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
             <plugin>
