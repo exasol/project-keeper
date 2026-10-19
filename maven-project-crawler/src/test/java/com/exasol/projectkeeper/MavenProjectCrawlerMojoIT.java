@@ -123,6 +123,7 @@ class MavenProjectCrawlerMojoIT {
         if (!wrapper.toFile().setExecutable(true)) {
             throw new IOException("Failed to make Maven Wrapper executable: " + wrapper);
         }
+        Files.copy(projectRoot.resolve("mvnw.cmd"), this.tempDir.resolve("mvnw.cmd"));
         final Path wrapperProperties = this.tempDir.resolve(".mvn/wrapper/maven-wrapper.properties");
         Files.createDirectories(wrapperProperties.getParent());
         Files.copy(projectRoot.resolve(".mvn/wrapper/maven-wrapper.properties"), wrapperProperties);
