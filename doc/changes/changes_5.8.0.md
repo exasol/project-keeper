@@ -6,7 +6,9 @@ Code name: Maven Wrapper
 
 Project Keeper now generates and verifies Maven Wrapper in its default `only-script` mode for Maven-root projects. Generated GitHub workflows and Project Keeper's internal Maven commands use the wrapper, pinning Maven 3.10.0 for local and CI builds.
 
-**Note:** PK does not mark the Maven Wrapper files as generated in `.gitattributes`. This will be implemented in https://github.com/exasol/project-keeper/issues/798. Until then, add the following three lines to `.gitattributes` in each repository:
+**Migration:**
+* If `.project-keeper.yml` contains workflow customizations that invoke `mvn`, update them to invoke the Maven Wrapper instead (`./mvnw` in Bash steps or `.\mvnw.cmd` in PowerShell steps).
+* PK does not mark the Maven Wrapper files as generated in `.gitattributes`. This will be implemented in https://github.com/exasol/project-keeper/issues/798. Until then, add the following three lines to `.gitattributes` in each repository:
 
 ```
 /mvnw                                  linguist-generated=true
