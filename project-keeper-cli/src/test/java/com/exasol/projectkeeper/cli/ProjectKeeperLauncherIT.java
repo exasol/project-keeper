@@ -102,6 +102,7 @@ class ProjectKeeperLauncherIT {
         LOGGER.info("Preparing Maven project in " + this.projectDir);
         final MavenProjectFixture fixture = new MavenProjectFixture(this.projectDir);
         fixture.gitInit();
+        MavenWrapperTestHelper.install(this.projectDir);
         fixture.writeConfig(fixture.getConfigWithoutModulesBuilder());
         fixture.writeDefaultPom();
         return fixture;

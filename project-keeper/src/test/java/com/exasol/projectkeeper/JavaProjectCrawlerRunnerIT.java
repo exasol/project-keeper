@@ -6,8 +6,6 @@ import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
@@ -24,6 +22,7 @@ import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
@@ -42,9 +41,9 @@ class JavaProjectCrawlerRunnerIT {
 
     @Test
     // [itest->dsn~maven-wrapper~1]
-    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException, IOException {
+    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException {
         Git.init().setDirectory(tempDir.toFile()).call().close();
-        installMavenWrapper(tempDir);
+        MavenWrapperTestHelper.install(tempDir);
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
         final MavenProjectCrawlResult result = crawlProject(pomFile);
@@ -67,37 +66,29 @@ class JavaProjectCrawlerRunnerIT {
     MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
         final Path projectDirectory = pomFiles.length == 0 || pomFiles[0].getParent() == null ? Path.of(".").toAbsolutePath()
                 : pomFiles[0].getParent();
+        return crawlProjectInDirectory(projectDirectory, pomFiles);
+    }
+
+    private MavenProjectCrawlResult crawlProjectInDirectory(final Path projectDirectory, final Path... pomFiles) {
         return new JavaProjectCrawlerRunner(projectDirectory, testMavenRepo, TestEnvBuilder.CURRENT_VERSION)
                 .crawlProject(pomFiles);
     }
 
-    private void installMavenWrapper(final Path projectDirectory) throws IOException {
-        copyResource("templates/mvnw", projectDirectory.resolve("mvnw"));
-        projectDirectory.resolve("mvnw").toFile().setExecutable(true);
-        copyResource("templates/mvnw.cmd", projectDirectory.resolve("mvnw.cmd"));
-        copyResource("templates/.mvn/wrapper/maven-wrapper.properties",
-                projectDirectory.resolve(".mvn/wrapper/maven-wrapper.properties"));
-    }
-
-    private void copyResource(final String resource, final Path target) throws IOException {
-        Files.createDirectories(target.getParent());
-        try (var content = getClass().getClassLoader().getResourceAsStream(resource)) {
-            Files.copy(content, target);
-        }
-    }
-
     @Test
-    void testGetDependencyChangesFailsForEmptyPomList() {
-        final IllegalStateException exception = assertThrows(IllegalStateException.class, this::crawlProject);
+    void testGetDependencyChangesFailsForEmptyPomList(@TempDir final Path tempDir) {
+        MavenWrapperTestHelper.install(tempDir);
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> crawlProjectInDirectory(tempDir));
         assertThat(exception.getMessage(), containsString(
                 "E-PK-MPC-64: Property 'projectsToCrawl' is not defined or empty. Specify property with least one pom file."));
     }
 
     @Test
-    void testGetDependencyChangesFailsForMissingPom() {
-        final Path missingPomFile = Path.of("missing-pom-file");
+    void testGetDependencyChangesFailsForMissingPom(@TempDir final Path tempDir) {
+        MavenWrapperTestHelper.install(tempDir);
+        final Path missingPomFile = tempDir.resolve("missing-pom-file");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> this.crawlProject(missingPomFile));
+                () -> crawlProjectInDirectory(tempDir, missingPomFile));
         assertThat(exception.getMessage(),
                 allOf(containsString("[FATAL] Non-readable POM"), containsString(missingPomFile.toString())));
     }

@@ -215,6 +215,7 @@
 | Dependency                             | License                                       |
 | -------------------------------------- | --------------------------------------------- |
 | [Maven Project Version Getter][68]     | [MIT License][69]                             |
+| [Project Keeper shared test setup][58] | [The MIT License][59]                         |
 | [org.xmlunit:xmlunit-matchers][60]     | [The Apache Software License, Version 2.0][8] |
 | [mockito-core][26]                     | [MIT][27]                                     |
 | [Maven Plugin Integration Testing][70] | [MIT License][71]                             |

@@ -16,6 +16,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 
 import com.exasol.projectkeeper.test.MavenProjectFixture;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
 
@@ -32,6 +33,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     void setup() {
         this.fixture = new MavenProjectFixture(this.projectDir);
         this.fixture.gitInit();
+        MavenWrapperTestHelper.install(this.projectDir);
     }
 
     @Test

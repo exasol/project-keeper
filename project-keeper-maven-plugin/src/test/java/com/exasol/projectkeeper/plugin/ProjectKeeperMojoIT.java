@@ -32,6 +32,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
@@ -57,6 +58,7 @@ class ProjectKeeperMojoIT {
             // git-commit-id-maven-plugin needs at least one commit
             git.commit().setMessage("initial commit").setAllowEmpty(true).call();
         }
+        MavenWrapperTestHelper.install(this.projectDir);
         new MvnProjectWithProjectKeeperPluginWriter(CURRENT_VERSION)
                 .addDependency("org.slf4j", "slf4j-api", ORIGINAL_SLF4J_VERSION)
                 .setArtifactFinalName("dummy-${project.version}")

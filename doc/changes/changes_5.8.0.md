@@ -52,6 +52,10 @@ We supporessed unresolved vulnerability CVE-2026-92877 in transitive dependency 
 
 * Updated `com.exasol:project-keeper-core:5.7.7` to `5.8.0`
 
+#### Test Dependency Updates
+
+* Added `com.exasol:project-keeper-shared-test-setup:5.8.0`
+
 ### Project Keeper Java Project Crawler
 
 #### Compile Dependency Updates
