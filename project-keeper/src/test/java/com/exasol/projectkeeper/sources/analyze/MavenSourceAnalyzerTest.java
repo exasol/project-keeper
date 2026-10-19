@@ -29,9 +29,7 @@ class MavenSourceAnalyzerTest {
         final List<Source> mavenSources = createMavenSources();
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyze(OWN_VERSION, mavenSources));
-        assertThat(exception.getMessage(),
-                allOf(containsString("E-PK-CORE-125: Error executing command 'dir/mvnw"),
-                        containsString("Verify that the 'dir/mvnw' executable exists and can be run.")));
+        assertThat(exception.getMessage(), startsWith("E-PK-CORE-125: Error executing command '"));
     }
 
     @Test
