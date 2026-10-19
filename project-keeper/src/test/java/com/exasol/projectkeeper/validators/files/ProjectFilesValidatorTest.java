@@ -3,14 +3,12 @@ package com.exasol.projectkeeper.validators.files;
 import static com.exasol.projectkeeper.HasNoMoreFindingsAfterApplyingFixesMatcher.hasNoMoreFindingsAfterApplyingFixes;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasNoValidationFindings;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.validationErrorMessages;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
+import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.hamcrest.io.FileMatchers.anExistingFile;
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_READ;
-import static java.nio.file.attribute.PosixFilePermission.OWNER_WRITE;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 
 import java.io.IOException;
@@ -100,8 +98,8 @@ class ProjectFilesValidatorTest {
         final Path wrapper = this.tempDir.resolve("mvnw");
         Files.setPosixFilePermissions(wrapper, Set.of(OWNER_READ, OWNER_WRITE));
 
-        assertFalse(Files.isExecutable(wrapper));
-        assertThat(validator, validationErrorMessages(contains("E-PK-CORE-18: Outdated content: 'mvnw'")));
+        assertAll(() -> assertFalse(Files.isExecutable(wrapper)),
+                () -> assertThat(validator, validationErrorMessages(contains("E-PK-CORE-18: Outdated content: 'mvnw'"))));
 
         fixAllFindings(validator);
         assertTrue(Files.isExecutable(wrapper));

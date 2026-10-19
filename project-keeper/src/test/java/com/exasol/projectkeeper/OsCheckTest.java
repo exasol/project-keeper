@@ -1,19 +1,17 @@
 package com.exasol.projectkeeper;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.*;
 
 import java.nio.file.Path;
 
-import com.exasol.projectkeeper.OsCheck.OSType;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
+
+import com.exasol.projectkeeper.OsCheck.OSType;
 
 class OsCheckTest {
     private static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
@@ -30,17 +28,24 @@ class OsCheckTest {
     }
 
     @Test
-    void getMavenWrapperPath() {
+    @EnabledOnOs(OS.WINDOWS)
+    void getMavenWrapperPathOnWindows() {
         final Path projectPath = Path.of("project");
-        assertThat(OsCheck.getMavenWrapperPath(projectPath),
-                equalTo(projectPath.toAbsolutePath().resolve("mvnw" + OsCheck.suffix(".cmd"))));
+        assertThat(OsCheck.getMavenWrapperPath(projectPath), equalTo(projectPath.toAbsolutePath().resolve("mvnw.cmd")));
+    }
+
+    @Test
+    @DisabledOnOs(OS.WINDOWS)
+    void getMavenWrapperPathOnUnix() {
+        final Path projectPath = Path.of("project");
+        assertThat(OsCheck.getMavenWrapperPath(projectPath), equalTo(projectPath.toAbsolutePath().resolve("mvnw")));
     }
 
     @ParameterizedTest
     @CsvSource(nullValues = { "NULL" }, value = { "Mac OS X, MACOS", "MAC OS X, MACOS", "Mac, MACOS", "_Mac_, MACOS",
             "Darwin, MACOS", "Windows 10, WINDOWS", "Windows 11, WINDOWS", "Win, WINDOWS", "_Win_, WINDOWS",
             "linux, LINUX", "LINUX DEBIAN, LINUX", "unix, OTHER", "NULL, OTHER" })
-    void detectOperatingSystemType(String osNameSystemProperty, OSType expectedType) {
+    void detectOperatingSystemType(final String osNameSystemProperty, final OSType expectedType) {
         final String orgValue = System.getProperty(OS_NAME_SYSTEM_PROPERTY);
         try {
             setSystemProperty(osNameSystemProperty);
@@ -50,7 +55,7 @@ class OsCheckTest {
         }
     }
 
-    private void setSystemProperty(String value) {
+    private void setSystemProperty(final String value) {
         if (value == null) {
             System.clearProperty(OS_NAME_SYSTEM_PROPERTY);
         } else {

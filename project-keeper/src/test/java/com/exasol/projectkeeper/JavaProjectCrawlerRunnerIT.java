@@ -33,6 +33,9 @@ class JavaProjectCrawlerRunnerIT {
     private static final String DEPENDENCY_VERSION = "0.4.1";
     private static Path testMavenRepo;
 
+    @TempDir
+    Path tempDir;
+
     @BeforeAll
     static void beforeAll() {
         final MavenIntegrationTestEnvironment testEnv = TestEnvBuilder.getTestEnv();
@@ -41,9 +44,8 @@ class JavaProjectCrawlerRunnerIT {
 
     @Test
     // [itest->dsn~maven-wrapper~1]
-    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException {
+    void testGetDependencyChanges() throws GitAPIException {
         Git.init().setDirectory(tempDir.toFile()).call().close();
-        MavenWrapperTestHelper.install(tempDir);
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
         final MavenProjectCrawlResult result = crawlProject(pomFile);
@@ -63,32 +65,24 @@ class JavaProjectCrawlerRunnerIT {
         );
     }
 
-    MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
-        final Path projectDirectory = pomFiles.length == 0 || pomFiles[0].getParent() == null ? Path.of(".").toAbsolutePath()
-                : pomFiles[0].getParent();
-        return crawlProjectInDirectory(projectDirectory, pomFiles);
-    }
-
-    private MavenProjectCrawlResult crawlProjectInDirectory(final Path projectDirectory, final Path... pomFiles) {
-        return new JavaProjectCrawlerRunner(projectDirectory, testMavenRepo, TestEnvBuilder.CURRENT_VERSION)
-                .crawlProject(pomFiles);
+    private MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
+        MavenWrapperTestHelper.install(tempDir);
+        return new JavaProjectCrawlerRunner(tempDir, testMavenRepo, TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFiles);
     }
 
     @Test
-    void testGetDependencyChangesFailsForEmptyPomList(@TempDir final Path tempDir) {
-        MavenWrapperTestHelper.install(tempDir);
+    void testGetDependencyChangesFailsForEmptyPomList() {
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> crawlProjectInDirectory(tempDir));
+                () -> crawlProject());
         assertThat(exception.getMessage(), containsString(
                 "E-PK-MPC-64: Property 'projectsToCrawl' is not defined or empty. Specify property with least one pom file."));
     }
 
     @Test
-    void testGetDependencyChangesFailsForMissingPom(@TempDir final Path tempDir) {
-        MavenWrapperTestHelper.install(tempDir);
+    void testGetDependencyChangesFailsForMissingPom() {
         final Path missingPomFile = tempDir.resolve("missing-pom-file");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> crawlProjectInDirectory(tempDir, missingPomFile));
+                () -> crawlProject(missingPomFile));
         assertThat(exception.getMessage(),
                 allOf(containsString("[FATAL] Non-readable POM"), containsString(missingPomFile.toString())));
     }

@@ -184,9 +184,10 @@ class ProjectVersionIncrementorTest {
 
     private void assertMavenExecuted() {
         final ShellCommand command = getExecutedCommand();
-        assertThat(command.workingDir().get(), equalTo(PROJECT_DIR));
-        assertThat(command.commandLine(), contains(equalTo(OsCheck.getMavenWrapperPath(PROJECT_DIR).toString()), equalTo("--batch-mode"),
-                equalTo("artifact-reference-checker:unify")));
+        final String mavenWrapperPath = OsCheck.getMavenWrapperPath(PROJECT_DIR).toString();
+        assertAll(() -> assertThat(command.workingDir().get(), equalTo(PROJECT_DIR)),
+                () -> assertThat(command.commandLine(), contains(equalTo(mavenWrapperPath), equalTo("--batch-mode"),
+                        equalTo("artifact-reference-checker:unify"))));
     }
 
     private ShellCommand getExecutedCommand() {
