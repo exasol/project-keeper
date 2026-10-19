@@ -34,6 +34,11 @@ jobs:
             11
             17
           cache: "maven"
+      - name: Prepare Maven Wrapper
+        id: prepare-maven-wrapper
+        run: .\mvnw.cmd -version
+        env:
+          MVNW_VERBOSE: true
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
@@ -50,10 +55,10 @@ jobs:
       - name: Install Go tools
         run: go install github.com/google/go-licenses/v2@v2.0.1
       - name: Build and install
-        run: mvn --batch-mode -T 1C -DossindexSkip=true -DtrimStackTrace=false clean install
+        run: .\mvnw.cmd --batch-mode -T 1C -DossindexSkip=true -DtrimStackTrace=false clean install
       - name: Run project-keeper itself
         id: build-pk-verify
-        run: mvn --batch-mode --no-transfer-progress -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
+        run: .\mvnw.cmd --batch-mode --no-transfer-progress -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
       - name: Verify Release Artifacts
         run: |
           print_message() {

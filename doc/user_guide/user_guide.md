@@ -393,7 +393,9 @@ For Maven projects, PK generates a `pk_generated_parent.pom` file. This file con
 
 The `pk_generated_parent.pom` file is required during the build and must be checked into version control. Run `./mvnw project-keeper:fix` to update the file instead of editing it manually.
 
-PK also generates Maven Wrapper files (`mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties`) for Maven-root projects. They pin the Maven version for local builds and GitHub Actions. Use `./mvnw` on Linux and macOS, or `mvnw.cmd` on Windows.
+PK also generates Maven Wrapper files (`mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties`) for Maven-root projects. They pin the Maven version for local builds and GitHub Actions. Use `./mvnw` on Linux and macOS. On Windows, run the wrapper from PowerShell as `.\mvnw.cmd ...`, for example `.\mvnw.cmd project-keeper:fix`.
+
+All Maven Wrapper commands in this guide use the Linux and macOS form (`./mvnw ...`). On Windows, replace that prefix with `.\mvnw.cmd`, retaining the remaining arguments.
 
 ### Overriding Defaults
 

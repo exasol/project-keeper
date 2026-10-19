@@ -31,6 +31,9 @@ jobs:
           distribution: "temurin"
           java-version: 17
           cache: "maven"
+      - name: Prepare Maven Wrapper
+        id: prepare-maven-wrapper
+        run: MVNW_VERBOSE=true ./mvnw -version
       - name: Set up Go
         uses: actions/setup-go@v7
         with:
@@ -47,7 +50,7 @@ jobs:
       - name: Install Go tools
         run: go install github.com/google/go-licenses/v2@v2.0.1
       - name: Build project-keeper
-        run: mvn --batch-mode --no-transfer-progress -T 1C clean package -DskipTests -DskipITs -DossindexSkip=true -DtrimStackTrace=false
+        run: ./mvnw --batch-mode --no-transfer-progress -T 1C clean package -DskipTests -DskipITs -DossindexSkip=true -DtrimStackTrace=false
       - name: Strip version number
         run: |
           mkdir artifact
@@ -85,6 +88,11 @@ jobs:
             11
             17
           cache: "maven"
+      - name: Prepare Maven Wrapper
+        id: prepare-maven-wrapper
+        run: .\mvnw.cmd -version
+        env:
+          MVNW_VERBOSE: true
       - name: Download jar
         uses: actions/download-artifact@v8
         with:
@@ -94,14 +102,14 @@ jobs:
       - name: Install project-keeper
         shell: pwsh
         run: |
-          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="shared-model-classes.jar" `
+          .\mvnw.cmd --batch-mode --no-transfer-progress install:install-file -Dfile="shared-model-classes.jar" `
             -DpomFile="shared-model-classes.pom"
-          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="maven-project-crawler.jar" `
+          .\mvnw.cmd --batch-mode --no-transfer-progress install:install-file -Dfile="maven-project-crawler.jar" `
             -DpomFile="maven-project-crawler.pom"
-          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="project-keeper-core.jar" `
+          .\mvnw.cmd --batch-mode --no-transfer-progress install:install-file -Dfile="project-keeper-core.jar" `
             -DpomFile="project-keeper-core.pom"
-          mvn --batch-mode --no-transfer-progress install:install-file -Dfile="project-keeper-maven-plugin.jar" `
+          .\mvnw.cmd --batch-mode --no-transfer-progress install:install-file -Dfile="project-keeper-maven-plugin.jar" `
             -DpomFile="project-keeper-maven-plugin.pom"
       - name: run project-keeper
         shell: pwsh
-        run: mvn --batch-mode --no-transfer-progress -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .
+        run: .\mvnw.cmd --batch-mode --no-transfer-progress -DtrimStackTrace=false com.exasol:project-keeper-maven-plugin:verify --projects .

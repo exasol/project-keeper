@@ -58,6 +58,9 @@ This maven plugin checks and unifies the project's structure according to the Ex
    ./mvnw project-keeper:verify --projects .
    ```
 
+   On Windows, run Maven Wrapper commands in PowerShell as `.\mvnw.cmd …`; for
+   example, `.\mvnw.cmd project-keeper:verify --projects .`.
+
 See the [User Guide](doc/user_guide/user_guide.md) for details and for non-Maven projects.
 
 ## Additional Resources
