@@ -42,7 +42,6 @@ class FileTemplatesFactory {
         templates.add(this.workflowGenerator.createBrokenLinksCheckerWorkflow());
         templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
-        // .gitattributes generate will be improved in https://github.com/exasol/project-keeper/issues/798
         templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
                 .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
         templates.add(new FileTemplateFromResource(".github/zizmor.yml", REQUIRE_EXACT));
