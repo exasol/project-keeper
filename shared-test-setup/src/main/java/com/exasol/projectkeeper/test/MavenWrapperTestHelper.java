@@ -20,7 +20,10 @@ public final class MavenWrapperTestHelper {
     public static void install(final Path projectDirectory) {
         try {
             copyResource("templates/mvnw", projectDirectory.resolve("mvnw"));
-            projectDirectory.resolve("mvnw").toFile().setExecutable(true);
+            final boolean success = projectDirectory.resolve("mvnw").toFile().setExecutable(true);
+            if (!success) {
+                throw new IllegalStateException("Failed to set executable permission for mvnw");
+            }
             copyResource("templates/mvnw.cmd", projectDirectory.resolve("mvnw.cmd"));
             copyResource("templates/.mvn/wrapper/maven-wrapper.properties",
                     projectDirectory.resolve(".mvn/wrapper/maven-wrapper.properties"));

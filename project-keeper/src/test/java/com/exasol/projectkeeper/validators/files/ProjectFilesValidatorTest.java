@@ -79,7 +79,7 @@ class ProjectFilesValidatorTest {
 
     @Test
     // [utest->dsn~maven-wrapper~1]
-    void testFixMavenWrapperFiles() throws IOException {
+    void testFixMavenWrapperFiles() {
         final ProjectFilesValidator validator = testee();
         fixAllFindings(validator);
         final Path wrapper = this.tempDir.resolve("mvnw");

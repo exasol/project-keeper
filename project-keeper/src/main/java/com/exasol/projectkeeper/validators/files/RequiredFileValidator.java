@@ -47,7 +47,11 @@ public class RequiredFileValidator {
             Files.createDirectories(file.getParent());
             Files.writeString(file, templateContent.replace("\r", "").replace("\n", System.lineSeparator()));
             if (requiresExecutablePermission) {
-                file.toFile().setExecutable(true, false);
+                final boolean success = file.toFile().setExecutable(true, false);
+                if (!success) {
+                    throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-214")
+                            .message("Failed to set executable permission for {{file name}}.", file).toString());
+                }
             }
         } catch (final IOException exception) {
             throw new IllegalStateException(
