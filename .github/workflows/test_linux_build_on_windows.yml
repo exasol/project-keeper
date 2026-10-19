@@ -90,6 +90,7 @@ jobs:
           cache: "maven"
       - name: Prepare Maven Wrapper
         id: prepare-maven-wrapper
+        shell: pwsh
         run: .\mvnw.cmd -version
         env:
           MVNW_VERBOSE: true
