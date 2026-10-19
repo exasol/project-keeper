@@ -20,6 +20,7 @@ public class JavaProjectCrawlerRunner {
     /**
      * Create a new instance of {@link JavaProjectCrawlerRunner}.
      *
+     * @param projectDirectory      the project directory
      * @param mvnRepositoryOverride Maven repository override. This is useful for running integration tests. Use
      *                              {@code null} for default.
      * @param ownVersion            project-keeper version

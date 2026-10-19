@@ -23,7 +23,8 @@ public class MavenProcessBuilder {
 
     /**
      * Create a new builder.
-     *
+     * 
+     * @param projectDirectory the project directory
      * @return new builder
      */
     public static MavenProcessBuilder create(final Path projectDirectory) {
