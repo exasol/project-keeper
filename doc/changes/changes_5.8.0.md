@@ -12,6 +12,12 @@ Project Keeper now generates and verifies Maven Wrapper in its default `only-scr
 
 ## Dependency Updates
 
+### Project Keeper Root Project
+
+#### Plugin Dependency Updates
+
+* Updated `org.itsallcode:openfasttrace-maven-plugin:3.0.0` to `3.1.0`
+
 ### Project Keeper Core
 
 #### Compile Dependency Updates
