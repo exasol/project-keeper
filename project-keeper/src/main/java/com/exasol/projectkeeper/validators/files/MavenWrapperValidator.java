@@ -11,6 +11,7 @@ import com.exasol.projectkeeper.Validator;
 import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 
 /** Validates the Maven Wrapper files required before Maven source analysis. */
+// [impl->dsn~maven-wrapper~1]
 public class MavenWrapperValidator implements Validator {
     private static final List<String> WRAPPER_PATHS = List.of("mvnw", "mvnw.cmd", ".mvn/wrapper/maven-wrapper.properties");
     private final Path projectDirectory;
