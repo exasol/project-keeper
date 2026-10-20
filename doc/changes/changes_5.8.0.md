@@ -1,4 +1,4 @@
-# Project Keeper 5.8.0, released 2026-10-??
+# Project Keeper 5.8.0, released 2026-10-20
 
 Code name: Maven Wrapper
 
