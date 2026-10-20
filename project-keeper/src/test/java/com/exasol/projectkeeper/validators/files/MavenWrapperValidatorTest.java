@@ -26,7 +26,7 @@ class MavenWrapperValidatorTest {
 
     @Test
     // [utest->dsn~maven-wrapper~1]
-    void fixesAllMavenWrapperFiles() throws IOException {
+    void fixesAllMavenWrapperFiles() {
         final MavenWrapperValidator validator = validator();
 
         fixAllFindings(validator);

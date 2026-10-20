@@ -121,7 +121,7 @@ class ProjectKeeperMojoIT {
         assertGeneratedWrapperRuns();
     }
 
-    private void assertGeneratedWrapperRuns() throws IOException, InterruptedException {
+    private void assertGeneratedWrapperRuns() throws IOException {
         final List<String> command = OsCheck.isWindows()
                 ? List.of("cmd", "/c", this.projectDir.resolve("mvnw.cmd").toString(), "--version")
                 : List.of(this.projectDir.resolve("mvnw").toString(), "--version");

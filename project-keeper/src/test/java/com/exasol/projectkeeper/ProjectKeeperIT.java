@@ -146,7 +146,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
 
     @Test
     // [itest->dsn~maven-wrapper~1]
-    void testFixBootstrapsMissingMavenWrapperBeforeSourceAnalysis() throws IOException {
+    void testFixBootstrapsMissingMavenWrapperBeforeSourceAnalysis() {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();
         pom.writeAsPomToProject(this.projectDir);
