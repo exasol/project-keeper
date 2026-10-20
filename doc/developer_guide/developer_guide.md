@@ -116,6 +116,7 @@ If you want to check if newer versions of some of the plugins are available and 
 
 ```sh
 ./mvnw openfasttrace:trace --projects .
+```
 
 ## Updating Maven Wrapper Templates
 
