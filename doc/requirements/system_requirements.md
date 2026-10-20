@@ -218,6 +218,26 @@ Covers:
 
 Needs: dsn
 
+### Mark Generated Files
+
+`feat~mark-generated-files~1`
+
+PK marks files it generates so repository hosting services can distinguish them from user-maintained source files.
+
+Needs: req
+
+#### Manage Generated File Attributes
+
+`req~manage-generated-file-attributes~1`
+
+PK manages `linguist-generated=true` attributes for generated files in `.gitattributes`. It preserves user-managed content in an existing file while ensuring the attributes for PK-generated files take precedence.
+
+Covers:
+
+* [`feat~mark-generated-files~1`](#mark-generated-files)
+
+Needs: dsn
+
 ### Fix Findings
 
 `feat~fix-findings~1`
