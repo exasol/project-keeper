@@ -16,6 +16,8 @@ import com.exasol.projectkeeper.sources.*;
  * Factory for file templates.
  */
 class FileTemplatesFactory {
+    private static final String ZIZMOR_CONFIG_FILE = ".github/zizmor.yml";
+    private static final String MAIN_CI_WORKFLOW = ".github/workflows/ci-build.yml";
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
@@ -40,7 +42,7 @@ class FileTemplatesFactory {
         templates.add(this.workflowGenerator.createBrokenLinksCheckerWorkflow());
         templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
-        templates.add(new FileTemplateFromResource(".github/zizmor.yml", REQUIRE_EXACT));
+        templates.add(new FileTemplateFromResource(ZIZMOR_CONFIG_FILE, REQUIRE_EXACT));
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
         } else {
@@ -56,9 +58,9 @@ class FileTemplatesFactory {
 
     List<String> getGeneratedFiles() {
         final List<String> generatedFiles = new ArrayList<>(List.of("SECURITY.md", "dependencies.md",
-                "doc/changes/changelog.md", ".github/workflows/broken_links_checker.yml", ".github/workflows/ci-build.yml",
+                "doc/changes/changelog.md", ".github/workflows/broken_links_checker.yml", MAIN_CI_WORKFLOW,
                 ".github/workflows/dependencies_check.yml", ".github/workflows/dependencies_update.yml",
-                ".github/workflows/release.yml", ".github/zizmor.yml"));
+                ".github/workflows/release.yml", ZIZMOR_CONFIG_FILE));
         if (this.sources.stream().anyMatch(this::isMvnRootProject)) {
             generatedFiles.addAll(List.of("pk_generated_parent.pom", "/mvnw", "/mvnw.cmd", "/.mvn/wrapper/maven-wrapper.properties"));
         }
@@ -83,7 +85,7 @@ class FileTemplatesFactory {
     private FileTemplate getCiBuildTemplate(final Set<ProjectKeeperModule> modules) {
         if (modules.contains(NATIVE_IMAGE)) {
             return new FileTemplateFromResource("templates/.github/workflows/ci-build-native-build.yml",
-                    ".github/workflows/ci-build.yml", REQUIRE_EXACT);
+                    MAIN_CI_WORKFLOW, REQUIRE_EXACT);
         } else {
             return this.workflowGenerator.createCiBuildWorkflow();
         }
