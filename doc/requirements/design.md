@@ -77,6 +77,18 @@ Covers:
 
 Needs: impl, utest, itest
 
+### Generated File Attributes
+
+`dsn~generated-file-attributes~1`
+
+PK creates `.gitattributes` from its built-in EOL rules and a supplied list of generated files when the file is absent. For an existing file, PK preserves all user content and appends only missing rules. It compares whitespace-delimited rule tokens, so whitespace-only manual edits remain valid. An appended rule overrides a conflicting earlier rule under Git attribute precedence. PK normalizes line endings whenever it writes the merged file.
+
+Covers:
+
+* [`req~manage-generated-file-attributes~1`](system_requirements.md#manage-generated-file-attributes)
+
+Needs: impl, utest
+
 ### Deleted Files Validator
 
 `dsn~deleted-files-validator~1`
@@ -365,7 +377,7 @@ Needs: impl, utest, itest
 ### Maven Wrapper
 `dsn~maven-wrapper~1`
 
-For Maven-root projects, PK keeps `mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties` as exact managed templates. The wrapper uses Maven Wrapper's `only-script` distribution type. PK marks these generated files in `.gitattributes`, makes `mvnw` executable on Unix-like systems, and repairs missing or changed files.
+For Maven-root projects, PK keeps `mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties` as exact managed templates. The wrapper uses Maven Wrapper's `only-script` distribution type, makes `mvnw` executable on Unix-like systems, and repairs missing or changed files.
 
 Generated Maven workflows call `./mvnw`. PK's Maven subprocesses use the project-root wrapper, retaining a module working directory where the command requires it.
 

@@ -41,6 +41,7 @@ public class ProjectFilesValidator implements Validator {
         final List<ValidationFinding> findings = new ArrayList<>();
         final FileTemplatesFactory templatesFactory = new FileTemplatesFactory(this.logger, this.projectKeeperVersion,
                 this.hasNpmModule, this.buildConfig, this.sources);
+        findings.addAll(new GitattributesValidator(this.projectDirectory, templatesFactory.getGeneratedFiles()).validate());
         findings.addAll(validateTemplatesRelativeToRepo(templatesFactory));
         findings.addAll(validateTemplatesRelativeToSource(templatesFactory));
         return findings;
