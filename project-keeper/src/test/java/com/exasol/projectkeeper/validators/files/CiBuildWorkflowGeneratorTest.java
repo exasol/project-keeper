@@ -191,8 +191,6 @@ class CiBuildWorkflowGeneratorTest {
                         hasEntry("server-password-env-var", "MAVEN_PASSWORD"),
                         hasEntry("gpg-passphrase-env-var", "MAVEN_GPG_PASSPHRASE"))),
                 () -> assertThat(job.getStep("setup-jdks").getIfCondition(), equalTo("${{ ! true }}")),
-                () -> assertThat(job.getStep("list-secret-gpg-keys").getIfCondition(),
-                        equalTo("${{ true && (! inputs.skip-maven-central) }}")),
                 () -> assertThat(job.getStep("deploy-maven-central").getIfCondition(),
                         equalTo("${{ true && (! inputs.skip-maven-central) }}")));
     }
@@ -206,8 +204,7 @@ class CiBuildWorkflowGeneratorTest {
                 () -> assertThat(job.getStep("configure-maven-central-credentials").getIfCondition(),
                         equalTo("${{ false }}")),
                 () -> assertThat(job.getStep("setup-jdks").getIfCondition(), equalTo("${{ ! false }}")),
-                () -> assertThat(job.getStep("list-secret-gpg-keys").getIfCondition(),
-                        equalTo("${{ false && (! inputs.skip-maven-central) }}")),
+                () -> assertThat(job.getStep("validate-gpg-signing-key").getIfCondition(), equalTo("${{ false }}")),
                 () -> assertThat(job.getStep("deploy-maven-central").getIfCondition(),
                         equalTo("${{ false && (! inputs.skip-maven-central) }}")));
     }

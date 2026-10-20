@@ -293,6 +293,22 @@ Rationale:
 
 Needs: req
 
+#### Validate Maven Central Signing Key
+`req~validate-maven-central-signing-key~0`
+
+PK validates the GPG signing key configured for Maven Central releases before continuing the generated release workflow. If the private key is missing, the key or a signing subkey is expired, or the key cannot sign, PK fails with instructions to update the GPG key and passphrase secrets.
+
+Rationale:
+
+* Maven Central deployment otherwise fails late with a non-actionable signing error when a configured key is unusable.
+* Validating the key before the release build avoids spending time on a release that cannot be deployed.
+
+Covers:
+
+* [`feat~maven-project-support~0`](#support-for-maven-projects)
+
+Needs: dsn
+
 #### Support Building With Multiple Java Versions
 `feat~mvn-multiple-java-versions~1`
 

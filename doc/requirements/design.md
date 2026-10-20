@@ -1132,6 +1132,19 @@ Covers:
 
 Needs: impl, utest
 
+#### Workflow `release.yml` Validates Maven Central Signing Key
+`dsn~release-workflow.validate-maven-central-signing-key~0`
+
+For Maven Central releases, PK generates a preflight step directly after `actions/setup-java` imports the GPG key. The step runs whenever Maven Central support is configured. It lists non-sensitive key metadata, rejects a missing private key and expired primary or signing subkeys, and creates a disposable detached signature using the configured passphrase.
+
+On validation failure, the step prints an actionable message telling users to update `OSSRH_GPG_SECRET_KEY` and `OSSRH_GPG_SECRET_KEY_PASSWORD`. It does not print key material or passphrases.
+
+Covers:
+
+* [`req~validate-maven-central-signing-key~0`](system_requirements.md#validate-maven-central-signing-key)
+
+Needs: impl
+
 #### Workflow `release.yml` Publishes SPDX SBOMs to Maven Central
 `dsn~release-workflow.publish-release-sboms~0`
 

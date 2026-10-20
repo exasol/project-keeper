@@ -1,4 +1,4 @@
-# Project Keeper 5.8.0, released 2026-10-??
+# Project Keeper 5.8.0, released 2026-10-20
 
 Code name: Maven Wrapper
 
@@ -22,6 +22,7 @@ We supporessed unresolved vulnerability CVE-2026-92877 in transitive dependency 
 
 ## Features
 
+* #790: Validate Maven Central GPG signing keys before release builds.
 * #791: Add Maven Wrapper generation and verification.
 
 ## Dependency Updates
