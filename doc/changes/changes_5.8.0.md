@@ -22,6 +22,7 @@ We supporessed unresolved vulnerability CVE-2026-92877 in transitive dependency 
 
 ## Features
 
+* #790: Validate Maven Central GPG signing keys before release builds.
 * #791: Add Maven Wrapper generation and verification.
 
 ## Dependency Updates
