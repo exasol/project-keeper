@@ -58,8 +58,7 @@ class FileTemplatesFactory {
         final List<String> generatedFiles = new ArrayList<>(List.of("SECURITY.md", "dependencies.md",
                 "doc/changes/changelog.md", ".github/workflows/broken_links_checker.yml", ".github/workflows/ci-build.yml",
                 ".github/workflows/dependencies_check.yml", ".github/workflows/dependencies_update.yml",
-                ".github/workflows/release.yml", ".github/zizmor.yml", ".settings/org.eclipse.jdt.core.prefs",
-                ".settings/org.eclipse.jdt.ui.prefs"));
+                ".github/workflows/release.yml", ".github/zizmor.yml"));
         if (this.sources.stream().anyMatch(this::isMvnRootProject)) {
             generatedFiles.addAll(List.of("pk_generated_parent.pom", "/mvnw", "/mvnw.cmd", "/.mvn/wrapper/maven-wrapper.properties"));
         }
