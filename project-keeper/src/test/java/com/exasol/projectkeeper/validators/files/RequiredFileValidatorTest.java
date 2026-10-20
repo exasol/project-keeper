@@ -39,7 +39,7 @@ class RequiredFileValidatorTest {
 
         assertThat(validator, validationErrorMessages(contains("E-PK-CORE-17: Missing required file: 'file.txt'")));
         fixAllFindings(validator.validate());
-        assertThat(Files.readString(file), equalTo(EXPECTED_CONTENT));
+        assertThat(Files.readString(file), equalTo(expectedFileContent()));
     }
 
     @Test
@@ -51,7 +51,7 @@ class RequiredFileValidatorTest {
 
         assertThat(validator, validationErrorMessages(contains("E-PK-CORE-18: Outdated content: 'file.txt'")));
         fixAllFindings(validator.validate());
-        assertThat(Files.readString(file), equalTo(EXPECTED_CONTENT));
+        assertThat(Files.readString(file), equalTo(expectedFileContent()));
     }
 
     @Test
@@ -81,6 +81,10 @@ class RequiredFileValidatorTest {
     private Validator validator(final Path file, final boolean requiresExecutablePermission) {
         return () -> new RequiredFileValidator().validateFile(this.projectDirectory, file,
                 withContentEqualTo(EXPECTED_CONTENT), requiresExecutablePermission);
+    }
+
+    private static String expectedFileContent() {
+        return EXPECTED_CONTENT.replace("\n", System.lineSeparator());
     }
 
     private static void fixAllFindings(final List<ValidationFinding> findings) {
