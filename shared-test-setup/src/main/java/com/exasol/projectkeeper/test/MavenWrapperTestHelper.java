@@ -18,6 +18,9 @@ public final class MavenWrapperTestHelper {
      * @param projectDirectory project directory
      */
     public static void install(final Path projectDirectory) {
+        if (projectDirectory.resolve("mvnw").toFile().exists()) {
+            throw new IllegalStateException("Maven Wrapper already exists in " + projectDirectory + ". No need to install it again.");
+        }
         try {
             copyResource("templates/mvnw", projectDirectory.resolve("mvnw"));
             final boolean success = projectDirectory.resolve("mvnw").toFile().setExecutable(true);

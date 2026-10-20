@@ -16,7 +16,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.junit.jupiter.api.*;
 
 import com.exasol.projectkeeper.test.MavenProjectFixture;
-import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
 
@@ -33,7 +32,6 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     void setup() {
         this.fixture = new MavenProjectFixture(this.projectDir);
         this.fixture.gitInit();
-        MavenWrapperTestHelper.install(this.projectDir);
     }
 
     @Test
@@ -144,6 +142,25 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
                         containsString("org.eclipse.jdt.core.compiler.compliance=11"),
                         containsString("org.eclipse.jdt.core.compiler.codegen.targetPlatform=11"),
                         containsString("org.eclipse.jdt.core.compiler.source=11"))));
+    }
+
+    @Test
+    // [itest->dsn~maven-wrapper~1]
+    void testFixBootstrapsMissingMavenWrapperBeforeSourceAnalysis() throws IOException {
+        final var pom = new TestMavenModel();
+        pom.configureAssemblyPluginFinalName();
+        pom.writeAsPomToProject(this.projectDir);
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
+
+        runFix();
+
+        assertAll(() -> assertThat(this.projectDir.resolve("mvnw").toFile(), anExistingFile()),
+                () -> assertThat(this.projectDir.resolve("mvnw.cmd").toFile(), anExistingFile()),
+                () -> assertThat(this.projectDir.resolve(".mvn/wrapper/maven-wrapper.properties").toFile(),
+                        anExistingFile()));
+        if (!OsCheck.isWindows()) {
+            assertThat(Files.isExecutable(this.projectDir.resolve("mvnw")), equalTo(true));
+        }
     }
 
     @Test

@@ -64,14 +64,12 @@ class FileTemplatesFactory {
         return new FileTemplateFromResource("non_maven_templates/" + lintActionPath, lintActionPath, REQUIRE_EXACT);
     }
 
-    // [impl->dsn~maven-wrapper~1]
     private List<FileTemplate> getGenericMavenTemplates(final Set<ProjectKeeperModule> modules) {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(getCiBuildTemplate(modules));
         templates.add(this.workflowGenerator.createDependenciesCheckWorkflow());
         templates.add(this.workflowGenerator.createDependenciesUpdateWorkflow());
         templates.add(this.workflowGenerator.createReleaseWorkflow(sources));
-        templates.addAll(MavenWrapperTemplates.getTemplates());
         return templates;
     }
 

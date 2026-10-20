@@ -42,22 +42,26 @@ public class RequiredFileValidator {
         return new FileExistsValidator(defaultContent);
     }
 
-    private static void fixFile(final Path file, final String templateContent, final boolean requiresExecutablePermission) {
+    private static void fixFileContent(final Path file, final String templateContent, final boolean requiresExecutablePermission) {
         try {
             Files.createDirectories(file.getParent());
             Files.writeString(file, templateContent.replace("\r", "").replace("\n", System.lineSeparator()));
             if (requiresExecutablePermission) {
-                final boolean success = file.toFile().setExecutable(true, false);
-                if (!success) {
-                    throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-214")
-                            .message("Failed to set executable permission for {{file name}}.", file).toString());
-                }
+                setExecutablePermission(file);
             }
         } catch (final IOException exception) {
             throw new IllegalStateException(
                     ExaError.messageBuilder("E-PK-CORE-16").message("Failed to create or replace {{required file}}.")
                             .parameter("required file", file).toString(),
                     exception);
+        }
+    }
+
+    private static void setExecutablePermission(final Path file) {
+        final boolean success = file.toFile().setExecutable(true, false);
+        if (!success) {
+            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-214")
+                    .message("Failed to set executable permission for {{file name}}.", file).toString());
         }
     }
 
@@ -95,12 +99,9 @@ public class RequiredFileValidator {
             final ContentValidator contentValidator, final boolean requiresExecutablePermission) {
         final String content = getActualContent(projectDir, file);
         final String contentWithUnifiedNewline = unifyNewlines(content);
-        final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline)
-                .or(() -> isMissingExecutablePermission(file, requiresExecutablePermission)
-                        ? Optional.of(contentWithUnifiedNewline)
-                        : Optional.empty());
+        final Optional<String> newContent = contentValidator.validateContent(contentWithUnifiedNewline);
         if (newContent.isPresent()) {
-            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFile(file, newContent.get(),
+            final SimpleValidationFinding.Fix fix = (final Logger log) -> fixFileContent(file, newContent.get(),
                     requiresExecutablePermission);
             if (contentWithUnifiedNewline == null) {
                 return List.of(SimpleValidationFinding
@@ -113,9 +114,14 @@ public class RequiredFileValidator {
                         .message("Outdated content: {{file name}}", osIndependentPath(projectDir, file)).toString())
                         .andFix(fix).build());
             }
-        } else {
-            return Collections.emptyList();
         }
+        if (isMissingExecutablePermission(file, requiresExecutablePermission)) {
+            final SimpleValidationFinding.Fix fix = (final Logger log) -> setExecutablePermission(file);
+            return List.of(SimpleValidationFinding.withMessage(ExaError.messageBuilder("E-PK-CORE-215")
+                    .message("Missing executable permission: {{file name}}", osIndependentPath(projectDir, file))
+                    .toString()).andFix(fix).build());
+        }
+        return Collections.emptyList();
     }
 
     private boolean isMissingExecutablePermission(final Path file, final boolean requiresExecutablePermission) {
