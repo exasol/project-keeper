@@ -16,13 +16,6 @@ import com.exasol.projectkeeper.sources.*;
  * Factory for file templates.
  */
 class FileTemplatesFactory {
-    private static final List<String> GENERATED_FILES = List.of("SECURITY.md", "dependencies.md",
-            "doc/changes/changelog.md", ".github/workflows/broken_links_checker.yml", ".github/workflows/ci-build.yml",
-            ".github/workflows/dependencies_check.yml", ".github/workflows/dependencies_update.yml",
-            ".github/workflows/release.yml", ".github/zizmor.yml", ".settings/org.eclipse.jdt.core.prefs",
-            ".settings/org.eclipse.jdt.ui.prefs");
-    private static final List<String> MAVEN_GENERATED_FILES = List.of("pk_generated_parent.pom", "/mvnw", "/mvnw.cmd",
-            "/.mvn/wrapper/maven-wrapper.properties");
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
