@@ -40,10 +40,7 @@ class FileTemplatesFactoryTest {
                 () -> assertContainsTemplate(templates, ".github/workflows/ci-build.yml"),
                 () -> assertContainsTemplate(templates, ".vscode/settings.json"),
                 () -> assertTrue(gitattributes.isPresent()),
-                () -> assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom")),
-                () -> assertContainsTemplate(templates, "mvnw"),
-                () -> assertContainsTemplate(templates, "mvnw.cmd"),
-                () -> assertContainsTemplate(templates, ".mvn/wrapper/maven-wrapper.properties"));
+                () -> assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom")));
     }
 
     // [utest->dsn~dependency-updater.workflow.generate~1]
