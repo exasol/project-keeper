@@ -81,7 +81,7 @@ Needs: impl, utest, itest
 
 `dsn~generated-file-attributes~1`
 
-PK creates `.gitattributes` from its complete template when the file is absent. For an existing file, PK derives its managed `linguist-generated=true` rules from that template, preserves all user content, and appends only missing rules. An appended rule overrides a conflicting earlier rule under Git attribute precedence. PK normalizes line endings whenever it writes the merged file.
+PK creates `.gitattributes` from its built-in EOL rules and a supplied list of generated files when the file is absent. For an existing file, PK preserves all user content and appends only missing rules. It compares whitespace-delimited rule tokens, so whitespace-only manual edits remain valid. An appended rule overrides a conflicting earlier rule under Git attribute precedence. PK normalizes line endings whenever it writes the merged file.
 
 Covers:
 

@@ -35,12 +35,17 @@ class FileTemplatesFactoryTest {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
         final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
-        final Optional<FileTemplate> gitattributes = findTemplate(templates, ".gitattributes");
         assertAll(
                 () -> assertContainsTemplate(templates, ".github/workflows/ci-build.yml"),
                 () -> assertContainsTemplate(templates, ".vscode/settings.json"),
-                () -> assertTrue(gitattributes.isPresent()),
-                () -> assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom")));
+                () -> assertTrue(findTemplate(templates, ".gitattributes").isEmpty()));
+    }
+
+    @Test
+    void testGenerateGitattributes() {
+        final List<AnalyzedSource> sources = getMavenSourceWithModules(Collections.emptySet());
+        assertThat(testee(sources).getGeneratedFiles(), allOf(hasItems("pk_generated_parent.pom", "/mvnw", "/mvnw.cmd",
+                "/.mvn/wrapper/maven-wrapper.properties"), hasItems("SECURITY.md", ".github/zizmor.yml")));
     }
 
     // [utest->dsn~dependency-updater.workflow.generate~1]
@@ -82,6 +87,7 @@ class FileTemplatesFactoryTest {
         final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
         assertFalse(() -> templates.stream()
                 .anyMatch(template -> template.getPathInProject().equals(Path.of(".github/workflows/ci-build.yml"))));
+        assertThat(testee(sources).getGeneratedFiles(), not(hasItem("/.mvn/wrapper/maven-wrapper.properties")));
         verify(this.loggerMock).warn(
                 "W-PK-CORE-91: For this project structure project keeper does not know how to configure ci-build. Please create the required actions on your own.");
     }

@@ -16,8 +16,13 @@ import com.exasol.projectkeeper.sources.*;
  * Factory for file templates.
  */
 class FileTemplatesFactory {
-    private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
-            "linguist-generated=true");
+    private static final List<String> GENERATED_FILES = List.of("SECURITY.md", "dependencies.md",
+            "doc/changes/changelog.md", ".github/workflows/broken_links_checker.yml", ".github/workflows/ci-build.yml",
+            ".github/workflows/dependencies_check.yml", ".github/workflows/dependencies_update.yml",
+            ".github/workflows/release.yml", ".github/zizmor.yml", ".settings/org.eclipse.jdt.core.prefs",
+            ".settings/org.eclipse.jdt.ui.prefs");
+    private static final List<String> MAVEN_GENERATED_FILES = List.of("pk_generated_parent.pom", "/mvnw", "/mvnw.cmd",
+            "/.mvn/wrapper/maven-wrapper.properties");
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;
@@ -42,8 +47,6 @@ class FileTemplatesFactory {
         templates.add(this.workflowGenerator.createBrokenLinksCheckerWorkflow());
         templates.add(new FileTemplateFromResource(".vscode/settings.json", REQUIRE_EXIST));
         final Optional<AnalyzedSource> mvnRoot = sources.stream().filter(this::isMvnRootProject).findFirst();
-        templates.add(new FileTemplateFromResource("templates/gitattributes", ".gitattributes", REQUIRE_EXIST)
-                .replacing("pomFiles", mvnRoot.isPresent() ? POM_FILES_GENERATED : ""));
         templates.add(new FileTemplateFromResource(".github/zizmor.yml", REQUIRE_EXACT));
         if (mvnRoot.isPresent()) {
             templates.addAll(getGenericMavenTemplates(mvnRoot.get().getModules()));
@@ -56,6 +59,18 @@ class FileTemplatesFactory {
         }
         this.workflowGenerator.verifyAllWorkflowCustomizationsAreUsed();
         return templates;
+    }
+
+    List<String> getGeneratedFiles() {
+        final List<String> generatedFiles = new ArrayList<>(List.of("SECURITY.md", "dependencies.md",
+                "doc/changes/changelog.md", ".github/workflows/broken_links_checker.yml", ".github/workflows/ci-build.yml",
+                ".github/workflows/dependencies_check.yml", ".github/workflows/dependencies_update.yml",
+                ".github/workflows/release.yml", ".github/zizmor.yml", ".settings/org.eclipse.jdt.core.prefs",
+                ".settings/org.eclipse.jdt.ui.prefs"));
+        if (this.sources.stream().anyMatch(this::isMvnRootProject)) {
+            generatedFiles.addAll(List.of("pk_generated_parent.pom", "/mvnw", "/mvnw.cmd", "/.mvn/wrapper/maven-wrapper.properties"));
+        }
+        return generatedFiles;
     }
 
     // [impl->dsn~non-maven-lint-github-actions~1]
