@@ -225,11 +225,6 @@ class GitHubWorkflow {
             return asMap(rawStep.computeIfAbsent("with", key -> new HashMap<>()));
         }
 
-        @SuppressWarnings("unchecked")
-        Map<String, String> getEnv() {
-            return (Map<String, String>) rawStep.get("env");
-        }
-
         private String getString(final String key) {
             return getOptionalString(key)
                     .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-204")
