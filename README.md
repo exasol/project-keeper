@@ -48,15 +48,20 @@ This maven plugin checks and unifies the project's structure according to the Ex
    </plugins>
    ```
 
-4. Run PK fix:
+4. Bootstrap Maven Wrapper and run PK fix with your installed Maven:
    ```sh
    mvn project-keeper:fix --projects .
    ```
 
+   This creates the Maven Wrapper. Use `./mvnw` for subsequent commands.
+
 5. Run PK verify:
    ```sh
-   mvn project-keeper:verify --projects .
+   ./mvnw project-keeper:verify --projects .
    ```
+
+   On Windows, run Maven Wrapper commands in PowerShell as `.\mvnw.cmd …`; for
+   example, `.\mvnw.cmd project-keeper:verify --projects .`.
 
 See the [User Guide](doc/user_guide/user_guide.md) for details and for non-Maven projects.
 

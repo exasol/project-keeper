@@ -22,6 +22,7 @@ import com.exasol.projectkeeper.validators.changelog.ChangelogFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
 import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
+import com.exasol.projectkeeper.validators.files.MavenWrapperValidator;
 import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
@@ -121,11 +122,18 @@ public class ProjectKeeper {
             if (source.getType().equals(MAVEN)) {
                 validators.add(new PomFileValidator(this.projectDir, source.getModules(), source.getPath(),
                         source.getParentPom(), new RepoInfo(this.repoName, licenseName)));
+                if (isRootMavenSource(source)) {
+                    validators.add(new MavenWrapperValidator(this.projectDir));
+                }
             } else {
                 validators.add(OwnVersionValidator.forCli(this.ownVersion));
             }
         }
         return new ValidationPhase(null, validators);
+    }
+
+    private boolean isRootMavenSource(final Source source) {
+        return this.projectDir.resolve("pom.xml").equals(source.getPath());
     }
 
     /*

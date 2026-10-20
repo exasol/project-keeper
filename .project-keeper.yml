@@ -114,7 +114,7 @@ build:
             name: Run tests and build with Maven
             id: maven-build
             run: |
-              mvn -T 1C --batch-mode clean install verify \
+              ./mvnw -T 1C --batch-mode clean install verify \
                   --no-transfer-progress \
                   -DossindexSkip=true \
                   -DtrimStackTrace=false
@@ -127,7 +127,7 @@ build:
             name: Run project-keeper itself
             id: build-pk-verify
             run: |
-              mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify \
+              ./mvnw --batch-mode com.exasol:project-keeper-maven-plugin:verify \
                 --projects . \
                 --no-transfer-progress
 
@@ -138,7 +138,7 @@ build:
             name: Install Project Keeper before check-release
             id: install-project-keeper
             run: |
-              mvn --batch-mode --threads 1C install \
+              ./mvnw --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
                   -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
@@ -154,7 +154,7 @@ build:
             id: install-project-keeper
             # This fixes https://github.com/exasol/project-keeper/issues/330
             run: |
-              mvn --batch-mode --threads 1C install \
+              ./mvnw --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
                   -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
@@ -169,7 +169,7 @@ build:
             id: install-project-keeper
             # This fixes https://github.com/exasol/project-keeper/issues/330
             run: |
-              mvn --batch-mode --threads 1C install \
+              ./mvnw --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
                   -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
@@ -184,7 +184,7 @@ build:
             id: install-project-keeper
             # Required for running PK verify-release
             run: |
-              mvn --batch-mode --threads 1C install \
+              ./mvnw --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
                   -DossindexSkip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true

@@ -9,11 +9,12 @@ import org.junit.jupiter.api.Test;
 import com.exasol.projectkeeper.validators.files.FileTemplate.Validation;
 
 import nl.jqno.equalsverifier.EqualsVerifier;
+import nl.jqno.equalsverifier.Warning;
 
 class FileTemplateFromResourceTest {
     @Test
     void testEqualsContract() {
-        EqualsVerifier.forClass(FileTemplateFromResource.class).verify();
+        EqualsVerifier.forClass(FileTemplateFromResource.class).suppress(Warning.NONFINAL_FIELDS).verify();
     }
 
     @Test
@@ -28,8 +29,7 @@ class FileTemplateFromResourceTest {
 
     @Test
     void rejectsReplacingTheSameKey() {
-        final FileTemplateFromResource testee = testee();
-        testee.replacing("key", "value1");
+        final FileTemplateFromResource testee = testee().replacing("key", "value1");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> testee.replacing("key", "value2"));
         assertThat(exception.getMessage(), equalTo(

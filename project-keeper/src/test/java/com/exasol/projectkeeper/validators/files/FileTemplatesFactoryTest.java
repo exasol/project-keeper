@@ -35,11 +35,12 @@ class FileTemplatesFactoryTest {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
         final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
-        assertContainsTemplate(templates, ".github/workflows/ci-build.yml");
-        assertContainsTemplate(templates, ".vscode/settings.json");
         final Optional<FileTemplate> gitattributes = findTemplate(templates, ".gitattributes");
-        assertTrue(gitattributes.isPresent());
-        assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom"));
+        assertAll(
+                () -> assertContainsTemplate(templates, ".github/workflows/ci-build.yml"),
+                () -> assertContainsTemplate(templates, ".vscode/settings.json"),
+                () -> assertTrue(gitattributes.isPresent()),
+                () -> assertThat(gitattributes.get().getContent(), containsString("pk_generated_parent.pom")));
     }
 
     // [utest->dsn~dependency-updater.workflow.generate~1]

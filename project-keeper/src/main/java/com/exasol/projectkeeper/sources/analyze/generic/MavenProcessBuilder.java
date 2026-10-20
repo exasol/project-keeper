@@ -4,37 +4,38 @@ import static java.util.Arrays.asList;
 
 import java.nio.file.Path;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import com.exasol.projectkeeper.OsCheck;
 
 /**
- * This class allows building and starting a {@code mvn} command.
+ * This class allows building and starting a project-local Maven Wrapper command.
  */
 public class MavenProcessBuilder {
     private final List<String> args = new ArrayList<>();
+    private final Path projectDirectory;
     private Path workingDir = null;
     private Duration timeout = null;
 
-    private MavenProcessBuilder() {
-        // Use create() method
+    private MavenProcessBuilder(final Path projectDirectory) {
+        this.projectDirectory = Objects.requireNonNull(projectDirectory, "projectDirectory");
     }
 
     /**
      * Create a new builder.
      * 
+     * @param projectDirectory the project directory
      * @return new builder
      */
-    public static MavenProcessBuilder create() {
-        final MavenProcessBuilder builder = new MavenProcessBuilder();
+    public static MavenProcessBuilder create(final Path projectDirectory) {
+        final MavenProcessBuilder builder = new MavenProcessBuilder(projectDirectory);
         builder.addArgument("--batch-mode");
         return builder;
     }
 
     /**
      * Add the given arguments to the command.
-     * 
+     *
      * @param arguments arguments to add
      * @return {@code this} for fluent programming
      */
@@ -45,7 +46,7 @@ public class MavenProcessBuilder {
 
     /**
      * Add the given argument to the command.
-     * 
+     *
      * @param argument argument to add
      * @return {@code this} for fluent programming
      */
@@ -56,7 +57,7 @@ public class MavenProcessBuilder {
 
     /**
      * Define the working directory where to execute the command. Default: {@code null}.
-     * 
+     *
      * @param workingDir working dir
      * @return {@code this} for fluent programming
      */
@@ -67,7 +68,7 @@ public class MavenProcessBuilder {
 
     /**
      * Set the timeout for running the process.
-     * 
+     *
      * @param timeout process timeout
      * @return {@code this} for fluent programming
      */
@@ -78,7 +79,7 @@ public class MavenProcessBuilder {
 
     /**
      * Build a {@link ShellCommand} that can be started with {@link CommandExecutor}.
-     * 
+     *
      * @return the built command
      */
     public ShellCommand buildCommand() {
@@ -89,7 +90,7 @@ public class MavenProcessBuilder {
                 .build();
     }
 
-    private static String getMavenExecutable() {
-        return "mvn" + OsCheck.suffix(".cmd");
+    private String getMavenExecutable() {
+        return OsCheck.getMavenWrapperPath(this.projectDirectory).toString();
     }
 }

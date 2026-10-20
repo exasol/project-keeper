@@ -18,7 +18,6 @@ import com.exasol.projectkeeper.sources.*;
 class FileTemplatesFactory {
     private static final String POM_FILES_GENERATED = String.format("%-65s%s", "pk_generated_parent.pom",
             "linguist-generated=true");
-
     private final Logger logger;
     private final String ownVersion;
     private final boolean hasNpmModule;

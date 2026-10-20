@@ -22,6 +22,7 @@ import com.exasol.projectkeeper.shared.dependencies.ProjectDependency;
 import com.exasol.projectkeeper.shared.dependencychanges.NewDependency;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.CrawledMavenProject;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 import com.exasol.projectkeeper.test.TestMavenModel;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
@@ -32,6 +33,9 @@ class JavaProjectCrawlerRunnerIT {
     private static final String DEPENDENCY_VERSION = "0.4.1";
     private static Path testMavenRepo;
 
+    @TempDir
+    Path tempDir;
+
     @BeforeAll
     static void beforeAll() {
         final MavenIntegrationTestEnvironment testEnv = TestEnvBuilder.getTestEnv();
@@ -39,7 +43,8 @@ class JavaProjectCrawlerRunnerIT {
     }
 
     @Test
-    void testGetDependencyChanges(@TempDir final Path tempDir) throws GitAPIException {
+    // [itest->dsn~maven-wrapper~1]
+    void testGetDependencyChanges() throws GitAPIException {
         Git.init().setDirectory(tempDir.toFile()).call().close();
         final Path pomFile = tempDir.resolve("pom.xml");
         writePomFile(pomFile);
@@ -60,22 +65,23 @@ class JavaProjectCrawlerRunnerIT {
         );
     }
 
-    MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
-        return new JavaProjectCrawlerRunner(testMavenRepo, TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFiles);
+    private MavenProjectCrawlResult crawlProject(final Path... pomFiles) {
+        MavenWrapperTestHelper.install(tempDir);
+        return new JavaProjectCrawlerRunner(tempDir, testMavenRepo, TestEnvBuilder.CURRENT_VERSION).crawlProject(pomFiles);
     }
 
     @Test
     void testGetDependencyChangesFailsForEmptyPomList() {
         final IllegalStateException exception = assertThrows(IllegalStateException.class, this::crawlProject);
-        assertThat(exception.getMessage(), containsString(
-                "E-PK-MPC-64: Property 'projectsToCrawl' is not defined or empty. Specify property with least one pom file."));
+        assertThat(exception.getMessage(),
+                containsString("E-PK-MPC-64: Property 'projectsToCrawl' is not defined or empty. Specify property with least one pom file."));
     }
 
     @Test
     void testGetDependencyChangesFailsForMissingPom() {
-        final Path missingPomFile = Path.of("missing-pom-file");
+        final Path missingPomFile = tempDir.resolve("missing-pom-file");
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
-                () -> this.crawlProject(missingPomFile));
+                () -> crawlProject(missingPomFile));
         assertThat(exception.getMessage(),
                 allOf(containsString("[FATAL] Non-readable POM"), containsString(missingPomFile.toString())));
     }

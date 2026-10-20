@@ -39,7 +39,7 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
 
     @Override
     public List<AnalyzedSource> analyze(final Path projectDir, final List<Source> sources) {
-        final Map<String, CrawledMavenProject> crawledMvnSources = runCrawlerForMvnSources(sources);
+        final Map<String, CrawledMavenProject> crawledMvnSources = runCrawlerForMvnSources(projectDir, sources);
         return sources.stream().map((final Source source) -> analyzeSource(projectDir, source, crawledMvnSources))
                 .toList();
     }
@@ -54,13 +54,13 @@ public class MavenSourceAnalyzer implements LanguageSpecificSourceAnalyzer {
      * @param sources list of sources
      * @return crawled maven sources
      */
-    private Map<String, CrawledMavenProject> runCrawlerForMvnSources(final List<Source> sources) {
+    private Map<String, CrawledMavenProject> runCrawlerForMvnSources(final Path projectDir, final List<Source> sources) {
         final List<Path> mvnSourcePaths = sources.stream().filter(source -> MAVEN.equals(source.getType()))
                 .map(Source::getPath).toList();
         if (mvnSourcePaths.isEmpty()) {
             return emptyMap();
         } else {
-            return new JavaProjectCrawlerRunner(this.mvnRepositoryOverride, this.ownVersion)
+            return new JavaProjectCrawlerRunner(projectDir, this.mvnRepositoryOverride, this.ownVersion)
                     .crawlProject(mvnSourcePaths.toArray(Path[]::new)).getCrawledProjects();
         }
     }

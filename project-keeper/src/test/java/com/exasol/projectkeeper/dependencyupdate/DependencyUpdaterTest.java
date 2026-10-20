@@ -77,7 +77,7 @@ class DependencyUpdaterTest {
         final ShellCommand updateProperties = commands.get(1);
         assertThat(useLatestVersion.workingDir().get(), equalTo(PROJECT_DIR));
         assertThat(updateProperties.workingDir().get(), equalTo(PROJECT_DIR));
-        final String mavenExecutable = "mvn" + OsCheck.suffix(".cmd");
+        final String mavenExecutable = OsCheck.getMavenWrapperPath(PROJECT_DIR).toString();
         assertThat(useLatestVersion.commandLine(),
                 Matchers.contains(mavenExecutable, "--batch-mode", "versions:use-latest-releases"));
         assertThat(updateProperties.commandLine(),

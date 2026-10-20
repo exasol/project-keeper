@@ -10,6 +10,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
@@ -32,6 +33,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
+import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFile;
 import com.exasol.projectkeeper.validators.pom.PomFileIO;
@@ -66,6 +68,9 @@ class ProjectKeeperMojoIT {
         verifier = mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
         // Ossindex requires credentials, skip it in tests
         verifier.setSystemProperty("ossindexSkip", "true");
+        // Tests use the system installed Maven for bootstrapping, which maybe an older version as the Maven Wrapper.
+        // Therefore, skip Maven version checks in tests.
+        verifier.setSystemProperty("enforcer.skip", "true");
     }
 
     @AfterEach
@@ -93,6 +98,38 @@ class ProjectKeeperMojoIT {
                 () -> assertThat(output, containsString("Validation failed. See above.")),
                 () -> assertThat(output, containsString("[ERROR] E-PK-CORE-17"))//
         );
+    }
+
+    @Test
+    // [itest->dsn~maven-wrapper~1]
+    void testFixBootstrapsAndCreatesUsableMavenWrapper() throws Exception {
+        writeProjectKeeperConfig("""
+                sources:
+                  - type: maven
+                    path: pom.xml
+                """);
+
+        verifier.executeGoal("project-keeper:fix");
+
+        assertAll(() -> assertThat(this.projectDir.resolve("mvnw").toFile(), anExistingFile()),
+                () -> assertThat(this.projectDir.resolve("mvnw.cmd").toFile(), anExistingFile()),
+                () -> assertThat(this.projectDir.resolve(".mvn/wrapper/maven-wrapper.properties").toFile(),
+                        anExistingFile()));
+        if (!OsCheck.isWindows()) {
+            assertThat(Files.isExecutable(this.projectDir.resolve("mvnw")), equalTo(true));
+        }
+        assertGeneratedWrapperRuns();
+    }
+
+    private void assertGeneratedWrapperRuns() throws IOException {
+        final List<String> command = OsCheck.isWindows()
+                ? List.of("cmd", "/c", this.projectDir.resolve("mvnw.cmd").toString(), "--version")
+                : List.of(this.projectDir.resolve("mvnw").toString(), "--version");
+        final Process process = new ProcessBuilder(command).directory(this.projectDir.toFile()).redirectErrorStream(true)
+                .start();
+        final String output = new String(process.getInputStream().readAllBytes(), StandardCharsets.UTF_8);
+        assertAll(() -> assertThat(process.waitFor(), equalTo(0)),
+                () -> assertThat(output, containsString("Apache Maven")));
     }
 
     private void writeSecurityMdFile() throws IOException {

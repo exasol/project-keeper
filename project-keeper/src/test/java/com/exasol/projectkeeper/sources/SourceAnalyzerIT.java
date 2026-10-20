@@ -6,7 +6,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
@@ -22,6 +21,7 @@ import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import com.exasol.projectkeeper.TestEnvBuilder;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperModule;
 import com.exasol.projectkeeper.shared.config.Source;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 import com.exasol.projectkeeper.test.TestMavenModel;
 
 @Tag("integration")
@@ -32,8 +32,9 @@ class SourceAnalyzerIT {
     Path tempDir;
 
     @Test
-    void testAnalyze() throws IOException, GitAPIException {
+    void testAnalyze() throws IllegalStateException, GitAPIException {
         Git.init().setDirectory(this.tempDir.toFile()).call().close();
+        MavenWrapperTestHelper.install(this.tempDir);
         new TestMavenModel().writeAsPomToProject(this.tempDir);
         final Path path = this.tempDir.resolve("pom.xml");
         final List<AnalyzedSource> result = SourceAnalyzer

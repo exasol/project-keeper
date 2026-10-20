@@ -92,7 +92,7 @@ public class DependencyUpdater {
     }
 
     private void runMaven(final String mavenGoal) {
-        final ShellCommand command = MavenProcessBuilder.create().addArgument(mavenGoal).workingDir(projectDir)
+        final ShellCommand command = MavenProcessBuilder.create(projectDir).addArgument(mavenGoal).workingDir(projectDir)
                 .timeout(MAVEN_COMMAND_TIMEOUT).buildCommand();
         commandExecutor.execute(command);
     }

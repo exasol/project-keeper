@@ -145,6 +145,25 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     }
 
     @Test
+    // [itest->dsn~maven-wrapper~1]
+    void testFixBootstrapsMissingMavenWrapperBeforeSourceAnalysis() {
+        final var pom = new TestMavenModel();
+        pom.configureAssemblyPluginFinalName();
+        pom.writeAsPomToProject(this.projectDir);
+        this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
+
+        runFix();
+
+        assertAll(() -> assertThat(this.projectDir.resolve("mvnw").toFile(), anExistingFile()),
+                () -> assertThat(this.projectDir.resolve("mvnw.cmd").toFile(), anExistingFile()),
+                () -> assertThat(this.projectDir.resolve(".mvn/wrapper/maven-wrapper.properties").toFile(),
+                        anExistingFile()));
+        if (!OsCheck.isWindows()) {
+            assertThat(Files.isExecutable(this.projectDir.resolve("mvnw")), equalTo(true));
+        }
+    }
+
+    @Test
     void testValidAfterFix() {
         final var pom = new TestMavenModel();
         pom.configureAssemblyPluginFinalName();

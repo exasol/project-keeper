@@ -102,6 +102,7 @@ class MavenProjectCrawlerMojoIT {
     }
 
     private CrawledMavenProject runCrawler(final Path projectDir) throws VerificationException, IOException {
+        installMavenWrapper();
         final Verifier verifier = TEST_ENV.getVerifier(this.tempDir);
         verifier.setAutoclean(false);
         final String path = projectDir.resolve("pom.xml").toAbsolutePath().toString();
@@ -111,5 +112,20 @@ class MavenProjectCrawlerMojoIT {
         final String response = new ResponseCoder().decodeResponse(output);
         verifier.resetStreams();
         return MavenProjectCrawlResult.fromJson(response).getCrawledProjects().get(path);
+    }
+
+    private void installMavenWrapper() throws IOException {
+        // MavenWrapperTestHelper cannot be used here because its wrapper templates are resources of the
+        // project-keeper module, which is not on this module's test classpath.
+        final Path projectRoot = Path.of("..").toAbsolutePath();
+        final Path wrapper = this.tempDir.resolve("mvnw");
+        Files.copy(projectRoot.resolve("mvnw"), wrapper);
+        if (!wrapper.toFile().setExecutable(true)) {
+            throw new IOException("Failed to make Maven Wrapper executable: " + wrapper);
+        }
+        Files.copy(projectRoot.resolve("mvnw.cmd"), this.tempDir.resolve("mvnw.cmd"));
+        final Path wrapperProperties = this.tempDir.resolve(".mvn/wrapper/maven-wrapper.properties");
+        Files.createDirectories(wrapperProperties.getParent());
+        Files.copy(projectRoot.resolve(".mvn/wrapper/maven-wrapper.properties"), wrapperProperties);
     }
 }

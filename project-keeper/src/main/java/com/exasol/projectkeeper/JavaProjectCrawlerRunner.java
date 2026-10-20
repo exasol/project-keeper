@@ -13,17 +13,20 @@ import com.exasol.projectkeeper.sources.analyze.generic.*;
  * Runs the maven plugin goal on the current repository and returns the parsed result.
  */
 public class JavaProjectCrawlerRunner {
+    private final Path projectDirectory;
     private final Path mvnRepositoryOverride;
     private final String ownVersion;
 
     /**
      * Create a new instance of {@link JavaProjectCrawlerRunner}.
      *
+     * @param projectDirectory      the project directory
      * @param mvnRepositoryOverride Maven repository override. This is useful for running integration tests. Use
      *                              {@code null} for default.
      * @param ownVersion            project-keeper version
      */
-    public JavaProjectCrawlerRunner(final Path mvnRepositoryOverride, final String ownVersion) {
+    public JavaProjectCrawlerRunner(final Path projectDirectory, final Path mvnRepositoryOverride, final String ownVersion) {
+        this.projectDirectory = projectDirectory;
         this.mvnRepositoryOverride = mvnRepositoryOverride;
         this.ownVersion = ownVersion;
     }
@@ -46,7 +49,7 @@ public class JavaProjectCrawlerRunner {
     }
 
     private MavenProcessBuilder buildMavenCommand(final Path... pomFiles) {
-        final MavenProcessBuilder builder = MavenProcessBuilder.create()
+        final MavenProcessBuilder builder = MavenProcessBuilder.create(this.projectDirectory)
                 .addArguments(
                         "--no-transfer-progress",
                         "com.exasol:project-keeper-java-project-crawler:" + this.ownVersion + ":" + "crawl",
@@ -57,7 +60,7 @@ public class JavaProjectCrawlerRunner {
                          * comparing dependencies).
                          */
                         "-Dmaven.defaultProjectBuilder.disableGlobalModelCache=true")
-                .workingDir(null) //
+                .workingDir(this.projectDirectory)
                 .timeout(Duration.ofSeconds(90));
 
         if (this.mvnRepositoryOverride != null) {

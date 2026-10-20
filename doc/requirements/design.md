@@ -362,6 +362,34 @@ IDEs like Eclipse or VS Code modify `.settings/org.eclipse.jdt.core.prefs` when 
 
 Needs: impl, utest, itest
 
+### Maven Wrapper
+`dsn~maven-wrapper~1`
+
+For Maven-root projects, PK keeps `mvnw`, `mvnw.cmd`, and `.mvn/wrapper/maven-wrapper.properties` as exact managed templates. The wrapper uses Maven Wrapper's `only-script` distribution type. PK marks these generated files in `.gitattributes`, makes `mvnw` executable on Unix-like systems, and repairs missing or changed files.
+
+Generated Maven workflows call `./mvnw`. PK's Maven subprocesses use the project-root wrapper, retaining a module working directory where the command requires it.
+
+Rationale:
+* Using `only-script` avoids adding a binary file to the repository. The wrapper scripts require platform specify tools like `curl`, `wget` or PowerShell to download the binaries, but this is acceptable.
+
+Covers:
+
+* [`req~maven-wrapper~1`](system_requirements.md#maven-wrapper)
+
+Needs: impl, utest, itest
+
+#### Maven Distribution Checksum Validation
+`dsn~maven-distribution-checksum-validation~1`
+
+The managed `maven-wrapper.properties` defines `distributionSha256Sum` for the pinned Maven distribution. The generated Maven Wrapper scripts validate the downloaded distribution against this SHA-256 value and fail without using it when the checksum does not match.
+
+Covers:
+
+* [`req~maven-distribution-checksum-validation~1`](system_requirements.md#maven-distribution-checksum-validation)
+
+Note:
+* OpenFastTrace does not read `.properties` files, so we can't trace into `project-keeper/src/main/resources/templates/.mvn/wrapper/maven-wrapper.properties`. See [openfasttrace#637](https://github.com/itsallcode/openfasttrace/issues/637) for the proposed fix.
+
 ## Non-Maven Integration
 `dsn~pk-verify-workflow~1`
 

@@ -31,3 +31,10 @@ parent-pom/.settings/org.eclipse.jdt.core.prefs                                 
 parent-pom/.settings/org.eclipse.jdt.ui.prefs                                    linguist-generated=true
 
 project-keeper-cli/src/assembly/all-dependencies.xml                             linguist-generated=true
+
+/mvnw                                  linguist-generated=true
+/mvnw.cmd                              linguist-generated=true
+/.mvn/wrapper/maven-wrapper.properties linguist-generated=true
+project-keeper/src/main/resources/templates/mvnw                                  linguist-generated=false
+project-keeper/src/main/resources/templates/mvnw.cmd                              linguist-generated=false
+project-keeper/src/main/resources/templates/.mvn/wrapper/maven-wrapper.properties linguist-generated=false

@@ -80,7 +80,8 @@ public class ProjectFilesValidator implements Validator {
     private List<ValidationFinding> validate(final Path projectDirectory, final FileTemplate template) {
         final Path projectFile = projectDirectory.resolve(template.getPathInProject());
         final ContentValidator contentValidator = getContentValidator(template);
-        return new RequiredFileValidator().validateFile(projectDirectory, projectFile, contentValidator);
+        return new RequiredFileValidator().validateFile(projectDirectory, projectFile, contentValidator,
+                template.requiresExecutablePermission());
     }
 
     private ContentValidator getContentValidator(final FileTemplate template) {

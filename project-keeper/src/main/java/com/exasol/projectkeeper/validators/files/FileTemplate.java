@@ -26,6 +26,15 @@ public interface FileTemplate {
     Validation getValidation();
 
     /**
+     * Check that the file is executable on platforms that support executable file permissions.
+     *
+     * @return {@code true} if the template represents an executable script
+     */
+    default boolean requiresExecutablePermission() {
+        return false;
+    }
+
+    /**
      * Types of templates.
      */
     public enum Validation {

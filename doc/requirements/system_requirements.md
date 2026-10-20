@@ -287,6 +287,30 @@ More and more libraries and tools for Java don't support Java 11 anymore, only J
 
 Needs: dsn
 
+#### Maven Wrapper
+`req~maven-wrapper~1`
+
+PK generates and verifies Maven Wrapper files for Maven-root projects so local commands, Project Keeper's Maven subprocesses, and generated GitHub workflows use the same pinned Maven version.
+
+Rationale:
+
+* Ensures using the same Maven version locally and in CI, avoiding issues like [#599](https://github.com/exasol/project-keeper/issues/599) or [#585](https://github.com/exasol/project-keeper/issues/585).
+* Allows updating the Maven version independently of the verison provided by GitHub action runner.
+* CI builds automatically cache Maven Wrapper om `~/.m2/wrapper/dists` with option `cache: maven` for `actions/setup-java`.
+
+Needs: dsn
+
+#### Maven Distribution Checksum Validation
+`req~maven-distribution-checksum-validation~1`
+
+PK generates Maven Wrapper configuration that validates the SHA-256 checksum of the downloaded Maven distribution before using it.
+
+Rationale:
+
+* Detects an inconsistent or tampered Maven distribution download before it is used.
+
+Needs: dsn
+
 #### JPMS-Safe Fat JARs
 `req~mvn-jpms-safe-fat-jars~1`
 

@@ -42,6 +42,9 @@ jobs:
           java-version: 11
           components: "native-image"
           github-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Prepare Maven Wrapper
+        id: prepare-maven-wrapper
+        run: MVNW_VERBOSE=true ./mvnw -version
       - name: Enable testcontainer reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
       - name: Cache local Maven repository
@@ -52,7 +55,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
       - name: Run tests and build with Maven
-        run: mvn --batch-mode --update-snapshots clean verify --file pom.xml -DtrimStackTrace=false
+        run: ./mvnw --batch-mode --update-snapshots clean verify --file pom.xml -DtrimStackTrace=false
       - name: Cache SonarCloud packages
         uses: actions/cache@v6
         with:
@@ -63,7 +66,7 @@ jobs:
         id: sonar-analysis
         if: ${{ env.SONAR_TOKEN != null && matrix.os == 'ubuntu-latest' }}
         run: |
-          mvn --batch-mode sonar:sonar \
+          ./mvnw --batch-mode sonar:sonar \
               --no-transfer-progress \
               -DtrimStackTrace=false \
               -Dsonar.token=$SONAR_TOKEN

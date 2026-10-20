@@ -104,6 +104,11 @@ jobs:
             17
             21
           cache: maven
+      - {
+        name: Prepare Maven Wrapper,
+        id: prepare-maven-wrapper,
+        run: MVNW_VERBOSE=true ./mvnw -version
+      }
       - name: Fail if not running on main or release branch
         id: check-main-or-release-branch
         if: ${{ github.ref != 'refs/heads/main' && !startsWith(github.ref, 'refs/heads/release/') }}
@@ -138,14 +143,14 @@ jobs:
       - name: Install Project Keeper
         id: install-project-keeper
         run: |
-          mvn --batch-mode --threads 1C install \
+          ./mvnw --batch-mode --threads 1C install \
               -Dmaven.test.skip=true -Dproject-keeper.skip=true \
               -DossindexSkip=true -Dmaven.javadoc.skip=true \
               -Derror-code-crawler.skip=true -Dreproducible.skip=true
       - name: Verify release preconditions
         id: verify-release
         run: |
-          mvn --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .
+          ./mvnw --batch-mode com.exasol:project-keeper-maven-plugin:verify-release --projects .
           echo "$GITHUB_OUTPUT"
         env: {
           GITHUB_TOKEN: '${{ github.token }}'
@@ -153,7 +158,7 @@ jobs:
       - {
         name: Build project,
         id: build,
-        run: mvn --batch-mode -DskipTests -DskipITs -DossindexSkip=true clean verify
+        run: ./mvnw --batch-mode -DskipTests -DskipITs -DossindexSkip=true clean verify
       }
       - {
         name: List secret GPG keys,
@@ -166,7 +171,7 @@ jobs:
         if: ${{ true && (! inputs.skip-maven-central) }}
         run: |
           echo "#### Maven Central Release" >> "$GITHUB_STEP_SUMMARY"
-          mvn --batch-mode -Dgpg.skip=false -DskipTests -DskipITs -DossindexSkip=true deploy \
+          ./mvnw --batch-mode -Dgpg.skip=false -DskipTests -DskipITs -DossindexSkip=true deploy \
               -Dcentral-publishing.deploymentName="Auto release of repo ${{ github.repository }} using PK release.yml" \
               -Dcentral-publishing.autoPublish=${{ inputs.maven-central-auto-publish }}
           if [[ "${{ inputs.maven-central-auto-publish }}" == "true" ]]; then

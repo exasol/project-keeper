@@ -19,6 +19,7 @@ import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig;
 import com.exasol.projectkeeper.shared.config.ProjectKeeperConfig.Builder;
 import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 import com.exasol.projectkeeper.test.TestMavenModel;
 
 @Tag("integration")
@@ -33,6 +34,7 @@ class DependenciesValidatorIT extends ProjectKeeperAbstractMavenIT {
     void setup() {
         this.fixture = new MavenProjectFixture(this.projectDir);
         this.fixture.gitInit();
+        MavenWrapperTestHelper.install(this.projectDir);
         this.dependenciesFile = this.projectDir.resolve("dependencies.md");
     }
 

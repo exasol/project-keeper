@@ -23,6 +23,7 @@ import com.exasol.mavenprojectversiongetter.MavenProjectVersionGetter;
 import com.exasol.projectkeeper.sources.analyze.generic.SimpleProcess;
 import com.exasol.projectkeeper.test.GolangProjectFixture;
 import com.exasol.projectkeeper.test.MavenProjectFixture;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 
 class ProjectKeeperLauncherExecutableJarIT {
     private static final Logger LOGGER = Logger.getLogger(ProjectKeeperLauncherExecutableJarIT.class.getName());
@@ -57,6 +58,7 @@ class ProjectKeeperLauncherExecutableJarIT {
         LOGGER.info("Preparing Maven project in " + this.projectDir);
         final MavenProjectFixture fixture = new MavenProjectFixture(this.projectDir);
         fixture.gitInit();
+        MavenWrapperTestHelper.install(this.projectDir);
         fixture.writeConfig(fixture.getConfigWithoutModulesBuilder());
         fixture.writeDefaultPom();
         return fixture;

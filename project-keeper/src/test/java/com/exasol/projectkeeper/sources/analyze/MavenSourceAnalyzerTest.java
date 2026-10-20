@@ -9,10 +9,12 @@ import java.nio.file.Path;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import com.exasol.projectkeeper.shared.config.Source;
 import com.exasol.projectkeeper.shared.config.SourceType;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
+import com.exasol.projectkeeper.test.MavenWrapperTestHelper;
 
 class MavenSourceAnalyzerTest {
     private static final Path PROJECT_DIR = Path.of("dir");
@@ -25,14 +27,11 @@ class MavenSourceAnalyzerTest {
     }
 
     @Test
-    void analyzingSourcesWithInvalidOwnVersionFails() {
+    void analyzingSourcesWithoutMavenWrapperFails() {
         final List<Source> mavenSources = createMavenSources();
         final IllegalStateException exception = assertThrows(IllegalStateException.class,
                 () -> analyze(OWN_VERSION, mavenSources));
-        assertThat(exception.getMessage(),
-                allOf(containsString("E-PK-CORE-126: Failed to run command"),
-                        containsString("[ERROR] Plugin com.exasol:project-keeper-java-project-crawler:" + OWN_VERSION
-                                + " or one of its dependencies could not be resolved")));
+        assertThat(exception.getMessage(), startsWith("E-PK-CORE-125: Error executing command '"));
     }
 
     @Test
@@ -45,11 +44,27 @@ class MavenSourceAnalyzerTest {
                         + " This is an internal error that should not happen. Please report it by opening a GitHub issue."));
     }
 
+    @Test
+    void analyzingSourcesWithInvalidOwnVersionFails(@TempDir final Path tempDir) {
+        MavenWrapperTestHelper.install(tempDir);
+        final List<Source> mavenSources = createMavenSources();
+        final IllegalStateException exception = assertThrows(IllegalStateException.class,
+                () -> analyze(OWN_VERSION, mavenSources, tempDir));
+        assertThat(exception.getMessage(),
+                allOf(containsString("E-PK-CORE-126: Failed to run command"),
+                        containsString("[ERROR] Plugin com.exasol:project-keeper-java-project-crawler:" + OWN_VERSION
+                                + " or one of its dependencies could not be resolved")));
+    }
+
     private List<Source> createMavenSources() {
         return List.of(Source.builder().type(SourceType.MAVEN).path(PROJECT_DIR.resolve("pom.xml")).build());
     }
 
     private List<AnalyzedSource> analyze(final String ownVersion, final List<Source> sources) {
-        return new MavenSourceAnalyzer(null, ownVersion).analyze(PROJECT_DIR, sources);
+        return analyze(ownVersion, sources, PROJECT_DIR);
+    }
+
+    private List<AnalyzedSource> analyze(final String ownVersion, final List<Source> sources, final Path projectDir) {
+        return new MavenSourceAnalyzer(null, ownVersion).analyze(projectDir, sources);
     }
 }

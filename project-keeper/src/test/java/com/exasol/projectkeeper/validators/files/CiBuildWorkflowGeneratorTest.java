@@ -64,7 +64,7 @@ class CiBuildWorkflowGeneratorTest {
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
         assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
                 () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
-                () -> assertThat(stepIds, contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
+                () -> assertThat(stepIds, contains("free-disk-space", "checkout", "setup-java", "prepare-maven-wrapper", "cache-sonar",
                         "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
                         "verify-release-artifacts", "upload-artifacts", "configure-link-check", "run-link-check")));
     }
@@ -81,7 +81,7 @@ class CiBuildWorkflowGeneratorTest {
         final List<String> stepIds = job.getSteps().stream().map(Step::getId).toList();
         assertAll(() -> assertThat(job.getSteps(), hasSize(greaterThanOrEqualTo(10))),
                 () -> assertThat(job.getStep("inserted-step").getName(), equalTo("Inserted Step")),
-                () -> assertThat(stepIds, contains("free-disk-space", "checkout", "setup-java", "cache-sonar",
+                () -> assertThat(stepIds, contains("free-disk-space", "checkout", "setup-java", "prepare-maven-wrapper", "cache-sonar",
                         "enable-testcontainer-reuse", "build-pk-verify", "sonar-analysis", "inserted-step",
                         "verify-release-artifacts", "upload-artifacts", "configure-link-check", "run-link-check")));
     }
@@ -183,7 +183,7 @@ class CiBuildWorkflowGeneratorTest {
         final Job job = releaseBuildContent(BuildOptions.builder().build(),
                 AnalyzedMavenSource.builder().modules(Set.of(MAVEN_CENTRAL)).build()).getJob("release");
         assertAll( //
-                () -> assertThat(job.getSteps(), hasSize(13)),
+                () -> assertThat(job.getSteps(), hasSize(14)),
                 () -> assertThat(job.getStep("configure-maven-central-credentials").getIfCondition(),
                         equalTo("${{ true }}")),
                 () -> assertThat(job.getStep("configure-maven-central-credentials").getWith(), allOf(
@@ -202,7 +202,7 @@ class CiBuildWorkflowGeneratorTest {
         final Job job = releaseBuildContent(BuildOptions.builder().build(), AnalyzedMavenSource.builder().build())
                 .getJob("release");
         assertAll( //
-                () -> assertThat(job.getSteps(), hasSize(13)),
+                () -> assertThat(job.getSteps(), hasSize(14)),
                 () -> assertThat(job.getStep("configure-maven-central-credentials").getIfCondition(),
                         equalTo("${{ false }}")),
                 () -> assertThat(job.getStep("setup-jdks").getIfCondition(), equalTo("${{ ! false }}")),
@@ -221,7 +221,7 @@ class CiBuildWorkflowGeneratorTest {
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("release");
-        assertAll(() -> assertThat(job.getSteps(), hasSize(14)),
+        assertAll(() -> assertThat(job.getSteps(), hasSize(15)),
                 () -> assertThat(job.getStep("new-step").getName(), equalTo("New Step")));
     }
 
@@ -235,7 +235,7 @@ class CiBuildWorkflowGeneratorTest {
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("report_security_issues");
-        assertAll(() -> assertThat(job.getSteps(), hasSize(6)),
+        assertAll(() -> assertThat(job.getSteps(), hasSize(7)),
                 () -> assertThat(job.getStep("new-step").getName(), equalTo("New Step")));
     }
 
@@ -249,7 +249,7 @@ class CiBuildWorkflowGeneratorTest {
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("update_dependencies");
-        assertAll(() -> assertThat(job.getSteps(), hasSize(14)),
+        assertAll(() -> assertThat(job.getSteps(), hasSize(15)),
                 () -> assertThat(job.getStep("new-step").getName(), equalTo("New Step")));
     }
 
