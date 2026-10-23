@@ -5,14 +5,20 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
+import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.MavenProjectCrawlResult;
 import com.exasol.projectkeeper.shared.mavenprojectcrawler.ResponseCoder;
 import com.exasol.projectkeeper.sources.analyze.generic.*;
 
 /**
  * Runs the maven plugin goal on the current repository and returns the parsed result.
+ * <p>
+ * The crawler times out after {@link #DEFAULT_TIMEOUT}. Users can change this with system property
+ * {@value #TIMEOUT_PROPERTY} (in seconds).
  */
 public class JavaProjectCrawlerRunner {
+    static final String TIMEOUT_PROPERTY = "project-keeper.crawlerTimeout";
+    static final Duration DEFAULT_TIMEOUT = Duration.ofSeconds(120);
     private final Path projectDirectory;
     private final Path mvnRepositoryOverride;
     private final String ownVersion;
@@ -61,12 +67,37 @@ public class JavaProjectCrawlerRunner {
                          */
                         "-Dmaven.defaultProjectBuilder.disableGlobalModelCache=true")
                 .workingDir(this.projectDirectory)
-                .timeout(Duration.ofSeconds(90));
+                .timeout(readTimeout());
 
         if (this.mvnRepositoryOverride != null) {
             builder.addArgument("-Dmaven.repo.local=" + this.mvnRepositoryOverride);
         }
         return builder;
+    }
+
+    static Duration readTimeout() {
+        final String value = System.getProperty(TIMEOUT_PROPERTY);
+        if ((value == null) || value.isBlank()) {
+            return DEFAULT_TIMEOUT;
+        }
+        final long seconds;
+        try {
+            seconds = Long.parseLong(value.trim());
+        } catch (final NumberFormatException exception) {
+            throw invalidTimeout(value, exception);
+        }
+        if (seconds <= 0) {
+            throw invalidTimeout(value, null);
+        }
+        return Duration.ofSeconds(seconds);
+    }
+
+    private static IllegalArgumentException invalidTimeout(final String value, final Exception cause) {
+        return new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-216")
+                .message("Invalid value {{value}} for system property {{property}}.", value, TIMEOUT_PROPERTY)
+                .mitigation("Specify the crawler timeout as a positive number of seconds, e.g. {{example}}.",
+                        "-D" + TIMEOUT_PROPERTY + "=180")
+                .toString(), cause);
     }
 
     private static String getProjectList(final Path... pomFiles) {

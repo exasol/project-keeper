@@ -2,7 +2,9 @@ package com.exasol.projectkeeper.pom;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
@@ -18,12 +20,16 @@ import com.exasol.errorreporting.ExaError;
 /**
  * Read a maven {@link Model} from an artifact of the maven repository using the {@link ProjectBuilder} that is injected
  * by Maven core to Mojo.
+ * <p>
+ * Models are cached by their coordinates, because the same artifacts (e.g. common plugins) are used by many modules of a
+ * multi-module project. Artifacts in a repository are immutable, so the cached model stays valid for the whole run.
  */
 public class MavenModelFromRepositoryReader {
     private static final String POM_ARTIFACT_TYPE = "pom";
     private final ProjectBuilder mavenProjectBuilder;
     private final ArtifactHandlerManager artifactHandlerManager;
     private final ProjectBuildingRequest projectBuildingRequest;
+    private final Map<Coordinates, Model> modelCache = new HashMap<>();
 
     /**
      * Create a new instance of {@link MavenModelFromRepositoryReader}.
@@ -61,11 +67,28 @@ public class MavenModelFromRepositoryReader {
                             groupId, artifactId, this.projectBuildingRequest.getProject().getName())
                     .toString());
         }
-        final Artifact artifactDescription = new DefaultArtifact(groupId, artifactId, version, null,
-                POM_ARTIFACT_TYPE, null, this.artifactHandlerManager.getArtifactHandler(POM_ARTIFACT_TYPE));
+        final Coordinates coordinates = new Coordinates(groupId, artifactId, version);
+        final Model cachedModel = this.modelCache.get(coordinates);
+        if (cachedModel != null) {
+            return cachedModel;
+        }
+        final Model model = buildModel(coordinates, remoteRepositories);
+        this.modelCache.put(coordinates, model);
+        return model;
+    }
+
+    @SuppressWarnings("deprecation") // Maven class ArtifactRepository is deprecated
+    private Model buildModel(final Coordinates coordinates, final List<ArtifactRepository> remoteRepositories)
+            throws ProjectBuildingException {
+        final Artifact artifactDescription = new DefaultArtifact(coordinates.groupId(), coordinates.artifactId(),
+                coordinates.version(), null, POM_ARTIFACT_TYPE, null,
+                this.artifactHandlerManager.getArtifactHandler(POM_ARTIFACT_TYPE));
         this.projectBuildingRequest.setRemoteRepositories(remoteRepositories);
         final ProjectBuildingResult build = this.mavenProjectBuilder.build(artifactDescription, true,
                 this.projectBuildingRequest);
         return build.getProject().getModel();
+    }
+
+    private record Coordinates(String groupId, String artifactId, String version) {
     }
 }
