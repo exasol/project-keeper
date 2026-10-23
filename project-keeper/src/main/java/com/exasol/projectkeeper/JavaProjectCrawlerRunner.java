@@ -80,14 +80,24 @@ public class JavaProjectCrawlerRunner {
         if ((value == null) || value.isBlank()) {
             return DEFAULT_TIMEOUT;
         }
-        if (!value.trim().matches("[1-9]\\d{0,8}")) {
-            throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-216")
-                    .message("Invalid value {{value}} for system property {{property}}.", value, TIMEOUT_PROPERTY)
-                    .mitigation("Specify the crawler timeout as a positive number of seconds, e.g. {{example}}.",
-                            "-D" + TIMEOUT_PROPERTY + "=180")
-                    .toString());
+        final long seconds;
+        try {
+            seconds = Long.parseLong(value.trim());
+        } catch (final NumberFormatException exception) {
+            throw invalidTimeout(value, exception);
         }
-        return Duration.ofSeconds(Long.parseLong(value.trim()));
+        if (seconds <= 0) {
+            throw invalidTimeout(value, null);
+        }
+        return Duration.ofSeconds(seconds);
+    }
+
+    private static IllegalArgumentException invalidTimeout(final String value, final Exception cause) {
+        return new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-216")
+                .message("Invalid value {{value}} for system property {{property}}.", value, TIMEOUT_PROPERTY)
+                .mitigation("Specify the crawler timeout as a positive number of seconds, e.g. {{example}}.",
+                        "-D" + TIMEOUT_PROPERTY + "=180")
+                .toString(), cause);
     }
 
     private static String getProjectList(final Path... pomFiles) {

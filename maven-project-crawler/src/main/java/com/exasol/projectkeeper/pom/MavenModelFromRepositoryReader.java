@@ -2,7 +2,9 @@ package com.exasol.projectkeeper.pom;
 
 import static java.util.Objects.requireNonNull;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.DefaultArtifact;
