@@ -545,6 +545,20 @@ In this case add command line option `--projects .`:
 
 You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=true` to your maven command.
 
+#### Crawler Timeout
+
+To analyze Maven sources, PK runs a separate Maven process that crawls all Maven modules. This process times out after 120 seconds. Large multi-module projects or builds with an empty local Maven repository may need more time. Set system property `project-keeper.crawlerTimeout` to the timeout in seconds:
+
+```sh
+./mvnw project-keeper:verify -Dproject-keeper.crawlerTimeout=300
+```
+
+For the [standalone command line interface](#standalone-command-line-interface) use environment variable `JAVA_TOOL_OPTIONS`:
+
+```sh
+JAVA_TOOL_OPTIONS="-Dproject-keeper.crawlerTimeout=300" ./.github/workflows/project-keeper.sh verify
+```
+
 ### Standalone Command Line Interface
 
 Use the `project-keeper-cli` for analyzing non-Maven projects like Golang. PK `fix` generates a shell script that simplifies running PK standalone on the command line:
