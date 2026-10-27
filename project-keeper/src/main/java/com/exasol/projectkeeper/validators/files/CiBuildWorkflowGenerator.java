@@ -134,12 +134,6 @@ class CiBuildWorkflowGenerator {
         return createCustomizedWorkflow("dependencies_check.yml");
     }
 
-    // [impl->dsn~dependency-updater.workflow.generate~1]
-    // [impl->dsn~customize-build-process.dependency-update~0]
-    FileTemplate createDependenciesUpdateWorkflow() {
-        return createCustomizedWorkflow("dependencies_update.yml");
-    }
-
     private FileTemplate createCustomizedWorkflow(final String workflowName) {
         return createCustomizedWorkflow(workflowName, template -> {
         });

@@ -134,7 +134,7 @@ class PomFileGeneratorTest {
         assertThat(pom.getProperties().get("test.excludeTags"), nullValue());
     }
 
-    // [utest->dsn~dependency-vulnerabilities~1]
+    // [utest->dsn~dependency-vulnerabilities~2]
     @Test
     void testAddOssindexSkipPropertyForRootPom() {
         final Model pom = runGeneration(emptyList(), null);

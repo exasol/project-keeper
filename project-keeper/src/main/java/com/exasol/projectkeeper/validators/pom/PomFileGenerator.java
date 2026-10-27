@@ -188,7 +188,7 @@ public class PomFileGenerator {
                         ? dependency("org.projectlombok", "lombok", "1.18.46", "provided", null)
                         : null) //
                 .nullableChild(enabledModules.contains(UDF_COVERAGE) //
-                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.15", "test", "runtime")
+                        ? dependency("org.jacoco", "org.jacoco.agent", "0.8.16", "test", "runtime")
                         : null);
     }
 
@@ -221,7 +221,7 @@ public class PomFileGenerator {
 
         if (!hasParentPom) {
             properties.child(element("test.excludeTags").text(""))
-                    // [impl->dsn~dependency-vulnerabilities~1]
+                    // [impl->dsn~dependency-vulnerabilities~2]
                     .child(element("ossindexSkip").text("false"));
         }
 

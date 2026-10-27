@@ -15,15 +15,18 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
 /**
  * {@link Validator} that checks that specific files do not exist.
  */
-// [impl->dsn~deleted-files-validator~1]
+// [impl->dsn~deleted-files-validator~2]
 public class DeletedFilesValidator implements Validator {
     private static final String RELEASE_DROID_WORKFLOW_WARNING = "Release-droid workflows are replaced by release.yml";
     private static final String GITHUB_WORKFLOWS = ".github/workflows";
+    private static final String DEPENDENCY_UPDATE_WORKFLOW_REMOVAL_REASON =
+            "The dependency update workflow was removed; vulnerabilities are monitored by Dependabot";
     private static final Map<Path, String> FILES_THAT_MUST_NOT_EXIST = Map.of(//
             Path.of(GITHUB_WORKFLOWS, "release_droid_print_quick_checksum.yml"), RELEASE_DROID_WORKFLOW_WARNING,
             Path.of(GITHUB_WORKFLOWS, "release_droid_release_on_maven_central.yml"), RELEASE_DROID_WORKFLOW_WARNING,
             Path.of(GITHUB_WORKFLOWS, "release_droid_upload_github_release_assets.yml"), RELEASE_DROID_WORKFLOW_WARNING,
             Path.of(GITHUB_WORKFLOWS, "release_droid_prepare_original_checksum.yml"), RELEASE_DROID_WORKFLOW_WARNING,
+            Path.of(GITHUB_WORKFLOWS, "dependencies_update.yml"), DEPENDENCY_UPDATE_WORKFLOW_REMOVAL_REASON,
             Path.of(GITHUB_WORKFLOWS, "ci-build-next-java.yml"), "Next Java build is now included in ci-build.yml",
             Path.of("release_config.yml"), "Release-droid configuration is replaced by release.yml");
     private final Path projectDirectory;
