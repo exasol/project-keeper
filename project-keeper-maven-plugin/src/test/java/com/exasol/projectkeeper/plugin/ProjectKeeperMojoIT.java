@@ -28,6 +28,7 @@ import org.junit.jupiter.api.io.TempDir;
 import com.exasol.mavenpluginintegrationtesting.MavenIntegrationTestEnvironment;
 import com.exasol.projectkeeper.OsCheck;
 import com.exasol.projectkeeper.validators.SecurityMdFileValidator;
+import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 class ProjectKeeperMojoIT {
     private static final String ORIGINAL_SLF4J_VERSION = "1.7.36";
@@ -226,6 +227,10 @@ class ProjectKeeperMojoIT {
         assertAll(
                 () -> assertThat(pluginArtifactIds, hasItem("spdx-maven-plugin")),
                 () -> assertThat(pluginArtifactIds, hasItem("build-helper-maven-plugin")));
+    }
+
+    private Model readGeneratedParentPom() {
+        return new PomFileIO().readPom(this.projectDir.resolve("pk_generated_parent.pom"));
     }
 
     private void writeProjectKeeperConfig(final String content) throws IOException {
