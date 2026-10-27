@@ -70,7 +70,9 @@ class JavaVersionExtractorTest {
 
     @ParameterizedTest
     @CsvSource({ "8, 11", "9, 11", "11, 17", "12, 17", "17, 21", "17.1, 21", "21, 25", "22, 25", "24, 25",
-            "25, 27", "26, 27", "27, 27", "28, 27" })
+            "25, 27", "26, 27", "27, 27",
+            // Non-released Java versions are mapped back to the last released version
+            "28, 27", "100, 27" })
     void getNextVersion(final String currentVersion, final String nextVersion) {
         assertThat("Next version for " + currentVersion, nextVersion(mavenSource(currentVersion)), equalTo(nextVersion));
     }
