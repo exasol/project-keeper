@@ -12,4 +12,4 @@ Project Keeper now uses a minimal Java HTTP client to read GitHub issue state du
 
 ## Security
 
-Removed the temporary OSS Index suppression for CVE-2026-92877 after removing the affected `jcabi-github` dependency.
+* #796: Removed the temporary OSS Index suppression for CVE-2026-92877 after removing the affected `jcabi-github` dependency.
