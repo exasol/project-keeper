@@ -207,6 +207,12 @@
                 <scope>test</scope>
             </dependency>
             <dependency>
+                <!-- Upgrade Mockito's transitive dependency to fix CVE-2026-116486. -->
+                <groupId>org.objenesis</groupId>
+                <artifactId>objenesis</artifactId>
+                <version>3.6</version>
+            </dependency>
+            <dependency>
                 <groupId>org.mockito</groupId>
                 <artifactId>mockito-junit-jupiter</artifactId>
                 <version>${mockito.version}</version>
