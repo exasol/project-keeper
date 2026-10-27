@@ -1,4 +1,4 @@
-# Project Keeper 5.8.2, released 2026-10-27
+# Project Keeper 5.8.2, released 2026-10-??
 
 Code name: Dependabot Monitoring
 
