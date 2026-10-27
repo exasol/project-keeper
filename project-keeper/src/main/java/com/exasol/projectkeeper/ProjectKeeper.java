@@ -11,7 +11,6 @@ import java.util.List;
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.ValidationPhase.Provision;
 import com.exasol.projectkeeper.config.ProjectKeeperConfigReader;
-import com.exasol.projectkeeper.dependencyupdate.DependencyUpdater;
 import com.exasol.projectkeeper.github.GitHubWorkflowOutput;
 import com.exasol.projectkeeper.shared.config.*;
 import com.exasol.projectkeeper.sources.AnalyzedSource;
@@ -352,17 +351,6 @@ public class ProjectKeeper {
                     .message("Validation did not return required provision.").ticketMitigation().toString());
         }
         return provision;
-    }
-
-    /**
-     * Update dependencies in the project.
-     * 
-     * @return {@code true} if the update was successful.
-     */
-    public boolean updateDependencies() {
-        final Provision provision = getValidationProvision();
-        return DependencyUpdater.create(this, config, logger, projectDir, provision.projectVersion())
-                .updateDependencies();
     }
 
     @FunctionalInterface

@@ -21,13 +21,10 @@ public class ProjectKeeperLauncher {
     private static final String GOAL_VERIFY = "verify";
     private static final String GOAL_VERIFY_RELEASE = "verify-release";
     private static final String GOAL_FIX = "fix";
-    private static final String GOAL_UPDATE_DEPENDENCIES = "update-dependencies";
-    private static final Map<String, ProjectKeeperGoal> ACCEPT_GOALS = Map.of( //
-            GOAL_VERIFY, ProjectKeeper::verify, //
-            GOAL_VERIFY_RELEASE, ProjectKeeper::verifyRelease, //
-            GOAL_FIX, ProjectKeeper::fix, //
-            GOAL_UPDATE_DEPENDENCIES, ProjectKeeper::updateDependencies //
-    );
+    private static final Map<String, ProjectKeeperGoal> ACCEPT_GOALS = Map.of(
+            GOAL_VERIFY, ProjectKeeper::verify,
+            GOAL_VERIFY_RELEASE, ProjectKeeper::verifyRelease,
+            GOAL_FIX, ProjectKeeper::fix);
 
     private final Path currentWorkingDir;
 
@@ -93,8 +90,7 @@ public class ProjectKeeperLauncher {
     }
 
     private void verifyCommandLineArguments(final String[] args) {
-        if ((args == null) || (args.length != 1) || !(GOAL_FIX.equals(args[0]) || GOAL_VERIFY.equals(args[0])
-                || GOAL_UPDATE_DEPENDENCIES.equals(args[0]))) {
+        if ((args == null) || (args.length != 1) || !(GOAL_FIX.equals(args[0]) || GOAL_VERIFY.equals(args[0]))) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CLI-2")
                     .message("Got no or invalid command line argument {{arguments}}.", Arrays.toString(args))
                     .mitigation("Please only specify arguments {{supported goals}}.", ACCEPT_GOALS.keySet())

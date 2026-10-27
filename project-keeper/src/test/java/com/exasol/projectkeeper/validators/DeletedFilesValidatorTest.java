@@ -4,6 +4,7 @@ import static com.exasol.projectkeeper.HasNoMoreFindingsAfterApplyingFixesMatche
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasNoValidationFindings;
 import static com.exasol.projectkeeper.HasValidationFindingWithMessageMatcher.hasValidationFindingWithMessage;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,7 +14,7 @@ import java.nio.file.Path;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
-// [utest->dsn~deleted-files-validator~1]
+// [utest->dsn~deleted-files-validator~2]
 class DeletedFilesValidatorTest {
 
     @Test
@@ -30,9 +31,29 @@ class DeletedFilesValidatorTest {
     }
 
     @Test
+    void testValidationWithDependencyUpdateWorkflow(@TempDir final Path tempDir) throws IOException {
+        final Path file = tempDir.resolve(".github/workflows/dependencies_update.yml");
+        Files.createDirectories(file.getParent());
+        Files.createFile(file);
+        assertThat(new DeletedFilesValidator(tempDir), hasValidationFindingWithMessage("E-PK-CORE-26: '.github"
+                + File.separator + "workflows" + File.separator
+                + "dependencies_update.yml' exists but must not exist. Reason: The dependency update workflow was removed; "
+                + "vulnerabilities are monitored by Dependabot"));
+    }
+
+    @Test
     void testFix(@TempDir final Path tempDir) throws IOException {
         createdIllegalFile(tempDir);
         assertThat(new DeletedFilesValidator(tempDir), hasNoMoreFindingsAfterApplyingFixes());
+    }
+
+    @Test
+    void testFixDeletesDependencyUpdateWorkflow(@TempDir final Path tempDir) throws IOException {
+        final Path file = tempDir.resolve(".github/workflows/dependencies_update.yml");
+        Files.createDirectories(file.getParent());
+        Files.createFile(file);
+        assertThat(new DeletedFilesValidator(tempDir), hasNoMoreFindingsAfterApplyingFixes());
+        assertThat(Files.exists(file), is(false));
     }
 
     private void createdIllegalFile(final Path tempDir) throws IOException {

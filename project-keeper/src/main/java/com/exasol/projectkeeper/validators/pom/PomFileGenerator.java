@@ -221,7 +221,7 @@ public class PomFileGenerator {
 
         if (!hasParentPom) {
             properties.child(element("test.excludeTags").text(""))
-                    // [impl->dsn~dependency-vulnerabilities~1]
+                    // [impl->dsn~dependency-vulnerabilities~2]
                     .child(element("ossindexSkip").text("false"));
         }
 
