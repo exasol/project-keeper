@@ -1388,11 +1388,9 @@ Common for all libraries:
 
 #### Decision
 
-We decided to use `com.jcabi:jcabi-github` for the following reasons:
-* Supports listing issues
-* Supports pagination
-* Low implementation effort
-* No workarounds required to fix compiler warnings
+We decided to implement a minimal client for the GitHub REST API using Java 17 `HttpClient` and the existing Jakarta JSON API. PK checks each GitHub issue mentioned in the current changes file using [`GET /repos/{owner}/{repo}/issues/{issue_number}`](https://docs.github.com/en/rest/issues/issues?apiVersion=2022-11-28#get-an-issue). It authenticates with a token obtained from `GH_TOKEN`, `GITHUB_TOKEN`, or the configured `gh` command line tool. A `404` response maps to `MISSING`; successful responses map the issue's `state` to `OPEN` or `CLOSED`. Other request failures retain the existing release verification error behavior.
+
+This avoids additional runtime dependencies while keeping the request implementation small. Since PK requests each issue by number, pagination is not needed.
 
 ### YAML Library for Reading/Writing GitHub Workflows
 

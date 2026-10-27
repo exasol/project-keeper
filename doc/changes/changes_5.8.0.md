@@ -18,7 +18,7 @@ Project Keeper now generates and verifies Maven Wrapper in its default `only-scr
 
 ## Security
 
-We supporessed unresolved vulnerability CVE-2026-92877 in transitive dependency `com.sun.xml.bind:jaxb-core` of `jcabi-github`. See [#799](https://github.com/exasol/project-keeper/issues/) for the proposed solution.
+We suppressed unresolved vulnerability CVE-2026-92877 in transitive dependency `com.sun.xml.bind:jaxb-core` of `jcabi-github`. See [#799](https://github.com/exasol/project-keeper/issues/799) for the proposed solution.
 
 ## Features
 
