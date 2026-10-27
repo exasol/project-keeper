@@ -48,7 +48,7 @@ class PomFileGeneratorTest {
         return pom.getDependencies().stream().map(Dependency::getArtifactId).toList();
     }
 
-    // [utest -> dsn~mvn-toolchain~1]
+    // [utest -> dsn~mvn-toolchain~2]
     @Test
     void testGenerateWithDefaultModule() {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);

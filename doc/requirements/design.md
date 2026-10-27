@@ -336,7 +336,7 @@ Covers:
 Needs: impl, itest
 
 ### Use Maven Toolchain
-`dsn~mvn-toolchain~1`
+`dsn~mvn-toolchain~2`
 
 PK generates build scripts with the following changes:
 * `pk_generated_parent.pom` contains `maven-toolchains-plugin`, using toolchain version `${java.version}`.
@@ -344,8 +344,9 @@ PK generates build scripts with the following changes:
   * Plugins like `maven-compiler-plugin` and `maven-surefire-plugin` use the toolchain configured in `${java.version}`.
     * This is an improvement over Maven's default behavior to use the Java version of `JAVA_HOME` for compiling and testing. This caused problems when JDK 17 was installed but the project requires a build with JDK 11. The user had to manually override `JAVA_HOME` to point to JDK 11 in order to fix the build.
   * This allows projects to override the Java version in their `pom.xml` file using the `<properties>` element.
-* `pk_generated_parent.pom` configures `maven-enforcer-plugin` to require Java 17 for the build.
-  * This ensures that builds fail early in case an older JDK is used.
+* `pk_generated_parent.pom` configures `maven-enforcer-plugin` to require Java 17 or newer for the Maven runtime.
+  * This ensures that builds fail early in case an older JDK is used, while allowing newer JDKs to run Maven.
+  * The diagnostic identifies this as the Maven runtime requirement. Compilation and testing continue to use the configured `${java.version}` toolchain.
 * All GitHub workflows `.github/workflows/*.yml` install both Java versions 11 and 17 using action `actions/setup-java`.
   * Action `actions/setup-java` automatically generates `~/.m2/toolchains.xml` with the paths to the installed JDKs.
   * PK specifies Java 17 as the last option, making it the default for the build. This means that Maven will automatically use Java 17 for running the build and plugins.
@@ -359,7 +360,7 @@ PK's user guide describes how to do this.
 
 Covers:
 
-* [feat~mvn-multiple-java-versions~1](system_requirements.md#support-building-with-multiple-java-versions)
+* [feat~mvn-multiple-java-versions~2](system_requirements.md#support-building-with-multiple-java-versions)
 
 Needs: impl, utest
 

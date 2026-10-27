@@ -18,7 +18,7 @@ import com.exasol.projectkeeper.validators.pom.plugin.*;
 /**
  * This class generates the expected content for the auto-generated parent pom file {@code pk_generated_parent.pom}.
  */
-// [impl -> dsn~mvn-toolchain~1]
+// [impl -> dsn~mvn-toolchain~2]
 public class PomFileGenerator {
     PomFileGenerator() {
     }

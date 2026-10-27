@@ -133,8 +133,9 @@
                                     <version>3.10.0</version>
                                 </requireMavenVersion>
                                 <requireJavaVersion>
-                                    <!-- Many plugins required Java 17 for running Maven. The toolchains plugin ensure building with the correct Java version. -->
-                                    <version>17</version>
+                                    <!-- This checks the Java runtime running Maven. Compilation uses the configured toolchain. -->
+                                    <version>[17,)</version>
+                                    <message>Project Keeper requires Maven to run on Java 17 or newer. The configured java.version is used for compilation and testing through Maven Toolchains.</message>
                                 </requireJavaVersion>
                             </rules>
                         </configuration>

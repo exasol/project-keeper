@@ -315,9 +315,9 @@ Covers:
 Needs: dsn
 
 #### Support Building With Multiple Java Versions
-`feat~mvn-multiple-java-versions~1`
+`feat~mvn-multiple-java-versions~2`
 
-PK generates CI build scripts that allow building and testing Java projects with Java versions 11 and 17.
+PK generates CI build scripts that allow building and testing Java projects with Java versions 11 and 17. Maven may run on Java 17 or newer while compilation and testing use the configured Java toolchain.
 
 Rationale:
 
