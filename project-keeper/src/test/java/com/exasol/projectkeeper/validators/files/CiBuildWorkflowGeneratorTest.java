@@ -232,7 +232,7 @@ class CiBuildWorkflowGeneratorTest {
                                 .step(WorkflowStep.createStep(Map.of("id", "new-step", "name", "New Step"))).build())
                         .build()))
                 .build()).getJob("check_dependencies");
-        assertAll(() -> assertThat(job.getSteps(), hasSize(5)),
+        assertAll(() -> assertThat(job.getSteps(), hasSize(6)),
                 () -> assertThat(job.getStep("new-step").getName(), equalTo("New Step")));
     }
 
@@ -296,15 +296,11 @@ class CiBuildWorkflowGeneratorTest {
                 () -> assertThat(workflow.getJob("build").getNeeds(), contains("build-and-test", "ossindex", "lint-github-actions")));
     }
 
-    // [utest->dsn~customize-build-process.remove-job~0]
     @Test
-    void removeJobFromOtherWorkflow() {
-        final GitHubWorkflow workflow = dependencyCheckBuildContent(BuildOptions.builder()
-                .workflows(List.of(CustomWorkflow.builder().workflowName("dependencies_check.yml")
-                        .removeJobs(List.of("start_dependency_udpate"))
-                        .build()))
-                .build());
+    void dependencyCheckContainsOnlyTheVulnerabilityCheckJob() {
+        final GitHubWorkflow workflow = dependencyCheckBuildContent(BuildOptions.builder().build());
         assertAll(() -> assertThat(workflow.getJobs(), hasSize(1)),
+                () -> assertThat(workflow.hasJob("check_dependencies"), is(true)),
                 () -> assertThat(workflow.hasJob("start_dependency_udpate"), is(false)));
     }
 
