@@ -214,9 +214,8 @@ Examples: obsolete workflows, including `.github/workflows/dependencies_update.y
 
 Rationale:
 
-From time to time we rename a required file. In that case, PK should make sure that the old version of the file no longer exists in the repositories.
-
-The dependency update workflow has been removed. During `fix`, PK deletes existing copies; during `verify`, PK reports an error while the obsolete workflow remains.
+* From time to time we rename a required file. In that case, PK should make sure that the old version of the file no longer exists in the repositories.
+* The dependency update workflow has been removed. During `fix`, PK deletes existing copies; during `verify`, PK reports an error while the obsolete workflow remains.
 
 Covers:
 
