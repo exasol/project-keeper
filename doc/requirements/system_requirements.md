@@ -70,9 +70,13 @@ Needs: dsn
 
 ##### Scan Dependencies for Vulnerabilities
 
-`req~dependency-vulnerabilities~1`
+`req~dependency-vulnerabilities~2`
 
-PK must add a scanner to the Maven build that verifies, that no dependency contains a vulnerability.
+PK must add a scanner to the Maven build that verifies that no dependency contains a vulnerability. The generated `dependencies_check.yml` workflow runs this scan weekly and fails when vulnerabilities are found. It does not create GitHub issues or pull requests, or send notifications.
+
+Rationale:
+
+The previous process created one GitHub issue per vulnerability and automatically opened dependency update pull requests. Some repositories accumulated more than 60 issues, making the issue tracker difficult to manage. Dependabot will monitor vulnerabilities; the scheduled check remains as a failing signal without creating issues, pull requests, or Slack notifications.
 
 Covers:
 
@@ -206,11 +210,12 @@ Needs: dsn
 
 PK verifies that certain files do not exist in the repository.
 
-Example: Broken-Link checker GitHub workflow
+Examples: obsolete workflows, including `.github/workflows/dependencies_update.yml`.
 
 Rationale:
 
-From time to time we rename a required file. In that case, PK should make sure that the old version of the file no longer exists in the repositories.
+* From time to time we rename a required file. In that case, PK should make sure that the old version of the file no longer exists in the repositories.
+* The dependency update workflow has been removed. During `fix`, PK deletes existing copies; during `verify`, PK reports an error while the obsolete workflow remains.
 
 Covers:
 
@@ -430,65 +435,6 @@ Covers:
 
 Needs: dsn
 
-### Automatic Dependency Update Process
-`feat~automatic-dependency-update-process~1`
-
-PK supports a process for automated dependency update. This speeds up fixing vulnerabilities in third party dependencies and creating releases.
-
-Rationale:
-
-The Exasol integration team maintains more than 130 projects that often require dependency updates due to security issues that are found in direct or transitive dependencies. In most cases the update requires pulling the latest source, updating the dependencies, updating the change log, running the tests locally, on success pushing the branch, running CI and creating a release as shown in the following bullet-list.
-
-* Update dependencies
-* Create change log entry
-* Run local tests
-* Push branch
-* Run CI
-* Release
-
-Needs: req
-
-#### Auto-update dependencies
-`req~auto-update-dependencies~1`
-
-PK automatically updates dependencies when the `dependencies_check.yml` workflow finds a new vulnerability.
-
-Covers:
-* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
-
-Needs: dsn
-
-#### Automatically create change log entry
-`req~auto-create-changelog~1`
-
-PK generates an entry in the changes file for fixed vulnerabilities.
-
-Rationale:
-
-The changes file entries for fixed vulnerabilities always have the same structure and can be easily automated to avoid manual work.
-
-Covers:
-* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
-
-Needs: dsn
-
-#### Automatically Create a Pull Request
-`req~auto-create-pr~1`
-
-PK creates a new Pull Request after upgrading dependencies.
-
-Rationale:
-
-A pull requests allows to
-* automatically run tests using the updated dependencies to verify if the upgrade caused any problems
-* review and approve changes
-* manually modify files in case of problems
-
-Covers:
-* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
-
-Needs: dsn
-
 #### Automatic Release
 `req~auto-release~1`
 
@@ -500,7 +446,7 @@ Rationale:
 * Optionally the user can indicate to apply the changes, but postpone creating a release.
 
 Covers:
-* [`feat~automatic-dependency-update-process~1`](#automatic-dependency-update-process)
+* [`feat~maven-project-support~0`](#support-for-maven-projects)
 
 Needs: dsn
 

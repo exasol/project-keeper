@@ -34,9 +34,9 @@ class ProjectKeeperLauncherIT {
     static Stream<Arguments> invalidArguments() {
         return Stream.of( //
                 args(), //
-                args("fix", "verify"), //
-                args("unknown") //
-        );
+                args("fix", "verify"),
+                args("unknown"),
+                args("update-dependencies"));
     }
 
     @ParameterizedTest
@@ -68,15 +68,6 @@ class ProjectKeeperLauncherIT {
         try (MavenProjectFixture mavenProject = prepareMavenProject()) {
             assertProcessSucceeds("fix");
             assertProcessSucceeds("verify");
-        }
-    }
-
-    @Test
-    @SuppressWarnings("try") // fixture used for setup and cleanup
-    void updateDependenciesJavaProjectSucceeds() {
-        try (MavenProjectFixture mavenProject = prepareMavenProject()) {
-            assertProcessSucceeds("fix");
-            assertProcessSucceeds("update-dependencies");
         }
     }
 

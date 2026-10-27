@@ -64,7 +64,7 @@ class JavaVersionExtractor {
         if (current < 25) {
             return "25";
         }
-        return "26";
+        return "27";
     }
 
     private double getCurrentLatestVersion() {

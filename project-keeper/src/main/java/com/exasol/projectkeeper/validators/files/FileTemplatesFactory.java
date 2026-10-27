@@ -59,7 +59,7 @@ class FileTemplatesFactory {
     List<String> getGeneratedFiles() {
         final List<String> generatedFiles = new ArrayList<>(List.of("SECURITY.md", "dependencies.md",
                 "doc/changes/changelog.md", ".github/workflows/broken_links_checker.yml", MAIN_CI_WORKFLOW,
-                ".github/workflows/dependencies_check.yml", ".github/workflows/dependencies_update.yml",
+                ".github/workflows/dependencies_check.yml",
                 ".github/workflows/release.yml", ZIZMOR_CONFIG_FILE));
         if (this.sources.stream().anyMatch(this::isMvnRootProject)) {
             generatedFiles.addAll(List.of("pk_generated_parent.pom", "/mvnw", "/mvnw.cmd", "/.mvn/wrapper/maven-wrapper.properties"));
@@ -77,7 +77,6 @@ class FileTemplatesFactory {
         final List<FileTemplate> templates = new ArrayList<>();
         templates.add(getCiBuildTemplate(modules));
         templates.add(this.workflowGenerator.createDependenciesCheckWorkflow());
-        templates.add(this.workflowGenerator.createDependenciesUpdateWorkflow());
         templates.add(this.workflowGenerator.createReleaseWorkflow(sources));
         return templates;
     }

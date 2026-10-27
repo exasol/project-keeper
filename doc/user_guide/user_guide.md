@@ -319,7 +319,6 @@ build:
   * `ci-build.yml`
   * `release.yml`
   * `dependencies_check.yml`
-  * `dependencies_update.yml`
   * `project-keeper-verify.yml`
   * `broken_links_checker.yml`
 * `jobs`: List of job customizations:
@@ -417,27 +416,6 @@ When your project uses multiple Maven modules, each can specify it's own Java ve
 
 PK will also calculate the maximum Java version used by all modules and use the next major Java version for generating `.github/workflows/ci-build-next-java.yml`.
 
-#### Exclude Dependencies From Automatic Version Update
-
-PK's [update-dependencies](#update-dependencies) mode updates the project's `pom.xml` files and updates the versions of all dependencies. In certain cases this could break the build. To exclude a dependency from the automatic update, add the following to your `pom.xml`:
-
-```xml
-<plugin>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>versions-maven-plugin</artifactId>
-    <configuration>
-        <excludes>
-            <!-- Dependencies use SLF4J 1.7 so we can't upgrade to 2 -->
-            <exclude>org.slf4j:slf4j-jdk14:jar:*:*</exclude>
-            <!-- Upgrading to 6.8.0.202311291450-r causes java.lang.NoClassDefFoundError: org/eclipse/jgit/internal/JGitText in ShutdownHook-->
-            <exclude>org.eclipse.jgit:org.eclipse.jgit:jar:*:6.8.0.202311291450-r</exclude>
-        </excludes>
-    </configuration>
-</plugin>
-```
-
-See the [documentation for `<excludes>`](https://www.mojohaus.org/versions/versions-maven-plugin/use-latest-releases-mojo.html#excludes) of the versions-maven-plugin for details.
-
 ### Using a Parent POM
 
 If you want to use a parent POM for your project, that's not possible directly since your `pom.xml` must use the `pk_generated_parent.pom` as parent.
@@ -516,16 +494,6 @@ In addition this plugin can also fix the project structure. For that use:
 ./mvnw project-keeper:fix
 ```
 
-#### Update Dependencies
-
-Run the following commands to update dependencies:
-
-```sh
-./mvnw project-keeper:update-dependencies
-```
-
-The command will increment the project's patch version if the current version is already released.
-
 #### Multi-Module Maven Projects
 
 For multi-module projects these commands may fail with the following error:
@@ -540,7 +508,6 @@ In this case add command line option `--projects .`:
 ./mvnw project-keeper:verify --projects .
 ./mvnw project-keeper:verify-release --projects .
 ./mvnw project-keeper:fix --projects .
-./mvnw project-keeper:update-dependencies --projects .
 ```
 
 You can skip the execution of project-keeper by adding `-Dproject-keeper.skip=true` to your maven command.
@@ -568,7 +535,7 @@ cd path/to/project
 ./.github/workflows/project-keeper.sh $GOAL
 ```
 
-The standalone variant supports the same goals as the Maven plugin: `fix`, `verify` and `update-dependencies`.
+The standalone variant supports the same goals as the Maven plugin: `fix` and `verify`.
 
 ### Automatic Release Process
 
@@ -593,15 +560,7 @@ Scheduled weekly, checks Markdown files for broken links.
 
 ### [`dependencies_check.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_check.yml)
 
-Scheduled weekly, checks the Maven project for vulnerable dependencies, creates new issues using [security_issues](https://exasol.github.io/python-toolbox/github_actions/security_issues.html) and starts the [`dependencies_update.yml`](#dependencies_updateyml) workflow that updates dependencies.
-
-### [`dependencies_update.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/dependencies_update.yml)
-
-This workflow is triggered manually or by workflow [`dependencies_check.yml`](#dependencies_checkyml). It updates dependencies, creates a changelog with fixed vulnerabilities and creates a new Pull Requests.
-
-In order to send notifications, this workflow requires GitHub secrets
-* `INTEGRATION_TEAM_SECURITY_UPDATES_WEBHOOK` (to report new release or failure status for dependency check)
-* `INTEGRATION_TEAM_SLACK_NOTIFICATION_WEBHOOK` (to report new pull requests with dependency updates).
+Scheduled weekly, checks the Maven project for vulnerable dependencies and fails if vulnerabilities are found. It does not create issues or send notifications. Dependabot can be used to monitor vulnerabilities.
 
 ### [`ci-build.yml`](../../project-keeper/src/main/resources/templates/.github/workflows/ci-build.yml)
 

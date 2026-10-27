@@ -12,7 +12,6 @@ doc/images/.svg                      linguist-generated=true
 .github/workflows/ci-build.yml             linguist-generated=true
 .github/workflows/release.yml              linguist-generated=true
 .github/workflows/dependencies_check.yml   linguist-generated=true
-.github/workflows/dependencies_update.yml  linguist-generated=true
 .github/zizmor.yml                         linguist-generated=true
 
 project-keeper-cli/.settings/org.eclipse.jdt.core.prefs                          linguist-generated=true

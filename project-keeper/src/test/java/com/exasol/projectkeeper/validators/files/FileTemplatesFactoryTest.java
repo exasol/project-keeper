@@ -48,14 +48,14 @@ class FileTemplatesFactoryTest {
                 "/.mvn/wrapper/maven-wrapper.properties"), hasItems("SECURITY.md", ".github/zizmor.yml")));
     }
 
-    // [utest->dsn~dependency-updater.workflow.generate~1]
     @Test
-    void testGenerateDependencyUpdateWorkflow() {
+    void testGenerateDependencyCheckWorkflow() {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
         final List<FileTemplate> templates = testee(sources).getGlobalTemplates();
-        assertContainsTemplate(templates, ".github/workflows/dependencies_check.yml");
-        assertContainsTemplate(templates, ".github/workflows/dependencies_update.yml");
+        assertAll(() -> assertContainsTemplate(templates, ".github/workflows/dependencies_check.yml"),
+                () -> assertThat(findTemplate(templates, ".github/workflows/dependencies_update.yml"), equalTo(Optional.empty())),
+                () -> assertThat(testee(sources).getGeneratedFiles(), not(hasItem(".github/workflows/dependencies_update.yml"))));
     }
 
     private FileTemplatesFactory testee(final List<AnalyzedSource> sources) {

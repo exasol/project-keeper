@@ -89,7 +89,7 @@ class ProjectKeeperIT extends ProjectKeeperAbstractMavenIT {
     }
 
     @Test
-    // [itest->dsn~deleted-files-validator~1]
+    // [itest->dsn~deleted-files-validator~2]
     void testVerifyWithAFileThatMustNotExist() throws IOException {
         writeDefaultPom();
         this.fixture.writeConfig(this.fixture.getConfigWithAllModulesBuilder());
