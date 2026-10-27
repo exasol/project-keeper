@@ -20,9 +20,7 @@ import com.exasol.projectkeeper.validators.*;
 import com.exasol.projectkeeper.validators.changelog.ChangelogFileValidator;
 import com.exasol.projectkeeper.validators.changesfile.ChangesFileValidator;
 import com.exasol.projectkeeper.validators.dependencies.DependenciesValidator;
-import com.exasol.projectkeeper.validators.files.LatestChangesFileValidator;
-import com.exasol.projectkeeper.validators.files.MavenWrapperValidator;
-import com.exasol.projectkeeper.validators.files.ProjectFilesValidator;
+import com.exasol.projectkeeper.validators.files.*;
 import com.exasol.projectkeeper.validators.finding.*;
 import com.exasol.projectkeeper.validators.pom.PomFileValidator;
 import com.exasol.projectkeeper.validators.release.ReleaseInspector;
@@ -324,33 +322,6 @@ public class ProjectKeeper {
          * @return {@code false} if the validation should stop after this phase.
          */
         boolean handlePhaseResult(final List<ValidationFinding> findings);
-    }
-
-    /**
-     * Verify the project and return validation provisions.
-     *
-     * @return Validation provisions if the validation succeeded
-     * @throws IllegalStateException if validation fails
-     */
-    private Provision getValidationProvision() {
-        Provision provision = null;
-        final List<PhaseValidator> phases = List.of(this::phase0LicenseFile, this::phase1BuildFiles,
-                this::phase2AnalyzeSources);
-        for (final PhaseValidator phaseValidator : phases) {
-            final ValidationPhase phase = phaseValidator.apply(provision);
-            provision = phase.provision();
-            final List<ValidationFinding> findings = runValidation(phase.validators());
-            if (!handleVerifyFindings(findings)) {
-                throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-175")
-                        .message("Validation failed, see log messages for details.")
-                        .mitigation("Fix findings and try again.").toString());
-            }
-        }
-        if (provision == null) {
-            throw new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-176")
-                    .message("Validation did not return required provision.").ticketMitigation().toString());
-        }
-        return provision;
     }
 
     @FunctionalInterface

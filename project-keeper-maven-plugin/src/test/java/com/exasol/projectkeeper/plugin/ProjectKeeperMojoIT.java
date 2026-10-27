@@ -32,7 +32,6 @@ import com.exasol.projectkeeper.validators.pom.PomFileIO;
 
 class ProjectKeeperMojoIT {
     private static final String ORIGINAL_SLF4J_VERSION = "1.7.36";
-    private static final String THIS_YEAR = String.valueOf(LocalDate.now().getYear());
     private static MavenIntegrationTestEnvironment mavenIntegrationTestEnvironment;
     private static final Logger LOG = Logger.getLogger(ProjectKeeperMojoIT.class.getName());
 
