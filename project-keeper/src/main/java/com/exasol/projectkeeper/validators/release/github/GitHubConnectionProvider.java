@@ -5,7 +5,6 @@ import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.sources.analyze.generic.SimpleProcess;
 
 class GitHubConnectionProvider {

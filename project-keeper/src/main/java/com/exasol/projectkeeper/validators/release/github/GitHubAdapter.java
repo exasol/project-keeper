@@ -9,8 +9,7 @@ import java.util.logging.Logger;
 
 import com.exasol.errorreporting.ExaError;
 
-import jakarta.json.Json;
-import jakarta.json.JsonObject;
+import jakarta.json.*;
 
 /**
  * This class allows executing queries against the GitHub API.
@@ -78,22 +77,32 @@ public class GitHubAdapter {
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 throw new IOException(formatErrorResponse(response));
             }
-            final JsonObject issue = Json.createReader(new StringReader(response.body())).readObject();
+            final JsonObject issue = parseJson(response);
             if ("open".equals(issue.getString("state"))) {
                 return IssueState.OPEN;
             } else {
                 return IssueState.CLOSED;
             }
-        } catch (final IOException | InterruptedException exception) {
-            if (exception instanceof InterruptedException) {
-                Thread.currentThread().interrupt();
-            }
-            throw new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-192")
-                    .message("Failed to get status of GitHub issue #{{issue number}}: {{cause}}", issueNumber,
-                            exception.getMessage())
-                    .toString(),
-                    exception instanceof final IOException ioException ? ioException
-                            : new IOException(exception));
+        } catch (final InterruptedException exception) {
+            Thread.currentThread().interrupt();
+            throw retrievingIssueStatusFailed(issueNumber, exception);
+        } catch (final IOException exception) {
+            throw retrievingIssueStatusFailed(issueNumber, exception);
+        }
+    }
+
+    private UncheckedIOException retrievingIssueStatusFailed(final int issueNumber, final Exception exception) {
+        return new UncheckedIOException(ExaError.messageBuilder("E-PK-CORE-192")
+                .message("Failed to get status of GitHub issue #{{issue number}}: {{cause}}", issueNumber,
+                        exception.getMessage())
+                .toString(),
+                exception instanceof final IOException ioException ? ioException
+                        : new IOException(exception));
+    }
+
+    private JsonObject parseJson(final HttpResponse<String> response) {
+        try (JsonReader reader = Json.createReader(new StringReader(response.body()))) {
+            return reader.readObject();
         }
     }
 
