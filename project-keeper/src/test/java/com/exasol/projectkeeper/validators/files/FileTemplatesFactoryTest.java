@@ -49,7 +49,7 @@ class FileTemplatesFactoryTest {
     }
 
     @Test
-    void testGenerateDependencyCheckWorkflowWithoutDependencyUpdateWorkflow() {
+    void testGenerateDependencyCheckWorkflow() {
         final Set<ProjectKeeperModule> modules = Collections.emptySet();
         final List<AnalyzedSource> sources = getMavenSourceWithModules(modules);
         final List<FileTemplate> templates = testee(sources).getGlobalTemplates();

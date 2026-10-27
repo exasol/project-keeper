@@ -76,7 +76,7 @@ PK must add a scanner to the Maven build that verifies that no dependency contai
 
 Rationale:
 
-The previous process created one GitHub issue per vulnerability and automatically opened dependency update pull requests. Some repositories accumulated more than 60 issues, making the issue tracker difficult to manage. Dependabot will monitor vulnerabilities; the scheduled check remains as a failing signal without creating issues, pull requests, or Slack notifications. The dependency update process will be refactored and simplified in the future. The previous generated changelog entry was too verbose and must be shortened to a single line in an upcoming change.
+The previous process created one GitHub issue per vulnerability and automatically opened dependency update pull requests. Some repositories accumulated more than 60 issues, making the issue tracker difficult to manage. Dependabot will monitor vulnerabilities; the scheduled check remains as a failing signal without creating issues, pull requests, or Slack notifications.
 
 Covers:
 
