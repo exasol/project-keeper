@@ -32,6 +32,8 @@ Project Keeper now uses a minimal Java HTTP client to read GitHub issue state du
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.8.1` to `5.8.2`
+* Removed `com.jcabi:jcabi-github:1.11.1`
+* Added `jakarta.json:jakarta.json-api:2.1.3`
 
 #### Runtime Dependency Updates
 
