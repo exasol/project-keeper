@@ -58,7 +58,7 @@ class ProjectKeeperMojoIT {
         LOG.info(() -> "Running test " + test.getDisplayName() + " using project " + this.projectDir + "...");
         verifier = mavenIntegrationTestEnvironment.getVerifier(this.projectDir);
         // Ossindex requires credentials, skip it in tests
-        verifier.setSystemProperty("ossindexSkip", "true");
+        verifier.setSystemProperty("ossindex.skip", "true");
         // Tests use the system installed Maven for bootstrapping, which maybe an older version as the Maven Wrapper.
         // Therefore, skip Maven version checks in tests.
         verifier.setSystemProperty("enforcer.skip", "true");

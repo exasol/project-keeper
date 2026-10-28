@@ -55,7 +55,7 @@ class PomFileGeneratorTest {
         final List<String> pluginNames = getPluginNames(pom);
         final List<String> pluginManagementPluginNames = getPluginManagementPluginNames(pom);
         final License license = pom.getLicenses().get(0);
-        assertAll(//
+        assertAll(
                 () -> assertThat(pom.getGroupId(), equalTo("com.example")),
                 () -> assertThat(pom.getArtifactId(), equalTo("my-parent-pom")),
                 () -> assertThat(pom.getScm().getConnection(),
@@ -78,7 +78,9 @@ class PomFileGeneratorTest {
                         "exec-maven-plugin")),
                 () -> assertThat(pluginNames,
                         containsInAnyOrder("sonar-maven-plugin", "maven-compiler-plugin", "maven-enforcer-plugin",
-                                "flatten-maven-plugin", "ossindex-maven-plugin", "git-commit-id-maven-plugin",
+                                "flatten-maven-plugin",
+                                // [utest->dsn~dependency-vulnerabilities~2]
+                                "ossindex-maven-plugin", "git-commit-id-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
                                 "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
                                 "maven-artifact-plugin", "maven-toolchains-plugin")));
@@ -132,19 +134,6 @@ class PomFileGeneratorTest {
     void testOmitTestExcludeTagsPropertyForNonRootPom() {
         final Model pom = runGeneration(emptyList(), new ParentPomRef("group", "parent-artifact", "version", "path"));
         assertThat(pom.getProperties().get("test.excludeTags"), nullValue());
-    }
-
-    // [utest->dsn~dependency-vulnerabilities~2]
-    @Test
-    void testAddOssindexSkipPropertyForRootPom() {
-        final Model pom = runGeneration(emptyList(), null);
-        assertThat(pom.getProperties().get("ossindexSkip"), equalTo("false"));
-    }
-
-    @Test
-    void testOmitOssindexSkipPropertyForNonRootPom() {
-        final Model pom = runGeneration(emptyList(), new ParentPomRef("group", "parent-artifact", "version", "path"));
-        assertThat(pom.getProperties().get("ossindexSkip"), nullValue());
     }
 
     @Test

@@ -41,7 +41,7 @@ https://repo.maven.apache.org/maven2 during a previous attempt.
 In order to fix this, just install project-keeper:
 
 ```sh
-./mvnw install --projects . -DskipTests -DskipITs -DossindexSkip=true
+./mvnw install --projects . -DskipTests -DskipITs -Dossindex.skip=true
 ```
 
 After that the dependencies of PK are available in your local maven repository in the version of the current release and hence references to these versions in the pom of the current release are valid.
@@ -55,7 +55,7 @@ Updating **project-keeper**'s own version requires the following steps:
 
     ```sh
     ./mvnw clean install -Dduplicate-finder.skip=true -DskipTests -DskipITs \
-        -Dproject-keeper.skip=true -DossindexSkip=true \
+        -Dproject-keeper.skip=true -Dossindex.skip=true \
         -Dmaven.javadoc.skip=true -Djacoco.skip=true \
         -Derror-code-crawler.skip=true -Dopenfasttrace.skip=true -T 1C
     ```
