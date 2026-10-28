@@ -77,8 +77,8 @@ public class GitHubAdapter {
             if (response.statusCode() < 200 || response.statusCode() >= 300) {
                 throw new IOException(formatErrorResponse(response));
             }
-            final JsonObject issue = parseJson(response);
-            if ("open".equals(issue.getString("state"))) {
+            final String state = getState(response);
+            if ("open".equals(state)) {
                 return IssueState.OPEN;
             } else {
                 return IssueState.CLOSED;
@@ -88,6 +88,14 @@ public class GitHubAdapter {
             throw retrievingIssueStatusFailed(issueNumber, exception);
         } catch (final IOException exception) {
             throw retrievingIssueStatusFailed(issueNumber, exception);
+        }
+    }
+
+    private String getState(final HttpResponse<String> response) throws IOException {
+        try {
+            return parseJson(response).getString("state");
+        } catch (final JsonException exception) {
+            throw new IOException("Failed to parse GitHub issue response as JSON: " + response.body(), exception);
         }
     }
 

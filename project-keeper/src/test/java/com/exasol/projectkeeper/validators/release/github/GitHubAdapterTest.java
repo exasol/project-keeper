@@ -65,6 +65,14 @@ class GitHubAdapterTest {
                 "E-PK-CORE-192: Failed to get status of GitHub issue #42: 'GitHub API returned HTTP status 500: {\"message\":\"Internal Server Error\"}'"));
     }
 
+    @Test
+    void wrapsMalformedJsonResponse() {
+        server.respond(200, "<html>upstream error</html>");
+        final var exception = assertThrows(UncheckedIOException.class, () -> adapter.getIssueState(42));
+        assertThat(exception.getMessage(), equalTo(
+                "E-PK-CORE-192: Failed to get status of GitHub issue #42: 'Failed to parse GitHub issue response as JSON: <html>upstream error</html>'"));
+    }
+
     private static final class GitHubApiServer implements AutoCloseable {
         private final HttpServer server;
         private volatile int status = 200;
