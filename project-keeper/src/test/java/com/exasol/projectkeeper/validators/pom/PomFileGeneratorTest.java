@@ -49,11 +49,13 @@ class PomFileGeneratorTest {
     }
 
     // [utest -> dsn~mvn-toolchain~1]
+    // [utest -> dsn~dependency-vulnerabilities~2]
     @Test
     void testGenerateWithDefaultModule() {
         final Model pom = runGeneration(List.of(ProjectKeeperModule.DEFAULT), null);
         final List<String> pluginNames = getPluginNames(pom);
         final List<String> pluginManagementPluginNames = getPluginManagementPluginNames(pom);
+        final Xpp3Dom ossindexConfiguration = (Xpp3Dom) findPlugin(pom, "ossindex-maven-plugin").getConfiguration();
         final License license = pom.getLicenses().get(0);
         assertAll(//
                 () -> assertThat(pom.getGroupId(), equalTo("com.example")),
@@ -81,7 +83,8 @@ class PomFileGeneratorTest {
                                 "flatten-maven-plugin", "ossindex-maven-plugin", "git-commit-id-maven-plugin",
                                 "maven-surefire-plugin", "versions-maven-plugin", "jacoco-maven-plugin",
                                 "error-code-crawler-maven-plugin", "duplicate-finder-maven-plugin",
-                                "maven-artifact-plugin", "maven-toolchains-plugin")));
+                                "maven-artifact-plugin", "maven-toolchains-plugin")),
+                () -> assertThat(ossindexConfiguration.getChild("skip").getValue(), equalTo("${ossindex.skip}")));
     }
 
     static Stream<Arguments> testPluginsAddedByModuleCases() {
