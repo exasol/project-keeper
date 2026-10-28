@@ -1,13 +1,11 @@
 package com.exasol.projectkeeper.validators.files;
 
-import static java.util.Collections.emptyList;
-import static java.util.stream.Collectors.toMap;
-
 import java.util.*;
-import java.util.Map.Entry;
 import java.util.function.Predicate;
 import java.util.logging.Logger;
 import java.util.stream.IntStream;
+
+import org.snakeyaml.engine.v2.nodes.Node;
 
 import com.exasol.errorreporting.ExaError;
 import com.exasol.projectkeeper.shared.config.workflow.JobPermissions;
@@ -18,58 +16,58 @@ import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
  */
 class GitHubWorkflow {
     private static final Logger LOG = Logger.getLogger(GitHubWorkflow.class.getName());
-    private final Map<String, Object> rawWorkflow;
+    private final YamlMapping rawWorkflow;
 
-    private GitHubWorkflow(final Map<String, Object> rawWorkflow) {
+    private GitHubWorkflow(final YamlMapping rawWorkflow) {
         this.rawWorkflow = rawWorkflow;
     }
 
     static GitHubWorkflow create(final Object rawWorkflow) {
-        return new GitHubWorkflow(asMap(rawWorkflow));
-    }
-
-    @SuppressWarnings("unchecked")
-    private static Map<String, Object> asMap(final Object rawYaml) {
-        return (Map<String, Object>) rawYaml;
+        return new GitHubWorkflow(YamlMapping.from(rawWorkflow));
     }
 
     Job getJob(final String jobId) {
-        final Object rawJob = getJobMap().get(jobId);
-        if (rawJob == null) {
+        final YamlMapping jobs = getJobMap();
+        if (!jobs.contains(jobId)) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-207")
                     .message("GitHub Workflow does not have a job with ID {{job id}}.", jobId)
-                    .mitigation("Choose one of {{available job ids}}.", getJobMap().keySet()).toString());
+                    .mitigation("Choose one of {{available job ids}}.", jobs.keys()).toString());
         }
-        return new Job(jobId, asMap(rawJob));
+        return new Job(jobId, jobs.mapping(jobId));
     }
 
     boolean hasJob(final String jobName) {
-        return getJobMap().containsKey(jobName);
+        return getJobMap().contains(jobName);
     }
 
     void removeJob(final String jobName) {
-        final Object previousJob = getJobMap().remove(jobName);
-        if (previousJob == null) {
+        final YamlMapping jobs = getJobMap();
+        if (jobs.remove(jobName) == null) {
             throw new IllegalArgumentException(ExaError.messageBuilder("E-PK-CORE-211")
                     .message("GitHub Workflow does not have a job with ID {{job name}}.", jobName)
-                    .mitigation("Choose one of {{available job names}}.", getJobMap().keySet()).toString());
+                    .mitigation("Choose one of {{available job names}}.", jobs.keys()).toString());
         }
     }
 
-    private Map<String, Object> getJobMap() {
-        return asMap(rawWorkflow.get("jobs"));
+    private YamlMapping getJobMap() {
+        return rawWorkflow.mapping("jobs");
     }
 
     List<Job> getJobs() {
-        return getJobMap().entrySet().stream().map(entry -> new Job(entry.getKey(), asMap(entry.getValue()))).toList();
+        return getJobMap().mappings().entrySet().stream().map(entry -> new Job(entry.getKey(), entry.getValue()))
+                .toList();
     }
 
     Map<String, Object> getOnTrigger() {
-        return asMap(rawWorkflow.get("on"));
+        return rawWorkflow.objectMap("on");
     }
 
     Object getRawObject() {
-        return this.rawWorkflow;
+        return rawWorkflow.toObject();
+    }
+
+    Node getRawNode() {
+        return rawWorkflow.node();
     }
 
     /**
@@ -78,9 +76,9 @@ class GitHubWorkflow {
      */
     static class Job {
         private final String id;
-        private final Map<String, Object> rawJob;
+        private final YamlMapping rawJob;
 
-        private Job(final String id, final Map<String, Object> rawJob) {
+        private Job(final String id, final YamlMapping rawJob) {
             this.id = id;
             this.rawJob = rawJob;
         }
@@ -94,63 +92,55 @@ class GitHubWorkflow {
                     .filter(hasId(id)) //
                     .findFirst() //
                     .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-206")
-                            .message("Job has no step with ID {{step id}}: {{raw job}}", id, rawJob).toString()));
+                            .message("Job has no step with ID {{step id}}: {{raw job}}", id, rawJob.toObject())
+                            .toString()));
         }
 
         List<Step> getSteps() {
-            return getRawSteps().stream().map(Step::new).toList();
+            return rawJob.mappingList("steps").stream().map(Step::new).toList();
         }
 
-        @SuppressWarnings("unchecked")
-        private List<Map<String, Object>> getRawSteps() {
-            final Object steps = rawJob.get("steps");
-            if (steps == null) {
-                return emptyList();
-            }
-            return (List<Map<String, Object>>) steps;
-        }
-
-        @SuppressWarnings("unchecked")
         public List<String> getNeeds() {
-            return (List<String>) rawJob.get("needs");
+            return rawJob.stringList("needs");
+        }
+
+        void removeNeed(final String jobName) {
+            rawJob.removeFromSequence("needs", jobName);
         }
 
         String getRunnerOS() {
-            return (String) rawJob.get("runs-on");
+            return rawJob.string("runs-on");
         }
 
         Map<String, Object> getConcurrency() {
-            return asMap(rawJob.get("concurrency"));
+            return rawJob.objectMap("concurrency");
         }
 
         Map<String, Object> getStrategy() {
-            return asMap(rawJob.get("strategy"));
+            return rawJob.objectMap("strategy");
         }
 
         Map<String, Object> getEnv() {
-            return asMap(rawJob.get("env"));
+            return rawJob.objectMap("env");
         }
 
         public String getEnvironment() {
-            return (String) rawJob.get("environment");
+            return rawJob.optionalString("environment").orElse(null);
         }
 
         public void setEnvironment(final String environmentName) {
             rawJob.put("environment", environmentName);
         }
 
-        public Map<String, String> getPermissions() {
-            return asStringMap(rawJob.get("permissions"));
-        }
-
         @SuppressWarnings("unchecked")
-        private static Map<String, String> asStringMap(final Object rawYaml) {
-            return (Map<String, String>) rawYaml;
+        public Map<String, String> getPermissions() {
+            return (Map<String, String>) (Map<?, ?>) rawJob.objectMap("permissions");
         }
 
         public void setPermissions(final JobPermissions permissions) {
-            final Map<String, String> rawPermissions = permissions.getPermissions().entrySet().stream()
-                    .collect(toMap(Entry::getKey, entry -> entry.getValue().getName()));
+            final Map<String, String> rawPermissions = new LinkedHashMap<>();
+            permissions.getPermissions()
+                    .forEach((name, permission) -> rawPermissions.put(name, permission.getName()));
             rawJob.put("permissions", rawPermissions);
         }
 
@@ -160,19 +150,17 @@ class GitHubWorkflow {
 
         // [impl->dsn~customize-build-process.replace-step~0]
         public void replaceStep(final String stepId, final WorkflowStep step) {
-            final List<Map<String, Object>> allSteps = getRawSteps();
             final int index = findStepIndex(stepId);
             LOG.fine(() -> "Replacing step '" + stepId + "' at index " + index + " with step '" + step.getId() + "'");
-            allSteps.set(index, step.getRawStep());
+            rawJob.replaceInSequence("steps", index, step.getRawStep());
         }
 
         // [impl->dsn~customize-build-process.insert-step-after~0]
         public void insertStepAfter(final String stepId, final WorkflowStep step) {
-            final List<Map<String, Object>> allSteps = getRawSteps();
             final int index = findStepIndex(stepId);
             LOG.fine(() -> "Inserting step '" + step.getId() + "' at index " + (index + 1) + " after step '" + stepId
                     + "'");
-            allSteps.add(index + 1, step.getRawStep());
+            rawJob.insertIntoSequence("steps", index + 1, step.getRawStep());
         }
 
         private int findStepIndex(final String stepId) {
@@ -191,9 +179,9 @@ class GitHubWorkflow {
      * This class represents a step in a GitHub workflow and provides methods to access its content via getter methods.
      */
     static class Step {
-        private final Map<String, Object> rawStep;
+        private final YamlMapping rawStep;
 
-        private Step(final Map<String, Object> rawStep) {
+        private Step(final YamlMapping rawStep) {
             this.rawStep = rawStep;
         }
 
@@ -218,21 +206,25 @@ class GitHubWorkflow {
         }
 
         boolean isUsesAction() {
-            return getOptionalString("uses").isPresent();
+            return rawStep.optionalString("uses").isPresent();
         }
 
         public Map<String, Object> getWith() {
-            return asMap(rawStep.computeIfAbsent("with", key -> new HashMap<>()));
+            if (rawStep.isNull("with")) {
+                return Collections.emptyMap();
+            }
+            return rawStep.objectMap("with");
+        }
+
+        void setWithValue(final String key, final Object value) {
+            rawStep.putInMapping("with", key, value);
         }
 
         private String getString(final String key) {
-            return getOptionalString(key)
+            return rawStep.optionalString(key)
                     .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-204")
-                            .message("Step has no field {{field name}}: {{raw step}}", key, rawStep).toString()));
-        }
-
-        private Optional<String> getOptionalString(final String key) {
-            return Optional.ofNullable((String) rawStep.get(key));
+                            .message("Step has no field {{field name}}: {{raw step}}", key, rawStep.toObject())
+                            .toString()));
         }
     }
 }

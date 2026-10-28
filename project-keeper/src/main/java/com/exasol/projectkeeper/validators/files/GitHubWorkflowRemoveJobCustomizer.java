@@ -21,7 +21,7 @@ class GitHubWorkflowRemoveJobCustomizer implements WorkflowCustomizer {
         workflow.removeJob(jobName);
         if (workflow.hasJob("build")) {
             final Job buildJob = workflow.getJob("build");
-            buildJob.getNeeds().remove(jobName);
+            buildJob.removeNeed(jobName);
         }
     }
 }

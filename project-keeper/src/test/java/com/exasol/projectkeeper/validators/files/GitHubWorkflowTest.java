@@ -10,6 +10,8 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Test;
 
+import com.exasol.projectkeeper.shared.config.workflow.JobPermissions;
+import com.exasol.projectkeeper.shared.config.workflow.JobPermissions.AccessLevel;
 import com.exasol.projectkeeper.shared.config.workflow.WorkflowStep;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Job;
 import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
@@ -334,6 +336,41 @@ class GitHubWorkflowTest {
                 """).getJob("build");
         job.setEnvironment("my-env");
         assertThat(job.getEnvironment(), equalTo("my-env"));
+    }
+
+    @Test
+    void setEnvironmentPreservesComment() {
+        final GitHubWorkflow workflow = read("""
+                jobs:
+                  build:
+                    environment: old # keep environment comment
+                """);
+        workflow.getJob("build").setEnvironment("new");
+        assertThat(GitHubWorkflowIO.create().dumpWorkflow(workflow), containsString("# keep environment comment"));
+    }
+
+    @Test
+    void setPermissionsPreservesComment() {
+        final GitHubWorkflow workflow = read("""
+                jobs:
+                  build:
+                    permissions: # keep permissions comment
+                      contents: read
+                """);
+        workflow.getJob("build").setPermissions(JobPermissions.builder().add("issues", AccessLevel.WRITE).build());
+        assertThat(GitHubWorkflowIO.create().dumpWorkflow(workflow), containsString("# keep permissions comment"));
+    }
+
+    @Test
+    void removeJobPreservesCommentsOnRemainingJob() {
+        final GitHubWorkflow workflow = read("""
+                jobs:
+                  removed: {}
+                  # keep remaining job comment
+                  remaining: {}
+                """);
+        workflow.removeJob("removed");
+        assertThat(GitHubWorkflowIO.create().dumpWorkflow(workflow), containsString("# keep remaining job comment"));
     }
 
     private GitHubWorkflow read(final String yaml) {
