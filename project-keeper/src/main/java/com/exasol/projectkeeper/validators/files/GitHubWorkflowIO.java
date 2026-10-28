@@ -1,19 +1,27 @@
 package com.exasol.projectkeeper.validators.files;
 
-import org.snakeyaml.engine.v2.api.*;
+import org.snakeyaml.engine.v2.api.DumpSettings;
+import org.snakeyaml.engine.v2.api.LoadSettings;
+import org.snakeyaml.engine.v2.api.lowlevel.Compose;
+import org.snakeyaml.engine.v2.api.lowlevel.Present;
+import org.snakeyaml.engine.v2.api.lowlevel.Serialize;
 import org.snakeyaml.engine.v2.common.*;
+import org.snakeyaml.engine.v2.nodes.Node;
 
 /**
  * This class provides options for serializing/deserializing GitHub workflows to/from YAML strings.
  */
+// [impl->dsn~customize-build-process.preserve-comments~0]
 public class GitHubWorkflowIO {
 
-    private final Load loader;
-    private final Dump dumper;
+    private final Compose composer;
+    private final Serialize serializer;
+    private final Present presenter;
 
-    private GitHubWorkflowIO(final Load loader, final Dump dumper) {
-        this.loader = loader;
-        this.dumper = dumper;
+    private GitHubWorkflowIO(final Compose composer, final Serialize serializer, final Present presenter) {
+        this.composer = composer;
+        this.serializer = serializer;
+        this.presenter = presenter;
     }
 
     /**
@@ -23,14 +31,18 @@ public class GitHubWorkflowIO {
      */
     public static GitHubWorkflowIO create() {
         final LoadSettings loadSettings = LoadSettings.builder().setParseComments(true).build();
-        final DumpSettings dumpSettings = DumpSettings.builder().setBestLineBreak("\n").setCanonical(false)
+        final DumpSettings dumpSettings = createDumpSettings();
+        return new GitHubWorkflowIO(new Compose(loadSettings), new Serialize(dumpSettings), new Present(dumpSettings));
+    }
+
+    static DumpSettings createDumpSettings() {
+        return DumpSettings.builder().setBestLineBreak("\n").setCanonical(false)
                 .setDefaultFlowStyle(FlowStyle.AUTO).setDefaultScalarStyle(ScalarStyle.PLAIN).setDumpComments(true)
                 .setExplicitEnd(false).setExplicitStart(false) //
                 .setIndent(2).setIndentWithIndicator(true).setIndicatorIndent(2) //
                 .setWidth(200) //
                 .setMultiLineFlow(true).setNonPrintableStyle(NonPrintableStyle.ESCAPE).setUseUnicodeEncoding(true)
                 .setSplitLines(false).build();
-        return new GitHubWorkflowIO(new Load(loadSettings), new Dump(dumpSettings));
     }
 
     /**
@@ -43,8 +55,9 @@ public class GitHubWorkflowIO {
         return GitHubWorkflow.create(load(content));
     }
 
-    Object load(final String content) {
-        return this.loader.loadFromString(content);
+    Node load(final String content) {
+        return this.composer.composeString(content)
+                .orElseThrow(() -> new IllegalArgumentException("GitHub workflow must not be empty"));
     }
 
     /**
@@ -54,10 +67,10 @@ public class GitHubWorkflowIO {
      * @return YAML string
      */
     public String dumpWorkflow(final GitHubWorkflow workflow) {
-        return dump(workflow.getRawObject());
+        return dump(workflow.getRawNode());
     }
 
-    String dump(final Object object) {
-        return this.dumper.dumpToString(object);
+    String dump(final Node node) {
+        return this.presenter.emitToString(this.serializer.serializeOne(node).iterator());
     }
 }

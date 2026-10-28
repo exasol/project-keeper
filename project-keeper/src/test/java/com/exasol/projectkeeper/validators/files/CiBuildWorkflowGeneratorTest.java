@@ -27,6 +27,14 @@ import com.exasol.projectkeeper.validators.files.GitHubWorkflow.Step;
 class CiBuildWorkflowGeneratorTest {
 
     @Test
+    // [utest->dsn~customize-build-process.preserve-comments~0]
+    void preservesCommentFromWorkflowTemplate() {
+        final String content = testee(BuildOptions.builder().build()).createCiBuildWorkflow().getContent();
+        assertThat(content,
+                containsString("# Note: test-compile required for multi-module projects to avoid dependency resolution problems"));
+    }
+
+    @Test
     void doesNotModifyOnTrigger() {
         final GitHubWorkflow workflow = ciBuildContent(BuildOptions.builder().runnerOs("my-runner-os"));
         assertThat(workflow.getOnTrigger(), hasKey("push"));

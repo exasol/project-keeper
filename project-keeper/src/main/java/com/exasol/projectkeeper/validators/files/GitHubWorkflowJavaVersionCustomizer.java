@@ -34,7 +34,7 @@ class GitHubWorkflowJavaVersionCustomizer implements WorkflowCustomizer {
     }
 
     private void updateJavaVersion(final Step step, final String version) {
-        step.getWith().put("java-version", version);
+        step.setWithValue("java-version", version);
     }
 
     private String formatJavaVersions() {

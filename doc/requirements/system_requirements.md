@@ -482,6 +482,16 @@ Currently some projects are already using customized workflows but needed to exc
 
 Needs: req
 
+#### Preserve Workflow Comments
+`req~preserve-workflow-comments~0`
+
+PK preserves comments from GitHub workflow templates when generating and customizing workflows.
+
+Covers:
+* [`feat~customize-workflows~1`](#customizable-workflows)
+
+Needs: dsn
+
 #### Customize Release Artifacts
 `req~customize-release-artifacts~0`
 

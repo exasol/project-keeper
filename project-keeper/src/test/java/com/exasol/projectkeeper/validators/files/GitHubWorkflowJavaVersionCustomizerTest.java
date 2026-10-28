@@ -1,8 +1,7 @@
 package com.exasol.projectkeeper.validators.files;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.equalTo;
-import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.*;
 
 import java.util.List;
 
@@ -59,6 +58,20 @@ class GitHubWorkflowJavaVersionCustomizerTest {
                         with:
                 """, List.of("v1"), "v2");
         assertThat(workflow.getJob("build").getStep("setup-java").getWith().get("java-version"), equalTo("v1"));
+    }
+
+    @Test
+    void preservesCommentWhenUpdatingJavaVersion() {
+        final GitHubWorkflow workflow = customize("""
+                jobs:
+                  build:
+                    steps:
+                      - id: setup-java
+                        uses: actions/setup-java@v6
+                        with:
+                          java-version: old # keep this comment
+                """, List.of("17"), "24");
+        assertThat(GitHubWorkflowIO.create().dumpWorkflow(workflow), containsString("# keep this comment"));
     }
 
     @Test

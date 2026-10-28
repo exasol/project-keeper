@@ -574,6 +574,18 @@ Covers:
 
 Needs: impl, utest, itest
 
+#### Preserve GitHub Workflow Comments
+`dsn~customize-build-process.preserve-comments~0`
+
+PK uses SnakeYAML's comment-aware node model for the complete workflow customization pipeline. It preserves comments attached to surviving nodes and transfers comments attached to replaced nodes to their replacements before serializing the generated workflow.
+
+Comments from `.project-keeper.yml` are not yet preserved or transferred to generated workflows because PK reads this configuration into Java objects using SnakeYAML's object mapping.
+
+Covers:
+* [`req~preserve-workflow-comments~0`](system_requirements.md#preserve-workflow-comments)
+
+Needs: impl, utest
+
 #### Customize Environment for GitHub Workflow `ci-build.yml`
 `dsn~customize-build-process.ci-build.environment~1`
 

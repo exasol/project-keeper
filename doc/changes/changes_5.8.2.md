@@ -4,13 +4,14 @@ Code name: Dependabot Monitoring
 
 ## Summary
 
-This release removes automated dependency issues, pull requests, and PK's `update-dependencies` mode. The scheduled vulnerability scan fails on findings, and `fix` removes obsolete `dependencies_update.yml` workflows.
+This release removes automated dependency issues, pull requests, and PK's `update-dependencies` mode. The scheduled vulnerability scan fails on findings, `fix` removes obsolete `dependencies_update.yml` workflows, and generated GitHub workflows preserve comments from their templates.
 
 Project Keeper now uses a minimal Java HTTP client to read GitHub issue state during release verification.
 
 ## Features
 
 * #807: Remove the automatic dependency updater and use Dependabot for vulnerability monitoring.
+* #760: Preserve YAML comments in generated GitHub workflows.
 * #799: Replace `jcabi-github` with a minimal GitHub REST client and remove its transitive JAXB dependency.
 
 ## Security

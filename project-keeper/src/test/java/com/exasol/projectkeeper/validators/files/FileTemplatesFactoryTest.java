@@ -158,8 +158,7 @@ class FileTemplatesFactoryTest {
         final Optional<FileTemplate> template = findTemplate(actual, ".github/workflows/ci-build.yml");
         assertTrue(template.isPresent());
         final String content = template.get().getContent();
-        System.out.println(content);
-        assertThat(content, allOf(containsString("java-version: '21',"), containsString("-Djava.version=21")));
+        assertThat(content, allOf(containsString("java-version: '21'"), containsString("-Djava.version=21")));
     }
 
     @ParameterizedTest

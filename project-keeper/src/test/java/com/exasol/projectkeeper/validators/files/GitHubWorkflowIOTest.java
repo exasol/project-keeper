@@ -82,22 +82,41 @@ class GitHubWorkflowIOTest {
         assertThat(testDescription, dumped, equalTo(expectedFormattedYaml));
     }
 
+    @Test
+    // [utest->dsn~customize-build-process.preserve-comments~0]
+    void preservesComments() {
+        final String dumped = testee().dump(testee().load("""
+                # header comment
+                jobs:
+                  # job comment
+                  build:
+                    steps:
+                      # step comment
+                      - id: step # inline comment
+                # end comment
+                """));
+        assertThat(dumped,
+                allOf(containsString("# header comment"), containsString("# job comment"),
+                        containsString("# step comment"), containsString("# inline comment"),
+                        containsString("# end comment")));
+    }
+
     static Stream<Arguments> testCases() {
         return Stream.of( //
-                testCase("key-value", "key: value", "{\n  key: value\n}\n"), //
-                testCase("comments removed", "key: value # comment", "{\n  key: value\n}\n"), //
-                testCase("'on' key not converted to true", "on: value", "{\n  on: value\n}\n"), //
-                testCase("'on' value not converted to true", "key: on", "{\n  key: on\n}\n"), //
-                testCase("multi-line list", """
+                testCase("key-value", "key: value", "key: value\n"), //
+                testCase("comments preserved", "key: value # comment", "key: value # comment\n"), //
+                testCase("'on' key not converted to true", "on: value", "on: value\n"), //
+                testCase("'on' value not converted to true", "key: on", "key: on\n"), //
+                testCaseUnchanged("multi-line list", """
                         list:
                           - itemA
                           - itemB
-                        """, "list: [\n  itemA,\n  itemB\n]\n"),
+                        """),
                 testCase("single-line list", "list: [itemA, itemB]", "list: [\n  itemA,\n  itemB\n]\n"), //
                 testCase("single-line list with quotes", "list: ['itemA', \"itemB\"]",
-                        "list: [\n  itemA,\n  itemB\n]\n"),
+                        "list: [\n  'itemA',\n  \"itemB\"\n]\n"),
                 testCase("single-line list with quotes and trailing whitespace", "list: ['itemA ', \" itemB\"]",
-                        "list: [\n  'itemA ',\n  ' itemB'\n]\n"),
+                        "list: [\n  'itemA ',\n  \" itemB\"\n]\n"),
                 testCaseUnchanged("ci-build step setup JDK", """
                         jobs:
                           build:
@@ -133,9 +152,8 @@ class GitHubWorkflowIOTest {
                                           mvn -T 1C --batch-mode clean verify install \
                                               --no-transfer-progress \
                                               -DtrimStackTrace=false
-                                        env: {
-                                          GITHUB_TOKEN: '${{ github.token }}'
-                                        }
+                                        env:
+                                          GITHUB_TOKEN: ${{ github.token }} # Required for integration tests of GitHub access
                                 """)
 
         );
