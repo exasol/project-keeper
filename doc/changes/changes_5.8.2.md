@@ -6,9 +6,16 @@ Code name: Dependabot Monitoring
 
 This release removes automated dependency issues, pull requests, and PK's `update-dependencies` mode. The scheduled vulnerability scan fails on findings, and `fix` removes obsolete `dependencies_update.yml` workflows.
 
+Project Keeper now uses a minimal Java HTTP client to read GitHub issue state during release verification.
+
 ## Features
 
 * #807: Remove the automatic dependency updater and use Dependabot for vulnerability monitoring.
+* #799: Replace `jcabi-github` with a minimal GitHub REST client and remove its transitive JAXB dependency.
+
+## Security
+
+* #796: Removed the temporary OSS Index suppression for CVE-2026-92877 after removing the affected `jcabi-github` dependency.
 
 ## Dependency Updates
 
@@ -25,6 +32,8 @@ This release removes automated dependency issues, pull requests, and PK's `updat
 #### Compile Dependency Updates
 
 * Updated `com.exasol:project-keeper-shared-model-classes:5.8.1` to `5.8.2`
+* Removed `com.jcabi:jcabi-github:1.11.1`
+* Added `jakarta.json:jakarta.json-api:2.1.3`
 
 #### Runtime Dependency Updates
 

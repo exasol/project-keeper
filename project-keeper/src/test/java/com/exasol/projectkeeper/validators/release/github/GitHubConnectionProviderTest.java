@@ -22,6 +22,12 @@ class GitHubConnectionProviderTest {
     }
 
     @Test
+    void ghTokenTakesPrecedenceOverGithubToken() {
+        assertThat(testee(Map.of("GH_TOKEN", "gh_token", "GITHUB_TOKEN", "github_token")).getToken().get(),
+                equalTo("gh_token"));
+    }
+
+    @Test
     void getTokenFromGhTool() {
         assertThat(testee(emptyMap()).getToken(), notNullValue());
     }
