@@ -19,6 +19,7 @@ import com.exasol.projectkeeper.validators.finding.ValidationFinding;
  * Validator that checks the existence of the doc/changes/changes_X.X.X.md file for the current project's version.
  */
 public class ChangesFileValidator extends AbstractFileValidator {
+    private static final int MAX_GITHUB_RELEASE_TITLE_LENGTH = 256;
     /** Section heading for the "Features" section used in the template. */
     public static final String FEATURES_SECTION = "## Features";
     /** Template for a fixed issue in the changes file. */
@@ -65,11 +66,29 @@ public class ChangesFileValidator extends AbstractFileValidator {
     protected List<ValidationFinding> validateContent(final Path file) {
         final ChangesFile changesFile = changesFileIO.read(file);
         return Stream
-                .of(validateDependencySection(file, changesFile), validateSummarySection(changesFile),
-                        validateProjectName(changesFile))
-                .filter(Optional::isPresent) //
-                .map(Optional::get) //
+                .of(validateDependencySection(file, changesFile),
+                        validateSummarySection(changesFile),
+                        validateProjectName(changesFile),
+                        validateReleaseTitleLength(changesFile))
+                .filter(Optional::isPresent)
+                .map(Optional::get)
                 .toList();
+    }
+
+    // [impl->dsn~verify-release-mode.release-title-length~1]
+    private Optional<ValidationFinding> validateReleaseTitleLength(final ChangesFile changesFile) {
+        final String codeName = changesFile.getCodeName();
+        if (codeName == null) {
+            return noFinding();
+        }
+        final int titleLength = changesFile.getReleaseTitle(this.projectVersion).length();
+        if (titleLength <= MAX_GITHUB_RELEASE_TITLE_LENGTH) {
+            return noFinding();
+        }
+        return finding(ExaError.messageBuilder("E-PK-CORE-217")
+                .message("GitHub release title in {{path}} has {{actual length}} characters; the maximum is {{maximum length}}.",
+                        relativeFilePath, titleLength, MAX_GITHUB_RELEASE_TITLE_LENGTH)
+                .mitigation("Shorten the code name.").toString());
     }
 
     private Optional<ValidationFinding> validateDependencySection(final Path file, final ChangesFile changesFile) {

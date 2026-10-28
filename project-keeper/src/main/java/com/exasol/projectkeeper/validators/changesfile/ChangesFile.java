@@ -37,7 +37,7 @@ public final class ChangesFile {
 
     /**
      * Get the relative path of the changes file for the given version.
-     * 
+     *
      * @param projectVersion project version
      * @return relative path of the changes file, e.g. {@code doc/changes/changes_1.2.3.md}
      */
@@ -57,7 +57,7 @@ public final class ChangesFile {
     /**
      * Get a builder configured with the this ChangesFile. This is useful for creating a copy and modify some parts of
      * this object.
-     * 
+     *
      * @return a preconfigured builder
      */
     public Builder toBuilder() {
@@ -73,7 +73,7 @@ public final class ChangesFile {
 
     /**
      * Get the project name for the first header line, e.g. {@code Project Keeper}.
-     * 
+     *
      * @return project name
      */
     public String getProjectName() {
@@ -82,7 +82,7 @@ public final class ChangesFile {
 
     /**
      * Get the project version for the first header line, e.g. {@code 1.2.3}.
-     * 
+     *
      * @return project version
      */
     public Semver getProjectVersion() {
@@ -91,7 +91,7 @@ public final class ChangesFile {
 
     /**
      * Get the release date for the first header line, e.g. {@code 2024-01-29} or {@code 2024-??-??}.
-     * 
+     *
      * @return release date
      */
     public String getReleaseDate() {
@@ -100,7 +100,7 @@ public final class ChangesFile {
 
     /**
      * Get the code name of the release.
-     * 
+     *
      * @return code name
      */
     public String getCodeName() {
@@ -108,9 +108,19 @@ public final class ChangesFile {
     }
 
     /**
+     * Get the GitHub release title for the given project version.
+     *
+     * @param version project version
+     * @return version and code name separated by one space
+     */
+    public String getReleaseTitle(final String version) {
+        return version + " " + this.codeName;
+    }
+
+    /**
      * Get the parsed release date for the first header line. If the date is not valid (e.g. {@code 2024-??-??}), this
      * will return an empty {@link Optional}.
-     * 
+     *
      * @return release date
      */
     public Optional<LocalDate> getParsedReleaseDate() {
@@ -132,7 +142,7 @@ public final class ChangesFile {
 
     /**
      * Get the dependency change section.
-     * 
+     *
      * @return dependency change section
      */
     public Optional<ChangesFileSection> getDependencyChangeSection() {
@@ -150,7 +160,7 @@ public final class ChangesFile {
 
     /**
      * Get all issues marked as fixed in this changes file.
-     * 
+     *
      * @return all fixed issues
      */
     public List<FixedIssue> getFixedIssues() {

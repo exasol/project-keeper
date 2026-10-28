@@ -450,6 +450,13 @@ Covers:
 
 Needs: dsn
 
+#### Validate GitHub Release Title Length
+`req~github-release-title-length~1`
+
+PK verifies that the generated GitHub release title, formed from the project version, a separating space, and the code name in the current changes file, is no longer than 256 characters. This validation runs in both `verify` and `verify-release`.
+
+Needs: dsn
+
 #### Publish SPDX SBOMs with Releases
 `req~publish-release-sboms~0`
 
