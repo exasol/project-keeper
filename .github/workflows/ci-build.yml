@@ -2,11 +2,9 @@
 name: CI Build
 on:
   push:
-    branches: [
-      main,
-      release/*
-    ]
-    
+    branches:
+      - main
+      - release/*
   pull_request:
     types: [
       opened,
@@ -15,25 +13,22 @@ on:
       ready_for_review
     ]
     
-  workflow_dispatch: null
+  workflow_dispatch:
+
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
     defaults:
-      run: {
-        shell: bash
-      }
-    permissions: {
-      contents: read,
-      issues: read
-    }
-    concurrency: {
-      group: '${{ github.workflow }}-build-and-test-${{ github.ref }}',
+      run:
+        shell: "bash"
+    permissions:
+      contents: read
+      issues: read # Required for PK verify-release
+    concurrency:
+      group: ${{ github.workflow }}-build-and-test-${{ github.ref }}
       cancel-in-progress: true
-    }
-    outputs: {
-      release-required: '${{ steps.check-release.outputs.release-required }}'
-    }
+    outputs:
+      release-required: ${{ steps.check-release.outputs.release-required }}
     steps:
       - name: Free Disk Space
         id: free-disk-space
@@ -44,19 +39,18 @@ jobs:
       - name: Checkout the repository
         id: checkout
         uses: actions/checkout@v7
-        with: {
-          fetch-depth: 0,
+        with:
+          fetch-depth: 0
           persist-credentials: false
-        }
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v6
         with:
-          distribution: temurin
+          distribution: "temurin"
           java-version: |-
             17
             21
-          cache: maven
+          cache: "maven"
       - name: Set up Go
         id: setup-go
         uses: actions/setup-go@v7
@@ -69,24 +63,19 @@ jobs:
         id: install-go-tools,
         run: go install github.com/google/go-licenses/v2@v2.0.1
       }
-      - {
-        name: Prepare Maven Wrapper,
-        id: prepare-maven-wrapper,
+      - name: Prepare Maven Wrapper
+        id: prepare-maven-wrapper
         run: MVNW_VERBOSE=true ./mvnw -version
-      }
       - name: Cache SonarCloud packages
         id: cache-sonar
         uses: actions/cache@v6
-        with: {
-          path: ~/.sonar/cache,
-          key: '${{ runner.os }}-sonar',
-          restore-keys: '${{ runner.os }}-sonar'
-        }
-      - {
-        name: Enable testcontainer reuse,
-        id: enable-testcontainer-reuse,
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Enable testcontainer reuse
+        id: enable-testcontainer-reuse
         run: echo 'testcontainers.reuse.enable=true' > "$HOME/.testcontainers.properties"
-      }
       - name: Run tests and build with Maven
         id: maven-build
         run: |
@@ -106,17 +95,17 @@ jobs:
               --no-transfer-progress \
               -DtrimStackTrace=false \
               -Dsonar.token=$SONAR_TOKEN
-        env: {
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}',
-          SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
-        }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       - name: Run project-keeper itself
         id: build-pk-verify
         run: |
           ./mvnw --batch-mode com.exasol:project-keeper-maven-plugin:verify \
             --projects . \
             --no-transfer-progress
-      - name: Verify Release Artifacts
+      - 
+        name: Verify Release Artifacts
         id: verify-release-artifacts
         run: |
           print_message() {
@@ -147,18 +136,18 @@ jobs:
               print_message "⚠️ $number_of_missing_files release artifact(s) missing ⚠️"
               exit 1
           fi
-        env: {
-          ARTIFACTS: '${{ steps.build-pk-verify.outputs.release-artifacts }}'
-        }
-      - name: Upload artifacts
+        env:
+          ARTIFACTS: ${{ steps.build-pk-verify.outputs.release-artifacts }}
+      - 
+        name: Upload artifacts
         id: upload-artifacts
         uses: actions/upload-artifact@v7
-        with: {
-          name: artifacts,
-          path: '${{ steps.build-pk-verify.outputs.release-artifacts }}',
+        with:
+          name: artifacts
+          path: ${{ steps.build-pk-verify.outputs.release-artifacts }}
           retention-days: 5
-        }
-      - name: Configure link check
+      - 
+        name: Configure link check
         id: configure-link-check
         run: |
           mkdir -p ./target
@@ -168,42 +157,37 @@ jobs:
                '{"pattern": "^https?://(www.)?eclipse.org"}' \
                '{"pattern": "^https?://projects.eclipse.org"}' \
                ']}' > ./target/broken_links_checker.json
-      - uses: tcort/github-action-markdown-link-check@e7c7a18363c842693fadde5d41a3bd3573a7a225
+      - uses: tcort/github-action-markdown-link-check@e7c7a18363c842693fadde5d41a3bd3573a7a225 # Latest main, no release yet
         id: run-link-check
-        with: {
-          use-quiet-mode: yes,
-          use-verbose-mode: yes,
+        with:
+          use-quiet-mode: "yes"
+          use-verbose-mode: "yes"
           config-file: ./target/broken_links_checker.json
-        }
+  
   next-java-compatibility:
     runs-on: ubuntu-latest
     defaults:
-      run: {
-        shell: bash
-      }
-    permissions: {
+      run:
+        shell: "bash"
+    permissions:
       contents: read
-    }
-    concurrency: {
-      group: '${{ github.workflow }}-next-java-${{ github.ref }}',
+    concurrency:
+      group: ${{ github.workflow }}-next-java-${{ github.ref }}
       cancel-in-progress: true
-    }
     steps:
       - name: Checkout the repository
         id: checkout
         uses: actions/checkout@v7
-        with: {
-          fetch-depth: 0,
+        with:
+          fetch-depth: 0
           persist-credentials: false
-        }
       - name: Set up JDK 21
         id: setup-java
         uses: actions/setup-java@v6
-        with: {
-          distribution: temurin,
-          java-version: '21',
-          cache: maven
-        }
+        with:
+          distribution: "temurin"
+          java-version: '21'
+          cache: "maven"
       - name: Run tests and build with Maven 21
         id: build-next-java
         run: |
@@ -213,108 +197,97 @@ jobs:
   ossindex:
     runs-on: ubuntu-latest
     defaults:
-      run: {
-        shell: bash
-      }
-    permissions: {
+      run:
+        shell: "bash"
+    permissions:
       contents: read
-    }
-    concurrency: {
-      group: '${{ github.workflow }}-ossindex-${{ github.ref }}',
+    concurrency:
+      group: ${{ github.workflow }}-ossindex-${{ github.ref }}
       cancel-in-progress: true
-    }
     steps:
       - name: Checkout the repository
         id: checkout
         uses: actions/checkout@v7
-        with: {
+        with:
           persist-credentials: false
-        }
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v6
         with:
-          distribution: temurin
+          distribution: "temurin"
           java-version: |-
             17
             21
-          cache: maven
+          cache: "maven"
           server-id: ossindex
           server-username-env-var: OSSINDEX_USERNAME
           server-password-env-var: OSSINDEX_API_TOKEN
       - name: Run Ossindex
         id: ossindex
+        # Note: test-compile required for multi-module projects to avoid dependency resolution problems
         run: |
           ./mvnw --batch-mode test-compile \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit \
               org.sonatype.ossindex.maven:ossindex-maven-plugin:audit-aggregate \
               --no-transfer-progress
-        env: {
-          OSSINDEX_USERNAME: '${{ secrets.OSSINDEX_USERNAME }}',
-          OSSINDEX_API_TOKEN: '${{ secrets.OSSINDEX_API_TOKEN }}'
-        }
+        env:
+          OSSINDEX_USERNAME: ${{ secrets.OSSINDEX_USERNAME }}
+          OSSINDEX_API_TOKEN: ${{ secrets.OSSINDEX_API_TOKEN }}
+  
+  
   lint-github-actions:
     runs-on: ubuntu-latest
     defaults:
-      run: {
-        shell: bash
-      }
-    permissions: {
+      run:
+        shell: "bash"
+    permissions:
       contents: read
-    }
-    concurrency: {
-      group: '${{ github.workflow }}-github-actions-linter-${{ github.ref }}',
+    concurrency:
+      group: ${{ github.workflow }}-github-actions-linter-${{ github.ref }}
       cancel-in-progress: true
-    }
     steps:
       - name: Checkout the repository
         id: checkout
         uses: actions/checkout@v7
-        with: {
+        with:
           persist-credentials: false
-        }
       - name: Lint GitHub actions with Zizmor
         id: lint-github-actions
-        uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b
-        with: {
+        uses: zizmorcore/zizmor-action@53290badfa369cb0bf7ad16342cb62c2fa47ac7b # v0.8.0
+        with:
           advanced-security: false
-        }
+  
   build:
-    needs: [
-      build-and-test,
-      next-java-compatibility,
-      ossindex,
-      lint-github-actions
-    ]
+    needs:
+      - build-and-test
+      - next-java-compatibility
+      - ossindex
+      - lint-github-actions
     runs-on: ubuntu-latest
     defaults:
-      run: {
-        shell: bash
-      }
-    permissions: {
-      contents: read,
-      issues: read
-    }
-    outputs: {
-      release-required: '${{ steps.check-release.outputs.release-required }}'
-    }
+      run:
+        shell: "bash"
+    permissions:
+      contents: read
+      issues: read # Required for PK verify-release
+    outputs:
+      release-required: ${{ steps.check-release.outputs.release-required }}
     steps:
       - name: Checkout the repository
         id: checkout
         uses: actions/checkout@v7
-        with: {
-          fetch-depth: 0,
+        with:
+          fetch-depth: 0
           persist-credentials: false
-        }
       - name: Set up JDKs
         id: setup-java
         uses: actions/setup-java@v6
         with:
-          distribution: temurin
+          distribution: "temurin"
           java-version: |-
             17
             21
-          cache: maven
+          cache: "maven"
       - name: Install Project Keeper before check-release
         id: install-project-keeper
         run: |
@@ -334,24 +307,22 @@ jobs:
               echo "See log output for details." >> "$GITHUB_STEP_SUMMARY"
               echo "release-required=false" >> "$GITHUB_OUTPUT"
           fi
-        env: {
-          GITHUB_TOKEN: '${{ secrets.GITHUB_TOKEN }}'
-        }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  
+  # [impl->dsn~release-workflow.ci-build-starts-release~2]
   start_release:
     needs: build
     if: ${{ needs.build.outputs.release-required == 'true' }}
-    concurrency: {
-      cancel-in-progress: false,
-      group: release
-    }
+    concurrency:
+      cancel-in-progress: false
+      group: "release"
     secrets: inherit
-    permissions: {
-      contents: write,
-      actions: read,
+    permissions:
+      contents: write
+      actions: read
       issues: read
-    }
     uses: $/.github/workflows/release.yml
-    with: {
-      started-from-ci: true,
+    with:
+      started-from-ci: true
       maven-central-auto-publish: true
-    }
