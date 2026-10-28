@@ -220,9 +220,7 @@ public class PomFileGenerator {
                 .child("sonar.host.url", "https://sonarcloud.io");
 
         if (!hasParentPom) {
-            properties.child(element("test.excludeTags").text(""))
-                    // [impl->dsn~dependency-vulnerabilities~2]
-                    .child(element("ossindexSkip").text("false"));
+            properties.child(element("test.excludeTags").text(""));
         }
 
         if (enabledModules.contains(MAVEN_CENTRAL)) {

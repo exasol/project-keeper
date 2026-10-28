@@ -65,7 +65,7 @@ jobs:
         id: build-pk-verify
         run: |
           ./mvnw --batch-mode clean verify \
-              -DossindexSkip=true \
+              -Dossindex.skip=true \
               --no-transfer-progress \
               -DtrimStackTrace=false \
               -Dcom.exasol.dockerdb.image=${{ matrix.exasol_db_version }}
@@ -78,7 +78,7 @@ jobs:
         if: ${{ env.SONAR_TOKEN != null && matrix.exasol_db_version == env.DEFAULT_EXASOL_DB_VERSION }}
         run: |
           ./mvnw --batch-mode org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
-              -DossindexSkip=true \
+              -Dossindex.skip=true \
               --no-transfer-progress \
               -DtrimStackTrace=false \
               -Dsonar.token=$SONAR_TOKEN
@@ -174,7 +174,7 @@ jobs:
         run: |
           ./mvnw --batch-mode clean package -DtrimStackTrace=false -Djava.version=$nextJavaVersion \
               --no-transfer-progress \
-              -DossindexSkip=true
+              -Dossindex.skip=true
 
 
   ossindex:

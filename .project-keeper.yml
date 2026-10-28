@@ -116,7 +116,7 @@ build:
             run: |
               ./mvnw -T 1C --batch-mode clean install verify \
                   --no-transfer-progress \
-                  -DossindexSkip=true \
+                  -Dossindex.skip=true \
                   -DtrimStackTrace=false
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
@@ -140,7 +140,7 @@ build:
             run: |
               ./mvnw --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-                  -DossindexSkip=true -Dmaven.javadoc.skip=true \
+                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
     # [itest->dsn~customize-build-process.dependency-check~0]
@@ -156,7 +156,7 @@ build:
             run: |
               ./mvnw --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-                  -DossindexSkip=true -Dmaven.javadoc.skip=true \
+                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true
 
 
@@ -172,5 +172,5 @@ build:
             run: |
               ./mvnw --batch-mode --threads 1C install \
                   -Dmaven.test.skip=true -Dproject-keeper.skip=true \
-                  -DossindexSkip=true -Dmaven.javadoc.skip=true \
+                  -Dossindex.skip=true -Dmaven.javadoc.skip=true \
                   -Derror-code-crawler.skip=true -Dreproducible.skip=true

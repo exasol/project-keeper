@@ -378,13 +378,13 @@ build:
             run: |
               ./mvnw -T 1C --batch-mode clean install verify \
                   --no-transfer-progress \
-                  -DossindexSkip=true \
+                  -Dossindex.skip=true \
                   -DtrimStackTrace=false
             env:
               GITHUB_TOKEN: ${{ github.token }} # Required for integration tests
 ```
 
-**Note**: If you override workflow step `build-pk-verify` in `.project-keeper.yml` please ensure disable OssIndex via `-DossindexSkip=true' as it requires additional credentials. OssIndex already runs in a separate job.
+**Note**: If you override workflow step `build-pk-verify` in `.project-keeper.yml` please ensure you disable OssIndex via `-Dossindex.skip=true` as it requires additional credentials. OssIndex already runs in a separate job.
 
 ## Maven Projects
 

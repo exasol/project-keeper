@@ -171,7 +171,7 @@ jobs:
       # [impl->dsn~release-workflow.verify-skip-tests~1]
       - name: Build project
         id: build
-        run: ./mvnw --batch-mode -DskipTests -DskipITs -DossindexSkip=true clean verify
+        run: ./mvnw --batch-mode -DskipTests -DskipITs -Dossindex.skip=true clean verify
 
       # Maven Central Deployment
       # [impl->dsn~release-workflow.deploy-maven-central~1]
@@ -180,7 +180,7 @@ jobs:
         if: ${{ $mavenCentralDeployment && (! inputs.skip-maven-central) }}
         run: |
           echo "#### Maven Central Release" >> "$GITHUB_STEP_SUMMARY"
-          ./mvnw --batch-mode -Dgpg.skip=false -DskipTests -DskipITs -DossindexSkip=true deploy \
+          ./mvnw --batch-mode -Dgpg.skip=false -DskipTests -DskipITs -Dossindex.skip=true deploy \
               -Dcentral-publishing.deploymentName="Auto release of repo ${{ github.repository }} using PK release.yml" \
               -Dcentral-publishing.autoPublish=${{ inputs.maven-central-auto-publish }}
           if [[ "${{ inputs.maven-central-auto-publish }}" == "true" ]]; then

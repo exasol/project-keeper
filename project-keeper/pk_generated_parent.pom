@@ -173,7 +173,7 @@
                 <configuration>
                     <authId>ossindex</authId>
                     <!-- [impl->dsn~dependency-vulnerabilities~2] -->
-                    <skip>${ossindexSkip}</skip>
+                    <skip>${ossindex.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
