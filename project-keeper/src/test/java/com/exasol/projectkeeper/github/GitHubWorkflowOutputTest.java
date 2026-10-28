@@ -7,12 +7,12 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 
-import org.apache.commons.lang3.exception.UncheckedException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -238,7 +238,7 @@ class GitHubWorkflowOutputTest {
             Files.createDirectories(path.getParent());
             Files.createFile(path);
         } catch (final IOException exception) {
-            throw new UncheckedException(exception);
+            throw new UncheckedIOException(exception);
         }
         when(this.changesFileIOMock.read(path)).thenReturn(changesFileBuilder.build());
     }
