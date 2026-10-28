@@ -124,21 +124,6 @@
                 <artifactId>snakeyaml-engine</artifactId>
                 <version>3.2</version>
             </dependency>
-            <dependency>
-                <groupId>com.jcabi</groupId>
-                <artifactId>jcabi-github</artifactId>
-                <version>1.11.1</version>
-                <exclusions>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-classic</artifactId>
-                    </exclusion>
-                    <exclusion>
-                        <groupId>ch.qos.logback</groupId>
-                        <artifactId>logback-core</artifactId>
-                    </exclusion>
-                </exclusions>
-            </dependency>
 
             <!-- test -->
             <dependency>
@@ -156,7 +141,7 @@
                 <scope>import</scope>
             </dependency>
             <dependency>
-                <!-- Upgrade transitive dependency of maven-core and com.jcabi:jcabi-github to fix CVE-2026-102554 -->
+                <!-- Upgrade transitive dependency of maven-core to fix CVE-2026-102554 -->
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava-bom</artifactId>
                 <version>33.7.2-jre</version>
@@ -352,18 +337,6 @@
                 <version>3.2.0</version>
                 <configuration>
                     <skip>true</skip>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.sonatype.ossindex.maven</groupId>
-                <artifactId>ossindex-maven-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <!-- Unresolved vulnerability CVE-2026-92877 in transitive dependency com.sun.xml.bind:jaxb-core of jcabi-github.
-                        See https://github.com/exasol/project-keeper/issues/799 for the proposed solution. -->
-                    <excludeVulnerabilityIds>
-                        <exclude>CVE-2026-92877</exclude>
-                    </excludeVulnerabilityIds>
                 </configuration>
             </plugin>
         </plugins>
