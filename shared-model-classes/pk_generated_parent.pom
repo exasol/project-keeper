@@ -167,13 +167,12 @@
                 </executions>
             </plugin>
             <plugin>
+                <!-- [impl->dsn~dependency-vulnerabilities~2] -->
                 <groupId>org.sonatype.ossindex.maven</groupId>
                 <artifactId>ossindex-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
                     <authId>ossindex</authId>
-                    <!-- [impl->dsn~dependency-vulnerabilities~2] -->
-                    <skip>${ossindex.skip}</skip>
                 </configuration>
                 <executions>
                     <execution>
