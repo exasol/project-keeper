@@ -22,6 +22,8 @@ import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
@@ -67,7 +69,7 @@ class ChangesFileValidatorTest {
     }
 
     @Test
-    void noDependencyUpdates(@Mock final Logger log){
+    void noDependencyUpdates(@Mock final Logger log) {
         final AnalyzedMavenSource source = createTestSetup(new TestMavenModel(), Collections.emptyList());
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(CHANGES_FILE_PATH);
@@ -90,7 +92,7 @@ class ChangesFileValidatorTest {
         createValidator(source).validate().forEach(finding -> new FindingsFixer(log).fixFindings(List.of(finding)));
         final Path changesFile = this.tempDir.resolve(CHANGES_FILE_PATH);
         assertThat(changesFile,
-                hasContent(equalTo("# my-project 1.2.3, released " + THIS_YEAR +"-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
+                hasContent(equalTo("# my-project 1.2.3, released " + THIS_YEAR + "-??-??" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "Code name:" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "## Summary" + LINE_SEPARATOR + LINE_SEPARATOR //
                         + "## Features" + LINE_SEPARATOR + LINE_SEPARATOR //
@@ -172,6 +174,23 @@ class ChangesFileValidatorTest {
                 "E-PK-CORE-195: Project name in '" + CHANGES_FILE_PATH + "' is missing. Add a project name.");
     }
 
+    // [utest->dsn~verify-release-mode.release-title-length~1]
+    @ParameterizedTest
+    @CsvSource({ "250, 256, false", "251, 257, true" })
+    void validateReleaseTitleLength(final int codeNameLength, final int titleLength, final boolean shouldFail)
+            throws IOException {
+        simulateChangesFile(ChangesFile.builder().projectName(A_PROJECT_NAME)
+                .codeName("x".repeat(codeNameLength))
+                .summary(ChangesFileSection.builder("## Summary").addLine("content").build()));
+        final List<ValidationFinding> findings = createValidatorWithChangesFileMock(defaultSource().build()).validate();
+        if (shouldFail) {
+            assertFinding(findings, "E-PK-CORE-217: GitHub release title in '" + CHANGES_FILE_PATH + "' has "
+                    + titleLength + " characters; the maximum is 256. Shorten the code name.");
+        } else {
+            assertThat(findings, empty());
+        }
+    }
+
     private AnalyzedMavenSourceBuilder defaultSource() {
         return AnalyzedMavenSource.builder().dependencyChanges(DependencyChangeReport.builder().build());
     }
@@ -200,7 +219,7 @@ class ChangesFileValidatorTest {
         return createTestSetup(new TestMavenModel());
     }
 
-    private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel){
+    private AnalyzedMavenSource createTestSetup(final TestMavenModel mavenModel) {
         final List<DependencyChange> list = List.of(new NewDependency("com.example", "my-lib", "1.2.3"));
         return createTestSetup(mavenModel, list);
     }

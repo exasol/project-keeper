@@ -1034,6 +1034,17 @@ Covers:
 
 Needs: impl, utest
 
+#### Validate GitHub Release Title Length
+`dsn~verify-release-mode.release-title-length~1`
+
+PK modes `verify` and `verify-release` validate that the generated GitHub release title, consisting of the project version, one separating space, and the changes file code name, does not exceed GitHub's 256-character limit. A title of exactly 256 characters is valid.
+
+Covers:
+
+* [`req~github-release-title-length~1`](system_requirements.md#validate-github-release-title-length)
+
+Needs: impl, utest
+
 #### PK Mode `verify-release` Checks All Issues are Closed
 `dsn~verify-release-mode.verify-issues-closed~1`
 
