@@ -171,35 +171,28 @@ final class YamlMapping {
     }
 
     private static void copyComments(final Node source, final Node target) {
-        final List<CommentLine> blockComments = new ArrayList<>();
-        final List<CommentLine> inlineComments = new ArrayList<>();
-        final List<CommentLine> endComments = new ArrayList<>();
-        collectComments(source, blockComments, inlineComments, endComments);
-        target.setBlockComments(blockComments);
-        target.setInLineComments(inlineComments);
-        target.setEndComments(endComments);
-    }
-
-    private static void collectComments(final Node node, final List<CommentLine> blockComments,
-            final List<CommentLine> inlineComments, final List<CommentLine> endComments) {
-        addComments(blockComments, node.getBlockComments());
-        addComments(inlineComments, node.getInLineComments());
-        addComments(endComments, node.getEndComments());
-        if (node instanceof final MappingNode mapping) {
-            mapping.getValue().forEach(entry -> {
-                collectComments(entry.getKeyNode(), blockComments, inlineComments, endComments);
-                collectComments(entry.getValueNode(), blockComments, inlineComments, endComments);
-            });
-        } else if (node instanceof final SequenceNode sequence) {
-            sequence.getValue()
-                    .forEach(item -> collectComments(item, blockComments, inlineComments, endComments));
+        copyDirectComments(source, target);
+        if (source instanceof final MappingNode sourceMapping
+                && target instanceof final MappingNode targetMapping) {
+            targetMapping.getValue().forEach(targetEntry -> sourceMapping.getValue().stream()
+                    .filter(sourceEntry -> scalar(sourceEntry.getKeyNode())
+                            .equals(scalar(targetEntry.getKeyNode())))
+                    .findFirst()
+                    .ifPresent(sourceEntry -> {
+                        copyComments(sourceEntry.getKeyNode(), targetEntry.getKeyNode());
+                        copyComments(sourceEntry.getValueNode(), targetEntry.getValueNode());
+                    }));
         }
     }
 
-    private static void addComments(final List<CommentLine> target, final List<CommentLine> comments) {
-        if (comments != null) {
-            target.addAll(comments);
-        }
+    private static void copyDirectComments(final Node source, final Node target) {
+        target.setBlockComments(copy(source.getBlockComments()));
+        target.setInLineComments(copy(source.getInLineComments()));
+        target.setEndComments(copy(source.getEndComments()));
+    }
+
+    private static List<CommentLine> copy(final List<CommentLine> comments) {
+        return comments == null ? List.of() : new ArrayList<>(comments);
     }
 
     private static Object toObject(final Node node) {

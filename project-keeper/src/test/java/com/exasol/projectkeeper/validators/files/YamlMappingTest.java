@@ -140,17 +140,54 @@ class YamlMappingTest {
     }
 
     @Test
-    void preservesCommentsWhenReplacingValue() {
+    void doesNotMoveChildCommentToReplacementPermissionsMapping() {
         final YamlMapping mapping = parse("""
-                value:
-                  # nested block comment
-                  nested: old # nested inline comment
+                permissions:
+                  contents: read # needed to clone the repository
                 """);
 
-        mapping.put("value", Map.of("replacement", "new"));
+        mapping.put("permissions", Map.of("issues", "write"));
 
-        assertThat(dump(mapping), allOf(containsString("# nested block comment"),
-                containsString("# nested inline comment"), containsString("replacement: new")));
+        assertThat(dump(mapping), equalTo("""
+                permissions: {
+                  issues: write
+                }
+                """));
+    }
+
+    @Test
+    void doesNotMoveChildCommentToReplacementWithMapping() {
+        final YamlMapping mapping = parse("""
+                with:
+                  cache: maven # speeds up builds
+                """);
+
+        mapping.put("with", Map.of("java-version", 21));
+
+        assertThat(dump(mapping), equalTo("""
+                with: {
+                  java-version: 21
+                }
+                """));
+    }
+
+    @Test
+    void preservesCommentsOnlyForReplacementMappingEntriesWithMatchingKeys() {
+        final YamlMapping mapping = parse("""
+                permissions:
+                  contents: read # needed to clone the repository
+                  actions: read # needed to inspect workflow runs
+                """);
+
+        mapping.put("permissions", linkedMap("contents", "write", "issues", "write"));
+
+        assertThat(dump(mapping), equalTo("""
+                permissions: {
+                  contents: write # needed to clone the repository
+                ,
+                  issues: write
+                }
+                """));
     }
 
     @Test
@@ -163,8 +200,13 @@ class YamlMappingTest {
 
         mapping.replaceInSequence("items", 0, Map.of("value", "new"));
 
-        assertThat(dump(mapping), allOf(containsString("# item block comment"),
-                containsString("# item inline comment"), containsString("value: new")));
+        assertThat(dump(mapping), equalTo("""
+                items:
+                  - {
+                    # item block comment
+                    value: new # item inline comment
+                  }
+                """));
     }
 
     @Test
