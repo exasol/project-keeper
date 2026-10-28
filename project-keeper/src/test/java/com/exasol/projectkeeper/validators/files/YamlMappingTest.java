@@ -169,8 +169,8 @@ class YamlMappingTest {
 
     @Test
     void reportsMissingRequiredMapping() {
-        final NullPointerException exception = assertThrows(NullPointerException.class,
-                () -> parse("value: content\n").mapping("missing"));
+        final YamlMapping yamlMapping = parse("value: content\n");
+        final NullPointerException exception = assertThrows(NullPointerException.class, () -> yamlMapping.mapping("missing"));
 
         assertThat(exception.getMessage(), equalTo("Missing YAML key 'missing'"));
     }

@@ -75,6 +75,7 @@ class GitHubWorkflow {
      * well as insert and replace steps.
      */
     static class Job {
+        private static final String STEPS_KEY = "steps";
         private final String id;
         private final YamlMapping rawJob;
 
@@ -88,16 +89,16 @@ class GitHubWorkflow {
         }
 
         Step getStep(final String id) {
-            return getSteps().stream() //
-                    .filter(hasId(id)) //
-                    .findFirst() //
+            return getSteps().stream()
+                    .filter(hasId(id))
+                    .findFirst()
                     .orElseThrow(() -> new IllegalStateException(ExaError.messageBuilder("E-PK-CORE-206")
                             .message("Job has no step with ID {{step id}}: {{raw job}}", id, rawJob.toObject())
                             .toString()));
         }
 
         List<Step> getSteps() {
-            return rawJob.mappingList("steps").stream().map(Step::new).toList();
+            return rawJob.mappingList(STEPS_KEY).stream().map(Step::new).toList();
         }
 
         public List<String> getNeeds() {
@@ -152,7 +153,7 @@ class GitHubWorkflow {
         public void replaceStep(final String stepId, final WorkflowStep step) {
             final int index = findStepIndex(stepId);
             LOG.fine(() -> "Replacing step '" + stepId + "' at index " + index + " with step '" + step.getId() + "'");
-            rawJob.replaceInSequence("steps", index, step.getRawStep());
+            rawJob.replaceInSequence(STEPS_KEY, index, step.getRawStep());
         }
 
         // [impl->dsn~customize-build-process.insert-step-after~0]
@@ -160,7 +161,7 @@ class GitHubWorkflow {
             final int index = findStepIndex(stepId);
             LOG.fine(() -> "Inserting step '" + step.getId() + "' at index " + (index + 1) + " after step '" + stepId
                     + "'");
-            rawJob.insertIntoSequence("steps", index + 1, step.getRawStep());
+            rawJob.insertIntoSequence(STEPS_KEY, index + 1, step.getRawStep());
         }
 
         private int findStepIndex(final String stepId) {
